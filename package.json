@@ -33,6 +33,7 @@
         "yalc:link": "bun run build && yalc publish && echo 'Run: cd <project> && yalc add @augno/internal-sdk --link'"
     },
     "devDependencies": {
+        "@changesets/cli": "^2.29.8",
         "openapi-typescript": "^7.10.1",
         "typescript": "^5.9.3",
         "yalc": "^1.0.0-pre.53"
