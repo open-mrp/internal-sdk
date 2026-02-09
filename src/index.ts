@@ -4,9 +4,13 @@ import createClient, { type ClientOptions, type Middleware } from "openapi-fetch
 import type { components, paths } from "./types.js";
 
 export type { components, paths };
-export { RequestHeaders };
+export { API_VERSION, RequestHeaders };
 
 export interface V2ClientOptions extends ClientOptions {
+    /**
+     * The API version to target. Defaults to the version from the bundled OpenAPI spec.
+     */
+    version?: string;
     /**
      * Optional callback to get the current account ID for the Augno-Account-ID header.
      */
@@ -26,7 +30,7 @@ export interface V2ClientOptions extends ClientOptions {
  * 3. Retries the original request after a successful refresh.
  */
 export const createV2Client = (options: V2ClientOptions) => {
-    const { getAccountID, onAuthFailure, ...fetchOptions } = options;
+    const { version, getAccountID, onAuthFailure, ...fetchOptions } = options;
     const client = createClient<paths>(fetchOptions);
 
     let isRefreshing = false;
@@ -34,7 +38,7 @@ export const createV2Client = (options: V2ClientOptions) => {
 
     const authMiddleware: Middleware = {
         async onRequest({ request }) {
-            request.headers.set(RequestHeaders.version, API_VERSION);
+            request.headers.set(RequestHeaders.version, version ?? API_VERSION);
 
             if (getAccountID && !request.headers.has(RequestHeaders.accountID)) {
                 const accountID = getAccountID();
