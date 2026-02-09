@@ -1,0 +1,43 @@
+{
+    "name": "@augno/internal-sdk",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/augno/internal-sdk.git"
+    },
+    "scripts": {
+        "build": "tsc",
+        "generate": "openapi-typescript ./specs/internal_openapi_spec.json -o ./src/types.ts && node -e \"const fs=require('fs');const spec=JSON.parse(fs.readFileSync('./specs/internal_openapi_spec.json','utf8'));fs.writeFileSync('./src/version.ts','// Auto-generated from OpenAPI spec. Do not edit manually.\\nexport const API_VERSION = \\\"'+spec.info.version+'\\\" as const;\\n')\"",
+        "prepublishOnly": "npm run build",
+        "check-types": "tsc --noEmit",
+        "check-changes": "changeset status || exit 1",
+        "release": "bun run build && bunx changeset publish",
+        "version": "changeset",
+        "yalc:publish": "bun run build && yalc publish --push",
+        "yalc:watch": "bun run build && yalc publish --push && tsc --watch",
+        "yalc:link": "bun run build && yalc publish && echo 'Run: cd <project> && yalc add @augno/internal-sdk --link'"
+    },
+    "devDependencies": {
+        "openapi-typescript": "^7.10.1",
+        "typescript": "^5.9.3",
+        "yalc": "^1.0.0-pre.53"
+    },
+    "dependencies": {
+        "openapi-fetch": "^0.13.8"
+    }
+}
