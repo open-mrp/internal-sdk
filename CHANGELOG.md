@@ -1,5 +1,11 @@
 # @augno/internal-sdk
 
+## 2.2.0
+
+### Minor Changes
+
+- 003fa86: feat: add api-key endpoints
+
 ## 2.1.0
 
 ### Minor Changes
