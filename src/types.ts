@@ -34,7 +34,7 @@ export interface paths {
         get?: never;
         /**
          * Refresh Token
-         * @description This endpoint is utilized to refresh an access token using a refresh token.
+         * @description This endpoint is used to refresh an access token using a refresh token.
          *     Once completed, a new access token is set in a cookie.
          */
         put: operations["refresh-token"];
@@ -56,10 +56,99 @@ export interface paths {
         put?: never;
         /**
          * Login User
-         * @description This endpoint is utilized to login a user. Once completed, the user object is
+         * @description This endpoint is used to login a user. Once completed, the user object is
          *     returned, and an access and refresh token are set in cookies.
          */
         post: operations["login-user"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/api-keys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List API Keys
+         * @description This endpoint returns a paginated list of API keys for the target account.
+         *     Supports cursor-based pagination and optional search filtering by name.
+         */
+        get: operations["list-api-keys"];
+        put?: never;
+        /**
+         * Create API Key
+         * @description This endpoint is used to create an API key. Once completed, the API key object is
+         *     returned, and the API key secret is returned. The secret is only returned once at creation, and is not retrievable after creation.
+         */
+        post: operations["create-api-key"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/api-keys/actions/fetch-doc-api-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Get Documentation API Key
+         * @description Returns a sandbox API key for use in API documentation. Reuses an existing valid key or creates a new one.
+         */
+        post: operations["get-documentation-api-key"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/api-keys/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Revoke API Key
+         * @description This endpoint revokes an API key so it can no longer be used to
+         *     authenticate requests. The API key will be marked as revoked and will no longer be usable.
+         */
+        delete: operations["revoke-api-key"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/api-keys/{id}/actions/rotate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rotate API Key
+         * @description This endpoint rotates an API key by revoking the existing key and creating a new
+         *     replacement with the same name, role, and owner. The new key inherits the old key's expiration unless an explicit expires_at override is provided.
+         *     The new API key secret is returned once and is not retrievable after creation.
+         */
+        post: operations["rotate-api-key"];
         delete?: never;
         options?: never;
         head?: never;
@@ -77,8 +166,8 @@ export interface paths {
         put?: never;
         /**
          * Create New Password
-         * @description This endpoint is utilized to create a new password for a user. Once completed, new cookies
-         *     are set in cookies.
+         * @description This endpoint is used to create a new password for a user. Once completed, new access and refresh tokens
+         *     are set in cookies, and previous tokens are revoked.
          */
         post: operations["create-new-password"];
         delete?: never;
@@ -98,7 +187,7 @@ export interface paths {
         put?: never;
         /**
          * Request Password Reset
-         * @description This endpoint is utilized to request a password reset for a user. An email will be sent to the user
+         * @description This endpoint is used to request a password reset for a user. An email will be sent to the user
          *     with a link to reset their password.
          */
         post: operations["request-password-reset"];
@@ -119,8 +208,8 @@ export interface paths {
         put?: never;
         /**
          * Reset Password
-         * @description This endpoint is utilized to reset a user's password using a password reset token.
-         *     Once completed, new access and refresh tokens are set in cookies.
+         * @description This endpoint is used to reset a user's password using a password reset token.
+         *     Once completed, new access and refresh tokens are set in cookies, and previous tokens are revoked.
          */
         post: operations["reset-password"];
         delete?: never;
@@ -141,7 +230,7 @@ export interface paths {
         post?: never;
         /**
          * Revoke Refresh Token
-         * @description This endpoint is utilized to revoke a refresh token.
+         * @description This endpoint is used to revoke a refresh token.
          *     Once completed, the refresh token is revoked and is no longer valid for refreshing an access token.
          */
         delete: operations["revoke-refresh-token"];
@@ -161,7 +250,7 @@ export interface paths {
         put?: never;
         /**
          * Register User
-         * @description This endpoint is utilized to register a new user on the customer portal. Once completed, the user object is
+         * @description This endpoint is used to register a new user on the customer portal. Once completed, the user object is
          *     returned, and an access and refresh token are set in cookies.
          */
         post: operations["register-user"];
@@ -190,8 +279,144 @@ export interface components {
          *     }
          */
         APIErrorResponse: {
-            /** @description The error object containing details about what went wrong. */
+            /**
+             * @description The error object containing details about what went wrong.
+             * @example {
+             *       "code": "validation_failed",
+             *       "doc_url": "https://docs.augno.com/errors/validation_failed",
+             *       "is_transient": false,
+             *       "message": "The request was invalid.",
+             *       "param": "email",
+             *       "type": "invalid_request_error"
+             *     }
+             */
             error: components["schemas"]["ResponseError"];
+        };
+        /**
+         * @description APIKey represents an API key for authenticating API requests
+         * @example {
+         *       "created_at": "2026-05-10T00:00:00Z",
+         *       "expires_at": "2026-05-10T01:00:00Z",
+         *       "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
+         *       "last_used_at": "2026-05-10T00:23:00Z",
+         *       "name": "Production API Key",
+         *       "object": "api_key",
+         *       "redacted_value": "aug_sk_prod_...kuIb",
+         *       "revoked_at": null,
+         *       "role": {
+         *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *         "name": "Admin"
+         *       },
+         *       "updated_at": "2026-05-10T00:23:00Z"
+         *     }
+         */
+        APIKey: {
+            /**
+             * Format: date-time
+             * @description The timestamp when the API key was created
+             */
+            created_at: string;
+            /**
+             * Format: date-time
+             * @description The timestamp when the API key expires
+             */
+            expires_at: string | null;
+            /** @description The unique identifier for the API key */
+            id: string;
+            /**
+             * Format: date-time
+             * @description The timestamp when the API key was last used
+             */
+            last_used_at: string | null;
+            /** @description The human-readable name for the API key */
+            name: string;
+            /**
+             * @description The object type, always "api_key"
+             * @enum {string}
+             */
+            object: "api_key";
+            /** @description The redacted value of the API key for display purposes */
+            redacted_value: string;
+            /**
+             * Format: date-time
+             * @description The timestamp when the API key was revoked
+             */
+            revoked_at: string | null;
+            /**
+             * @description The role associated with this API key
+             * @example {
+             *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *       "name": "Admin"
+             *     }
+             */
+            role: components["schemas"]["LightRole"];
+            /**
+             * Format: date-time
+             * @description The timestamp when the API key was last updated
+             */
+            updated_at: string;
+        };
+        /**
+         * @description The request to create an API key
+         * @example {
+         *       "name": "Production API Key",
+         *       "role_id": "rl_dkeig3ngi35g"
+         *     }
+         */
+        CreateAPIKeyRequest: {
+            /**
+             * Format: date-time
+             * @description Optional expiration time for the API key
+             */
+            expires_at?: string | null;
+            /** @description The name for the API key */
+            name: string;
+            /** @description The role ID for the API key */
+            role_id: string;
+        };
+        /**
+         * @description CreatedAPIKey represents a newly created API key with the full secret value
+         * @example {
+         *       "api_key_info": {
+         *         "created_at": "2026-05-10T00:00:00Z",
+         *         "expires_at": "2026-05-10T01:00:00Z",
+         *         "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
+         *         "last_used_at": "2026-05-10T00:23:00Z",
+         *         "name": "Production API Key",
+         *         "object": "api_key",
+         *         "redacted_value": "aug_sk_prod_...kuIb",
+         *         "revoked_at": null,
+         *         "role": {
+         *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *           "name": "Admin"
+         *         },
+         *         "updated_at": "2026-05-10T00:23:00Z"
+         *       },
+         *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadykuIb"
+         *     }
+         */
+        CreatedAPIKey: {
+            /**
+             * @description The API key metadata
+             * @example {
+             *       "created_at": "2026-05-10T00:00:00Z",
+             *       "expires_at": "2026-05-10T01:00:00Z",
+             *       "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
+             *       "last_used_at": "2026-05-10T00:23:00Z",
+             *       "name": "Production API Key",
+             *       "object": "api_key",
+             *       "redacted_value": "aug_sk_prod_...kuIb",
+             *       "revoked_at": null,
+             *       "role": {
+             *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *         "name": "Admin"
+             *       },
+             *       "updated_at": "2026-05-10T00:23:00Z"
+             *     }
+             */
+            api_key_info: components["schemas"]["APIKey"];
+            /** @description The full API key secret value (only shown once at creation) */
+            api_key_secret: string;
         };
         /**
          * @description Healthcheck contains information on the health of the application.
@@ -202,6 +427,41 @@ export interface components {
         Healthcheck: {
             /** @description Current operational status of the API service */
             status: string;
+        };
+        /**
+         * @description LightRole represents a minimal role reference
+         * @example {
+         *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *       "name": "Admin"
+         *     }
+         */
+        LightRole: {
+            /** @description The unique identifier for the role */
+            id: string;
+            /** @description The display name of the role */
+            name: string;
+        };
+        /**
+         * @description A paginated list of APIKey resources
+         * @example {
+         *       "data": [],
+         *       "has_more": true,
+         *       "next_cursor": "sample_cursor_id",
+         *       "object": "list"
+         *     }
+         */
+        List_APIKey: {
+            /** @description Array of APIKey resources in this page */
+            data: components["schemas"]["APIKey"][];
+            /** @description Whether there are more results available after this page */
+            has_more: boolean;
+            /** @description Cursor for fetching the next page, null if on last page */
+            next_cursor: string | null;
+            /**
+             * @description Object type for APIKey list
+             * @enum {string}
+             */
+            object: "list";
         };
         /**
          * @description The request to login a user
@@ -239,7 +499,7 @@ export interface components {
          *     }
          */
         RequestPasswordResetRequest: {
-            /** @description The account slug (optional) */
+            /** @description The account slug (optional, Used to return user back to origonal login portal (instead of plain augno login) after password reset) */
             account_slug?: string | null;
             /** @description The username or email of the account to reset */
             identifier: string;
@@ -254,7 +514,7 @@ export interface components {
         ResetPasswordRequest: {
             /** @description The new password of the user */
             password: string;
-            /** @description The password reset token */
+            /** @description The password reset token (from request_password_reset endpoint) */
             token: string;
         };
         /**
@@ -283,6 +543,19 @@ export interface components {
             param: string | null;
             /** @description The type of error. */
             type: string;
+        };
+        /**
+         * @description The request to rotate an API key, optionally overriding the expiration
+         * @example {
+         *       "expires_at": "2026-12-31T23:59:59Z"
+         *     }
+         */
+        RotateAPIKeyRequest: {
+            /**
+             * Format: date-time
+             * @description Optional expiration time override for the new API key
+             */
+            expires_at?: string | null;
         };
         /**
          * @description The request to update a user's password
@@ -864,6 +1137,945 @@ export interface operations {
                 };
             };
             /** @description Internal Server Error response for Login User */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "list-api-keys": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Query parameter: status for List API Keys
+                 * @example [
+                 *       "active"
+                 *     ]
+                 */
+                status?: ("active" | "expired" | "revoked")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for List API Keys */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "data": [],
+                     *       "has_more": true,
+                     *       "next_cursor": "sample_cursor_id",
+                     *       "object": "list"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["List_APIKey"];
+                };
+            };
+            /** @description Bad Request response for List API Keys */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Unauthorized response for List API Keys */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Forbidden response for List API Keys */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Not Found response for List API Keys */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Conflict response for List API Keys */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests response for List API Keys */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error response for List API Keys */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "create-api-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The request body for Create API Key */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "Production API Key",
+                 *       "role_id": "rl_dkeig3ngi35g"
+                 *     }
+                 */
+                "application/json": components["schemas"]["CreateAPIKeyRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Create API Key */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "api_key_info": {
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "expires_at": "2026-05-10T01:00:00Z",
+                     *         "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "last_used_at": "2026-05-10T00:23:00Z",
+                     *         "name": "Production API Key",
+                     *         "object": "api_key",
+                     *         "redacted_value": "aug_sk_prod_...kuIb",
+                     *         "revoked_at": null,
+                     *         "role": {
+                     *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *           "name": "Admin"
+                     *         },
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadykuIb"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["CreatedAPIKey"];
+                };
+            };
+            /** @description Bad Request response for Create API Key */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Unauthorized response for Create API Key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Forbidden response for Create API Key */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Not Found response for Create API Key */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Conflict response for Create API Key */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests response for Create API Key */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error response for Create API Key */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "get-documentation-api-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Get Documentation API Key */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "api_key_info": {
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "expires_at": "2026-05-10T01:00:00Z",
+                     *         "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "last_used_at": "2026-05-10T00:23:00Z",
+                     *         "name": "Production API Key",
+                     *         "object": "api_key",
+                     *         "redacted_value": "aug_sk_prod_...kuIb",
+                     *         "revoked_at": null,
+                     *         "role": {
+                     *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *           "name": "Admin"
+                     *         },
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadykuIb"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["CreatedAPIKey"];
+                };
+            };
+            /** @description Bad Request response for Get Documentation API Key */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Unauthorized response for Get Documentation API Key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Forbidden response for Get Documentation API Key */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Not Found response for Get Documentation API Key */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Conflict response for Get Documentation API Key */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests response for Get Documentation API Key */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error response for Get Documentation API Key */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "revoke-api-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Path parameter: id for Revoke API Key */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Revoke API Key */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {} */
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Bad Request response for Revoke API Key */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Unauthorized response for Revoke API Key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Forbidden response for Revoke API Key */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Not Found response for Revoke API Key */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Conflict response for Revoke API Key */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests response for Revoke API Key */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error response for Revoke API Key */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "rotate-api-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Path parameter: id for Rotate API Key */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The request body for Rotate API Key */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "expires_at": "2026-12-31T23:59:59Z"
+                 *     }
+                 */
+                "application/json": components["schemas"]["RotateAPIKeyRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Rotate API Key */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "api_key_info": {
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "expires_at": "2026-05-10T01:00:00Z",
+                     *         "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "last_used_at": "2026-05-10T00:23:00Z",
+                     *         "name": "Production API Key",
+                     *         "object": "api_key",
+                     *         "redacted_value": "aug_sk_prod_...kuIb",
+                     *         "revoked_at": null,
+                     *         "role": {
+                     *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *           "name": "Admin"
+                     *         },
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadykuIb"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["CreatedAPIKey"];
+                };
+            };
+            /** @description Bad Request response for Rotate API Key */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Unauthorized response for Rotate API Key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Forbidden response for Rotate API Key */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Not Found response for Rotate API Key */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Conflict response for Rotate API Key */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests response for Rotate API Key */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "validation_failed",
+                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
+                     *         "is_transient": false,
+                     *         "message": "The request was invalid.",
+                     *         "param": "email",
+                     *         "type": "invalid_request_error"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error response for Rotate API Key */
             500: {
                 headers: {
                     [name: string]: unknown;
