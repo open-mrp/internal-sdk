@@ -1387,7 +1387,7 @@ export interface components {
             data: components["schemas"]["RegistrationSession"][];
         };
         /**
-         * @description A paginated list of RequestLog resources
+         * @description A paginated list of RequestLogListItem resources
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -1401,7 +1401,7 @@ export interface components {
          *           "id": "rl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "request_log",
          *           "method": "GET",
-         *           "host": "",
+         *           "host": "https://api.augno.com",
          *           "path": "/v1/core/sandboxes",
          *           "normalized_route": "/v1/core/sandboxes",
          *           "query_json": null,
@@ -1414,27 +1414,25 @@ export interface components {
          *           "referrer": null,
          *           "error_code": null,
          *           "error_message": null,
-         *           "occurred_at": "2026-02-27T01:14:09.980143-05:00",
-         *           "created_at": "2026-02-27T01:14:09.980143-05:00",
+         *           "occurred_at": "2026-02-27T08:48:00.315553-05:00",
+         *           "created_at": "2026-02-27T08:48:00.315553-05:00",
          *           "account": null,
          *           "actor": null,
-         *           "idempotency_key": null,
-         *           "request_body_json": null,
-         *           "response_body_json": null
+         *           "idempotency_key": null
          *         }
          *       ]
          *     }
          */
-        List_RequestLog: {
+        List_RequestLogListItem: {
             /**
-             * @description Object type for RequestLog list
+             * @description Object type for RequestLogListItem list
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for RequestLog list */
+            /** @description Pagination metadata for RequestLogListItem list */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of RequestLog resources in this page */
-            data: components["schemas"]["RequestLog"][];
+            /** @description Array of RequestLogListItem resources in this page */
+            data: components["schemas"]["RequestLogListItem"][];
         };
         /**
          * @description A paginated list of Sandbox resources
@@ -1919,7 +1917,7 @@ export interface components {
          *       "id": "rl_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "request_log",
          *       "method": "GET",
-         *       "host": "",
+         *       "host": "https://api.augno.com",
          *       "path": "/v1/core/sandboxes",
          *       "normalized_route": "/v1/core/sandboxes",
          *       "query_json": null,
@@ -1932,8 +1930,8 @@ export interface components {
          *       "referrer": null,
          *       "error_code": null,
          *       "error_message": null,
-         *       "occurred_at": "2026-02-27T01:14:09.980147-05:00",
-         *       "created_at": "2026-02-27T01:14:09.980147-05:00",
+         *       "occurred_at": "2026-02-27T08:48:00.315586-05:00",
+         *       "created_at": "2026-02-27T08:48:00.315586-05:00",
          *       "account": null,
          *       "actor": null,
          *       "idempotency_key": null,
@@ -2030,6 +2028,94 @@ export interface components {
              *     }
              */
             role: components["schemas"]["LightRole"] | null;
+        };
+        /**
+         * @description RequestLogListItem is the list representation of a request log entry.
+         *     It omits the request and response body JSON fields which are only
+         *     available when retrieving a single request log by ID.
+         * @example {
+         *       "id": "rl_01jm4r6700f8nwq3v5hx2d9ktp",
+         *       "object": "request_log",
+         *       "method": "GET",
+         *       "host": "https://api.augno.com",
+         *       "path": "/v1/core/sandboxes",
+         *       "normalized_route": "/v1/core/sandboxes",
+         *       "query_json": null,
+         *       "status_code": 200,
+         *       "latency_us": 12345,
+         *       "api_version": null,
+         *       "identity_type": null,
+         *       "client_ip": null,
+         *       "user_agent": null,
+         *       "referrer": null,
+         *       "error_code": null,
+         *       "error_message": null,
+         *       "occurred_at": "2026-02-27T08:48:00.315557-05:00",
+         *       "created_at": "2026-02-27T08:48:00.315557-05:00",
+         *       "account": null,
+         *       "actor": null,
+         *       "idempotency_key": null
+         *     }
+         */
+        RequestLogListItem: {
+            /** @description The unique identifier for the request log. */
+            id: string;
+            /**
+             * @description The object type.
+             * @enum {string}
+             */
+            object: "request_log";
+            /** @description The HTTP method. */
+            method: string;
+            /** @description The request host. */
+            host: string;
+            /** @description The request path. */
+            path: string;
+            /** @description The normalized route pattern. */
+            normalized_route: string;
+            /** @description The query parameters as JSON. */
+            query_json: string | null;
+            /** @description The HTTP status code. */
+            status_code: number;
+            /** @description The request latency in microseconds. */
+            latency_us: number;
+            /** @description The API version used. */
+            api_version: string | null;
+            /** @description The identity type of the caller. */
+            identity_type: string | null;
+            /** @description The client IP address. */
+            client_ip: string | null;
+            /** @description The user agent string. */
+            user_agent: string | null;
+            /** @description The referrer header. */
+            referrer: string | null;
+            /** @description The API error code, if any. */
+            error_code: string | null;
+            /** @description The error message, if any. */
+            error_message: string | null;
+            /**
+             * Format: date-time
+             * @description When the request occurred.
+             */
+            occurred_at: string;
+            /**
+             * Format: date-time
+             * @description When the log entry was created.
+             */
+            created_at: string;
+            /**
+             * @description The account targeted by the request.
+             * @example {
+             *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *       "object_type": "account",
+             *       "name": "Acme Inc."
+             *     }
+             */
+            account: components["schemas"]["LightAccount"] | null;
+            /** @description Actor details (user or API key). */
+            actor: components["schemas"]["RequestLogActor"] | null;
+            /** @description The user-provided idempotency key value. */
+            idempotency_key: string | null;
         };
         /**
          * @description The request to request a password reset
@@ -4082,7 +4168,7 @@ export interface operations {
                      *           "id": "rl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "request_log",
                      *           "method": "GET",
-                     *           "host": "",
+                     *           "host": "https://api.augno.com",
                      *           "path": "/v1/core/sandboxes",
                      *           "normalized_route": "/v1/core/sandboxes",
                      *           "query_json": null,
@@ -4095,18 +4181,16 @@ export interface operations {
                      *           "referrer": null,
                      *           "error_code": null,
                      *           "error_message": null,
-                     *           "occurred_at": "2026-02-27T01:14:09.980143-05:00",
-                     *           "created_at": "2026-02-27T01:14:09.980143-05:00",
+                     *           "occurred_at": "2026-02-27T08:48:00.315553-05:00",
+                     *           "created_at": "2026-02-27T08:48:00.315553-05:00",
                      *           "account": null,
                      *           "actor": null,
-                     *           "idempotency_key": null,
-                     *           "request_body_json": null,
-                     *           "response_body_json": null
+                     *           "idempotency_key": null
                      *         }
                      *       ]
                      *     }
                      */
-                    "application/json": components["schemas"]["List_RequestLog"];
+                    "application/json": components["schemas"]["List_RequestLogListItem"];
                 };
             };
             /** @description Error response */
@@ -4143,7 +4227,7 @@ export interface operations {
                      *       "id": "rl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "request_log",
                      *       "method": "GET",
-                     *       "host": "",
+                     *       "host": "https://api.augno.com",
                      *       "path": "/v1/core/sandboxes",
                      *       "normalized_route": "/v1/core/sandboxes",
                      *       "query_json": null,
@@ -4156,8 +4240,8 @@ export interface operations {
                      *       "referrer": null,
                      *       "error_code": null,
                      *       "error_message": null,
-                     *       "occurred_at": "2026-02-27T01:14:09.980147-05:00",
-                     *       "created_at": "2026-02-27T01:14:09.980147-05:00",
+                     *       "occurred_at": "2026-02-27T08:48:00.315586-05:00",
+                     *       "created_at": "2026-02-27T08:48:00.315586-05:00",
                      *       "account": null,
                      *       "actor": null,
                      *       "idempotency_key": null,
