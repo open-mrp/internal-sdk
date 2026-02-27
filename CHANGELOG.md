@@ -1,5 +1,11 @@
 # @augno/internal-sdk
 
+## 3.0.0
+
+### Major Changes
+
+- a893155: feat: v2 public release
+
 ## 2.2.0
 
 ### Minor Changes
