@@ -21,6 +21,7 @@
         "url": "https://github.com/augno/internal-sdk.git"
     },
     "scripts": {
+        "setup": "bun run generate && bun run build && bun run yalc:publish",
         "build": "tsc",
         "generate": "openapi-typescript ./specs/internal_openapi_spec.json -o ./src/types.ts && node -e \"const fs=require('fs');const spec=JSON.parse(fs.readFileSync('./specs/internal_openapi_spec.json','utf8'));fs.writeFileSync('./src/version.ts','// Auto-generated from OpenAPI spec. Do not edit manually.\\nexport const API_VERSION = \\\"'+spec.info.version+'\\\" as const;\\n')\"",
         "prepublishOnly": "npm run build",

@@ -53,6 +53,14 @@ export const createV2Client = (options: V2ClientOptions) => {
             const isAuthPath = request.url.includes('/v1/auth/access-tokens') || request.url.includes('/v1/auth/actions/login');
             
             if (response.status === 401 && !isAuthPath) {
+                // If this is already a retry, don't attempt another refresh
+                if (request.headers.has('X-Retry')) {
+                    if (onAuthFailure) {
+                        await onAuthFailure(new Error('Authentication failed after token refresh'));
+                    }
+                    return response;
+                }
+
                 try {
                     if (!isRefreshing) {
                         isRefreshing = true;
@@ -61,10 +69,11 @@ export const createV2Client = (options: V2ClientOptions) => {
                             throw new Error('Base URL is required for access token refresh');
                         }
                         refreshPromise = fetch(`${fetchOptions.baseUrl}/v1/auth/access-tokens`, {
-                            method: 'POST',
+                            method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'Authorization': request.headers.get('Authorization') || '',
+                                'Augno-Version': version ?? API_VERSION,
                             },
                             credentials: 'include',
                         }).then(async (res) => {
@@ -77,11 +86,13 @@ export const createV2Client = (options: V2ClientOptions) => {
                             refreshPromise = null;
                         });
                     }
-                    
+
                     await refreshPromise;
-                    
-                    // Retry the original request
-                    return fetch(request.clone());
+
+                    // Retry the original request with a flag to prevent further retries
+                    const retryRequest = request.clone();
+                    retryRequest.headers.set('X-Retry', '1');
+                    return fetch(retryRequest);
                 } catch (error) {
                     if (onAuthFailure) {
                         await onAuthFailure(error);
