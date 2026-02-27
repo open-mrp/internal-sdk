@@ -119,7 +119,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Get API Key
+         * @description This endpoint returns a single API key's metadata by its ID.
+         */
+        get: operations["get-api-key"];
         put?: never;
         post?: never;
         /**
@@ -239,6 +243,184 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/auth/registration-sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Registration Sessions
+         * @description Returns a paginated list of open (uncompleted) registration sessions for the authenticated user.
+         */
+        get: operations["list-registration-sessions"];
+        put?: never;
+        /**
+         * Create Registration Session
+         * @description Creates a new registration session for the given email and plan code. If an active
+         *     (uncompleted) session already exists for the email, the existing session ID is returned. A verification email is sent on creation.
+         */
+        post: operations["create-registration-session"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/registration-sessions/{session_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Registration Session
+         * @description Returns the current state of a registration session, including user details, account details,
+         *     and the current step in the registration flow.
+         */
+        get: operations["get-registration-session"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Registration Session
+         * @description Updates an in-progress registration session's step and/or form data.
+         *     Only provided fields are applied; omitted fields are left unchanged.
+         */
+        patch: operations["update-registration-session"];
+        trace?: never;
+    };
+    "/v1/auth/registration-sessions/{session_id}/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Complete Registration
+         * @description Completes the registration flow by creating the production account, sandbox account,
+         *     roles, permissions, and account-user records. Requires payment to be completed first.
+         */
+        post: operations["complete-registration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/registration-sessions/{session_id}/actions/checkout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Registration Checkout
+         * @description Creates a Stripe checkout session for a registration session. Creates the Stripe customer,
+         *     product, price, and checkout session. Uses recovery points for safe retries after failures.
+         */
+        post: operations["create-registration-checkout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/registration-sessions/{session_id}/actions/confirm-payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm Registration Payment
+         * @description Confirms that a Stripe checkout session payment has completed for the given registration session.
+         *     Retrieves the checkout status from Stripe and, if complete, marks the registration session's payment as done.
+         */
+        post: operations["confirm-registration-payment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/registration-sessions/{session_id}/actions/resend-verification-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resend Verification Email
+         * @description Resends the verification email for an existing registration session. A new verification
+         *     token is generated and the previous token is invalidated.
+         */
+        post: operations["resend-verification-email"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/registration-sessions/{session_id}/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create User for Registration
+         * @description Creates a user for the given registration session. If the session email matches an existing user,
+         *     that user is associated with the session. Otherwise a new user is created with the provided name and password.
+         *     Returns the user ID. Idempotent: if a user is already associated with the session, returns the existing user ID.
+         */
+        post: operations["create-user-for-registration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/registration-sessions/{token}/actions/verify-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Verify Registration Token
+         * @description Verifies the email token sent during registration. Marks the session's email as verified and
+         *     advances the registration flow to the next step. Idempotent: repeated calls with the same token return the same session.
+         */
+        put: operations["verify-registration-token"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/auth/users": {
         parameters: {
             query?: never;
@@ -260,6 +442,286 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/billing/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Ensure Billing Customer
+         * @description Links or fetches a Stripe customer for the requesting account.
+         *     If a Stripe customer already exists it is returned; otherwise a new one is created.
+         */
+        put: operations["ensure-billing-customer"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/billing/accounts/usage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Account Usage
+         * @description Returns current resource usage (seats, invoices, batches, sandboxes) with plan limits and subscription info for the authenticated account.
+         */
+        get: operations["get-account-usage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/billing/actions/request-enterprise": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Enterprise Inquiry
+         * @description Sends a notification to the sales team requesting information about enterprise plans.
+         *     Returns a confirmation that the inquiry was submitted.
+         */
+        post: operations["create-enterprise-inquiry"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/billing/plan-switches/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm Plan Switch
+         * @description Confirms a plan switch after a Stripe checkout redirect completes.
+         *     Called with the checkout session ID and target plan ID to finalize the upgrade.
+         */
+        post: operations["confirm-plan-switch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/billing/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Pricing Plans
+         * @description Returns a paginated list of available pricing plans with their limits and features.
+         */
+        get: operations["list-pricing-plans"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/billing/plans/{id}/proration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Preview Plan Change
+         * @description Previews the cost impact of switching to a different pricing plan.
+         *     Returns proration details including credits, charges, and net amount.
+         */
+        get: operations["preview-plan-change"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/billing/plans/{id}/switch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Switch Plan
+         * @description Initiates a plan switch. Handles free-to-paid (checkout redirect),
+         *     paid-to-free (subscription cancellation), and paid-to-paid (subscription update) scenarios.
+         */
+        post: operations["switch-plan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/billing/portal-sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Billing Portal Session
+         * @description Creates a Stripe billing portal session for managing subscriptions.
+         *     Returns a URL that can be used to redirect the user to the Stripe billing portal.
+         */
+        post: operations["create-billing-portal-session"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/core/request-logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Request Logs
+         * @description This endpoint returns a paginated, filterable list of request logs for the target account.
+         *     Supports cursor-based pagination and various filters.
+         */
+        get: operations["list-request-logs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/core/request-logs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Request Log
+         * @description This endpoint returns a single request log by its ID.
+         */
+        get: operations["get-request-log"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/core/sandboxes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Sandboxes
+         * @description This endpoint returns a paginated list of sandbox accounts for the target account.
+         *     Supports cursor-based pagination.
+         */
+        get: operations["list-sandboxes"];
+        put?: never;
+        /**
+         * Create Sandbox
+         * @description This endpoint creates a new sandbox account for the target account.
+         *     Enforces a per-account sandbox limit. Requires admin permissions.
+         */
+        post: operations["create-sandbox"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/core/sandboxes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Sandbox
+         * @description This endpoint returns a single sandbox account by its ID.
+         */
+        get: operations["get-sandbox"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete Sandbox
+         * @description This endpoint deletes a sandbox account. At least one sandbox must remain
+         *     per production account. The sandbox and its account record are removed synchronously, and all
+         *     account-scoped data is purged asynchronously.
+         */
+        delete: operations["delete-sandbox"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/core/units": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Units
+         * @description This endpoint returns a paginated list of units for the target account, including both account-specific and global system units.
+         *     Supports cursor-based pagination, filtering by dimension type and unit group membership, and search by name or abbreviation.
+         */
+        get: operations["list-units"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -270,11 +732,13 @@ export interface components {
          * @example {
          *       "error": {
          *         "code": "validation_failed",
-         *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-         *         "is_transient": false,
+         *         "type": "invalid_request_error",
          *         "message": "The request was invalid.",
          *         "param": "email",
-         *         "type": "invalid_request_error"
+         *         "doc_url": "https://docs.augno.com/errors#validation_failed",
+         *         "is_transient": false,
+         *         "quota": null,
+         *         "request_log_url": null
          *       }
          *     }
          */
@@ -283,140 +747,427 @@ export interface components {
              * @description The error object containing details about what went wrong.
              * @example {
              *       "code": "validation_failed",
-             *       "doc_url": "https://docs.augno.com/errors/validation_failed",
-             *       "is_transient": false,
+             *       "type": "invalid_request_error",
              *       "message": "The request was invalid.",
              *       "param": "email",
-             *       "type": "invalid_request_error"
+             *       "doc_url": "https://docs.augno.com/errors#validation_failed",
+             *       "is_transient": false,
+             *       "quota": null,
+             *       "request_log_url": "https://augno.com/dashboard/request-logs/rq_fbv1ygmybo3eauykr74"
              *     }
              */
             error: components["schemas"]["ResponseError"];
         };
         /**
-         * @description APIKey represents an API key for authenticating API requests
+         * @description APIKey represents an API key for authenticating API requests.
          * @example {
-         *       "created_at": "2026-05-10T00:00:00Z",
-         *       "expires_at": "2026-05-10T01:00:00Z",
-         *       "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
-         *       "last_used_at": "2026-05-10T00:23:00Z",
-         *       "name": "Production API Key",
+         *       "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
          *       "object": "api_key",
-         *       "redacted_value": "aug_sk_prod_...kuIb",
-         *       "revoked_at": null,
+         *       "name": "Production API Key",
+         *       "redacted_value": "aug_sk_prod_...hjt4",
          *       "role": {
          *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *         "name": "Admin"
+         *         "object_type": "",
+         *         "name": "Admin",
+         *         "role_type_code": null
          *       },
-         *       "updated_at": "2026-05-10T00:23:00Z"
+         *       "created_at": "2026-05-10T00:00:00Z",
+         *       "updated_at": "2026-05-10T00:23:00Z",
+         *       "last_used_at": "2026-05-10T00:23:00Z",
+         *       "expires_at": "2026-06-10T00:00:00Z",
+         *       "revoked_at": null
          *     }
          */
         APIKey: {
-            /**
-             * Format: date-time
-             * @description The timestamp when the API key was created
-             */
-            created_at: string;
-            /**
-             * Format: date-time
-             * @description The timestamp when the API key expires
-             */
-            expires_at: string | null;
-            /** @description The unique identifier for the API key */
+            /** @description The unique identifier for the API key. */
             id: string;
             /**
-             * Format: date-time
-             * @description The timestamp when the API key was last used
-             */
-            last_used_at: string | null;
-            /** @description The human-readable name for the API key */
-            name: string;
-            /**
-             * @description The object type, always "api_key"
+             * @description The object type.
              * @enum {string}
              */
             object: "api_key";
-            /** @description The redacted value of the API key for display purposes */
+            /** @description The human-readable name for the API key. */
+            name: string;
+            /** @description The redacted value of the API key for display purposes. */
             redacted_value: string;
             /**
-             * Format: date-time
-             * @description The timestamp when the API key was revoked
-             */
-            revoked_at: string | null;
-            /**
-             * @description The role associated with this API key
+             * @description The role associated with this API key.
              * @example {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-             *       "name": "Admin"
+             *       "object_type": "role",
+             *       "name": "Admin",
+             *       "role_type_code": "admin"
              *     }
              */
             role: components["schemas"]["LightRole"];
             /**
              * Format: date-time
-             * @description The timestamp when the API key was last updated
+             * @description The timestamp when the API key was created.
+             */
+            created_at: string;
+            /**
+             * Format: date-time
+             * @description The timestamp when the API key was last updated.
              */
             updated_at: string;
+            /**
+             * Format: date-time
+             * @description The timestamp when the API key was last used.
+             */
+            last_used_at: string | null;
+            /**
+             * Format: date-time
+             * @description The timestamp when the API key expires.
+             */
+            expires_at: string | null;
+            /**
+             * Format: date-time
+             * @description The timestamp when the API key was revoked.
+             */
+            revoked_at: string | null;
+        };
+        /**
+         * @description AccountUsageResponse represents account usage metrics across all resource types.
+         * @example {
+         *       "seats": {
+         *         "current": 5,
+         *         "limit": 10
+         *       },
+         *       "invoices": {
+         *         "current": 100,
+         *         "limit": null
+         *       },
+         *       "batches": {
+         *         "current": 100,
+         *         "limit": null
+         *       },
+         *       "sandboxes": {
+         *         "current": 5,
+         *         "limit": 10
+         *       },
+         *       "subscription": {
+         *         "status": "trialing",
+         *         "current_period_end": "2026-05-24T00:00:00Z",
+         *         "trial_end": "2026-05-24T00:00:00Z",
+         *         "cancel_at_period_end": false
+         *       }
+         *     }
+         */
+        AccountUsageResponse: {
+            /**
+             * @description The seat usage for the account.
+             * @example {
+             *       "current": 5,
+             *       "limit": 10
+             *     }
+             */
+            seats: components["schemas"]["UsageItem"];
+            /**
+             * @description The invoice usage for the account.
+             * @example {
+             *       "current": 5,
+             *       "limit": 10
+             *     }
+             */
+            invoices: components["schemas"]["UsageItem"];
+            /**
+             * @description The batch usage for the account.
+             * @example {
+             *       "current": 5,
+             *       "limit": 10
+             *     }
+             */
+            batches: components["schemas"]["UsageItem"];
+            /**
+             * @description The sandbox usage for the account.
+             * @example {
+             *       "current": 5,
+             *       "limit": 10
+             *     }
+             */
+            sandboxes: components["schemas"]["UsageItem"];
+            /**
+             * @description Subscription status information.
+             * @example {
+             *       "status": "trialing",
+             *       "current_period_end": "2026-05-24T00:00:00Z",
+             *       "trial_end": "2026-05-24T00:00:00Z",
+             *       "cancel_at_period_end": false
+             *     }
+             */
+            subscription: components["schemas"]["SubscriptionInfo"] | null;
+        };
+        /**
+         * @description BillingPortalSessionResponse represents a Stripe billing portal session.
+         * @example {
+         *       "url": "https://billing.stripe.com/p/session/test_YWNjdF8xTTJKVGtMa3E0Z3Bic"
+         *     }
+         */
+        BillingPortalSessionResponse: {
+            /** @description The URL to redirect the user to the Stripe billing portal. */
+            url: string;
+        };
+        /**
+         * @description CompleteRegistrationResponse is the response from completing a registration.
+         * @example {
+         *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *       "object": "account"
+         *     }
+         */
+        CompleteRegistrationResponse: {
+            /** @description The ID of the created account. */
+            id: string;
+            /**
+             * @description The object type.
+             * @enum {string}
+             */
+            object: "account";
+        };
+        /**
+         * @description ConfirmPaymentRequest is the request to confirm payment for a registration session.
+         * @example {
+         *       "checkout_session_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG"
+         *     }
+         */
+        ConfirmPaymentRequest: {
+            /** @description The Stripe checkout session ID to verify. */
+            checkout_session_id: string;
+        };
+        /**
+         * @description ConfirmPaymentResponse is the response from confirming a registration payment.
+         * @example {
+         *       "status": "complete",
+         *       "subscription_id": "sub_1Qw4Rn2eZvKYlo2C0ghJ3kXa",
+         *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp"
+         *     }
+         */
+        ConfirmPaymentResponse: {
+            /** @description The Stripe checkout session status (e.g., "complete", "open", "expired"). */
+            status: string;
+            /** @description The Stripe subscription ID, present when payment is complete. */
+            subscription_id: string | null;
+            /** @description The Stripe customer ID associated with the checkout. */
+            stripe_customer_id: string | null;
+        };
+        /**
+         * @description The request to confirm a plan switch after a Stripe checkout redirect.
+         * @example {
+         *       "session_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG",
+         *       "plan_id": "pt_pro_01gf7a8200eaj8fke1xvw4h50x"
+         *     }
+         */
+        ConfirmPlanSwitchRequest: {
+            /** @description The Stripe checkout session ID from the redirect. */
+            session_id: string;
+            /** @description The target plan ID to switch to. */
+            plan_id: string;
+        };
+        /**
+         * @description ConfirmPlanSwitchResponse represents the result of confirming a plan switch.
+         * @example {
+         *       "success": true
+         *     }
+         */
+        ConfirmPlanSwitchResponse: {
+            /** @description Whether the plan switch was confirmed successfully. */
+            success: boolean;
         };
         /**
          * @description The request to create an API key
          * @example {
-         *       "name": "Production API Key",
-         *       "role_id": "rl_dkeig3ngi35g"
+         *       "role_id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *       "name": "Production API Key"
          *     }
          */
         CreateAPIKeyRequest: {
+            /** @description The role ID for the API key. */
+            role_id: string;
+            /** @description The name for the API key. */
+            name: string;
             /**
              * Format: date-time
-             * @description Optional expiration time for the API key
+             * @description Optional expiration time for the API key.
              */
             expires_at?: string | null;
-            /** @description The name for the API key */
-            name: string;
-            /** @description The role ID for the API key */
-            role_id: string;
         };
         /**
-         * @description CreatedAPIKey represents a newly created API key with the full secret value
+         * @description CreateCheckoutResponse is the response from creating a checkout session for a registration.
          * @example {
+         *       "client_secret": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG_secret_fk3Mds9RqwEm5J",
+         *       "checkout_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG",
+         *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
+         *       "publishable_key": "pk_test_51OjP6DKQnQhqLJrS7DG5gHN00xY3bRzWp"
+         *     }
+         */
+        CreateCheckoutResponse: {
+            /** @description The Stripe checkout session client secret for the embedded checkout UI. */
+            client_secret: string;
+            /** @description The Stripe checkout session ID. */
+            checkout_id: string;
+            /** @description The Stripe customer ID created for this registration. */
+            stripe_customer_id: string;
+            /** @description The Stripe publishable key for the frontend. */
+            publishable_key: string;
+        };
+        /**
+         * @description The request to create a registration session
+         * @example {
+         *       "email": "jdoe@augno.com",
+         *       "plan_code": "starter"
+         *     }
+         */
+        CreateRegistrationSessionRequest: {
+            /** @description The email address for the registration session. */
+            email: string;
+            /**
+             * @description The plan code for the registration session.
+             * @enum {string}
+             */
+            plan_code: "free" | "starter" | "pro";
+        };
+        /**
+         * @description The request to create a sandbox.
+         * @example {
+         *       "name": "Integration Testing",
+         *       "mode": "blank"
+         *     }
+         */
+        CreateSandboxRequest: {
+            /** @description The display name for the sandbox. */
+            name: string;
+            /**
+             * @description Controls whether the sandbox is blank or seeded with tutorial data.
+             * @enum {string}
+             */
+            mode: "blank" | "seeded";
+        };
+        /**
+         * @description CreateSessionResponse is the response from creating a registration session.
+         * @example {
+         *       "id": "rs_01gf7a8200eaj8fke1xvw4h50x",
+         *       "object": "registration_session"
+         *     }
+         */
+        CreateSessionResponse: {
+            /** @description The unique identifier of the created registration session. */
+            id: string;
+            /**
+             * @description The object type.
+             * @enum {string}
+             */
+            object: "registration_session";
+        };
+        /**
+         * @description The request to create a user for a registration session
+         * @example {
+         *       "name": "Jane Smith",
+         *       "password": "P@ssw0rd123!"
+         *     }
+         */
+        CreateUserRequest: {
+            /** @description Display name for the new user. */
+            name: string;
+            /** @description Password for the new user account. */
+            password: string;
+        };
+        /**
+         * @description CreateUserResponse is the response from creating a user for a registration session.
+         * @example {
+         *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+         *       "object": "user"
+         *     }
+         */
+        CreateUserResponse: {
+            /** @description The ID of the created user. */
+            id: string;
+            /**
+             * @description The object type.
+             * @enum {string}
+             */
+            object: "user";
+        };
+        /**
+         * @description CreatedAPIKey represents a newly created API key with the full secret value.
+         * @example {
+         *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadyhjtr",
          *       "api_key_info": {
-         *         "created_at": "2026-05-10T00:00:00Z",
-         *         "expires_at": "2026-05-10T01:00:00Z",
-         *         "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
-         *         "last_used_at": "2026-05-10T00:23:00Z",
-         *         "name": "Production API Key",
+         *         "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
          *         "object": "api_key",
-         *         "redacted_value": "aug_sk_prod_...kuIb",
-         *         "revoked_at": null,
+         *         "name": "Production API Key",
+         *         "redacted_value": "aug_sk_prod_...hjt4",
          *         "role": {
          *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *           "name": "Admin"
+         *           "object_type": "",
+         *           "name": "Admin",
+         *           "role_type_code": null
          *         },
-         *         "updated_at": "2026-05-10T00:23:00Z"
-         *       },
-         *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadykuIb"
+         *         "created_at": "2026-05-10T00:00:00Z",
+         *         "updated_at": "2026-05-10T00:23:00Z",
+         *         "last_used_at": "2026-05-10T00:23:00Z",
+         *         "expires_at": "2026-06-10T00:00:00Z",
+         *         "revoked_at": null
+         *       }
          *     }
          */
         CreatedAPIKey: {
+            /** @description The full API key secret value (only shown once at creation). */
+            api_key_secret: string;
             /**
-             * @description The API key metadata
+             * @description The API key metadata.
              * @example {
-             *       "created_at": "2026-05-10T00:00:00Z",
-             *       "expires_at": "2026-05-10T01:00:00Z",
-             *       "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
-             *       "last_used_at": "2026-05-10T00:23:00Z",
-             *       "name": "Production API Key",
+             *       "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
              *       "object": "api_key",
-             *       "redacted_value": "aug_sk_prod_...kuIb",
-             *       "revoked_at": null,
+             *       "name": "Production API Key",
+             *       "redacted_value": "aug_sk_prod_...hjt4",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-             *         "name": "Admin"
+             *         "object_type": "",
+             *         "name": "Admin",
+             *         "role_type_code": null
              *       },
-             *       "updated_at": "2026-05-10T00:23:00Z"
+             *       "created_at": "2026-05-10T00:00:00Z",
+             *       "updated_at": "2026-05-10T00:23:00Z",
+             *       "last_used_at": "2026-05-10T00:23:00Z",
+             *       "expires_at": "2026-06-10T00:00:00Z",
+             *       "revoked_at": null
              *     }
              */
             api_key_info: components["schemas"]["APIKey"];
-            /** @description The full API key secret value (only shown once at creation) */
-            api_key_secret: string;
+        };
+        /**
+         * @description EnsureBillingCustomerResponse represents the result of ensuring a billing customer exists.
+         * @example {
+         *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
+         *       "created": true
+         *     }
+         */
+        EnsureBillingCustomerResponse: {
+            /** @description The ID of the Stripe customer for billing. */
+            stripe_customer_id: string;
+            /** @description Indicates whether a new Stripe customer was created. */
+            created: boolean;
+        };
+        /**
+         * @description EnterpriseInquiry represents a request for an enterprise plan upgrade.
+         * @example {
+         *       "id": "enir_01gf7a8200eaj8fke1xvw4h50x",
+         *       "object": "enterprise_inquiry",
+         *       "created_at": "2026-05-10T00:00:00Z"
+         *     }
+         */
+        EnterpriseInquiry: {
+            /** @description The unique identifier for this enterprise inquiry. */
+            id: string;
+            /**
+             * @description The object type.
+             * @enum {string}
+             */
+            object: "enterprise_inquiry";
+            /**
+             * Format: date-time
+             * @description When this inquiry was submitted.
+             */
+            created_at: string;
         };
         /**
          * @description Healthcheck contains information on the health of the application.
@@ -425,72 +1176,860 @@ export interface components {
          *     }
          */
         Healthcheck: {
-            /** @description Current operational status of the API service */
+            /** @description Current operational status of the API service. */
             status: string;
         };
         /**
-         * @description LightRole represents a minimal role reference
+         * @description LightAccount represents a minimal account reference.
+         * @example {
+         *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *       "object_type": "account",
+         *       "name": "Acme Inc."
+         *     }
+         */
+        LightAccount: {
+            /** @description The unique identifier for the account. */
+            id: string;
+            /**
+             * @description The resource type identifier.
+             * @enum {string}
+             */
+            object_type: "account";
+            /** @description The display name of the account. */
+            name: string;
+        };
+        /**
+         * @description LightRole represents a minimal role reference.
          * @example {
          *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *       "name": "Admin"
+         *       "object_type": "role",
+         *       "name": "Admin",
+         *       "role_type_code": "admin"
          *     }
          */
         LightRole: {
-            /** @description The unique identifier for the role */
+            /** @description The unique identifier for the role. */
             id: string;
-            /** @description The display name of the role */
+            /**
+             * @description The resource type identifier.
+             * @enum {string}
+             */
+            object_type: "role";
+            /** @description The display name of the role. */
             name: string;
+            /**
+             * @description The role type code.
+             * @enum {string|null}
+             */
+            role_type_code: "admin" | "user" | "scanner" | "sales_rep" | null;
         };
         /**
          * @description A paginated list of APIKey resources
          * @example {
-         *       "data": [],
-         *       "has_more": true,
-         *       "next_cursor": "sample_cursor_id",
-         *       "object": "list"
+         *       "object": "list",
+         *       "page_info": {
+         *         "next_cursor": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
+         *         "prev_cursor": null,
+         *         "has_next_page": true,
+         *         "has_prev_page": false
+         *       },
+         *       "data": [
+         *         {
+         *           "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
+         *           "object": "api_key",
+         *           "name": "Production API Key",
+         *           "redacted_value": "aug_sk_prod_...hjt4",
+         *           "role": {
+         *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *             "object_type": "",
+         *             "name": "Admin",
+         *             "role_type_code": null
+         *           },
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "updated_at": "2026-05-10T00:23:00Z",
+         *           "last_used_at": "2026-05-10T00:23:00Z",
+         *           "expires_at": "2026-06-10T00:00:00Z",
+         *           "revoked_at": null
+         *         }
+         *       ]
          *     }
          */
         List_APIKey: {
-            /** @description Array of APIKey resources in this page */
-            data: components["schemas"]["APIKey"][];
-            /** @description Whether there are more results available after this page */
-            has_more: boolean;
-            /** @description Cursor for fetching the next page, null if on last page */
-            next_cursor: string | null;
             /**
              * @description Object type for APIKey list
              * @enum {string}
              */
             object: "list";
+            /** @description Pagination metadata for APIKey list */
+            page_info: components["schemas"]["PageInfo"];
+            /** @description Array of APIKey resources in this page */
+            data: components["schemas"]["APIKey"][];
+        };
+        /**
+         * @description A paginated list of PricingPlan resources
+         * @example {
+         *       "object": "list",
+         *       "page_info": {
+         *         "next_cursor": "pt_starter_01gf7a8200eaj8fke1xvw4h50x",
+         *         "prev_cursor": null,
+         *         "has_next_page": true,
+         *         "has_prev_page": false
+         *       },
+         *       "data": [
+         *         {
+         *           "id": "pt_starter_01gf7a8200eaj8fke1xvw4h50x",
+         *           "object": "pricing_plan",
+         *           "name": "Starter",
+         *           "plan_type_code": "starter",
+         *           "price_per_seat": 19,
+         *           "price_per_month": 19,
+         *           "seat_minimum": 1,
+         *           "limits": [
+         *             {
+         *               "key": "sandboxes_maximum",
+         *               "value": 3
+         *             },
+         *             {
+         *               "key": "seats_maximum",
+         *               "value": 5
+         *             },
+         *             {
+         *               "key": "invoices_maximum",
+         *               "value": 10000
+         *             },
+         *             {
+         *               "key": "batches_maximum",
+         *               "value": 10000
+         *             }
+         *           ],
+         *           "display_features": [
+         *             "3 sandbox environments",
+         *             "Up to 5 team seats",
+         *             "Unlimited invoices",
+         *             "Priority email support"
+         *           ],
+         *           "display_order": 2,
+         *           "is_highlighted": true,
+         *           "button_text": "Start Free Trial",
+         *           "includes_previous_plan": "Free"
+         *         }
+         *       ]
+         *     }
+         */
+        List_PricingPlan: {
+            /**
+             * @description Object type for PricingPlan list
+             * @enum {string}
+             */
+            object: "list";
+            /** @description Pagination metadata for PricingPlan list */
+            page_info: components["schemas"]["PageInfo"];
+            /** @description Array of PricingPlan resources in this page */
+            data: components["schemas"]["PricingPlan"][];
+        };
+        /**
+         * @description A paginated list of RegistrationSession resources
+         * @example {
+         *       "object": "list",
+         *       "page_info": {
+         *         "next_cursor": "rs_01gf7a8200eaj8fke1xvw4h50x",
+         *         "prev_cursor": null,
+         *         "has_next_page": true,
+         *         "has_prev_page": false
+         *       },
+         *       "data": [
+         *         {
+         *           "id": "rs_01gf7a8200eaj8fke1xvw4h50x",
+         *           "object": "registration_session",
+         *           "plan_code": "starter",
+         *           "step": "verification",
+         *           "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
+         *           "stripe_checkout_session_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG",
+         *           "payment_completed": false,
+         *           "account": {
+         *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *             "object": "account",
+         *             "name": "Acme Inc.",
+         *             "billing_address": {
+         *               "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
+         *               "object": "address",
+         *               "line1": "123 Main Street",
+         *               "line2": "Suite 100",
+         *               "city": "San Francisco",
+         *               "state": "CA",
+         *               "postal_code": "94105",
+         *               "country": "US"
+         *             }
+         *           },
+         *           "user": {
+         *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+         *             "object": "user",
+         *             "email": "jdoe@augno.com",
+         *             "email_verified": "2026-06-10T00:00:00Z",
+         *             "name": "John Doe"
+         *           },
+         *           "completed_at": null,
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "updated_at": "2026-05-10T00:23:00Z"
+         *         }
+         *       ]
+         *     }
+         */
+        List_RegistrationSession: {
+            /**
+             * @description Object type for RegistrationSession list
+             * @enum {string}
+             */
+            object: "list";
+            /** @description Pagination metadata for RegistrationSession list */
+            page_info: components["schemas"]["PageInfo"];
+            /** @description Array of RegistrationSession resources in this page */
+            data: components["schemas"]["RegistrationSession"][];
+        };
+        /**
+         * @description A paginated list of RequestLog resources
+         * @example {
+         *       "object": "list",
+         *       "page_info": {
+         *         "next_cursor": null,
+         *         "prev_cursor": null,
+         *         "has_next_page": true,
+         *         "has_prev_page": false
+         *       },
+         *       "data": [
+         *         {
+         *           "id": "rl_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "object": "request_log",
+         *           "method": "GET",
+         *           "host": "",
+         *           "path": "/v1/core/sandboxes",
+         *           "normalized_route": "/v1/core/sandboxes",
+         *           "query_json": null,
+         *           "status_code": 200,
+         *           "latency_us": 12345,
+         *           "api_version": null,
+         *           "identity_type": null,
+         *           "client_ip": null,
+         *           "user_agent": null,
+         *           "referrer": null,
+         *           "error_code": null,
+         *           "error_message": null,
+         *           "occurred_at": "2026-02-27T01:14:09.980143-05:00",
+         *           "created_at": "2026-02-27T01:14:09.980143-05:00",
+         *           "account": null,
+         *           "actor": null,
+         *           "idempotency_key": null,
+         *           "request_body_json": null,
+         *           "response_body_json": null
+         *         }
+         *       ]
+         *     }
+         */
+        List_RequestLog: {
+            /**
+             * @description Object type for RequestLog list
+             * @enum {string}
+             */
+            object: "list";
+            /** @description Pagination metadata for RequestLog list */
+            page_info: components["schemas"]["PageInfo"];
+            /** @description Array of RequestLog resources in this page */
+            data: components["schemas"]["RequestLog"][];
+        };
+        /**
+         * @description A paginated list of Sandbox resources
+         * @example {
+         *       "object": "list",
+         *       "page_info": {
+         *         "next_cursor": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "prev_cursor": null,
+         *         "has_next_page": true,
+         *         "has_prev_page": false
+         *       },
+         *       "data": [
+         *         {
+         *           "id": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "object": "sandbox",
+         *           "name": "Integration Testing",
+         *           "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "updated_at": "2026-05-10T00:23:00Z"
+         *         }
+         *       ]
+         *     }
+         */
+        List_Sandbox: {
+            /**
+             * @description Object type for Sandbox list
+             * @enum {string}
+             */
+            object: "list";
+            /** @description Pagination metadata for Sandbox list */
+            page_info: components["schemas"]["PageInfo"];
+            /** @description Array of Sandbox resources in this page */
+            data: components["schemas"]["Sandbox"][];
+        };
+        /**
+         * @description A paginated list of Unit resources
+         * @example {
+         *       "object": "list",
+         *       "page_info": {
+         *         "next_cursor": "unit_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "prev_cursor": null,
+         *         "has_next_page": true,
+         *         "has_prev_page": false
+         *       },
+         *       "data": [
+         *         {
+         *           "id": "unit_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "object": "unit",
+         *           "name": "Kilogram",
+         *           "abbreviation": "kg",
+         *           "type": "mass",
+         *           "ratio_numerator": "1000.000000000000000000000000000000",
+         *           "ratio_denominator": "1.000000000000000000000000000000",
+         *           "offset_numerator": "0.000000000000000000000000000000",
+         *           "offset_denominator": "1.000000000000000000000000000000",
+         *           "is_base_unit": false,
+         *           "is_internal": false,
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "updated_at": "2026-05-10T00:23:00Z"
+         *         }
+         *       ]
+         *     }
+         */
+        List_Unit: {
+            /**
+             * @description Object type for Unit list
+             * @enum {string}
+             */
+            object: "list";
+            /** @description Pagination metadata for Unit list */
+            page_info: components["schemas"]["PageInfo"];
+            /** @description Array of Unit resources in this page */
+            data: components["schemas"]["Unit"][];
         };
         /**
          * @description The request to login a user
          * @example {
          *       "identifier": "jdoe",
-         *       "password": "super-secret-password"
+         *       "password": "QgS7Z8Hhj3&1"
          *     }
          */
         LoginRequest: {
-            /** @description The username or email for authentication */
+            /** @description The username or email for authentication. */
             identifier: string;
-            /** @description The password of the user */
+            /** @description The password of the user. */
             password: string;
+        };
+        /** @description PageInfo contains cursor-based pagination metadata. */
+        PageInfo: {
+            /** @description Cursor to fetch the next page of results, null if no more pages. */
+            next_cursor: string | null;
+            /** @description Cursor to fetch the previous page of results, null if on the first page. */
+            prev_cursor: string | null;
+            /** @description Whether there are more results after this page. */
+            has_next_page: boolean;
+            /** @description Whether there are results before this page. */
+            has_prev_page: boolean;
+        };
+        /** @description PlanChangeLineItem represents a single line item in a proration preview. */
+        PlanChangeLineItem: {
+            /** @description Description of the line item. */
+            description: string;
+            /** @description Amount in cents (negative for credits). */
+            amount: number;
+            /** @description Whether this line item is a proration adjustment. */
+            is_proration: boolean;
+        };
+        /**
+         * @description PlanChangeProration represents the proration calculation for a plan change.
+         * @example {
+         *       "credit_amount": 0,
+         *       "charge_amount": 4900,
+         *       "net_amount": 4900,
+         *       "formatted_net_amount": "$49.00",
+         *       "is_credit": false,
+         *       "total_invoice_amount": 4900,
+         *       "formatted_total_invoice_amount": "$49.00",
+         *       "monthly_bill_amount": 4900,
+         *       "formatted_monthly_bill_amount": "$49.00",
+         *       "line_items": [
+         *         {
+         *           "description": "Professional plan — 1 seat(s) × $49.00/mo",
+         *           "amount": 4900,
+         *           "is_proration": false
+         *         }
+         *       ]
+         *     }
+         */
+        PlanChangeProration: {
+            /** @description The credit amount in cents from unused time on the current plan. */
+            credit_amount: number;
+            /** @description The charge amount in cents for the new plan. */
+            charge_amount: number;
+            /** @description The net amount in cents (charge minus credit). */
+            net_amount: number;
+            /** @description The formatted net amount for display (e.g., "$49.00"). */
+            formatted_net_amount: string;
+            /** @description Whether the net amount is a credit (negative). */
+            is_credit: boolean;
+            /** @description The total invoice amount in cents that would be charged immediately. */
+            total_invoice_amount: number;
+            /** @description The formatted total invoice amount for display. */
+            formatted_total_invoice_amount: string;
+            /** @description The estimated monthly bill amount in cents after the change. */
+            monthly_bill_amount: number;
+            /** @description The formatted monthly bill amount for display. */
+            formatted_monthly_bill_amount: string;
+            /** @description Detailed line items from the proration calculation. */
+            line_items: components["schemas"]["PlanChangeLineItem"][];
+        };
+        /**
+         * @description PlanLimit represents a resource limit for a pricing plan.
+         * @example {
+         *       "key": "sandboxes_maximum",
+         *       "value": 1
+         *     }
+         */
+        PlanLimit: {
+            /** @description The resource key this limit applies to (e.g., "sandboxes", "seats", "invoices"). */
+            key: string;
+            /** @description The maximum allowed value, null means unlimited. */
+            value: number | null;
+        };
+        /**
+         * @description PricingPlan represents a pricing plan available for purchase.
+         * @example {
+         *       "id": "pt_starter_01gf7a8200eaj8fke1xvw4h50x",
+         *       "object": "pricing_plan",
+         *       "name": "Starter",
+         *       "plan_type_code": "starter",
+         *       "price_per_seat": 19,
+         *       "price_per_month": 19,
+         *       "seat_minimum": 1,
+         *       "limits": [
+         *         {
+         *           "key": "sandboxes_maximum",
+         *           "value": 3
+         *         },
+         *         {
+         *           "key": "seats_maximum",
+         *           "value": 5
+         *         },
+         *         {
+         *           "key": "invoices_maximum",
+         *           "value": 10000
+         *         },
+         *         {
+         *           "key": "batches_maximum",
+         *           "value": 10000
+         *         }
+         *       ],
+         *       "display_features": [
+         *         "3 sandbox environments",
+         *         "Up to 5 team seats",
+         *         "Unlimited invoices",
+         *         "Priority email support"
+         *       ],
+         *       "display_order": 2,
+         *       "is_highlighted": true,
+         *       "button_text": "Start Free Trial",
+         *       "includes_previous_plan": "Free"
+         *     }
+         */
+        PricingPlan: {
+            /** @description The unique ID of the plan. */
+            id: string;
+            /**
+             * @description The object type.
+             * @enum {string}
+             */
+            object: "pricing_plan";
+            /** @description The display name of the plan. */
+            name: string;
+            /**
+             * @description The plan type code (e.g., "free", "starter", "professional").
+             * @enum {string}
+             */
+            plan_type_code: "free" | "starter" | "pro";
+            /** @description The price per seat per month in dollars. */
+            price_per_seat: number;
+            /** @description The flat monthly price in dollars, if applicable. */
+            price_per_month?: number | null;
+            /** @description The minimum number of seats required for this plan. */
+            seat_minimum?: number | null;
+            /** @description The resource limits for this plan. */
+            limits: components["schemas"]["PlanLimit"][];
+            /** @description The features to display on the pricing page. */
+            display_features: string[];
+            /** @description The display order for sorting plans on the pricing page. */
+            display_order: number;
+            /** @description Whether this plan should be visually highlighted. */
+            is_highlighted: boolean;
+            /** @description The call-to-action button text for this plan. */
+            button_text: string;
+            /** @description The name of the previous plan tier that this plan includes. */
+            includes_previous_plan?: string | null;
+        };
+        /**
+         * @description QuotaInfo provides machine-readable details about a plan-imposed resource limit.
+         *     Included in limit_exceeded errors so clients can display upgrade prompts, usage bars,
+         *     or implement programmatic retry/backoff logic.
+         */
+        QuotaInfo: {
+            /** @description Limit is the maximum number of resources allowed by the current plan. */
+            limit: number;
+            /** @description Used is the number of resources currently consumed. */
+            used: number;
+            /**
+             * Format: date-time
+             * @description ResetAt is the time when the quota resets, if applicable. Nil for static (non-metered) limits.
+             */
+            reset_at: string | null;
         };
         /**
          * @description The request to register a new user
          * @example {
          *       "email": "jdoe@augno.com",
-         *       "name": "John Doe",
-         *       "password": "super-secret-password"
+         *       "password": "QgS7Z8Hhj3&1",
+         *       "name": "John Doe"
          *     }
          */
         RegisterRequest: {
-            /** @description The email address for the new user */
+            /** @description The email address for the new user. */
             email: string;
-            /** @description The full name of the new user */
-            name: string;
-            /** @description The password for the new user */
+            /** @description The password for the new user. */
             password: string;
+            /** @description The full name of the new user. */
+            name: string;
+        };
+        /**
+         * @description RegistrationSession represents a registration session.
+         * @example {
+         *       "id": "rs_01gf7a8200eaj8fke1xvw4h50x",
+         *       "object": "registration_session",
+         *       "plan_code": "starter",
+         *       "step": "verification",
+         *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
+         *       "stripe_checkout_session_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG",
+         *       "payment_completed": false,
+         *       "account": {
+         *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *         "object": "account",
+         *         "name": "Acme Inc.",
+         *         "billing_address": {
+         *           "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
+         *           "object": "address",
+         *           "line1": "123 Main Street",
+         *           "line2": "Suite 100",
+         *           "city": "San Francisco",
+         *           "state": "CA",
+         *           "postal_code": "94105",
+         *           "country": "US"
+         *         }
+         *       },
+         *       "user": {
+         *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+         *         "object": "user",
+         *         "email": "jdoe@augno.com",
+         *         "email_verified": "2026-06-10T00:00:00Z",
+         *         "name": "John Doe"
+         *       },
+         *       "completed_at": null,
+         *       "created_at": "2026-05-10T00:00:00Z",
+         *       "updated_at": "2026-05-10T00:23:00Z"
+         *     }
+         */
+        RegistrationSession: {
+            /** @description The unique identifier for this registration session. */
+            id: string;
+            /**
+             * @description The type of this object.
+             * @enum {string}
+             */
+            object: "registration_session";
+            /** @description The pricing plan code selected during registration. */
+            plan_code: string;
+            /**
+             * @description The current step in the registration flow.
+             * @enum {string}
+             */
+            step: "verification" | "user_details" | "account_details" | "review" | "payment" | "completed";
+            /** @description The Stripe customer ID, if one has been created. */
+            stripe_customer_id: string | null;
+            /** @description The Stripe checkout session ID, if checkout was initiated. */
+            stripe_checkout_session_id: string | null;
+            /** @description Whether payment has been completed for this registration. */
+            payment_completed: boolean;
+            /**
+             * @description The account being registered.
+             * @example {
+             *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *       "object": "account",
+             *       "name": "Acme Inc.",
+             *       "billing_address": {
+             *         "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
+             *         "object": "address",
+             *         "line1": "123 Main Street",
+             *         "line2": "Suite 100",
+             *         "city": "San Francisco",
+             *         "state": "CA",
+             *         "postal_code": "94105",
+             *         "country": "US"
+             *       }
+             *     }
+             */
+            account: components["schemas"]["RegistrationSessionAccount"] | null;
+            /**
+             * @description The user being registered.
+             * @example {
+             *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+             *       "object": "user",
+             *       "email": "jdoe@augno.com",
+             *       "email_verified": "2026-06-10T00:00:00Z",
+             *       "name": "John Doe"
+             *     }
+             */
+            user: components["schemas"]["RegistrationSessionUser"];
+            /**
+             * Format: date-time
+             * @description When the registration was completed, null if still in progress.
+             */
+            completed_at: string | null;
+            /**
+             * Format: date-time
+             * @description When this registration session was created.
+             */
+            created_at: string;
+            /**
+             * Format: date-time
+             * @description When this registration session was last updated.
+             */
+            updated_at: string;
+        };
+        /**
+         * @description RegistrationSessionAccount represents account data within a registration session.
+         * @example {
+         *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *       "object": "account",
+         *       "name": "Acme Inc.",
+         *       "billing_address": {
+         *         "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
+         *         "object": "address",
+         *         "line1": "123 Main Street",
+         *         "line2": "Suite 100",
+         *         "city": "San Francisco",
+         *         "state": "CA",
+         *         "postal_code": "94105",
+         *         "country": "US"
+         *       }
+         *     }
+         */
+        RegistrationSessionAccount: {
+            /** @description The account ID, null until account is created. */
+            id: string | null;
+            /**
+             * @description Object type identifier for registration session account.
+             * @enum {string}
+             */
+            object: "account";
+            /** @description The account's display name. */
+            name: string;
+            /**
+             * @description The account's billing address.
+             * @example {
+             *       "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
+             *       "object": "address",
+             *       "line1": "123 Main Street",
+             *       "line2": "Suite 100",
+             *       "city": "San Francisco",
+             *       "state": "CA",
+             *       "postal_code": "94105",
+             *       "country": "US"
+             *     }
+             */
+            billing_address: components["schemas"]["RegistrationSessionAddress"];
+        };
+        /**
+         * @description RegistrationSessionAddress represents an address within a registration session.
+         * @example {
+         *       "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
+         *       "object": "address",
+         *       "line1": "123 Main Street",
+         *       "line2": "Suite 100",
+         *       "city": "San Francisco",
+         *       "state": "CA",
+         *       "postal_code": "94105",
+         *       "country": "US"
+         *     }
+         */
+        RegistrationSessionAddress: {
+            /** @description The address ID, null until address is created. */
+            id: string | null;
+            /**
+             * @description Object type identifier for registration session address.
+             * @enum {string}
+             */
+            object: "address";
+            /** @description Street address line 1. */
+            line1: string | null;
+            /** @description Street address line 2 (apartment, suite, etc.). */
+            line2: string | null;
+            /** @description City name. */
+            city: string | null;
+            /** @description State or province. */
+            state: string | null;
+            /** @description Postal or ZIP code. */
+            postal_code: string | null;
+            /** @description Two-letter country code. */
+            country: string | null;
+        };
+        /**
+         * @description RegistrationSessionUser represents user data within a registration session.
+         * @example {
+         *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+         *       "object": "user",
+         *       "email": "jdoe@augno.com",
+         *       "email_verified": "2026-06-10T00:00:00Z",
+         *       "name": "John Doe"
+         *     }
+         */
+        RegistrationSessionUser: {
+            /** @description The user ID, null until user is created. */
+            id: string | null;
+            /**
+             * @description Object type identifier for registration session user.
+             * @enum {string}
+             */
+            object: "user";
+            /** @description Email address provided during registration. */
+            email: string;
+            /**
+             * Format: date-time
+             * @description Timestamp when email was verified, null if pending.
+             */
+            email_verified: string | null;
+            /** @description Display name provided during registration. */
+            name: string | null;
+        };
+        /**
+         * @description RequestLog represents a single API request log entry.
+         * @example {
+         *       "id": "rl_01jm4r6700f8nwq3v5hx2d9ktp",
+         *       "object": "request_log",
+         *       "method": "GET",
+         *       "host": "",
+         *       "path": "/v1/core/sandboxes",
+         *       "normalized_route": "/v1/core/sandboxes",
+         *       "query_json": null,
+         *       "status_code": 200,
+         *       "latency_us": 12345,
+         *       "api_version": null,
+         *       "identity_type": null,
+         *       "client_ip": null,
+         *       "user_agent": null,
+         *       "referrer": null,
+         *       "error_code": null,
+         *       "error_message": null,
+         *       "occurred_at": "2026-02-27T01:14:09.980147-05:00",
+         *       "created_at": "2026-02-27T01:14:09.980147-05:00",
+         *       "account": null,
+         *       "actor": null,
+         *       "idempotency_key": null,
+         *       "request_body_json": null,
+         *       "response_body_json": null
+         *     }
+         */
+        RequestLog: {
+            /** @description The unique identifier for the request log. */
+            id: string;
+            /**
+             * @description The object type.
+             * @enum {string}
+             */
+            object: "request_log";
+            /** @description The HTTP method. */
+            method: string;
+            /** @description The request host. */
+            host: string;
+            /** @description The request path. */
+            path: string;
+            /** @description The normalized route pattern. */
+            normalized_route: string;
+            /** @description The query parameters as JSON. */
+            query_json: string | null;
+            /** @description The HTTP status code. */
+            status_code: number;
+            /** @description The request latency in microseconds. */
+            latency_us: number;
+            /** @description The API version used. */
+            api_version: string | null;
+            /** @description The identity type of the caller. */
+            identity_type: string | null;
+            /** @description The client IP address. */
+            client_ip: string | null;
+            /** @description The user agent string. */
+            user_agent: string | null;
+            /** @description The referrer header. */
+            referrer: string | null;
+            /** @description The API error code, if any. */
+            error_code: string | null;
+            /** @description The error message, if any. */
+            error_message: string | null;
+            /**
+             * Format: date-time
+             * @description When the request occurred.
+             */
+            occurred_at: string;
+            /**
+             * Format: date-time
+             * @description When the log entry was created.
+             */
+            created_at: string;
+            /**
+             * @description The account targeted by the request.
+             * @example {
+             *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *       "object_type": "account",
+             *       "name": "Acme Inc."
+             *     }
+             */
+            account: components["schemas"]["LightAccount"] | null;
+            /** @description Actor details (user or API key). */
+            actor: components["schemas"]["RequestLogActor"] | null;
+            /** @description The user-provided idempotency key value. */
+            idempotency_key: string | null;
+            /** @description The JSON request body. */
+            request_body_json: string | null;
+            /** @description The JSON response body. */
+            response_body_json: string | null;
+        };
+        /** @description RequestLogActor contains the resolved actor details for a request log. */
+        RequestLogActor: {
+            /** @description The actor's ID (user ID or API key type_id). */
+            id: string;
+            /**
+             * @description The resource type identifier.
+             * @enum {string}
+             */
+            object_type: "user";
+            /** @description The actor's display name. */
+            name: string | null;
+            /** @description The actor's email (users only). */
+            email: string | null;
+            /** @description The redacted API key value (API keys only). */
+            redacted_value: string | null;
+            /**
+             * @description The role assigned to the actor.
+             * @example {
+             *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *       "object_type": "role",
+             *       "name": "Admin",
+             *       "role_type_code": "admin"
+             *     }
+             */
+            role: components["schemas"]["LightRole"] | null;
         };
         /**
          * @description The request to request a password reset
@@ -499,23 +2038,23 @@ export interface components {
          *     }
          */
         RequestPasswordResetRequest: {
-            /** @description The account slug (optional, Used to return user back to origonal login portal (instead of plain augno login) after password reset) */
-            account_slug?: string | null;
-            /** @description The username or email of the account to reset */
+            /** @description The username or email of the account to reset. */
             identifier: string;
+            /** @description The account slug, used to redirect the user back to the original account login portal after password reset. */
+            account_slug?: string | null;
         };
         /**
          * @description The request to reset a user's password
          * @example {
-         *       "password": "new-super-secret-password",
-         *       "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1Z25vLmNvbSIsInN1YiI6InVzXzAxZ2Y3YTgyMDBlMXNyMjBwZzl3eDZkMmswIiwiZXhwIjoxNzU2ODIzMzI5LCJpYXQiOjE3NTY4MTk3Mjl9.2ZodhtiHDqIQnDjzrJZvqIdEbQbmkgbTaz4OXdbXCWNjzEsy2-5e78XQRu-aZ8MoZ2dusIVKQcN1Tm-arKR0_Q"
+         *       "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1Z25vLmNvbSIsInN1YiI6InVzXzAxZ2Y3YTgyMDBlMXNyMjBwZzl3eDZkMmswIiwiZXhwIjoxNzU2ODIzMzI5LCJpYXQiOjE3NTY4MTk3Mjl9.2ZodhtiHDqIQnDjzrJZvqIdEbQbmkgbTaz4OXdbXCWNjzEsy2-5e78XQRu-aZ8MoZ2dusIVKQcN1Tm-arKR0_Q",
+         *       "password": "50iR2X0r@bvIH"
          *     }
          */
         ResetPasswordRequest: {
-            /** @description The new password of the user */
-            password: string;
-            /** @description The password reset token (from request_password_reset endpoint) */
+            /** @description The password reset token (from request_password_reset endpoint). */
             token: string;
+            /** @description The new password of the user. */
+            password: string;
         };
         /**
          * @description ResponseError is the JSON-serializable error body returned to API clients. It contains
@@ -523,26 +2062,35 @@ export interface components {
          *     documentation.
          * @example {
          *       "code": "validation_failed",
-         *       "doc_url": "https://docs.augno.com/errors/validation_failed",
-         *       "is_transient": false,
+         *       "type": "invalid_request_error",
          *       "message": "The request was invalid.",
          *       "param": "email",
-         *       "type": "invalid_request_error"
+         *       "doc_url": "https://docs.augno.com/errors#validation_failed",
+         *       "is_transient": false,
+         *       "quota": null,
+         *       "request_log_url": "https://augno.com/dashboard/request-logs/rq_fbv1ygmybo3eauykr74"
          *     }
          */
         ResponseError: {
             /** @description A machine-readable code for the error. */
             code: string;
-            /** @description A URL to documentation about the error. */
-            doc_url: string | null;
-            /** @description Whether this error is transient and the request can be retried. */
-            is_transient: boolean;
+            /** @description The type of error. */
+            type: string;
             /** @description A human-readable message providing more details about the error. */
             message: string;
             /** @description The parameter that caused the error, if applicable. */
             param: string | null;
-            /** @description The type of error. */
-            type: string;
+            /** @description A URL to documentation about the error. */
+            doc_url: string | null;
+            /** @description Whether this error is transient and the request can be retried. */
+            is_transient: boolean;
+            /** @description Quota provides plan limit details when the error is limit_exceeded. Nil otherwise. */
+            quota: components["schemas"]["QuotaInfo"] | null;
+            /**
+             * @description RequestLogURL is a link to the dashboard page for this request's log entry.
+             *     Nil when no request log is available.
+             */
+            request_log_url: string | null;
         };
         /**
          * @description The request to rotate an API key, optionally overriding the expiration
@@ -553,68 +2101,269 @@ export interface components {
         RotateAPIKeyRequest: {
             /**
              * Format: date-time
-             * @description Optional expiration time override for the new API key
+             * @description Optional expiration time override for the new API key.
              */
             expires_at?: string | null;
         };
         /**
+         * @description Sandbox represents an isolated testing environment for an account.
+         * @example {
+         *       "id": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
+         *       "object": "sandbox",
+         *       "name": "Integration Testing",
+         *       "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
+         *       "created_at": "2026-05-10T00:00:00Z",
+         *       "updated_at": "2026-05-10T00:23:00Z"
+         *     }
+         */
+        Sandbox: {
+            /** @description The unique identifier for the sandbox. */
+            id: string;
+            /**
+             * @description The object type.
+             * @enum {string}
+             */
+            object: "sandbox";
+            /** @description The display name of the sandbox. */
+            name: string;
+            /** @description The ID of the account this sandbox belongs to. */
+            account_id: string;
+            /**
+             * Format: date-time
+             * @description When this sandbox was created.
+             */
+            created_at: string;
+            /**
+             * Format: date-time
+             * @description When this sandbox was last updated.
+             */
+            updated_at: string;
+        };
+        /**
+         * @description SubscriptionInfo represents subscription status and billing information.
+         * @example {
+         *       "status": "trialing",
+         *       "current_period_end": "2026-05-24T00:00:00Z",
+         *       "trial_end": "2026-05-24T00:00:00Z",
+         *       "cancel_at_period_end": false
+         *     }
+         */
+        SubscriptionInfo: {
+            /** @description The subscription status (active, trialing, past_due, canceled, etc.). */
+            status: string;
+            /**
+             * Format: date-time
+             * @description When the current billing period ends.
+             */
+            current_period_end?: string | null;
+            /**
+             * Format: date-time
+             * @description When the trial ends, if subscription is trialing.
+             */
+            trial_end?: string | null;
+            /** @description Whether the subscription will cancel at the end of the current period. */
+            cancel_at_period_end: boolean;
+            /**
+             * Format: date-time
+             * @description When the subscription will be canceled, if scheduled for cancellation.
+             */
+            cancel_at?: string | null;
+        };
+        /**
+         * @description SwitchPlanResponse represents the result of initiating a plan switch.
+         * @example {
+         *       "success": true,
+         *       "requires_payment": false,
+         *       "checkout_url": "https://checkout.stripe.com/c/pay/cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG"
+         *     }
+         */
+        SwitchPlanResponse: {
+            /** @description Whether the plan switch was initiated successfully. */
+            success: boolean;
+            /** @description Whether the plan switch requires payment via checkout. */
+            requires_payment: boolean;
+            /** @description The Stripe checkout URL, if payment is required. */
+            checkout_url?: string | null;
+        };
+        /**
+         * @description Unit represents a unit of measurement used for conversions and product quantities.
+         * @example {
+         *       "id": "unit_01jm4r6700f8nwq3v5hx2d9ktp",
+         *       "object": "unit",
+         *       "name": "Kilogram",
+         *       "abbreviation": "kg",
+         *       "type": "mass",
+         *       "ratio_numerator": "1000.000000000000000000000000000000",
+         *       "ratio_denominator": "1.000000000000000000000000000000",
+         *       "offset_numerator": "0.000000000000000000000000000000",
+         *       "offset_denominator": "1.000000000000000000000000000000",
+         *       "is_base_unit": false,
+         *       "is_internal": false,
+         *       "created_at": "2026-05-10T00:00:00Z",
+         *       "updated_at": "2026-05-10T00:23:00Z"
+         *     }
+         */
+        Unit: {
+            /** @description The unique identifier for the unit. */
+            id: string;
+            /**
+             * @description The object type.
+             * @enum {string}
+             */
+            object: "unit";
+            /** @description The display name of the unit (e.g. "Gram", "Kilogram"). */
+            name: string;
+            /** @description The short abbreviation for the unit (e.g. "g", "kg"). */
+            abbreviation: string;
+            /**
+             * @description The unit dimension (e.g. "quantity", "mass", "time", "currency").
+             * @enum {string}
+             */
+            type: "currency" | "quantity" | "time" | "mass" | "volume" | "length" | "temperature" | "area";
+            /**
+             * Format: decimal
+             * @description The conversion ratio numerator relative to the base unit in the same dimension.
+             */
+            ratio_numerator: string;
+            /**
+             * Format: decimal
+             * @description The conversion ratio denominator relative to the base unit in the same dimension.
+             */
+            ratio_denominator: string;
+            /**
+             * Format: decimal
+             * @description The conversion offset numerator, used for temperature-like conversions. Zero for most unit types.
+             */
+            offset_numerator: string;
+            /**
+             * Format: decimal
+             * @description The conversion offset denominator. Typically 1.
+             */
+            offset_denominator: string;
+            /** @description Whether this unit is the base unit for its dimension. Conversion ratios are relative to this unit. */
+            is_base_unit: boolean;
+            /** @description Whether this unit belongs to the requesting account. False for system/global units. */
+            is_internal: boolean;
+            /**
+             * Format: date-time
+             * @description When this unit was created.
+             */
+            created_at: string;
+            /**
+             * Format: date-time
+             * @description When this unit was last updated.
+             */
+            updated_at: string;
+        };
+        /**
          * @description The request to update a user's password
          * @example {
-         *       "new_password": "new-super-secret-password",
-         *       "old_password": "super-secret-password"
+         *       "old_password": "QgS7Z8Hhj3&1",
+         *       "new_password": "50iR2X0r@bvIH"
          *     }
          */
         UpdatePasswordRequest: {
-            /** @description The new password to be set */
-            new_password: string;
-            /** @description The user's current password */
+            /** @description The user's current password. */
             old_password: string;
+            /** @description The new password to be set. */
+            new_password: string;
+        };
+        /** @description UpdateSessionDataRequest holds the mutable form data fields for updating a session */
+        UpdateSessionDataRequest: {
+            /** @description Display name for the user. */
+            user_name?: string | null;
+            /** @description Display name for the account. */
+            account_name?: string | null;
+            /** @description Billing address line 1. */
+            billing_address_line1?: string | null;
+            /** @description Billing address line 2. */
+            billing_address_line2?: string | null;
+            /** @description Billing address city. */
+            billing_address_city?: string | null;
+            /** @description Billing address state. */
+            billing_address_state?: string | null;
+            /** @description Billing address postal code. */
+            billing_address_postal_code?: string | null;
+            /** @description Billing address country. */
+            billing_address_country?: string | null;
         };
         /**
-         * @description A user in the Augno system
+         * @description The request to update a registration session
          * @example {
-         *       "created_at": "2026-05-10T00:00:00Z",
-         *       "email": "jdoe@augno.com",
-         *       "email_verified": "2026-05-10T01:00:00Z",
+         *       "step": "user_details",
+         *       "session_data": {
+         *         "user_name": "Jane Smith",
+         *         "account_name": "Acme Corp"
+         *       }
+         *     }
+         */
+        UpdateSessionRequest: {
+            /**
+             * @description The step to advance the session to.
+             * @enum {string|null}
+             */
+            step?: "verification" | "user_details" | "account_details" | "review" | "payment" | "completed" | null;
+            /** @description The session data to merge into the existing session data. */
+            session_data?: components["schemas"]["UpdateSessionDataRequest"] | null;
+        };
+        /**
+         * @description UsageItem represents a single usage metric with current value and optional limit.
+         * @example {
+         *       "current": 5,
+         *       "limit": 10
+         *     }
+         */
+        UsageItem: {
+            /** @description The current usage count. */
+            current: number;
+            /** @description The maximum allowed usage, null means unlimited. */
+            limit: number | null;
+        };
+        /**
+         * @description A user in the Augno system.
+         * @example {
          *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *       "image_url": "https://example.com/avatar.jpg",
-         *       "name": "John Doe",
          *       "object": "user",
-         *       "updated_at": "2026-05-10T00:23:00Z",
-         *       "username": "jdoe"
+         *       "email": "jdoe@augno.com",
+         *       "name": "John Doe",
+         *       "username": "jdoe",
+         *       "email_verified": "2026-06-10T00:00:00Z",
+         *       "image_url": "https://example.com/avatar.jpg",
+         *       "created_at": "2026-05-10T00:00:00Z",
+         *       "updated_at": "2026-05-10T00:23:00Z"
          *     }
          */
         User: {
-            /**
-             * Format: date-time
-             * @description When this user was created
-             */
-            created_at: string;
-            /** @description The user's email address */
-            email: string | null;
-            /**
-             * Format: date-time
-             * @description When the user's email was verified, null if unverified
-             */
-            email_verified: string | null;
-            /** @description The unique identifier for this user */
+            /** @description The unique identifier for this user. */
             id: string;
-            /** @description URL to the user's profile image */
-            image_url: string | null;
-            /** @description The user's display name */
-            name: string | null;
             /**
-             * @description The resource type identifier
+             * @description The resource type identifier.
              * @enum {string}
              */
             object: "user";
+            /** @description The user's email address. */
+            email: string | null;
+            /** @description The user's display name. */
+            name: string | null;
+            /** @description The user's unique username. */
+            username: string | null;
             /**
              * Format: date-time
-             * @description When this user was last updated
+             * @description When the user's email was verified, null if unverified.
+             */
+            email_verified: string | null;
+            /** @description URL to the user's profile image. */
+            image_url: string | null;
+            /**
+             * Format: date-time
+             * @description When this user was created.
+             */
+            created_at: string;
+            /**
+             * Format: date-time
+             * @description When this user was last updated.
              */
             updated_at: string;
-            /** @description The user's unique username */
-            username: string | null;
         };
     };
     responses: never;
@@ -648,150 +2397,12 @@ export interface operations {
                     "application/json": components["schemas"]["Healthcheck"];
                 };
             };
-            /** @description Bad Request response for Get Health Check */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Unauthorized response for Get Health Check */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Forbidden response for Get Health Check */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Not Found response for Get Health Check */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Conflict response for Get Health Check */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Too Many Requests response for Get Health Check */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Internal Server Error response for Get Health Check */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -819,150 +2430,12 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
-            /** @description Bad Request response for Refresh Token */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Unauthorized response for Refresh Token */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Forbidden response for Refresh Token */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Not Found response for Refresh Token */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Conflict response for Refresh Token */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Too Many Requests response for Refresh Token */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Internal Server Error response for Refresh Token */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -981,7 +2454,7 @@ export interface operations {
                 /**
                  * @example {
                  *       "identifier": "jdoe",
-                 *       "password": "super-secret-password"
+                 *       "password": "QgS7Z8Hhj3&1"
                  *     }
                  */
                 "application/json": components["schemas"]["LoginRequest"];
@@ -996,164 +2469,26 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "email": "jdoe@augno.com",
-                     *       "email_verified": "2026-05-10T01:00:00Z",
                      *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *       "image_url": "https://example.com/avatar.jpg",
-                     *       "name": "John Doe",
                      *       "object": "user",
-                     *       "updated_at": "2026-05-10T00:23:00Z",
-                     *       "username": "jdoe"
+                     *       "email": "jdoe@augno.com",
+                     *       "name": "John Doe",
+                     *       "username": "jdoe",
+                     *       "email_verified": "2026-06-10T00:00:00Z",
+                     *       "image_url": "https://example.com/avatar.jpg",
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
                      */
                     "application/json": components["schemas"]["User"];
                 };
             };
-            /** @description Bad Request response for Login User */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Unauthorized response for Login User */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Forbidden response for Login User */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Not Found response for Login User */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Conflict response for Login User */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Too Many Requests response for Login User */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Internal Server Error response for Login User */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -1163,7 +2498,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: status for List API Keys
+                 * @description Filter API keys by status.
                  * @example [
                  *       "active"
                  *     ]
@@ -1184,159 +2519,43 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "data": [],
-                     *       "has_more": true,
-                     *       "next_cursor": "sample_cursor_id",
-                     *       "object": "list"
+                     *       "object": "list",
+                     *       "page_info": {
+                     *         "next_cursor": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
+                     *         "prev_cursor": null,
+                     *         "has_next_page": true,
+                     *         "has_prev_page": false
+                     *       },
+                     *       "data": [
+                     *         {
+                     *           "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
+                     *           "object": "api_key",
+                     *           "name": "Production API Key",
+                     *           "redacted_value": "aug_sk_prod_...hjt4",
+                     *           "role": {
+                     *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *             "object_type": "",
+                     *             "name": "Admin",
+                     *             "role_type_code": null
+                     *           },
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z",
+                     *           "last_used_at": "2026-05-10T00:23:00Z",
+                     *           "expires_at": "2026-06-10T00:00:00Z",
+                     *           "revoked_at": null
+                     *         }
+                     *       ]
                      *     }
                      */
                     "application/json": components["schemas"]["List_APIKey"];
                 };
             };
-            /** @description Bad Request response for List API Keys */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Unauthorized response for List API Keys */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Forbidden response for List API Keys */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Not Found response for List API Keys */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Conflict response for List API Keys */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Too Many Requests response for List API Keys */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Internal Server Error response for List API Keys */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -1354,8 +2573,8 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "name": "Production API Key",
-                 *       "role_id": "rl_dkeig3ngi35g"
+                 *       "role_id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                 *       "name": "Production API Key"
                  *     }
                  */
                 "application/json": components["schemas"]["CreateAPIKeyRequest"];
@@ -1370,171 +2589,35 @@ export interface operations {
                 content: {
                     /**
                      * @example {
+                     *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadyhjtr",
                      *       "api_key_info": {
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "expires_at": "2026-05-10T01:00:00Z",
-                     *         "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
-                     *         "last_used_at": "2026-05-10T00:23:00Z",
-                     *         "name": "Production API Key",
+                     *         "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
                      *         "object": "api_key",
-                     *         "redacted_value": "aug_sk_prod_...kuIb",
-                     *         "revoked_at": null,
+                     *         "name": "Production API Key",
+                     *         "redacted_value": "aug_sk_prod_...hjt4",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *           "name": "Admin"
+                     *           "object_type": "",
+                     *           "name": "Admin",
+                     *           "role_type_code": null
                      *         },
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadykuIb"
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z",
+                     *         "last_used_at": "2026-05-10T00:23:00Z",
+                     *         "expires_at": "2026-06-10T00:00:00Z",
+                     *         "revoked_at": null
+                     *       }
                      *     }
                      */
                     "application/json": components["schemas"]["CreatedAPIKey"];
                 };
             };
-            /** @description Bad Request response for Create API Key */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Unauthorized response for Create API Key */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Forbidden response for Create API Key */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Not Found response for Create API Key */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Conflict response for Create API Key */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Too Many Requests response for Create API Key */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Internal Server Error response for Create API Key */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -1557,171 +2640,86 @@ export interface operations {
                 content: {
                     /**
                      * @example {
+                     *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadyhjtr",
                      *       "api_key_info": {
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "expires_at": "2026-05-10T01:00:00Z",
-                     *         "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
-                     *         "last_used_at": "2026-05-10T00:23:00Z",
-                     *         "name": "Production API Key",
+                     *         "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
                      *         "object": "api_key",
-                     *         "redacted_value": "aug_sk_prod_...kuIb",
-                     *         "revoked_at": null,
+                     *         "name": "Production API Key",
+                     *         "redacted_value": "aug_sk_prod_...hjt4",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *           "name": "Admin"
+                     *           "object_type": "",
+                     *           "name": "Admin",
+                     *           "role_type_code": null
                      *         },
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadykuIb"
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z",
+                     *         "last_used_at": "2026-05-10T00:23:00Z",
+                     *         "expires_at": "2026-06-10T00:00:00Z",
+                     *         "revoked_at": null
+                     *       }
                      *     }
                      */
                     "application/json": components["schemas"]["CreatedAPIKey"];
                 };
             };
-            /** @description Bad Request response for Get Documentation API Key */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Unauthorized response for Get Documentation API Key */
-            401: {
+        };
+    };
+    "get-api-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the API key to retrieve. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Get API Key */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
+                     *       "object": "api_key",
+                     *       "name": "Production API Key",
+                     *       "redacted_value": "aug_sk_prod_...hjt4",
+                     *       "role": {
+                     *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *         "object_type": "",
+                     *         "name": "Admin",
+                     *         "role_type_code": null
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z",
+                     *       "last_used_at": "2026-05-10T00:23:00Z",
+                     *       "expires_at": "2026-06-10T00:00:00Z",
+                     *       "revoked_at": null
                      *     }
                      */
-                    "application/json": components["schemas"]["APIErrorResponse"];
+                    "application/json": components["schemas"]["APIKey"];
                 };
             };
-            /** @description Forbidden response for Get Documentation API Key */
-            403: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Not Found response for Get Documentation API Key */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Conflict response for Get Documentation API Key */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Too Many Requests response for Get Documentation API Key */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Internal Server Error response for Get Documentation API Key */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -1732,7 +2730,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Path parameter: id for Revoke API Key */
+                /** @description The ID of the API key to revoke. */
                 id: string;
             };
             cookie?: never;
@@ -1749,150 +2747,12 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
-            /** @description Bad Request response for Revoke API Key */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Unauthorized response for Revoke API Key */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Forbidden response for Revoke API Key */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Not Found response for Revoke API Key */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Conflict response for Revoke API Key */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Too Many Requests response for Revoke API Key */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Internal Server Error response for Revoke API Key */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -1903,7 +2763,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Path parameter: id for Rotate API Key */
+                /** @description The unique identifier for the API key to rotate. */
                 id: string;
             };
             cookie?: never;
@@ -1928,171 +2788,35 @@ export interface operations {
                 content: {
                     /**
                      * @example {
+                     *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadyhjtr",
                      *       "api_key_info": {
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "expires_at": "2026-05-10T01:00:00Z",
-                     *         "id": "ak_01gf7a8200eaj8fke1xvw4h50x",
-                     *         "last_used_at": "2026-05-10T00:23:00Z",
-                     *         "name": "Production API Key",
+                     *         "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
                      *         "object": "api_key",
-                     *         "redacted_value": "aug_sk_prod_...kuIb",
-                     *         "revoked_at": null,
+                     *         "name": "Production API Key",
+                     *         "redacted_value": "aug_sk_prod_...hjt4",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *           "name": "Admin"
+                     *           "object_type": "",
+                     *           "name": "Admin",
+                     *           "role_type_code": null
                      *         },
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadykuIb"
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z",
+                     *         "last_used_at": "2026-05-10T00:23:00Z",
+                     *         "expires_at": "2026-06-10T00:00:00Z",
+                     *         "revoked_at": null
+                     *       }
                      *     }
                      */
                     "application/json": components["schemas"]["CreatedAPIKey"];
                 };
             };
-            /** @description Bad Request response for Rotate API Key */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Unauthorized response for Rotate API Key */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Forbidden response for Rotate API Key */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Not Found response for Rotate API Key */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Conflict response for Rotate API Key */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Too Many Requests response for Rotate API Key */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Internal Server Error response for Rotate API Key */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -2110,8 +2834,8 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "new_password": "new-super-secret-password",
-                 *       "old_password": "super-secret-password"
+                 *       "old_password": "QgS7Z8Hhj3&1",
+                 *       "new_password": "50iR2X0r@bvIH"
                  *     }
                  */
                 "application/json": components["schemas"]["UpdatePasswordRequest"];
@@ -2128,150 +2852,12 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
-            /** @description Bad Request response for Create New Password */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Unauthorized response for Create New Password */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Forbidden response for Create New Password */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Not Found response for Create New Password */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Conflict response for Create New Password */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Too Many Requests response for Create New Password */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Internal Server Error response for Create New Password */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -2306,150 +2892,12 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
-            /** @description Bad Request response for Request Password Reset */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Unauthorized response for Request Password Reset */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Forbidden response for Request Password Reset */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Not Found response for Request Password Reset */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Conflict response for Request Password Reset */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Too Many Requests response for Request Password Reset */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Internal Server Error response for Request Password Reset */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -2467,8 +2915,8 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "password": "new-super-secret-password",
-                 *       "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1Z25vLmNvbSIsInN1YiI6InVzXzAxZ2Y3YTgyMDBlMXNyMjBwZzl3eDZkMmswIiwiZXhwIjoxNzU2ODIzMzI5LCJpYXQiOjE3NTY4MTk3Mjl9.2ZodhtiHDqIQnDjzrJZvqIdEbQbmkgbTaz4OXdbXCWNjzEsy2-5e78XQRu-aZ8MoZ2dusIVKQcN1Tm-arKR0_Q"
+                 *       "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1Z25vLmNvbSIsInN1YiI6InVzXzAxZ2Y3YTgyMDBlMXNyMjBwZzl3eDZkMmswIiwiZXhwIjoxNzU2ODIzMzI5LCJpYXQiOjE3NTY4MTk3Mjl9.2ZodhtiHDqIQnDjzrJZvqIdEbQbmkgbTaz4OXdbXCWNjzEsy2-5e78XQRu-aZ8MoZ2dusIVKQcN1Tm-arKR0_Q",
+                 *       "password": "50iR2X0r@bvIH"
                  *     }
                  */
                 "application/json": components["schemas"]["ResetPasswordRequest"];
@@ -2485,150 +2933,12 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
-            /** @description Bad Request response for Reset Password */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Unauthorized response for Reset Password */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Forbidden response for Reset Password */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Not Found response for Reset Password */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Conflict response for Reset Password */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Too Many Requests response for Reset Password */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-            /** @description Internal Server Error response for Reset Password */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -2656,150 +2966,577 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
-            /** @description Bad Request response for Revoke Refresh Token */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Unauthorized response for Revoke Refresh Token */
-            401: {
+        };
+    };
+    "list-registration-sessions": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Cursor for fetching the next page, from a previous response's next_cursor field.
+                 * @example example
+                 */
+                cursor?: string;
+                /**
+                 * @description Maximum number of results to return per page (default: 100, max: 1000).
+                 * @example 100
+                 */
+                limit?: number;
+                /**
+                 * @description Optional search query to filter results.
+                 * @example example
+                 */
+                q?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for List Registration Sessions */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "object": "list",
+                     *       "page_info": {
+                     *         "next_cursor": "rs_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "prev_cursor": null,
+                     *         "has_next_page": true,
+                     *         "has_prev_page": false
+                     *       },
+                     *       "data": [
+                     *         {
+                     *           "id": "rs_01gf7a8200eaj8fke1xvw4h50x",
+                     *           "object": "registration_session",
+                     *           "plan_code": "starter",
+                     *           "step": "verification",
+                     *           "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
+                     *           "stripe_checkout_session_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG",
+                     *           "payment_completed": false,
+                     *           "account": {
+                     *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *             "object": "account",
+                     *             "name": "Acme Inc.",
+                     *             "billing_address": {
+                     *               "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
+                     *               "object": "address",
+                     *               "line1": "123 Main Street",
+                     *               "line2": "Suite 100",
+                     *               "city": "San Francisco",
+                     *               "state": "CA",
+                     *               "postal_code": "94105",
+                     *               "country": "US"
+                     *             }
+                     *           },
+                     *           "user": {
+                     *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+                     *             "object": "user",
+                     *             "email": "jdoe@augno.com",
+                     *             "email_verified": "2026-06-10T00:00:00Z",
+                     *             "name": "John Doe"
+                     *           },
+                     *           "completed_at": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       ]
                      *     }
                      */
+                    "application/json": components["schemas"]["List_RegistrationSession"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Forbidden response for Revoke Refresh Token */
-            403: {
+        };
+    };
+    "create-registration-session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The request body for Create Registration Session */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "email": "jdoe@augno.com",
+                 *       "plan_code": "starter"
+                 *     }
+                 */
+                "application/json": components["schemas"]["CreateRegistrationSessionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Create Registration Session */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "id": "rs_01gf7a8200eaj8fke1xvw4h50x",
+                     *       "object": "registration_session"
                      *     }
                      */
+                    "application/json": components["schemas"]["CreateSessionResponse"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Not Found response for Revoke Refresh Token */
-            404: {
+        };
+    };
+    "get-registration-session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The session ID. */
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Get Registration Session */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "id": "rs_01gf7a8200eaj8fke1xvw4h50x",
+                     *       "object": "registration_session",
+                     *       "plan_code": "starter",
+                     *       "step": "verification",
+                     *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
+                     *       "stripe_checkout_session_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG",
+                     *       "payment_completed": false,
+                     *       "account": {
+                     *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "object": "account",
+                     *         "name": "Acme Inc.",
+                     *         "billing_address": {
+                     *           "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
+                     *           "object": "address",
+                     *           "line1": "123 Main Street",
+                     *           "line2": "Suite 100",
+                     *           "city": "San Francisco",
+                     *           "state": "CA",
+                     *           "postal_code": "94105",
+                     *           "country": "US"
+                     *         }
+                     *       },
+                     *       "user": {
+                     *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+                     *         "object": "user",
+                     *         "email": "jdoe@augno.com",
+                     *         "email_verified": "2026-06-10T00:00:00Z",
+                     *         "name": "John Doe"
+                     *       },
+                     *       "completed_at": null,
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
                      */
+                    "application/json": components["schemas"]["RegistrationSession"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Conflict response for Revoke Refresh Token */
-            409: {
+        };
+    };
+    "update-registration-session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The session ID. */
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The request body for Update Registration Session */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "step": "user_details",
+                 *       "session_data": {
+                 *         "user_name": "Jane Smith",
+                 *         "account_name": "Acme Corp"
+                 *       }
+                 *     }
+                 */
+                "application/json": components["schemas"]["UpdateSessionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Update Registration Session */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "id": "rs_01gf7a8200eaj8fke1xvw4h50x",
+                     *       "object": "registration_session",
+                     *       "plan_code": "starter",
+                     *       "step": "verification",
+                     *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
+                     *       "stripe_checkout_session_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG",
+                     *       "payment_completed": false,
+                     *       "account": {
+                     *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "object": "account",
+                     *         "name": "Acme Inc.",
+                     *         "billing_address": {
+                     *           "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
+                     *           "object": "address",
+                     *           "line1": "123 Main Street",
+                     *           "line2": "Suite 100",
+                     *           "city": "San Francisco",
+                     *           "state": "CA",
+                     *           "postal_code": "94105",
+                     *           "country": "US"
+                     *         }
+                     *       },
+                     *       "user": {
+                     *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+                     *         "object": "user",
+                     *         "email": "jdoe@augno.com",
+                     *         "email_verified": "2026-06-10T00:00:00Z",
+                     *         "name": "John Doe"
+                     *       },
+                     *       "completed_at": null,
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
                      */
+                    "application/json": components["schemas"]["RegistrationSession"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Too Many Requests response for Revoke Refresh Token */
-            429: {
+        };
+    };
+    "complete-registration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The session ID. */
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Complete Registration */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *       "object": "account"
                      *     }
                      */
+                    "application/json": components["schemas"]["CompleteRegistrationResponse"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Internal Server Error response for Revoke Refresh Token */
-            500: {
+        };
+    };
+    "create-registration-checkout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The session ID. */
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Create Registration Checkout */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "client_secret": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG_secret_fk3Mds9RqwEm5J",
+                     *       "checkout_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG",
+                     *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
+                     *       "publishable_key": "pk_test_51OjP6DKQnQhqLJrS7DG5gHN00xY3bRzWp"
                      *     }
                      */
+                    "application/json": components["schemas"]["CreateCheckoutResponse"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "confirm-registration-payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The session ID. */
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The request body for Confirm Registration Payment */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "checkout_session_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG"
+                 *     }
+                 */
+                "application/json": components["schemas"]["ConfirmPaymentRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Confirm Registration Payment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "status": "complete",
+                     *       "subscription_id": "sub_1Qw4Rn2eZvKYlo2C0ghJ3kXa",
+                     *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ConfirmPaymentResponse"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "resend-verification-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The session ID (from path). */
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Resend Verification Email */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {} */
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "create-user-for-registration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The session ID. */
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The request body for Create User for Registration */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "Jane Smith",
+                 *       "password": "P@ssw0rd123!"
+                 *     }
+                 */
+                "application/json": components["schemas"]["CreateUserRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Create User for Registration */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+                     *       "object": "user"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["CreateUserResponse"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "verify-registration-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The verification token from the email link. */
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Verify Registration Token */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "rs_01gf7a8200eaj8fke1xvw4h50x",
+                     *       "object": "registration_session",
+                     *       "plan_code": "starter",
+                     *       "step": "verification",
+                     *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
+                     *       "stripe_checkout_session_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG",
+                     *       "payment_completed": false,
+                     *       "account": {
+                     *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "object": "account",
+                     *         "name": "Acme Inc.",
+                     *         "billing_address": {
+                     *           "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
+                     *           "object": "address",
+                     *           "line1": "123 Main Street",
+                     *           "line2": "Suite 100",
+                     *           "city": "San Francisco",
+                     *           "state": "CA",
+                     *           "postal_code": "94105",
+                     *           "country": "US"
+                     *         }
+                     *       },
+                     *       "user": {
+                     *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+                     *         "object": "user",
+                     *         "email": "jdoe@augno.com",
+                     *         "email_verified": "2026-06-10T00:00:00Z",
+                     *         "name": "John Doe"
+                     *       },
+                     *       "completed_at": null,
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RegistrationSession"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
@@ -2818,8 +3555,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "email": "jdoe@augno.com",
-                 *       "name": "John Doe",
-                 *       "password": "super-secret-password"
+                 *       "password": "QgS7Z8Hhj3&1",
+                 *       "name": "John Doe"
                  *     }
                  */
                 "application/json": components["schemas"]["RegisterRequest"];
@@ -2834,164 +3571,868 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "email": "jdoe@augno.com",
-                     *       "email_verified": "2026-05-10T01:00:00Z",
                      *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *       "image_url": "https://example.com/avatar.jpg",
-                     *       "name": "John Doe",
                      *       "object": "user",
-                     *       "updated_at": "2026-05-10T00:23:00Z",
-                     *       "username": "jdoe"
+                     *       "email": "jdoe@augno.com",
+                     *       "name": "John Doe",
+                     *       "username": "jdoe",
+                     *       "email_verified": "2026-06-10T00:00:00Z",
+                     *       "image_url": "https://example.com/avatar.jpg",
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
                      */
                     "application/json": components["schemas"]["User"];
                 };
             };
-            /** @description Bad Request response for Register User */
-            400: {
+            /** @description Error response */
+            "4XX": {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
-                     *     }
-                     */
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Unauthorized response for Register User */
-            401: {
+        };
+    };
+    "ensure-billing-customer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Ensure Billing Customer */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
+                     *       "created": true
                      *     }
                      */
+                    "application/json": components["schemas"]["EnsureBillingCustomerResponse"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Forbidden response for Register User */
-            403: {
+        };
+    };
+    "get-account-usage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Get Account Usage */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
+                     *       "seats": {
+                     *         "current": 5,
+                     *         "limit": 10
+                     *       },
+                     *       "invoices": {
+                     *         "current": 100,
+                     *         "limit": null
+                     *       },
+                     *       "batches": {
+                     *         "current": 100,
+                     *         "limit": null
+                     *       },
+                     *       "sandboxes": {
+                     *         "current": 5,
+                     *         "limit": 10
+                     *       },
+                     *       "subscription": {
+                     *         "status": "trialing",
+                     *         "current_period_end": "2026-05-24T00:00:00Z",
+                     *         "trial_end": "2026-05-24T00:00:00Z",
+                     *         "cancel_at_period_end": false
                      *       }
                      *     }
                      */
+                    "application/json": components["schemas"]["AccountUsageResponse"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Not Found response for Register User */
-            404: {
+        };
+    };
+    "create-enterprise-inquiry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Create Enterprise Inquiry */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "id": "enir_01gf7a8200eaj8fke1xvw4h50x",
+                     *       "object": "enterprise_inquiry",
+                     *       "created_at": "2026-05-10T00:00:00Z"
                      *     }
                      */
+                    "application/json": components["schemas"]["EnterpriseInquiry"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Conflict response for Register User */
-            409: {
+        };
+    };
+    "confirm-plan-switch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The request body for Confirm Plan Switch */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "session_id": "cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG",
+                 *       "plan_id": "pt_pro_01gf7a8200eaj8fke1xvw4h50x"
+                 *     }
+                 */
+                "application/json": components["schemas"]["ConfirmPlanSwitchRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Confirm Plan Switch */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "success": true
                      *     }
                      */
+                    "application/json": components["schemas"]["ConfirmPlanSwitchResponse"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Too Many Requests response for Register User */
-            429: {
+        };
+    };
+    "list-pricing-plans": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Cursor for fetching the next page, from a previous response's next_cursor field.
+                 * @example example
+                 */
+                cursor?: string;
+                /**
+                 * @description Maximum number of results to return per page (default: 100, max: 1000).
+                 * @example 100
+                 */
+                limit?: number;
+                /**
+                 * @description Optional search query to filter results.
+                 * @example example
+                 */
+                q?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for List Pricing Plans */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "object": "list",
+                     *       "page_info": {
+                     *         "next_cursor": "pt_starter_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "prev_cursor": null,
+                     *         "has_next_page": true,
+                     *         "has_prev_page": false
+                     *       },
+                     *       "data": [
+                     *         {
+                     *           "id": "pt_starter_01gf7a8200eaj8fke1xvw4h50x",
+                     *           "object": "pricing_plan",
+                     *           "name": "Starter",
+                     *           "plan_type_code": "starter",
+                     *           "price_per_seat": 19,
+                     *           "price_per_month": 19,
+                     *           "seat_minimum": 1,
+                     *           "limits": [
+                     *             {
+                     *               "key": "sandboxes_maximum",
+                     *               "value": 3
+                     *             },
+                     *             {
+                     *               "key": "seats_maximum",
+                     *               "value": 5
+                     *             },
+                     *             {
+                     *               "key": "invoices_maximum",
+                     *               "value": 10000
+                     *             },
+                     *             {
+                     *               "key": "batches_maximum",
+                     *               "value": 10000
+                     *             }
+                     *           ],
+                     *           "display_features": [
+                     *             "3 sandbox environments",
+                     *             "Up to 5 team seats",
+                     *             "Unlimited invoices",
+                     *             "Priority email support"
+                     *           ],
+                     *           "display_order": 2,
+                     *           "is_highlighted": true,
+                     *           "button_text": "Start Free Trial",
+                     *           "includes_previous_plan": "Free"
+                     *         }
+                     *       ]
                      *     }
                      */
+                    "application/json": components["schemas"]["List_PricingPlan"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
-            /** @description Internal Server Error response for Register User */
-            500: {
+        };
+    };
+    "preview-plan-change": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Path parameter: id for Preview Plan Change */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Preview Plan Change */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     /**
                      * @example {
-                     *       "error": {
-                     *         "code": "validation_failed",
-                     *         "doc_url": "https://docs.augno.com/errors/validation_failed",
-                     *         "is_transient": false,
-                     *         "message": "The request was invalid.",
-                     *         "param": "email",
-                     *         "type": "invalid_request_error"
-                     *       }
+                     *       "credit_amount": 0,
+                     *       "charge_amount": 4900,
+                     *       "net_amount": 4900,
+                     *       "formatted_net_amount": "$49.00",
+                     *       "is_credit": false,
+                     *       "total_invoice_amount": 4900,
+                     *       "formatted_total_invoice_amount": "$49.00",
+                     *       "monthly_bill_amount": 4900,
+                     *       "formatted_monthly_bill_amount": "$49.00",
+                     *       "line_items": [
+                     *         {
+                     *           "description": "Professional plan — 1 seat(s) × $49.00/mo",
+                     *           "amount": 4900,
+                     *           "is_proration": false
+                     *         }
+                     *       ]
                      *     }
                      */
+                    "application/json": components["schemas"]["PlanChangeProration"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "switch-plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Path parameter: id for Switch Plan */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Switch Plan */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "success": true,
+                     *       "requires_payment": false,
+                     *       "checkout_url": "https://checkout.stripe.com/c/pay/cs_test_a1VnbGQ4ZTFRdGRqUWpYR3h6OG"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["SwitchPlanResponse"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "create-billing-portal-session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Create Billing Portal Session */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "url": "https://billing.stripe.com/p/session/test_YWNjdF8xTTJKVGtMa3E0Z3Bic"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["BillingPortalSessionResponse"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "list-request-logs": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Cursor for fetching the next page, from a previous response's next_cursor field.
+                 * @example example
+                 */
+                cursor?: string;
+                /**
+                 * @description Maximum number of results to return per page (default: 100, max: 1000).
+                 * @example 100
+                 */
+                limit?: number;
+                /**
+                 * @description Search query: matches against ID (exact), path (partial), or error message (partial).
+                 * @example example
+                 */
+                q?: string;
+                /**
+                 * @description Filter: start of date range for occurred_at.
+                 * @example example
+                 */
+                start_date?: string;
+                /**
+                 * @description Filter: end of date range for occurred_at.
+                 * @example example
+                 */
+                end_date?: string;
+                /**
+                 * @description Filter: HTTP method.
+                 * @example example
+                 */
+                method?: string;
+                /**
+                 * @description Filter: HTTP status code.
+                 * @example 100
+                 */
+                status_code?: number;
+                /**
+                 * @description Filter: API error code.
+                 * @example example
+                 */
+                error_code?: string;
+                /**
+                 * @description Filter: actor's home account ID.
+                 * @example example
+                 */
+                account_id?: string;
+                /**
+                 * @description Filter: actor ID.
+                 * @example example
+                 */
+                actor_id?: string;
+                /**
+                 * @description Filter: actor type ("user" or "api_key").
+                 * @example example
+                 */
+                actor_type?: string;
+                /**
+                 * @description Filter: actor name (partial or exact match).
+                 * @example example
+                 */
+                actor_name?: string;
+                /**
+                 * @description When true, string filters use exact match instead of partial (LIKE).
+                 * @example true
+                 */
+                exact_match?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for List Request Logs */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "object": "list",
+                     *       "page_info": {
+                     *         "next_cursor": null,
+                     *         "prev_cursor": null,
+                     *         "has_next_page": true,
+                     *         "has_prev_page": false
+                     *       },
+                     *       "data": [
+                     *         {
+                     *           "id": "rl_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "request_log",
+                     *           "method": "GET",
+                     *           "host": "",
+                     *           "path": "/v1/core/sandboxes",
+                     *           "normalized_route": "/v1/core/sandboxes",
+                     *           "query_json": null,
+                     *           "status_code": 200,
+                     *           "latency_us": 12345,
+                     *           "api_version": null,
+                     *           "identity_type": null,
+                     *           "client_ip": null,
+                     *           "user_agent": null,
+                     *           "referrer": null,
+                     *           "error_code": null,
+                     *           "error_message": null,
+                     *           "occurred_at": "2026-02-27T01:14:09.980143-05:00",
+                     *           "created_at": "2026-02-27T01:14:09.980143-05:00",
+                     *           "account": null,
+                     *           "actor": null,
+                     *           "idempotency_key": null,
+                     *           "request_body_json": null,
+                     *           "response_body_json": null
+                     *         }
+                     *       ]
+                     *     }
+                     */
+                    "application/json": components["schemas"]["List_RequestLog"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "get-request-log": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the request log to retrieve. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Get Request Log */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "rl_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "request_log",
+                     *       "method": "GET",
+                     *       "host": "",
+                     *       "path": "/v1/core/sandboxes",
+                     *       "normalized_route": "/v1/core/sandboxes",
+                     *       "query_json": null,
+                     *       "status_code": 200,
+                     *       "latency_us": 12345,
+                     *       "api_version": null,
+                     *       "identity_type": null,
+                     *       "client_ip": null,
+                     *       "user_agent": null,
+                     *       "referrer": null,
+                     *       "error_code": null,
+                     *       "error_message": null,
+                     *       "occurred_at": "2026-02-27T01:14:09.980147-05:00",
+                     *       "created_at": "2026-02-27T01:14:09.980147-05:00",
+                     *       "account": null,
+                     *       "actor": null,
+                     *       "idempotency_key": null,
+                     *       "request_body_json": null,
+                     *       "response_body_json": null
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RequestLog"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "list-sandboxes": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Cursor for fetching the next page, from a previous response's next_cursor field.
+                 * @example example
+                 */
+                cursor?: string;
+                /**
+                 * @description Maximum number of results to return per page (default: 100, max: 1000).
+                 * @example 100
+                 */
+                limit?: number;
+                /**
+                 * @description Optional search query to filter results.
+                 * @example example
+                 */
+                q?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for List Sandboxes */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "object": "list",
+                     *       "page_info": {
+                     *         "next_cursor": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "prev_cursor": null,
+                     *         "has_next_page": true,
+                     *         "has_prev_page": false
+                     *       },
+                     *       "data": [
+                     *         {
+                     *           "id": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "sandbox",
+                     *           "name": "Integration Testing",
+                     *           "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       ]
+                     *     }
+                     */
+                    "application/json": components["schemas"]["List_Sandbox"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "create-sandbox": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The request body for Create Sandbox */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "Integration Testing",
+                 *       "mode": "blank"
+                 *     }
+                 */
+                "application/json": components["schemas"]["CreateSandboxRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Create Sandbox */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "sandbox",
+                     *       "name": "Integration Testing",
+                     *       "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Sandbox"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "get-sandbox": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the sandbox to retrieve. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Get Sandbox */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "sandbox",
+                     *       "name": "Integration Testing",
+                     *       "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Sandbox"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "delete-sandbox": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the sandbox to delete. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Delete Sandbox */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {} */
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "list-units": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Filter by unit dimension code (e.g. "mass", "quantity").
+                 * @example example
+                 */
+                type?: string;
+                /**
+                 * @description Filter by unit group membership.
+                 * @example []
+                 */
+                unit_group_ids?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for List Units */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "object": "list",
+                     *       "page_info": {
+                     *         "next_cursor": "unit_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "prev_cursor": null,
+                     *         "has_next_page": true,
+                     *         "has_prev_page": false
+                     *       },
+                     *       "data": [
+                     *         {
+                     *           "id": "unit_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "1000.000000000000000000000000000000",
+                     *           "ratio_denominator": "1.000000000000000000000000000000",
+                     *           "offset_numerator": "0.000000000000000000000000000000",
+                     *           "offset_denominator": "1.000000000000000000000000000000",
+                     *           "is_base_unit": false,
+                     *           "is_internal": false,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       ]
+                     *     }
+                     */
+                    "application/json": components["schemas"]["List_Unit"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["APIErrorResponse"];
                 };
             };
