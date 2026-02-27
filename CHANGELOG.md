@@ -1,5 +1,11 @@
 # @augno/internal-sdk
 
+## 3.1.0
+
+### Minor Changes
+
+- 63a91d6: feat: slim the request logs list
+
 ## 3.0.0
 
 ### Major Changes
