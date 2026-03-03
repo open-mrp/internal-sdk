@@ -1,5 +1,11 @@
 # @augno/internal-sdk
 
+## 3.2.0
+
+### Minor Changes
+
+- 16611ff: feat: new unit endpoints
+
 ## 3.1.0
 
 ### Minor Changes
