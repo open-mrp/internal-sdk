@@ -715,11 +715,47 @@ export interface paths {
          */
         get: operations["list-units"];
         put?: never;
-        post?: never;
+        /**
+         * Create Unit
+         * @description This endpoint creates a new account-owned unit.
+         */
+        post: operations["create-unit"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/core/units/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Unit
+         * @description This endpoint returns a single unit by its ID.
+         *     The unit must belong to the requesting account or be a system (global) unit.
+         */
+        get: operations["get-unit"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete Unit
+         * @description This endpoint deletes an account-owned unit.
+         *     Associated unit group memberships are also removed. System units cannot be deleted.
+         */
+        delete: operations["delete-unit"];
+        options?: never;
+        head?: never;
+        /**
+         * Update Unit
+         * @description This endpoint partially updates an account-owned unit.
+         *     Only provided fields are updated; absent fields retain their current values.
+         *     System units cannot be updated.
+         */
+        patch: operations["update-unit"];
         trace?: never;
     };
 }
@@ -1058,6 +1094,40 @@ export interface components {
             object: "registration_session";
         };
         /**
+         * @description CreateUnitRequest is the request to create a new unit.
+         * @example {
+         *       "name": "Gram",
+         *       "abbreviation": "g",
+         *       "type": "mass",
+         *       "ratio_numerator": "1.000000000000000000000000000000",
+         *       "ratio_denominator": "1.000000000000000000000000000000",
+         *       "offset_numerator": "0.000000000000000000000000000000",
+         *       "offset_denominator": "1.000000000000000000000000000000",
+         *       "is_base_unit": true
+         *     }
+         */
+        CreateUnitRequest: {
+            /** @description The display name of the unit (e.g. "Gram"). */
+            name: string;
+            /** @description The short abbreviation for the unit (e.g. "g"). */
+            abbreviation: string;
+            /**
+             * @description The unit dimension code (e.g. "mass", "quantity").
+             * @enum {string}
+             */
+            type: "currency" | "quantity" | "time" | "mass" | "volume" | "length" | "temperature" | "area";
+            /** @description The conversion ratio numerator relative to the base unit, as a decimal string. */
+            ratio_numerator: string;
+            /** @description The conversion ratio denominator relative to the base unit, as a decimal string. */
+            ratio_denominator: string;
+            /** @description The conversion offset numerator, as a decimal string. */
+            offset_numerator: string;
+            /** @description The conversion offset denominator, as a decimal string. */
+            offset_denominator: string;
+            /** @description Whether this unit is the base unit for its dimension. */
+            is_base_unit: boolean;
+        };
+        /**
          * @description The request to create a user for a registration session
          * @example {
          *       "name": "Jane Smith",
@@ -1391,7 +1461,7 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": null,
+         *         "next_cursor": "rl_01jm4r6700f8nwq3v5hx2d9ktp",
          *         "prev_cursor": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
@@ -1404,20 +1474,36 @@ export interface components {
          *           "host": "https://api.augno.com",
          *           "path": "/v1/core/sandboxes",
          *           "normalized_route": "/v1/core/sandboxes",
-         *           "query_json": null,
+         *           "query_json": "{\"limit\":10}",
          *           "status_code": 200,
          *           "latency_us": 12345,
-         *           "api_version": null,
-         *           "identity_type": null,
-         *           "client_ip": null,
-         *           "user_agent": null,
+         *           "api_version": "2026-01-01",
+         *           "identity_type": "user",
+         *           "client_ip": "198.51.100.7",
+         *           "user_agent": "Mozilla/5.0",
          *           "referrer": null,
          *           "error_code": null,
          *           "error_message": null,
-         *           "occurred_at": "2026-02-27T08:48:00.315553-05:00",
-         *           "created_at": "2026-02-27T08:48:00.315553-05:00",
-         *           "account": null,
-         *           "actor": null,
+         *           "occurred_at": "2026-05-10T00:00:00Z",
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "account": {
+         *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *             "object_type": "account",
+         *             "name": "Acme Inc."
+         *           },
+         *           "actor": {
+         *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+         *             "object_type": "user",
+         *             "name": "John Doe",
+         *             "email": "jdoe@augno.com",
+         *             "redacted_value": null,
+         *             "role": {
+         *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *               "object_type": "role",
+         *               "name": "Admin",
+         *               "role_type_code": "admin"
+         *             }
+         *           },
          *           "idempotency_key": null
          *         }
          *       ]
@@ -1920,23 +2006,39 @@ export interface components {
          *       "host": "https://api.augno.com",
          *       "path": "/v1/core/sandboxes",
          *       "normalized_route": "/v1/core/sandboxes",
-         *       "query_json": null,
+         *       "query_json": "{\"limit\":10}",
          *       "status_code": 200,
          *       "latency_us": 12345,
-         *       "api_version": null,
-         *       "identity_type": null,
-         *       "client_ip": null,
-         *       "user_agent": null,
+         *       "api_version": "2026-01-01",
+         *       "identity_type": "user",
+         *       "client_ip": "198.51.100.7",
+         *       "user_agent": "Mozilla/5.0",
          *       "referrer": null,
          *       "error_code": null,
          *       "error_message": null,
-         *       "occurred_at": "2026-02-27T08:48:00.315586-05:00",
-         *       "created_at": "2026-02-27T08:48:00.315586-05:00",
-         *       "account": null,
-         *       "actor": null,
+         *       "occurred_at": "2026-05-10T00:00:00Z",
+         *       "created_at": "2026-05-10T00:00:00Z",
+         *       "account": {
+         *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *         "object_type": "account",
+         *         "name": "Acme Inc."
+         *       },
+         *       "actor": {
+         *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+         *         "object_type": "user",
+         *         "name": "John Doe",
+         *         "email": "jdoe@augno.com",
+         *         "redacted_value": null,
+         *         "role": {
+         *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *           "object_type": "role",
+         *           "name": "Admin",
+         *           "role_type_code": "admin"
+         *         }
+         *       },
          *       "idempotency_key": null,
          *       "request_body_json": null,
-         *       "response_body_json": null
+         *       "response_body_json": "{\"object\":\"list\",\"data\":[...]}"
          *     }
          */
         RequestLog: {
@@ -2040,20 +2142,36 @@ export interface components {
          *       "host": "https://api.augno.com",
          *       "path": "/v1/core/sandboxes",
          *       "normalized_route": "/v1/core/sandboxes",
-         *       "query_json": null,
+         *       "query_json": "{\"limit\":10}",
          *       "status_code": 200,
          *       "latency_us": 12345,
-         *       "api_version": null,
-         *       "identity_type": null,
-         *       "client_ip": null,
-         *       "user_agent": null,
+         *       "api_version": "2026-01-01",
+         *       "identity_type": "user",
+         *       "client_ip": "198.51.100.7",
+         *       "user_agent": "Mozilla/5.0",
          *       "referrer": null,
          *       "error_code": null,
          *       "error_message": null,
-         *       "occurred_at": "2026-02-27T08:48:00.315557-05:00",
-         *       "created_at": "2026-02-27T08:48:00.315557-05:00",
-         *       "account": null,
-         *       "actor": null,
+         *       "occurred_at": "2026-05-10T00:00:00Z",
+         *       "created_at": "2026-05-10T00:00:00Z",
+         *       "account": {
+         *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *         "object_type": "account",
+         *         "name": "Acme Inc."
+         *       },
+         *       "actor": {
+         *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+         *         "object_type": "user",
+         *         "name": "John Doe",
+         *         "email": "jdoe@augno.com",
+         *         "redacted_value": null,
+         *         "role": {
+         *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *           "object_type": "role",
+         *           "name": "Admin",
+         *           "role_type_code": "admin"
+         *         }
+         *       },
          *       "idempotency_key": null
          *     }
          */
@@ -2391,6 +2509,21 @@ export interface components {
             step?: "verification" | "user_details" | "account_details" | "review" | "payment" | "completed" | null;
             /** @description The session data to merge into the existing session data. */
             session_data?: components["schemas"]["UpdateSessionDataRequest"] | null;
+        };
+        /** @description UpdateUnitRequest is the request to partially update a unit. */
+        UpdateUnitRequest: {
+            /** @description The display name of the unit. */
+            name?: string | null;
+            /** @description The short abbreviation for the unit. */
+            abbreviation?: string | null;
+            /** @description The conversion ratio numerator, as a decimal string. */
+            ratio_numerator?: string | null;
+            /** @description The conversion ratio denominator, as a decimal string. */
+            ratio_denominator?: string | null;
+            /** @description The conversion offset numerator, as a decimal string. */
+            offset_numerator?: string | null;
+            /** @description The conversion offset denominator, as a decimal string. */
+            offset_denominator?: string | null;
         };
         /**
          * @description UsageItem represents a single usage metric with current value and optional limit.
@@ -4158,7 +4291,7 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": null,
+                     *         "next_cursor": "rl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "prev_cursor": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
@@ -4171,20 +4304,36 @@ export interface operations {
                      *           "host": "https://api.augno.com",
                      *           "path": "/v1/core/sandboxes",
                      *           "normalized_route": "/v1/core/sandboxes",
-                     *           "query_json": null,
+                     *           "query_json": "{\"limit\":10}",
                      *           "status_code": 200,
                      *           "latency_us": 12345,
-                     *           "api_version": null,
-                     *           "identity_type": null,
-                     *           "client_ip": null,
-                     *           "user_agent": null,
+                     *           "api_version": "2026-01-01",
+                     *           "identity_type": "user",
+                     *           "client_ip": "198.51.100.7",
+                     *           "user_agent": "Mozilla/5.0",
                      *           "referrer": null,
                      *           "error_code": null,
                      *           "error_message": null,
-                     *           "occurred_at": "2026-02-27T08:48:00.315553-05:00",
-                     *           "created_at": "2026-02-27T08:48:00.315553-05:00",
-                     *           "account": null,
-                     *           "actor": null,
+                     *           "occurred_at": "2026-05-10T00:00:00Z",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "account": {
+                     *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *             "object_type": "account",
+                     *             "name": "Acme Inc."
+                     *           },
+                     *           "actor": {
+                     *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+                     *             "object_type": "user",
+                     *             "name": "John Doe",
+                     *             "email": "jdoe@augno.com",
+                     *             "redacted_value": null,
+                     *             "role": {
+                     *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *               "object_type": "role",
+                     *               "name": "Admin",
+                     *               "role_type_code": "admin"
+                     *             }
+                     *           },
                      *           "idempotency_key": null
                      *         }
                      *       ]
@@ -4230,23 +4379,39 @@ export interface operations {
                      *       "host": "https://api.augno.com",
                      *       "path": "/v1/core/sandboxes",
                      *       "normalized_route": "/v1/core/sandboxes",
-                     *       "query_json": null,
+                     *       "query_json": "{\"limit\":10}",
                      *       "status_code": 200,
                      *       "latency_us": 12345,
-                     *       "api_version": null,
-                     *       "identity_type": null,
-                     *       "client_ip": null,
-                     *       "user_agent": null,
+                     *       "api_version": "2026-01-01",
+                     *       "identity_type": "user",
+                     *       "client_ip": "198.51.100.7",
+                     *       "user_agent": "Mozilla/5.0",
                      *       "referrer": null,
                      *       "error_code": null,
                      *       "error_message": null,
-                     *       "occurred_at": "2026-02-27T08:48:00.315586-05:00",
-                     *       "created_at": "2026-02-27T08:48:00.315586-05:00",
-                     *       "account": null,
-                     *       "actor": null,
+                     *       "occurred_at": "2026-05-10T00:00:00Z",
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "account": {
+                     *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "object_type": "account",
+                     *         "name": "Acme Inc."
+                     *       },
+                     *       "actor": {
+                     *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+                     *         "object_type": "user",
+                     *         "name": "John Doe",
+                     *         "email": "jdoe@augno.com",
+                     *         "redacted_value": null,
+                     *         "role": {
+                     *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *           "object_type": "role",
+                     *           "name": "Admin",
+                     *           "role_type_code": "admin"
+                     *         }
+                     *       },
                      *       "idempotency_key": null,
                      *       "request_body_json": null,
-                     *       "response_body_json": null
+                     *       "response_body_json": "{\"object\":\"list\",\"data\":[...]}"
                      *     }
                      */
                     "application/json": components["schemas"]["RequestLog"];
@@ -4509,6 +4674,205 @@ export interface operations {
                      *     }
                      */
                     "application/json": components["schemas"]["List_Unit"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "create-unit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The request body for Create Unit */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "Gram",
+                 *       "abbreviation": "g",
+                 *       "type": "mass",
+                 *       "ratio_numerator": "1.000000000000000000000000000000",
+                 *       "ratio_denominator": "1.000000000000000000000000000000",
+                 *       "offset_numerator": "0.000000000000000000000000000000",
+                 *       "offset_denominator": "1.000000000000000000000000000000",
+                 *       "is_base_unit": true
+                 *     }
+                 */
+                "application/json": components["schemas"]["CreateUnitRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Create Unit */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "unit_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "unit",
+                     *       "name": "Kilogram",
+                     *       "abbreviation": "kg",
+                     *       "type": "mass",
+                     *       "ratio_numerator": "1000.000000000000000000000000000000",
+                     *       "ratio_denominator": "1.000000000000000000000000000000",
+                     *       "offset_numerator": "0.000000000000000000000000000000",
+                     *       "offset_denominator": "1.000000000000000000000000000000",
+                     *       "is_base_unit": false,
+                     *       "is_internal": false,
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Unit"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "get-unit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the unit to retrieve. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Get Unit */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "unit_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "unit",
+                     *       "name": "Kilogram",
+                     *       "abbreviation": "kg",
+                     *       "type": "mass",
+                     *       "ratio_numerator": "1000.000000000000000000000000000000",
+                     *       "ratio_denominator": "1.000000000000000000000000000000",
+                     *       "offset_numerator": "0.000000000000000000000000000000",
+                     *       "offset_denominator": "1.000000000000000000000000000000",
+                     *       "is_base_unit": false,
+                     *       "is_internal": false,
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Unit"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "delete-unit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the unit to delete. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Delete Unit */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {} */
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "update-unit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the unit to update. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The request body for Update Unit */
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateUnitRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Update Unit */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "unit_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "unit",
+                     *       "name": "Kilogram",
+                     *       "abbreviation": "kg",
+                     *       "type": "mass",
+                     *       "ratio_numerator": "1000.000000000000000000000000000000",
+                     *       "ratio_denominator": "1.000000000000000000000000000000",
+                     *       "offset_numerator": "0.000000000000000000000000000000",
+                     *       "offset_denominator": "1.000000000000000000000000000000",
+                     *       "is_base_unit": false,
+                     *       "is_internal": false,
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Unit"];
                 };
             };
             /** @description Error response */
