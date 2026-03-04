@@ -1535,7 +1535,6 @@ export interface components {
          *           "id": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "sandbox",
          *           "name": "Integration Testing",
-         *           "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
          *           "owner_account": {
          *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
          *             "object": "account",
@@ -2320,7 +2319,6 @@ export interface components {
          *       "id": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "sandbox",
          *       "name": "Integration Testing",
-         *       "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
          *       "owner_account": {
          *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
          *         "object": "account",
@@ -2340,8 +2338,6 @@ export interface components {
             object: "sandbox";
             /** @description The display name of the sandbox. */
             name: string;
-            /** @description The ID of the account this sandbox belongs to. */
-            account_id: string;
             /**
              * @description The owner account of this sandbox. Expandable.
              * @example {
@@ -4553,7 +4549,6 @@ export interface operations {
                      *           "id": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "sandbox",
                      *           "name": "Integration Testing",
-                     *           "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
                      *           "owner_account": {
                      *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
                      *             "object": "account",
@@ -4618,7 +4613,6 @@ export interface operations {
                      *       "id": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "sandbox",
                      *       "name": "Integration Testing",
-                     *       "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
                      *       "owner_account": {
                      *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
                      *         "object": "account",
@@ -4673,7 +4667,6 @@ export interface operations {
                      *       "id": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "sandbox",
                      *       "name": "Integration Testing",
-                     *       "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
                      *       "owner_account": {
                      *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
                      *         "object": "account",
