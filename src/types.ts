@@ -803,9 +803,9 @@ export interface components {
          *       "redacted_value": "aug_sk_prod_...hjt4",
          *       "role": {
          *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *         "object_type": "",
+         *         "object": "role",
          *         "name": "Admin",
-         *         "role_type_code": null
+         *         "role_type_code": "admin"
          *       },
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z",
@@ -818,7 +818,7 @@ export interface components {
             /** @description The unique identifier for the API key. */
             id: string;
             /**
-             * @description The object type.
+             * @description The resource type identifier.
              * @enum {string}
              */
             object: "api_key";
@@ -827,15 +827,15 @@ export interface components {
             /** @description The redacted value of the API key for display purposes. */
             redacted_value: string;
             /**
-             * @description The role associated with this API key.
+             * @description The role associated with this API key. Expandable.
              * @example {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-             *       "object_type": "role",
+             *       "object": "role",
              *       "name": "Admin",
              *       "role_type_code": "admin"
              *     }
              */
-            role: components["schemas"]["LightRole"];
+            role: components["schemas"]["LightRole"] | null;
             /**
              * Format: date-time
              * @description The timestamp when the API key was created.
@@ -954,7 +954,7 @@ export interface components {
             /** @description The ID of the created account. */
             id: string;
             /**
-             * @description The object type.
+             * @description The resource type identifier.
              * @enum {string}
              */
             object: "account";
@@ -1088,7 +1088,7 @@ export interface components {
             /** @description The unique identifier of the created registration session. */
             id: string;
             /**
-             * @description The object type.
+             * @description The resource type identifier.
              * @enum {string}
              */
             object: "registration_session";
@@ -1151,7 +1151,7 @@ export interface components {
             /** @description The ID of the created user. */
             id: string;
             /**
-             * @description The object type.
+             * @description The resource type identifier.
              * @enum {string}
              */
             object: "user";
@@ -1167,9 +1167,9 @@ export interface components {
          *         "redacted_value": "aug_sk_prod_...hjt4",
          *         "role": {
          *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *           "object_type": "",
+         *           "object": "role",
          *           "name": "Admin",
-         *           "role_type_code": null
+         *           "role_type_code": "admin"
          *         },
          *         "created_at": "2026-05-10T00:00:00Z",
          *         "updated_at": "2026-05-10T00:23:00Z",
@@ -1191,9 +1191,9 @@ export interface components {
              *       "redacted_value": "aug_sk_prod_...hjt4",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-             *         "object_type": "",
+             *         "object": "role",
              *         "name": "Admin",
-             *         "role_type_code": null
+             *         "role_type_code": "admin"
              *       },
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z",
@@ -1229,7 +1229,7 @@ export interface components {
             /** @description The unique identifier for this enterprise inquiry. */
             id: string;
             /**
-             * @description The object type.
+             * @description The resource type identifier.
              * @enum {string}
              */
             object: "enterprise_inquiry";
@@ -1253,7 +1253,7 @@ export interface components {
          * @description LightAccount represents a minimal account reference.
          * @example {
          *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
-         *       "object_type": "account",
+         *       "object": "account",
          *       "name": "Acme Inc."
          *     }
          */
@@ -1264,7 +1264,7 @@ export interface components {
              * @description The resource type identifier.
              * @enum {string}
              */
-            object_type: "account";
+            object: "account";
             /** @description The display name of the account. */
             name: string;
         };
@@ -1272,7 +1272,7 @@ export interface components {
          * @description LightRole represents a minimal role reference.
          * @example {
          *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *       "object_type": "role",
+         *       "object": "role",
          *       "name": "Admin",
          *       "role_type_code": "admin"
          *     }
@@ -1284,14 +1284,14 @@ export interface components {
              * @description The resource type identifier.
              * @enum {string}
              */
-            object_type: "role";
+            object: "role";
             /** @description The display name of the role. */
             name: string;
             /**
              * @description The role type code.
-             * @enum {string|null}
+             * @enum {string}
              */
-            role_type_code: "admin" | "user" | "scanner" | "sales_rep" | null;
+            role_type_code: "admin" | "user" | "scanner" | "sales_rep";
         };
         /**
          * @description A paginated list of APIKey resources
@@ -1311,9 +1311,9 @@ export interface components {
          *           "redacted_value": "aug_sk_prod_...hjt4",
          *           "role": {
          *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *             "object_type": "",
+         *             "object": "role",
          *             "name": "Admin",
-         *             "role_type_code": null
+         *             "role_type_code": "admin"
          *           },
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z",
@@ -1488,18 +1488,18 @@ export interface components {
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "account": {
          *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
-         *             "object_type": "account",
+         *             "object": "account",
          *             "name": "Acme Inc."
          *           },
          *           "actor": {
          *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *             "object_type": "user",
+         *             "object": "user",
          *             "name": "John Doe",
          *             "email": "jdoe@augno.com",
          *             "redacted_value": null,
          *             "role": {
          *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *               "object_type": "role",
+         *               "object": "role",
          *               "name": "Admin",
          *               "role_type_code": "admin"
          *             }
@@ -1536,6 +1536,11 @@ export interface components {
          *           "object": "sandbox",
          *           "name": "Integration Testing",
          *           "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
+         *           "owner_account": {
+         *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *             "object": "account",
+         *             "name": "Acme Inc."
+         *           },
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         }
@@ -1726,7 +1731,7 @@ export interface components {
             /** @description The unique ID of the plan. */
             id: string;
             /**
-             * @description The object type.
+             * @description The resource type identifier.
              * @enum {string}
              */
             object: "pricing_plan";
@@ -2020,18 +2025,18 @@ export interface components {
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "account": {
          *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
-         *         "object_type": "account",
+         *         "object": "account",
          *         "name": "Acme Inc."
          *       },
          *       "actor": {
          *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *         "object_type": "user",
+         *         "object": "user",
          *         "name": "John Doe",
          *         "email": "jdoe@augno.com",
          *         "redacted_value": null,
          *         "role": {
          *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *           "object_type": "role",
+         *           "object": "role",
          *           "name": "Admin",
          *           "role_type_code": "admin"
          *         }
@@ -2045,7 +2050,7 @@ export interface components {
             /** @description The unique identifier for the request log. */
             id: string;
             /**
-             * @description The object type.
+             * @description The resource type identifier.
              * @enum {string}
              */
             object: "request_log";
@@ -2088,15 +2093,15 @@ export interface components {
              */
             created_at: string;
             /**
-             * @description The account targeted by the request.
+             * @description The account targeted by the request. Expandable.
              * @example {
              *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
-             *       "object_type": "account",
+             *       "object": "account",
              *       "name": "Acme Inc."
              *     }
              */
             account: components["schemas"]["LightAccount"] | null;
-            /** @description Actor details (user or API key). */
+            /** @description Actor details (user or API key). Expandable. */
             actor: components["schemas"]["RequestLogActor"] | null;
             /** @description The user-provided idempotency key value. */
             idempotency_key: string | null;
@@ -2113,7 +2118,7 @@ export interface components {
              * @description The resource type identifier.
              * @enum {string}
              */
-            object_type: "user";
+            object: "user";
             /** @description The actor's display name. */
             name: string | null;
             /** @description The actor's email (users only). */
@@ -2121,10 +2126,10 @@ export interface components {
             /** @description The redacted API key value (API keys only). */
             redacted_value: string | null;
             /**
-             * @description The role assigned to the actor.
+             * @description The role assigned to the actor. Expandable.
              * @example {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-             *       "object_type": "role",
+             *       "object": "role",
              *       "name": "Admin",
              *       "role_type_code": "admin"
              *     }
@@ -2156,18 +2161,18 @@ export interface components {
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "account": {
          *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
-         *         "object_type": "account",
+         *         "object": "account",
          *         "name": "Acme Inc."
          *       },
          *       "actor": {
          *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *         "object_type": "user",
+         *         "object": "user",
          *         "name": "John Doe",
          *         "email": "jdoe@augno.com",
          *         "redacted_value": null,
          *         "role": {
          *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *           "object_type": "role",
+         *           "object": "role",
          *           "name": "Admin",
          *           "role_type_code": "admin"
          *         }
@@ -2179,7 +2184,7 @@ export interface components {
             /** @description The unique identifier for the request log. */
             id: string;
             /**
-             * @description The object type.
+             * @description The resource type identifier.
              * @enum {string}
              */
             object: "request_log";
@@ -2222,15 +2227,15 @@ export interface components {
              */
             created_at: string;
             /**
-             * @description The account targeted by the request.
+             * @description The account targeted by the request. Expandable.
              * @example {
              *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
-             *       "object_type": "account",
+             *       "object": "account",
              *       "name": "Acme Inc."
              *     }
              */
             account: components["schemas"]["LightAccount"] | null;
-            /** @description Actor details (user or API key). */
+            /** @description Actor details (user or API key). Expandable. */
             actor: components["schemas"]["RequestLogActor"] | null;
             /** @description The user-provided idempotency key value. */
             idempotency_key: string | null;
@@ -2316,6 +2321,11 @@ export interface components {
          *       "object": "sandbox",
          *       "name": "Integration Testing",
          *       "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
+         *       "owner_account": {
+         *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *         "object": "account",
+         *         "name": "Acme Inc."
+         *       },
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z"
          *     }
@@ -2324,7 +2334,7 @@ export interface components {
             /** @description The unique identifier for the sandbox. */
             id: string;
             /**
-             * @description The object type.
+             * @description The resource type identifier.
              * @enum {string}
              */
             object: "sandbox";
@@ -2332,6 +2342,15 @@ export interface components {
             name: string;
             /** @description The ID of the account this sandbox belongs to. */
             account_id: string;
+            /**
+             * @description The owner account of this sandbox. Expandable.
+             * @example {
+             *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *       "object": "account",
+             *       "name": "Acme Inc."
+             *     }
+             */
+            owner_account: components["schemas"]["LightAccount"] | null;
             /**
              * Format: date-time
              * @description When this sandbox was created.
@@ -2411,7 +2430,7 @@ export interface components {
             /** @description The unique identifier for the unit. */
             id: string;
             /**
-             * @description The object type.
+             * @description The resource type identifier.
              * @enum {string}
              */
             object: "unit";
@@ -2723,6 +2742,13 @@ export interface operations {
                  *     ]
                  */
                 status?: ("active" | "expired" | "revoked")[];
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "role"
+                 *     ]
+                 */
+                "include[]"?: "role"[];
             };
             header?: never;
             path?: never;
@@ -2753,9 +2779,9 @@ export interface operations {
                      *           "redacted_value": "aug_sk_prod_...hjt4",
                      *           "role": {
                      *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *             "object_type": "",
+                     *             "object": "role",
                      *             "name": "Admin",
-                     *             "role_type_code": null
+                     *             "role_type_code": "admin"
                      *           },
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z",
@@ -2782,7 +2808,15 @@ export interface operations {
     };
     "create-api-key": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "role"
+                 *     ]
+                 */
+                "include[]"?: "role"[];
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -2816,9 +2850,9 @@ export interface operations {
                      *         "redacted_value": "aug_sk_prod_...hjt4",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *           "object_type": "",
+                     *           "object": "role",
                      *           "name": "Admin",
-                     *           "role_type_code": null
+                     *           "role_type_code": "admin"
                      *         },
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z",
@@ -2844,7 +2878,15 @@ export interface operations {
     };
     "get-documentation-api-key": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "role"
+                 *     ]
+                 */
+                "include[]"?: "role"[];
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -2867,9 +2909,9 @@ export interface operations {
                      *         "redacted_value": "aug_sk_prod_...hjt4",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *           "object_type": "",
+                     *           "object": "role",
                      *           "name": "Admin",
-                     *           "role_type_code": null
+                     *           "role_type_code": "admin"
                      *         },
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z",
@@ -2895,7 +2937,15 @@ export interface operations {
     };
     "get-api-key": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "role"
+                 *     ]
+                 */
+                "include[]"?: "role"[];
+            };
             header?: never;
             path: {
                 /** @description The ID of the API key to retrieve. */
@@ -2919,9 +2969,9 @@ export interface operations {
                      *       "redacted_value": "aug_sk_prod_...hjt4",
                      *       "role": {
                      *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *         "object_type": "",
+                     *         "object": "role",
                      *         "name": "Admin",
-                     *         "role_type_code": null
+                     *         "role_type_code": "admin"
                      *       },
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z",
@@ -2979,7 +3029,15 @@ export interface operations {
     };
     "rotate-api-key": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "role"
+                 *     ]
+                 */
+                "include[]"?: "role"[];
+            };
             header?: never;
             path: {
                 /** @description The unique identifier for the API key to rotate. */
@@ -3015,9 +3073,9 @@ export interface operations {
                      *         "redacted_value": "aug_sk_prod_...hjt4",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *           "object_type": "",
+                     *           "object": "role",
                      *           "name": "Admin",
-                     *           "role_type_code": null
+                     *           "role_type_code": "admin"
                      *         },
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z",
@@ -4274,6 +4332,13 @@ export interface operations {
                  * @example true
                  */
                 exact_match?: boolean;
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "account"
+                 *     ]
+                 */
+                "include[]"?: ("account" | "actor" | "actor.role")[];
             };
             header?: never;
             path?: never;
@@ -4318,18 +4383,18 @@ export interface operations {
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "account": {
                      *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
-                     *             "object_type": "account",
+                     *             "object": "account",
                      *             "name": "Acme Inc."
                      *           },
                      *           "actor": {
                      *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *             "object_type": "user",
+                     *             "object": "user",
                      *             "name": "John Doe",
                      *             "email": "jdoe@augno.com",
                      *             "redacted_value": null,
                      *             "role": {
                      *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *               "object_type": "role",
+                     *               "object": "role",
                      *               "name": "Admin",
                      *               "role_type_code": "admin"
                      *             }
@@ -4355,7 +4420,15 @@ export interface operations {
     };
     "get-request-log": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "account"
+                 *     ]
+                 */
+                "include[]"?: ("account" | "actor" | "actor.role")[];
+            };
             header?: never;
             path: {
                 /** @description The ID of the request log to retrieve. */
@@ -4393,18 +4466,18 @@ export interface operations {
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "account": {
                      *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
-                     *         "object_type": "account",
+                     *         "object": "account",
                      *         "name": "Acme Inc."
                      *       },
                      *       "actor": {
                      *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *         "object_type": "user",
+                     *         "object": "user",
                      *         "name": "John Doe",
                      *         "email": "jdoe@augno.com",
                      *         "redacted_value": null,
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *           "object_type": "role",
+                     *           "object": "role",
                      *           "name": "Admin",
                      *           "role_type_code": "admin"
                      *         }
@@ -4446,6 +4519,13 @@ export interface operations {
                  * @example example
                  */
                 q?: string;
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "owner_account"
+                 *     ]
+                 */
+                "include[]"?: "owner_account"[];
             };
             header?: never;
             path?: never;
@@ -4474,6 +4554,11 @@ export interface operations {
                      *           "object": "sandbox",
                      *           "name": "Integration Testing",
                      *           "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
+                     *           "owner_account": {
+                     *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *             "object": "account",
+                     *             "name": "Acme Inc."
+                     *           },
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         }
@@ -4496,7 +4581,15 @@ export interface operations {
     };
     "create-sandbox": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "owner_account"
+                 *     ]
+                 */
+                "include[]"?: "owner_account"[];
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -4526,6 +4619,11 @@ export interface operations {
                      *       "object": "sandbox",
                      *       "name": "Integration Testing",
                      *       "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
+                     *       "owner_account": {
+                     *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "object": "account",
+                     *         "name": "Acme Inc."
+                     *       },
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -4546,7 +4644,15 @@ export interface operations {
     };
     "get-sandbox": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "owner_account"
+                 *     ]
+                 */
+                "include[]"?: "owner_account"[];
+            };
             header?: never;
             path: {
                 /** @description The ID of the sandbox to retrieve. */
@@ -4568,6 +4674,11 @@ export interface operations {
                      *       "object": "sandbox",
                      *       "name": "Integration Testing",
                      *       "account_id": "ac_01jm4r6700g2bz7y4c6e8f1jrm",
+                     *       "owner_account": {
+                     *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "object": "account",
+                     *         "name": "Acme Inc."
+                     *       },
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
