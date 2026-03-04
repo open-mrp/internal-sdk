@@ -100,7 +100,7 @@ jobs:
               if: steps.diff.outputs.changed == 'true'
               run: npm run release
               env:
-                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Commit and push
               if: steps.diff.outputs.changed == 'true'
