@@ -1,5 +1,11 @@
 # @augno/internal-sdk
 
+## 3.2.2
+
+### Patch Changes
+
+- 06e906e: fix: cd
+
 ## 3.2.1
 
 ### Patch Changes
