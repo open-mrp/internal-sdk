@@ -17,12 +17,12 @@ on:
 
 permissions:
     contents: write
-    packages: write
+    pull-requests: write
     id-token: write
 
 jobs:
     sync:
-        name: Sync and Publish
+        name: Sync API Spec
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -92,22 +92,20 @@ jobs:
                   Sync types from API ${API_VERSION}
                   EOF
 
-            - name: Version packages
-              if: steps.diff.outputs.changed == 'true'
-              run: bunx changeset version
-
-            - name: Publish to GitHub Packages
-              if: steps.diff.outputs.changed == 'true'
-              run: npm run release
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Commit and push
+            - name: Create PR
               if: steps.diff.outputs.changed == 'true'
               run: |
+                  API_VERSION="${{ github.event.client_payload.api_version || 'manual' }}"
+                  BRANCH="sync-api-spec/${API_VERSION}-$(date +%s)"
                   git config user.name "github-actions[bot]"
                   git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git checkout -b "$BRANCH"
                   git add -A
-                  API_VERSION="${{ github.event.client_payload.api_version || 'manual' }}"
                   git commit -m "chore: sync types from API ${API_VERSION}"
-                  git push
+                  git push -u origin "$BRANCH"
+                  gh pr create \
+                    --title "chore: sync types from API ${API_VERSION}" \
+                    --body "Auto-generated PR to sync internal SDK types from API release ${API_VERSION}." \
+                    --base main
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
