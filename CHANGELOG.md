@@ -1,5 +1,11 @@
 # @augno/internal-sdk
 
+## 3.3.0
+
+### Minor Changes
+
+- b0e3291: feat: agents
+
 ## 3.2.3
 
 ### Patch Changes
