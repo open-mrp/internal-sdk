@@ -12,7 +12,7 @@ export interface V2ClientOptions extends ClientOptions {
      */
     version?: string;
     /**
-     * Optional callback to get the current account ID for the Augno-Account-ID header.
+     * Optional callback to get the current account ID for the Augno-Account header.
      */
     getAccountID?: () => string | undefined;
     /**
@@ -25,7 +25,7 @@ export interface V2ClientOptions extends ClientOptions {
  * Creates a type-safe API client for the V2 API with built-in Augno authentication logic.
  * 
  * This client automatically:
- * 1. Attaches the Augno-Account-ID header if a getter is provided.
+ * 1. Attaches the Augno-Account header if a getter is provided.
  * 2. Handles 401 Unauthorized responses by attempting to refresh the access token.
  * 3. Retries the original request after a successful refresh.
  */
