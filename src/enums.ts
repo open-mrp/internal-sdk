@@ -1,5 +1,5 @@
 export enum RequestHeaders {
-    accountID = 'Augno-Account-ID',
+    accountID = 'Augno-Account',
     version = 'Augno-Version'
 }
 

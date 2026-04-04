@@ -28,7 +28,7 @@ Types flow from `specs/internal_openapi_spec.json` → `npm run generate` → `s
 ### Source Files
 
 - **`src/index.ts`** — Main entry point. Exports `createV2Client()` factory function, `V2ClientOptions` type, and re-exports `components`/`paths` types. The client wraps `openapi-fetch` with middleware that:
-  - Attaches `Augno-Account-ID` header via a `getAccountID()` callback
+  - Attaches `Augno-Account` header via a `getAccountID()` callback
   - Handles 401 responses with automatic token refresh (POST to `/v1/auth/access-tokens`)
   - Prevents concurrent refresh requests with a shared promise pattern
   - Skips auth middleware for login and token refresh paths
