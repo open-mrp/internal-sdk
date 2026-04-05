@@ -42175,11 +42175,11 @@ export interface components {
              * @enum {string|null}
              */
             status_code?: "normal" | "preferred" | "hold_shipment" | "hold_all" | null;
-            /** @description The customer email address. */
+            /** @description The customer email address. Send null to clear. */
             email?: string | null;
-            /** @description The customer phone number. */
+            /** @description The customer phone number. Send null to clear. */
             phone?: string | null;
-            /** @description The customer website URL. */
+            /** @description The customer website URL. Send null to clear. */
             url?: string | null;
             /** @description Whether the customer is EDI enabled. */
             is_edi_enabled?: boolean | null;
@@ -42213,7 +42213,7 @@ export interface components {
             /** @description The ship-to address ID. */
             ship_to_address_id?: string | null;
             /** @description The customer price group IDs. When provided, replaces all existing price groups. */
-            customer_price_group_ids: string[];
+            customer_price_group_ids?: string[] | null;
             /** @description The customer type group ID. */
             customer_type_group_id?: string | null;
             /**
@@ -42319,10 +42319,10 @@ export interface components {
             name?: string | null;
             /**
              * @description The code of the location type.
-             * @enum {string|null}
+             * @enum {string}
              */
-            type_code?: "building" | "section" | "aisle" | "rack" | "shelf" | "bin" | null;
-            /** @description The ID of the parent location. */
+            type_code?: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
+            /** @description The ID of the parent location. Send null to clear. */
             parent_id?: string | null;
             /** @description Set to true to remove the parent (make top-level). */
             clear_parent: boolean;
@@ -42876,14 +42876,14 @@ export interface components {
             notes?: string | null;
             /**
              * @description The label size code for the scanning station.
-             * @enum {string|null}
+             * @enum {string}
              */
-            label_size_code?: "1x1" | "1x3" | "1x4" | "2x4" | null;
+            label_size_code?: "1x1" | "1x3" | "1x4" | "2x4";
             /**
              * @description The label type code for the scanning station.
-             * @enum {string|null}
+             * @enum {string}
              */
-            label_type_code?: "tag" | "traveler" | null;
+            label_type_code?: "tag" | "traveler";
             /** @description Whether material check is required at this station. */
             material_check_required?: boolean | null;
         };
@@ -43008,9 +43008,9 @@ export interface components {
             name?: string | null;
             /**
              * @description The shipping term type.
-             * @enum {string|null}
+             * @enum {string}
              */
-            type?: "free_freight" | "flat_rate_freight" | "carrier_rate_freight" | null;
+            type?: "free_freight" | "flat_rate_freight" | "carrier_rate_freight";
             /** @description The flat rate for this shipping term. Send null to clear. */
             flat_rate?: components["schemas"]["QuantityInputRequest"] | null;
             /** @description The minimum order value for free shipping under this term. Send null to clear. */
