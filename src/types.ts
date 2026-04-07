@@ -392,6 +392,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/auth/actions/magic-login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Magic Login
+         * @description Exchanges a magic login token for a session, setting access and refresh tokens in cookies.
+         */
+        post: operations["magic-login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/auth/api-keys": {
         parameters: {
             query?: never;
@@ -26554,6 +26574,16 @@ export interface components {
              */
             updated_at: string;
         };
+        /**
+         * @description The request to exchange a magic login token for a session
+         * @example {
+         *       "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1Z25vLmNvbSIsInN1YiI6InVzXzAxZ2Y3YTgyMDBlMXNyMjBwZzl3eDZkMmswIiwiZXhwIjoxNzU2ODIzMzI5LCJpYXQiOjE3NTY4MTk3Mjl9.2ZodhtiHDqIQnDjzrJZvqIdEbQbmkgbTaz4OXdbXCWNjzEsy2-5e78XQRu-aZ8MoZ2dusIVKQcN1Tm-arKR0_Q"
+         *     }
+         */
+        MagicLoginRequest: {
+            /** @description The magic login token from the "already registered" email. */
+            token: string;
+        };
         /** @description ManufacturingMetrics represents manufacturing performance metrics for a period. */
         ManufacturingMetrics: {
             /** @description The production metric value. */
@@ -34360,6 +34390,8 @@ export interface components {
             password: string;
             /** @description The full name of the new user. */
             name: string;
+            /** @description When registering from a customer portal, scopes the magic-login link in the "already registered" email. */
+            account_slug?: string | null;
         };
         /**
          * @description RegistrationFlow represents a configured registration flow for customer onboarding.
@@ -42175,11 +42207,11 @@ export interface components {
              * @enum {string|null}
              */
             status_code?: "normal" | "preferred" | "hold_shipment" | "hold_all" | null;
-            /** @description The customer email address. */
+            /** @description The customer email address. Send null to clear. */
             email?: string | null;
-            /** @description The customer phone number. */
+            /** @description The customer phone number. Send null to clear. */
             phone?: string | null;
-            /** @description The customer website URL. */
+            /** @description The customer website URL. Send null to clear. */
             url?: string | null;
             /** @description Whether the customer is EDI enabled. */
             is_edi_enabled?: boolean | null;
@@ -42213,7 +42245,7 @@ export interface components {
             /** @description The ship-to address ID. */
             ship_to_address_id?: string | null;
             /** @description The customer price group IDs. When provided, replaces all existing price groups. */
-            customer_price_group_ids: string[];
+            customer_price_group_ids?: string[] | null;
             /** @description The customer type group ID. */
             customer_type_group_id?: string | null;
             /**
@@ -42319,10 +42351,10 @@ export interface components {
             name?: string | null;
             /**
              * @description The code of the location type.
-             * @enum {string|null}
+             * @enum {string}
              */
-            type_code?: "building" | "section" | "aisle" | "rack" | "shelf" | "bin" | null;
-            /** @description The ID of the parent location. */
+            type_code?: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
+            /** @description The ID of the parent location. Send null to clear. */
             parent_id?: string | null;
             /** @description Set to true to remove the parent (make top-level). */
             clear_parent: boolean;
@@ -42876,14 +42908,14 @@ export interface components {
             notes?: string | null;
             /**
              * @description The label size code for the scanning station.
-             * @enum {string|null}
+             * @enum {string}
              */
-            label_size_code?: "1x1" | "1x3" | "1x4" | "2x4" | null;
+            label_size_code?: "1x1" | "1x3" | "1x4" | "2x4";
             /**
              * @description The label type code for the scanning station.
-             * @enum {string|null}
+             * @enum {string}
              */
-            label_type_code?: "tag" | "traveler" | null;
+            label_type_code?: "tag" | "traveler";
             /** @description Whether material check is required at this station. */
             material_check_required?: boolean | null;
         };
@@ -43008,9 +43040,9 @@ export interface components {
             name?: string | null;
             /**
              * @description The shipping term type.
-             * @enum {string|null}
+             * @enum {string}
              */
-            type?: "free_freight" | "flat_rate_freight" | "carrier_rate_freight" | null;
+            type?: "free_freight" | "flat_rate_freight" | "carrier_rate_freight";
             /** @description The flat rate for this shipping term. Send null to clear. */
             flat_rate?: components["schemas"]["QuantityInputRequest"] | null;
             /** @description The minimum order value for free shipping under this term. Send null to clear. */
@@ -46465,6 +46497,58 @@ export interface operations {
         };
         responses: {
             /** @description Successful response for Login User */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+                     *       "object": "user",
+                     *       "email": "jdoe@augno.com",
+                     *       "name": "John Doe",
+                     *       "username": "jdoe",
+                     *       "email_verified_at": "2026-06-10T00:00:00Z",
+                     *       "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "magic-login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The request body for Magic Login */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1Z25vLmNvbSIsInN1YiI6InVzXzAxZ2Y3YTgyMDBlMXNyMjBwZzl3eDZkMmswIiwiZXhwIjoxNzU2ODIzMzI5LCJpYXQiOjE3NTY4MTk3Mjl9.2ZodhtiHDqIQnDjzrJZvqIdEbQbmkgbTaz4OXdbXCWNjzEsy2-5e78XQRu-aZ8MoZ2dusIVKQcN1Tm-arKR0_Q"
+                 *     }
+                 */
+                "application/json": components["schemas"]["MagicLoginRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Magic Login */
             200: {
                 headers: {
                     [name: string]: unknown;
