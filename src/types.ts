@@ -13343,8 +13343,35 @@ export interface components {
          * @example {
          *       "name": "Acme Inc.",
          *       "note": "Key enterprise account",
+         *       "status_code": "normal",
          *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
-         *       "default_payment_term_id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp"
+         *       "default_payment_term_id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
+         *       "default_shipping_term_id": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
+         *       "customer_type_group_id": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
+         *       "bill_to_address": {
+         *         "name": "Acme Inc.",
+         *         "phone": null,
+         *         "email": null,
+         *         "is_drop_ship": false,
+         *         "street_line_1": "123 Main St",
+         *         "street_line_2": null,
+         *         "locality": "New York",
+         *         "state": "NY",
+         *         "postal_code": "10001",
+         *         "country": "US"
+         *       },
+         *       "ship_to_address": {
+         *         "name": "Acme Inc.",
+         *         "phone": null,
+         *         "email": null,
+         *         "is_drop_ship": false,
+         *         "street_line_1": "123 Main St",
+         *         "street_line_2": null,
+         *         "locality": "New York",
+         *         "state": "NY",
+         *         "postal_code": "10001",
+         *         "country": "US"
+         *       }
          *     }
          */
         CreateCustomerRequest: {
@@ -13364,7 +13391,7 @@ export interface components {
              * @description The account status code.
              * @enum {string|null}
              */
-            status_code?: "normal" | "preferred" | "hold_shipment" | "hold_all" | null;
+            status_code: "normal" | "preferred" | "hold_shipment" | "hold_all" | null;
             /** @description Whether the customer is EDI enabled. */
             is_edi_enabled?: boolean | null;
             /**
@@ -13378,13 +13405,13 @@ export interface components {
              */
             freight_policy?: "free_freight" | "billed_freight";
             /** @description The default carrier ID. */
-            default_carrier_id?: string | null;
+            default_carrier_id: string | null;
             /** @description The default service level ID. */
             default_service_level_id?: string | null;
             /** @description The default payment term ID. */
-            default_payment_term_id?: string | null;
+            default_payment_term_id: string | null;
             /** @description The default shipping term ID. */
-            default_shipping_term_id?: string | null;
+            default_shipping_term_id: string | null;
             /**
              * @description The default priority code.
              * @enum {string|null}
@@ -13392,14 +13419,10 @@ export interface components {
             default_priority_code?: "low" | "normal" | "high" | null;
             /** @description The default sales rep user ID. */
             default_sales_rep_user_id?: string | null;
-            /** @description The bill-to address ID. */
-            bill_to_address_id?: string | null;
-            /** @description The ship-to address ID. */
-            ship_to_address_id?: string | null;
             /** @description The customer price group IDs. */
             customer_price_group_ids: string[];
             /** @description The customer type group ID. */
-            customer_type_group_id?: string | null;
+            customer_type_group_id: string | null;
             /**
              * @description The carrier billing type.
              * @enum {string|null}
@@ -13407,6 +13430,10 @@ export interface components {
             carrier_billing_type?: "sender" | "third_party" | null;
             /** @description The carrier billing account number. */
             carrier_billing_account?: string | null;
+            /** @description The bill-to address for this customer. */
+            bill_to_address: components["schemas"]["AddressInput"] | null;
+            /** @description The ship-to address for this customer. */
+            ship_to_address: components["schemas"]["AddressInput"] | null;
         };
         /**
          * @description CreateDCLocationRequest is the request to create a new DC location.
@@ -82472,8 +82499,35 @@ export interface operations {
                  * @example {
                  *       "name": "Acme Inc.",
                  *       "note": "Key enterprise account",
+                 *       "status_code": "normal",
                  *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
-                 *       "default_payment_term_id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp"
+                 *       "default_payment_term_id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
+                 *       "default_shipping_term_id": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
+                 *       "customer_type_group_id": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
+                 *       "bill_to_address": {
+                 *         "name": "Acme Inc.",
+                 *         "phone": null,
+                 *         "email": null,
+                 *         "is_drop_ship": false,
+                 *         "street_line_1": "123 Main St",
+                 *         "street_line_2": null,
+                 *         "locality": "New York",
+                 *         "state": "NY",
+                 *         "postal_code": "10001",
+                 *         "country": "US"
+                 *       },
+                 *       "ship_to_address": {
+                 *         "name": "Acme Inc.",
+                 *         "phone": null,
+                 *         "email": null,
+                 *         "is_drop_ship": false,
+                 *         "street_line_1": "123 Main St",
+                 *         "street_line_2": null,
+                 *         "locality": "New York",
+                 *         "state": "NY",
+                 *         "postal_code": "10001",
+                 *         "country": "US"
+                 *       }
                  *     }
                  */
                 "application/json": components["schemas"]["CreateCustomerRequest"];
