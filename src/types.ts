@@ -42277,9 +42277,9 @@ export interface components {
             customer_type_group_id?: string | null;
             /**
              * @description The carrier billing type.
-             * @enum {string|null}
+             * @enum {string}
              */
-            carrier_billing_type?: "sender" | "third_party" | null;
+            carrier_billing_type?: "sender" | "third_party";
             /** @description The carrier billing account number. */
             carrier_billing_account?: string | null;
         };
@@ -43136,7 +43136,7 @@ export interface components {
             /** @description The end of the zipcode range (501-99999). */
             end_zipcode?: number | null;
             /** @description The ID of the sales rep (account user) assigned to this territory. */
-            sales_rep_id?: string | null;
+            sales_rep_id?: string;
             /** @description The ID of the product line this territory is scoped to. */
             product_line_id?: string | null;
             /** @description Set to true to remove the product line from this territory. */
