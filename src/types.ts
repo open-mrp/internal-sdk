@@ -7079,6 +7079,7 @@ export interface components {
          *         "is_parent_account": false,
          *         "commission_policy": "",
          *         "note": null,
+         *         "credit_limit": null,
          *         "contact_info": null,
          *         "freight_preferences": null,
          *         "defaults": null,
@@ -7214,6 +7215,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -13430,6 +13452,8 @@ export interface components {
             carrier_billing_type?: "sender" | "third_party" | null;
             /** @description The carrier billing account number. */
             carrier_billing_account?: string | null;
+            /** @description The credit limit for this customer. */
+            credit_limit?: components["schemas"]["QuantityInput"] | null;
             /** @description The bill-to address for this customer. */
             bill_to_address: components["schemas"]["AddressInput"] | null;
             /** @description The ship-to address for this customer. */
@@ -14552,6 +14576,27 @@ export interface components {
          *       "is_parent_account": false,
          *       "commission_policy": "commission_applied",
          *       "note": "Preferred customer since 2020.",
+         *       "credit_limit": {
+         *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "object": "quantity",
+         *         "value": "1234.56",
+         *         "display_value": "$1,234.56",
+         *         "unit": {
+         *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "object": "unit",
+         *           "name": "US Dollar",
+         *           "abbreviation": "$",
+         *           "type": "currency",
+         *           "ratio_numerator": "",
+         *           "ratio_denominator": "",
+         *           "offset_numerator": "",
+         *           "offset_denominator": "",
+         *           "is_base_unit": false,
+         *           "owner": null,
+         *           "created_at": "0001-01-01T00:00:00Z",
+         *           "updated_at": "0001-01-01T00:00:00Z"
+         *         }
+         *       },
          *       "contact_info": {
          *         "object": "customer_contact_info",
          *         "email": "orders@acme.com",
@@ -14770,6 +14815,31 @@ export interface components {
             commission_policy: "commission_applied" | "commission_exempt";
             /** @description Notes about the customer. */
             note: string | null;
+            /**
+             * @description The customer's credit limit.
+             * @example {
+             *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *       "object": "quantity",
+             *       "value": "1234.56",
+             *       "display_value": "$1,234.56",
+             *       "unit": {
+             *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "unit",
+             *         "name": "US Dollar",
+             *         "abbreviation": "$",
+             *         "type": "currency",
+             *         "ratio_numerator": "",
+             *         "ratio_denominator": "",
+             *         "offset_numerator": "",
+             *         "offset_denominator": "",
+             *         "is_base_unit": false,
+             *         "owner": null,
+             *         "created_at": "0001-01-01T00:00:00Z",
+             *         "updated_at": "0001-01-01T00:00:00Z"
+             *       }
+             *     }
+             */
+            credit_limit: components["schemas"]["Quantity"] | null;
             /** @description The customer's contact information. */
             contact_info: components["schemas"]["CustomerContactInfo"] | null;
             /** @description The customer's freight preferences. */
@@ -15075,6 +15145,27 @@ export interface components {
          *         "is_parent_account": false,
          *         "commission_policy": "commission_applied",
          *         "note": "Preferred customer since 2020.",
+         *         "credit_limit": {
+         *           "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "object": "quantity",
+         *           "value": "1234.56",
+         *           "display_value": "$1,234.56",
+         *           "unit": {
+         *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *             "object": "unit",
+         *             "name": "US Dollar",
+         *             "abbreviation": "$",
+         *             "type": "currency",
+         *             "ratio_numerator": "",
+         *             "ratio_denominator": "",
+         *             "offset_numerator": "",
+         *             "offset_denominator": "",
+         *             "is_base_unit": false,
+         *             "owner": null,
+         *             "created_at": "0001-01-01T00:00:00Z",
+         *             "updated_at": "0001-01-01T00:00:00Z"
+         *           }
+         *         },
          *         "contact_info": {
          *           "object": "customer_contact_info",
          *           "email": "orders@acme.com",
@@ -15306,6 +15397,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -18319,6 +18431,7 @@ export interface components {
          *         "is_parent_account": false,
          *         "commission_policy": "",
          *         "note": null,
+         *         "credit_limit": null,
          *         "contact_info": null,
          *         "freight_preferences": null,
          *         "defaults": null,
@@ -18409,6 +18522,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -19001,6 +19135,7 @@ export interface components {
          *         "is_parent_account": false,
          *         "commission_policy": "",
          *         "note": null,
+         *         "credit_limit": null,
          *         "contact_info": null,
          *         "freight_preferences": null,
          *         "defaults": null,
@@ -19085,6 +19220,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -20222,6 +20378,7 @@ export interface components {
          *             "is_parent_account": false,
          *             "commission_policy": "",
          *             "note": null,
+         *             "credit_limit": null,
          *             "contact_info": null,
          *             "freight_preferences": null,
          *             "defaults": null,
@@ -22156,6 +22313,27 @@ export interface components {
          *             "is_parent_account": false,
          *             "commission_policy": "commission_applied",
          *             "note": "Preferred customer since 2020.",
+         *             "credit_limit": {
+         *               "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+         *               "object": "quantity",
+         *               "value": "1234.56",
+         *               "display_value": "$1,234.56",
+         *               "unit": {
+         *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *                 "object": "unit",
+         *                 "name": "US Dollar",
+         *                 "abbreviation": "$",
+         *                 "type": "currency",
+         *                 "ratio_numerator": "",
+         *                 "ratio_denominator": "",
+         *                 "offset_numerator": "",
+         *                 "offset_denominator": "",
+         *                 "is_base_unit": false,
+         *                 "owner": null,
+         *                 "created_at": "0001-01-01T00:00:00Z",
+         *                 "updated_at": "0001-01-01T00:00:00Z"
+         *               }
+         *             },
          *             "contact_info": {
          *               "object": "customer_contact_info",
          *               "email": "orders@acme.com",
@@ -23040,6 +23218,7 @@ export interface components {
          *             "is_parent_account": false,
          *             "commission_policy": "",
          *             "note": null,
+         *             "credit_limit": null,
          *             "contact_info": null,
          *             "freight_preferences": null,
          *             "defaults": null,
@@ -23157,6 +23336,7 @@ export interface components {
          *             "is_parent_account": false,
          *             "commission_policy": "",
          *             "note": null,
+         *             "credit_limit": null,
          *             "contact_info": null,
          *             "freight_preferences": null,
          *             "defaults": null,
@@ -24217,6 +24397,7 @@ export interface components {
          *             "is_parent_account": false,
          *             "commission_policy": "",
          *             "note": null,
+         *             "credit_limit": null,
          *             "contact_info": null,
          *             "freight_preferences": null,
          *             "defaults": null,
@@ -24830,6 +25011,7 @@ export interface components {
          *             "is_parent_account": false,
          *             "commission_policy": "",
          *             "note": null,
+         *             "credit_limit": null,
          *             "contact_info": null,
          *             "freight_preferences": null,
          *             "defaults": null,
@@ -25237,6 +25419,7 @@ export interface components {
          *             "is_parent_account": false,
          *             "commission_policy": "",
          *             "note": null,
+         *             "credit_limit": null,
          *             "contact_info": null,
          *             "freight_preferences": null,
          *             "defaults": null,
@@ -27724,6 +27907,7 @@ export interface components {
          *           "is_parent_account": false,
          *           "commission_policy": "",
          *           "note": null,
+         *           "credit_limit": null,
          *           "contact_info": null,
          *           "freight_preferences": null,
          *           "defaults": null,
@@ -27852,6 +28036,7 @@ export interface components {
              *         "is_parent_account": false,
              *         "commission_policy": "",
              *         "note": null,
+             *         "credit_limit": null,
              *         "contact_info": null,
              *         "freight_preferences": null,
              *         "defaults": null,
@@ -28511,6 +28696,7 @@ export interface components {
          *         "is_parent_account": false,
          *         "commission_policy": "",
          *         "note": null,
+         *         "credit_limit": null,
          *         "contact_info": null,
          *         "freight_preferences": null,
          *         "defaults": null,
@@ -28640,6 +28826,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -29065,6 +29272,7 @@ export interface components {
          *         "is_parent_account": false,
          *         "commission_policy": "",
          *         "note": null,
+         *         "credit_limit": null,
          *         "contact_info": null,
          *         "freight_preferences": null,
          *         "defaults": null,
@@ -29120,6 +29328,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -32972,6 +33201,16 @@ export interface components {
              */
             unit: components["schemas"]["Unit"] | null;
         };
+        /** @description QuantityInput represents a value with an associated unit for create/update requests. */
+        QuantityInput: {
+            /**
+             * Format: decimal
+             * @description The decimal value.
+             */
+            value: string;
+            /** @description The unit ID for the value. */
+            unit_id: string;
+        };
         /** @description QuantityInputRequest represents a quantity value and unit pair. */
         QuantityInputRequest: {
             /** @description The decimal value. */
@@ -33255,6 +33494,7 @@ export interface components {
          *         "is_parent_account": false,
          *         "commission_policy": "",
          *         "note": null,
+         *         "credit_limit": null,
          *         "contact_info": null,
          *         "freight_preferences": null,
          *         "defaults": null,
@@ -33619,6 +33859,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -35174,6 +35435,7 @@ export interface components {
          *         "is_parent_account": false,
          *         "commission_policy": "",
          *         "note": null,
+         *         "credit_limit": null,
          *         "contact_info": null,
          *         "freight_preferences": null,
          *         "defaults": null,
@@ -35383,6 +35645,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -36535,6 +36818,7 @@ export interface components {
          *         "is_parent_account": false,
          *         "commission_policy": "",
          *         "note": null,
+         *         "credit_limit": null,
          *         "contact_info": null,
          *         "freight_preferences": null,
          *         "defaults": null,
@@ -36603,6 +36887,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -37473,6 +37778,7 @@ export interface components {
              *         "is_parent_account": false,
              *         "commission_policy": "",
              *         "note": null,
+             *         "credit_limit": null,
              *         "contact_info": null,
              *         "freight_preferences": null,
              *         "defaults": null,
@@ -37667,6 +37973,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -38307,6 +38634,7 @@ export interface components {
              *         "is_parent_account": false,
              *         "commission_policy": "",
              *         "note": null,
+             *         "credit_limit": null,
              *         "contact_info": null,
              *         "freight_preferences": null,
              *         "defaults": null,
@@ -38641,6 +38969,7 @@ export interface components {
              *         "is_parent_account": false,
              *         "commission_policy": "",
              *         "note": null,
+             *         "credit_limit": null,
              *         "contact_info": null,
              *         "freight_preferences": null,
              *         "defaults": null,
@@ -38835,6 +39164,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -40822,6 +41172,7 @@ export interface components {
              *         "is_parent_account": false,
              *         "commission_policy": "",
              *         "note": null,
+             *         "credit_limit": null,
              *         "contact_info": null,
              *         "freight_preferences": null,
              *         "defaults": null,
@@ -41006,6 +41357,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -41414,6 +41786,27 @@ export interface components {
              *       "is_parent_account": false,
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
+             *       "credit_limit": {
+             *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "quantity",
+             *         "value": "1234.56",
+             *         "display_value": "$1,234.56",
+             *         "unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "$",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         }
+             *       },
              *       "contact_info": {
              *         "object": "customer_contact_info",
              *         "email": "orders@acme.com",
@@ -42219,7 +42612,8 @@ export interface components {
          *       "name": "Acme Corp Updated",
          *       "note": "Updated account notes",
          *       "freight_policy": "billed_freight",
-         *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp"
+         *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
+         *       "credit_limit": {}
          *     }
          */
         UpdateCustomerRequest: {
@@ -42282,6 +42676,8 @@ export interface components {
             carrier_billing_type?: "sender" | "third_party";
             /** @description The carrier billing account number. */
             carrier_billing_account?: string | null;
+            /** @description The credit limit for this customer. Send null to clear. */
+            credit_limit?: components["schemas"]["QuantityInput"] | null;
         };
         /**
          * @description UpdateDCLocationRequest is the request to partially update a DC location.
@@ -55422,6 +55818,7 @@ export interface operations {
                      *             "is_parent_account": false,
                      *             "commission_policy": "",
                      *             "note": null,
+                     *             "credit_limit": null,
                      *             "contact_info": null,
                      *             "freight_preferences": null,
                      *             "defaults": null,
@@ -55816,6 +56213,7 @@ export interface operations {
                      *             "is_parent_account": false,
                      *             "commission_policy": "",
                      *             "note": null,
+                     *             "credit_limit": null,
                      *             "contact_info": null,
                      *             "freight_preferences": null,
                      *             "defaults": null,
@@ -56302,6 +56700,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
@@ -56843,6 +57242,7 @@ export interface operations {
                      *             "is_parent_account": false,
                      *             "commission_policy": "",
                      *             "note": null,
+                     *             "credit_limit": null,
                      *             "contact_info": null,
                      *             "freight_preferences": null,
                      *             "defaults": null,
@@ -56957,6 +57357,7 @@ export interface operations {
                      *             "is_parent_account": false,
                      *             "commission_policy": "",
                      *             "note": null,
+                     *             "credit_limit": null,
                      *             "contact_info": null,
                      *             "freight_preferences": null,
                      *             "defaults": null,
@@ -69080,6 +69481,7 @@ export interface operations {
                      *             "is_parent_account": false,
                      *             "commission_policy": "",
                      *             "note": null,
+                     *             "credit_limit": null,
                      *             "contact_info": null,
                      *             "freight_preferences": null,
                      *             "defaults": null,
@@ -69172,6 +69574,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
@@ -69346,6 +69749,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
@@ -69513,6 +69917,7 @@ export interface operations {
                      *           "is_parent_account": false,
                      *           "commission_policy": "",
                      *           "note": null,
+                     *           "credit_limit": null,
                      *           "contact_info": null,
                      *           "freight_preferences": null,
                      *           "defaults": null,
@@ -69671,6 +70076,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
@@ -69827,6 +70233,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
@@ -80579,6 +80986,7 @@ export interface operations {
                      *             "is_parent_account": false,
                      *             "commission_policy": "",
                      *             "note": null,
+                     *             "credit_limit": null,
                      *             "contact_info": null,
                      *             "freight_preferences": null,
                      *             "defaults": null,
@@ -80767,6 +81175,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
@@ -80936,6 +81345,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
@@ -81148,6 +81558,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
@@ -82486,7 +82897,7 @@ export interface operations {
                  *       "bill_to_address"
                  *     ]
                  */
-                "include[]"?: ("bill_to_address" | "ship_to_address" | "type" | "parent_account" | "freight_preferences.carrier" | "freight_preferences.service_level" | "defaults.payment_term" | "defaults.shipping_term" | "defaults.sales_rep" | "defaults.priority" | "contact_info" | "freight_preferences" | "defaults" | "notification_preferences" | "price_groups" | "child_accounts")[];
+                "include[]"?: ("bill_to_address" | "ship_to_address" | "type" | "parent_account" | "freight_preferences.carrier" | "freight_preferences.service_level" | "defaults.payment_term" | "defaults.shipping_term" | "defaults.sales_rep" | "defaults.priority" | "contact_info" | "freight_preferences" | "defaults" | "notification_preferences" | "price_groups" | "child_accounts" | "credit_limit")[];
             };
             header?: never;
             path?: never;
@@ -82551,6 +82962,27 @@ export interface operations {
                      *       "is_parent_account": false,
                      *       "commission_policy": "commission_applied",
                      *       "note": "Preferred customer since 2020.",
+                     *       "credit_limit": {
+                     *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "quantity",
+                     *         "value": "1234.56",
+                     *         "display_value": "$1,234.56",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "$",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         }
+                     *       },
                      *       "contact_info": {
                      *         "object": "customer_contact_info",
                      *         "email": "orders@acme.com",
@@ -82859,7 +83291,7 @@ export interface operations {
                  *       "bill_to_address"
                  *     ]
                  */
-                "include[]"?: ("bill_to_address" | "ship_to_address" | "type" | "parent_account" | "freight_preferences.carrier" | "freight_preferences.service_level" | "defaults.payment_term" | "defaults.shipping_term" | "defaults.sales_rep" | "defaults.priority" | "contact_info" | "freight_preferences" | "defaults" | "notification_preferences" | "price_groups" | "child_accounts")[];
+                "include[]"?: ("bill_to_address" | "ship_to_address" | "type" | "parent_account" | "freight_preferences.carrier" | "freight_preferences.service_level" | "defaults.payment_term" | "defaults.shipping_term" | "defaults.sales_rep" | "defaults.priority" | "contact_info" | "freight_preferences" | "defaults" | "notification_preferences" | "price_groups" | "child_accounts" | "credit_limit")[];
             };
             header?: never;
             path: {
@@ -82887,6 +83319,27 @@ export interface operations {
                      *       "is_parent_account": false,
                      *       "commission_policy": "commission_applied",
                      *       "note": "Preferred customer since 2020.",
+                     *       "credit_limit": {
+                     *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "quantity",
+                     *         "value": "1234.56",
+                     *         "display_value": "$1,234.56",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "$",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         }
+                     *       },
                      *       "contact_info": {
                      *         "object": "customer_contact_info",
                      *         "email": "orders@acme.com",
@@ -83133,7 +83586,7 @@ export interface operations {
                  *       "bill_to_address"
                  *     ]
                  */
-                "include[]"?: ("bill_to_address" | "ship_to_address" | "type" | "parent_account" | "freight_preferences.carrier" | "freight_preferences.service_level" | "defaults.payment_term" | "defaults.shipping_term" | "defaults.sales_rep" | "defaults.priority" | "contact_info" | "freight_preferences" | "defaults" | "notification_preferences" | "price_groups" | "child_accounts")[];
+                "include[]"?: ("bill_to_address" | "ship_to_address" | "type" | "parent_account" | "freight_preferences.carrier" | "freight_preferences.service_level" | "defaults.payment_term" | "defaults.shipping_term" | "defaults.sales_rep" | "defaults.priority" | "contact_info" | "freight_preferences" | "defaults" | "notification_preferences" | "price_groups" | "child_accounts" | "credit_limit")[];
             };
             header?: never;
             path: {
@@ -83150,7 +83603,8 @@ export interface operations {
                  *       "name": "Acme Corp Updated",
                  *       "note": "Updated account notes",
                  *       "freight_policy": "billed_freight",
-                 *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp"
+                 *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
+                 *       "credit_limit": {}
                  *     }
                  */
                 "application/json": components["schemas"]["UpdateCustomerRequest"];
@@ -83174,6 +83628,27 @@ export interface operations {
                      *       "is_parent_account": false,
                      *       "commission_policy": "commission_applied",
                      *       "note": "Preferred customer since 2020.",
+                     *       "credit_limit": {
+                     *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "quantity",
+                     *         "value": "1234.56",
+                     *         "display_value": "$1,234.56",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "$",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         }
+                     *       },
                      *       "contact_info": {
                      *         "object": "customer_contact_info",
                      *         "email": "orders@acme.com",
@@ -83387,7 +83862,7 @@ export interface operations {
                  *       "bill_to_address"
                  *     ]
                  */
-                "include[]"?: ("bill_to_address" | "ship_to_address" | "type" | "parent_account" | "freight_preferences.carrier" | "freight_preferences.service_level" | "defaults.payment_term" | "defaults.shipping_term" | "defaults.sales_rep" | "defaults.priority" | "contact_info" | "freight_preferences" | "defaults" | "notification_preferences" | "price_groups" | "child_accounts")[];
+                "include[]"?: ("bill_to_address" | "ship_to_address" | "type" | "parent_account" | "freight_preferences.carrier" | "freight_preferences.service_level" | "defaults.payment_term" | "defaults.shipping_term" | "defaults.sales_rep" | "defaults.priority" | "contact_info" | "freight_preferences" | "defaults" | "notification_preferences" | "price_groups" | "child_accounts" | "credit_limit")[];
             };
             header?: never;
             path: {
@@ -83427,6 +83902,27 @@ export interface operations {
                      *       "is_parent_account": false,
                      *       "commission_policy": "commission_applied",
                      *       "note": "Preferred customer since 2020.",
+                     *       "credit_limit": {
+                     *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "quantity",
+                     *         "value": "1234.56",
+                     *         "display_value": "$1,234.56",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "$",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         }
+                     *       },
                      *       "contact_info": {
                      *         "object": "customer_contact_info",
                      *         "email": "orders@acme.com",
@@ -84599,6 +85095,27 @@ export interface operations {
                      *             "is_parent_account": false,
                      *             "commission_policy": "commission_applied",
                      *             "note": "Preferred customer since 2020.",
+                     *             "credit_limit": {
+                     *               "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "quantity",
+                     *               "value": "1234.56",
+                     *               "display_value": "$1,234.56",
+                     *               "unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "US Dollar",
+                     *                 "abbreviation": "$",
+                     *                 "type": "currency",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               }
+                     *             },
                      *             "contact_info": {
                      *               "object": "customer_contact_info",
                      *               "email": "orders@acme.com",
@@ -84873,6 +85390,27 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "commission_applied",
                      *         "note": "Preferred customer since 2020.",
+                     *         "credit_limit": {
+                     *           "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "quantity",
+                     *           "value": "1234.56",
+                     *           "display_value": "$1,234.56",
+                     *           "unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "$",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           }
+                     *         },
                      *         "contact_info": {
                      *           "object": "customer_contact_info",
                      *           "email": "orders@acme.com",
@@ -85135,6 +85673,27 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "commission_applied",
                      *         "note": "Preferred customer since 2020.",
+                     *         "credit_limit": {
+                     *           "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "quantity",
+                     *           "value": "1234.56",
+                     *           "display_value": "$1,234.56",
+                     *           "unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "$",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           }
+                     *         },
                      *         "contact_info": {
                      *           "object": "customer_contact_info",
                      *           "email": "orders@acme.com",
@@ -85442,6 +86001,27 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "commission_applied",
                      *         "note": "Preferred customer since 2020.",
+                     *         "credit_limit": {
+                     *           "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "quantity",
+                     *           "value": "1234.56",
+                     *           "display_value": "$1,234.56",
+                     *           "unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "$",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           }
+                     *         },
                      *         "contact_info": {
                      *           "object": "customer_contact_info",
                      *           "email": "orders@acme.com",
@@ -86168,6 +86748,7 @@ export interface operations {
                      *             "is_parent_account": false,
                      *             "commission_policy": "",
                      *             "note": null,
+                     *             "credit_limit": null,
                      *             "contact_info": null,
                      *             "freight_preferences": null,
                      *             "defaults": null,
@@ -86301,6 +86882,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
@@ -86660,6 +87242,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
@@ -86946,6 +87529,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
@@ -87196,6 +87780,7 @@ export interface operations {
                      *         "is_parent_account": false,
                      *         "commission_policy": "",
                      *         "note": null,
+                     *         "credit_limit": null,
                      *         "contact_info": null,
                      *         "freight_preferences": null,
                      *         "defaults": null,
