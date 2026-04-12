@@ -1788,19 +1788,19 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/core/addresses/autocomplete": {
+    "/v1/core/addresses/actions/validate": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        get?: never;
         /**
-         * Autocomplete Address
-         * @description Returns address autocomplete suggestions based on the input text.
+         * Validate Address
+         * @description Validates an address and returns whether it is valid, a formatted version, and any validation messages.
          */
-        get: operations["autocomplete-address"];
-        put?: never;
+        put: operations["validate-address"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1828,20 +1828,20 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/core/addresses/validate": {
+    "/v1/core/addresses/suggestions": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
         /**
-         * Validate Address
-         * @description Validates an address and returns whether it is valid, a formatted version, and any validation messages.
+         * Get Address Suggestions
+         * @description Returns address suggestions based on the input text.
          */
-        post: operations["validate-address"];
+        get: operations["get-address-suggestions"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -3600,6 +3600,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/operations/carriers/{carrier_id}/service-levels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Service Levels
+         * @description Returns a paginated list of service levels for a carrier.
+         */
+        get: operations["list-service-levels"];
+        put?: never;
+        /**
+         * Create Service Level
+         * @description Creates a new service level (shipping service level) for a carrier.
+         */
+        post: operations["create-service-level"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/operations/carriers/{carrier_id}/service-levels/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Service Level
+         * @description Returns a single service level by its ID.
+         */
+        get: operations["get-service-level"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete Service Level
+         * @description Permanently deletes a service level. Default (system-synced) service levels cannot be deleted.
+         */
+        delete: operations["delete-service-level"];
+        options?: never;
+        head?: never;
+        /**
+         * Update Service Level
+         * @description Partially updates a service level's name, code, and portal visibility.
+         */
+        patch: operations["update-service-level"];
+        trace?: never;
+    };
     "/v1/operations/carriers/{id}": {
         parameters: {
             query?: never;
@@ -4079,7 +4131,7 @@ export interface paths {
         head?: never;
         /**
          * Update Location
-         * @description Partially updates a location. Set clear_parent to true to remove the parent.
+         * @description Partially updates a location.
          */
         patch: operations["update-location"];
         trace?: never;
@@ -6603,11 +6655,23 @@ export interface components {
          *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *         "object": "role",
          *         "name": "Admin",
-         *         "type_code": "admin",
-         *         "owner": null,
-         *         "permissions": null,
-         *         "created_at": "0001-01-01T00:00:00Z",
-         *         "updated_at": "0001-01-01T00:00:00Z"
+         *         "type": "admin",
+         *         "owner": {
+         *           "object": "owner",
+         *           "type": "account",
+         *           "account": {
+         *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *             "object": "account"
+         *           }
+         *         },
+         *         "permissions": [
+         *           "customers:create",
+         *           "customers:read",
+         *           "customers:update",
+         *           "customers:delete"
+         *         ],
+         *         "created_at": "2026-05-10T00:00:00Z",
+         *         "updated_at": "2026-05-10T00:23:00Z"
          *       },
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z",
@@ -6634,7 +6698,7 @@ export interface components {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "role",
              *       "name": "Admin",
-             *       "type_code": "admin",
+             *       "type": "admin",
              *       "owner": {
              *         "object": "owner",
              *         "type": "account",
@@ -6979,7 +7043,7 @@ export interface components {
          *       "id": "ai_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "account_integration",
          *       "name": "My Stripe Integration",
-         *       "integration_code": "stripe",
+         *       "provider": "stripe",
          *       "is_active": true,
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z"
@@ -6999,7 +7063,7 @@ export interface components {
              * @description The integration provider code (e.g. "stripe", "shippo").
              * @enum {string}
              */
-            integration_code: "stripe" | "shippo";
+            provider: "stripe" | "shippo";
             /** @description Whether this integration is currently active. */
             is_active: boolean;
             /**
@@ -7184,7 +7248,7 @@ export interface components {
          *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "attribute",
          *             "value": "Premium",
-         *             "color_code": "",
+         *             "color": "",
          *             "sort_order": 0,
          *             "created_at": "0001-01-01T00:00:00Z",
          *             "updated_at": "0001-01-01T00:00:00Z"
@@ -7678,7 +7742,7 @@ export interface components {
          *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *         "object": "role",
          *         "name": "Admin",
-         *         "type_code": "admin",
+         *         "type": "admin",
          *         "owner": {
          *           "object": "owner",
          *           "type": "account",
@@ -7731,7 +7795,7 @@ export interface components {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "role",
              *       "name": "Admin",
-             *       "type_code": "admin",
+             *       "type": "admin",
              *       "owner": {
              *         "object": "owner",
              *         "type": "account",
@@ -7762,7 +7826,7 @@ export interface components {
              *         "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
              *         "object": "location",
              *         "name": "Warehouse A",
-             *         "type_code": "building",
+             *         "type": "building",
              *         "parent": null,
              *         "children": {
              *           "object": "list",
@@ -7777,7 +7841,7 @@ export interface components {
              *               "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
              *               "object": "location",
              *               "name": "Shelf A1",
-             *               "type_code": "building",
+             *               "type": "building",
              *               "parent": null,
              *               "children": null,
              *               "created_at": "0001-01-01T00:00:00Z",
@@ -7803,8 +7867,8 @@ export interface components {
              *             "name": "Packaging Line 1",
              *             "notes": null,
              *             "type": "init_batch",
-             *             "label_size_code": null,
-             *             "label_type_code": null,
+             *             "label_size": null,
+             *             "label_type": null,
              *             "material_check_required": false,
              *             "department": null,
              *             "production_steps": null,
@@ -7859,14 +7923,15 @@ export interface components {
          * @description Actor is a reference to an actor (user, API key, or agent).
          * @example {
          *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *       "object": "user",
+         *       "object": "actor",
+         *       "type": "user",
          *       "name": "John Doe",
          *       "handle": "jdoe@augno.com",
          *       "role": {
          *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *         "object": "role",
          *         "name": "Admin",
-         *         "type_code": "admin",
+         *         "type": "admin",
          *         "owner": {
          *           "object": "owner",
          *           "type": "account",
@@ -7893,7 +7958,12 @@ export interface components {
              * @description The resource type identifier.
              * @enum {string}
              */
-            object: "user|api_key|agent";
+            object: "actor";
+            /**
+             * @description The type of actor.
+             * @enum {string}
+             */
+            type: "user" | "api_key" | "agent";
             /** @description The display name of the actor. */
             name: string | null;
             /** @description Human-readable handle (email for users, redacted value for API keys, slug for agents). */
@@ -7904,7 +7974,7 @@ export interface components {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "role",
              *       "name": "Admin",
-             *       "type_code": "admin",
+             *       "type": "admin",
              *       "owner": {
              *         "object": "owner",
              *         "type": "account",
@@ -8240,7 +8310,8 @@ export interface components {
              * @description The entity this action relates to.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *       "object": "user"
+             *       "object": "entity",
+             *       "type": "user"
              *     }
              */
             entity: components["schemas"]["Entity"] | null;
@@ -8255,14 +8326,15 @@ export interface components {
              * @description Who reviewed the action.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *       "object": "user",
+             *       "object": "actor",
+             *       "type": "user",
              *       "name": "John Doe",
              *       "handle": "jdoe@augno.com",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -8350,14 +8422,15 @@ export interface components {
              * @description Who acknowledged the alert.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *       "object": "user",
+             *       "object": "actor",
+             *       "type": "user",
              *       "name": "John Doe",
              *       "handle": "jdoe@augno.com",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -8409,14 +8482,15 @@ export interface components {
              *       "total_output_tokens": 300,
              *       "triggered_by": {
              *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *         "object": "user",
+             *         "object": "actor",
+             *         "type": "user",
              *         "name": "John Doe",
              *         "handle": "jdoe@augno.com",
              *         "role": {
              *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *           "object": "role",
              *           "name": "Admin",
-             *           "type_code": "admin",
+             *           "type": "admin",
              *           "owner": {
              *             "object": "owner",
              *             "type": "account",
@@ -8506,7 +8580,8 @@ export interface components {
              *             "duration_ms": null,
              *             "actor": {
              *               "id": "us_01jm4r6700f8nwq3v5hx2d9ktp",
-             *               "object": "user",
+             *               "object": "actor",
+             *               "type": "user",
              *               "name": "Jane Doe",
              *               "handle": null,
              *               "role": null
@@ -8590,26 +8665,35 @@ export interface components {
          *           ]
          *         }
          *       },
-         *       "tools": [
-         *         {
-         *           "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
-         *           "object": "agent_definition_tool",
-         *           "tool": {
-         *             "id": "tdef_01k0b1seed0searchproduct0",
-         *             "object": "available_tool",
-         *             "name": "Search Products",
-         *             "description": "Search for products by keyword or phrase",
-         *             "config_schema": null,
-         *             "category": "built_in",
-         *             "required_permissions": [
-         *               "products:read"
-         *             ]
-         *           },
-         *           "config": {},
-         *           "sort_order": 0,
-         *           "require_review": false
-         *         }
-         *       ],
+         *       "tools": {
+         *         "object": "list",
+         *         "page_info": {
+         *           "next_cursor": null,
+         *           "prev_cursor": null,
+         *           "has_next_page": false,
+         *           "has_prev_page": false
+         *         },
+         *         "data": [
+         *           {
+         *             "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
+         *             "object": "agent_definition_tool",
+         *             "tool": {
+         *               "id": "tdef_01k0b1seed0searchproduct0",
+         *               "object": "available_tool",
+         *               "name": "Search Products",
+         *               "description": "Search for products by keyword or phrase",
+         *               "config_schema": null,
+         *               "category": "built_in",
+         *               "required_permissions": [
+         *                 "products:read"
+         *               ]
+         *             },
+         *             "config": {},
+         *             "sort_order": 0,
+         *             "require_review": false
+         *           }
+         *         ]
+         *       },
          *       "status": "inactive",
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z"
@@ -8649,7 +8733,7 @@ export interface components {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "role",
              *       "name": "Admin",
-             *       "type_code": "admin",
+             *       "type": "admin",
              *       "owner": {
              *         "object": "owner",
              *         "type": "account",
@@ -8689,7 +8773,7 @@ export interface components {
              */
             config: components["schemas"]["AgentDefinitionConfig"] | null;
             /** @description The tools attached to this agent. */
-            tools: components["schemas"]["AgentDefinitionTool"][];
+            tools: components["schemas"]["List_AgentDefinitionTool"] | null;
             /**
              * @description The per-account activation status for this agent definition.
              * @enum {string}
@@ -8822,7 +8906,8 @@ export interface components {
          *       "metadata": {},
          *       "entity": {
          *         "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
-         *         "object": "account"
+         *         "object": "entity",
+         *         "type": "account"
          *       },
          *       "importance": 0.8,
          *       "expires_at": "2026-06-10T00:00:00Z",
@@ -8848,7 +8933,8 @@ export interface components {
              * @description The entity this memory relates to.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *       "object": "user"
+             *       "object": "entity",
+             *       "type": "user"
              *     }
              */
             entity: components["schemas"]["Entity"] | null;
@@ -8891,14 +8977,15 @@ export interface components {
          *       "total_output_tokens": 300,
          *       "triggered_by": {
          *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *         "object": "user",
+         *         "object": "actor",
+         *         "type": "user",
          *         "name": "John Doe",
          *         "handle": "jdoe@augno.com",
          *         "role": {
          *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *           "object": "role",
          *           "name": "Admin",
-         *           "type_code": "admin",
+         *           "type": "admin",
          *           "owner": {
          *             "object": "owner",
          *             "type": "account",
@@ -8988,7 +9075,8 @@ export interface components {
          *             "duration_ms": null,
          *             "actor": {
          *               "id": "us_01jm4r6700f8nwq3v5hx2d9ktp",
-         *               "object": "user",
+         *               "object": "actor",
+         *               "type": "user",
          *               "name": "Jane Doe",
          *               "handle": null,
          *               "role": null
@@ -9044,14 +9132,15 @@ export interface components {
              * @description The actor that triggered this run. Null for scheduled or event-triggered runs.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *       "object": "user",
+             *       "object": "actor",
+             *       "type": "user",
              *       "name": "John Doe",
              *       "handle": "jdoe@augno.com",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -9112,26 +9201,35 @@ export interface components {
              *           ]
              *         }
              *       },
-             *       "tools": [
-             *         {
-             *           "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
-             *           "object": "agent_definition_tool",
-             *           "tool": {
-             *             "id": "tdef_01k0b1seed0searchproduct0",
-             *             "object": "available_tool",
-             *             "name": "Search Products",
-             *             "description": "Search for products by keyword or phrase",
-             *             "config_schema": null,
-             *             "category": "built_in",
-             *             "required_permissions": [
-             *               "products:read"
-             *             ]
-             *           },
-             *           "config": {},
-             *           "sort_order": 0,
-             *           "require_review": false
-             *         }
-             *       ],
+             *       "tools": {
+             *         "object": "list",
+             *         "page_info": {
+             *           "next_cursor": null,
+             *           "prev_cursor": null,
+             *           "has_next_page": false,
+             *           "has_prev_page": false
+             *         },
+             *         "data": [
+             *           {
+             *             "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
+             *             "object": "agent_definition_tool",
+             *             "tool": {
+             *               "id": "tdef_01k0b1seed0searchproduct0",
+             *               "object": "available_tool",
+             *               "name": "Search Products",
+             *               "description": "Search for products by keyword or phrase",
+             *               "config_schema": null,
+             *               "category": "built_in",
+             *               "required_permissions": [
+             *                 "products:read"
+             *               ]
+             *             },
+             *             "config": {},
+             *             "sort_order": 0,
+             *             "require_review": false
+             *           }
+             *         ]
+             *       },
              *       "status": "inactive",
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
@@ -9153,7 +9251,8 @@ export interface components {
          *       "duration_ms": null,
          *       "actor": {
          *         "id": "us_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "object": "user",
+         *         "object": "actor",
+         *         "type": "user",
          *         "name": "Jane Doe",
          *         "handle": null,
          *         "role": null
@@ -9184,14 +9283,15 @@ export interface components {
              * @description The actor who produced this event.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *       "object": "user",
+             *       "object": "actor",
+             *       "type": "user",
              *       "name": "John Doe",
              *       "handle": "jdoe@augno.com",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -9840,7 +9940,7 @@ export interface components {
          *       "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "attribute",
          *       "value": "Premium",
-         *       "color_code": "red",
+         *       "color": "red",
          *       "sort_order": 1,
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z"
@@ -9860,7 +9960,7 @@ export interface components {
              * @description The color code of the attribute.
              * @enum {string}
              */
-            color_code: "blue" | "brown" | "default" | "gray" | "green" | "orange" | "pink" | "purple" | "red" | "yellow";
+            color: "blue" | "brown" | "default" | "gray" | "green" | "orange" | "pink" | "purple" | "red" | "yellow";
             /** @description The display order of the attribute. */
             sort_order: number;
             /**
@@ -9886,14 +9986,15 @@ export interface components {
          *       "resource_id": "us_01gf7a8200e9pvbd6bgyq395ae",
          *       "actor": {
          *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *         "object": "user",
+         *         "object": "actor",
+         *         "type": "user",
          *         "name": "John Doe",
          *         "handle": "jdoe@augno.com",
          *         "role": {
          *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *           "object": "role",
          *           "name": "Admin",
-         *           "type_code": "admin",
+         *           "type": "admin",
          *           "owner": {
          *             "object": "owner",
          *             "type": "account",
@@ -9912,13 +10013,22 @@ export interface components {
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         }
          *       },
-         *       "changes": [
-         *         {
-         *           "field": "email",
-         *           "old_value": "old@example.com",
-         *           "new_value": "new@example.com"
-         *         }
-         *       ],
+         *       "changes": {
+         *         "object": "list",
+         *         "page_info": {
+         *           "next_cursor": null,
+         *           "prev_cursor": null,
+         *           "has_next_page": false,
+         *           "has_prev_page": false
+         *         },
+         *         "data": [
+         *           {
+         *             "field": "email",
+         *             "old_value": "old@example.com",
+         *             "new_value": "new@example.com"
+         *           }
+         *         ]
+         *       },
          *       "metadata": {
          *         "reason": "operator override"
          *       },
@@ -9946,21 +10056,22 @@ export interface components {
              * @description The resource type of the audited entity.
              * @enum {string}
              */
-            resource_type: "account" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
+            resource_type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
             /** @description The unique identifier of the audited resource. */
             resource_id: string;
             /**
              * @description The actor who performed the mutation.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *       "object": "user",
+             *       "object": "actor",
+             *       "type": "user",
              *       "name": "John Doe",
              *       "handle": "jdoe@augno.com",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -9982,7 +10093,7 @@ export interface components {
              */
             actor: components["schemas"]["Actor"] | null;
             /** @description The field-level changes recorded for this event. */
-            changes: components["schemas"]["AuditFieldChange"][];
+            changes: components["schemas"]["List_AuditFieldChange"] | null;
             /** @description Arbitrary JSON metadata associated with the mutation (e.g. reason, source, tags). */
             metadata: Record<string, never>;
             /** @description The originating HTTP request ID, when available. */
@@ -10101,7 +10212,7 @@ export interface components {
          *         "sku": "ALM-2024-1001",
          *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *         "notes": null,
-         *         "item_type_code": "product",
+         *         "type": "product",
          *         "category": {
          *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "item_category",
@@ -10245,7 +10356,7 @@ export interface components {
          *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *               "object": "attribute",
          *               "value": "Premium",
-         *               "color_code": "red",
+         *               "color": "red",
          *               "sort_order": 1,
          *               "created_at": "2026-05-10T00:00:00Z",
          *               "updated_at": "2026-05-10T00:23:00Z"
@@ -10325,8 +10436,8 @@ export interface components {
          *         "name": "Packaging Line 1",
          *         "notes": null,
          *         "type": "init_batch",
-         *         "label_size_code": null,
-         *         "label_type_code": null,
+         *         "label_size": null,
+         *         "label_type": null,
          *         "material_check_required": false,
          *         "department": null,
          *         "production_steps": null,
@@ -10342,7 +10453,7 @@ export interface components {
          *           "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
          *           "object": "location",
          *           "name": "Warehouse A",
-         *           "type_code": "building",
+         *           "type": "building",
          *           "parent": null,
          *           "children": {
          *             "object": "list",
@@ -10357,7 +10468,7 @@ export interface components {
          *                 "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
          *                 "object": "location",
          *                 "name": "Shelf A1",
-         *                 "type_code": "building",
+         *                 "type": "building",
          *                 "parent": null,
          *                 "children": null,
          *                 "created_at": "0001-01-01T00:00:00Z",
@@ -10383,8 +10494,8 @@ export interface components {
          *               "name": "Packaging Line 1",
          *               "notes": null,
          *               "type": "init_batch",
-         *               "label_size_code": null,
-         *               "label_type_code": null,
+         *               "label_size": null,
+         *               "label_type": null,
          *               "material_check_required": false,
          *               "department": null,
          *               "production_steps": null,
@@ -10478,7 +10589,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -10622,7 +10733,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -10718,8 +10829,8 @@ export interface components {
              *       "name": "Packaging Line 1",
              *       "notes": null,
              *       "type": "init_batch",
-             *       "label_size_code": null,
-             *       "label_type_code": null,
+             *       "label_size": null,
+             *       "label_type": null,
              *       "material_check_required": false,
              *       "department": null,
              *       "production_steps": null,
@@ -10739,7 +10850,7 @@ export interface components {
              *         "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
              *         "object": "location",
              *         "name": "Warehouse A",
-             *         "type_code": "building",
+             *         "type": "building",
              *         "parent": null,
              *         "children": {
              *           "object": "list",
@@ -10754,7 +10865,7 @@ export interface components {
              *               "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
              *               "object": "location",
              *               "name": "Shelf A1",
-             *               "type_code": "building",
+             *               "type": "building",
              *               "parent": null,
              *               "children": null,
              *               "created_at": "0001-01-01T00:00:00Z",
@@ -10780,8 +10891,8 @@ export interface components {
              *             "name": "Packaging Line 1",
              *             "notes": null,
              *             "type": "init_batch",
-             *             "label_size_code": null,
-             *             "label_type_code": null,
+             *             "label_size": null,
+             *             "label_type": null,
              *             "material_check_required": false,
              *             "department": null,
              *             "production_steps": null,
@@ -10947,7 +11058,7 @@ export interface components {
              *           "object": "item",
              *           "sku": "ALM-2024-1001",
              *           "description": null,
-             *           "item_type_code": "product"
+             *           "item_type": "product"
              *         },
              *         "quantity": {
              *           "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -11024,7 +11135,7 @@ export interface components {
              *             "object": "item",
              *             "sku": "ALM-2024-1001",
              *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-             *             "item_type_code": "part"
+             *             "item_type": "part"
              *           },
              *           "instructions": "Mix with water before adding",
              *           "created_at": "2026-05-10T00:00:00Z",
@@ -11092,7 +11203,7 @@ export interface components {
          *           "sku": "ALM-2024-1001",
          *           "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *           "notes": null,
-         *           "item_type_code": "product",
+         *           "type": "product",
          *           "category": {
          *             "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "item_category",
@@ -11236,7 +11347,7 @@ export interface components {
          *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                 "object": "attribute",
          *                 "value": "Premium",
-         *                 "color_code": "red",
+         *                 "color": "red",
          *                 "sort_order": 1,
          *                 "created_at": "2026-05-10T00:00:00Z",
          *                 "updated_at": "2026-05-10T00:23:00Z"
@@ -11316,8 +11427,8 @@ export interface components {
          *           "name": "Packaging Line 1",
          *           "notes": null,
          *           "type": "init_batch",
-         *           "label_size_code": null,
-         *           "label_type_code": null,
+         *           "label_size": null,
+         *           "label_type": null,
          *           "material_check_required": false,
          *           "department": null,
          *           "production_steps": null,
@@ -11333,7 +11444,7 @@ export interface components {
          *             "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
          *             "object": "location",
          *             "name": "Warehouse A",
-         *             "type_code": "building",
+         *             "type": "building",
          *             "parent": null,
          *             "children": {
          *               "object": "list",
@@ -11348,7 +11459,7 @@ export interface components {
          *                   "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
          *                   "object": "location",
          *                   "name": "Shelf A1",
-         *                   "type_code": "building",
+         *                   "type": "building",
          *                   "parent": null,
          *                   "children": null,
          *                   "created_at": "0001-01-01T00:00:00Z",
@@ -11374,8 +11485,8 @@ export interface components {
          *                 "name": "Packaging Line 1",
          *                 "notes": null,
          *                 "type": "init_batch",
-         *                 "label_size_code": null,
-         *                 "label_type_code": null,
+         *                 "label_size": null,
+         *                 "label_type": null,
          *                 "material_check_required": false,
          *                 "department": null,
          *                 "production_steps": null,
@@ -11473,7 +11584,7 @@ export interface components {
              *         "sku": "ALM-2024-1001",
              *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *         "notes": null,
-             *         "item_type_code": "product",
+             *         "type": "product",
              *         "category": {
              *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "item_category",
@@ -11617,7 +11728,7 @@ export interface components {
              *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *               "object": "attribute",
              *               "value": "Premium",
-             *               "color_code": "red",
+             *               "color": "red",
              *               "sort_order": 1,
              *               "created_at": "2026-05-10T00:00:00Z",
              *               "updated_at": "2026-05-10T00:23:00Z"
@@ -11697,8 +11808,8 @@ export interface components {
              *         "name": "Packaging Line 1",
              *         "notes": null,
              *         "type": "init_batch",
-             *         "label_size_code": null,
-             *         "label_type_code": null,
+             *         "label_size": null,
+             *         "label_type": null,
              *         "material_check_required": false,
              *         "department": null,
              *         "production_steps": null,
@@ -11714,7 +11825,7 @@ export interface components {
              *           "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
              *           "object": "location",
              *           "name": "Warehouse A",
-             *           "type_code": "building",
+             *           "type": "building",
              *           "parent": null,
              *           "children": {
              *             "object": "list",
@@ -11729,7 +11840,7 @@ export interface components {
              *                 "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
              *                 "object": "location",
              *                 "name": "Shelf A1",
-             *                 "type_code": "building",
+             *                 "type": "building",
              *                 "parent": null,
              *                 "children": null,
              *                 "created_at": "0001-01-01T00:00:00Z",
@@ -11755,8 +11866,8 @@ export interface components {
              *               "name": "Packaging Line 1",
              *               "notes": null,
              *               "type": "init_batch",
-             *               "label_size_code": null,
-             *               "label_type_code": null,
+             *               "label_size": null,
+             *               "label_type": null,
              *               "material_check_required": false,
              *               "department": null,
              *               "production_steps": null,
@@ -12155,7 +12266,7 @@ export interface components {
             /** @description The owner of this resource. */
             owner: components["schemas"]["Owner"] | null;
             /** @description The service levels (shipping service levels). */
-            service_levels: components["schemas"]["ServiceLevel"][] | null;
+            service_levels: components["schemas"]["List_ServiceLevel"] | null;
             /**
              * Format: date-time
              * @description When the carrier was soft-deleted, if applicable.
@@ -12227,7 +12338,7 @@ export interface components {
          *             "sku": "WDG-001",
          *             "description": null,
          *             "notes": null,
-         *             "item_type_code": "",
+         *             "type": "",
          *             "category": null,
          *             "unit_value": null,
          *             "unit_cost": null,
@@ -12279,7 +12390,7 @@ export interface components {
          *         "sku": "WDG-001",
          *         "description": null,
          *         "notes": null,
-         *         "item_type_code": "",
+         *         "type": "",
          *         "category": null,
          *         "unit_value": null,
          *         "unit_cost": null,
@@ -12318,7 +12429,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -12462,7 +12573,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -12844,7 +12955,7 @@ export interface components {
          *         "object": "item",
          *         "sku": "ALM-2024-1001",
          *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-         *         "item_type_code": "part"
+         *         "item_type": "part"
          *       },
          *       "instructions": "Mix with water before adding",
          *       "created_at": "2026-05-10T00:00:00Z",
@@ -12916,7 +13027,7 @@ export interface components {
              *       "object": "item",
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-             *       "item_type_code": "part"
+             *       "item_type": "part"
              *     }
              */
             consumed_item: components["schemas"]["ConsumptionItem"] | null;
@@ -12940,7 +13051,7 @@ export interface components {
          *       "object": "item",
          *       "sku": "ALM-2024-1001",
          *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-         *       "item_type_code": "part"
+         *       "item_type": "part"
          *     }
          */
         ConsumptionItem: {
@@ -12959,7 +13070,7 @@ export interface components {
              * @description The item type code.
              * @enum {string}
              */
-            item_type_code: "product" | "material" | "part";
+            item_type: "product" | "material" | "part";
         };
         /**
          * @description ContinueRunRequest is the request to continue an agent run awaiting input.
@@ -13015,7 +13126,7 @@ export interface components {
              * Format: date-time
              * @description Optional expiration time for the API key.
              */
-            expires_at?: string | null;
+            expires_at?: string;
         };
         /**
          * @description CreateAccountGroupProductLineAccessRequest is the request to create product line access for an account group.
@@ -13254,7 +13365,7 @@ export interface components {
          * @description CreateAttributeRequest is the request to create a new attribute.
          * @example {
          *       "value": "Red",
-         *       "color_code": "red",
+         *       "color": "red",
          *       "sort_order": 1
          *     }
          */
@@ -13265,7 +13376,7 @@ export interface components {
              * @description The color code of the attribute. Randomly assigned if not provided.
              * @enum {string|null}
              */
-            color_code?: "blue" | "brown" | "default" | "gray" | "green" | "orange" | "pink" | "purple" | "red" | "yellow" | null;
+            color?: "blue" | "brown" | "default" | "gray" | "green" | "orange" | "pink" | "purple" | "red" | "yellow" | null;
             /** @description The display order of the attribute. Defaults to last position if not provided. */
             sort_order: number | null;
         };
@@ -13365,7 +13476,7 @@ export interface components {
          * @example {
          *       "name": "Acme Inc.",
          *       "note": "Key enterprise account",
-         *       "status_code": "normal",
+         *       "status": "normal",
          *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "default_payment_term_id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "default_shipping_term_id": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -13413,7 +13524,7 @@ export interface components {
              * @description The account status code.
              * @enum {string|null}
              */
-            status_code: "normal" | "preferred" | "hold_shipment" | "hold_all" | null;
+            status: "normal" | "preferred" | "hold_shipment" | "hold_all" | null;
             /** @description Whether the customer is EDI enabled. */
             is_edi_enabled?: boolean | null;
             /**
@@ -13438,7 +13549,7 @@ export interface components {
              * @description The default priority code.
              * @enum {string|null}
              */
-            default_priority_code?: "low" | "normal" | "high" | null;
+            default_priority?: "low" | "normal" | "high" | null;
             /** @description The default sales rep user ID. */
             default_sales_rep_user_id?: string | null;
             /** @description The customer price group IDs. */
@@ -13516,7 +13627,7 @@ export interface components {
          * @description CreateLocationRequest is the request to create a new location.
          * @example {
          *       "name": "Warehouse A",
-         *       "type_code": "building"
+         *       "type": "building"
          *     }
          */
         CreateLocationRequest: {
@@ -13526,7 +13637,7 @@ export interface components {
              * @description The code of the location type.
              * @enum {string}
              */
-            type_code: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
+            type: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
             /** @description The ID of the parent location. Null for top-level locations. */
             parent_id?: string | null;
             /** @description IDs of existing locations to attach as children of this location. */
@@ -13675,7 +13786,7 @@ export interface components {
          *       "sku": "ALM-2024-1001",
          *       "description": null,
          *       "notes": null,
-         *       "product_type_code": "sale",
+         *       "type": "sale",
          *       "product_line_id": null,
          *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "is_portal_ready": true,
@@ -13690,7 +13801,7 @@ export interface components {
             /** @description Additional notes about the product. */
             notes: string | null;
             /** @description The product type code (e.g. sale, sample). */
-            product_type_code: string;
+            type: string;
             /** @description The ID of the product line to assign to this product. */
             product_line_id: string | null;
             /** @description The ID of the item category. */
@@ -14139,6 +14250,28 @@ export interface components {
             department_id: string;
         };
         /**
+         * @description CreateServiceLevelRequest is the request to create a new service level.
+         * @example {
+         *       "name": "Ground Shipping",
+         *       "code": "ground",
+         *       "is_default": false
+         *     }
+         */
+        CreateServiceLevelRequest: {
+            /** @description The display name of the service level. */
+            name: string;
+            /** @description The service level code. */
+            code: string;
+            /**
+             * @description Whether this service level is visible in the customer portal.
+             * @default visible
+             * @enum {string}
+             */
+            customer_portal_visibility: "visible" | "hidden";
+            /** @description Whether this is a default (system-synced) service level. */
+            is_default: boolean;
+        };
+        /**
          * @description CreateSessionResponse is the response from creating a registration session.
          * @example {
          *       "id": "rgfw_01gf7a8200eaj8fke1xvw4h50x",
@@ -14294,10 +14427,10 @@ export interface components {
          * @description CreateTransactionRequest is the request to create a new transaction.
          * @example {
          *       "customer_id": "ac_01gf7a8200er3ar3pkfrb6kk29",
-         *       "transaction_type_code": "payment",
+         *       "type": "payment",
          *       "amount": "500.00",
-         *       "transaction_method_code": "check",
-         *       "adjustment_type_code": null,
+         *       "method": "check",
+         *       "adjustment_type": null,
          *       "responsible_user_id": null,
          *       "note": "Q1 invoice payment"
          *     }
@@ -14306,13 +14439,13 @@ export interface components {
             /** @description The ID of the customer for this transaction. */
             customer_id: string;
             /** @description The transaction type code. */
-            transaction_type_code: string;
+            type: string;
             /** @description The transaction amount as a decimal string. */
             amount: string;
             /** @description The transaction method code. */
-            transaction_method_code: string | null;
+            method: string | null;
             /** @description The adjustment type code, if applicable. */
-            adjustment_type_code: string | null;
+            adjustment_type: string | null;
             /** @description The ID of the user responsible for this transaction. */
             responsible_user_id: string | null;
             /** @description A note about this transaction. */
@@ -14521,11 +14654,23 @@ export interface components {
          *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *           "object": "role",
          *           "name": "Admin",
-         *           "type_code": "admin",
-         *           "owner": null,
-         *           "permissions": null,
-         *           "created_at": "0001-01-01T00:00:00Z",
-         *           "updated_at": "0001-01-01T00:00:00Z"
+         *           "type": "admin",
+         *           "owner": {
+         *             "object": "owner",
+         *             "type": "account",
+         *             "account": {
+         *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *               "object": "account"
+         *             }
+         *           },
+         *           "permissions": [
+         *             "customers:create",
+         *             "customers:read",
+         *             "customers:update",
+         *             "customers:delete"
+         *           ],
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "updated_at": "2026-05-10T00:23:00Z"
          *         },
          *         "created_at": "2026-05-10T00:00:00Z",
          *         "updated_at": "2026-05-10T00:23:00Z",
@@ -14549,11 +14694,23 @@ export interface components {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
-             *         "owner": null,
-             *         "permissions": null,
-             *         "created_at": "0001-01-01T00:00:00Z",
-             *         "updated_at": "0001-01-01T00:00:00Z"
+             *         "type": "admin",
+             *         "owner": {
+             *           "object": "owner",
+             *           "type": "account",
+             *           "account": {
+             *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *             "object": "account"
+             *           }
+             *         },
+             *         "permissions": [
+             *           "customers:create",
+             *           "customers:read",
+             *           "customers:update",
+             *           "customers:delete"
+             *         ],
+             *         "created_at": "2026-05-10T00:00:00Z",
+             *         "updated_at": "2026-05-10T00:23:00Z"
              *       },
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z",
@@ -15769,7 +15926,7 @@ export interface components {
          *               "sku": "ALM-2024-1001",
          *               "description": null,
          *               "notes": null,
-         *               "item_type_code": "",
+         *               "type": "",
          *               "category": null,
          *               "unit_value": null,
          *               "unit_cost": null,
@@ -15913,7 +16070,7 @@ export interface components {
          *         "sku": "ALM-2024-1001",
          *         "description": null,
          *         "notes": null,
-         *         "item_type_code": "",
+         *         "type": "",
          *         "category": null,
          *         "unit_value": null,
          *         "unit_cost": null,
@@ -16006,7 +16163,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -16150,7 +16307,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -16236,7 +16393,7 @@ export interface components {
              *       "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
              *       "object": "location",
              *       "name": "Warehouse A",
-             *       "type_code": "building",
+             *       "type": "building",
              *       "parent": null,
              *       "children": {
              *         "object": "list",
@@ -16251,7 +16408,7 @@ export interface components {
              *             "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
              *             "object": "location",
              *             "name": "Shelf A1",
-             *             "type_code": "building",
+             *             "type": "building",
              *             "parent": null,
              *             "children": null,
              *             "created_at": "0001-01-01T00:00:00Z",
@@ -16437,7 +16594,7 @@ export interface components {
          *         "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
          *         "object": "location",
          *         "name": "Warehouse A",
-         *         "type_code": "building",
+         *         "type": "building",
          *         "parent": null,
          *         "children": {
          *           "object": "list",
@@ -16452,7 +16609,7 @@ export interface components {
          *               "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
          *               "object": "location",
          *               "name": "Shelf A1",
-         *               "type_code": "building",
+         *               "type": "building",
          *               "parent": null,
          *               "children": null,
          *               "created_at": "0001-01-01T00:00:00Z",
@@ -16478,8 +16635,8 @@ export interface components {
          *             "name": "Packaging Line 1",
          *             "notes": null,
          *             "type": "init_batch",
-         *             "label_size_code": null,
-         *             "label_type_code": null,
+         *             "label_size": null,
+         *             "label_type": null,
          *             "material_check_required": false,
          *             "department": null,
          *             "production_steps": null,
@@ -16531,7 +16688,7 @@ export interface components {
              *       "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
              *       "object": "location",
              *       "name": "Warehouse A",
-             *       "type_code": "building",
+             *       "type": "building",
              *       "parent": null,
              *       "children": {
              *         "object": "list",
@@ -16546,7 +16703,7 @@ export interface components {
              *             "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
              *             "object": "location",
              *             "name": "Shelf A1",
-             *             "type_code": "building",
+             *             "type": "building",
              *             "parent": null,
              *             "children": null,
              *             "created_at": "0001-01-01T00:00:00Z",
@@ -16656,7 +16813,7 @@ export interface components {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -16696,14 +16853,32 @@ export interface components {
          *       "ses_message_id": null,
          *       "sent_by": {
          *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *         "object": "user",
-         *         "email": "jdoe@augno.com",
+         *         "object": "actor",
+         *         "type": "user",
          *         "name": "John Doe",
-         *         "username": "jdoe",
-         *         "email_verified_at": "2026-06-10T00:00:00Z",
-         *         "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
-         *         "created_at": "2026-05-10T00:00:00Z",
-         *         "updated_at": "2026-05-10T00:23:00Z"
+         *         "handle": "jdoe@augno.com",
+         *         "role": {
+         *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *           "object": "role",
+         *           "name": "Admin",
+         *           "type": "admin",
+         *           "owner": {
+         *             "object": "owner",
+         *             "type": "account",
+         *             "account": {
+         *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *               "object": "account"
+         *             }
+         *           },
+         *           "permissions": [
+         *             "customers:create",
+         *             "customers:read",
+         *             "customers:update",
+         *             "customers:delete"
+         *           ],
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "updated_at": "2026-05-10T00:23:00Z"
+         *         }
          *       },
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z"
@@ -16728,20 +16903,39 @@ export interface components {
             /** @description The SES message ID returned by AWS. */
             ses_message_id: string | null;
             /**
-             * @description The user who sent the email. Null if not associated with a user.
+             * @description The actor who sent the email. Null when the email was sent by the
+             *     system, or when the caller did not request `include=sent_by`.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *       "object": "user",
-             *       "email": "jdoe@augno.com",
+             *       "object": "actor",
+             *       "type": "user",
              *       "name": "John Doe",
-             *       "username": "jdoe",
-             *       "email_verified_at": "2026-06-10T00:00:00Z",
-             *       "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
-             *       "created_at": "2026-05-10T00:00:00Z",
-             *       "updated_at": "2026-05-10T00:23:00Z"
+             *       "handle": "jdoe@augno.com",
+             *       "role": {
+             *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *         "object": "role",
+             *         "name": "Admin",
+             *         "type": "admin",
+             *         "owner": {
+             *           "object": "owner",
+             *           "type": "account",
+             *           "account": {
+             *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *             "object": "account"
+             *           }
+             *         },
+             *         "permissions": [
+             *           "customers:create",
+             *           "customers:read",
+             *           "customers:update",
+             *           "customers:delete"
+             *         ],
+             *         "created_at": "2026-05-10T00:00:00Z",
+             *         "updated_at": "2026-05-10T00:23:00Z"
+             *       }
              *     }
              */
-            sent_by: components["schemas"]["User"] | null;
+            sent_by: components["schemas"]["Actor"] | null;
             /**
              * Format: date-time
              * @description When this email log was created.
@@ -16823,10 +17017,11 @@ export interface components {
             created_at: string;
         };
         /**
-         * @description Entity represents an entity in the system.
+         * @description Entity is a polymorphic reference to any resource in the system.
          * @example {
          *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *       "object": "user"
+         *       "object": "entity",
+         *       "type": "user"
          *     }
          */
         Entity: {
@@ -16836,7 +17031,12 @@ export interface components {
              * @description The resource type identifier.
              * @enum {string}
              */
-            object: "account" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
+            object: "entity";
+            /**
+             * @description The resource kind that this entity references (e.g. "user", "customer", "sales_order").
+             * @enum {string}
+             */
+            type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
         };
         /**
          * @description EstimateRateRequest is the request to estimate a shipping rate.
@@ -16934,7 +17134,7 @@ export interface components {
          *         "sku": "HB-M10X30-ZN",
          *         "description": null,
          *         "notes": null,
-         *         "item_type_code": "",
+         *         "type": "",
          *         "category": null,
          *         "unit_value": null,
          *         "unit_cost": null,
@@ -16976,7 +17176,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -17120,7 +17320,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -17275,7 +17475,7 @@ export interface components {
          * @example {
          *       "id": "icl_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "inventory_change_log",
-         *       "action_type_code": "scan",
+         *       "action_type": "scan",
          *       "quantity": {
          *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
          *         "object": "quantity",
@@ -17303,7 +17503,7 @@ export interface components {
          *         "sku": "ALM-2024-1001",
          *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *         "notes": null,
-         *         "item_type_code": "product",
+         *         "type": "product",
          *         "category": {
          *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "item_category",
@@ -17447,7 +17647,7 @@ export interface components {
          *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *               "object": "attribute",
          *               "value": "Premium",
-         *               "color_code": "red",
+         *               "color": "red",
          *               "sort_order": 1,
          *               "created_at": "2026-05-10T00:00:00Z",
          *               "updated_at": "2026-05-10T00:23:00Z"
@@ -17475,8 +17675,8 @@ export interface components {
          *         "name": "Packaging Line 1",
          *         "notes": null,
          *         "type": "init_batch",
-         *         "label_size_code": null,
-         *         "label_type_code": null,
+         *         "label_size": null,
+         *         "label_type": null,
          *         "material_check_required": false,
          *         "department": null,
          *         "production_steps": null,
@@ -17499,7 +17699,7 @@ export interface components {
              * @description The code indicating the type of inventory change action.
              * @enum {string}
              */
-            action_type_code: "scan" | "user_action" | "system_action" | "user_correction";
+            action_type: "scan" | "user_action" | "system_action" | "user_correction";
             /**
              * @description The quantity associated with this change.
              * @example {
@@ -17533,7 +17733,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -17677,7 +17877,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -17713,8 +17913,8 @@ export interface components {
              *       "name": "Packaging Line 1",
              *       "notes": null,
              *       "type": "init_batch",
-             *       "label_size_code": null,
-             *       "label_type_code": null,
+             *       "label_size": null,
+             *       "label_type": null,
              *       "material_check_required": false,
              *       "department": null,
              *       "production_steps": null,
@@ -17744,7 +17944,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -17888,7 +18088,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -18051,7 +18251,7 @@ export interface components {
          *                 "sku": "ALM-2024-1001",
          *                 "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *                 "notes": null,
-         *                 "item_type_code": "product",
+         *                 "type": "product",
          *                 "category": {
          *                   "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *                   "object": "item_category",
@@ -18195,7 +18395,7 @@ export interface components {
          *                       "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                       "object": "attribute",
          *                       "value": "Premium",
-         *                       "color_code": "red",
+         *                       "color": "red",
          *                       "sort_order": 1,
          *                       "created_at": "2026-05-10T00:00:00Z",
          *                       "updated_at": "2026-05-10T00:23:00Z"
@@ -18870,7 +19070,7 @@ export interface components {
          *           "sku": "ALM-2024-1001",
          *           "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *           "notes": null,
-         *           "item_type_code": "product",
+         *           "type": "product",
          *           "category": {
          *             "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "item_category",
@@ -19014,7 +19214,7 @@ export interface components {
          *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                 "object": "attribute",
          *                 "value": "Premium",
-         *                 "color_code": "red",
+         *                 "color": "red",
          *                 "sort_order": 1,
          *                 "created_at": "2026-05-10T00:00:00Z",
          *                 "updated_at": "2026-05-10T00:23:00Z"
@@ -19176,7 +19376,7 @@ export interface components {
          *         "created_at": "2026-05-10T00:00:00Z",
          *         "updated_at": "2026-05-10T00:23:00Z"
          *       },
-         *       "priority_code": "normal",
+         *       "priority": "normal",
          *       "payment_term": {
          *         "id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
          *         "object": "payment_term",
@@ -19466,7 +19666,7 @@ export interface components {
              * @description The priority code for the customer.
              * @enum {string}
              */
-            priority_code: "low" | "normal" | "high";
+            priority: "low" | "normal" | "high";
             /**
              * @description The payment term for this invoice.
              * @example {
@@ -19518,7 +19718,7 @@ export interface components {
          *       "sku": "ALM-2024-1001",
          *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *       "notes": null,
-         *       "item_type_code": "product",
+         *       "type": "product",
          *       "category": {
          *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *         "object": "item_category",
@@ -19662,7 +19862,7 @@ export interface components {
          *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "attribute",
          *             "value": "Premium",
-         *             "color_code": "red",
+         *             "color": "red",
          *             "sort_order": 1,
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "updated_at": "2026-05-10T00:23:00Z"
@@ -19692,7 +19892,7 @@ export interface components {
              * @description The item type code.
              * @enum {string}
              */
-            item_type_code: "product" | "material" | "part";
+            type: "product" | "material" | "part";
             /**
              * @description The item category.
              * @example {
@@ -20193,11 +20393,23 @@ export interface components {
          *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *             "object": "role",
          *             "name": "Admin",
-         *             "type_code": "admin",
-         *             "owner": null,
-         *             "permissions": null,
-         *             "created_at": "0001-01-01T00:00:00Z",
-         *             "updated_at": "0001-01-01T00:00:00Z"
+         *             "type": "admin",
+         *             "owner": {
+         *               "object": "owner",
+         *               "type": "account",
+         *               "account": {
+         *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *                 "object": "account"
+         *               }
+         *             },
+         *             "permissions": [
+         *               "customers:create",
+         *               "customers:read",
+         *               "customers:update",
+         *               "customers:delete"
+         *             ],
+         *             "created_at": "2026-05-10T00:00:00Z",
+         *             "updated_at": "2026-05-10T00:23:00Z"
          *           },
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z",
@@ -20335,7 +20547,7 @@ export interface components {
          *           "id": "ai_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "account_integration",
          *           "name": "My Stripe Integration",
-         *           "integration_code": "stripe",
+         *           "provider": "stripe",
          *           "is_active": true,
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
@@ -20483,7 +20695,7 @@ export interface components {
          *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                 "object": "attribute",
          *                 "value": "Premium",
-         *                 "color_code": "",
+         *                 "color": "",
          *                 "sort_order": 0,
          *                 "created_at": "0001-01-01T00:00:00Z",
          *                 "updated_at": "0001-01-01T00:00:00Z"
@@ -20569,7 +20781,7 @@ export interface components {
          *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *             "object": "role",
          *             "name": "Admin",
-         *             "type_code": "admin",
+         *             "type": "admin",
          *             "owner": {
          *               "object": "owner",
          *               "type": "account",
@@ -20810,26 +21022,35 @@ export interface components {
          *               ]
          *             }
          *           },
-         *           "tools": [
-         *             {
-         *               "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
-         *               "object": "agent_definition_tool",
-         *               "tool": {
-         *                 "id": "tdef_01k0b1seed0searchproduct0",
-         *                 "object": "available_tool",
-         *                 "name": "Search Products",
-         *                 "description": "Search for products by keyword or phrase",
-         *                 "config_schema": null,
-         *                 "category": "built_in",
-         *                 "required_permissions": [
-         *                   "products:read"
-         *                 ]
-         *               },
-         *               "config": {},
-         *               "sort_order": 0,
-         *               "require_review": false
-         *             }
-         *           ],
+         *           "tools": {
+         *             "object": "list",
+         *             "page_info": {
+         *               "next_cursor": null,
+         *               "prev_cursor": null,
+         *               "has_next_page": false,
+         *               "has_prev_page": false
+         *             },
+         *             "data": [
+         *               {
+         *                 "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
+         *                 "object": "agent_definition_tool",
+         *                 "tool": {
+         *                   "id": "tdef_01k0b1seed0searchproduct0",
+         *                   "object": "available_tool",
+         *                   "name": "Search Products",
+         *                   "description": "Search for products by keyword or phrase",
+         *                   "config_schema": null,
+         *                   "category": "built_in",
+         *                   "required_permissions": [
+         *                     "products:read"
+         *                   ]
+         *                 },
+         *                 "config": {},
+         *                 "sort_order": 0,
+         *                 "require_review": false
+         *               }
+         *             ]
+         *           },
          *           "status": "inactive",
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
@@ -20847,6 +21068,18 @@ export interface components {
             page_info: components["schemas"]["PageInfo"];
             /** @description Array of AgentDefinition resources in this page */
             data: components["schemas"]["AgentDefinition"][];
+        };
+        /** @description A paginated list of AgentDefinitionTool resources */
+        List_AgentDefinitionTool: {
+            /**
+             * @description Object type for AgentDefinitionTool list
+             * @enum {string}
+             */
+            object: "list";
+            /** @description Pagination metadata for AgentDefinitionTool list */
+            page_info: components["schemas"]["PageInfo"];
+            /** @description Array of AgentDefinitionTool resources in this page */
+            data: components["schemas"]["AgentDefinitionTool"][];
         };
         /**
          * @description A paginated list of AgentMemory resources
@@ -20867,7 +21100,8 @@ export interface components {
          *           "metadata": {},
          *           "entity": {
          *             "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
-         *             "object": "account"
+         *             "object": "entity",
+         *             "type": "account"
          *           },
          *           "importance": 0.8,
          *           "expires_at": "2026-06-10T00:00:00Z",
@@ -20918,14 +21152,15 @@ export interface components {
          *           "total_output_tokens": 300,
          *           "triggered_by": {
          *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *             "object": "user",
+         *             "object": "actor",
+         *             "type": "user",
          *             "name": "John Doe",
          *             "handle": "jdoe@augno.com",
          *             "role": {
          *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *               "object": "role",
          *               "name": "Admin",
-         *               "type_code": "admin",
+         *               "type": "admin",
          *               "owner": {
          *                 "object": "owner",
          *                 "type": "account",
@@ -21015,7 +21250,8 @@ export interface components {
          *                 "duration_ms": null,
          *                 "actor": {
          *                   "id": "us_01jm4r6700f8nwq3v5hx2d9ktp",
-         *                   "object": "user",
+         *                   "object": "actor",
+         *                   "type": "user",
          *                   "name": "Jane Doe",
          *                   "handle": null,
          *                   "role": null
@@ -21168,14 +21404,15 @@ export interface components {
          *           "resource_id": "us_01gf7a8200e9pvbd6bgyq395ae",
          *           "actor": {
          *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *             "object": "user",
+         *             "object": "actor",
+         *             "type": "user",
          *             "name": "John Doe",
          *             "handle": "jdoe@augno.com",
          *             "role": {
          *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *               "object": "role",
          *               "name": "Admin",
-         *               "type_code": "admin",
+         *               "type": "admin",
          *               "owner": {
          *                 "object": "owner",
          *                 "type": "account",
@@ -21194,13 +21431,22 @@ export interface components {
          *               "updated_at": "2026-05-10T00:23:00Z"
          *             }
          *           },
-         *           "changes": [
-         *             {
-         *               "field": "email",
-         *               "old_value": "old@example.com",
-         *               "new_value": "new@example.com"
-         *             }
-         *           ],
+         *           "changes": {
+         *             "object": "list",
+         *             "page_info": {
+         *               "next_cursor": null,
+         *               "prev_cursor": null,
+         *               "has_next_page": false,
+         *               "has_prev_page": false
+         *             },
+         *             "data": [
+         *               {
+         *                 "field": "email",
+         *                 "old_value": "old@example.com",
+         *                 "new_value": "new@example.com"
+         *               }
+         *             ]
+         *           },
          *           "metadata": {
          *             "reason": "operator override"
          *           },
@@ -21223,6 +21469,18 @@ export interface components {
             page_info: components["schemas"]["PageInfo"];
             /** @description Array of AuditEvent resources in this page */
             data: components["schemas"]["AuditEvent"][];
+        };
+        /** @description A paginated list of AuditFieldChange resources */
+        List_AuditFieldChange: {
+            /**
+             * @description Object type for AuditFieldChange list
+             * @enum {string}
+             */
+            object: "list";
+            /** @description Pagination metadata for AuditFieldChange list */
+            page_info: components["schemas"]["PageInfo"];
+            /** @description Array of AuditFieldChange resources in this page */
+            data: components["schemas"]["AuditFieldChange"][];
         };
         /**
          * @description A paginated list of AvailableTool resources
@@ -21280,7 +21538,7 @@ export interface components {
          *             "sku": "ALM-2024-1001",
          *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *             "notes": null,
-         *             "item_type_code": "product",
+         *             "type": "product",
          *             "category": {
          *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *               "object": "item_category",
@@ -21424,7 +21682,7 @@ export interface components {
          *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                   "object": "attribute",
          *                   "value": "Premium",
-         *                   "color_code": "red",
+         *                   "color": "red",
          *                   "sort_order": 1,
          *                   "created_at": "2026-05-10T00:00:00Z",
          *                   "updated_at": "2026-05-10T00:23:00Z"
@@ -21504,8 +21762,8 @@ export interface components {
          *             "name": "Packaging Line 1",
          *             "notes": null,
          *             "type": "init_batch",
-         *             "label_size_code": null,
-         *             "label_type_code": null,
+         *             "label_size": null,
+         *             "label_type": null,
          *             "material_check_required": false,
          *             "department": null,
          *             "production_steps": null,
@@ -21521,7 +21779,7 @@ export interface components {
          *               "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
          *               "object": "location",
          *               "name": "Warehouse A",
-         *               "type_code": "building",
+         *               "type": "building",
          *               "parent": null,
          *               "children": {
          *                 "object": "list",
@@ -21536,7 +21794,7 @@ export interface components {
          *                     "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
          *                     "object": "location",
          *                     "name": "Shelf A1",
-         *                     "type_code": "building",
+         *                     "type": "building",
          *                     "parent": null,
          *                     "children": null,
          *                     "created_at": "0001-01-01T00:00:00Z",
@@ -21562,8 +21820,8 @@ export interface components {
          *                   "name": "Packaging Line 1",
          *                   "notes": null,
          *                   "type": "init_batch",
-         *                   "label_size_code": null,
-         *                   "label_type_code": null,
+         *                   "label_size": null,
+         *                   "label_type": null,
          *                   "material_check_required": false,
          *                   "department": null,
          *                   "production_steps": null,
@@ -21676,7 +21934,7 @@ export interface components {
          *               "sku": "ALM-2024-1001",
          *               "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *               "notes": null,
-         *               "item_type_code": "product",
+         *               "type": "product",
          *               "category": {
          *                 "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *                 "object": "item_category",
@@ -21820,7 +22078,7 @@ export interface components {
          *                     "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                     "object": "attribute",
          *                     "value": "Premium",
-         *                     "color_code": "red",
+         *                     "color": "red",
          *                     "sort_order": 1,
          *                     "created_at": "2026-05-10T00:00:00Z",
          *                     "updated_at": "2026-05-10T00:23:00Z"
@@ -21900,8 +22158,8 @@ export interface components {
          *               "name": "Packaging Line 1",
          *               "notes": null,
          *               "type": "init_batch",
-         *               "label_size_code": null,
-         *               "label_type_code": null,
+         *               "label_size": null,
+         *               "label_type": null,
          *               "material_check_required": false,
          *               "department": null,
          *               "production_steps": null,
@@ -21917,7 +22175,7 @@ export interface components {
          *                 "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
          *                 "object": "location",
          *                 "name": "Warehouse A",
-         *                 "type_code": "building",
+         *                 "type": "building",
          *                 "parent": null,
          *                 "children": {
          *                   "object": "list",
@@ -21932,7 +22190,7 @@ export interface components {
          *                       "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
          *                       "object": "location",
          *                       "name": "Shelf A1",
-         *                       "type_code": "building",
+         *                       "type": "building",
          *                       "parent": null,
          *                       "children": null,
          *                       "created_at": "0001-01-01T00:00:00Z",
@@ -21958,8 +22216,8 @@ export interface components {
          *                     "name": "Packaging Line 1",
          *                     "notes": null,
          *                     "type": "init_batch",
-         *                     "label_size_code": null,
-         *                     "label_type_code": null,
+         *                     "label_size": null,
+         *                     "label_type": null,
          *                     "material_check_required": false,
          *                     "department": null,
          *                     "production_steps": null,
@@ -22141,7 +22399,7 @@ export interface components {
          *                 "sku": "WDG-001",
          *                 "description": null,
          *                 "notes": null,
-         *                 "item_type_code": "",
+         *                 "type": "",
          *                 "category": null,
          *                 "unit_value": null,
          *                 "unit_cost": null,
@@ -22710,7 +22968,7 @@ export interface components {
          *             "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
          *             "object": "location",
          *             "name": "Warehouse A",
-         *             "type_code": "building",
+         *             "type": "building",
          *             "parent": null,
          *             "children": {
          *               "object": "list",
@@ -22725,7 +22983,7 @@ export interface components {
          *                   "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
          *                   "object": "location",
          *                   "name": "Shelf A1",
-         *                   "type_code": "building",
+         *                   "type": "building",
          *                   "parent": null,
          *                   "children": null,
          *                   "created_at": "0001-01-01T00:00:00Z",
@@ -22751,8 +23009,8 @@ export interface components {
          *                 "name": "Packaging Line 1",
          *                 "notes": null,
          *                 "type": "init_batch",
-         *                 "label_size_code": null,
-         *                 "label_type_code": null,
+         *                 "label_size": null,
+         *                 "label_type": null,
          *                 "material_check_required": false,
          *                 "department": null,
          *                 "production_steps": null,
@@ -22832,6 +23090,18 @@ export interface components {
             /** @description Array of EDIRun resources in this page */
             data: components["schemas"]["EDIRun"][];
         };
+        /** @description A paginated list of EmailContact resources */
+        List_EmailContact: {
+            /**
+             * @description Object type for EmailContact list
+             * @enum {string}
+             */
+            object: "list";
+            /** @description Pagination metadata for EmailContact list */
+            page_info: components["schemas"]["PageInfo"];
+            /** @description Array of EmailContact resources in this page */
+            data: components["schemas"]["EmailContact"][];
+        };
         /**
          * @description A paginated list of EmailLog resources
          * @example {
@@ -22855,14 +23125,32 @@ export interface components {
          *           "ses_message_id": null,
          *           "sent_by": {
          *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *             "object": "user",
-         *             "email": "jdoe@augno.com",
+         *             "object": "actor",
+         *             "type": "user",
          *             "name": "John Doe",
-         *             "username": "jdoe",
-         *             "email_verified_at": "2026-06-10T00:00:00Z",
-         *             "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
-         *             "created_at": "2026-05-10T00:00:00Z",
-         *             "updated_at": "2026-05-10T00:23:00Z"
+         *             "handle": "jdoe@augno.com",
+         *             "role": {
+         *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *               "object": "role",
+         *               "name": "Admin",
+         *               "type": "admin",
+         *               "owner": {
+         *                 "object": "owner",
+         *                 "type": "account",
+         *                 "account": {
+         *                   "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *                   "object": "account"
+         *                 }
+         *               },
+         *               "permissions": [
+         *                 "customers:create",
+         *                 "customers:read",
+         *                 "customers:update",
+         *                 "customers:delete"
+         *               ],
+         *               "created_at": "2026-05-10T00:00:00Z",
+         *               "updated_at": "2026-05-10T00:23:00Z"
+         *             }
          *           },
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
@@ -22900,7 +23188,7 @@ export interface components {
          *             "sku": "HB-M10X30-ZN",
          *             "description": null,
          *             "notes": null,
-         *             "item_type_code": "",
+         *             "type": "",
          *             "category": null,
          *             "unit_value": null,
          *             "unit_cost": null,
@@ -22955,7 +23243,7 @@ export interface components {
          *         {
          *           "id": "icl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "inventory_change_log",
-         *           "action_type_code": "scan",
+         *           "action_type": "scan",
          *           "quantity": {
          *             "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "quantity",
@@ -22983,7 +23271,7 @@ export interface components {
          *             "sku": "ALM-2024-1001",
          *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *             "notes": null,
-         *             "item_type_code": "product",
+         *             "type": "product",
          *             "category": {
          *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *               "object": "item_category",
@@ -23127,7 +23415,7 @@ export interface components {
          *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                   "object": "attribute",
          *                   "value": "Premium",
-         *                   "color_code": "red",
+         *                   "color": "red",
          *                   "sort_order": 1,
          *                   "created_at": "2026-05-10T00:00:00Z",
          *                   "updated_at": "2026-05-10T00:23:00Z"
@@ -23155,8 +23443,8 @@ export interface components {
          *             "name": "Packaging Line 1",
          *             "notes": null,
          *             "type": "init_batch",
-         *             "label_size_code": null,
-         *             "label_type_code": null,
+         *             "label_size": null,
+         *             "label_type": null,
          *             "material_check_required": false,
          *             "department": null,
          *             "production_steps": null,
@@ -23377,7 +23665,7 @@ export interface components {
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           },
-         *           "priority_code": "normal",
+         *           "priority": "normal",
          *           "payment_term": {
          *             "id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "payment_term",
@@ -23427,7 +23715,7 @@ export interface components {
          *           "sku": "ALM-2024-1001",
          *           "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *           "notes": null,
-         *           "item_type_code": "product",
+         *           "type": "product",
          *           "category": {
          *             "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "item_category",
@@ -23571,7 +23859,7 @@ export interface components {
          *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                 "object": "attribute",
          *                 "value": "Premium",
-         *                 "color_code": "red",
+         *                 "color": "red",
          *                 "sort_order": 1,
          *                 "created_at": "2026-05-10T00:00:00Z",
          *                 "updated_at": "2026-05-10T00:23:00Z"
@@ -23697,7 +23985,7 @@ export interface components {
          *             "sku": "ALM-2024-1001",
          *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *             "notes": null,
-         *             "item_type_code": "product",
+         *             "type": "product",
          *             "category": {
          *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *               "object": "item_category",
@@ -23841,7 +24129,7 @@ export interface components {
          *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                   "object": "attribute",
          *                   "value": "Premium",
-         *                   "color_code": "red",
+         *                   "color": "red",
          *                   "sort_order": 1,
          *                   "created_at": "2026-05-10T00:00:00Z",
          *                   "updated_at": "2026-05-10T00:23:00Z"
@@ -23933,7 +24221,7 @@ export interface components {
          *             "sku": "ALM-2024-1001",
          *             "description": null,
          *             "notes": null,
-         *             "item_type_code": "",
+         *             "type": "",
          *             "category": null,
          *             "unit_value": null,
          *             "unit_cost": null,
@@ -23949,8 +24237,8 @@ export interface components {
          *             "name": "Packaging Line 1",
          *             "notes": null,
          *             "type": "init_batch",
-         *             "label_size_code": null,
-         *             "label_type_code": null,
+         *             "label_size": null,
+         *             "label_type": null,
          *             "material_check_required": false,
          *             "department": null,
          *             "production_steps": null,
@@ -24221,7 +24509,7 @@ export interface components {
          *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                 "object": "attribute",
          *                 "value": "Premium",
-         *                 "color_code": "red",
+         *                 "color": "red",
          *                 "sort_order": 1,
          *                 "created_at": "2026-05-10T00:00:00Z",
          *                 "updated_at": "2026-05-10T00:23:00Z"
@@ -24328,7 +24616,7 @@ export interface components {
          *                 "code": "customers:read",
          *                 "name": "Read Customers",
          *                 "description": null,
-         *                 "permission_group_code": "customers",
+         *                 "group": "customers",
          *                 "created_at": "2026-05-10T00:00:00Z",
          *                 "updated_at": "2026-05-10T00:23:00Z"
          *               }
@@ -24469,7 +24757,7 @@ export interface components {
          *           "id": "pl_01gf7a8200er3ar3pkfrb6kk29",
          *           "object": "pricing_plan",
          *           "name": "Starter",
-         *           "plan_type_code": "starter",
+         *           "plan_type": "starter",
          *           "price_per_seat": 19,
          *           "price_per_month": 19,
          *           "seat_minimum": 1,
@@ -24604,7 +24892,7 @@ export interface components {
          *             "sku": "ALM-2024-1001",
          *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *             "notes": null,
-         *             "item_type_code": "product",
+         *             "type": "product",
          *             "category": {
          *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *               "object": "item_category",
@@ -24748,7 +25036,7 @@ export interface components {
          *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                   "object": "attribute",
          *                   "value": "Premium",
-         *                   "color_code": "red",
+         *                   "color": "red",
          *                   "sort_order": 1,
          *                   "created_at": "2026-05-10T00:00:00Z",
          *                   "updated_at": "2026-05-10T00:23:00Z"
@@ -25252,14 +25540,15 @@ export interface components {
          *           },
          *           "actor": {
          *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *             "object": "user",
+         *             "object": "actor",
+         *             "type": "user",
          *             "name": "John Doe",
          *             "handle": "jdoe@augno.com",
          *             "role": {
          *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *               "object": "role",
          *               "name": "Admin",
-         *               "type_code": "admin",
+         *               "type": "admin",
          *               "owner": {
          *                 "object": "owner",
          *                 "type": "account",
@@ -25311,7 +25600,7 @@ export interface components {
          *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *           "object": "role",
          *           "name": "Admin",
-         *           "type_code": "admin",
+         *           "type": "admin",
          *           "owner": {
          *             "object": "owner",
          *             "type": "account",
@@ -25859,7 +26148,7 @@ export interface components {
          *               "sku": "ALM-2024-1001",
          *               "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *               "notes": null,
-         *               "item_type_code": "product",
+         *               "type": "product",
          *               "category": {
          *                 "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *                 "object": "item_category",
@@ -26003,7 +26292,7 @@ export interface components {
          *                     "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                     "object": "attribute",
          *                     "value": "Premium",
-         *                     "color_code": "red",
+         *                     "color": "red",
          *                     "sort_order": 1,
          *                     "created_at": "2026-05-10T00:00:00Z",
          *                     "updated_at": "2026-05-10T00:23:00Z"
@@ -26625,7 +26914,7 @@ export interface components {
          *       "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
          *       "object": "location",
          *       "name": "Warehouse A",
-         *       "type_code": "building",
+         *       "type": "building",
          *       "parent": null,
          *       "children": {
          *         "object": "list",
@@ -26640,7 +26929,7 @@ export interface components {
          *             "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
          *             "object": "location",
          *             "name": "Shelf A1",
-         *             "type_code": "building",
+         *             "type": "building",
          *             "parent": null,
          *             "children": null,
          *             "created_at": "0001-01-01T00:00:00Z",
@@ -26666,7 +26955,7 @@ export interface components {
              * @description The code of the location type.
              * @enum {string}
              */
-            type_code: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
+            type: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
             /** @description The parent location. Null if this is a top-level location. Expandable. */
             parent: components["schemas"]["Location"] | null;
             /** @description The child locations. Expandable. */
@@ -26818,7 +27107,7 @@ export interface components {
          *         "sku": "ALM-2024-1001",
          *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *         "notes": null,
-         *         "item_type_code": "product",
+         *         "type": "product",
          *         "category": {
          *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "item_category",
@@ -26962,7 +27251,7 @@ export interface components {
          *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *               "object": "attribute",
          *               "value": "Premium",
-         *               "color_code": "red",
+         *               "color": "red",
          *               "sort_order": 1,
          *               "created_at": "2026-05-10T00:00:00Z",
          *               "updated_at": "2026-05-10T00:23:00Z"
@@ -27037,7 +27326,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -27181,7 +27470,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -27364,7 +27653,7 @@ export interface components {
          *         "sku": "ALM-2024-1001",
          *         "description": null,
          *         "notes": null,
-         *         "item_type_code": "",
+         *         "type": "",
          *         "category": null,
          *         "unit_value": null,
          *         "unit_cost": null,
@@ -27380,8 +27669,8 @@ export interface components {
          *         "name": "Packaging Line 1",
          *         "notes": null,
          *         "type": "init_batch",
-         *         "label_size_code": null,
-         *         "label_type_code": null,
+         *         "label_size": null,
+         *         "label_type": null,
          *         "material_check_required": false,
          *         "department": null,
          *         "production_steps": null,
@@ -27408,7 +27697,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -27552,7 +27841,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -27573,8 +27862,8 @@ export interface components {
              *       "name": "Packaging Line 1",
              *       "notes": null,
              *       "type": "init_batch",
-             *       "label_size_code": null,
-             *       "label_type_code": null,
+             *       "label_size": null,
+             *       "label_type": null,
              *       "material_check_required": false,
              *       "department": null,
              *       "production_steps": null,
@@ -27787,7 +28076,7 @@ export interface components {
             /** @description The ship-to country. */
             ship_to_country: string | null;
             /** @description The order discount code. */
-            order_discount_code: string | null;
+            discount_code: string | null;
             /**
              * Format: date-time
              * @description The date the order was completed.
@@ -28319,7 +28608,7 @@ export interface components {
          *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "attribute",
          *             "value": "Premium",
-         *             "color_code": "red",
+         *             "color": "red",
          *             "sort_order": 1,
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "updated_at": "2026-05-10T00:23:00Z"
@@ -28558,7 +28847,7 @@ export interface components {
          *       "code": "customers:read",
          *       "name": "Read Customers",
          *       "description": null,
-         *       "permission_group_code": "customers",
+         *       "group": "customers",
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z"
          *     }
@@ -28578,7 +28867,7 @@ export interface components {
             /** @description An optional description of what this permission controls. */
             description: string | null;
             /** @description The code of the permission group this permission belongs to. */
-            permission_group_code: string;
+            group: string;
             /**
              * Format: date-time
              * @description When the permission was created.
@@ -28613,7 +28902,7 @@ export interface components {
          *             "code": "customers:read",
          *             "name": "Read Customers",
          *             "description": null,
-         *             "permission_group_code": "customers",
+         *             "group": "customers",
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           }
@@ -29656,7 +29945,7 @@ export interface components {
          *       "id": "pl_01gf7a8200er3ar3pkfrb6kk29",
          *       "object": "pricing_plan",
          *       "name": "Starter",
-         *       "plan_type_code": "starter",
+         *       "plan_type": "starter",
          *       "price_per_seat": 19,
          *       "price_per_month": 19,
          *       "seat_minimum": 1,
@@ -29708,7 +29997,7 @@ export interface components {
              * @description The plan type code.
              * @enum {string}
              */
-            plan_type_code: "free" | "starter" | "pro";
+            plan_type: "free" | "starter" | "pro";
             /** @description The price per seat per month in dollars. */
             price_per_seat: number;
             /** @description The flat monthly price in dollars, if applicable. */
@@ -29809,7 +30098,7 @@ export interface components {
          *         "sku": "ALM-2024-1001",
          *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *         "notes": null,
-         *         "item_type_code": "product",
+         *         "type": "product",
          *         "category": {
          *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "item_category",
@@ -29953,7 +30242,7 @@ export interface components {
          *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *               "object": "attribute",
          *               "value": "Premium",
-         *               "color_code": "red",
+         *               "color": "red",
          *               "sort_order": 1,
          *               "created_at": "2026-05-10T00:00:00Z",
          *               "updated_at": "2026-05-10T00:23:00Z"
@@ -30019,7 +30308,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -30163,7 +30452,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -31188,7 +31477,7 @@ export interface components {
              * @description The resource type identifier.
              * @enum {string}
              */
-            object: "account" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
+            object: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
         };
         /**
          * @description ProductionOutput represents the production output of a production step.
@@ -31200,7 +31489,7 @@ export interface components {
          *         "object": "item",
          *         "sku": "ALM-2024-1001",
          *         "description": null,
-         *         "item_type_code": "product"
+         *         "item_type": "product"
          *       },
          *       "quantity": {
          *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -31242,7 +31531,7 @@ export interface components {
              *       "object": "item",
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-             *       "item_type_code": "part"
+             *       "item_type": "part"
              *     }
              */
             produced_item: components["schemas"]["ConsumptionItem"] | null;
@@ -31340,7 +31629,7 @@ export interface components {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -31427,7 +31716,7 @@ export interface components {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -31606,7 +31895,7 @@ export interface components {
          *           "object": "item",
          *           "sku": "ALM-2024-1001",
          *           "description": null,
-         *           "item_type_code": "product"
+         *           "item_type": "product"
          *         },
          *         "quantity": {
          *           "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -31683,7 +31972,7 @@ export interface components {
          *             "object": "item",
          *             "sku": "ALM-2024-1001",
          *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-         *             "item_type_code": "part"
+         *             "item_type": "part"
          *           },
          *           "instructions": "Mix with water before adding",
          *           "created_at": "2026-05-10T00:00:00Z",
@@ -31857,7 +32146,7 @@ export interface components {
              *         "object": "item",
              *         "sku": "ALM-2024-1001",
              *         "description": null,
-             *         "item_type_code": "product"
+             *         "item_type": "product"
              *       },
              *       "quantity": {
              *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -32573,7 +32862,7 @@ export interface components {
             /** @description The order lines. */
             lines: components["schemas"]["List_PurchaseOrderLineDetail"] | null;
             /** @description The email contacts for this order. */
-            contacts: components["schemas"]["EmailContact"][] | null;
+            contacts: components["schemas"]["List_EmailContact"] | null;
             /**
              * Format: date-time
              * @description The timestamp when the order was issued.
@@ -32696,7 +32985,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -32840,7 +33129,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -33638,7 +33927,7 @@ export interface components {
              *                 "sku": "ALM-2024-1001",
              *                 "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *                 "notes": null,
-             *                 "item_type_code": "product",
+             *                 "type": "product",
              *                 "category": {
              *                   "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *                   "object": "item_category",
@@ -33782,7 +34071,7 @@ export interface components {
              *                       "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *                       "object": "attribute",
              *                       "value": "Premium",
-             *                       "color_code": "red",
+             *                       "color": "red",
              *                       "sort_order": 1,
              *                       "created_at": "2026-05-10T00:00:00Z",
              *                       "updated_at": "2026-05-10T00:23:00Z"
@@ -35023,14 +35312,15 @@ export interface components {
          *       },
          *       "actor": {
          *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *         "object": "user",
+         *         "object": "actor",
+         *         "type": "user",
          *         "name": "John Doe",
          *         "handle": "jdoe@augno.com",
          *         "role": {
          *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *           "object": "role",
          *           "name": "Admin",
-         *           "type_code": "admin",
+         *           "type": "admin",
          *           "owner": {
          *             "object": "owner",
          *             "type": "account",
@@ -35119,14 +35409,15 @@ export interface components {
              * @description Actor details (user or API key).
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *       "object": "user",
+             *       "object": "actor",
+             *       "type": "user",
              *       "name": "John Doe",
              *       "handle": "jdoe@augno.com",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -35241,7 +35532,7 @@ export interface components {
          *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *       "object": "role",
          *       "name": "Admin",
-         *       "type_code": "admin",
+         *       "type": "admin",
          *       "owner": {
          *         "object": "owner",
          *         "type": "account",
@@ -35274,10 +35565,10 @@ export interface components {
              * @description The role type code.
              * @enum {string}
              */
-            type_code: "admin" | "user" | "scanner" | "sales_rep" | "agent";
+            type: "admin" | "user" | "scanner" | "sales_rep" | "agent";
             /** @description The owner of this resource. */
             owner: components["schemas"]["Owner"] | null;
-            /** @description The permissions for this role in "{domain}:{action}" format. */
+            /** @description The permissions for this role in `{domain}:{action}` format. */
             permissions: string[] | null;
             /**
              * Format: date-time
@@ -35301,7 +35592,7 @@ export interface components {
              * Format: date-time
              * @description Optional expiration time override for the new API key.
              */
-            expires_at?: string | null;
+            expires_at?: string;
         };
         /** @description SalesEntry represents a single sales transaction entry for analytics. */
         SalesEntry: {
@@ -35378,7 +35669,7 @@ export interface components {
             /** @description The ship-to country. */
             ship_to_country: string | null;
             /** @description The order discount code. */
-            order_discount_code: string | null;
+            discount_code: string | null;
             /**
              * Format: date-time
              * @description The date the order was completed.
@@ -35951,14 +36242,15 @@ export interface components {
              * @description The sales representative. Uses Actor sub-resource.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *       "object": "user",
+             *       "object": "actor",
+             *       "type": "user",
              *       "name": "John Doe",
              *       "handle": "jdoe@augno.com",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -36128,7 +36420,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -36272,7 +36564,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -36386,7 +36678,7 @@ export interface components {
              *       "sku": "ALM-2024-1001",
              *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "item_type_code": "product",
+             *       "type": "product",
              *       "category": {
              *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "item_category",
@@ -36530,7 +36822,7 @@ export interface components {
              *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *             "object": "attribute",
              *             "value": "Premium",
-             *             "color_code": "red",
+             *             "color": "red",
              *             "sort_order": 1,
              *             "created_at": "2026-05-10T00:00:00Z",
              *             "updated_at": "2026-05-10T00:23:00Z"
@@ -37393,8 +37685,8 @@ export interface components {
          *       "name": "Packaging Line 1",
          *       "notes": null,
          *       "type": "init_batch",
-         *       "label_size_code": null,
-         *       "label_type_code": null,
+         *       "label_size": null,
+         *       "label_type": null,
          *       "material_check_required": false,
          *       "department": null,
          *       "production_steps": null,
@@ -37423,12 +37715,12 @@ export interface components {
              * @description The label size code for the scanning station.
              * @enum {string|null}
              */
-            label_size_code: "1x1" | "1x3" | "1x4" | "2x4" | null;
+            label_size: "1x1" | "1x3" | "1x4" | "2x4" | null;
             /**
              * @description The label type code for the scanning station.
              * @enum {string|null}
              */
-            label_type_code: "tag" | "traveler" | null;
+            label_type: "tag" | "traveler" | null;
             /** @description Whether material check is required at this station. */
             material_check_required: boolean;
             /** @description The department this scanning station belongs to. */
@@ -37552,7 +37844,7 @@ export interface components {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -38262,7 +38554,7 @@ export interface components {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -38405,7 +38697,7 @@ export interface components {
              *                 "sku": "ALM-2024-1001",
              *                 "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *                 "notes": null,
-             *                 "item_type_code": "product",
+             *                 "type": "product",
              *                 "category": {
              *                   "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *                   "object": "item_category",
@@ -38549,7 +38841,7 @@ export interface components {
              *                       "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *                       "object": "attribute",
              *                       "value": "Premium",
-             *                       "color_code": "red",
+             *                       "color": "red",
              *                       "sort_order": 1,
              *                       "created_at": "2026-05-10T00:00:00Z",
              *                       "updated_at": "2026-05-10T00:23:00Z"
@@ -40209,7 +40501,7 @@ export interface components {
          *           "sku": "ALM-2024-1001",
          *           "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *           "notes": null,
-         *           "item_type_code": "product",
+         *           "type": "product",
          *           "category": {
          *             "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "item_category",
@@ -40353,7 +40645,7 @@ export interface components {
          *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                 "object": "attribute",
          *                 "value": "Premium",
-         *                 "color_code": "red",
+         *                 "color": "red",
          *                 "sort_order": 1,
          *                 "created_at": "2026-05-10T00:00:00Z",
          *                 "updated_at": "2026-05-10T00:23:00Z"
@@ -40437,7 +40729,7 @@ export interface components {
              *         "sku": "ALM-2024-1001",
              *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *         "notes": null,
-             *         "item_type_code": "product",
+             *         "type": "product",
              *         "category": {
              *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "item_category",
@@ -40581,7 +40873,7 @@ export interface components {
              *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
              *               "object": "attribute",
              *               "value": "Premium",
-             *               "color_code": "red",
+             *               "color": "red",
              *               "sort_order": 1,
              *               "created_at": "2026-05-10T00:00:00Z",
              *               "updated_at": "2026-05-10T00:23:00Z"
@@ -40837,7 +41129,7 @@ export interface components {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "role",
              *       "name": "Admin",
-             *       "type_code": "admin",
+             *       "type": "admin",
              *       "owner": {
              *         "object": "owner",
              *         "type": "account",
@@ -40939,7 +41231,7 @@ export interface components {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -41213,7 +41505,7 @@ export interface components {
              *         "created_at": "2026-05-10T00:00:00Z",
              *         "updated_at": "2026-05-10T00:23:00Z"
              *       },
-             *       "priority_code": "normal",
+             *       "priority": "normal",
              *       "payment_term": {
              *         "id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "payment_term",
@@ -41584,7 +41876,7 @@ export interface components {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *         "object": "role",
              *         "name": "Admin",
-             *         "type_code": "admin",
+             *         "type": "admin",
              *         "owner": {
              *           "object": "owner",
              *           "type": "account",
@@ -42375,9 +42667,9 @@ export interface components {
          */
         UpdateAccountIntegrationRequest: {
             /** @description The human-readable name for the integration. */
-            name?: string | null;
+            name?: string;
             /** @description Whether this integration is currently active. */
-            is_active?: boolean | null;
+            is_active?: boolean;
         };
         /**
          * @description UpdateAccountPriceRequest is the request to partially update an account price.
@@ -42387,19 +42679,19 @@ export interface components {
          */
         UpdateAccountPriceRequest: {
             /** @description The ID of the recipient (customer) account. */
-            recipient_account_id?: string | null;
+            recipient_account_id?: string;
             /** @description The ID of the product line this price applies to. */
-            product_line_id?: string | null;
+            product_line_id?: string;
             /** @description The rate value as a decimal string. */
-            rate_value?: string | null;
+            rate_value?: string;
             /** @description The ID of the numerator unit for the rate. */
-            rate_numerator_unit_id?: string | null;
+            rate_numerator_unit_id?: string;
             /** @description The ID of the denominator unit for the rate. */
-            rate_denominator_unit_id?: string | null;
+            rate_denominator_unit_id?: string;
             /** @description The IDs of item categories to constrain this price to. Replaces existing categories. */
-            category_ids?: string[] | null;
+            category_ids?: string[];
             /** @description The IDs of attributes to constrain this price to. Replaces existing attributes. */
-            attribute_ids?: string[] | null;
+            attribute_ids?: string[];
         };
         /**
          * @description UpdateAccountRequest is the request to partially update an account.
@@ -42409,23 +42701,23 @@ export interface components {
          */
         UpdateAccountRequest: {
             /** @description The display name of the account. */
-            name?: string | null;
+            name?: string;
             /** @description The support email address. */
-            support_email?: string | null;
+            support_email?: string;
             /** @description The support phone number. */
-            phone_number?: string | null;
+            phone_number?: string;
             /** @description The portal slug. */
-            slug?: string | null;
+            slug?: string;
             /** @description The website URL. */
-            website_url?: string | null;
+            website_url?: string;
             /** @description The Facebook handle. */
-            facebook_handle?: string | null;
+            facebook_handle?: string;
             /** @description The Instagram handle. */
-            instagram_handle?: string | null;
+            instagram_handle?: string;
             /** @description The LinkedIn handle. */
-            linkedin_handle?: string | null;
+            linkedin_handle?: string;
             /** @description The Twitter handle. */
-            twitter_handle?: string | null;
+            twitter_handle?: string;
         };
         /**
          * @description UpdateAccountUserPasswordRequest is the request to update an account user's password.
@@ -42450,11 +42742,11 @@ export interface components {
          */
         UpdateAccountUserRequest: {
             /** @description The user's display name. */
-            name?: string | null;
+            name?: string;
             /** @description The user's email address. */
-            email?: string | null;
+            email?: string;
             /** @description The user's username. */
-            username?: string | null;
+            username?: string;
             /** @description The ID of the role to assign. */
             role_id?: string | null;
             /** @description The ID of the department to assign. */
@@ -42468,25 +42760,25 @@ export interface components {
          */
         UpdateAddressRequest: {
             /** @description The display name of the address. */
-            name?: string | null;
+            name?: string;
             /** @description The phone number associated with this address. */
             phone?: string | null;
             /** @description The email address associated with this address. */
             email?: string | null;
             /** @description Whether this is a drop ship address. */
-            is_drop_ship?: boolean | null;
+            is_drop_ship?: boolean;
             /** @description The first line of the street address. */
-            street_line_1?: string | null;
+            street_line_1?: string;
             /** @description The second line of the street address. */
             street_line_2?: string | null;
             /** @description The city or locality. */
-            locality?: string | null;
+            locality?: string;
             /** @description The state or administrative area. */
-            state?: string | null;
+            state?: string;
             /** @description The postal or zip code. */
-            postal_code?: string | null;
+            postal_code?: string;
             /** @description The two-letter country code. */
-            country?: string | null;
+            country?: string;
         };
         /**
          * @description UpdateAgentRequest is the request to partially update an agent definition.
@@ -42524,9 +42816,9 @@ export interface components {
              *       }
              *     }
              */
-            config?: components["schemas"]["ConfigInput"] | null;
+            config?: components["schemas"]["ConfigInput"];
             /** @description The tools to attach to this agent. Replaces the existing tool set when provided. */
-            tools?: components["schemas"]["ToolInput"][] | null;
+            tools?: components["schemas"]["ToolInput"][];
             /** @description The ID of the role that defines this agent's permissions. */
             role_id?: string | null;
         };
@@ -42548,30 +42840,29 @@ export interface components {
          */
         UpdateAttributeRequest: {
             /** @description The new value of the attribute. */
-            value?: string | null;
+            value?: string;
             /**
              * @description The new color code of the attribute.
-             * @enum {string|null}
+             * @enum {string}
              */
-            color_code?: "blue" | "brown" | "default" | "gray" | "green" | "orange" | "pink" | "purple" | "red" | "yellow" | null;
+            color?: "blue" | "brown" | "default" | "gray" | "green" | "orange" | "pink" | "purple" | "red" | "yellow";
             /** @description The new display order of the attribute. */
-            sort_order?: number | null;
+            sort_order?: number;
         };
         /**
          * @description UpdateCarrierRequest is the request to update a carrier.
          * @example {
-         *       "name": "FedEx Express",
-         *       "customer_portal_visibility": null
+         *       "name": "FedEx Express"
          *     }
          */
         UpdateCarrierRequest: {
             /** @description The new display name for the carrier. */
-            name: string | null;
+            name?: string;
             /**
              * @description Whether this carrier is visible in the customer portal.
-             * @enum {string|null}
+             * @enum {string}
              */
-            customer_portal_visibility: "visible" | "hidden" | null;
+            customer_portal_visibility?: "visible" | "hidden";
         };
         /**
          * @description UpdateConsumptionRequest is the request to partially update a consumption.
@@ -42582,15 +42873,15 @@ export interface components {
          */
         UpdateConsumptionRequest: {
             /** @description The ID of the item being consumed. */
-            item_id?: string | null;
+            item_id?: string;
             /** @description The decimal value of the quantity consumed. */
-            quantity_value?: string | null;
+            quantity_value?: string;
             /** @description The unit ID for the quantity consumed. */
-            quantity_unit_id?: string | null;
+            quantity_unit_id?: string;
             /** @description The decimal value of the waste quantity. */
-            waste_quantity_value?: string | null;
+            waste_quantity_value?: string;
             /** @description The unit ID for the waste quantity. */
-            waste_quantity_unit_id?: string | null;
+            waste_quantity_unit_id?: string;
             /** @description Optional instructions for how this material is consumed. */
             instructions?: string | null;
         };
@@ -42618,16 +42909,16 @@ export interface components {
          */
         UpdateCustomerRequest: {
             /** @description The customer name. */
-            name?: string | null;
+            name?: string;
             /** @description The customer number. */
-            number?: string | null;
+            number?: string;
             /** @description A note about the customer. */
             note?: string | null;
             /**
              * @description The status code.
-             * @enum {string|null}
+             * @enum {string}
              */
-            status_code?: "normal" | "preferred" | "hold_shipment" | "hold_all" | null;
+            status?: "normal" | "preferred" | "hold_shipment" | "hold_all";
             /** @description The customer email address. Send null to clear. */
             email?: string | null;
             /** @description The customer phone number. Send null to clear. */
@@ -42635,7 +42926,7 @@ export interface components {
             /** @description The customer website URL. Send null to clear. */
             url?: string | null;
             /** @description Whether the customer is EDI enabled. */
-            is_edi_enabled?: boolean | null;
+            is_edi_enabled?: boolean;
             /**
              * @description The commission policy for this customer.
              * @enum {string}
@@ -42647,18 +42938,18 @@ export interface components {
              */
             freight_policy?: "free_freight" | "billed_freight";
             /** @description The default carrier ID. */
-            default_carrier_id?: string | null;
+            default_carrier_id?: string;
             /** @description The default service level ID. */
             default_service_level_id?: string | null;
             /** @description The default payment term ID. */
-            default_payment_term_id?: string | null;
+            default_payment_term_id?: string;
             /** @description The default shipping term ID. */
-            default_shipping_term_id?: string | null;
+            default_shipping_term_id?: string;
             /**
              * @description The default priority code.
-             * @enum {string|null}
+             * @enum {string}
              */
-            default_priority_code?: "low" | "normal" | "high" | null;
+            default_priority?: "low" | "normal" | "high";
             /** @description The default sales rep user ID. */
             default_sales_rep_user_id?: string | null;
             /** @description The bill-to address ID. */
@@ -42666,9 +42957,9 @@ export interface components {
             /** @description The ship-to address ID. */
             ship_to_address_id?: string | null;
             /** @description The customer price group IDs. When provided, replaces all existing price groups. */
-            customer_price_group_ids?: string[] | null;
+            customer_price_group_ids?: string[];
             /** @description The customer type group ID. */
-            customer_type_group_id?: string | null;
+            customer_type_group_id?: string;
             /**
              * @description The carrier billing type.
              * @enum {string}
@@ -42687,9 +42978,9 @@ export interface components {
          */
         UpdateDCLocationRequest: {
             /** @description The ID of the customer account to associate with this DC location. */
-            customer_id?: string | null;
+            customer_id?: string;
             /** @description The location description. */
-            location?: string | null;
+            location?: string;
         };
         /**
          * @description UpdateDepartmentRequest is the request to partially update a department.
@@ -42699,11 +42990,11 @@ export interface components {
          */
         UpdateDepartmentRequest: {
             /** @description The display name of the department. */
-            name?: string | null;
+            name?: string;
             /** @description Optional notes about the department. */
             notes?: string | null;
             /** @description The ID of the storage location to associate with this department. */
-            location_id?: string | null;
+            location_id?: string;
             /** @description IDs of scanning stations to connect to this department (additive). */
             scanning_station_ids: string[];
             /** @description IDs of machines to connect to this department (additive). */
@@ -42718,13 +43009,13 @@ export interface components {
          */
         UpdateInvoiceRequest: {
             /** @description A note to attach to the invoice. */
-            note?: string | null;
+            note?: string;
             /** @description Whether the invoice has been sent. */
-            has_been_sent?: boolean | null;
+            has_been_sent?: boolean;
             /** @description Whether the invoice has been sent via EDI. */
-            is_edi_sent?: boolean | null;
+            is_edi_sent?: boolean;
             /** @description Whether the invoice has been paid in full. */
-            is_paid_in_full?: boolean | null;
+            is_paid_in_full?: boolean;
         };
         /**
          * @description UpdateItemCategoryRequest is the request to partially update an item category.
@@ -42734,9 +43025,9 @@ export interface components {
          */
         UpdateItemCategoryRequest: {
             /** @description The display name of the item category. */
-            name?: string | null;
+            name?: string;
             /** @description Optional notes about the item category. */
-            notes?: string | null;
+            notes?: string;
         };
         /**
          * @description UpdateItemInventoryRequest is the request to adjust or reconcile inventory for an item.
@@ -42752,37 +43043,34 @@ export interface components {
             /** @description The quantity change to apply. */
             quantity_change?: number;
             /** @description Whether to reconcile (force to exact value) or adjust (add delta). */
-            reconcile?: boolean | null;
+            reconcile?: boolean;
             /** @description Optional customer to update inventory for. */
-            customer_id?: string | null;
+            customer_id?: string;
             /** @description Optional location. */
-            location_id?: string | null;
+            location_id?: string;
             /** @description Optional lot number. */
-            lot_number?: string | null;
+            lot_number?: string;
             /** @description The unit ID for the quantity change. */
             unit_id?: string;
         };
         /**
          * @description UpdateLocationRequest is the request to partially update a location.
          * @example {
-         *       "name": "Warehouse B",
-         *       "clear_parent": false
+         *       "name": "Warehouse B"
          *     }
          */
         UpdateLocationRequest: {
             /** @description The display name of the location. */
-            name?: string | null;
+            name?: string;
             /**
              * @description The code of the location type.
              * @enum {string}
              */
-            type_code?: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
+            type?: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
             /** @description The ID of the parent location. Send null to clear. */
             parent_id?: string | null;
-            /** @description Set to true to remove the parent (make top-level). */
-            clear_parent: boolean;
             /** @description The IDs of child locations. When provided, replaces all current children. */
-            child_ids?: string[] | null;
+            child_ids?: string[];
         };
         /**
          * @description UpdateMachineRequest is the request to partially update a machine.
@@ -42792,11 +43080,11 @@ export interface components {
          */
         UpdateMachineRequest: {
             /** @description The display name of the machine. */
-            name?: string | null;
+            name?: string;
             /** @description The serial number of the machine. */
-            serial_number?: string | null;
+            serial_number?: string;
             /** @description Optional notes about the machine. */
-            notes?: string | null;
+            notes?: string;
         };
         /**
          * @example {
@@ -42804,11 +43092,11 @@ export interface components {
          *     }
          */
         UpdateMaterialRequest: {
-            sku?: string | null;
-            description?: string | null;
-            notes?: string | null;
-            order_point?: components["schemas"]["QuantityInputRequest"] | null;
-            lead_time?: components["schemas"]["QuantityInputRequest"] | null;
+            sku?: string;
+            description?: string;
+            notes?: string;
+            order_point?: components["schemas"]["QuantityInputRequest"];
+            lead_time?: components["schemas"]["QuantityInputRequest"];
         };
         /**
          * @description UpdateMemoryRequest is the request to update an existing agent memory.
@@ -42861,21 +43149,21 @@ export interface components {
          */
         UpdateOrderDiscountRequest: {
             /** @description The display name of the discount. */
-            name?: string | null;
+            name?: string;
             /** @description The unique code for this discount. */
-            code?: string | null;
+            code?: string;
             /**
              * Format: decimal
              * @description The percentage value of the discount as a decimal string.
              */
-            percentage?: string | null;
+            percentage?: string;
             /**
              * Format: decimal
              * @description The fixed amount of the discount as a decimal string.
              */
-            amount?: string | null;
+            amount?: string;
             /** @description The type of discount: "percentage" or "amount". */
-            discount_type?: string | null;
+            discount_type?: string;
         };
         /**
          * @description UpdatePartRequest is the request to partially update a part.
@@ -42887,7 +43175,7 @@ export interface components {
          */
         UpdatePartRequest: {
             /** @description The part SKU. */
-            sku?: string | null;
+            sku?: string;
             /** @description The part description. */
             description: string | null;
             /** @description Optional notes about the part. */
@@ -42914,7 +43202,7 @@ export interface components {
          */
         UpdatePaymentTermRequest: {
             /** @description The display name of the payment term. */
-            name?: string | null;
+            name?: string;
         };
         /**
          * @description UpdatePickLineRequest is the request to update a pick line's quantity.
@@ -42924,7 +43212,7 @@ export interface components {
          */
         UpdatePickLineRequest: {
             /** @description The quantity value to set for this line. */
-            quantity_value?: string | null;
+            quantity_value?: string;
         };
         /**
          * @description UpdatePickRequest is the request to partially update a pick's metadata.
@@ -42934,7 +43222,7 @@ export interface components {
          */
         UpdatePickRequest: {
             /** @description The pick number. */
-            number?: string | null;
+            number?: string;
             /** @description The timestamp when the pick was finished. Pass an empty string to clear. */
             finished_at?: string | null;
         };
@@ -42946,7 +43234,7 @@ export interface components {
          */
         UpdateProductLineRequest: {
             /** @description The display name of the product line. */
-            name?: string | null;
+            name?: string;
             /**
              * @description The commission policy for this product line.
              * @enum {string}
@@ -42958,7 +43246,7 @@ export interface components {
              */
             freight_policy?: "free_freight" | "billed_freight";
             /** @description The ID of the unit group to associate with this product line. */
-            unit_group_id?: string | null;
+            unit_group_id?: string;
         };
         /**
          * @description UpdateProductRequest is the request to partially update a product.
@@ -42968,13 +43256,13 @@ export interface components {
          */
         UpdateProductRequest: {
             /** @description The stock keeping unit code. */
-            sku?: string | null;
+            sku?: string;
             /** @description A description of the product. */
-            description?: string | null;
+            description?: string;
             /** @description Additional notes about the product. */
-            notes?: string | null;
+            notes?: string;
             /** @description Whether this product is visible on the customer portal. */
-            is_portal_ready?: boolean | null;
+            is_portal_ready?: boolean;
         };
         /**
          * @description UpdateProductTypeRequest is the request to partially update a product type.
@@ -42985,9 +43273,9 @@ export interface components {
          */
         UpdateProductTypeRequest: {
             /** @description The display name of the product type. */
-            name?: string | null;
+            name?: string;
             /** @description The unique code for the product type. */
-            code?: string | null;
+            code?: string;
         };
         /**
          * @description UpdateProductionRequest is the request to update a production output.
@@ -42999,11 +43287,11 @@ export interface components {
          */
         UpdateProductionRequest: {
             /** @description The new item ID. */
-            item_id?: string | null;
+            item_id?: string;
             /** @description The new quantity value as a decimal string. */
-            quantity_value?: string | null;
+            quantity_value?: string;
             /** @description The new quantity unit ID. */
-            quantity_unit_id?: string | null;
+            quantity_unit_id?: string;
         };
         /**
          * @description UpdateProductionRunRequest is the request to update an existing production run.
@@ -43014,9 +43302,9 @@ export interface components {
          */
         UpdateProductionRunRequest: {
             /** @description The new production run number. */
-            number: string | null;
+            number: string;
             /** @description The user ID of the new responsible user. */
-            responsible_user_id: string | null;
+            responsible_user_id: string;
         };
         /**
          * @description UpdateProductionStepRequest is the request to update a production step.
@@ -43028,13 +43316,13 @@ export interface components {
          */
         UpdateProductionStepRequest: {
             /** @description The new name. */
-            name?: string | null;
+            name?: string;
             /** @description The new leveling factor as a decimal string. */
-            leveling_factor?: string | null;
+            leveling_factor?: string;
             /** @description The new allowances as a decimal string. */
-            allowances?: string | null;
+            allowances?: string;
             /** @description The new scanning station ID. */
-            scanning_station_id?: string | null;
+            scanning_station_id?: string;
         };
         /**
          * @description UpdatePropertyRequest is the request to update a property.
@@ -43044,7 +43332,7 @@ export interface components {
          */
         UpdatePropertyRequest: {
             /** @description The new name of the property. */
-            name?: string | null;
+            name?: string;
         };
         /**
          * @description UpdatePurchaseOrderLineRequest is the request to update a purchase order line.
@@ -43061,34 +43349,34 @@ export interface components {
             /** @description The item ID. */
             item_id?: string | null;
             /** @description The product SKU. */
-            product_sku?: string | null;
+            product_sku?: string;
             /** @description The product description. */
-            product_description?: string | null;
+            product_description?: string;
             /**
              * Format: decimal
              * @description The quantity value.
              */
-            quantity_value?: string | null;
+            quantity_value?: string;
             /** @description The quantity unit ID. */
-            quantity_unit_id?: string | null;
+            quantity_unit_id?: string;
             /**
              * Format: decimal
              * @description The unit price value.
              */
-            unit_price_value?: string | null;
+            unit_price_value?: string;
             /** @description The unit price numerator unit ID. */
-            unit_price_numerator_unit_id?: string | null;
+            unit_price_numerator_unit_id?: string;
             /** @description The unit price denominator unit ID. */
-            unit_price_denominator_unit_id?: string | null;
+            unit_price_denominator_unit_id?: string;
             /**
              * Format: decimal
              * @description The unit cost value.
              */
-            unit_cost_value?: string | null;
+            unit_cost_value?: string;
             /** @description The unit cost numerator unit ID. */
-            unit_cost_numerator_unit_id?: string | null;
+            unit_cost_numerator_unit_id?: string;
             /** @description The unit cost denominator unit ID. */
-            unit_cost_denominator_unit_id?: string | null;
+            unit_cost_denominator_unit_id?: string;
         };
         /**
          * @description UpdatePurchaseOrderRequest is the request to update a purchase order.
@@ -43101,17 +43389,17 @@ export interface components {
          */
         UpdatePurchaseOrderRequest: {
             /** @description A note for the order. */
-            note?: string | null;
+            note?: string;
             /** @description The purchase order number. */
-            number?: string | null;
+            number?: string;
             /** @description The priority code. */
-            priority_code?: string | null;
+            priority_code?: string;
             /** @description The billing address ID. */
             billing_address_id?: string | null;
             /** @description The shipping address ID. */
             shipping_address_id?: string | null;
             /** @description The promised/scheduled delivery date. */
-            promised_at?: string | null;
+            promised_at?: string;
             /** @description The account user IDs for email contacts (replaces existing). */
             contact_account_user_ids: string[];
         };
@@ -43124,9 +43412,9 @@ export interface components {
          */
         UpdateQuantityRequest: {
             /** @description The new decimal value of the quantity. */
-            value?: string | null;
+            value?: string;
             /** @description The new unit ID for this quantity. */
-            unit_id?: string | null;
+            unit_id?: string;
             /** @description The ID of the parent resource that owns this quantity. */
             object_id?: string;
             /** @description The type of the parent resource (e.g. "item", "production_step"). */
@@ -43141,11 +43429,11 @@ export interface components {
          */
         UpdateRateRequest: {
             /** @description The new decimal value of the rate. */
-            value?: string | null;
+            value?: string;
             /** @description The new numerator unit ID for this rate. */
-            numerator_unit_id?: string | null;
+            numerator_unit_id?: string;
             /** @description The new denominator unit ID for this rate. */
-            denominator_unit_id?: string | null;
+            denominator_unit_id?: string;
             /** @description The ID of the parent resource that owns this rate. */
             object_id?: string;
             /** @description The type of the parent resource (e.g. "item", "production_step"). */
@@ -43159,7 +43447,7 @@ export interface components {
          */
         UpdateReceivingOrderLineRequest: {
             /** @description The quantity value to set for this line. */
-            quantity_value?: string | null;
+            quantity_value?: string;
         };
         /**
          * @description UpdateRegistrationFlowRequest is the request to partially update a registration flow.
@@ -43169,7 +43457,7 @@ export interface components {
          */
         UpdateRegistrationFlowRequest: {
             /** @description The display name of the registration flow. */
-            name?: string | null;
+            name?: string;
             /** @description The IDs of the customer groups associated with this registration flow. */
             customer_group_ids: string[];
             /** @description The IDs of the payment terms associated with this registration flow. */
@@ -43195,9 +43483,9 @@ export interface components {
          */
         UpdateRoleRequest: {
             /** @description The new display name for the role. */
-            name: string | null;
+            name: string;
             /** @description The full set of permissions to replace existing ones with in "domain:action" format. If omitted, permissions are not changed. */
-            permissions: string[] | null;
+            permissions: string[];
         };
         /**
          * @description UpdateSalesOrderLineRequest is the request to update a sales order line.
@@ -43210,40 +43498,40 @@ export interface components {
          */
         UpdateSalesOrderLineRequest: {
             /** @description The product ID. */
-            product_id?: string | null;
+            product_id?: string;
             /** @description The item ID. */
-            item_id?: string | null;
+            item_id?: string;
             /** @description The product SKU. */
-            product_sku?: string | null;
+            product_sku?: string;
             /** @description The product description. */
-            product_description?: string | null;
+            product_description?: string;
             /**
              * Format: decimal
              * @description The quantity value.
              */
-            quantity_value?: string | null;
+            quantity_value?: string;
             /** @description The quantity unit ID. */
-            quantity_unit_id?: string | null;
+            quantity_unit_id?: string;
             /**
              * Format: decimal
              * @description The unit price value.
              */
-            unit_price_value?: string | null;
+            unit_price_value?: string;
             /** @description The unit price numerator unit ID. */
-            unit_price_numerator_unit_id?: string | null;
+            unit_price_numerator_unit_id?: string;
             /** @description The unit price denominator unit ID. */
-            unit_price_denominator_unit_id?: string | null;
+            unit_price_denominator_unit_id?: string;
             /**
              * Format: decimal
              * @description The unit cost value.
              */
-            unit_cost_value?: string | null;
+            unit_cost_value?: string;
             /** @description The unit cost numerator unit ID. */
-            unit_cost_numerator_unit_id?: string | null;
+            unit_cost_numerator_unit_id?: string;
             /** @description The unit cost denominator unit ID. */
-            unit_cost_denominator_unit_id?: string | null;
+            unit_cost_denominator_unit_id?: string;
             /** @description The EDI line item ID. */
-            edi_line_item_id?: string | null;
+            edi_line_item_id?: string;
         };
         /**
          * @description UpdateSalesOrderRequest is the request to update a sales order.
@@ -43257,19 +43545,19 @@ export interface components {
          */
         UpdateSalesOrderRequest: {
             /** @description The customer purchase order number. */
-            customer_po_number?: string | null;
+            customer_po_number?: string;
             /** @description A note for the order. */
-            note?: string | null;
+            note?: string;
             /** @description The carrier ID. */
             carrier_id?: string | null;
             /** @description The service level ID. */
             service_level_id?: string | null;
             /** @description The carrier billing type. */
-            carrier_billing_type?: string | null;
+            carrier_billing_type?: string;
             /** @description The carrier billing account number. */
-            carrier_billing_account?: string | null;
+            carrier_billing_account?: string;
             /** @description The priority code. */
-            priority_code?: string | null;
+            priority_code?: string;
             /** @description The sales rep ID. */
             sales_rep_id?: string | null;
             /** @description The shipping term ID. */
@@ -43279,42 +43567,42 @@ export interface components {
             /** @description The order discount ID. */
             order_discount_id?: string | null;
             /** @description Bill-to address name. */
-            bill_to_name?: string | null;
+            bill_to_name?: string;
             /** @description Bill-to street line 1. */
-            bill_to_street_line_1?: string | null;
+            bill_to_street_line_1?: string;
             /** @description Bill-to street line 2. */
             bill_to_street_line_2?: string | null;
             /** @description Bill-to locality/city. */
-            bill_to_locality?: string | null;
+            bill_to_locality?: string;
             /** @description Bill-to state/province. */
-            bill_to_state?: string | null;
+            bill_to_state?: string;
             /** @description Bill-to postal code. */
-            bill_to_postal_code?: string | null;
+            bill_to_postal_code?: string;
             /** @description Bill-to country. */
-            bill_to_country?: string | null;
+            bill_to_country?: string;
             /** @description Ship-to address name. */
-            ship_to_name?: string | null;
+            ship_to_name?: string;
             /** @description Ship-to street line 1. */
-            ship_to_street_line_1?: string | null;
+            ship_to_street_line_1?: string;
             /** @description Ship-to street line 2. */
             ship_to_street_line_2?: string | null;
             /** @description Ship-to locality/city. */
-            ship_to_locality?: string | null;
+            ship_to_locality?: string;
             /** @description Ship-to state/province. */
-            ship_to_state?: string | null;
+            ship_to_state?: string;
             /** @description Ship-to postal code. */
-            ship_to_postal_code?: string | null;
+            ship_to_postal_code?: string;
             /** @description Ship-to country. */
-            ship_to_country?: string | null;
+            ship_to_country?: string;
             /** @description The order number. */
-            number?: string | null;
+            number?: string;
             /** @description Whether the order acknowledgment has been sent. */
-            is_acknowledgment_sent?: boolean | null;
+            is_acknowledgment_sent?: boolean;
             /**
              * Format: date-time
              * @description The promised delivery date.
              */
-            promised_at?: string | null;
+            promised_at?: string;
             /** @description The customer (buyer account) ID. */
             customer_id?: string | null;
         };
@@ -43326,40 +43614,57 @@ export interface components {
          */
         UpdateScanningStationRequest: {
             /** @description The display name of the scanning station. */
-            name?: string | null;
+            name?: string;
             /** @description Optional notes about the scanning station. */
             notes?: string | null;
             /**
              * @description The label size code for the scanning station.
              * @enum {string}
              */
-            label_size_code?: "1x1" | "1x3" | "1x4" | "2x4";
+            label_size?: "1x1" | "1x3" | "1x4" | "2x4";
             /**
              * @description The label type code for the scanning station.
              * @enum {string}
              */
-            label_type_code?: "tag" | "traveler";
+            label_type?: "tag" | "traveler";
             /** @description Whether material check is required at this station. */
-            material_check_required?: boolean | null;
+            material_check_required?: boolean;
+        };
+        /**
+         * @description UpdateServiceLevelRequest is the request to update a service level.
+         * @example {
+         *       "name": "Express Shipping"
+         *     }
+         */
+        UpdateServiceLevelRequest: {
+            /** @description The new display name for the service level. */
+            name?: string;
+            /** @description The new service level code. */
+            code?: string;
+            /**
+             * @description Whether this service level is visible in the customer portal.
+             * @enum {string}
+             */
+            customer_portal_visibility?: "visible" | "hidden";
         };
         /** @description UpdateSessionDataRequest holds the mutable form data fields for updating a session */
         UpdateSessionDataRequest: {
             /** @description Display name for the user. */
-            user_name?: string | null;
+            user_name?: string;
             /** @description Display name for the account. */
-            account_name?: string | null;
+            account_name?: string;
             /** @description Billing address line 1. */
-            billing_address_line1?: string | null;
+            billing_address_line1?: string;
             /** @description Billing address line 2. */
-            billing_address_line2?: string | null;
+            billing_address_line2?: string;
             /** @description Billing address city. */
-            billing_address_city?: string | null;
+            billing_address_city?: string;
             /** @description Billing address state. */
-            billing_address_state?: string | null;
+            billing_address_state?: string;
             /** @description Billing address postal code. */
-            billing_address_postal_code?: string | null;
+            billing_address_postal_code?: string;
             /** @description Billing address country. */
-            billing_address_country?: string | null;
+            billing_address_country?: string;
         };
         /**
          * @description The request to update a registration session
@@ -43374,11 +43679,11 @@ export interface components {
         UpdateSessionRequest: {
             /**
              * @description The step to advance the session to.
-             * @enum {string|null}
+             * @enum {string}
              */
-            step?: "verification" | "user_details" | "account_details" | "review" | "payment" | "completed" | null;
+            step?: "verification" | "user_details" | "account_details" | "review" | "payment" | "completed";
             /** @description The session data to merge into the existing session data. */
-            session_data?: components["schemas"]["UpdateSessionDataRequest"] | null;
+            session_data?: components["schemas"]["UpdateSessionDataRequest"];
         };
         /**
          * @description UpdateSettlementRequest is the request to update a settlement.
@@ -43392,9 +43697,9 @@ export interface components {
             /** @description The new settlement number. */
             number: string | null;
             /** @description The new note for this settlement. */
-            note: string | null;
+            note: string;
             /** @description The ID of the responsible user for this settlement. */
-            responsible_user_id: string | null;
+            responsible_user_id: string;
         };
         /**
          * @description UpdateShipmentLineRequest is the request to partially update a shipment line.
@@ -43405,9 +43710,9 @@ export interface components {
          */
         UpdateShipmentLineRequest: {
             /** @description The quantity value to set. */
-            quantity_value?: string | null;
+            quantity_value?: string;
             /** @description The ID of the unit for the quantity. */
-            quantity_unit_id?: string | null;
+            quantity_unit_id?: string;
         };
         /**
          * @description UpdateShipmentRequest is the request to partially update a shipment.
@@ -43417,13 +43722,13 @@ export interface components {
          */
         UpdateShipmentRequest: {
             /** @description An optional note for the shipment. */
-            note?: string | null;
+            note?: string;
             /** @description The shipment number. */
-            number?: string | null;
+            number?: string;
             /** @description The master tracking number for the shipment. */
-            master_tracking_number?: string | null;
+            master_tracking_number?: string;
             /** @description The ID of the carrier for this shipment. */
-            carrier_id?: string | null;
+            carrier_id?: string;
             /** @description The ID of the service level for this shipment. */
             service_level_id?: string | null;
         };
@@ -43439,7 +43744,7 @@ export interface components {
          */
         UpdateShippingCaseRequest: {
             /** @description The new tracking number. */
-            tracking_number: string | null;
+            tracking_number: string;
             /** @description The new freight amount value. */
             freight_amount_value: string | null;
             /** @description The new freight amount unit ID. */
@@ -43451,16 +43756,19 @@ export interface components {
         };
         /**
          * @description UpdateShippingTermRequest is the request to partially update a shipping term.
-         *     All fields are optional. Absent fields are left unchanged. Explicitly null
-         *     values for flat_rate, minimum_order_value, and free_shipping_service_level_ids
-         *     clear the existing value.
+         *     All fields are optional. Absent fields are left unchanged. Send an explicit
+         *     JSON null for flat_rate, minimum_order_value, or free_shipping_service_level_ids
+         *     to clear the existing value.
          * @example {
-         *       "name": "Collect"
+         *       "name": "Collect",
+         *       "flat_rate": {},
+         *       "minimum_order_value": {},
+         *       "free_shipping_service_level_ids": {}
          *     }
          */
         UpdateShippingTermRequest: {
             /** @description The display name of the shipping term. */
-            name?: string | null;
+            name?: string;
             /**
              * @description The shipping term type.
              * @enum {string}
@@ -43471,7 +43779,7 @@ export interface components {
             /** @description The minimum order value for free shipping under this term. Send null to clear. */
             minimum_order_value?: components["schemas"]["QuantityInputRequest"] | null;
             /** @description The service level IDs that qualify for free shipping. Send null to clear. */
-            free_shipping_service_level_ids: string[];
+            free_shipping_service_level_ids?: string[] | null;
         };
         /**
          * @example {
@@ -43479,9 +43787,9 @@ export interface components {
          *     }
          */
         UpdateSupplierMaterialRequest: {
-            supplier_part_number?: string | null;
+            supplier_part_number?: string;
             supplier_description?: string | null;
-            is_active?: boolean | null;
+            is_active?: boolean;
         };
         /**
          * @description UpdateSupplierRequest is the request to update a supplier.
@@ -43496,7 +43804,7 @@ export interface components {
          */
         UpdateSupplierRequest: {
             /** @description The new display name. */
-            name: string | null;
+            name: string;
             /** @description The new supplier number. */
             number: string | null;
             /** @description The new note. Set update_note to true to apply. */
@@ -43526,21 +43834,21 @@ export interface components {
          */
         UpdateTerritoryRequest: {
             /** @description The state this territory covers. */
-            state?: string | null;
+            state?: string;
             /** @description The start of the zipcode range (501-99999). */
-            start_zipcode?: number | null;
+            start_zipcode?: number;
             /** @description The end of the zipcode range (501-99999). */
-            end_zipcode?: number | null;
+            end_zipcode?: number;
             /** @description The ID of the sales rep (account user) assigned to this territory. */
             sales_rep_id?: string;
             /** @description The ID of the product line this territory is scoped to. */
-            product_line_id?: string | null;
+            product_line_id?: string;
             /** @description Set to true to remove the product line from this territory. */
-            clear_product_line?: boolean | null;
+            clear_product_line?: boolean;
             /** @description Set to true to remove the start zipcode from this territory. */
-            clear_start_zipcode?: boolean | null;
+            clear_start_zipcode?: boolean;
             /** @description Set to true to remove the end zipcode from this territory. */
-            clear_end_zipcode?: boolean | null;
+            clear_end_zipcode?: boolean;
         };
         /**
          * @description UpdateTransactionAllocationRequest is the request to update a transaction allocation.
@@ -43550,7 +43858,7 @@ export interface components {
          */
         UpdateTransactionAllocationRequest: {
             /** @description The new allocation amount as a decimal string. */
-            amount: string | null;
+            amount: string;
         };
         /**
          * @description UpdateTransactionRequest is the request to update a transaction.
@@ -43558,8 +43866,8 @@ export interface components {
          *       "number": null,
          *       "note": "Updated payment note",
          *       "amount": "750.00",
-         *       "transaction_method_code": "ach",
-         *       "adjustment_type_code": null,
+         *       "method": "ach",
+         *       "adjustment_type": null,
          *       "responsible_user_id": null,
          *       "clear_responsible_user": false,
          *       "clear_transaction_method": false,
@@ -43571,13 +43879,13 @@ export interface components {
             /** @description The new transaction number. */
             number: string | null;
             /** @description The new note for this transaction. */
-            note: string | null;
+            note: string;
             /** @description The new amount as a decimal string. */
-            amount: string | null;
+            amount: string;
             /** @description The new transaction method code. */
-            transaction_method_code: string | null;
+            method: string;
             /** @description The new adjustment type code. */
-            adjustment_type_code: string | null;
+            adjustment_type: string | null;
             /** @description The new responsible user ID. */
             responsible_user_id: string | null;
             /** @description Set to true to clear the responsible user. */
@@ -43598,13 +43906,13 @@ export interface components {
          */
         UpdateUnitGroupRequest: {
             /** @description The display name of the unit group. */
-            name?: string | null;
+            name?: string;
             /** @description Optional notes about the unit group. Set to null to clear. */
             notes?: string | null;
             /** @description The base unit ID. */
-            base_unit_id?: string | null;
+            base_unit_id?: string;
             /** @description If provided, upserts associated units. Existing associated units not in the list are preserved. */
-            associated_units?: components["schemas"]["CreateUnitGroupUnitParam"][] | null;
+            associated_units?: components["schemas"]["CreateUnitGroupUnitParam"][];
         };
         /**
          * @description UpdateUnitGroupUnitRequest is the request to update an associated unit.
@@ -43615,11 +43923,11 @@ export interface components {
          */
         UpdateUnitGroupUnitRequest: {
             /** @description The unit ID. */
-            unit_id?: string | null;
+            unit_id?: string;
             /** @description The discount percentage. */
-            discount_percentage?: number | null;
+            discount_percentage?: number;
             /** @description The fixed discount amount. */
-            discount_fixed?: number | null;
+            discount_fixed?: number;
             /**
              * @description Whether this associated unit is visible in the customer portal.
              * @enum {string}
@@ -43635,17 +43943,17 @@ export interface components {
          */
         UpdateUnitRequest: {
             /** @description The display name of the unit. */
-            name?: string | null;
+            name?: string;
             /** @description The short abbreviation for the unit. */
-            abbreviation?: string | null;
+            abbreviation?: string;
             /** @description The conversion ratio numerator, as a decimal string. */
-            ratio_numerator?: string | null;
+            ratio_numerator?: string;
             /** @description The conversion ratio denominator, as a decimal string. */
-            ratio_denominator?: string | null;
+            ratio_denominator?: string;
             /** @description The conversion offset numerator, as a decimal string. */
-            offset_numerator?: string | null;
+            offset_numerator?: string;
             /** @description The conversion offset denominator, as a decimal string. */
-            offset_denominator?: string | null;
+            offset_denominator?: string;
         };
         /**
          * @description UpdateUserRequest is the request to update a user.
@@ -43657,9 +43965,9 @@ export interface components {
          */
         UpdateUserRequest: {
             /** @description The user's display name. */
-            name: string | null;
+            name: string;
             /** @description URL to the user's profile image. */
-            image_url: string | null;
+            image_url: string;
             /**
              * Format: date-time
              * @description When the user's email was verified. Set to null to mark as unverified.
@@ -43682,7 +43990,7 @@ export interface components {
          */
         UpdateVolumeDiscountRequest: {
             /** @description The display name of the volume discount. */
-            name?: string | null;
+            name?: string;
             /** @description The tiers for this volume discount (upsert semantics). */
             tiers: components["schemas"]["UpdateVolumeDiscountTierInput"][];
             /** @description The account group IDs to set as customer groups. */
@@ -43711,7 +44019,7 @@ export interface components {
         /** @description UpdateVolumeDiscountTierInput represents a tier to upsert. */
         UpdateVolumeDiscountTierInput: {
             /** @description The ID of an existing tier to update. Omit for new tiers. */
-            id?: string | null;
+            id?: string;
             /** @description The display name for the tier. */
             name?: string;
             /**
@@ -43851,7 +44159,7 @@ export interface components {
             /** @description The first line of the street address. */
             address_line_1: string;
             /** @description The second line of the street address. */
-            address_line_2?: string | null;
+            address_line_2?: string;
             /** @description The city. */
             city: string;
             /** @description The state or administrative area. */
@@ -43888,7 +44196,7 @@ export interface components {
          *             "attributes": {
          *               "data": [
          *                 {
-         *                   "color_code": "red",
+         *                   "color": "red",
          *                   "created_at": "2026-05-10T00:00:00Z",
          *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *                   "object": "attribute",
@@ -43963,10 +44271,10 @@ export interface components {
          *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *             "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "is_dirty": false,
-         *             "item_type_code": "product",
          *             "notes": null,
          *             "object": "item",
          *             "sku": "ALM-2024-1001",
+         *             "type": "product",
          *             "unit_cost": {
          *               "created_at": "2026-05-10T00:00:00Z",
          *               "denominator_unit": {
@@ -44100,7 +44408,7 @@ export interface components {
                      *       "attributes": {
                      *         "data": [
                      *           {
-                     *             "color_code": "red",
+                     *             "color": "red",
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "attribute",
@@ -44175,10 +44483,10 @@ export interface components {
                      *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "is_dirty": false,
-                     *       "item_type_code": "product",
                      *       "notes": null,
                      *       "object": "item",
                      *       "sku": "ALM-2024-1001",
+                     *       "type": "product",
                      *       "unit_cost": {
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "denominator_unit": {
@@ -44771,26 +45079,35 @@ export interface operations {
                      *               ]
                      *             }
                      *           },
-                     *           "tools": [
-                     *             {
-                     *               "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "agent_definition_tool",
-                     *               "tool": {
-                     *                 "id": "tdef_01k0b1seed0searchproduct0",
-                     *                 "object": "available_tool",
-                     *                 "name": "Search Products",
-                     *                 "description": "Search for products by keyword or phrase",
-                     *                 "config_schema": null,
-                     *                 "category": "built_in",
-                     *                 "required_permissions": [
-                     *                   "products:read"
-                     *                 ]
-                     *               },
-                     *               "config": {},
-                     *               "sort_order": 0,
-                     *               "require_review": false
-                     *             }
-                     *           ],
+                     *           "tools": {
+                     *             "object": "list",
+                     *             "page_info": {
+                     *               "next_cursor": null,
+                     *               "prev_cursor": null,
+                     *               "has_next_page": false,
+                     *               "has_prev_page": false
+                     *             },
+                     *             "data": [
+                     *               {
+                     *                 "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "agent_definition_tool",
+                     *                 "tool": {
+                     *                   "id": "tdef_01k0b1seed0searchproduct0",
+                     *                   "object": "available_tool",
+                     *                   "name": "Search Products",
+                     *                   "description": "Search for products by keyword or phrase",
+                     *                   "config_schema": null,
+                     *                   "category": "built_in",
+                     *                   "required_permissions": [
+                     *                     "products:read"
+                     *                   ]
+                     *                 },
+                     *                 "config": {},
+                     *                 "sort_order": 0,
+                     *                 "require_review": false
+                     *               }
+                     *             ]
+                     *           },
                      *           "status": "inactive",
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
@@ -44897,26 +45214,35 @@ export interface operations {
                      *           ]
                      *         }
                      *       },
-                     *       "tools": [
-                     *         {
-                     *           "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "agent_definition_tool",
-                     *           "tool": {
-                     *             "id": "tdef_01k0b1seed0searchproduct0",
-                     *             "object": "available_tool",
-                     *             "name": "Search Products",
-                     *             "description": "Search for products by keyword or phrase",
-                     *             "config_schema": null,
-                     *             "category": "built_in",
-                     *             "required_permissions": [
-                     *               "products:read"
-                     *             ]
-                     *           },
-                     *           "config": {},
-                     *           "sort_order": 0,
-                     *           "require_review": false
-                     *         }
-                     *       ],
+                     *       "tools": {
+                     *         "object": "list",
+                     *         "page_info": {
+                     *           "next_cursor": null,
+                     *           "prev_cursor": null,
+                     *           "has_next_page": false,
+                     *           "has_prev_page": false
+                     *         },
+                     *         "data": [
+                     *           {
+                     *             "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "agent_definition_tool",
+                     *             "tool": {
+                     *               "id": "tdef_01k0b1seed0searchproduct0",
+                     *               "object": "available_tool",
+                     *               "name": "Search Products",
+                     *               "description": "Search for products by keyword or phrase",
+                     *               "config_schema": null,
+                     *               "category": "built_in",
+                     *               "required_permissions": [
+                     *                 "products:read"
+                     *               ]
+                     *             },
+                     *             "config": {},
+                     *             "sort_order": 0,
+                     *             "require_review": false
+                     *           }
+                     *         ]
+                     *       },
                      *       "status": "inactive",
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
@@ -44989,26 +45315,35 @@ export interface operations {
                      *           ]
                      *         }
                      *       },
-                     *       "tools": [
-                     *         {
-                     *           "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "agent_definition_tool",
-                     *           "tool": {
-                     *             "id": "tdef_01k0b1seed0searchproduct0",
-                     *             "object": "available_tool",
-                     *             "name": "Search Products",
-                     *             "description": "Search for products by keyword or phrase",
-                     *             "config_schema": null,
-                     *             "category": "built_in",
-                     *             "required_permissions": [
-                     *               "products:read"
-                     *             ]
-                     *           },
-                     *           "config": {},
-                     *           "sort_order": 0,
-                     *           "require_review": false
-                     *         }
-                     *       ],
+                     *       "tools": {
+                     *         "object": "list",
+                     *         "page_info": {
+                     *           "next_cursor": null,
+                     *           "prev_cursor": null,
+                     *           "has_next_page": false,
+                     *           "has_prev_page": false
+                     *         },
+                     *         "data": [
+                     *           {
+                     *             "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "agent_definition_tool",
+                     *             "tool": {
+                     *               "id": "tdef_01k0b1seed0searchproduct0",
+                     *               "object": "available_tool",
+                     *               "name": "Search Products",
+                     *               "description": "Search for products by keyword or phrase",
+                     *               "config_schema": null,
+                     *               "category": "built_in",
+                     *               "required_permissions": [
+                     *                 "products:read"
+                     *               ]
+                     *             },
+                     *             "config": {},
+                     *             "sort_order": 0,
+                     *             "require_review": false
+                     *           }
+                     *         ]
+                     *       },
                      *       "status": "inactive",
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
@@ -45124,26 +45459,35 @@ export interface operations {
                      *           ]
                      *         }
                      *       },
-                     *       "tools": [
-                     *         {
-                     *           "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "agent_definition_tool",
-                     *           "tool": {
-                     *             "id": "tdef_01k0b1seed0searchproduct0",
-                     *             "object": "available_tool",
-                     *             "name": "Search Products",
-                     *             "description": "Search for products by keyword or phrase",
-                     *             "config_schema": null,
-                     *             "category": "built_in",
-                     *             "required_permissions": [
-                     *               "products:read"
-                     *             ]
-                     *           },
-                     *           "config": {},
-                     *           "sort_order": 0,
-                     *           "require_review": false
-                     *         }
-                     *       ],
+                     *       "tools": {
+                     *         "object": "list",
+                     *         "page_info": {
+                     *           "next_cursor": null,
+                     *           "prev_cursor": null,
+                     *           "has_next_page": false,
+                     *           "has_prev_page": false
+                     *         },
+                     *         "data": [
+                     *           {
+                     *             "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "agent_definition_tool",
+                     *             "tool": {
+                     *               "id": "tdef_01k0b1seed0searchproduct0",
+                     *               "object": "available_tool",
+                     *               "name": "Search Products",
+                     *               "description": "Search for products by keyword or phrase",
+                     *               "config_schema": null,
+                     *               "category": "built_in",
+                     *               "required_permissions": [
+                     *                 "products:read"
+                     *               ]
+                     *             },
+                     *             "config": {},
+                     *             "sort_order": 0,
+                     *             "require_review": false
+                     *           }
+                     *         ]
+                     *       },
                      *       "status": "inactive",
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
@@ -45226,26 +45570,35 @@ export interface operations {
                      *           ]
                      *         }
                      *       },
-                     *       "tools": [
-                     *         {
-                     *           "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "agent_definition_tool",
-                     *           "tool": {
-                     *             "id": "tdef_01k0b1seed0searchproduct0",
-                     *             "object": "available_tool",
-                     *             "name": "Search Products",
-                     *             "description": "Search for products by keyword or phrase",
-                     *             "config_schema": null,
-                     *             "category": "built_in",
-                     *             "required_permissions": [
-                     *               "products:read"
-                     *             ]
-                     *           },
-                     *           "config": {},
-                     *           "sort_order": 0,
-                     *           "require_review": false
-                     *         }
-                     *       ],
+                     *       "tools": {
+                     *         "object": "list",
+                     *         "page_info": {
+                     *           "next_cursor": null,
+                     *           "prev_cursor": null,
+                     *           "has_next_page": false,
+                     *           "has_prev_page": false
+                     *         },
+                     *         "data": [
+                     *           {
+                     *             "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "agent_definition_tool",
+                     *             "tool": {
+                     *               "id": "tdef_01k0b1seed0searchproduct0",
+                     *               "object": "available_tool",
+                     *               "name": "Search Products",
+                     *               "description": "Search for products by keyword or phrase",
+                     *               "config_schema": null,
+                     *               "category": "built_in",
+                     *               "required_permissions": [
+                     *                 "products:read"
+                     *               ]
+                     *             },
+                     *             "config": {},
+                     *             "sort_order": 0,
+                     *             "require_review": false
+                     *           }
+                     *         ]
+                     *       },
                      *       "status": "inactive",
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
@@ -45528,7 +45881,8 @@ export interface operations {
                      *           "metadata": {},
                      *           "entity": {
                      *             "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
-                     *             "object": "account"
+                     *             "object": "entity",
+                     *             "type": "account"
                      *           },
                      *           "importance": 0.8,
                      *           "expires_at": "2026-06-10T00:00:00Z",
@@ -45591,7 +45945,8 @@ export interface operations {
                      *       "metadata": {},
                      *       "entity": {
                      *         "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
-                     *         "object": "account"
+                     *         "object": "entity",
+                     *         "type": "account"
                      *       },
                      *       "importance": 0.8,
                      *       "expires_at": "2026-06-10T00:00:00Z",
@@ -45640,7 +45995,8 @@ export interface operations {
                      *       "metadata": {},
                      *       "entity": {
                      *         "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
-                     *         "object": "account"
+                     *         "object": "entity",
+                     *         "type": "account"
                      *       },
                      *       "importance": 0.8,
                      *       "expires_at": "2026-06-10T00:00:00Z",
@@ -45733,7 +46089,8 @@ export interface operations {
                      *       "metadata": {},
                      *       "entity": {
                      *         "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
-                     *         "object": "account"
+                     *         "object": "entity",
+                     *         "type": "account"
                      *       },
                      *       "importance": 0.8,
                      *       "expires_at": "2026-06-10T00:00:00Z",
@@ -45777,7 +46134,7 @@ export interface operations {
                  * @description Filter by run status code (e.g. "running", "completed", "failed").
                  * @example example
                  */
-                status_code?: string;
+                status?: string;
                 /**
                  * @description Filter by agent definition ID.
                  * @example example
@@ -45832,14 +46189,15 @@ export interface operations {
                      *           "total_output_tokens": 300,
                      *           "triggered_by": {
                      *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *             "object": "user",
+                     *             "object": "actor",
+                     *             "type": "user",
                      *             "name": "John Doe",
                      *             "handle": "jdoe@augno.com",
                      *             "role": {
                      *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *               "object": "role",
                      *               "name": "Admin",
-                     *               "type_code": "admin",
+                     *               "type": "admin",
                      *               "owner": {
                      *                 "object": "owner",
                      *                 "type": "account",
@@ -45929,7 +46287,8 @@ export interface operations {
                      *                 "duration_ms": null,
                      *                 "actor": {
                      *                   "id": "us_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                   "object": "user",
+                     *                   "object": "actor",
+                     *                   "type": "user",
                      *                   "name": "Jane Doe",
                      *                   "handle": null,
                      *                   "role": null
@@ -46011,14 +46370,15 @@ export interface operations {
                      *       "total_output_tokens": 300,
                      *       "triggered_by": {
                      *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *         "object": "user",
+                     *         "object": "actor",
+                     *         "type": "user",
                      *         "name": "John Doe",
                      *         "handle": "jdoe@augno.com",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *           "object": "role",
                      *           "name": "Admin",
-                     *           "type_code": "admin",
+                     *           "type": "admin",
                      *           "owner": {
                      *             "object": "owner",
                      *             "type": "account",
@@ -46108,7 +46468,8 @@ export interface operations {
                      *             "duration_ms": null,
                      *             "actor": {
                      *               "id": "us_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "user",
+                     *               "object": "actor",
+                     *               "type": "user",
                      *               "name": "Jane Doe",
                      *               "handle": null,
                      *               "role": null
@@ -46180,14 +46541,15 @@ export interface operations {
                      *       "total_output_tokens": 300,
                      *       "triggered_by": {
                      *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *         "object": "user",
+                     *         "object": "actor",
+                     *         "type": "user",
                      *         "name": "John Doe",
                      *         "handle": "jdoe@augno.com",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *           "object": "role",
                      *           "name": "Admin",
-                     *           "type_code": "admin",
+                     *           "type": "admin",
                      *           "owner": {
                      *             "object": "owner",
                      *             "type": "account",
@@ -46277,7 +46639,8 @@ export interface operations {
                      *             "duration_ms": null,
                      *             "actor": {
                      *               "id": "us_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "user",
+                     *               "object": "actor",
+                     *               "type": "user",
                      *               "name": "Jane Doe",
                      *               "handle": null,
                      *               "role": null
@@ -46349,14 +46712,15 @@ export interface operations {
                      *       "total_output_tokens": 300,
                      *       "triggered_by": {
                      *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *         "object": "user",
+                     *         "object": "actor",
+                     *         "type": "user",
                      *         "name": "John Doe",
                      *         "handle": "jdoe@augno.com",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *           "object": "role",
                      *           "name": "Admin",
-                     *           "type_code": "admin",
+                     *           "type": "admin",
                      *           "owner": {
                      *             "object": "owner",
                      *             "type": "account",
@@ -46446,7 +46810,8 @@ export interface operations {
                      *             "duration_ms": null,
                      *             "actor": {
                      *               "id": "us_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "user",
+                     *               "object": "actor",
+                     *               "type": "user",
                      *               "name": "Jane Doe",
                      *               "handle": null,
                      *               "role": null
@@ -46530,14 +46895,15 @@ export interface operations {
                      *       "total_output_tokens": 300,
                      *       "triggered_by": {
                      *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *         "object": "user",
+                     *         "object": "actor",
+                     *         "type": "user",
                      *         "name": "John Doe",
                      *         "handle": "jdoe@augno.com",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *           "object": "role",
                      *           "name": "Admin",
-                     *           "type_code": "admin",
+                     *           "type": "admin",
                      *           "owner": {
                      *             "object": "owner",
                      *             "type": "account",
@@ -46627,7 +46993,8 @@ export interface operations {
                      *             "duration_ms": null,
                      *             "actor": {
                      *               "id": "us_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "user",
+                     *               "object": "actor",
+                     *               "type": "user",
                      *               "name": "Jane Doe",
                      *               "handle": null,
                      *               "role": null
@@ -47068,11 +47435,23 @@ export interface operations {
                      *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *             "object": "role",
                      *             "name": "Admin",
-                     *             "type_code": "admin",
-                     *             "owner": null,
-                     *             "permissions": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *             "type": "admin",
+                     *             "owner": {
+                     *               "object": "owner",
+                     *               "type": "account",
+                     *               "account": {
+                     *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                 "object": "account"
+                     *               }
+                     *             },
+                     *             "permissions": [
+                     *               "customers:create",
+                     *               "customers:read",
+                     *               "customers:update",
+                     *               "customers:delete"
+                     *             ],
+                     *             "created_at": "2026-05-10T00:00:00Z",
+                     *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z",
@@ -47143,11 +47522,23 @@ export interface operations {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *           "object": "role",
                      *           "name": "Admin",
-                     *           "type_code": "admin",
-                     *           "owner": null,
-                     *           "permissions": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *           "type": "admin",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "account",
+                     *             "account": {
+                     *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *               "object": "account"
+                     *             }
+                     *           },
+                     *           "permissions": [
+                     *             "customers:create",
+                     *             "customers:read",
+                     *             "customers:update",
+                     *             "customers:delete"
+                     *           ],
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z",
@@ -47206,11 +47597,23 @@ export interface operations {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *           "object": "role",
                      *           "name": "Admin",
-                     *           "type_code": "admin",
-                     *           "owner": null,
-                     *           "permissions": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *           "type": "admin",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "account",
+                     *             "account": {
+                     *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *               "object": "account"
+                     *             }
+                     *           },
+                     *           "permissions": [
+                     *             "customers:create",
+                     *             "customers:read",
+                     *             "customers:update",
+                     *             "customers:delete"
+                     *           ],
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z",
@@ -47270,11 +47673,23 @@ export interface operations {
                      *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *         "object": "role",
                      *         "name": "Admin",
-                     *         "type_code": "admin",
-                     *         "owner": null,
-                     *         "permissions": null,
-                     *         "created_at": "0001-01-01T00:00:00Z",
-                     *         "updated_at": "0001-01-01T00:00:00Z"
+                     *         "type": "admin",
+                     *         "owner": {
+                     *           "object": "owner",
+                     *           "type": "account",
+                     *           "account": {
+                     *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *             "object": "account"
+                     *           }
+                     *         },
+                     *         "permissions": [
+                     *           "customers:create",
+                     *           "customers:read",
+                     *           "customers:update",
+                     *           "customers:delete"
+                     *         ],
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z",
@@ -47378,11 +47793,23 @@ export interface operations {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *           "object": "role",
                      *           "name": "Admin",
-                     *           "type_code": "admin",
-                     *           "owner": null,
-                     *           "permissions": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *           "type": "admin",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "account",
+                     *             "account": {
+                     *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *               "object": "account"
+                     *             }
+                     *           },
+                     *           "permissions": [
+                     *             "customers:create",
+                     *             "customers:read",
+                     *             "customers:update",
+                     *             "customers:delete"
+                     *           ],
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z",
@@ -48370,7 +48797,7 @@ export interface operations {
                      *           "id": "pl_01gf7a8200er3ar3pkfrb6kk29",
                      *           "object": "pricing_plan",
                      *           "name": "Starter",
-                     *           "plan_type_code": "starter",
+                     *           "plan_type": "starter",
                      *           "price_per_seat": 19,
                      *           "price_per_month": 19,
                      *           "seat_minimum": 1,
@@ -48763,7 +49190,7 @@ export interface operations {
                      *                 "sku": "WDG-001",
                      *                 "description": null,
                      *                 "notes": null,
-                     *                 "item_type_code": "",
+                     *                 "type": "",
                      *                 "category": null,
                      *                 "unit_value": null,
                      *                 "unit_cost": null,
@@ -49288,7 +49715,7 @@ export interface operations {
                      *           "sku": "ALM-2024-1001",
                      *           "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *           "notes": null,
-                     *           "item_type_code": "product",
+                     *           "type": "product",
                      *           "category": {
                      *             "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "item_category",
@@ -49432,7 +49859,7 @@ export interface operations {
                      *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                 "object": "attribute",
                      *                 "value": "Premium",
-                     *                 "color_code": "red",
+                     *                 "color": "red",
                      *                 "sort_order": 1,
                      *                 "created_at": "2026-05-10T00:00:00Z",
                      *                 "updated_at": "2026-05-10T00:23:00Z"
@@ -49620,7 +50047,7 @@ export interface operations {
                      *       "sku": "ALM-2024-1001",
                      *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *       "notes": null,
-                     *       "item_type_code": "product",
+                     *       "type": "product",
                      *       "category": {
                      *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "object": "item_category",
@@ -49764,7 +50191,7 @@ export interface operations {
                      *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "attribute",
                      *             "value": "Premium",
-                     *             "color_code": "red",
+                     *             "color": "red",
                      *             "sort_order": 1,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
@@ -50725,7 +51152,7 @@ export interface operations {
                      *             "sku": "ALM-2024-1001",
                      *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *             "notes": null,
-                     *             "item_type_code": "product",
+                     *             "type": "product",
                      *             "category": {
                      *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "item_category",
@@ -50869,7 +51296,7 @@ export interface operations {
                      *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                   "object": "attribute",
                      *                   "value": "Premium",
-                     *                   "color_code": "red",
+                     *                   "color": "red",
                      *                   "sort_order": 1,
                      *                   "created_at": "2026-05-10T00:00:00Z",
                      *                   "updated_at": "2026-05-10T00:23:00Z"
@@ -50915,7 +51342,7 @@ export interface operations {
                  *       "sku": "ALM-2024-1001",
                  *       "description": null,
                  *       "notes": null,
-                 *       "product_type_code": "sale",
+                 *       "type": "sale",
                  *       "product_line_id": null,
                  *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                  *       "is_portal_ready": true,
@@ -50968,7 +51395,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -51112,7 +51539,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -51180,7 +51607,7 @@ export interface operations {
                      *             "attributes": {
                      *               "data": [
                      *                 {
-                     *                   "color_code": "red",
+                     *                   "color": "red",
                      *                   "created_at": "2026-05-10T00:00:00Z",
                      *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                   "object": "attribute",
@@ -51255,10 +51682,10 @@ export interface operations {
                      *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *             "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "is_dirty": false,
-                     *             "item_type_code": "product",
                      *             "notes": null,
                      *             "object": "item",
                      *             "sku": "ALM-2024-1001",
+                     *             "type": "product",
                      *             "unit_cost": {
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "denominator_unit": {
@@ -51444,7 +51871,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -51588,7 +52015,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -51671,7 +52098,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -51815,7 +52242,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -51908,7 +52335,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -52052,7 +52479,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -52137,7 +52564,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -52281,7 +52708,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -52626,7 +53053,7 @@ export interface operations {
                 /**
                  * @example {
                  *       "value": "Red",
-                 *       "color_code": "red",
+                 *       "color": "red",
                  *       "sort_order": 1
                  *     }
                  */
@@ -52645,7 +53072,7 @@ export interface operations {
                      *       "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "attribute",
                      *       "value": "Premium",
-                     *       "color_code": "red",
+                     *       "color": "red",
                      *       "sort_order": 1,
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
@@ -52690,7 +53117,7 @@ export interface operations {
                      *       "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "attribute",
                      *       "value": "Premium",
-                     *       "color_code": "red",
+                     *       "color": "red",
                      *       "sort_order": 1,
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
@@ -52780,7 +53207,7 @@ export interface operations {
                      *       "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "attribute",
                      *       "value": "Premium",
-                     *       "color_code": "red",
+                     *       "color": "red",
                      *       "sort_order": 1,
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
@@ -53927,27 +54354,30 @@ export interface operations {
             };
         };
     };
-    "autocomplete-address": {
+    "validate-address": {
         parameters: {
-            query: {
-                /**
-                 * @description The text input for autocomplete.
-                 * @example example
-                 */
-                input: string;
-                /**
-                 * @description An optional session token for grouping autocomplete requests.
-                 * @example example
-                 */
-                "session_token,omitempty"?: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        /** @description The request body for Validate Address */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "address_line_1": "123 Main St",
+                 *       "city": "Springfield",
+                 *       "state": "IL",
+                 *       "postal_code": "62701",
+                 *       "country": "US"
+                 *     }
+                 */
+                "application/json": components["schemas"]["ValidateAddressRequest"];
+            };
+        };
         responses: {
-            /** @description Successful response for Autocomplete Address */
+            /** @description Successful response for Validate Address */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -53955,25 +54385,23 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "object": "list",
-                     *       "page_info": {
-                     *         "next_cursor": "ChIJd8BlQ2BZwokRAFUEcm_qrcA",
-                     *         "prev_cursor": null,
-                     *         "has_next_page": true,
-                     *         "has_prev_page": false
+                     *       "object": "validated_address",
+                     *       "is_valid": true,
+                     *       "formatted_address": "123 Main St, Springfield, IL 62701, USA",
+                     *       "components": {
+                     *         "object": "address_components",
+                     *         "address_line_1": "123 Main St",
+                     *         "address_line_2": null,
+                     *         "city": "Springfield",
+                     *         "state": "IL",
+                     *         "postal_code": "62701",
+                     *         "country": "United States",
+                     *         "country_code": "US"
                      *       },
-                     *       "data": [
-                     *         {
-                     *           "id": "ChIJd8BlQ2BZwokRAFUEcm_qrcA",
-                     *           "object": "address_suggestion",
-                     *           "description": "123 Main St, Springfield, IL 62701, USA",
-                     *           "main_text": "123 Main St",
-                     *           "secondary_text": "Springfield, IL 62701, USA"
-                     *         }
-                     *       ]
+                     *       "validation_messages": []
                      *     }
                      */
-                    "application/json": components["schemas"]["List_AddressSuggestion"];
+                    "application/json": components["schemas"]["ValidatedAddress"];
                 };
             };
             /** @description Error response */
@@ -54041,30 +54469,27 @@ export interface operations {
             };
         };
     };
-    "validate-address": {
+    "get-address-suggestions": {
         parameters: {
-            query?: never;
+            query: {
+                /**
+                 * @description The text input for autocomplete.
+                 * @example example
+                 */
+                input: string;
+                /**
+                 * @description An optional session token for grouping autocomplete requests.
+                 * @example example
+                 */
+                "session_token,omitempty"?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description The request body for Validate Address */
-        requestBody?: {
-            content: {
-                /**
-                 * @example {
-                 *       "address_line_1": "123 Main St",
-                 *       "city": "Springfield",
-                 *       "state": "IL",
-                 *       "postal_code": "62701",
-                 *       "country": "US"
-                 *     }
-                 */
-                "application/json": components["schemas"]["ValidateAddressRequest"];
-            };
-        };
+        requestBody?: never;
         responses: {
-            /** @description Successful response for Validate Address */
+            /** @description Successful response for Get Address Suggestions */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -54072,23 +54497,25 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "object": "validated_address",
-                     *       "is_valid": true,
-                     *       "formatted_address": "123 Main St, Springfield, IL 62701, USA",
-                     *       "components": {
-                     *         "object": "address_components",
-                     *         "address_line_1": "123 Main St",
-                     *         "address_line_2": null,
-                     *         "city": "Springfield",
-                     *         "state": "IL",
-                     *         "postal_code": "62701",
-                     *         "country": "United States",
-                     *         "country_code": "US"
+                     *       "object": "list",
+                     *       "page_info": {
+                     *         "next_cursor": "ChIJd8BlQ2BZwokRAFUEcm_qrcA",
+                     *         "prev_cursor": null,
+                     *         "has_next_page": true,
+                     *         "has_prev_page": false
                      *       },
-                     *       "validation_messages": []
+                     *       "data": [
+                     *         {
+                     *           "id": "ChIJd8BlQ2BZwokRAFUEcm_qrcA",
+                     *           "object": "address_suggestion",
+                     *           "description": "123 Main St, Springfield, IL 62701, USA",
+                     *           "main_text": "123 Main St",
+                     *           "secondary_text": "Springfield, IL 62701, USA"
+                     *         }
+                     *       ]
                      *     }
                      */
-                    "application/json": components["schemas"]["ValidatedAddress"];
+                    "application/json": components["schemas"]["List_AddressSuggestion"];
                 };
             };
             /** @description Error response */
@@ -54621,7 +55048,7 @@ export interface operations {
                  * @description Resource type, matching the object type of the audited entity.
                  * @example account
                  */
-                resource_type?: "account" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
+                resource_type?: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
                 /**
                  * @description Resource ID (type_id of the audited resource).
                  * @example example
@@ -54680,14 +55107,15 @@ export interface operations {
                      *           "resource_id": "us_01gf7a8200e9pvbd6bgyq395ae",
                      *           "actor": {
                      *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *             "object": "user",
+                     *             "object": "actor",
+                     *             "type": "user",
                      *             "name": "John Doe",
                      *             "handle": "jdoe@augno.com",
                      *             "role": {
                      *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *               "object": "role",
                      *               "name": "Admin",
-                     *               "type_code": "admin",
+                     *               "type": "admin",
                      *               "owner": {
                      *                 "object": "owner",
                      *                 "type": "account",
@@ -54706,13 +55134,22 @@ export interface operations {
                      *               "updated_at": "2026-05-10T00:23:00Z"
                      *             }
                      *           },
-                     *           "changes": [
-                     *             {
-                     *               "field": "email",
-                     *               "old_value": "old@example.com",
-                     *               "new_value": "new@example.com"
-                     *             }
-                     *           ],
+                     *           "changes": {
+                     *             "object": "list",
+                     *             "page_info": {
+                     *               "next_cursor": null,
+                     *               "prev_cursor": null,
+                     *               "has_next_page": false,
+                     *               "has_prev_page": false
+                     *             },
+                     *             "data": [
+                     *               {
+                     *                 "field": "email",
+                     *                 "old_value": "old@example.com",
+                     *                 "new_value": "new@example.com"
+                     *               }
+                     *             ]
+                     *           },
                      *           "metadata": {
                      *             "reason": "operator override"
                      *           },
@@ -54774,14 +55211,15 @@ export interface operations {
                      *       "resource_id": "us_01gf7a8200e9pvbd6bgyq395ae",
                      *       "actor": {
                      *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *         "object": "user",
+                     *         "object": "actor",
+                     *         "type": "user",
                      *         "name": "John Doe",
                      *         "handle": "jdoe@augno.com",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *           "object": "role",
                      *           "name": "Admin",
-                     *           "type_code": "admin",
+                     *           "type": "admin",
                      *           "owner": {
                      *             "object": "owner",
                      *             "type": "account",
@@ -54800,13 +55238,22 @@ export interface operations {
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         }
                      *       },
-                     *       "changes": [
-                     *         {
-                     *           "field": "email",
-                     *           "old_value": "old@example.com",
-                     *           "new_value": "new@example.com"
-                     *         }
-                     *       ],
+                     *       "changes": {
+                     *         "object": "list",
+                     *         "page_info": {
+                     *           "next_cursor": null,
+                     *           "prev_cursor": null,
+                     *           "has_next_page": false,
+                     *           "has_prev_page": false
+                     *         },
+                     *         "data": [
+                     *           {
+                     *             "field": "email",
+                     *             "old_value": "old@example.com",
+                     *             "new_value": "new@example.com"
+                     *           }
+                     *         ]
+                     *       },
                      *       "metadata": {
                      *         "reason": "operator override"
                      *       },
@@ -54849,6 +55296,13 @@ export interface operations {
                  * @example example
                  */
                 q?: string;
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "sent_by"
+                 *     ]
+                 */
+                "include[]"?: "sent_by"[];
             };
             header?: never;
             path?: never;
@@ -54884,14 +55338,32 @@ export interface operations {
                      *           "ses_message_id": null,
                      *           "sent_by": {
                      *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *             "object": "user",
-                     *             "email": "jdoe@augno.com",
+                     *             "object": "actor",
+                     *             "type": "user",
                      *             "name": "John Doe",
-                     *             "username": "jdoe",
-                     *             "email_verified_at": "2026-06-10T00:00:00Z",
-                     *             "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
+                     *             "handle": "jdoe@augno.com",
+                     *             "role": {
+                     *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *               "object": "role",
+                     *               "name": "Admin",
+                     *               "type": "admin",
+                     *               "owner": {
+                     *                 "object": "owner",
+                     *                 "type": "account",
+                     *                 "account": {
+                     *                   "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                   "object": "account"
+                     *                 }
+                     *               },
+                     *               "permissions": [
+                     *                 "customers:create",
+                     *                 "customers:read",
+                     *                 "customers:update",
+                     *                 "customers:delete"
+                     *               ],
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
                      *           },
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
@@ -54915,7 +55387,15 @@ export interface operations {
     };
     "get-email-log": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "sent_by"
+                 *     ]
+                 */
+                "include[]"?: "sent_by"[];
+            };
             header?: never;
             path: {
                 /** @description The ID of the email log to retrieve. */
@@ -54944,14 +55424,32 @@ export interface operations {
                      *       "ses_message_id": null,
                      *       "sent_by": {
                      *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *         "object": "user",
-                     *         "email": "jdoe@augno.com",
+                     *         "object": "actor",
+                     *         "type": "user",
                      *         "name": "John Doe",
-                     *         "username": "jdoe",
-                     *         "email_verified_at": "2026-06-10T00:00:00Z",
-                     *         "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *         "handle": "jdoe@augno.com",
+                     *         "role": {
+                     *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *           "object": "role",
+                     *           "name": "Admin",
+                     *           "type": "admin",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "account",
+                     *             "account": {
+                     *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *               "object": "account"
+                     *             }
+                     *           },
+                     *           "permissions": [
+                     *             "customers:create",
+                     *             "customers:read",
+                     *             "customers:update",
+                     *             "customers:delete"
+                     *           ],
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
                      *       },
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
@@ -55101,14 +55599,15 @@ export interface operations {
                      *           },
                      *           "actor": {
                      *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *             "object": "user",
+                     *             "object": "actor",
+                     *             "type": "user",
                      *             "name": "John Doe",
                      *             "handle": "jdoe@augno.com",
                      *             "role": {
                      *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *               "object": "role",
                      *               "name": "Admin",
-                     *               "type_code": "admin",
+                     *               "type": "admin",
                      *               "owner": {
                      *                 "object": "owner",
                      *                 "type": "account",
@@ -55207,14 +55706,15 @@ export interface operations {
                      *       },
                      *       "actor": {
                      *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *         "object": "user",
+                     *         "object": "actor",
+                     *         "type": "user",
                      *         "name": "John Doe",
                      *         "handle": "jdoe@augno.com",
                      *         "role": {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *           "object": "role",
                      *           "name": "Admin",
-                     *           "type_code": "admin",
+                     *           "type": "admin",
                      *           "owner": {
                      *             "object": "owner",
                      *             "type": "account",
@@ -56254,7 +56754,7 @@ export interface operations {
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
-                     *           "priority_code": "normal",
+                     *           "priority": "normal",
                      *           "payment_term": {
                      *             "id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "payment_term",
@@ -56433,7 +56933,7 @@ export interface operations {
                      *                 "sku": "ALM-2024-1001",
                      *                 "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *                 "notes": null,
-                     *                 "item_type_code": "product",
+                     *                 "type": "product",
                      *                 "category": {
                      *                   "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                   "object": "item_category",
@@ -56577,7 +57077,7 @@ export interface operations {
                      *                       "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                       "object": "attribute",
                      *                       "value": "Premium",
-                     *                       "color_code": "red",
+                     *                       "color": "red",
                      *                       "sort_order": 1,
                      *                       "created_at": "2026-05-10T00:00:00Z",
                      *                       "updated_at": "2026-05-10T00:23:00Z"
@@ -56741,7 +57241,7 @@ export interface operations {
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
-                     *       "priority_code": "normal",
+                     *       "priority": "normal",
                      *       "payment_term": {
                      *         "id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "object": "payment_term",
@@ -58157,17 +58657,17 @@ export interface operations {
                  * @description Filter by transaction type codes.
                  * @example []
                  */
-                "type_codes[]"?: string[];
+                "types[]"?: string[];
                 /**
                  * @description Filter by adjustment type codes.
                  * @example []
                  */
-                "adjustment_type_codes[]"?: string[];
+                "adjustment_types[]"?: string[];
                 /**
                  * @description Filter by transaction method codes.
                  * @example []
                  */
-                "method_codes[]"?: string[];
+                "methods[]"?: string[];
                 /**
                  * @description Filter by customer IDs.
                  * @example []
@@ -58285,10 +58785,10 @@ export interface operations {
                 /**
                  * @example {
                  *       "customer_id": "ac_01gf7a8200er3ar3pkfrb6kk29",
-                 *       "transaction_type_code": "payment",
+                 *       "type": "payment",
                  *       "amount": "500.00",
-                 *       "transaction_method_code": "check",
-                 *       "adjustment_type_code": null,
+                 *       "method": "check",
+                 *       "adjustment_type": null,
                  *       "responsible_user_id": null,
                  *       "note": "Q1 invoice payment"
                  *     }
@@ -58599,8 +59099,8 @@ export interface operations {
                  *       "number": null,
                  *       "note": "Updated payment note",
                  *       "amount": "750.00",
-                 *       "transaction_method_code": "ach",
-                 *       "adjustment_type_code": null,
+                 *       "method": "ach",
+                 *       "adjustment_type": null,
                  *       "responsible_user_id": null,
                  *       "clear_responsible_user": false,
                  *       "clear_transaction_method": false,
@@ -58760,7 +59260,7 @@ export interface operations {
                      *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *             "object": "role",
                      *             "name": "Admin",
-                     *             "type_code": "admin",
+                     *             "type": "admin",
                      *             "owner": {
                      *               "object": "owner",
                      *               "type": "account",
@@ -58855,7 +59355,7 @@ export interface operations {
                      *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *         "object": "role",
                      *         "name": "Admin",
-                     *         "type_code": "admin",
+                     *         "type": "admin",
                      *         "owner": {
                      *           "object": "owner",
                      *           "type": "account",
@@ -58933,7 +59433,7 @@ export interface operations {
                      *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *         "object": "role",
                      *         "name": "Admin",
-                     *         "type_code": "admin",
+                     *         "type": "admin",
                      *         "owner": {
                      *           "object": "owner",
                      *           "type": "account",
@@ -59048,7 +59548,7 @@ export interface operations {
                      *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *         "object": "role",
                      *         "name": "Admin",
-                     *         "type_code": "admin",
+                     *         "type": "admin",
                      *         "owner": {
                      *           "object": "owner",
                      *           "type": "account",
@@ -59170,7 +59670,7 @@ export interface operations {
                      *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *         "object": "role",
                      *         "name": "Admin",
-                     *         "type_code": "admin",
+                     *         "type": "admin",
                      *         "owner": {
                      *           "object": "owner",
                      *           "type": "account",
@@ -59719,7 +60219,7 @@ export interface operations {
                      *           "id": "ai_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "account_integration",
                      *           "name": "My Stripe Integration",
-                     *           "integration_code": "stripe",
+                     *           "provider": "stripe",
                      *           "is_active": true,
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
@@ -59773,7 +60273,7 @@ export interface operations {
                      *       "id": "ai_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "account_integration",
                      *       "name": "My Stripe Integration",
-                     *       "integration_code": "stripe",
+                     *       "provider": "stripe",
                      *       "is_active": true,
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
@@ -59896,7 +60396,7 @@ export interface operations {
                      *       "id": "ai_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "account_integration",
                      *       "name": "My Stripe Integration",
-                     *       "integration_code": "stripe",
+                     *       "provider": "stripe",
                      *       "is_active": true,
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
@@ -59939,7 +60439,7 @@ export interface operations {
                      *       "id": "ai_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "account_integration",
                      *       "name": "My Stripe Integration",
-                     *       "integration_code": "stripe",
+                     *       "provider": "stripe",
                      *       "is_active": true,
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
@@ -60216,7 +60716,7 @@ export interface operations {
                      *                 "code": "customers:read",
                      *                 "name": "Read Customers",
                      *                 "description": null,
-                     *                 "permission_group_code": "customers",
+                     *                 "group": "customers",
                      *                 "created_at": "2026-05-10T00:00:00Z",
                      *                 "updated_at": "2026-05-10T00:23:00Z"
                      *               }
@@ -60347,7 +60847,7 @@ export interface operations {
                      *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *           "object": "role",
                      *           "name": "Admin",
-                     *           "type_code": "admin",
+                     *           "type": "admin",
                      *           "owner": {
                      *             "object": "owner",
                      *             "type": "account",
@@ -60426,7 +60926,7 @@ export interface operations {
                      *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *       "object": "role",
                      *       "name": "Admin",
-                     *       "type_code": "admin",
+                     *       "type": "admin",
                      *       "owner": {
                      *         "object": "owner",
                      *         "type": "account",
@@ -60490,7 +60990,7 @@ export interface operations {
                      *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *       "object": "role",
                      *       "name": "Admin",
-                     *       "type_code": "admin",
+                     *       "type": "admin",
                      *       "owner": {
                      *         "object": "owner",
                      *         "type": "account",
@@ -60601,7 +61101,7 @@ export interface operations {
                      *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                      *       "object": "role",
                      *       "name": "Admin",
-                     *       "type_code": "admin",
+                     *       "type": "admin",
                      *       "owner": {
                      *         "object": "owner",
                      *         "type": "account",
@@ -60862,7 +61362,7 @@ export interface operations {
                      *             "sku": "ALM-2024-1001",
                      *             "description": null,
                      *             "notes": null,
-                     *             "item_type_code": "",
+                     *             "type": "",
                      *             "category": null,
                      *             "unit_value": null,
                      *             "unit_cost": null,
@@ -60878,8 +61378,8 @@ export interface operations {
                      *             "name": "Packaging Line 1",
                      *             "notes": null,
                      *             "type": "init_batch",
-                     *             "label_size_code": null,
-                     *             "label_type_code": null,
+                     *             "label_size": null,
+                     *             "label_type": null,
                      *             "material_check_required": false,
                      *             "department": null,
                      *             "production_steps": null,
@@ -60983,7 +61483,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -61127,7 +61627,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -61207,8 +61707,8 @@ export interface operations {
                      *         "name": "Packaging Line 1",
                      *         "notes": null,
                      *         "type": "init_batch",
-                     *         "label_size_code": null,
-                     *         "label_type_code": null,
+                     *         "label_size": null,
+                     *         "label_type": null,
                      *         "material_check_required": false,
                      *         "department": null,
                      *         "production_steps": null,
@@ -61224,7 +61724,7 @@ export interface operations {
                      *           "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *           "object": "location",
                      *           "name": "Warehouse A",
-                     *           "type_code": "building",
+                     *           "type": "building",
                      *           "parent": null,
                      *           "children": {
                      *             "object": "list",
@@ -61239,7 +61739,7 @@ export interface operations {
                      *                 "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *                 "object": "location",
                      *                 "name": "Shelf A1",
-                     *                 "type_code": "building",
+                     *                 "type": "building",
                      *                 "parent": null,
                      *                 "children": null,
                      *                 "created_at": "0001-01-01T00:00:00Z",
@@ -61265,8 +61765,8 @@ export interface operations {
                      *               "name": "Packaging Line 1",
                      *               "notes": null,
                      *               "type": "init_batch",
-                     *               "label_size_code": null,
-                     *               "label_type_code": null,
+                     *               "label_size": null,
+                     *               "label_type": null,
                      *               "material_check_required": false,
                      *               "department": null,
                      *               "production_steps": null,
@@ -61394,7 +61894,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -61538,7 +62038,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -61618,8 +62118,8 @@ export interface operations {
                      *         "name": "Packaging Line 1",
                      *         "notes": null,
                      *         "type": "init_batch",
-                     *         "label_size_code": null,
-                     *         "label_type_code": null,
+                     *         "label_size": null,
+                     *         "label_type": null,
                      *         "material_check_required": false,
                      *         "department": null,
                      *         "production_steps": null,
@@ -61635,7 +62135,7 @@ export interface operations {
                      *           "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *           "object": "location",
                      *           "name": "Warehouse A",
-                     *           "type_code": "building",
+                     *           "type": "building",
                      *           "parent": null,
                      *           "children": {
                      *             "object": "list",
@@ -61650,7 +62150,7 @@ export interface operations {
                      *                 "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *                 "object": "location",
                      *                 "name": "Shelf A1",
-                     *                 "type_code": "building",
+                     *                 "type": "building",
                      *                 "parent": null,
                      *                 "children": null,
                      *                 "created_at": "0001-01-01T00:00:00Z",
@@ -61676,8 +62176,8 @@ export interface operations {
                      *               "name": "Packaging Line 1",
                      *               "notes": null,
                      *               "type": "init_batch",
-                     *               "label_size_code": null,
-                     *               "label_type_code": null,
+                     *               "label_size": null,
+                     *               "label_type": null,
                      *               "material_check_required": false,
                      *               "department": null,
                      *               "production_steps": null,
@@ -61808,7 +62308,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -61952,7 +62452,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -62032,8 +62532,8 @@ export interface operations {
                      *         "name": "Packaging Line 1",
                      *         "notes": null,
                      *         "type": "init_batch",
-                     *         "label_size_code": null,
-                     *         "label_type_code": null,
+                     *         "label_size": null,
+                     *         "label_type": null,
                      *         "material_check_required": false,
                      *         "department": null,
                      *         "production_steps": null,
@@ -62049,7 +62549,7 @@ export interface operations {
                      *           "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *           "object": "location",
                      *           "name": "Warehouse A",
-                     *           "type_code": "building",
+                     *           "type": "building",
                      *           "parent": null,
                      *           "children": {
                      *             "object": "list",
@@ -62064,7 +62564,7 @@ export interface operations {
                      *                 "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *                 "object": "location",
                      *                 "name": "Shelf A1",
-                     *                 "type_code": "building",
+                     *                 "type": "building",
                      *                 "parent": null,
                      *                 "children": null,
                      *                 "created_at": "0001-01-01T00:00:00Z",
@@ -62090,8 +62590,8 @@ export interface operations {
                      *               "name": "Packaging Line 1",
                      *               "notes": null,
                      *               "type": "init_batch",
-                     *               "label_size_code": null,
-                     *               "label_type_code": null,
+                     *               "label_size": null,
+                     *               "label_type": null,
                      *               "material_check_required": false,
                      *               "department": null,
                      *               "production_steps": null,
@@ -62222,7 +62722,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -62366,7 +62866,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -62446,8 +62946,8 @@ export interface operations {
                      *         "name": "Packaging Line 1",
                      *         "notes": null,
                      *         "type": "init_batch",
-                     *         "label_size_code": null,
-                     *         "label_type_code": null,
+                     *         "label_size": null,
+                     *         "label_type": null,
                      *         "material_check_required": false,
                      *         "department": null,
                      *         "production_steps": null,
@@ -62463,7 +62963,7 @@ export interface operations {
                      *           "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *           "object": "location",
                      *           "name": "Warehouse A",
-                     *           "type_code": "building",
+                     *           "type": "building",
                      *           "parent": null,
                      *           "children": {
                      *             "object": "list",
@@ -62478,7 +62978,7 @@ export interface operations {
                      *                 "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *                 "object": "location",
                      *                 "name": "Shelf A1",
-                     *                 "type_code": "building",
+                     *                 "type": "building",
                      *                 "parent": null,
                      *                 "children": null,
                      *                 "created_at": "0001-01-01T00:00:00Z",
@@ -62504,8 +63004,8 @@ export interface operations {
                      *               "name": "Packaging Line 1",
                      *               "notes": null,
                      *               "type": "init_batch",
-                     *               "label_size_code": null,
-                     *               "label_type_code": null,
+                     *               "label_size": null,
+                     *               "label_type": null,
                      *               "material_check_required": false,
                      *               "department": null,
                      *               "production_steps": null,
@@ -62644,7 +63144,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -62788,7 +63288,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -62868,8 +63368,8 @@ export interface operations {
                      *         "name": "Packaging Line 1",
                      *         "notes": null,
                      *         "type": "init_batch",
-                     *         "label_size_code": null,
-                     *         "label_type_code": null,
+                     *         "label_size": null,
+                     *         "label_type": null,
                      *         "material_check_required": false,
                      *         "department": null,
                      *         "production_steps": null,
@@ -62885,7 +63385,7 @@ export interface operations {
                      *           "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *           "object": "location",
                      *           "name": "Warehouse A",
-                     *           "type_code": "building",
+                     *           "type": "building",
                      *           "parent": null,
                      *           "children": {
                      *             "object": "list",
@@ -62900,7 +63400,7 @@ export interface operations {
                      *                 "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *                 "object": "location",
                      *                 "name": "Shelf A1",
-                     *                 "type_code": "building",
+                     *                 "type": "building",
                      *                 "parent": null,
                      *                 "children": null,
                      *                 "created_at": "0001-01-01T00:00:00Z",
@@ -62926,8 +63426,8 @@ export interface operations {
                      *               "name": "Packaging Line 1",
                      *               "notes": null,
                      *               "type": "init_batch",
-                     *               "label_size_code": null,
-                     *               "label_type_code": null,
+                     *               "label_size": null,
+                     *               "label_type": null,
                      *               "material_check_required": false,
                      *               "department": null,
                      *               "production_steps": null,
@@ -63112,7 +63612,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -63256,7 +63756,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -63336,8 +63836,8 @@ export interface operations {
                      *         "name": "Packaging Line 1",
                      *         "notes": null,
                      *         "type": "init_batch",
-                     *         "label_size_code": null,
-                     *         "label_type_code": null,
+                     *         "label_size": null,
+                     *         "label_type": null,
                      *         "material_check_required": false,
                      *         "department": null,
                      *         "production_steps": null,
@@ -63353,7 +63853,7 @@ export interface operations {
                      *           "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *           "object": "location",
                      *           "name": "Warehouse A",
-                     *           "type_code": "building",
+                     *           "type": "building",
                      *           "parent": null,
                      *           "children": {
                      *             "object": "list",
@@ -63368,7 +63868,7 @@ export interface operations {
                      *                 "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *                 "object": "location",
                      *                 "name": "Shelf A1",
-                     *                 "type_code": "building",
+                     *                 "type": "building",
                      *                 "parent": null,
                      *                 "children": null,
                      *                 "created_at": "0001-01-01T00:00:00Z",
@@ -63394,8 +63894,8 @@ export interface operations {
                      *               "name": "Packaging Line 1",
                      *               "notes": null,
                      *               "type": "init_batch",
-                     *               "label_size_code": null,
-                     *               "label_type_code": null,
+                     *               "label_size": null,
+                     *               "label_type": null,
                      *               "material_check_required": false,
                      *               "department": null,
                      *               "production_steps": null,
@@ -63526,7 +64026,7 @@ export interface operations {
                      *               "sku": "ALM-2024-1001",
                      *               "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *               "notes": null,
-                     *               "item_type_code": "product",
+                     *               "type": "product",
                      *               "category": {
                      *                 "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                 "object": "item_category",
@@ -63670,7 +64170,7 @@ export interface operations {
                      *                     "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                     "object": "attribute",
                      *                     "value": "Premium",
-                     *                     "color_code": "red",
+                     *                     "color": "red",
                      *                     "sort_order": 1,
                      *                     "created_at": "2026-05-10T00:00:00Z",
                      *                     "updated_at": "2026-05-10T00:23:00Z"
@@ -63750,8 +64250,8 @@ export interface operations {
                      *               "name": "Packaging Line 1",
                      *               "notes": null,
                      *               "type": "init_batch",
-                     *               "label_size_code": null,
-                     *               "label_type_code": null,
+                     *               "label_size": null,
+                     *               "label_type": null,
                      *               "material_check_required": false,
                      *               "department": null,
                      *               "production_steps": null,
@@ -63767,7 +64267,7 @@ export interface operations {
                      *                 "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *                 "object": "location",
                      *                 "name": "Warehouse A",
-                     *                 "type_code": "building",
+                     *                 "type": "building",
                      *                 "parent": null,
                      *                 "children": {
                      *                   "object": "list",
@@ -63782,7 +64282,7 @@ export interface operations {
                      *                       "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *                       "object": "location",
                      *                       "name": "Shelf A1",
-                     *                       "type_code": "building",
+                     *                       "type": "building",
                      *                       "parent": null,
                      *                       "children": null,
                      *                       "created_at": "0001-01-01T00:00:00Z",
@@ -63808,8 +64308,8 @@ export interface operations {
                      *                     "name": "Packaging Line 1",
                      *                     "notes": null,
                      *                     "type": "init_batch",
-                     *                     "label_size_code": null,
-                     *                     "label_type_code": null,
+                     *                     "label_size": null,
+                     *                     "label_type": null,
                      *                     "material_check_required": false,
                      *                     "department": null,
                      *                     "production_steps": null,
@@ -64123,6 +64623,247 @@ export interface operations {
             };
         };
     };
+    "list-service-levels": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Query parameter: cursor for List Service Levels
+                 * @example example
+                 */
+                cursor?: string;
+                /**
+                 * @description Query parameter: limit for List Service Levels
+                 * @example 100
+                 */
+                limit?: number;
+                /**
+                 * @description Query parameter: q for List Service Levels
+                 * @example example
+                 */
+                q?: string;
+            };
+            header?: never;
+            path: {
+                /** @description The ID of the carrier whose service levels to list. */
+                carrier_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for List Service Levels */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["List_ServiceLevel"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "create-service-level": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the carrier. */
+                carrier_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The request body for Create Service Level */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "Ground Shipping",
+                 *       "code": "ground",
+                 *       "is_default": false
+                 *     }
+                 */
+                "application/json": components["schemas"]["CreateServiceLevelRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Create Service Level */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "service_level",
+                     *       "name": "FedEx Ground",
+                     *       "service_level_token": "fedex_ground",
+                     *       "customer_portal_visibility": "visible",
+                     *       "is_default": false,
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ServiceLevel"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "get-service-level": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the carrier. */
+                carrier_id: string;
+                /** @description The ID of the service level to retrieve. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Get Service Level */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "service_level",
+                     *       "name": "FedEx Ground",
+                     *       "service_level_token": "fedex_ground",
+                     *       "customer_portal_visibility": "visible",
+                     *       "is_default": false,
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ServiceLevel"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "delete-service-level": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the carrier. */
+                carrier_id: string;
+                /** @description The ID of the service level to delete. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Delete Service Level */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {} */
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "update-service-level": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the carrier. */
+                carrier_id: string;
+                /** @description The ID of the service level to update. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The request body for Update Service Level */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "Express Shipping"
+                 *     }
+                 */
+                "application/json": components["schemas"]["UpdateServiceLevelRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Update Service Level */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "service_level",
+                     *       "name": "FedEx Ground",
+                     *       "service_level_token": "fedex_ground",
+                     *       "customer_portal_visibility": "visible",
+                     *       "is_default": false,
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ServiceLevel"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
     "get-carrier": {
         parameters: {
             query?: {
@@ -64241,8 +64982,7 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "name": "FedEx Express",
-                 *       "customer_portal_visibility": null
+                 *       "name": "FedEx Express"
                  *     }
                  */
                 "application/json": components["schemas"]["UpdateCarrierRequest"];
@@ -64845,7 +65585,7 @@ export interface operations {
                      *               "sku": "ALM-2024-1001",
                      *               "description": null,
                      *               "notes": null,
-                     *               "item_type_code": "",
+                     *               "type": "",
                      *               "category": null,
                      *               "unit_value": null,
                      *               "unit_cost": null,
@@ -64993,7 +65733,7 @@ export interface operations {
                      *             "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *             "object": "location",
                      *             "name": "Warehouse A",
-                     *             "type_code": "building",
+                     *             "type": "building",
                      *             "parent": null,
                      *             "children": {
                      *               "object": "list",
@@ -65008,7 +65748,7 @@ export interface operations {
                      *                   "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *                   "object": "location",
                      *                   "name": "Shelf A1",
-                     *                   "type_code": "building",
+                     *                   "type": "building",
                      *                   "parent": null,
                      *                   "children": null,
                      *                   "created_at": "0001-01-01T00:00:00Z",
@@ -65034,8 +65774,8 @@ export interface operations {
                      *                 "name": "Packaging Line 1",
                      *                 "notes": null,
                      *                 "type": "init_batch",
-                     *                 "label_size_code": null,
-                     *                 "label_type_code": null,
+                     *                 "label_size": null,
+                     *                 "label_type": null,
                      *                 "material_check_required": false,
                      *                 "department": null,
                      *                 "production_steps": null,
@@ -65126,7 +65866,7 @@ export interface operations {
                      *         "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *         "object": "location",
                      *         "name": "Warehouse A",
-                     *         "type_code": "building",
+                     *         "type": "building",
                      *         "parent": null,
                      *         "children": {
                      *           "object": "list",
@@ -65141,7 +65881,7 @@ export interface operations {
                      *               "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *               "object": "location",
                      *               "name": "Shelf A1",
-                     *               "type_code": "building",
+                     *               "type": "building",
                      *               "parent": null,
                      *               "children": null,
                      *               "created_at": "0001-01-01T00:00:00Z",
@@ -65167,8 +65907,8 @@ export interface operations {
                      *             "name": "Packaging Line 1",
                      *             "notes": null,
                      *             "type": "init_batch",
-                     *             "label_size_code": null,
-                     *             "label_type_code": null,
+                     *             "label_size": null,
+                     *             "label_type": null,
                      *             "material_check_required": false,
                      *             "department": null,
                      *             "production_steps": null,
@@ -65252,7 +65992,7 @@ export interface operations {
                      *         "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *         "object": "location",
                      *         "name": "Warehouse A",
-                     *         "type_code": "building",
+                     *         "type": "building",
                      *         "parent": null,
                      *         "children": {
                      *           "object": "list",
@@ -65267,7 +66007,7 @@ export interface operations {
                      *               "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *               "object": "location",
                      *               "name": "Shelf A1",
-                     *               "type_code": "building",
+                     *               "type": "building",
                      *               "parent": null,
                      *               "children": null,
                      *               "created_at": "0001-01-01T00:00:00Z",
@@ -65293,8 +66033,8 @@ export interface operations {
                      *             "name": "Packaging Line 1",
                      *             "notes": null,
                      *             "type": "init_batch",
-                     *             "label_size_code": null,
-                     *             "label_type_code": null,
+                     *             "label_size": null,
+                     *             "label_type": null,
                      *             "material_check_required": false,
                      *             "department": null,
                      *             "production_steps": null,
@@ -65413,7 +66153,7 @@ export interface operations {
                      *         "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *         "object": "location",
                      *         "name": "Warehouse A",
-                     *         "type_code": "building",
+                     *         "type": "building",
                      *         "parent": null,
                      *         "children": {
                      *           "object": "list",
@@ -65428,7 +66168,7 @@ export interface operations {
                      *               "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *               "object": "location",
                      *               "name": "Shelf A1",
-                     *               "type_code": "building",
+                     *               "type": "building",
                      *               "parent": null,
                      *               "children": null,
                      *               "created_at": "0001-01-01T00:00:00Z",
@@ -65454,8 +66194,8 @@ export interface operations {
                      *             "name": "Packaging Line 1",
                      *             "notes": null,
                      *             "type": "init_batch",
-                     *             "label_size_code": null,
-                     *             "label_type_code": null,
+                     *             "label_size": null,
+                     *             "label_type": null,
                      *             "material_check_required": false,
                      *             "department": null,
                      *             "production_steps": null,
@@ -65815,7 +66555,7 @@ export interface operations {
                      *         {
                      *           "id": "icl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "inventory_change_log",
-                     *           "action_type_code": "scan",
+                     *           "action_type": "scan",
                      *           "quantity": {
                      *             "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "quantity",
@@ -65843,7 +66583,7 @@ export interface operations {
                      *             "sku": "ALM-2024-1001",
                      *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *             "notes": null,
-                     *             "item_type_code": "product",
+                     *             "type": "product",
                      *             "category": {
                      *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "item_category",
@@ -65987,7 +66727,7 @@ export interface operations {
                      *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                   "object": "attribute",
                      *                   "value": "Premium",
-                     *                   "color_code": "red",
+                     *                   "color": "red",
                      *                   "sort_order": 1,
                      *                   "created_at": "2026-05-10T00:00:00Z",
                      *                   "updated_at": "2026-05-10T00:23:00Z"
@@ -66015,8 +66755,8 @@ export interface operations {
                      *             "name": "Packaging Line 1",
                      *             "notes": null,
                      *             "type": "init_batch",
-                     *             "label_size_code": null,
-                     *             "label_type_code": null,
+                     *             "label_size": null,
+                     *             "label_type": null,
                      *             "material_check_required": false,
                      *             "department": null,
                      *             "production_steps": null,
@@ -66128,7 +66868,7 @@ export interface operations {
                      * @example {
                      *       "id": "icl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "inventory_change_log",
-                     *       "action_type_code": "scan",
+                     *       "action_type": "scan",
                      *       "quantity": {
                      *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "object": "quantity",
@@ -66156,7 +66896,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -66300,7 +67040,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -66328,8 +67068,8 @@ export interface operations {
                      *         "name": "Packaging Line 1",
                      *         "notes": null,
                      *         "type": "init_batch",
-                     *         "label_size_code": null,
-                     *         "label_type_code": null,
+                     *         "label_size": null,
+                     *         "label_type": null,
                      *         "material_check_required": false,
                      *         "department": null,
                      *         "production_steps": null,
@@ -66535,7 +67275,7 @@ export interface operations {
                 /**
                  * @example {
                  *       "name": "Warehouse A",
-                 *       "type_code": "building"
+                 *       "type": "building"
                  *     }
                  */
                 "application/json": components["schemas"]["CreateLocationRequest"];
@@ -66553,7 +67293,7 @@ export interface operations {
                      *       "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *       "object": "location",
                      *       "name": "Warehouse A",
-                     *       "type_code": "building",
+                     *       "type": "building",
                      *       "parent": null,
                      *       "children": {
                      *         "object": "list",
@@ -66568,7 +67308,7 @@ export interface operations {
                      *             "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *             "object": "location",
                      *             "name": "Shelf A1",
-                     *             "type_code": "building",
+                     *             "type": "building",
                      *             "parent": null,
                      *             "children": null,
                      *             "created_at": "0001-01-01T00:00:00Z",
@@ -66625,7 +67365,7 @@ export interface operations {
                      *       "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *       "object": "location",
                      *       "name": "Warehouse A",
-                     *       "type_code": "building",
+                     *       "type": "building",
                      *       "parent": null,
                      *       "children": {
                      *         "object": "list",
@@ -66640,7 +67380,7 @@ export interface operations {
                      *             "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *             "object": "location",
                      *             "name": "Shelf A1",
-                     *             "type_code": "building",
+                     *             "type": "building",
                      *             "parent": null,
                      *             "children": null,
                      *             "created_at": "0001-01-01T00:00:00Z",
@@ -66722,8 +67462,7 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "name": "Warehouse B",
-                 *       "clear_parent": false
+                 *       "name": "Warehouse B"
                  *     }
                  */
                 "application/json": components["schemas"]["UpdateLocationRequest"];
@@ -66741,7 +67480,7 @@ export interface operations {
                      *       "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *       "object": "location",
                      *       "name": "Warehouse A",
-                     *       "type_code": "building",
+                     *       "type": "building",
                      *       "parent": null,
                      *       "children": {
                      *         "object": "list",
@@ -66756,7 +67495,7 @@ export interface operations {
                      *             "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *             "object": "location",
                      *             "name": "Shelf A1",
-                     *             "type_code": "building",
+                     *             "type": "building",
                      *             "parent": null,
                      *             "children": null,
                      *             "created_at": "0001-01-01T00:00:00Z",
@@ -67096,7 +67835,7 @@ export interface operations {
                      *             "sku": "ALM-2024-1001",
                      *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *             "notes": null,
-                     *             "item_type_code": "product",
+                     *             "type": "product",
                      *             "category": {
                      *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "item_category",
@@ -67240,7 +67979,7 @@ export interface operations {
                      *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                   "object": "attribute",
                      *                   "value": "Premium",
-                     *                   "color_code": "red",
+                     *                   "color": "red",
                      *                   "sort_order": 1,
                      *                   "created_at": "2026-05-10T00:00:00Z",
                      *                   "updated_at": "2026-05-10T00:23:00Z"
@@ -67351,7 +68090,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -67495,7 +68234,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -67604,7 +68343,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -67748,7 +68487,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -67849,7 +68588,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -67993,7 +68732,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -68104,7 +68843,7 @@ export interface operations {
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "item_type_code": "product",
+                     *         "type": "product",
                      *         "category": {
                      *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "item_category",
@@ -68248,7 +68987,7 @@ export interface operations {
                      *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "attribute",
                      *               "value": "Premium",
-                     *               "color_code": "red",
+                     *               "color": "red",
                      *               "sort_order": 1,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
@@ -68538,7 +69277,7 @@ export interface operations {
                      *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                 "object": "attribute",
                      *                 "value": "Premium",
-                     *                 "color_code": "red",
+                     *                 "color": "red",
                      *                 "sort_order": 1,
                      *                 "created_at": "2026-05-10T00:00:00Z",
                      *                 "updated_at": "2026-05-10T00:23:00Z"
@@ -68751,7 +69490,7 @@ export interface operations {
                      *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "attribute",
                      *             "value": "Premium",
-                     *             "color_code": "red",
+                     *             "color": "red",
                      *             "sort_order": 1,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
@@ -68953,7 +69692,7 @@ export interface operations {
                      *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "attribute",
                      *             "value": "Premium",
-                     *             "color_code": "red",
+                     *             "color": "red",
                      *             "sort_order": 1,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
@@ -69147,7 +69886,7 @@ export interface operations {
                      *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "attribute",
                      *             "value": "Premium",
-                     *             "color_code": "red",
+                     *             "color": "red",
                      *             "sort_order": 1,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
@@ -69361,7 +70100,7 @@ export interface operations {
                      *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "attribute",
                      *             "value": "Premium",
-                     *             "color_code": "red",
+                     *             "color": "red",
                      *             "sort_order": 1,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
@@ -71346,7 +72085,7 @@ export interface operations {
                      *             "sku": "ALM-2024-1001",
                      *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *             "notes": null,
-                     *             "item_type_code": "product",
+                     *             "type": "product",
                      *             "category": {
                      *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "item_category",
@@ -71490,7 +72229,7 @@ export interface operations {
                      *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                   "object": "attribute",
                      *                   "value": "Premium",
-                     *                   "color_code": "red",
+                     *                   "color": "red",
                      *                   "sort_order": 1,
                      *                   "created_at": "2026-05-10T00:00:00Z",
                      *                   "updated_at": "2026-05-10T00:23:00Z"
@@ -71570,8 +72309,8 @@ export interface operations {
                      *             "name": "Packaging Line 1",
                      *             "notes": null,
                      *             "type": "init_batch",
-                     *             "label_size_code": null,
-                     *             "label_type_code": null,
+                     *             "label_size": null,
+                     *             "label_type": null,
                      *             "material_check_required": false,
                      *             "department": null,
                      *             "production_steps": null,
@@ -71587,7 +72326,7 @@ export interface operations {
                      *               "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *               "object": "location",
                      *               "name": "Warehouse A",
-                     *               "type_code": "building",
+                     *               "type": "building",
                      *               "parent": null,
                      *               "children": {
                      *                 "object": "list",
@@ -71602,7 +72341,7 @@ export interface operations {
                      *                     "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *                     "object": "location",
                      *                     "name": "Shelf A1",
-                     *                     "type_code": "building",
+                     *                     "type": "building",
                      *                     "parent": null,
                      *                     "children": null,
                      *                     "created_at": "0001-01-01T00:00:00Z",
@@ -71628,8 +72367,8 @@ export interface operations {
                      *                   "name": "Packaging Line 1",
                      *                   "notes": null,
                      *                   "type": "init_batch",
-                     *                   "label_size_code": null,
-                     *                   "label_type_code": null,
+                     *                   "label_size": null,
+                     *                   "label_type": null,
                      *                   "material_check_required": false,
                      *                   "department": null,
                      *                   "production_steps": null,
@@ -71782,7 +72521,7 @@ export interface operations {
                      *             "sku": "ALM-2024-1001",
                      *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *             "notes": null,
-                     *             "item_type_code": "product",
+                     *             "type": "product",
                      *             "category": {
                      *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "item_category",
@@ -71926,7 +72665,7 @@ export interface operations {
                      *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                   "object": "attribute",
                      *                   "value": "Premium",
-                     *                   "color_code": "red",
+                     *                   "color": "red",
                      *                   "sort_order": 1,
                      *                   "created_at": "2026-05-10T00:00:00Z",
                      *                   "updated_at": "2026-05-10T00:23:00Z"
@@ -72006,8 +72745,8 @@ export interface operations {
                      *             "name": "Packaging Line 1",
                      *             "notes": null,
                      *             "type": "init_batch",
-                     *             "label_size_code": null,
-                     *             "label_type_code": null,
+                     *             "label_size": null,
+                     *             "label_type": null,
                      *             "material_check_required": false,
                      *             "department": null,
                      *             "production_steps": null,
@@ -72023,7 +72762,7 @@ export interface operations {
                      *               "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *               "object": "location",
                      *               "name": "Warehouse A",
-                     *               "type_code": "building",
+                     *               "type": "building",
                      *               "parent": null,
                      *               "children": {
                      *                 "object": "list",
@@ -72038,7 +72777,7 @@ export interface operations {
                      *                     "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *                     "object": "location",
                      *                     "name": "Shelf A1",
-                     *                     "type_code": "building",
+                     *                     "type": "building",
                      *                     "parent": null,
                      *                     "children": null,
                      *                     "created_at": "0001-01-01T00:00:00Z",
@@ -72064,8 +72803,8 @@ export interface operations {
                      *                   "name": "Packaging Line 1",
                      *                   "notes": null,
                      *                   "type": "init_batch",
-                     *                   "label_size_code": null,
-                     *                   "label_type_code": null,
+                     *                   "label_size": null,
+                     *                   "label_type": null,
                      *                   "material_check_required": false,
                      *                   "department": null,
                      *                   "production_steps": null,
@@ -72426,7 +73165,7 @@ export interface operations {
                      *           "object": "item",
                      *           "sku": "ALM-2024-1001",
                      *           "description": null,
-                     *           "item_type_code": "product"
+                     *           "item_type": "product"
                      *         },
                      *         "quantity": {
                      *           "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -72503,7 +73242,7 @@ export interface operations {
                      *             "object": "item",
                      *             "sku": "ALM-2024-1001",
                      *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *             "item_type_code": "part"
+                     *             "item_type": "part"
                      *           },
                      *           "instructions": "Mix with water before adding",
                      *           "created_at": "2026-05-10T00:00:00Z",
@@ -72745,7 +73484,7 @@ export interface operations {
                      *           "object": "item",
                      *           "sku": "ALM-2024-1001",
                      *           "description": null,
-                     *           "item_type_code": "product"
+                     *           "item_type": "product"
                      *         },
                      *         "quantity": {
                      *           "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -72822,7 +73561,7 @@ export interface operations {
                      *             "object": "item",
                      *             "sku": "ALM-2024-1001",
                      *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *             "item_type_code": "part"
+                     *             "item_type": "part"
                      *           },
                      *           "instructions": "Mix with water before adding",
                      *           "created_at": "2026-05-10T00:00:00Z",
@@ -73045,7 +73784,7 @@ export interface operations {
                      *           "object": "item",
                      *           "sku": "ALM-2024-1001",
                      *           "description": null,
-                     *           "item_type_code": "product"
+                     *           "item_type": "product"
                      *         },
                      *         "quantity": {
                      *           "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -73122,7 +73861,7 @@ export interface operations {
                      *             "object": "item",
                      *             "sku": "ALM-2024-1001",
                      *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *             "item_type_code": "part"
+                     *             "item_type": "part"
                      *           },
                      *           "instructions": "Mix with water before adding",
                      *           "created_at": "2026-05-10T00:00:00Z",
@@ -73244,7 +73983,7 @@ export interface operations {
                      *         "object": "item",
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "item_type_code": "part"
+                     *         "item_type": "part"
                      *       },
                      *       "instructions": "Mix with water before adding",
                      *       "created_at": "2026-05-10T00:00:00Z",
@@ -73344,7 +74083,7 @@ export interface operations {
                      *         "object": "item",
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "item_type_code": "part"
+                     *         "item_type": "part"
                      *       },
                      *       "instructions": "Mix with water before adding",
                      *       "created_at": "2026-05-10T00:00:00Z",
@@ -73444,7 +74183,7 @@ export interface operations {
                      *         "object": "item",
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "item_type_code": "part"
+                     *         "item_type": "part"
                      *       },
                      *       "instructions": "Mix with water before adding",
                      *       "created_at": "2026-05-10T00:00:00Z",
@@ -73555,7 +74294,7 @@ export interface operations {
                      *         "object": "item",
                      *         "sku": "ALM-2024-1001",
                      *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "item_type_code": "part"
+                     *         "item_type": "part"
                      *       },
                      *       "instructions": "Mix with water before adding",
                      *       "created_at": "2026-05-10T00:00:00Z",
@@ -73605,7 +74344,7 @@ export interface operations {
                      *         "object": "item",
                      *         "sku": "ALM-2024-1001",
                      *         "description": null,
-                     *         "item_type_code": "product"
+                     *         "item_type": "product"
                      *       },
                      *       "quantity": {
                      *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -73687,7 +74426,7 @@ export interface operations {
                      *         "object": "item",
                      *         "sku": "ALM-2024-1001",
                      *         "description": null,
-                     *         "item_type_code": "product"
+                     *         "item_type": "product"
                      *       },
                      *       "quantity": {
                      *         "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -76631,8 +77370,8 @@ export interface operations {
                      *       "name": "Packaging Line 1",
                      *       "notes": null,
                      *       "type": "init_batch",
-                     *       "label_size_code": null,
-                     *       "label_type_code": null,
+                     *       "label_size": null,
+                     *       "label_type": null,
                      *       "material_check_required": false,
                      *       "department": null,
                      *       "production_steps": null,
@@ -76687,8 +77426,8 @@ export interface operations {
                      *       "name": "Packaging Line 1",
                      *       "notes": null,
                      *       "type": "init_batch",
-                     *       "label_size_code": null,
-                     *       "label_type_code": null,
+                     *       "label_size": null,
+                     *       "label_type": null,
                      *       "material_check_required": false,
                      *       "department": null,
                      *       "production_steps": null,
@@ -76786,8 +77525,8 @@ export interface operations {
                      *       "name": "Packaging Line 1",
                      *       "notes": null,
                      *       "type": "init_batch",
-                     *       "label_size_code": null,
-                     *       "label_type_code": null,
+                     *       "label_size": null,
+                     *       "label_type": null,
                      *       "material_check_required": false,
                      *       "department": null,
                      *       "production_steps": null,
@@ -76862,7 +77601,7 @@ export interface operations {
                      *             "sku": "ALM-2024-1001",
                      *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *             "notes": null,
-                     *             "item_type_code": "product",
+                     *             "type": "product",
                      *             "category": {
                      *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "item_category",
@@ -77006,7 +77745,7 @@ export interface operations {
                      *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                   "object": "attribute",
                      *                   "value": "Premium",
-                     *                   "color_code": "red",
+                     *                   "color": "red",
                      *                   "sort_order": 1,
                      *                   "created_at": "2026-05-10T00:00:00Z",
                      *                   "updated_at": "2026-05-10T00:23:00Z"
@@ -77086,8 +77825,8 @@ export interface operations {
                      *             "name": "Packaging Line 1",
                      *             "notes": null,
                      *             "type": "init_batch",
-                     *             "label_size_code": null,
-                     *             "label_type_code": null,
+                     *             "label_size": null,
+                     *             "label_type": null,
                      *             "material_check_required": false,
                      *             "department": null,
                      *             "production_steps": null,
@@ -77103,7 +77842,7 @@ export interface operations {
                      *               "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                      *               "object": "location",
                      *               "name": "Warehouse A",
-                     *               "type_code": "building",
+                     *               "type": "building",
                      *               "parent": null,
                      *               "children": {
                      *                 "object": "list",
@@ -77118,7 +77857,7 @@ export interface operations {
                      *                     "id": "lc_01gf7a8200er3ar3pkfrb6kk32",
                      *                     "object": "location",
                      *                     "name": "Shelf A1",
-                     *                     "type_code": "building",
+                     *                     "type": "building",
                      *                     "parent": null,
                      *                     "children": null,
                      *                     "created_at": "0001-01-01T00:00:00Z",
@@ -77144,8 +77883,8 @@ export interface operations {
                      *                   "name": "Packaging Line 1",
                      *                   "notes": null,
                      *                   "type": "init_batch",
-                     *                   "label_size_code": null,
-                     *                   "label_type_code": null,
+                     *                   "label_size": null,
+                     *                   "label_type": null,
                      *                   "material_check_required": false,
                      *                   "department": null,
                      *                   "production_steps": null,
@@ -78769,7 +79508,10 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "name": "Collect"
+                 *       "name": "Collect",
+                 *       "flat_rate": {},
+                 *       "minimum_order_value": {},
+                 *       "free_shipping_service_level_ids": {}
                  *     }
                  */
                 "application/json": components["schemas"]["UpdateShippingTermRequest"];
@@ -79390,7 +80132,7 @@ export interface operations {
                      *               "sku": "ALM-2024-1001",
                      *               "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *               "notes": null,
-                     *               "item_type_code": "product",
+                     *               "type": "product",
                      *               "category": {
                      *                 "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                 "object": "item_category",
@@ -79534,7 +80276,7 @@ export interface operations {
                      *                     "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                     "object": "attribute",
                      *                     "value": "Premium",
-                     *                     "color_code": "red",
+                     *                     "color": "red",
                      *                     "sort_order": 1,
                      *                     "created_at": "2026-05-10T00:00:00Z",
                      *                     "updated_at": "2026-05-10T00:23:00Z"
@@ -79658,7 +80400,7 @@ export interface operations {
                      *           "sku": "ALM-2024-1001",
                      *           "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *           "notes": null,
-                     *           "item_type_code": "product",
+                     *           "type": "product",
                      *           "category": {
                      *             "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "item_category",
@@ -79802,7 +80544,7 @@ export interface operations {
                      *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                 "object": "attribute",
                      *                 "value": "Premium",
-                     *                 "color_code": "red",
+                     *                 "color": "red",
                      *                 "sort_order": 1,
                      *                 "created_at": "2026-05-10T00:00:00Z",
                      *                 "updated_at": "2026-05-10T00:23:00Z"
@@ -79922,7 +80664,7 @@ export interface operations {
                      *           "sku": "ALM-2024-1001",
                      *           "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *           "notes": null,
-                     *           "item_type_code": "product",
+                     *           "type": "product",
                      *           "category": {
                      *             "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "item_category",
@@ -80066,7 +80808,7 @@ export interface operations {
                      *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                 "object": "attribute",
                      *                 "value": "Premium",
-                     *                 "color_code": "red",
+                     *                 "color": "red",
                      *                 "sort_order": 1,
                      *                 "created_at": "2026-05-10T00:00:00Z",
                      *                 "updated_at": "2026-05-10T00:23:00Z"
@@ -80178,7 +80920,7 @@ export interface operations {
                      *           "sku": "ALM-2024-1001",
                      *           "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *           "notes": null,
-                     *           "item_type_code": "product",
+                     *           "type": "product",
                      *           "category": {
                      *             "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "item_category",
@@ -80322,7 +81064,7 @@ export interface operations {
                      *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                 "object": "attribute",
                      *                 "value": "Premium",
-                     *                 "color_code": "red",
+                     *                 "color": "red",
                      *                 "sort_order": 1,
                      *                 "created_at": "2026-05-10T00:00:00Z",
                      *                 "updated_at": "2026-05-10T00:23:00Z"
@@ -80444,7 +81186,7 @@ export interface operations {
                      *           "sku": "ALM-2024-1001",
                      *           "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *           "notes": null,
-                     *           "item_type_code": "product",
+                     *           "type": "product",
                      *           "category": {
                      *             "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "item_category",
@@ -80588,7 +81330,7 @@ export interface operations {
                      *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                 "object": "attribute",
                      *                 "value": "Premium",
-                     *                 "color_code": "red",
+                     *                 "color": "red",
                      *                 "sort_order": 1,
                      *                 "created_at": "2026-05-10T00:00:00Z",
                      *                 "updated_at": "2026-05-10T00:23:00Z"
@@ -81091,7 +81833,7 @@ export interface operations {
                      *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                 "object": "attribute",
                      *                 "value": "Premium",
-                     *                 "color_code": "",
+                     *                 "color": "",
                      *                 "sort_order": 0,
                      *                 "created_at": "0001-01-01T00:00:00Z",
                      *                 "updated_at": "0001-01-01T00:00:00Z"
@@ -81280,7 +82022,7 @@ export interface operations {
                      *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "attribute",
                      *             "value": "Premium",
-                     *             "color_code": "",
+                     *             "color": "",
                      *             "sort_order": 0,
                      *             "created_at": "0001-01-01T00:00:00Z",
                      *             "updated_at": "0001-01-01T00:00:00Z"
@@ -81450,7 +82192,7 @@ export interface operations {
                      *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "attribute",
                      *             "value": "Premium",
-                     *             "color_code": "",
+                     *             "color": "",
                      *             "sort_order": 0,
                      *             "created_at": "0001-01-01T00:00:00Z",
                      *             "updated_at": "0001-01-01T00:00:00Z"
@@ -81663,7 +82405,7 @@ export interface operations {
                      *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "attribute",
                      *             "value": "Premium",
-                     *             "color_code": "",
+                     *             "color": "",
                      *             "sort_order": 0,
                      *             "created_at": "0001-01-01T00:00:00Z",
                      *             "updated_at": "0001-01-01T00:00:00Z"
@@ -82910,7 +83652,7 @@ export interface operations {
                  * @example {
                  *       "name": "Acme Inc.",
                  *       "note": "Key enterprise account",
-                 *       "status_code": "normal",
+                 *       "status": "normal",
                  *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
                  *       "default_payment_term_id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
                  *       "default_shipping_term_id": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -84163,7 +84905,7 @@ export interface operations {
                      *             "sku": "HB-M10X30-ZN",
                      *             "description": null,
                      *             "notes": null,
-                     *             "item_type_code": "",
+                     *             "type": "",
                      *             "category": null,
                      *             "unit_value": null,
                      *             "unit_cost": null,
