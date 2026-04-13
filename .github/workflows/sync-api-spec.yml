@@ -92,6 +92,10 @@ jobs:
                   Sync types from API ${API_VERSION}
                   EOF
 
+            - name: Apply version bump
+              if: steps.diff.outputs.changed == 'true'
+              run: bunx changeset version
+
             - name: Create PR
               if: steps.diff.outputs.changed == 'true'
               run: |
@@ -105,7 +109,7 @@ jobs:
                   git push -u origin "$BRANCH"
                   gh pr create \
                     --title "chore: sync types from API ${API_VERSION}" \
-                    --body "Auto-generated PR to sync internal SDK types from API release ${API_VERSION}." \
+                    --body "Auto-generated PR to sync internal SDK types from API release ${API_VERSION}. Merging will publish the new version to GitHub Packages." \
                     --base main
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
