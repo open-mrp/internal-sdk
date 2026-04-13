@@ -33,13 +33,13 @@ export interface paths {
         };
         /**
          * List Agents
-         * @description Returns all system and custom agent definitions for the current account.
+         * @description Returns a paginated list of agent definitions for the current account.
          */
         get: operations["list-agents"];
         put?: never;
         /**
          * Create Agent
-         * @description Creates a new custom agent definition with optional tool configuration.
+         * @description Creates a custom agent definition with optional tool configuration.
          */
         post: operations["create-agent"];
         delete?: never;
@@ -57,7 +57,7 @@ export interface paths {
         };
         /**
          * Get Agent
-         * @description Returns a single agent definition with its tool configuration.
+         * @description Returns an agent definition by ID.
          */
         get: operations["get-agent"];
         put?: never;
@@ -125,7 +125,7 @@ export interface paths {
         };
         /**
          * Get Agent Alert
-         * @description Returns a single agent alert by ID.
+         * @description Returns an agent alert by ID.
          */
         get: operations["get-agent-alert"];
         put?: never;
@@ -165,13 +165,13 @@ export interface paths {
         };
         /**
          * List Agent Memories
-         * @description Returns a paginated list of agent memories for the current account.
+         * @description Returns a paginated list of agent memories.
          */
         get: operations["list-agent-memories"];
         put?: never;
         /**
          * Create Agent Memory
-         * @description Creates a new agent memory for the current account.
+         * @description Creates an agent memory.
          */
         post: operations["create-agent-memory"];
         delete?: never;
@@ -189,7 +189,7 @@ export interface paths {
         };
         /**
          * Get Agent Memory
-         * @description Returns a single agent memory by ID.
+         * @description Returns an agent memory by ID.
          */
         get: operations["get-agent-memory"];
         put?: never;
@@ -223,7 +223,7 @@ export interface paths {
         put?: never;
         /**
          * Trigger Run
-         * @description Triggers a new agent run for the specified agent definition.
+         * @description Triggers an agent run for the specified agent definition.
          */
         post: operations["trigger-run"];
         delete?: never;
@@ -241,7 +241,7 @@ export interface paths {
         };
         /**
          * Get Run
-         * @description Returns a single agent run by its ID.
+         * @description Returns an agent run by ID.
          */
         get: operations["get-run"];
         put?: never;
@@ -283,7 +283,7 @@ export interface paths {
         put?: never;
         /**
          * Continue Run
-         * @description Continues an agent run that is awaiting input with a new user message.
+         * @description Continues an agent run awaiting input with a user message.
          */
         post: operations["continue-run"];
         delete?: never;
@@ -301,7 +301,7 @@ export interface paths {
         };
         /**
          * List Tool Groups
-         * @description Returns all tool groups used to organize available platform tools.
+         * @description Returns a paginated list of tool groups.
          */
         get: operations["list-tool-groups"];
         put?: never;
@@ -321,7 +321,7 @@ export interface paths {
         };
         /**
          * List Tools
-         * @description Returns all available platform tools that can be assigned to agents.
+         * @description Returns a paginated list of tools that can be assigned to agents.
          */
         get: operations["list-tools"];
         put?: never;
@@ -421,13 +421,13 @@ export interface paths {
         };
         /**
          * List API Keys
-         * @description Returns a paginated list of API keys for the current account.
+         * @description Returns a paginated list of API keys.
          */
         get: operations["list-api-keys"];
         put?: never;
         /**
          * Create API Key
-         * @description Creates a new API key. The secret value is returned only once at creation and cannot be retrieved afterward.
+         * @description Creates an API key. The secret key is returned once and cannot be retrieved later.
          */
         post: operations["create-api-key"];
         delete?: never;
@@ -447,7 +447,7 @@ export interface paths {
         put?: never;
         /**
          * Get Documentation API Key
-         * @description Returns a sandbox API key for use in API documentation. Reuses an existing valid key or creates a new one.
+         * @description Returns a sandbox API key for documentation. Reuses an existing valid key or creates one if none exists.
          */
         post: operations["get-documentation-api-key"];
         delete?: never;
@@ -465,14 +465,14 @@ export interface paths {
         };
         /**
          * Get API Key
-         * @description Returns a single API key by its ID.
+         * @description Returns API key metadata by ID.
          */
         get: operations["get-api-key"];
         put?: never;
         post?: never;
         /**
          * Revoke API Key
-         * @description Revokes an API key so it can no longer be used to authenticate requests.
+         * @description Revokes an API key, preventing it from being used to authenticate requests.
          */
         delete: operations["revoke-api-key"];
         options?: never;
@@ -491,7 +491,7 @@ export interface paths {
         put?: never;
         /**
          * Rotate API Key
-         * @description Rotates an API key by revoking the existing key and issuing a replacement with the same name, role, and expiration. The new secret is returned only once.
+         * @description Rotates an API key by revoking the existing key and issuing a replacement with the same name, role, and expiration. The new secret is returned once.
          */
         post: operations["rotate-api-key"];
         delete?: never;
@@ -510,10 +510,10 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Create New Password
+         * Update Password
          * @description Updates a user's password, revoking previous tokens and setting new access and refresh tokens in cookies.
          */
-        post: operations["create-new-password"];
+        post: operations["update-password"];
         delete?: never;
         options?: never;
         head?: never;
@@ -531,7 +531,7 @@ export interface paths {
         put?: never;
         /**
          * Request Password Reset
-         * @description Sends a password reset email to the user with a link to reset their password.
+         * @description Sends a password reset email to the user.
          */
         post: operations["request-password-reset"];
         delete?: never;
@@ -572,7 +572,7 @@ export interface paths {
         post?: never;
         /**
          * Revoke Refresh Token
-         * @description Revokes a refresh token, making it no longer valid for obtaining new access tokens.
+         * @description Revokes a refresh token.
          */
         delete: operations["revoke-refresh-token"];
         options?: never;
@@ -595,7 +595,7 @@ export interface paths {
         put?: never;
         /**
          * Create Registration Session
-         * @description Creates a new registration session for the given email and plan code. Returns the existing session ID if an active session already exists for that email.
+         * @description Creates a registration session. Returns the existing session ID if an active session already exists for that email.
          */
         post: operations["create-registration-session"];
         delete?: never;
@@ -613,7 +613,7 @@ export interface paths {
         };
         /**
          * Get Registration Session
-         * @description Returns the current state of a registration session, including its step and associated user and account details.
+         * @description Returns a registration session by ID, including its current step and associated user and account details.
          */
         get: operations["get-registration-session"];
         put?: never;
@@ -759,7 +759,7 @@ export interface paths {
         put?: never;
         /**
          * Register User
-         * @description Registers a new user on the customer portal, returning the user object and setting access and refresh tokens in cookies.
+         * @description Registers a user on the customer portal. Returns the user object and sets access and refresh tokens in cookies.
          */
         post: operations["register-user"];
         delete?: never;
@@ -778,7 +778,7 @@ export interface paths {
         get?: never;
         /**
          * Ensure Billing Customer
-         * @description Ensures a Stripe billing customer exists for the account, creating one if it does not already exist.
+         * @description Ensures a Stripe billing customer exists for the account.
          */
         put: operations["ensure-billing-customer"];
         post?: never;
@@ -797,7 +797,7 @@ export interface paths {
         };
         /**
          * Get Account Usage
-         * @description Returns current resource usage for the account, including seats, invoices, batches, and sandboxes, along with plan limits and subscription details.
+         * @description Returns resource usage for the account, including seats, invoices, batches, sandboxes, and subscription details.
          */
         get: operations["get-account-usage"];
         put?: never;
@@ -917,12 +917,12 @@ export interface paths {
         };
         /**
          * Get Spending Cap
-         * @description Returns the current monthly agent spending cap for the account. A null cap_cents indicates no cap.
+         * @description Returns the monthly agent spending cap for the account. Null cap_cents means no cap.
          */
         get: operations["get-spending-cap"];
         /**
          * Set Spending Cap
-         * @description Sets or removes the monthly agent spending cap for the account. Pass null cap_cents to remove the cap.
+         * @description Sets or removes the monthly agent spending cap for the account.
          */
         put: operations["set-spending-cap"];
         post?: never;
@@ -987,7 +987,7 @@ export interface paths {
         put?: never;
         /**
          * Create Item Category
-         * @description Creates a new account-owned item category.
+         * @description Creates an account-owned item category.
          */
         post: operations["create-item-category"];
         delete?: never;
@@ -1005,7 +1005,7 @@ export interface paths {
         };
         /**
          * Get Item Category
-         * @description Returns a single item category by its ID, including account-specific and global system categories.
+         * @description Returns an item category by ID. Includes account-specific and global system categories.
          */
         get: operations["get-item-category"];
         put?: never;
@@ -1077,7 +1077,7 @@ export interface paths {
         };
         /**
          * List Items
-         * @description Returns a paginated list of items for the target account, with filtering by type, category, attributes, supplier, and date range.
+         * @description Returns a paginated list of items.
          */
         get: operations["list-items"];
         put?: never;
@@ -1137,7 +1137,7 @@ export interface paths {
         };
         /**
          * Export Items
-         * @description Exports all items with their on-hand inventory for the target account as an Excel file.
+         * @description Exports all items with on-hand inventory as an Excel file.
          */
         get: operations["export-items"];
         put?: never;
@@ -1157,7 +1157,7 @@ export interface paths {
         };
         /**
          * Get Item
-         * @description Returns a single item by its ID.
+         * @description Returns an item by ID.
          */
         get: operations["get-item"];
         put?: never;
@@ -1241,13 +1241,13 @@ export interface paths {
         };
         /**
          * List Product Lines
-         * @description Returns a paginated list of product lines for the target account, including both account-specific and global system product lines.
+         * @description Returns a paginated list of product lines, including account-owned and system product lines.
          */
         get: operations["list-product-lines"];
         put?: never;
         /**
          * Create Product Line
-         * @description Creates a new account-owned product line.
+         * @description Creates an account-owned product line.
          */
         post: operations["create-product-line"];
         delete?: never;
@@ -1265,7 +1265,7 @@ export interface paths {
         };
         /**
          * Get Product Line
-         * @description Returns a product line by its ID, including system-owned product lines accessible to the account.
+         * @description Returns a product line by ID, including system-owned product lines accessible to the account.
          */
         get: operations["get-product-line"];
         put?: never;
@@ -1299,7 +1299,7 @@ export interface paths {
         put?: never;
         /**
          * Create Product Type
-         * @description Creates a new product type.
+         * @description Creates a product type.
          */
         post: operations["create-product-type"];
         delete?: never;
@@ -1317,7 +1317,7 @@ export interface paths {
         };
         /**
          * Get Product Type
-         * @description Returns a single product type by its ID or code.
+         * @description Returns a product type by ID or code.
          */
         get: operations["get-product-type"];
         put?: never;
@@ -1351,7 +1351,7 @@ export interface paths {
         put?: never;
         /**
          * Create Product
-         * @description Creates a new product.
+         * @description Creates a product.
          */
         post: operations["create-product"];
         delete?: never;
@@ -1389,7 +1389,7 @@ export interface paths {
         };
         /**
          * Get Product
-         * @description Returns a single product by its ID.
+         * @description Returns a product by ID.
          */
         get: operations["get-product"];
         put?: never;
@@ -1443,7 +1443,7 @@ export interface paths {
         put?: never;
         /**
          * Create Property
-         * @description Creates a new property.
+         * @description Creates a property.
          */
         post: operations["create-property"];
         delete?: never;
@@ -1461,14 +1461,14 @@ export interface paths {
         };
         /**
          * Get Property
-         * @description Returns a single property by its ID.
+         * @description Returns a property by ID.
          */
         get: operations["get-property"];
         put?: never;
         post?: never;
         /**
          * Delete Property
-         * @description Deletes a property and all its associated attributes.
+         * @description Deletes a property and all associated attributes.
          */
         delete: operations["delete-property"];
         options?: never;
@@ -1495,7 +1495,7 @@ export interface paths {
         put?: never;
         /**
          * Create Attribute
-         * @description Creates a new attribute under a property.
+         * @description Creates an attribute under a property.
          */
         post: operations["create-attribute"];
         delete?: never;
@@ -1513,7 +1513,7 @@ export interface paths {
         };
         /**
          * Get Attribute
-         * @description Returns a single attribute by its ID within a property.
+         * @description Returns an attribute by ID within a property.
          */
         get: operations["get-attribute"];
         put?: never;
@@ -1541,13 +1541,13 @@ export interface paths {
         };
         /**
          * List Unit Groups
-         * @description Returns a paginated list of unit groups for the current account, including system unit groups.
+         * @description Returns a paginated list of unit groups, including system unit groups.
          */
         get: operations["list-unit-groups"];
         put?: never;
         /**
          * Create Unit Group
-         * @description Creates a new unit group with optional associated units.
+         * @description Creates a unit group with optional associated units.
          */
         post: operations["create-unit-group"];
         delete?: never;
@@ -1565,7 +1565,7 @@ export interface paths {
         };
         /**
          * Get Unit Group
-         * @description Returns a single unit group by its ID.
+         * @description Returns a unit group by ID.
          */
         get: operations["get-unit-group"];
         put?: never;
@@ -1593,7 +1593,7 @@ export interface paths {
         };
         /**
          * List Unit Group Units
-         * @description Returns the list of associated units within the specified unit group.
+         * @description Returns a list of associated units within a unit group.
          */
         get: operations["list-unit-group-units"];
         put?: never;
@@ -1617,7 +1617,7 @@ export interface paths {
         };
         /**
          * Get Unit Group Unit
-         * @description Returns a single associated unit within a unit group by its ID.
+         * @description Returns an associated unit within a unit group by ID.
          */
         get: operations["get-unit-group-unit"];
         put?: never;
@@ -1631,7 +1631,7 @@ export interface paths {
         head?: never;
         /**
          * Update Unit Group Associated Unit
-         * @description Updates an associated unit within a unit group.
+         * @description Partially updates an associated unit within a unit group.
          */
         patch: operations["update-unit-group-associated-unit"];
         trace?: never;
@@ -1651,7 +1651,7 @@ export interface paths {
         put?: never;
         /**
          * Create Unit
-         * @description Creates a new account-owned unit.
+         * @description Creates an account-owned unit.
          */
         post: operations["create-unit"];
         delete?: never;
@@ -1689,7 +1689,7 @@ export interface paths {
         };
         /**
          * Get Unit
-         * @description Returns a single unit by its ID, including both account-owned and global system units.
+         * @description Returns a unit by ID, including both account-owned and global system units.
          */
         get: operations["get-unit"];
         put?: never;
@@ -1836,10 +1836,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Address Suggestions
-         * @description Returns address suggestions based on the input text.
+         * List Address Suggestions
+         * @description Returns address suggestions based on input text.
          */
-        get: operations["get-address-suggestions"];
+        get: operations["list-address-suggestions"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2157,7 +2157,7 @@ export interface paths {
         };
         /**
          * Get Audit Event
-         * @description Returns a single audit event by its ID.
+         * @description Returns an audit event by ID.
          */
         get: operations["get-audit-event"];
         put?: never;
@@ -2197,7 +2197,7 @@ export interface paths {
         };
         /**
          * Get Email Log
-         * @description Returns a single email log by its ID.
+         * @description Returns an email log by ID.
          */
         get: operations["get-email-log"];
         put?: never;
@@ -2217,7 +2217,7 @@ export interface paths {
         };
         /**
          * List Request Logs
-         * @description Returns a paginated, filterable list of request logs for the target account.
+         * @description Returns a paginated list of request logs.
          */
         get: operations["list-request-logs"];
         put?: never;
@@ -2237,7 +2237,7 @@ export interface paths {
         };
         /**
          * Get Request Log
-         * @description Returns a single request log by its ID.
+         * @description Returns a request log by ID.
          */
         get: operations["get-request-log"];
         put?: never;
@@ -2257,13 +2257,13 @@ export interface paths {
         };
         /**
          * List Sandboxes
-         * @description Returns a paginated list of sandbox accounts for the target account.
+         * @description Returns a paginated list of sandboxes.
          */
         get: operations["list-sandboxes"];
         put?: never;
         /**
          * Create Sandbox
-         * @description Creates a new sandbox account for the target account.
+         * @description Creates a sandbox account.
          */
         post: operations["create-sandbox"];
         delete?: never;
@@ -2281,7 +2281,7 @@ export interface paths {
         };
         /**
          * Get Sandbox
-         * @description Returns a single sandbox account by its ID.
+         * @description Returns a sandbox by ID.
          */
         get: operations["get-sandbox"];
         put?: never;
@@ -2325,7 +2325,7 @@ export interface paths {
         };
         /**
          * Get System Property
-         * @description Returns a single system property by its ID.
+         * @description Returns a system property by ID.
          */
         get: operations["get-system-property"];
         put?: never;
@@ -2409,7 +2409,7 @@ export interface paths {
         };
         /**
          * List Account Transactions
-         * @description Returns a paginated list of transactions scoped to a specific customer account, optionally including transactions from child accounts.
+         * @description Returns a paginated list of transactions for a customer account, optionally including child account transactions.
          */
         get: operations["list-account-transactions"];
         put?: never;
@@ -2469,7 +2469,7 @@ export interface paths {
         };
         /**
          * Get Invoice
-         * @description Returns a single invoice by its ID.
+         * @description Returns an invoice by ID.
          */
         get: operations["get-invoice"];
         put?: never;
@@ -2513,13 +2513,13 @@ export interface paths {
         };
         /**
          * List Payment Terms
-         * @description Returns a paginated list of payment terms for the account, including both account-specific and default system payment terms.
+         * @description Returns a paginated list of payment terms. Includes both account-specific and system default payment terms.
          */
         get: operations["list-payment-terms"];
         put?: never;
         /**
          * Create Payment Term
-         * @description Creates a new payment term.
+         * @description Creates a payment term.
          */
         post: operations["create-payment-term"];
         delete?: never;
@@ -2537,7 +2537,7 @@ export interface paths {
         };
         /**
          * Get Payment Term
-         * @description Returns a single payment term by its ID.
+         * @description Returns a payment term by ID.
          */
         get: operations["get-payment-term"];
         put?: never;
@@ -2631,7 +2631,7 @@ export interface paths {
         put?: never;
         /**
          * Create Settlement
-         * @description Creates a new settlement with transaction allocations. A settlement number is automatically generated.
+         * @description Creates a settlement with transaction allocations. A settlement number is automatically generated.
          */
         post: operations["create-settlement"];
         delete?: never;
@@ -2649,14 +2649,14 @@ export interface paths {
         };
         /**
          * Get Settlement
-         * @description Returns a single settlement by its ID.
+         * @description Returns a settlement by ID.
          */
         get: operations["get-settlement"];
         put?: never;
         post?: never;
         /**
          * Delete Settlement
-         * @description Deletes a settlement, removing its allocations and reverting payment statuses on affected invoices and transactions.
+         * @description Deletes a settlement, removing allocations and reverting payment statuses on affected invoices and transactions.
          */
         delete: operations["delete-settlement"];
         options?: never;
@@ -2767,7 +2767,7 @@ export interface paths {
         put?: never;
         /**
          * Create Transaction
-         * @description Creates a new transaction with an automatically generated transaction number.
+         * @description Creates a transaction with an automatically generated transaction number.
          */
         post: operations["create-transaction"];
         delete?: never;
@@ -2785,14 +2785,14 @@ export interface paths {
         };
         /**
          * Get Transaction
-         * @description Returns a single transaction by its ID.
+         * @description Returns a transaction by ID.
          */
         get: operations["get-transaction"];
         put?: never;
         post?: never;
         /**
          * Delete Transaction
-         * @description Deletes a transaction and cascades deletion to its allocations.
+         * @description Deletes a transaction and cascades deletion to allocations.
          */
         delete: operations["delete-transaction"];
         options?: never;
@@ -2819,7 +2819,7 @@ export interface paths {
         put?: never;
         /**
          * Create Account User
-         * @description Creates a new account user and invites them to the account.
+         * @description Creates an account user and invites them to the account.
          */
         post: operations["create-account-user"];
         delete?: never;
@@ -2837,7 +2837,7 @@ export interface paths {
         };
         /**
          * Get Account User
-         * @description Returns a single account user by ID.
+         * @description Returns an account user by ID.
          */
         get: operations["get-account-user"];
         put?: never;
@@ -2906,7 +2906,7 @@ export interface paths {
         get?: never;
         /**
          * Update Account User Password
-         * @description Updates an account user's password, requiring the requester's current password for verification.
+         * @description Updates an account user's password. Requires the requester's current password for verification.
          */
         put: operations["update-account-user-password"];
         post?: never;
@@ -2927,7 +2927,7 @@ export interface paths {
         put?: never;
         /**
          * Restore Account User
-         * @description Restores a previously removed account user, setting their status back to active.
+         * @description Restores a removed account user, setting their status to active.
          */
         post: operations["restore-account-user"];
         delete?: never;
@@ -2947,7 +2947,7 @@ export interface paths {
         put?: never;
         /**
          * Unlock Account User
-         * @description Unlocks a previously locked account user, restoring their access to the account.
+         * @description Unlocks an account user, restoring their access to the account.
          */
         post: operations["unlock-account-user"];
         delete?: never;
@@ -2989,7 +2989,7 @@ export interface paths {
         };
         /**
          * Get Account Logo URL
-         * @description Returns a presigned URL for the account's logo image. The URL expires after one hour.
+         * @description Returns a presigned URL for the account's logo. Expires after one hour.
          */
         get: operations["get-account-logo-url"];
         put?: never;
@@ -3010,7 +3010,7 @@ export interface paths {
         get?: never;
         /**
          * Upload Account Photo
-         * @description Uploads a logo image for an account as a raw binary body.
+         * @description Uploads an account logo. Send as raw binary body.
          */
         put: operations["upload-account-photo"];
         post?: never;
@@ -3079,7 +3079,7 @@ export interface paths {
         put?: never;
         /**
          * Create Account Integration
-         * @description Creates a new account integration, or updates an existing one with the same integration code. Credentials are encrypted at rest and never returned in API responses.
+         * @description Creates an account integration, or updates an existing one with the same integration code. Credentials are encrypted at rest and never returned in API responses.
          */
         post: operations["create-account-integration"];
         delete?: never;
@@ -3205,7 +3205,7 @@ export interface paths {
         };
         /**
          * List Customer Accounts
-         * @description Returns the customer accounts accessible to the authenticated user under the specified vendor account.
+         * @description Returns a paginated list of customer accounts accessible to the authenticated user under the specified vendor account.
          */
         get: operations["list-customer-accounts"];
         put?: never;
@@ -3245,7 +3245,7 @@ export interface paths {
         };
         /**
          * Get Account by Slug
-         * @description Returns a minimal public account by its portal slug. Unauthenticated.
+         * @description Returns a public account by portal slug. Unauthenticated.
          */
         get: operations["get-account-by-slug"];
         put?: never;
@@ -3271,7 +3271,7 @@ export interface paths {
         put?: never;
         /**
          * Create Role
-         * @description Creates a new custom role with the specified permissions.
+         * @description Creates a custom role with the specified permissions.
          */
         post: operations["create-role"];
         delete?: never;
@@ -3289,7 +3289,7 @@ export interface paths {
         };
         /**
          * Get Role
-         * @description Returns a single role by its ID, including its structured permissions.
+         * @description Returns a role by ID, including its structured permissions.
          */
         get: operations["get-role"];
         put?: never;
@@ -3317,7 +3317,7 @@ export interface paths {
         };
         /**
          * Get User
-         * @description Returns a single user's profile by its ID.
+         * @description Returns a user by ID.
          */
         get: operations["get-user"];
         put?: never;
@@ -3341,7 +3341,7 @@ export interface paths {
         };
         /**
          * Get User Photo URL
-         * @description Returns a presigned URL for the user's profile photo. The URL expires after one hour.
+         * @description Returns a presigned URL for the user's profile photo. Expires after one hour.
          */
         get: operations["get-user-photo-url"];
         /**
@@ -3365,10 +3365,10 @@ export interface paths {
         };
         get?: never;
         /**
-         * Analyze Open Batch Summaries
+         * Get Open Batch Summaries
          * @description Returns aggregated summaries of open batches, optionally filtered by item IDs or product line IDs.
          */
-        put: operations["analyze-open-batch-summaries"];
+        put: operations["get-open-batch-summaries"];
         post?: never;
         delete?: never;
         options?: never;
@@ -3387,7 +3387,7 @@ export interface paths {
         put?: never;
         /**
          * Bulk Delete Batches
-         * @description Deletes multiple batches in a single operation.
+         * @description Deletes multiple batches.
          */
         post: operations["bulk-delete-batches"];
         delete?: never;
@@ -3447,7 +3447,7 @@ export interface paths {
         put?: never;
         /**
          * Merge Batches
-         * @description Merges multiple batches into a single batch at the specified production step and scanning station.
+         * @description Merges multiple batches into one at the specified production step and scanning station.
          */
         post: operations["merge-batches"];
         delete?: never;
@@ -3467,7 +3467,7 @@ export interface paths {
         put?: never;
         /**
          * Move Batches
-         * @description Moves one or more batches to a new production step at the specified scanning station.
+         * @description Moves batches to a production step at the specified scanning station.
          */
         post: operations["move-batches"];
         delete?: never;
@@ -3567,7 +3567,7 @@ export interface paths {
         put?: never;
         /**
          * Get Possible Next Steps
-         * @description Returns the possible next production steps for a batch at a given scanning station.
+         * @description Returns possible next production steps for a batch at a given scanning station.
          */
         post: operations["get-possible-next-steps"];
         delete?: never;
@@ -3591,7 +3591,7 @@ export interface paths {
         put?: never;
         /**
          * Create Carrier
-         * @description Creates a new carrier. If a Shippo-supported carrier code is provided, the carrier will be registered with Shippo and service levels will be auto-synced as options.
+         * @description Creates a carrier. If a Shippo-supported carrier code is provided, the carrier will be registered with Shippo and service levels will be auto-synced as options.
          */
         post: operations["create-carrier"];
         delete?: never;
@@ -3615,7 +3615,7 @@ export interface paths {
         put?: never;
         /**
          * Create Service Level
-         * @description Creates a new service level (shipping service level) for a carrier.
+         * @description Creates a service level for a carrier.
          */
         post: operations["create-service-level"];
         delete?: never;
@@ -3633,14 +3633,14 @@ export interface paths {
         };
         /**
          * Get Service Level
-         * @description Returns a single service level by its ID.
+         * @description Returns a service level by ID.
          */
         get: operations["get-service-level"];
         put?: never;
         post?: never;
         /**
          * Delete Service Level
-         * @description Permanently deletes a service level. Default (system-synced) service levels cannot be deleted.
+         * @description Permanently deletes a service level. Fails if the service level is a default (system-synced) level.
          */
         delete: operations["delete-service-level"];
         options?: never;
@@ -3661,14 +3661,14 @@ export interface paths {
         };
         /**
          * Get Carrier
-         * @description Returns a single carrier by ID.
+         * @description Returns a carrier by ID.
          */
         get: operations["get-carrier"];
         put?: never;
         post?: never;
         /**
          * Delete Carrier
-         * @description Deletes a carrier and cascades to remove all its options. If the carrier is managed by Shippo, the Shippo account is deactivated.
+         * @description Deletes a carrier and cascades to remove all options. If the carrier is managed by Shippo, the Shippo account is deactivated.
          */
         delete: operations["delete-carrier"];
         options?: never;
@@ -3691,7 +3691,7 @@ export interface paths {
         put?: never;
         /**
          * Initiate Carrier OAuth
-         * @description Initiates the OAuth flow for a Shippo-managed carrier and returns an OAuth URL to redirect the user to. Not available in sandbox mode.
+         * @description Initiates the OAuth flow for a Shippo-managed carrier and returns an OAuth URL. Not available in sandbox mode.
          */
         post: operations["initiate-carrier-oauth"];
         delete?: never;
@@ -3755,7 +3755,7 @@ export interface paths {
         put?: never;
         /**
          * Create DC Location
-         * @description Creates a new DC location.
+         * @description Creates a DC location.
          */
         post: operations["create-dc-location"];
         delete?: never;
@@ -3773,7 +3773,7 @@ export interface paths {
         };
         /**
          * Get DC Location
-         * @description Returns a single DC location by its ID.
+         * @description Returns a DC location by ID.
          */
         get: operations["get-dc-location"];
         put?: never;
@@ -3821,7 +3821,7 @@ export interface paths {
         };
         /**
          * Get Delivery
-         * @description Returns a single delivery by its ID, including all delivery lines.
+         * @description Returns a delivery by ID, including all delivery lines.
          */
         get: operations["get-delivery"];
         put?: never;
@@ -3841,13 +3841,13 @@ export interface paths {
         };
         /**
          * List Departments
-         * @description Returns a paginated list of departments for the current account.
+         * @description Returns a paginated list of departments.
          */
         get: operations["list-departments"];
         put?: never;
         /**
          * Create Department
-         * @description Creates a new department.
+         * @description Creates a department.
          */
         post: operations["create-department"];
         delete?: never;
@@ -3865,7 +3865,7 @@ export interface paths {
         };
         /**
          * Get Department
-         * @description Returns a single department by its ID.
+         * @description Returns a department by ID.
          */
         get: operations["get-department"];
         put?: never;
@@ -3913,7 +3913,7 @@ export interface paths {
         };
         /**
          * Get EDI Run
-         * @description Returns a single EDI run by its ID.
+         * @description Returns an EDI run by ID.
          */
         get: operations["get-edi-run"];
         put?: never;
@@ -3955,7 +3955,7 @@ export interface paths {
         put?: never;
         /**
          * Resubmit EDI Invoice
-         * @description Resubmits an invoice via EDI. Requires the invoice to exist and EDI to be enabled on the account.
+         * @description Resubmits an invoice via EDI. Fails if the invoice does not exist or EDI is not enabled on the account.
          */
         post: operations["resubmit-edi-invoice"];
         delete?: never;
@@ -4033,7 +4033,7 @@ export interface paths {
         };
         /**
          * Get Inventory Change Log
-         * @description Returns a single inventory change log by its ID.
+         * @description Returns an inventory change log by ID.
          */
         get: operations["get-inventory-change-log"];
         put?: never;
@@ -4053,7 +4053,7 @@ export interface paths {
         };
         /**
          * List Location Types
-         * @description Returns a paginated list of all location types.
+         * @description Returns a paginated list of location types.
          */
         get: operations["list-location-types"];
         put?: never;
@@ -4073,7 +4073,7 @@ export interface paths {
         };
         /**
          * Get Location Type
-         * @description Returns a single location type by its ID or code.
+         * @description Returns a location type by ID or code.
          */
         get: operations["get-location-type"];
         put?: never;
@@ -4099,7 +4099,7 @@ export interface paths {
         put?: never;
         /**
          * Create Location
-         * @description Creates a new location for the caller's account.
+         * @description Creates a location for the caller's account.
          */
         post: operations["create-location"];
         delete?: never;
@@ -4117,7 +4117,7 @@ export interface paths {
         };
         /**
          * Get Location
-         * @description Returns a single location by its ID.
+         * @description Returns a location by ID.
          */
         get: operations["get-location"];
         put?: never;
@@ -4151,7 +4151,7 @@ export interface paths {
         put?: never;
         /**
          * Create Machine
-         * @description Creates a new machine and associates it with a department.
+         * @description Creates a machine and associates it with a department.
          */
         post: operations["create-machine"];
         delete?: never;
@@ -4169,7 +4169,7 @@ export interface paths {
         };
         /**
          * Get Machine
-         * @description Returns a single machine by its ID.
+         * @description Returns a machine by ID.
          */
         get: operations["get-machine"];
         put?: never;
@@ -4197,13 +4197,13 @@ export interface paths {
         };
         /**
          * List Materials
-         * @description Returns a paginated list of materials for the current account.
+         * @description Returns a paginated list of materials.
          */
         get: operations["list-materials"];
         put?: never;
         /**
          * Create Material
-         * @description Creates a new material.
+         * @description Creates a material.
          */
         post: operations["create-material"];
         delete?: never;
@@ -4221,14 +4221,14 @@ export interface paths {
         };
         /**
          * Get Material
-         * @description Returns a single material by its ID.
+         * @description Returns a material by ID.
          */
         get: operations["get-material"];
         put?: never;
         post?: never;
         /**
          * Delete Material
-         * @description Deletes a material by its ID.
+         * @description Deletes a material by ID.
          */
         delete: operations["delete-material"];
         options?: never;
@@ -4255,7 +4255,7 @@ export interface paths {
         put?: never;
         /**
          * Create Part
-         * @description Creates a new part with the specified SKU and category.
+         * @description Creates a part with the specified SKU and category.
          */
         post: operations["create-part"];
         delete?: never;
@@ -4273,14 +4273,14 @@ export interface paths {
         };
         /**
          * Get Part
-         * @description Returns a single part by its ID.
+         * @description Returns a part by ID.
          */
         get: operations["get-part"];
         put?: never;
         post?: never;
         /**
          * Delete Part
-         * @description Soft-deletes a part by setting its deleted_at timestamp.
+         * @description Deletes a part. Sets the deleted_at timestamp rather than removing the record.
          */
         delete: operations["delete-part"];
         options?: never;
@@ -4321,7 +4321,7 @@ export interface paths {
         };
         /**
          * Get Pick
-         * @description Returns a single pick by its ID.
+         * @description Returns a pick by ID.
          */
         get: operations["get-pick"];
         put?: never;
@@ -4386,7 +4386,7 @@ export interface paths {
         get?: never;
         /**
          * Void Pick
-         * @description Voids a pick, cancelling all of its lines.
+         * @description Voids a pick, cancelling all lines.
          */
         put: operations["void-pick"];
         post?: never;
@@ -4446,7 +4446,7 @@ export interface paths {
         get?: never;
         /**
          * Pick Pick Line
-         * @description Marks a single pick line as picked.
+         * @description Marks a pick line as picked.
          */
         put: operations["pick-pick-line"];
         post?: never;
@@ -4466,7 +4466,7 @@ export interface paths {
         get?: never;
         /**
          * Void Pick Line
-         * @description Voids a single pick line.
+         * @description Voids a pick line.
          */
         put: operations["void-pick-line"];
         post?: never;
@@ -4487,7 +4487,7 @@ export interface paths {
         put?: never;
         /**
          * Connect Production Steps
-         * @description Links two production steps in the production flow DAG, making the source step an upstream dependency of the target step.
+         * @description Connects two production steps in the production flow DAG. The source step becomes an upstream dependency of the target step.
          */
         post: operations["connect-production-steps"];
         delete?: never;
@@ -4505,7 +4505,7 @@ export interface paths {
         };
         /**
          * Get Production Flow
-         * @description Returns the full production flow graph for the given item, including all upstream production steps, their consumptions, and connections.
+         * @description Returns the production flow graph for the given item, including all production steps, their consumptions, and connections.
          */
         get: operations["get-production-flow"];
         put?: never;
@@ -4525,13 +4525,13 @@ export interface paths {
         };
         /**
          * List Production Runs
-         * @description Returns a paginated list of production runs for the current account.
+         * @description Returns a paginated list of production runs.
          */
         get: operations["list-production-runs"];
         put?: never;
         /**
          * Create Production Run
-         * @description Creates a new production run for the current account.
+         * @description Creates a production run.
          */
         post: operations["create-production-run"];
         delete?: never;
@@ -4549,7 +4549,7 @@ export interface paths {
         };
         /**
          * Get Production Run
-         * @description Returns a single production run by its ID.
+         * @description Returns a production run by ID.
          */
         get: operations["get-production-run"];
         put?: never;
@@ -4563,7 +4563,7 @@ export interface paths {
         head?: never;
         /**
          * Update Production Run
-         * @description Partially updates a production run. Only non-completed runs can be updated.
+         * @description Partially updates a production run. Fails if the run is completed.
          */
         patch: operations["update-production-run"];
         trace?: never;
@@ -4583,7 +4583,7 @@ export interface paths {
         put?: never;
         /**
          * Add Batches to Production Run
-         * @description Adds batches to a production run. Fails if the run is already completed.
+         * @description Adds batches to a production run. Fails if the run is completed.
          */
         post: operations["add-batches-to-production-run"];
         delete?: never;
@@ -4607,7 +4607,7 @@ export interface paths {
         put?: never;
         /**
          * Create Production Step
-         * @description Creates a new production step with production output, rates, and consumptions.
+         * @description Creates a production step with production output, rates, and consumptions.
          */
         post: operations["create-production-step"];
         delete?: never;
@@ -4627,7 +4627,7 @@ export interface paths {
         put?: never;
         /**
          * Bulk Create Production Steps
-         * @description Creates multiple production steps in a single bulk operation.
+         * @description Creates multiple production steps in a single request.
          */
         post: operations["bulk-create-production-steps"];
         delete?: never;
@@ -4645,7 +4645,7 @@ export interface paths {
         };
         /**
          * Get Production Step
-         * @description Returns a single production step by its ID.
+         * @description Returns a production step by ID.
          */
         get: operations["get-production-step"];
         put?: never;
@@ -4675,7 +4675,7 @@ export interface paths {
         put?: never;
         /**
          * Create Consumption
-         * @description Creates a new consumption within a production step.
+         * @description Creates a consumption within a production step.
          */
         post: operations["create-consumption"];
         delete?: never;
@@ -4693,7 +4693,7 @@ export interface paths {
         };
         /**
          * Get Consumption
-         * @description Returns a single consumption by its ID within a production step.
+         * @description Returns a consumption by ID within a production step.
          */
         get: operations["get-consumption"];
         put?: never;
@@ -4721,7 +4721,7 @@ export interface paths {
         };
         /**
          * Get Production
-         * @description Returns a single production output by its ID within a production step.
+         * @description Returns a production output by ID within a production step.
          */
         get: operations["get-production"];
         put?: never;
@@ -4751,7 +4751,7 @@ export interface paths {
         put?: never;
         /**
          * Create Purchase Order
-         * @description Creates a new purchase order.
+         * @description Creates a purchase order.
          */
         post: operations["create-purchase-order"];
         delete?: never;
@@ -4771,7 +4771,7 @@ export interface paths {
         put?: never;
         /**
          * Bulk Delete Purchase Orders
-         * @description Deletes multiple purchase orders in a single operation.
+         * @description Deletes multiple purchase orders.
          */
         post: operations["bulk-delete-purchase-orders"];
         delete?: never;
@@ -4809,7 +4809,7 @@ export interface paths {
         };
         /**
          * Get Purchase Order
-         * @description Returns a single purchase order by its ID.
+         * @description Returns a purchase order by ID.
          */
         get: operations["get-purchase-order"];
         put?: never;
@@ -4838,7 +4838,7 @@ export interface paths {
         get?: never;
         /**
          * Change Purchase Order Status
-         * @description Changes the status of a purchase order using actions: issue (draft to issued), unissue (issued to draft), close (issued to closed), or open (closed to issued).
+         * @description Changes the status of a purchase order. Supported actions: issue (draft to issued), unissue (issued to draft), close (issued to closed), open (closed to issued).
          */
         put: operations["change-purchase-order-status"];
         post?: never;
@@ -4859,7 +4859,7 @@ export interface paths {
         put?: never;
         /**
          * Create Purchase Order Line
-         * @description Creates a new line item on a purchase order.
+         * @description Creates a line item on a purchase order.
          */
         post: operations["create-purchase-order-line"];
         delete?: never;
@@ -4927,7 +4927,7 @@ export interface paths {
         head?: never;
         /**
          * Update Rate
-         * @description Partially updates a rate record.
+         * @description Partially updates a rate.
          */
         patch: operations["update-rate"];
         trace?: never;
@@ -4961,7 +4961,7 @@ export interface paths {
         };
         /**
          * Get Receiving Order
-         * @description Returns a single receiving order by its ID.
+         * @description Returns a receiving order by ID.
          */
         get: operations["get-receiving-order"];
         put?: never;
@@ -5022,7 +5022,7 @@ export interface paths {
         get?: never;
         /**
          * Void Receiving Order
-         * @description Voids a receiving order, cancelling all of its lines.
+         * @description Voids a receiving order, cancelling all lines.
          */
         put: operations["void-receiving-order"];
         post?: never;
@@ -5062,7 +5062,7 @@ export interface paths {
         get?: never;
         /**
          * Receive Receiving Order Line
-         * @description Marks a single receiving order line as received.
+         * @description Marks a receiving order line as received.
          */
         put: operations["receive-receiving-order-line"];
         post?: never;
@@ -5082,7 +5082,7 @@ export interface paths {
         get?: never;
         /**
          * Void Receiving Order Line
-         * @description Voids a single receiving order line.
+         * @description Voids a receiving order line.
          */
         put: operations["void-receiving-order-line"];
         post?: never;
@@ -5107,7 +5107,7 @@ export interface paths {
         put?: never;
         /**
          * Create Scanning Station
-         * @description Creates a new scanning station associated with a department.
+         * @description Creates a scanning station associated with a department.
          */
         post: operations["create-scanning-station"];
         delete?: never;
@@ -5125,7 +5125,7 @@ export interface paths {
         };
         /**
          * Get Scanning Station
-         * @description Returns a single scanning station by its ID.
+         * @description Returns a scanning station by ID.
          */
         get: operations["get-scanning-station"];
         put?: never;
@@ -5273,14 +5273,14 @@ export interface paths {
         };
         /**
          * Get Shipment
-         * @description Returns a single shipment by its ID.
+         * @description Returns a shipment by ID.
          */
         get: operations["get-shipment"];
         put?: never;
         post?: never;
         /**
          * Delete Shipment
-         * @description Deletes a shipment. Cannot be deleted if it has already been shipped.
+         * @description Deletes a shipment. Fails if already shipped.
          */
         delete: operations["delete-shipment"];
         options?: never;
@@ -5347,7 +5347,7 @@ export interface paths {
         put?: never;
         /**
          * Create Shipment Line
-         * @description Creates a new line on a shipment.
+         * @description Creates a line on a shipment.
          */
         post: operations["create-shipment-line"];
         delete?: never;
@@ -5365,7 +5365,7 @@ export interface paths {
         };
         /**
          * Get Shipment Line
-         * @description Returns a single shipment line by its ID.
+         * @description Returns a shipment line by ID.
          */
         get: operations["get-shipment-line"];
         put?: never;
@@ -5393,7 +5393,7 @@ export interface paths {
         };
         /**
          * Get Shipping Case
-         * @description Returns a single shipping case by its ID.
+         * @description Returns a shipping case by ID.
          */
         get: operations["get-shipping-case"];
         put?: never;
@@ -5447,7 +5447,7 @@ export interface paths {
         put?: never;
         /**
          * Create Shipping Term
-         * @description Creates a new account-owned shipping term.
+         * @description Creates an account-owned shipping term.
          */
         post: operations["create-shipping-term"];
         delete?: never;
@@ -5465,7 +5465,7 @@ export interface paths {
         };
         /**
          * Get Shipping Term
-         * @description Returns a single shipping term by its ID.
+         * @description Returns a shipping term by ID.
          */
         get: operations["get-shipping-term"];
         put?: never;
@@ -5499,7 +5499,7 @@ export interface paths {
         put?: never;
         /**
          * Create Supplier
-         * @description Creates a new supplier, optionally with inline bill-to and ship-to addresses.
+         * @description Creates a supplier, optionally with inline bill-to and ship-to addresses.
          */
         post: operations["create-supplier"];
         delete?: never;
@@ -5537,7 +5537,7 @@ export interface paths {
         };
         /**
          * Get Supplier
-         * @description Returns a single supplier by its ID.
+         * @description Returns a supplier by ID.
          */
         get: operations["get-supplier"];
         put?: never;
@@ -5565,13 +5565,13 @@ export interface paths {
         };
         /**
          * List Supplier Materials
-         * @description Returns a paginated list of supplier materials for a given supplier.
+         * @description Returns a paginated list of supplier materials.
          */
         get: operations["list-supplier-materials"];
         put?: never;
         /**
          * Create Supplier Material
-         * @description Creates a new supplier material association.
+         * @description Creates a supplier material association.
          */
         post: operations["create-supplier-material"];
         delete?: never;
@@ -5589,7 +5589,7 @@ export interface paths {
         };
         /**
          * Get Supplier Material
-         * @description Returns a single supplier material by supplier and item ID.
+         * @description Returns a supplier material by ID.
          */
         get: operations["get-supplier-material"];
         put?: never;
@@ -5623,7 +5623,7 @@ export interface paths {
         put?: never;
         /**
          * Create Account Group
-         * @description Creates a new account group.
+         * @description Creates an account group.
          */
         post: operations["create-account-group"];
         delete?: never;
@@ -5640,15 +5640,15 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Retrieve Account Group
-         * @description Retrieves a single account group by its ID.
+         * Get Account Group
+         * @description Returns an account group by ID.
          */
-        get: operations["retrieve-account-group"];
+        get: operations["get-account-group"];
         put?: never;
         post?: never;
         /**
          * Delete Account Group
-         * @description Deletes an account group. This request will fail if the account group is actively used in production.
+         * @description Deletes an account group. Fails if the account group is actively used in production.
          */
         delete: operations["delete-account-group"];
         options?: never;
@@ -5675,7 +5675,7 @@ export interface paths {
         put?: never;
         /**
          * Create Account Price
-         * @description Creates a new account price for a recipient customer account. Account prices override all other pricing rules.
+         * @description Creates an account price for a recipient customer account. Account prices override all other pricing rules.
          */
         post: operations["create-account-price"];
         delete?: never;
@@ -5693,7 +5693,7 @@ export interface paths {
         };
         /**
          * Get Account Price
-         * @description Returns a single account price by its ID.
+         * @description Returns an account price by ID.
          */
         get: operations["get-account-price"];
         put?: never;
@@ -5721,7 +5721,7 @@ export interface paths {
         };
         /**
          * List Account Statuses
-         * @description Returns a paginated list of account statuses, which are global lookup values used when setting account relationship statuses.
+         * @description Returns a paginated list of account statuses. Global lookup values for setting account relationship statuses.
          */
         get: operations["list-account-statuses"];
         put?: never;
@@ -5741,7 +5741,7 @@ export interface paths {
         };
         /**
          * Get Account Status
-         * @description Returns a single account status by its ID or code.
+         * @description Returns an account status by ID or code.
          */
         get: operations["get-account-status"];
         put?: never;
@@ -5761,13 +5761,13 @@ export interface paths {
         };
         /**
          * List Sales Targets
-         * @description Returns a paginated list of sales targets for a specific account user.
+         * @description Returns a paginated list of sales targets for an account user.
          */
         get: operations["list-sales-targets"];
         put?: never;
         /**
          * Create Sales Target
-         * @description Creates a new sales target for an account user.
+         * @description Creates a sales target for an account user.
          */
         post: operations["create-sales-target"];
         delete?: never;
@@ -5805,13 +5805,13 @@ export interface paths {
         };
         /**
          * List Territories
-         * @description Returns a paginated list of territories for the specified account.
+         * @description Returns a paginated list of territories.
          */
         get: operations["list-territories"];
         put?: never;
         /**
          * Create Territory
-         * @description Creates a new territory for the specified account.
+         * @description Creates a territory.
          */
         post: operations["create-territory"];
         delete?: never;
@@ -5829,14 +5829,14 @@ export interface paths {
         };
         /**
          * Get Territory
-         * @description Returns a single territory by its ID.
+         * @description Returns a territory by ID.
          */
         get: operations["get-territory"];
         put?: never;
         post?: never;
         /**
          * Delete Territory
-         * @description Deletes a territory from the specified account.
+         * @description Deletes a territory.
          */
         delete: operations["delete-territory"];
         options?: never;
@@ -5863,7 +5863,7 @@ export interface paths {
         put?: never;
         /**
          * Create Address
-         * @description Creates a new address.
+         * @description Creates an address.
          */
         post: operations["create-address"];
         delete?: never;
@@ -5881,14 +5881,14 @@ export interface paths {
         };
         /**
          * Get Address
-         * @description Returns a single address by its ID.
+         * @description Returns an address by ID.
          */
         get: operations["get-address"];
         put?: never;
         post?: never;
         /**
          * Delete Address
-         * @description Deletes an address. This request will fail if the address is in use as a billing or shipping address on a sales order, invoice, or shipment, or as a default address on the account.
+         * @description Deletes an address. Fails if the address is in use as a billing or shipping address on a sales order, invoice, or shipment, or as a default account address.
          */
         delete: operations["delete-address"];
         options?: never;
@@ -5935,7 +5935,7 @@ export interface paths {
         put?: never;
         /**
          * Create Customer
-         * @description Creates a new customer account, auto-generating a customer number if one is not provided.
+         * @description Creates a customer account. Auto-generates a customer number if one is not provided.
          */
         post: operations["create-customer"];
         delete?: never;
@@ -5955,7 +5955,7 @@ export interface paths {
         put?: never;
         /**
          * Bulk Delete Customers
-         * @description Deletes multiple customers in a single operation.
+         * @description Deletes multiple customers.
          */
         post: operations["bulk-delete-customers"];
         delete?: never;
@@ -5975,7 +5975,7 @@ export interface paths {
         put?: never;
         /**
          * Register Customer
-         * @description Submits a customer registration request through a registration flow.
+         * @description Registers a customer through a registration flow.
          */
         post: operations["register-customer"];
         delete?: never;
@@ -5993,14 +5993,14 @@ export interface paths {
         };
         /**
          * Get Customer
-         * @description Returns a single customer by ID.
+         * @description Returns a customer by ID.
          */
         get: operations["get-customer"];
         put?: never;
         post?: never;
         /**
          * Delete Customer
-         * @description Deletes a customer and its associated account relations, addresses, and account users.
+         * @description Deletes a customer and associated account relations, addresses, and account users.
          */
         delete: operations["delete-customer"];
         options?: never;
@@ -6067,7 +6067,7 @@ export interface paths {
         put?: never;
         /**
          * Create Order Discount
-         * @description Creates a new order discount.
+         * @description Creates an order discount.
          */
         post: operations["create-order-discount"];
         delete?: never;
@@ -6087,7 +6087,7 @@ export interface paths {
         put?: never;
         /**
          * Find Order Discount by Code
-         * @description Finds an order discount by its unique code, optionally scoped to a buyer account or sales order.
+         * @description Finds an order discount by code, optionally scoped to a buyer account or sales order.
          */
         post: operations["find-order-discount-by-code"];
         delete?: never;
@@ -6105,14 +6105,14 @@ export interface paths {
         };
         /**
          * Get Order Discount
-         * @description Returns a single order discount by its ID.
+         * @description Returns an order discount by ID.
          */
         get: operations["get-order-discount"];
         put?: never;
         post?: never;
         /**
          * Delete Order Discount
-         * @description Deletes an order discount by its ID.
+         * @description Deletes an order discount by ID.
          */
         delete: operations["delete-order-discount"];
         options?: never;
@@ -6153,7 +6153,7 @@ export interface paths {
         };
         /**
          * Get Priority
-         * @description Returns a single priority by its ID or code.
+         * @description Returns a priority by ID or code.
          */
         get: operations["get-priority"];
         put?: never;
@@ -6197,7 +6197,7 @@ export interface paths {
         };
         /**
          * Get Account Group Product Line Access
-         * @description Returns the product line access for a single account group.
+         * @description Returns product line access for an account group.
          */
         get: operations["get-account-group-product-line-access"];
         put?: never;
@@ -6283,7 +6283,7 @@ export interface paths {
         put?: never;
         /**
          * Create Registration Flow
-         * @description Creates a new registration flow.
+         * @description Creates a registration flow.
          */
         post: operations["create-registration-flow"];
         delete?: never;
@@ -6301,7 +6301,7 @@ export interface paths {
         };
         /**
          * Get Registration Flow by Slug
-         * @description Returns a single registration flow by its slug.
+         * @description Returns a registration flow by slug.
          */
         get: operations["get-registration-flow-by-slug"];
         put?: never;
@@ -6321,7 +6321,7 @@ export interface paths {
         };
         /**
          * Get Registration Flow
-         * @description Returns a single registration flow by its ID.
+         * @description Returns a registration flow by ID.
          */
         get: operations["get-registration-flow"];
         put?: never;
@@ -6355,7 +6355,7 @@ export interface paths {
         put?: never;
         /**
          * Create Sales Order
-         * @description Creates a new sales order.
+         * @description Creates a sales order.
          */
         post: operations["create-sales-order"];
         delete?: never;
@@ -6413,7 +6413,7 @@ export interface paths {
         };
         /**
          * Get Sales Order
-         * @description Returns a single sales order by its ID.
+         * @description Returns a sales order by ID.
          */
         get: operations["get-sales-order"];
         put?: never;
@@ -6503,7 +6503,7 @@ export interface paths {
         put?: never;
         /**
          * Create Sales Order Line
-         * @description Creates a new line item on a sales order.
+         * @description Creates a line item on a sales order.
          */
         post: operations["create-sales-order-line"];
         delete?: never;
@@ -6524,7 +6524,7 @@ export interface paths {
         post?: never;
         /**
          * Delete Sales Order Line
-         * @description Deletes a sales order line item and its related records.
+         * @description Deletes a sales order line and related records.
          */
         delete: operations["delete-sales-order-line"];
         options?: never;
@@ -6551,7 +6551,7 @@ export interface paths {
         put?: never;
         /**
          * Create Volume Discount
-         * @description Creates a new volume discount for the target account.
+         * @description Creates a volume discount for the target account.
          */
         post: operations["create-volume-discount"];
         delete?: never;
@@ -6569,7 +6569,7 @@ export interface paths {
         };
         /**
          * Get Volume Discount
-         * @description Returns a single volume discount by its ID.
+         * @description Returns a volume discount by ID.
          */
         get: operations["get-volume-discount"];
         put?: never;
@@ -6599,7 +6599,7 @@ export interface paths {
         put?: never;
         /**
          * Process Stripe Webhook
-         * @description Receives and processes a Stripe webhook event, verifying the signature before dispatching.
+         * @description Processes a Stripe webhook event, verifying the signature before dispatching.
          */
         post: operations["process-stripe-webhook"];
         delete?: never;
@@ -6645,7 +6645,7 @@ export interface components {
             error: components["schemas"]["ResponseError"];
         };
         /**
-         * @description APIKey represents an API key for authenticating API requests.
+         * @description API key resource.
          * @example {
          *       "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
          *       "object": "api_key",
@@ -6688,19 +6688,19 @@ export interface components {
          *     }
          */
         APIKey: {
-            /** @description The unique identifier for the API key. */
+            /** @description API key ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "api_key";
-            /** @description The human-readable name for the API key. */
+            /** @description Human-readable name for the API key. */
             name: string;
-            /** @description The redacted value of the API key for display purposes. */
+            /** @description Redacted key value. */
             redacted_value: string;
             /**
-             * @description The role associated with this API key.
+             * @description Assigned role.
              * @example {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "role",
@@ -6734,32 +6734,32 @@ export interface components {
             role: components["schemas"]["Role"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the API key was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the API key was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the API key was last used.
+             * @description Last used timestamp.
              */
             last_used_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the API key expires.
+             * @description Expiration timestamp.
              */
             expires_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the API key was revoked.
+             * @description Revocation timestamp.
              */
             revoked_at: string | null;
         };
         /**
-         * @description Account represents a full account with optional branding and portal sub-resources.
+         * @description Account with optional branding and portal sub-resources.
          * @example {
          *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
          *       "object": "account",
@@ -6773,17 +6773,17 @@ export interface components {
          *     }
          */
         Account: {
-            /** @description The unique identifier for the account. */
+            /** @description Account ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account";
-            /** @description The display name of the account. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The default billing address.
+             * @description Default billing address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -6807,7 +6807,7 @@ export interface components {
              */
             default_billing_address: components["schemas"]["Address"] | null;
             /**
-             * @description The default shipping address.
+             * @description Default shipping address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -6831,7 +6831,7 @@ export interface components {
              */
             default_shipping_address: components["schemas"]["Address"] | null;
             /**
-             * @description The account branding configuration.
+             * @description Branding configuration.
              * @example {
              *       "id": "abr_01gf7a8200eaj8fke1xvw4h50x",
              *       "object": "account_branding",
@@ -6849,7 +6849,7 @@ export interface components {
              */
             branding: components["schemas"]["AccountBranding"] | null;
             /**
-             * @description The account portal configuration.
+             * @description Portal configuration.
              * @example {
              *       "id": "apo_01gf7a8200eaj8fke1xvw4h50x",
              *       "object": "account_portal",
@@ -6861,17 +6861,17 @@ export interface components {
             portal: components["schemas"]["AccountPortal"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the account was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the account was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AccountBranding holds the branding metadata for an account.
+         * @description Branding metadata for an account.
          * @example {
          *       "id": "abr_01gf7a8200eaj8fke1xvw4h50x",
          *       "object": "account_branding",
@@ -6888,42 +6888,42 @@ export interface components {
          *     }
          */
         AccountBranding: {
-            /** @description The unique identifier for the branding record. */
+            /** @description Branding ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account_branding";
-            /** @description The support email address. */
+            /** @description Support email address. */
             support_email: string | null;
-            /** @description The support phone number. */
+            /** @description Support phone number. */
             phone_number: string | null;
-            /** @description The logo URL (S3 key). */
+            /** @description Logo URL (S3 key). */
             logo_url: string | null;
-            /** @description The Facebook handle. */
+            /** @description Facebook handle. */
             facebook_handle: string | null;
-            /** @description The Instagram handle. */
+            /** @description Instagram handle. */
             instagram_handle: string | null;
-            /** @description The LinkedIn handle. */
+            /** @description LinkedIn handle. */
             linkedin_handle: string | null;
-            /** @description The Twitter handle. */
+            /** @description Twitter handle. */
             twitter_handle: string | null;
-            /** @description The website URL. */
+            /** @description Website URL. */
             website_url: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the branding was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the branding was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AccountGroup represents an account group used for organizing customer accounts.
+         * @description Account group resource.
          * @example {
          *       "id": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "account_group",
@@ -6937,45 +6937,45 @@ export interface components {
          *     }
          */
         AccountGroup: {
-            /** @description The unique identifier for the account group. */
+            /** @description Account group ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account_group";
-            /** @description The display name of the account group. */
+            /** @description Display name. */
             name: string;
-            /** @description A description of the account group. */
+            /** @description Description. */
             description: string | null;
             /**
-             * @description The commission policy of the account group.
+             * @description Commission policy.
              * @enum {string}
              */
             commission_policy: "commission_applied" | "commission_exempt";
             /**
-             * @description The freight policy of the account group.
+             * @description Freight policy.
              * @enum {string}
              */
             freight_policy: "free_freight" | "billed_freight";
             /**
-             * @description The account group type.
+             * @description Account group type.
              * @enum {string}
              */
             type: "pricing_group" | "type_group";
             /**
              * Format: date-time
-             * @description When this account group was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this account group was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AccountGroupProductLineAccess represents the product lines accessible to an account group.
+         * @description AccountGroupProductLineAccess is the product lines accessible to an account group.
          * @example {
          *       "account_group": {
          *         "id": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -7019,7 +7019,7 @@ export interface components {
          */
         AccountGroupProductLineAccess: {
             /**
-             * @description The account group.
+             * @description Account group.
              * @example {
              *       "id": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "account_group",
@@ -7034,25 +7034,25 @@ export interface components {
              */
             account_group: components["schemas"]["AccountGroup"] | null;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account_group_product_line_access";
-            /** @description The product lines accessible to this account group. */
+            /** @description Product lines accessible to this account group. */
             product_lines: components["schemas"]["List_ProductLine"] | null;
             /**
              * Format: date-time
-             * @description When this record was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this record was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AccountIntegration represents a third-party integration connected to an account.
+         * @description Third-party integration connected to an account.
          * @example {
          *       "id": "ai_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "account_integration",
@@ -7064,45 +7064,45 @@ export interface components {
          *     }
          */
         AccountIntegration: {
-            /** @description The unique identifier for the account integration. */
+            /** @description Account integration ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account_integration";
-            /** @description The human-readable name for the integration. */
+            /** @description Display name of the integration. */
             name: string;
             /**
-             * @description The integration provider code (e.g. "stripe", "shippo").
+             * @description Integration provider code (e.g. "stripe", "shippo").
              * @enum {string}
              */
             provider: "stripe" | "shippo";
-            /** @description Whether this integration is currently active. */
+            /** @description Whether the integration is active. */
             is_active: boolean;
             /**
              * Format: date-time
-             * @description When this integration was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this integration was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AccountLogoURL holds a presigned URL for an account's logo.
+         * @description Presigned URL for an account's logo.
          * @example {
          *       "url": null
          *     }
          */
         AccountLogoURL: {
-            /** @description The presigned URL for the logo image, or null if no logo exists. */
+            /** @description Presigned URL. Null if no logo exists. */
             url: string | null;
         };
         /**
-         * @description AccountPhotoUploadResult is the response for a photo upload.
+         * @description Result of an account photo upload.
          * @example {
          *       "success": true
          *     }
@@ -7112,7 +7112,7 @@ export interface components {
             success: boolean;
         };
         /**
-         * @description AccountPortal holds the portal metadata for an account.
+         * @description Portal metadata for an account.
          * @example {
          *       "id": "apo_01gf7a8200eaj8fke1xvw4h50x",
          *       "object": "account_portal",
@@ -7122,28 +7122,28 @@ export interface components {
          *     }
          */
         AccountPortal: {
-            /** @description The unique identifier for the portal record. */
+            /** @description Portal ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account_portal";
-            /** @description The portal slug. */
+            /** @description Portal slug. */
             slug: string;
             /**
              * Format: date-time
-             * @description The timestamp when the portal was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the portal was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AccountPrice represents a customer-specific price for a product line.
+         * @description Customer-specific price for a product line.
          * @example {
          *       "id": "acpr_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "account_price",
@@ -7274,15 +7274,15 @@ export interface components {
          *     }
          */
         AccountPrice: {
-            /** @description The unique identifier for the account price. */
+            /** @description Account price ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account_price";
             /**
-             * @description The customer account this price applies to.
+             * @description Customer account this price applies to.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -7513,7 +7513,7 @@ export interface components {
              */
             recipient_account: components["schemas"]["Customer"] | null;
             /**
-             * @description The product line this price applies to.
+             * @description Product line this price applies to.
              * @example {
              *       "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "product_line",
@@ -7534,7 +7534,7 @@ export interface components {
              */
             product_line: components["schemas"]["ProductLine"] | null;
             /**
-             * @description The rate (price per unit) for this account price.
+             * @description Rate (price per unit).
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -7575,23 +7575,23 @@ export interface components {
              *     }
              */
             rate: components["schemas"]["Rate"] | null;
-            /** @description The item categories this price is constrained to. */
+            /** @description Item categories this price is constrained to. */
             categories: components["schemas"]["List_ItemCategory"] | null;
-            /** @description The attributes this price is constrained to. */
+            /** @description Attributes this price is constrained to. */
             attributes: components["schemas"]["List_Attribute"] | null;
             /**
              * Format: date-time
-             * @description When this account price was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this account price was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AccountStatus represents an account status lookup value.
+         * @description AccountStatus is an account status lookup value.
          * @example {
          *       "id": "acss_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "account_status",
@@ -7607,35 +7607,35 @@ export interface components {
          *     }
          */
         AccountStatus: {
-            /** @description The unique identifier for the account status. */
+            /** @description Account status ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account_status";
             /**
-             * @description The machine-readable code for this status.
+             * @description Machine-readable status code.
              * @enum {string}
              */
             code: "normal" | "preferred" | "hold_shipment" | "hold_all";
-            /** @description The display name of the account status. */
+            /** @description Display name. */
             name: string;
-            /** @description The owner of this resource. */
+            /** @description Owner of this resource. */
             owner: components["schemas"]["Owner"] | null;
             /**
              * Format: date-time
-             * @description When this account status was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this account status was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AccountUsageResponse represents account usage metrics across all resource types.
+         * @description Account usage metrics across all resource types.
          * @example {
          *       "object": "account_usage_response",
          *       "seats": {
@@ -7680,12 +7680,12 @@ export interface components {
          */
         AccountUsageResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account_usage_response";
             /**
-             * @description The seat usage for the account.
+             * @description Seat usage.
              * @example {
              *       "object": "usage_item",
              *       "current": 5,
@@ -7694,7 +7694,7 @@ export interface components {
              */
             seats: components["schemas"]["UsageItem"];
             /**
-             * @description The invoice usage for the account.
+             * @description Invoice usage.
              * @example {
              *       "object": "usage_item",
              *       "current": 5,
@@ -7703,7 +7703,7 @@ export interface components {
              */
             invoices: components["schemas"]["UsageItem"];
             /**
-             * @description The batch usage for the account.
+             * @description Batch usage.
              * @example {
              *       "object": "usage_item",
              *       "current": 5,
@@ -7712,7 +7712,7 @@ export interface components {
              */
             batches: components["schemas"]["UsageItem"];
             /**
-             * @description The sandbox usage for the account.
+             * @description Sandbox usage.
              * @example {
              *       "object": "usage_item",
              *       "current": 5,
@@ -7749,7 +7749,7 @@ export interface components {
             agent_token_detail: components["schemas"]["AgentTokenDetail"] | null;
         };
         /**
-         * @description AccountUser represents an account user with their profile, role, and department.
+         * @description Account user with profile, role, and department.
          * @example {
          *       "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
          *       "object": "account_user",
@@ -7795,30 +7795,30 @@ export interface components {
          *     }
          */
         AccountUser: {
-            /** @description The account_user join record ID. */
+            /** @description Account user ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account_user";
-            /** @description The user's display name. */
+            /** @description Display name. */
             name: string | null;
-            /** @description The user's email address. */
+            /** @description Email address. */
             email: string | null;
-            /** @description The user's username. */
+            /** @description Username. */
             username: string | null;
-            /** @description The user's profile image URL. */
+            /** @description Profile image URL. */
             image_url: string | null;
             /** @description Whether the user's email is verified. */
             is_verified: boolean;
             /**
-             * @description The account user status.
+             * @description Account user status.
              * @enum {string}
              */
             status: "active" | "disabled" | "removed";
             /**
-             * @description The role assigned to this account user.
+             * @description Assigned role.
              * @example {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "role",
@@ -7851,7 +7851,7 @@ export interface components {
              */
             role: components["schemas"]["Role"] | null;
             /**
-             * @description The department assigned to this account user.
+             * @description Assigned department.
              * @example {
              *       "id": "dp_01gf7a8200er3ar3pkfrb6kk30",
              *       "object": "department",
@@ -7955,7 +7955,7 @@ export interface components {
             updated_at: string;
         };
         /**
-         * @description Actor is a reference to an actor (user, API key, or agent).
+         * @description Reference to an actor (user, API key, or agent).
          * @example {
          *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
          *       "object": "actor",
@@ -7994,24 +7994,24 @@ export interface components {
          *     }
          */
         Actor: {
-            /** @description The unique identifier for the actor. */
+            /** @description Actor ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "actor";
             /**
-             * @description The type of actor.
+             * @description Actor type.
              * @enum {string}
              */
             type: "user" | "api_key" | "agent";
-            /** @description The display name of the actor. */
+            /** @description Display name. */
             name: string | null;
             /** @description Human-readable handle (email for users, redacted value for API keys, slug for agents). */
             handle: string | null;
             /**
-             * @description The role assigned to the actor.
+             * @description Assigned role.
              * @example {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "role",
@@ -8044,29 +8044,29 @@ export interface components {
              */
             role: components["schemas"]["Role"] | null;
         };
-        /** @description AddBatchInputRequest represents a single batch to add to a production run. */
+        /** @description Batch to add to a production run. */
         AddBatchInputRequest: {
-            /** @description The item ID for the batch. */
+            /** @description Item ID. */
             item_id: string;
-            /** @description The quantity value as a decimal string. */
+            /** @description Quantity value as a decimal string. */
             quantity_value: string;
-            /** @description The unit ID for the quantity. */
+            /** @description Quantity unit ID. */
             quantity_unit_id: string;
-            /** @description The seconds value as a decimal string. */
+            /** @description Seconds value as a decimal string. */
             seconds_value: string | null;
-            /** @description The unit ID for seconds. */
+            /** @description Seconds unit ID. */
             seconds_unit_id: string | null;
-            /** @description The waste value as a decimal string. */
+            /** @description Waste value as a decimal string. */
             waste_value: string | null;
-            /** @description The unit ID for waste. */
+            /** @description Waste unit ID. */
             waste_unit_id: string | null;
-            /** @description The production step ID. */
+            /** @description Production step ID. */
             production_step_id: string | null;
-            /** @description The scanning station ID. */
+            /** @description Scanning station ID. */
             scanning_station_id: string | null;
         };
         /**
-         * @description AddBatchesToProductionRunRequest is the request to add batches to a production run.
+         * @description Request to add batches to a production run.
          * @example {
          *       "batches": [
          *         {
@@ -8084,11 +8084,11 @@ export interface components {
          *     }
          */
         AddBatchesToProductionRunRequest: {
-            /** @description The batches to add. */
+            /** @description Batches to add. */
             batches: components["schemas"]["AddBatchInputRequest"][];
         };
         /**
-         * @description Address represents an address with its associated geolocation.
+         * @description Address with associated geolocation.
          * @example {
          *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "address",
@@ -8111,58 +8111,58 @@ export interface components {
          *     }
          */
         Address: {
-            /** @description The unique identifier for the address. */
+            /** @description Address ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "address";
-            /** @description The display name of the address. */
+            /** @description Display name of the address. */
             name: string;
-            /** @description The phone number associated with this address. */
+            /** @description Phone number associated with the address. */
             phone: string | null;
-            /** @description The email address associated with this address. */
+            /** @description Email address associated with the address. */
             email: string | null;
-            /** @description Whether this is a drop ship address. */
+            /** @description Whether the address is a drop ship location. */
             is_drop_ship: boolean;
-            /** @description The geolocation details for this address. */
+            /** @description Geolocation details for the address. */
             geolocation: components["schemas"]["Geolocation"] | null;
             /**
              * Format: date-time
-             * @description When this address was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this address was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description AddressComponents represents parsed address components. */
+        /** @description Parsed address components. */
         AddressComponents: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "address_components";
-            /** @description The first line of the street address. */
+            /** @description First line of the street address. */
             address_line_1: string;
-            /** @description The second line of the street address. */
+            /** @description Second line of the street address. */
             address_line_2: string | null;
-            /** @description The city. */
+            /** @description City. */
             city: string;
-            /** @description The state or administrative area. */
+            /** @description State or administrative area. */
             state: string;
-            /** @description The postal or zip code. */
+            /** @description Postal or ZIP code. */
             postal_code: string;
-            /** @description The country name or code. */
+            /** @description Country name or code. */
             country: string;
-            /** @description The two-letter country code. */
+            /** @description Two-letter country code. */
             country_code: string;
         };
         /**
-         * @description AddressDetailsResult represents the result of a place details lookup.
+         * @description Result of a place details lookup.
          * @example {
          *       "object": "address_details_result",
          *       "address": {
@@ -8180,18 +8180,17 @@ export interface components {
          */
         AddressDetailsResult: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "address_details_result";
-            /** @description The parsed address components. */
+            /** @description Parsed address components. */
             address: components["schemas"]["AddressComponents"] | null;
-            /** @description The formatted full address string. */
+            /** @description Formatted full address string. */
             formatted_address: string;
         };
         /**
-         * @description AddressInput represents an address.
-         *     Field names align with the Address resource shape.
+         * @description Request to create an address.
          * @example {
          *       "name": "Headquarters",
          *       "is_drop_ship": false,
@@ -8203,29 +8202,29 @@ export interface components {
          *     }
          */
         AddressInput: {
-            /** @description The display name of the address. */
+            /** @description Display name of the address. */
             name: string;
-            /** @description The phone number associated with this address. */
+            /** @description Phone number associated with the address. */
             phone?: string | null;
-            /** @description The email address associated with this address. */
+            /** @description Email address associated with the address. */
             email?: string | null;
-            /** @description Whether this is a drop ship address. */
+            /** @description Whether the address is a drop ship location. */
             is_drop_ship: boolean;
-            /** @description The first line of the street address. */
+            /** @description First line of the street address. */
             street_line_1?: string | null;
-            /** @description The second line of the street address. */
+            /** @description Second line of the street address. */
             street_line_2?: string | null;
-            /** @description The city or locality. */
+            /** @description City or locality. */
             locality?: string | null;
-            /** @description The state or administrative area. */
+            /** @description State or administrative area. */
             state?: string | null;
-            /** @description The postal or zip code. */
+            /** @description Postal or ZIP code. */
             postal_code?: string | null;
-            /** @description The two-letter country code. */
+            /** @description Two-letter country code. */
             country: string;
         };
         /**
-         * @description AddressSuggestion represents an autocomplete suggestion.
+         * @description Autocomplete address suggestion.
          * @example {
          *       "id": "ChIJd8BlQ2BZwokRAFUEcm_qrcA",
          *       "object": "address_suggestion",
@@ -8235,22 +8234,22 @@ export interface components {
          *     }
          */
         AddressSuggestion: {
-            /** @description The Google Places ID for the suggestion. */
+            /** @description Google Places ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "address_suggestion";
-            /** @description The full text description of the suggestion. */
+            /** @description Full description. */
             description: string;
-            /** @description The main text of the suggestion (typically the street address). */
+            /** @description Main text (typically the street address). */
             main_text: string;
-            /** @description The secondary text of the suggestion (typically city, state, country). */
+            /** @description Secondary text (typically city, state, country). */
             secondary_text: string;
         };
         /**
-         * @description AdjustmentType represents a type of inventory adjustment.
+         * @description Adjustment type resource.
          * @example {
          *       "id": "adjt_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "adjustment_type",
@@ -8266,35 +8265,35 @@ export interface components {
          *     }
          */
         AdjustmentType: {
-            /** @description The unique identifier for the adjustment type. */
+            /** @description Adjustment type ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "adjustment_type";
-            /** @description The display name of the adjustment type. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The machine-readable code for the adjustment type.
+             * @description Machine-readable code.
              * @enum {string}
              */
             code: "discount" | "shipping_discrepancy" | "short_payment" | "write_off" | "fee" | "refund";
-            /** @description The owner of this resource. */
+            /** @description Resource owner. */
             owner: components["schemas"]["Owner"] | null;
             /**
              * Format: date-time
-             * @description When this adjustment type was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this adjustment type was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AgentAction represents a single action performed during an agent run.
+         * @description Agent action resource.
          * @example {
          *       "id": "agax_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "agent_action",
@@ -8335,37 +8334,37 @@ export interface components {
          *     }
          */
         AgentAction: {
-            /** @description The unique identifier for the action. */
+            /** @description Agent action ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "agent_action";
-            /** @description The agent run this action belongs to. */
+            /** @description Agent run this action belongs to. */
             run: components["schemas"]["AgentRun"] | null;
             /**
-             * @description The tool slug identifier.
+             * @description Tool slug.
              * @enum {string}
              */
             tool_slug: "save_memory" | "create_alert" | "search_products" | "list_products" | "lookup_customer" | "create_artifact" | "update_memory" | "delete_memory" | "read_doc" | "fetch_url";
             /**
-             * @description The current status of this action.
+             * @description Current action status.
              * @enum {string}
              */
             status: "pending_review" | "auto_approved" | "approved" | "rejected" | "executed" | "failed";
-            /** @description A short label for the action. */
+            /** @description Short label. */
             label: string | null;
-            /** @description A description of what the action does. */
+            /** @description Action description. */
             description: string | null;
-            /** @description The input to the action. */
+            /** @description Action input. */
             input: Record<string, never> | null;
-            /** @description The output from the action. */
+            /** @description Action output. */
             output: Record<string, never> | null;
             /** @description Error message if the action failed. */
             error_message: string | null;
             /**
-             * @description The entity this action relates to.
+             * @description Entity this action relates to.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "entity",
@@ -8373,7 +8372,7 @@ export interface components {
              *     }
              */
             entity: components["schemas"]["Entity"] | null;
-            /** @description Whether this action requires human review. */
+            /** @description Whether human review is required. */
             requires_review: boolean;
             /**
              * Format: date-time
@@ -8437,7 +8436,7 @@ export interface components {
             updated_at: string;
         };
         /**
-         * @description AgentAlert represents an alert generated by an agent.
+         * @description AgentAlert is an alert generated by an agent.
          * @example {
          *       "id": "agnf_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "agent_alert",
@@ -8455,36 +8454,36 @@ export interface components {
          *     }
          */
         AgentAlert: {
-            /** @description The unique identifier for the alert. */
+            /** @description Alert ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "agent_alert";
             /**
-             * @description The severity of the alert.
+             * @description Alert severity.
              * @enum {string}
              */
             severity: "info" | "warning" | "urgent" | "critical";
             /**
-             * @description The current status of the alert.
+             * @description Alert status.
              * @enum {string}
              */
             status: "open" | "acknowledged";
-            /** @description A short title for the alert. */
+            /** @description Alert title. */
             title: string;
-            /** @description A longer description of the alert. */
+            /** @description Alert description. */
             message: string | null;
             /** @description Additional metadata as JSON. */
             metadata: Record<string, never>;
             /**
              * Format: date-time
-             * @description When the alert was acknowledged.
+             * @description Acknowledgment timestamp.
              */
             acknowledged_at: string | null;
             /**
-             * @description Who acknowledged the alert.
+             * @description Acknowledging actor.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "actor",
@@ -8525,16 +8524,16 @@ export interface components {
             acknowledged_by: components["schemas"]["Actor"] | null;
             /**
              * Format: date-time
-             * @description When this alert was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this alert was last updated.
+             * @description Last update timestamp.
              */
             updated_at: string;
             /**
-             * @description The agent run that produced this alert.
+             * @description Agent run that produced this alert.
              * @example {
              *       "id": "agrn_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "agent_run",
@@ -8674,7 +8673,7 @@ export interface components {
              */
             run: components["schemas"]["AgentRun"] | null;
             /**
-             * @description The agent action that produced this alert.
+             * @description Agent action that produced this alert.
              * @example {
              *       "id": "agax_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "agent_action",
@@ -8717,7 +8716,7 @@ export interface components {
             action: components["schemas"]["AgentAction"] | null;
         };
         /**
-         * @description AgentDefinition represents an agent definition.
+         * @description Agent definition resource.
          * @example {
          *       "id": "agdf_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "agent_definition",
@@ -8779,25 +8778,25 @@ export interface components {
          *     }
          */
         AgentDefinition: {
-            /** @description The unique identifier for the agent definition. */
+            /** @description Agent definition ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "agent_definition";
-            /** @description The display name of the agent. */
+            /** @description Display name. */
             name: string;
-            /** @description The unique slug identifier. */
+            /** @description URL-friendly slug. */
             slug: string;
-            /** @description A description of what the agent does. */
+            /** @description Description of what the agent does. */
             description: string | null;
             /**
              * @description Agent definition type.
              * @enum {string}
              */
             definition_type: "system" | "custom";
-            /** @description The category code for this agent. */
+            /** @description Category code. */
             category_code: string;
             /**
              * @description How this agent is triggered.
@@ -8807,7 +8806,7 @@ export interface components {
             /** @description Whether the current user can edit this agent definition. */
             is_editable: boolean;
             /**
-             * @description The role that defines this agent's permissions.
+             * @description Role defining agent permissions.
              * @example {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "role",
@@ -8840,7 +8839,7 @@ export interface components {
              */
             role: components["schemas"]["Role"] | null;
             /**
-             * @description The agent configuration.
+             * @description Agent configuration.
              * @example {
              *       "object": "agent_definition_config",
              *       "system_prompt": "You are an order processing agent. Parse incoming emails and create draft orders.",
@@ -8858,28 +8857,27 @@ export interface components {
              *     }
              */
             config: components["schemas"]["AgentDefinitionConfig"] | null;
-            /** @description The tools attached to this agent. */
+            /** @description Tools attached to this agent. */
             tools: components["schemas"]["List_AgentDefinitionTool"] | null;
             /**
-             * @description The per-account activation status for this agent definition.
+             * @description Per-account activation status.
              * @enum {string}
              */
             status: "active" | "inactive";
             /**
              * Format: date-time
-             * @description When this agent definition was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this agent definition was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AgentDefinitionConfig holds agent-level configuration that controls LLM behavior.
-         *     This is separate from tool-level config (AgentDefinitionTool.Config) which
-         *     configures individual tools attached to the agent.
+         * @description Agent-level configuration controlling LLM behavior.
+         *     Separate from AgentDefinitionTool.Config, which configures individual tools.
          * @example {
          *       "object": "agent_definition_config",
          *       "system_prompt": "You are an order processing agent. Parse incoming emails and create draft orders.",
@@ -8898,15 +8896,15 @@ export interface components {
          */
         AgentDefinitionConfig: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "agent_definition_config";
-            /** @description The system prompt / instructions given to the agent. */
+            /** @description System prompt / instructions for the agent. */
             system_prompt: string | null;
-            /** @description The LLM model identifier (e.g. "claude-sonnet-4"). */
+            /** @description LLM model identifier (e.g. "claude-sonnet-4"). */
             model: string | null;
-            /** @description The LLM provider name (e.g. "anthropic", "openai"). Inferred from model if omitted. */
+            /** @description LLM provider name (e.g. "anthropic", "openai"). Inferred from model if omitted. */
             provider: string | null;
             /** @description LLM sampling temperature between 0 and 1. */
             temperature: number | null;
@@ -8924,11 +8922,8 @@ export interface components {
             trigger_config: components["schemas"]["TriggerConfig"] | null;
         };
         /**
-         * @description AgentDefinitionTool represents a tool attached to an agent definition.
-         *     It pairs an AvailableTool with agent-specific configuration and settings.
-         *     The tool's config_schema defines what options are available; the config field
-         *     here holds the actual values chosen for this particular agent.
-         *     Different agents using the same tool can have different config values.
+         * @description Tool attached to an agent definition.
+         *     Pairs an AvailableTool with agent-specific config values.
          * @example {
          *       "id": "agdftl_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "agent_definition_tool",
@@ -8949,15 +8944,15 @@ export interface components {
          *     }
          */
         AgentDefinitionTool: {
-            /** @description The unique identifier for this agent-tool link. */
+            /** @description Agent definition tool ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "agent_definition_tool";
             /**
-             * @description The tool attached to this agent definition.
+             * @description Attached tool.
              * @example {
              *       "id": "tdef_01k0b1seed0searchproduct0",
              *       "object": "available_tool",
@@ -8972,18 +8967,17 @@ export interface components {
              */
             tool: components["schemas"]["AvailableTool"];
             /**
-             * @description The instance-specific configuration values for this tool on this agent.
-             *     Must conform to the tool's config_schema. These values are used by the
-             *     tool handler at runtime but are not exposed to the LLM.
+             * @description Instance-specific configuration for this tool.
+             *     Must conform to the tool's config_schema.
              */
             config: Record<string, never>;
-            /** @description The sort order of this tool within the agent. */
+            /** @description Sort order within the agent. */
             sort_order: number;
-            /** @description Whether this tool requires human review before execution. */
+            /** @description Requires human review before execution. */
             require_review: boolean;
         };
         /**
-         * @description AgentMemory represents a piece of agent memory stored for contextual recall.
+         * @description Agent memory resource.
          * @example {
          *       "id": "agmm_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "agent_memory",
@@ -9002,21 +8996,21 @@ export interface components {
          *     }
          */
         AgentMemory: {
-            /** @description The unique identifier for the memory. */
+            /** @description Memory ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "agent_memory";
-            /** @description The category of memory. */
+            /** @description Memory category. */
             category: string;
-            /** @description The content of the memory. */
+            /** @description Memory content. */
             content: string;
             /** @description Arbitrary metadata as JSON. */
             metadata: Record<string, never>;
             /**
-             * @description The entity this memory relates to.
+             * @description Associated entity.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "entity",
@@ -9024,26 +9018,26 @@ export interface components {
              *     }
              */
             entity: components["schemas"]["Entity"] | null;
-            /** @description How important this memory is (0-1 scale). */
+            /** @description Importance score (0–1 scale). */
             importance: number;
             /**
              * Format: date-time
-             * @description When this memory expires. Null means it never expires.
+             * @description Expiration timestamp. Null means it never expires.
              */
             expires_at: string | null;
             /**
              * Format: date-time
-             * @description When this memory was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this memory was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AgentRun represents an execution instance of an agent.
+         * @description Agent run resource.
          * @example {
          *       "id": "agrn_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "agent_run",
@@ -9182,26 +9176,26 @@ export interface components {
          *     }
          */
         AgentRun: {
-            /** @description The unique identifier for the agent run. */
+            /** @description Agent run ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "agent_run";
             /**
-             * @description The current status of this run.
+             * @description Current run status.
              * @enum {string}
              */
             status: "pending" | "running" | "completed" | "failed" | "cancelled" | "awaiting_input" | "awaiting_approval";
             /**
-             * @description How this run was triggered.
+             * @description Trigger type.
              * @enum {string}
              */
             trigger_type: "scheduled" | "manual" | "event";
-            /** @description The input provided to the agent. */
+            /** @description Input provided to the agent. */
             input: Record<string, never>;
-            /** @description The output produced by the agent. */
+            /** @description Output produced by the agent. */
             output: Record<string, never>;
             /** @description Error message if the run failed. */
             error_message: string | null;
@@ -9222,7 +9216,7 @@ export interface components {
             /** @description Total output tokens consumed. */
             total_output_tokens: number | null;
             /**
-             * @description The actor that triggered this run. Null for scheduled or event-triggered runs.
+             * @description Actor that triggered this run. Null for scheduled or event-triggered runs.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "actor",
@@ -9271,10 +9265,10 @@ export interface components {
              * @description When this run was last updated.
              */
             updated_at: string;
-            /** @description The actions performed during this run. */
+            /** @description Actions performed during this run. */
             actions: components["schemas"]["List_AgentAction"] | null;
             /**
-             * @description The full agent definition for this run.
+             * @description Full agent definition for this run.
              * @example {
              *       "id": "agdf_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "agent_definition",
@@ -9336,11 +9330,11 @@ export interface components {
              *     }
              */
             definition: components["schemas"]["AgentDefinition"] | null;
-            /** @description The timeline steps for this run. */
+            /** @description Timeline steps for this run. */
             steps: components["schemas"]["List_AgentRunStep"] | null;
         };
         /**
-         * @description AgentRunStep represents a single step in the agent run timeline.
+         * @description Agent run step resource.
          * @example {
          *       "id": "agrnev_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "agent_run_step",
@@ -9362,25 +9356,25 @@ export interface components {
          *     }
          */
         AgentRunStep: {
-            /** @description The unique identifier for the step. */
+            /** @description Agent run step ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "agent_run_step";
-            /** @description The type of step. */
+            /** @description Step type. */
             step_type: string;
-            /** @description A short title for the step. */
+            /** @description Short title for the step. */
             title: string;
-            /** @description The content/details of the step. */
+            /** @description Step content. */
             content: string | null;
-            /** @description The sequence number of the step. */
+            /** @description Sequence number. */
             sequence: number;
             /** @description Duration in milliseconds. */
             duration_ms: number | null;
             /**
-             * @description The actor who produced this event.
+             * @description Actor who produced this event.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "actor",
@@ -9427,20 +9421,20 @@ export interface components {
              */
             created_at: string;
         };
-        /** @description AgentSpendInfo provides estimated agent LLM spending for the current month. */
+        /** @description Estimated agent LLM spending for the current billing month. */
         AgentSpendInfo: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "agent_spend_info";
-            /** @description The estimated spend in cents for the current billing month. */
+            /** @description Estimated spend in cents for the current billing month. */
             estimated_spend_cents: number;
-            /** @description The monthly spending cap in cents. Null means no cap. */
+            /** @description Monthly spending cap in cents. Null means no cap. */
             cap_cents: number | null;
         };
         /**
-         * @description AgentTokenDetail provides detailed agent token usage information.
+         * @description Detailed agent token usage breakdown.
          * @example {
          *       "object": "agent_token_detail",
          *       "included_tokens": 1000000,
@@ -9456,23 +9450,23 @@ export interface components {
          */
         AgentTokenDetail: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "agent_token_detail";
-            /** @description Number of tokens included in the plan. */
+            /** @description Tokens included in the plan. */
             included_tokens: number;
-            /** @description Total tokens used in the current period. */
+            /** @description Tokens used in the current billing period. */
             used_tokens: number;
-            /** @description Input tokens used in the current period. */
+            /** @description Input tokens used in the current billing period. */
             input_tokens: number;
-            /** @description Output tokens used in the current period. */
+            /** @description Output tokens used in the current billing period. */
             output_tokens: number;
             /** @description Additional tokens purchased via token packs. */
             additional_tokens_purchased: number;
             /** @description Total tokens available (included + purchased). */
             total_available: number;
-            /** @description Estimated cost in dollars for the current period. */
+            /** @description Estimated cost in dollars for the current billing period. */
             current_period_cost: number;
             /** @description When the current billing period ends (ISO 8601). */
             billing_period_end: string;
@@ -9480,7 +9474,7 @@ export interface components {
             overage_cost_per_million_tokens: number;
         };
         /**
-         * @description AgentTokenUsage represents a daily token usage record for an account.
+         * @description Daily agent token usage record.
          * @example {
          *       "id": "agtk_01gf7a8200er3ar3pkfrb6kk29",
          *       "object": "agent_token_usage",
@@ -9494,14 +9488,14 @@ export interface components {
          *     }
          */
         AgentTokenUsage: {
-            /** @description The unique identifier for this usage record. */
+            /** @description Usage record ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "agent_token_usage";
-            /** @description The date of usage (YYYY-MM-DD). */
+            /** @description Date of usage (YYYY-MM-DD). */
             date: string;
             /** @description Total input tokens consumed. */
             input_tokens: number;
@@ -9513,24 +9507,24 @@ export interface components {
             run_count: number;
             /**
              * Format: date-time
-             * @description When this record was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this record was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description AllocationCustomer is a minimal customer sub-resource for allocation entries. */
+        /** @description Minimal customer sub-resource for allocation entries. */
         AllocationCustomer: {
-            /** @description The customer display name. */
+            /** @description Customer display name. */
             name: string;
-            /** @description The customer number. */
+            /** @description Customer number. */
             number: string | null;
         };
         /**
-         * @description AllocationEntry represents a transaction allocation entry in list views.
+         * @description Transaction allocation entry in list views.
          * @example {
          *       "id": "txal_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "allocation_entry",
@@ -9557,64 +9551,64 @@ export interface components {
          *     }
          */
         AllocationEntry: {
-            /** @description The unique identifier for the allocation. */
+            /** @description Allocation ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "allocation_entry";
-            /** @description The allocated amount as a decimal string. */
+            /** @description Allocated amount as a decimal string. */
             amount: string;
-            /** @description A human-readable formatted amount (e.g. "$500.00"). */
+            /** @description Human-readable formatted amount (e.g. "$500.00"). */
             display_amount: string;
-            /** @description The customer associated with this allocation. */
+            /** @description Customer associated with this allocation. */
             customer: components["schemas"]["AllocationCustomer"] | null;
-            /** @description The transaction associated with this allocation. */
+            /** @description Transaction associated with this allocation. */
             transaction: components["schemas"]["AllocationTransaction"] | null;
-            /** @description The invoice associated with this allocation. */
+            /** @description Invoice associated with this allocation. */
             invoice: components["schemas"]["AllocationInvoice"] | null;
-            /** @description A note about this allocation. */
+            /** @description Note about this allocation. */
             note: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the allocation was created.
+             * @description Creation timestamp.
              */
             created_at: string;
         };
-        /** @description AllocationInvoice is a minimal invoice sub-resource for allocation entries. */
+        /** @description Minimal invoice sub-resource for allocation entries. */
         AllocationInvoice: {
-            /** @description The unique identifier for the invoice. */
+            /** @description Invoice ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "invoice_summary";
-            /** @description The invoice number. */
+            /** @description Invoice number. */
             number: string;
         };
-        /** @description AllocationRequest represents a storage allocation. */
+        /** @description Storage allocation. */
         AllocationRequest: {
-            /** @description The location ID to allocate to. */
+            /** @description Location ID to allocate to. */
             location_id?: string | null;
-            /** @description The quantity to allocate. */
+            /** @description Quantity to allocate. */
             quantity: string;
         };
-        /** @description AllocationTransaction is a minimal transaction sub-resource for allocation entries. */
+        /** @description Minimal transaction sub-resource for allocation entries. */
         AllocationTransaction: {
-            /** @description The unique identifier for the transaction. */
+            /** @description Transaction ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "transaction";
-            /** @description The type of transaction (e.g. "payment", "credit"). */
+            /** @description Transaction type (e.g. "payment", "credit"). */
             type: string;
-            /** @description The transaction method (e.g. "check", "wire"). */
+            /** @description Transaction method (e.g. "check", "wire"). */
             method: string | null;
-            /** @description The adjustment type, if applicable. */
+            /** @description Adjustment type, if applicable. */
             adjustment_type: string | null;
         };
         /** @description AnalyticsItem represents a lightweight item reference. */
@@ -9690,7 +9684,7 @@ export interface components {
         /** @description AnalyzeDeliveriesResponse represents the response from the analyze deliveries endpoint. */
         AnalyzeDeliveriesResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "analyze_deliveries_response";
@@ -9713,7 +9707,7 @@ export interface components {
         /** @description AnalyzeDemandForecastResponse represents the response from the demand forecast endpoint. */
         AnalyzeDemandForecastResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
@@ -9734,7 +9728,7 @@ export interface components {
         /** @description AnalyzeInventoryReceiptsResponse represents the response from the analyze inventory receipts endpoint. */
         AnalyzeInventoryReceiptsResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
@@ -9775,7 +9769,7 @@ export interface components {
         /** @description AnalyzeManufacturingBatchResponse represents the response from the analyze manufacturing batch endpoint. */
         AnalyzeManufacturingBatchResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "analyze_manufacturing_batch_response";
@@ -9802,7 +9796,7 @@ export interface components {
         /** @description AnalyzeManufacturingResponse represents the response from the analyze manufacturing endpoint. */
         AnalyzeManufacturingResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "analyze_manufacturing_response";
@@ -9819,7 +9813,7 @@ export interface components {
         /** @description AnalyzeMaterialsResponse represents the response from the analyze materials endpoint. */
         AnalyzeMaterialsResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
@@ -9846,7 +9840,7 @@ export interface components {
         /** @description AnalyzeNewCustomersResponse represents the response from the analyze new customers endpoint. */
         AnalyzeNewCustomersResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "analyze_new_customers_response";
@@ -9871,7 +9865,7 @@ export interface components {
         /** @description AnalyzeOeeResponse represents the response from the analyze OEE endpoint. */
         AnalyzeOeeResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "analyze_oee_response";
@@ -9879,7 +9873,7 @@ export interface components {
             departments: components["schemas"]["OeeDepartment"][];
         };
         /**
-         * @description AnalyzeOpenBatchesRequest is the request to analyze open batches filtered by items or product lines.
+         * @description Request to analyze open batches.
          * @example {
          *       "item_ids": [
          *         "it_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -9890,9 +9884,9 @@ export interface components {
          *     }
          */
         AnalyzeOpenBatchesRequest: {
-            /** @description Optional list of item IDs to filter by. */
+            /** @description Item IDs to filter by. */
             item_ids: string[];
-            /** @description Optional list of product line IDs to filter by. */
+            /** @description Product line IDs to filter by. */
             product_line_ids: string[];
         };
         /**
@@ -9901,7 +9895,7 @@ export interface components {
          */
         AnalyzeOpenBatchesResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
@@ -9922,7 +9916,7 @@ export interface components {
         /** @description AnalyzeOrdersResponse represents the response from the analyze orders endpoint. */
         AnalyzeOrdersResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
@@ -9953,7 +9947,7 @@ export interface components {
         /** @description AnalyzeProductionCostsResponse represents the response from the analyze production costs endpoint. */
         AnalyzeProductionCostsResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
@@ -9976,7 +9970,7 @@ export interface components {
         /** @description AnalyzeQuarterlyOrdersResponse represents the response from the analyze quarterly orders endpoint. */
         AnalyzeQuarterlyOrdersResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "analyze_quarterly_orders_response";
@@ -10022,7 +10016,7 @@ export interface components {
         /** @description AnalyzeSalesResponse represents the response from the analyze sales endpoint. */
         AnalyzeSalesResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
@@ -10032,7 +10026,7 @@ export interface components {
         /** @description AnalyzeWeeksOfSalesResponse represents the response from the weeks-of-sales analytics endpoint. */
         AnalyzeWeeksOfSalesResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "analyze_weeks_of_sales_response";
@@ -10042,7 +10036,7 @@ export interface components {
             count: number;
         };
         /**
-         * @description Attribute represents a value option within a property.
+         * @description Value option within a property.
          * @example {
          *       "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "attribute",
@@ -10054,37 +10048,35 @@ export interface components {
          *     }
          */
         Attribute: {
-            /** @description The unique identifier for the attribute. */
+            /** @description Attribute ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "attribute";
-            /** @description The value of the attribute. */
+            /** @description Attribute value. */
             value: string;
             /**
-             * @description The color code of the attribute.
+             * @description Color code.
              * @enum {string}
              */
             color: "blue" | "brown" | "default" | "gray" | "green" | "orange" | "pink" | "purple" | "red" | "yellow";
-            /** @description The display order of the attribute. */
+            /** @description Display order. */
             sort_order: number;
             /**
              * Format: date-time
-             * @description The timestamp when the attribute was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the attribute was last updated.
+             * @description Last update timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description AuditEvent represents a single immutable audit event record. Audit events
-         *     capture who mutated a resource, what changed, and when, providing a
-         *     comprehensive edit history for compliance and traceability.
+         * @description Immutable audit event record. Captures the actor, changed resource, and timestamp.
          * @example {
          *       "id": "ae_01gq7s3f2m0y9h2t7z1w7q3v9k",
          *       "object": "audit_event",
@@ -10154,27 +10146,27 @@ export interface components {
          *     }
          */
         AuditEvent: {
-            /** @description The unique identifier for the audit event. */
+            /** @description Audit event ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "audit_event";
             /**
-             * @description The type of mutation that occurred.
+             * @description Mutation type.
              * @enum {string}
              */
             action: "create" | "update" | "delete" | "restore" | "archive";
             /**
-             * @description The resource type of the audited entity.
+             * @description Resource type of the audited entity.
              * @enum {string}
              */
             resource_type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
-            /** @description The unique identifier of the audited resource. */
+            /** @description Audited resource ID. */
             resource_id: string;
             /**
-             * @description The actor who performed the mutation.
+             * @description Actor who performed the mutation.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "actor",
@@ -10213,15 +10205,15 @@ export interface components {
              *     }
              */
             actor: components["schemas"]["Actor"] | null;
-            /** @description The field-level changes recorded for this event. */
+            /** @description Field-level changes recorded for this event. */
             changes: components["schemas"]["List_AuditFieldChange"] | null;
-            /** @description Arbitrary JSON metadata associated with the mutation (e.g. reason, source, tags). */
+            /** @description Arbitrary JSON metadata for the mutation (e.g. reason, source, tags). */
             metadata: Record<string, never>;
-            /** @description The originating HTTP request ID, when available. */
+            /** @description Originating HTTP request ID. */
             request_id: string | null;
-            /** @description The idempotency key associated with the originating request, when applicable. */
+            /** @description Idempotency key of the originating request. */
             idempotency_key: string | null;
-            /** @description The originating client IP address, when available. */
+            /** @description Originating client IP address. */
             source_ip: string | null;
             /**
              * Format: date-time
@@ -10234,23 +10226,17 @@ export interface components {
              */
             created_at: string;
         };
-        /**
-         * @description AuditFieldChange represents a single field-level before/after transition
-         *     recorded during an update mutation.
-         */
+        /** @description Field-level before/after transition recorded during a mutation. */
         AuditFieldChange: {
-            /** @description The name of the field that changed. */
+            /** @description Name of the changed field. */
             field: string;
-            /** @description The previous value of the field as a JSON fragment, or null for creation events. */
+            /** @description Previous value as a JSON fragment. Null for creation events. */
             old_value: Record<string, never>;
-            /** @description The new value of the field as a JSON fragment, or null for deletion events. */
+            /** @description New value as a JSON fragment. Null for deletion events. */
             new_value: Record<string, never>;
         };
         /**
-         * @description AvailableTool represents a platform tool that can be attached to agents.
-         *     Each tool has a config_schema that describes what configuration options it accepts,
-         *     and an input_schema (internal, not exposed via API) that tells the LLM what arguments
-         *     to pass when invoking the tool at runtime.
+         * @description Platform tool that can be attached to agents.
          * @example {
          *       "id": "tdef_01k0b1seed0searchproduct0",
          *       "object": "available_tool",
@@ -10264,19 +10250,19 @@ export interface components {
          *     }
          */
         AvailableTool: {
-            /** @description The unique identifier for the tool. */
+            /** @description Tool ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "available_tool";
-            /** @description The name of the tool. */
+            /** @description Tool name. */
             name: string;
-            /** @description A description of the tool. */
+            /** @description Tool description. */
             description: string | null;
             /**
-             * @description A JSON schema describing what configuration options this tool accepts.
+             * @description JSON schema describing the configuration options this tool accepts.
              *     Defines the shape of the `config` field on AgentDefinitionTool.
              *
              *     For example:
@@ -10294,9 +10280,9 @@ export interface components {
              *     ```
              */
             config_schema: Record<string, never> | null;
-            /** @description The tool category. */
+            /** @description Tool category. */
             category: string;
-            /** @description Permissions required to use this tool. */
+            /** @description Required permissions. */
             required_permissions: string[];
         };
         /** @description BaseQuantity represents a quantity with its unit of measure. */
@@ -10323,7 +10309,7 @@ export interface components {
             name: string;
         };
         /**
-         * @description Batch represents a production batch.
+         * @description Production batch.
          * @example {
          *       "id": "bt_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "batch",
@@ -10695,15 +10681,15 @@ export interface components {
          *     }
          */
         Batch: {
-            /** @description The unique identifier for the batch. */
+            /** @description Batch ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "batch";
             /**
-             * @description The item associated with this batch.
+             * @description Item.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -10868,7 +10854,7 @@ export interface components {
              */
             item: components["schemas"]["Item"] | null;
             /**
-             * @description The quantity produced in this batch.
+             * @description Quantity produced.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -10893,7 +10879,7 @@ export interface components {
              */
             quantity: components["schemas"]["Quantity"] | null;
             /**
-             * @description The time measurement for this batch in seconds.
+             * @description Time measurement in seconds.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -10918,7 +10904,7 @@ export interface components {
              */
             seconds: components["schemas"]["Quantity"] | null;
             /**
-             * @description The waste measurement for this batch.
+             * @description Waste measurement.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -10943,7 +10929,7 @@ export interface components {
              */
             waste: components["schemas"]["Quantity"] | null;
             /**
-             * @description The scanning station where this batch was scanned.
+             * @description Scanning station.
              * @example {
              *       "id": "scst_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "scanning_station",
@@ -10961,7 +10947,7 @@ export interface components {
              */
             scanning_station: components["schemas"]["ScanningStation"] | null;
             /**
-             * @description The department associated with this batch's scanning station.
+             * @description Department of the scanning station.
              * @example {
              *       "id": "dp_01gf7a8200er3ar3pkfrb6kk30",
              *       "object": "department",
@@ -11049,7 +11035,7 @@ export interface components {
              */
             department: components["schemas"]["Department"] | null;
             /**
-             * @description The production step this batch belongs to.
+             * @description Production step.
              * @example {
              *       "id": "prst_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "production_step",
@@ -11274,7 +11260,7 @@ export interface components {
              */
             production_step: components["schemas"]["ProductionStep"] | null;
             /**
-             * @description The production run this batch belongs to.
+             * @description Production run.
              * @example {
              *       "id": "prru_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "production_run",
@@ -11282,37 +11268,37 @@ export interface components {
              *     }
              */
             production_run: components["schemas"]["ProductionRun"] | null;
-            /** @description The machines used for this batch. */
+            /** @description Machines used. */
             machines: components["schemas"]["List_Machine"] | null;
-            /** @description The lots associated with this batch. */
+            /** @description Associated lots. */
             lots: components["schemas"]["List_BatchLot"] | null;
-            /** @description The IDs of batches that feed into this batch. */
+            /** @description Input batch IDs. */
             input_batch_ids: string[];
-            /** @description The IDs of batches that this batch feeds into. */
+            /** @description Output batch IDs. */
             output_batch_ids: string[];
             /**
              * Format: date-time
-             * @description The timestamp when the batch was closed.
+             * @description Closed timestamp.
              */
             closed_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the batch was scanned.
+             * @description Scanned timestamp.
              */
             scanned_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the batch was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the batch was last updated.
+             * @description Last-updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description BatchFlowNode represents a batch within a production flow graph, including its input and output edges.
+         * @description Batch within a production flow graph, including input and output edges.
          * @example {
          *       "object": "batch_flow_node",
          *       "batch": {
@@ -11690,12 +11676,12 @@ export interface components {
          */
         BatchFlowNode: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "batch_flow_node";
             /**
-             * @description The batch at this node.
+             * @description Batch at this node.
              * @example {
              *       "id": "bt_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "batch",
@@ -12067,20 +12053,20 @@ export interface components {
              *     }
              */
             batch: components["schemas"]["Batch"];
-            /** @description The IDs of batches that feed into this batch. */
+            /** @description IDs of batches that feed into this batch. */
             input_batch_ids: string[];
-            /** @description The IDs of batches that this batch feeds into. */
+            /** @description IDs of batches this batch feeds into. */
             output_batch_ids: string[];
         };
-        /** @description BatchLot represents a lot associated with a batch. */
+        /** @description Lot associated with a batch. */
         BatchLot: {
-            /** @description The lot number. */
+            /** @description Lot number. */
             lot_number: string;
-            /** @description The lot type (material or productionRun). */
+            /** @description Lot type (material or productionRun). */
             type: string;
         };
         /**
-         * @description BillingPortalSessionResponse represents a Stripe billing portal session.
+         * @description Stripe billing portal session.
          * @example {
          *       "object": "billing_portal_session_response",
          *       "url": "https://billing.stripe.com/p/session/test_YWNjdF8xTTJKVGtMa3E0Z3Bic"
@@ -12088,31 +12074,31 @@ export interface components {
          */
         BillingPortalSessionResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "billing_portal_session_response";
-            /** @description The URL to redirect the user to the Stripe billing portal. */
+            /** @description Redirect URL for the Stripe billing portal. */
             url: string;
         };
-        /** @description BulkCreateConsumptionInput represents a consumption input resolved by SKU. */
+        /** @description Consumption input resolved by SKU. */
         BulkCreateConsumptionInput: {
-            /** @description The item SKU for the consumed material. */
+            /** @description SKU of the consumed material. */
             sku: string;
-            /** @description The consumption quantity measure. */
+            /** @description Consumption quantity measure. */
             measure: number;
-            /** @description Optional instructions for this consumption. */
+            /** @description Instructions for this consumption. */
             instructions?: string | null;
         };
-        /** @description BulkCreateItemInput represents a single item to create in a bulk operation. */
+        /** @description BulkCreateItemInput is the input for a single item in a bulk create operation. */
         BulkCreateItemInput: {
-            /** @description The SKU for the item. */
+            /** @description Item SKU. */
             sku: string;
-            /** @description The description for the item. */
+            /** @description Item description. */
             description?: string | null;
-            /** @description The item category ID. */
+            /** @description Item category ID. */
             item_category_id: string;
-            /** @description The product line ID. */
+            /** @description Product line ID. */
             product_line_id?: string | null;
         };
         /** @description BulkCreateItemResult represents the result of creating a single item in a bulk operation. */
@@ -12140,9 +12126,9 @@ export interface components {
          *     }
          */
         BulkCreateItemsRequest: {
-            /** @description The items to create. */
+            /** @description Items to create. */
             items: components["schemas"]["BulkCreateItemInput"][];
-            /** @description The type of items to create (product, material, part). */
+            /** @description Item type (product, material, or part). */
             type: string;
         };
         /**
@@ -12154,41 +12140,41 @@ export interface components {
          */
         BulkCreateItemsResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
             /** @description The results of each item creation. */
             data: components["schemas"]["BulkCreateItemResult"][];
         };
-        /** @description BulkCreateProductionOutputInput represents a production output input resolved by SKU. */
+        /** @description Production output input resolved by SKU. */
         BulkCreateProductionOutputInput: {
-            /** @description The item SKU for the produced item. */
+            /** @description SKU of the produced item. */
             sku: string;
-            /** @description The production quantity measure. */
+            /** @description Production quantity measure. */
             measure: number;
         };
-        /** @description BulkCreateProductionStepInput represents a single production step to create. */
+        /** @description Production step input for bulk creation. */
         BulkCreateProductionStepInput: {
-            /** @description The name of the production step. */
+            /** @description Display name. */
             name: string;
-            /** @description The consumptions for this step. */
+            /** @description Consumptions. */
             consumptions: components["schemas"]["BulkCreateConsumptionInput"][];
-            /** @description The production outputs for this step. At least one is required. */
+            /** @description Production outputs. At least one is required. */
             productions: components["schemas"]["BulkCreateProductionOutputInput"][];
-            /** @description The labor rate (dollars per hour). */
+            /** @description Labor rate in dollars per hour. */
             labor_rate: number;
-            /** @description The labor time value. */
+            /** @description Labor time value. */
             labor_time: number;
-            /** @description The unit abbreviation for labor time (default: "hr"). Must be one of: hr, minute, second, day. */
+            /** @description Labor time unit abbreviation (default: "hr"). One of: hr, minute, second, day. */
             labor_time_unit?: string | null;
-            /** @description The overhead rate (dollars per hour). */
+            /** @description Overhead rate in dollars per hour. */
             overhead_rate: number;
-            /** @description The allowances factor (default: 0). */
+            /** @description Allowances factor (default: 0). */
             allowances?: number | null;
-            /** @description The leveling factor (default: 0). */
+            /** @description Leveling factor (default: 0). */
             leveling_factor?: number | null;
-            /** @description The scanning station name to associate (resolved by name). */
+            /** @description Scanning station name, resolved by name. */
             station?: string | null;
         };
         /** @description BulkCreateProductionStepResult represents the result of creating a single production step. */
@@ -12205,7 +12191,7 @@ export interface components {
             action: string;
         };
         /**
-         * @description BulkCreateProductionStepsRequest is the request to create multiple production steps.
+         * @description Request to bulk create production steps.
          * @example {
          *       "steps": [
          *         {
@@ -12230,7 +12216,7 @@ export interface components {
          *     }
          */
         BulkCreateProductionStepsRequest: {
-            /** @description The production steps to create. */
+            /** @description Production steps to create. */
             steps: components["schemas"]["BulkCreateProductionStepInput"][];
         };
         /**
@@ -12242,7 +12228,7 @@ export interface components {
          */
         BulkCreateProductionStepsResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
@@ -12250,7 +12236,7 @@ export interface components {
             data: components["schemas"]["BulkCreateProductionStepResult"][];
         };
         /**
-         * @description BulkDeleteCustomersRequest is the request to delete multiple customers at once.
+         * @description Request to delete multiple customers.
          * @example {
          *       "customer_ids": [
          *         "ac_01gf7a8200er3ar3pkfrb6kk29"
@@ -12258,11 +12244,11 @@ export interface components {
          *     }
          */
         BulkDeleteCustomersRequest: {
-            /** @description The IDs of the customers to delete. */
+            /** @description Customer IDs to delete. */
             customer_ids: string[];
         };
         /**
-         * @description BulkDeletePurchaseOrdersRequest is the request to delete multiple purchase orders.
+         * @description Request to delete multiple purchase orders.
          * @example {
          *       "purchase_order_ids": [
          *         "po_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -12270,11 +12256,11 @@ export interface components {
          *     }
          */
         BulkDeletePurchaseOrdersRequest: {
-            /** @description The IDs of the purchase orders to delete. */
+            /** @description Purchase order IDs. */
             purchase_order_ids: string[];
         };
         /**
-         * @description BulkDeleteSalesOrdersRequest is the request to delete multiple sales orders.
+         * @description Request to bulk delete sales orders.
          * @example {
          *       "sales_order_ids": [
          *         "or_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -12282,7 +12268,7 @@ export interface components {
          *     }
          */
         BulkDeleteSalesOrdersRequest: {
-            /** @description The IDs of the sales orders to delete. */
+            /** @description Sales order IDs. */
             sales_order_ids: string[];
         };
         /**
@@ -12294,16 +12280,16 @@ export interface components {
          *     }
          */
         BulkDeleteSuppliersRequest: {
-            /** @description The IDs of the suppliers to delete. */
+            /** @description Supplier IDs to delete. */
             supplier_ids: string[];
         };
-        /** @description BulkReconcileItemInput represents a single item to reconcile. */
+        /** @description BulkReconcileItemInput is the input for a single item in a bulk reconcile operation. */
         BulkReconcileItemInput: {
-            /** @description The SKU of the item to reconcile. */
+            /** @description Item SKU. */
             sku: string;
-            /** @description The unit abbreviation for the quantity. */
+            /** @description Unit abbreviation for the quantity. */
             unit: string;
-            /** @description The quantity value. */
+            /** @description Quantity. */
             quantity: number;
         };
         /**
@@ -12320,27 +12306,27 @@ export interface components {
          *     }
          */
         BulkReconcileItemsRequest: {
-            /** @description The items to reconcile. */
+            /** @description Items to reconcile. */
             data: components["schemas"]["BulkReconcileItemInput"][];
-            /** @description The reconcile type: "addition" or "force". */
+            /** @description Reconcile type: "addition" or "force". */
             reconcile_type: string;
         };
-        /** @description BulkReconcileItemsResponse represents the response from bulk reconciling items. */
+        /** @description BulkReconcileItemsResponse is the response from bulk reconciling items. */
         BulkReconcileItemsResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "bulk_reconcile_items_response";
-            /** @description The reconciled items. */
+            /** @description Successfully reconciled items. */
             reconciled_items: components["schemas"]["ReconciledItemResult"][];
-            /** @description The skipped items. */
+            /** @description Skipped items. */
             skipped_items: components["schemas"]["SkippedItemResult"][];
-            /** @description The errors. */
+            /** @description Reconciliation errors. */
             errors: components["schemas"]["ReconcileErrorResult"][];
         };
         /**
-         * @description Carrier represents a shipping carrier configured for the account.
+         * @description Carrier resource.
          * @example {
          *       "id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "carrier",
@@ -12370,49 +12356,49 @@ export interface components {
          *     }
          */
         Carrier: {
-            /** @description The unique identifier for the carrier. */
+            /** @description Carrier ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "carrier";
-            /** @description The display name of the carrier. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The carrier code.
+             * @description Carrier code.
              * @enum {string|null}
              */
             code: "fedex" | "ups" | "usps" | "will_call" | "delivery" | "ltl" | "ltl1" | "freight_collect" | null;
-            /** @description The carrier account number, if applicable. */
+            /** @description Account number. */
             account_number: string | null;
             /**
-             * @description Whether this carrier is visible in the customer portal.
+             * @description Customer portal visibility.
              * @enum {string}
              */
             customer_portal_visibility: "visible" | "hidden";
-            /** @description The owner of this resource. */
+            /** @description Owner. */
             owner: components["schemas"]["Owner"] | null;
-            /** @description The service levels (shipping service levels). */
+            /** @description Service levels. */
             service_levels: components["schemas"]["List_ServiceLevel"] | null;
             /**
              * Format: date-time
-             * @description When the carrier was soft-deleted, if applicable.
+             * @description Soft-delete timestamp.
              */
             deleted_at: string | null;
             /**
              * Format: date-time
-             * @description When the carrier was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When the carrier was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description CatalogAttribute represents an attribute of a product in the catalog.
+         * @description Attribute of a product in the catalog.
          * @example {
          *       "id": "at_01jm4r6700e3kxb9w2nqh7g5fp",
          *       "object": "catalog_attribute",
@@ -12425,17 +12411,17 @@ export interface components {
          *     }
          */
         CatalogAttribute: {
-            /** @description The unique identifier for the attribute. */
+            /** @description Attribute ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "catalog_attribute";
-            /** @description The attribute value (text). */
+            /** @description Attribute value. */
             name: string;
             /**
-             * @description The property this attribute belongs to.
+             * @description Property this attribute belongs to.
              * @example {
              *       "id": "pr_01jm4r6700e3kxb9w2nqh7g5fp",
              *       "object": "catalog_property",
@@ -12445,7 +12431,7 @@ export interface components {
             property: components["schemas"]["CatalogProperty"] | null;
         };
         /**
-         * @description CatalogCategory represents a category of products in the catalog.
+         * @description Category of products in the catalog.
          * @example {
          *       "id": "ic_01jm4r6700e3kxb9w2nqh7g5fp",
          *       "object": "catalog_category",
@@ -12494,22 +12480,22 @@ export interface components {
          *     }
          */
         CatalogCategory: {
-            /** @description The unique identifier for the item category. */
+            /** @description Item category ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "catalog_category";
-            /** @description The name of the item category. */
+            /** @description Name. */
             name: string;
-            /** @description The properties associated with this item category. */
+            /** @description Properties associated with this item category. */
             properties: components["schemas"]["CatalogProperty"][];
-            /** @description The products in this category. */
+            /** @description Products in this category. */
             products: components["schemas"]["CatalogProduct"][];
         };
         /**
-         * @description CatalogProduct represents a product in the catalog.
+         * @description Product in the catalog.
          * @example {
          *       "object": "catalog_product",
          *       "item": {
@@ -12545,12 +12531,12 @@ export interface components {
          */
         CatalogProduct: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "catalog_product";
             /**
-             * @description The item associated with this catalog product.
+             * @description Associated item.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -12714,13 +12700,13 @@ export interface components {
              *     }
              */
             item: components["schemas"]["Item"] | null;
-            /** @description The product description. */
+            /** @description Description. */
             description: string;
-            /** @description The attributes of this product. */
+            /** @description Attributes. */
             attributes: components["schemas"]["CatalogAttribute"][];
         };
         /**
-         * @description CatalogProductLine represents a product line available in the catalog.
+         * @description Product line available in the catalog.
          * @example {
          *       "id": "pl_01jm4r6700e3kxb9w2nqh7g5fp",
          *       "object": "catalog_product_line",
@@ -12728,18 +12714,18 @@ export interface components {
          *     }
          */
         CatalogProductLine: {
-            /** @description The unique identifier for the product line. */
+            /** @description Product line ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "catalog_product_line";
-            /** @description The name of the product line. */
+            /** @description Name. */
             name: string;
         };
         /**
-         * @description CatalogProperty represents a property associated with an item category.
+         * @description Property associated with an item category.
          * @example {
          *       "id": "pr_01jm4r6700e3kxb9w2nqh7g5fp",
          *       "object": "catalog_property",
@@ -12747,38 +12733,38 @@ export interface components {
          *     }
          */
         CatalogProperty: {
-            /** @description The unique identifier for the property. */
+            /** @description Property ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "catalog_property";
-            /** @description The name of the property. */
+            /** @description Name. */
             name: string;
         };
         /**
-         * @description ChangePurchaseOrderStatusRequest is the request to change the status of a purchase order.
+         * @description Request to change the status of a purchase order.
          * @example {
          *       "status_change": "issue",
          *       "send_email": true
          *     }
          */
         ChangePurchaseOrderStatusRequest: {
-            /** @description The status change action to perform (e.g., "issue", "unissue", "close", "open"). */
+            /** @description Status change action (e.g., "issue", "unissue", "close", "open"). */
             status_change: string;
             /** @description Whether to send a notification email. */
             send_email: boolean;
         };
         /**
-         * @description ChangeSalesOrderStatusRequest is the request to change the status of a sales order.
+         * @description Request to change the status of a sales order.
          * @example {
          *       "status_change": "issue",
          *       "send_email": true
          *     }
          */
         ChangeSalesOrderStatusRequest: {
-            /** @description The status change action to perform (e.g., "issue", "unissue", "close", "open"). */
+            /** @description Status change action (e.g., "issue", "unissue", "close", "open"). */
             status_change: string;
             /** @description Whether to send a notification email. */
             send_email: boolean;
@@ -12793,7 +12779,7 @@ export interface components {
             data: components["schemas"]["Coordinate"][];
         };
         /**
-         * @description CheckDuplicateRequest is the request to check for a duplicate record number.
+         * @description Request to check for a duplicate record number.
          * @example {
          *       "type": "invoice_number",
          *       "record_number": "INV-001",
@@ -12801,15 +12787,15 @@ export interface components {
          *     }
          */
         CheckDuplicateRequest: {
-            /** @description The type of duplicate check to perform: invoice_number, order_number, or customer_po_number. */
+            /** @description Duplicate check type: invoice_number, order_number, or customer_po_number. */
             type: string;
-            /** @description The record number to check. */
+            /** @description Record number to check. */
             record_number: string;
-            /** @description The customer ID, required for customer_po_number checks. */
+            /** @description Customer ID, required for customer_po_number checks. */
             customer_id: string | null;
         };
         /**
-         * @description CheckDuplicateResult represents the result of a duplicate check action.
+         * @description Result of a duplicate check.
          * @example {
          *       "is_duplicate": true,
          *       "message": "This invoice number INV-001 already exists"
@@ -12818,30 +12804,30 @@ export interface components {
         CheckDuplicateResult: {
             /** @description Whether the record number is a duplicate. */
             is_duplicate: boolean;
-            /** @description A human-readable message if the record is a duplicate. */
+            /** @description Human-readable message if the record is a duplicate. */
             message: string | null;
         };
-        /** @description CheckoutSalesOrderRequest is the request to create a checkout session for a sales order. */
+        /** @description Request to create a checkout session for a sales order. */
         CheckoutSalesOrderRequest: {
-            /** @description The email for the checkout session. */
+            /** @description Email for the checkout session. */
             email: string;
-            /** @description The URL to redirect to on success. */
+            /** @description Redirect URL on success. */
             success_url?: string | null;
-            /** @description The URL to redirect to on cancel. */
+            /** @description Redirect URL on cancel. */
             cancel_url?: string | null;
         };
         /**
-         * @description CheckoutSalesOrderResponse represents the checkout result.
+         * @description Checkout session result.
          * @example {
          *       "checkout_url": "https://checkout.stripe.com/pay/cs_test_example"
          *     }
          */
         CheckoutSalesOrderResponse: {
-            /** @description The checkout URL. */
+            /** @description Checkout URL. */
             checkout_url: string;
         };
         /**
-         * @description CheckoutSessionResponse represents the result of creating a customer checkout session.
+         * @description Result of creating a customer checkout session.
          * @example {
          *       "object": "checkout_session",
          *       "checkout_session_client_secret": "cs_test_secret_example123"
@@ -12849,15 +12835,15 @@ export interface components {
          */
         CheckoutSessionResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "checkout_session";
-            /** @description The Stripe checkout session client secret for embedded checkout. */
+            /** @description Stripe checkout session client secret for embedded checkout. */
             checkout_session_client_secret: string;
         };
         /**
-         * @description ChildAccount represents a child customer account in a parent-child relationship.
+         * @description Child customer account in a parent-child relationship.
          * @example {
          *       "id": "acre_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "child_account",
@@ -12879,15 +12865,15 @@ export interface components {
          *     }
          */
         ChildAccount: {
-            /** @description The account relation ID. */
+            /** @description Account relation ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "child_account";
             /**
-             * @description The counterparty account.
+             * @description Counterparty account.
              * @example {
              *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
              *       "object": "account",
@@ -12901,9 +12887,9 @@ export interface components {
              *     }
              */
             account: components["schemas"]["Account"] | null;
-            /** @description The external number for the account relation. */
+            /** @description External number for the account relation. */
             external_number: string | null;
-            /** @description The support email from account branding. */
+            /** @description Support email from account branding. */
             email: string | null;
             /**
              * Format: date-time
@@ -12917,33 +12903,33 @@ export interface components {
             updated_at: string;
         };
         /**
-         * @description CloseBatchRequest is the request to close a batch.
+         * @description Request to close a batch.
          * @example {
          *       "batch_id": "bt_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         CloseBatchRequest: {
-            /** @description The ID of the batch to close. */
+            /** @description Batch ID. */
             batch_id: string;
         };
         /**
-         * @description CompleteRegistrationResponse is the response from completing a registration.
+         * @description Result of completing a registration.
          * @example {
          *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
          *       "object": "account"
          *     }
          */
         CompleteRegistrationResponse: {
-            /** @description The ID of the created account. */
+            /** @description Account ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account";
         };
         /**
-         * @description ConfigInput holds agent-level configuration for creation/update requests.
+         * @description Agent-level configuration for creation/update requests.
          * @example {
          *       "system_prompt": "You are an order processing agent. Parse incoming emails and create draft orders.",
          *       "model": "claude-sonnet-4",
@@ -12959,11 +12945,11 @@ export interface components {
          *     }
          */
         ConfigInput: {
-            /** @description The system prompt / instructions given to the agent. */
+            /** @description System prompt / instructions for the agent. */
             system_prompt: string | null;
-            /** @description The LLM model identifier (e.g. "claude-sonnet-4"). */
+            /** @description LLM model identifier (e.g. "claude-sonnet-4"). */
             model: string | null;
-            /** @description The LLM provider name (e.g. "anthropic", "openai"). Inferred from model if omitted. */
+            /** @description LLM provider name (e.g. "anthropic", "openai"). Inferred from model if omitted. */
             provider: string | null;
             /** @description LLM sampling temperature between 0 and 1. */
             temperature: number | null;
@@ -12980,17 +12966,17 @@ export interface components {
             trigger_config: components["schemas"]["TriggerConfigInput"] | null;
         };
         /**
-         * @description ConfirmPaymentRequest is the request to confirm payment for a registration session.
+         * @description Request to confirm payment for a registration session.
          * @example {
          *       "setup_intent_id": "seti_1N4kLm2eZvKYlo2C0wFVpSbx"
          *     }
          */
         ConfirmPaymentRequest: {
-            /** @description The Stripe Setup Intent ID to verify. */
+            /** @description Stripe Setup Intent ID to verify. */
             setup_intent_id: string;
         };
         /**
-         * @description ConfirmPaymentResponse is the response from confirming payment for a registration.
+         * @description Result of confirming payment for a registration.
          * @example {
          *       "object": "confirm_payment_response",
          *       "status": "succeeded",
@@ -12999,40 +12985,40 @@ export interface components {
          */
         ConfirmPaymentResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "confirm_payment_response";
-            /** @description The Setup Intent status (e.g. "succeeded"). */
+            /** @description Setup Intent status (e.g., "succeeded"). */
             status: string;
-            /** @description The payment method ID attached by the Setup Intent. */
+            /** @description Payment method ID attached by the Setup Intent. */
             payment_method_id: string | null;
         };
         /**
-         * @description ConnectProductionStepsRequest is the request to connect production steps to a scanning station.
+         * @description Request to connect production steps to a scanning station.
          * @example {
          *       "name": "Mixing"
          *     }
          */
         ConnectProductionStepsRequest: {
-            /** @description The name (or partial name) of production steps to connect. */
+            /** @description Name or partial name of production steps to connect. */
             name: string;
         };
         /**
-         * @description ConnectStepsRequest is the request to connect two production steps in the flow DAG.
+         * @description ConnectStepsRequest is the request to connect two steps in the production flow DAG.
          * @example {
          *       "source_production_step_id": "prst_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "target_production_step_id": "prst_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         ConnectStepsRequest: {
-            /** @description The source (upstream) production step ID. */
+            /** @description Source (upstream) production step ID. */
             source_production_step_id: string;
-            /** @description The target (downstream) production step ID. */
+            /** @description Target (downstream) production step ID. */
             target_production_step_id: string;
         };
         /**
-         * @description Consumption represents a material consumed by a production step.
+         * @description Material consumed by a production step.
          * @example {
          *       "id": "cp_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "consumption",
@@ -13091,15 +13077,15 @@ export interface components {
          *     }
          */
         Consumption: {
-            /** @description The unique identifier for the consumption. */
+            /** @description Consumption ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "consumption";
             /**
-             * @description The quantity consumed.
+             * @description Quantity consumed.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -13124,7 +13110,7 @@ export interface components {
              */
             quantity: components["schemas"]["Quantity"] | null;
             /**
-             * @description The waste quantity.
+             * @description Waste quantity.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -13149,7 +13135,7 @@ export interface components {
              */
             waste_quantity: components["schemas"]["Quantity"] | null;
             /**
-             * @description The consumed item.
+             * @description Consumed item.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -13159,21 +13145,21 @@ export interface components {
              *     }
              */
             consumed_item: components["schemas"]["ConsumptionItem"] | null;
-            /** @description Optional instructions for how this material is consumed. */
+            /** @description Instructions for how this material is consumed. */
             instructions: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the consumption was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the consumption was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ConsumptionItem is a lightweight item representation for consumption sub-resources.
+         * @description Item embedded within a consumption.
          * @example {
          *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "item",
@@ -13183,25 +13169,25 @@ export interface components {
          *     }
          */
         ConsumptionItem: {
-            /** @description The unique identifier for the item. */
+            /** @description Item ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "item";
-            /** @description The stock keeping unit code. */
+            /** @description Stock keeping unit code. */
             sku: string;
-            /** @description A description of the item. */
+            /** @description Item description. */
             description: string | null;
             /**
-             * @description The item type code.
+             * @description Item type code.
              * @enum {string}
              */
             item_type: "product" | "material" | "part";
         };
         /**
-         * @description ContinueRunRequest is the request to continue an agent run awaiting input.
+         * @description Request to continue an agent run awaiting input.
          * @example {
          *       "message": "Yes, proceed with creating the order.",
          *       "approved_tool_slugs": null,
@@ -13209,11 +13195,11 @@ export interface components {
          *     }
          */
         ContinueRunRequest: {
-            /** @description The user message to send to the agent. */
+            /** @description User message to send to the agent. */
             message: string;
-            /** @description Optional list of tool slugs to approve individually. If empty, all pending tools are approved. */
+            /** @description Tool slugs to approve individually. If empty, all pending tools are approved. */
             approved_tool_slugs: string[] | null;
-            /** @description Optional list of tool slugs to allow for the rest of the run without further approval. */
+            /** @description Tool slugs to allow for the rest of the run without further approval. */
             allowed_tool_slugs: string[] | null;
         };
         /** @description Coordinate represents a single data point on a chart. */
@@ -13239,25 +13225,25 @@ export interface components {
             quantity: components["schemas"]["BaseQuantity"];
         };
         /**
-         * @description The request to create an API key
+         * @description Request to create an API key.
          * @example {
          *       "role_id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *       "name": "Production API Key"
          *     }
          */
         CreateAPIKeyRequest: {
-            /** @description The role ID for the API key. */
+            /** @description Role ID assigned to the API key. */
             role_id: string;
-            /** @description The name for the API key. */
+            /** @description Human-readable name for the API key. */
             name: string;
             /**
              * Format: date-time
-             * @description Optional expiration time for the API key.
+             * @description Expiration time. If not set, the key does not expire.
              */
             expires_at?: string;
         };
         /**
-         * @description CreateAccountGroupProductLineAccessRequest is the request to create product line access for an account group.
+         * @description CreateAccountGroupProductLineAccessRequest is a request to create product line access for an account group.
          * @example {
          *       "account_group_id": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "product_line_ids": [
@@ -13266,43 +13252,43 @@ export interface components {
          *     }
          */
         CreateAccountGroupProductLineAccessRequest: {
-            /** @description The ID of the account group. */
+            /** @description Account group ID. */
             account_group_id: string;
-            /** @description The IDs of the product lines to grant access to. */
+            /** @description Product line IDs to grant access to. */
             product_line_ids: string[];
         };
         /**
-         * @description CreateAccountGroupRequest is the request to create a new account group.
+         * @description Request to create an account group.
          * @example {
          *       "name": "Wholesale Customers",
          *       "type": "type_group"
          *     }
          */
         CreateAccountGroupRequest: {
-            /** @description The display name of the account group. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The account group type code.
+             * @description Account group type.
              * @enum {string}
              */
             type: "pricing_group" | "type_group";
             /**
-             * @description The commission status code.
+             * @description Commission policy.
              * @default commission_exempt
              * @enum {string}
              */
             commission_policy: "commission_applied" | "commission_exempt";
             /**
-             * @description The freight status code.
+             * @description Freight policy.
              * @default billed_freight
              * @enum {string}
              */
             freight_policy: "free_freight" | "billed_freight";
-            /** @description An optional description of the account group. */
+            /** @description Description. */
             description?: string;
         };
         /**
-         * @description CreateAccountIntegrationRequest is the request to create or upsert an account integration.
+         * @description Request to create or upsert an account integration.
          * @example {
          *       "name": "My Stripe Integration",
          *       "integration_code": "stripe",
@@ -13310,18 +13296,18 @@ export interface components {
          *     }
          */
         CreateAccountIntegrationRequest: {
-            /** @description The human-readable name for the integration. */
+            /** @description Display name of the integration. */
             name: string;
             /**
-             * @description The integration provider code (e.g. "stripe", "shippo").
+             * @description Integration provider code (e.g. "stripe", "shippo").
              * @enum {string}
              */
             integration_code: "stripe" | "shippo";
-            /** @description The credentials JSON string containing provider-specific keys. */
+            /** @description Credentials JSON string containing provider-specific keys. */
             credentials: string;
         };
         /**
-         * @description CreateAccountPriceRequest is the request to create a new account price.
+         * @description Request to create an account price.
          * @example {
          *       "recipient_account_id": "ac_01gf7a8200eaj8fke1xvw4h50x",
          *       "product_line_id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -13337,23 +13323,23 @@ export interface components {
          *     }
          */
         CreateAccountPriceRequest: {
-            /** @description The ID of the recipient customer account. */
+            /** @description Recipient customer account ID. */
             recipient_account_id: string;
-            /** @description The ID of the product line this price applies to. */
+            /** @description Product line ID. */
             product_line_id: string;
-            /** @description The rate value as a decimal string. */
+            /** @description Rate value as a decimal string. */
             rate_value: string;
-            /** @description The ID of the numerator unit for the rate. */
+            /** @description Rate numerator unit ID. */
             rate_numerator_unit_id: string;
-            /** @description The ID of the denominator unit for the rate. */
+            /** @description Rate denominator unit ID. */
             rate_denominator_unit_id: string;
-            /** @description The IDs of item categories to constrain this price to. */
+            /** @description Item category IDs to constrain this price to. */
             category_ids: string[];
-            /** @description The IDs of attributes to constrain this price to. */
+            /** @description Attribute IDs to constrain this price to. */
             attribute_ids: string[];
         };
         /**
-         * @description CreateAccountUserRequest is the request to create a new account user.
+         * @description Request to create an account user.
          * @example {
          *       "name": "John Doe",
          *       "email": "jdoe@augno.com",
@@ -13367,17 +13353,17 @@ export interface components {
          *     }
          */
         CreateAccountUserRequest: {
-            /** @description The user's display name. */
+            /** @description Display name. */
             name: string | null;
-            /** @description The user's email address. */
+            /** @description Email address. */
             email: string | null;
-            /** @description The user's username. */
+            /** @description Username. */
             username: string | null;
-            /** @description The user's password. */
+            /** @description Password. */
             password: string | null;
-            /** @description The ID of the role to assign. Expandable. */
+            /** @description Role ID. Expandable. */
             role_id?: string | null;
-            /** @description The ID of the department to assign. Expandable. */
+            /** @description Department ID. Expandable. */
             department_id?: string | null;
             /** @description Whether the user is a sales representative. */
             is_sales_rep?: boolean | null;
@@ -13389,7 +13375,7 @@ export interface components {
             receives_purchase_order_submission_notifications: boolean;
         };
         /**
-         * @description CreateAgentRequest is the request to create a new agent definition.
+         * @description Request to create an agent definition.
          * @example {
          *       "name": "Inventory Monitor",
          *       "slug": "inventory_monitor",
@@ -13420,16 +13406,16 @@ export interface components {
          *     }
          */
         CreateAgentRequest: {
-            /** @description The display name of the agent. */
+            /** @description Display name. */
             name: string;
-            /** @description A unique URL-friendly identifier for the agent. */
+            /** @description URL-friendly identifier. */
             slug: string;
-            /** @description A human-readable description of what the agent does. */
+            /** @description Description of what the agent does. */
             description: string;
-            /** @description The category code that classifies this agent (e.g. "order_processing"). */
+            /** @description Category code (e.g. "order_processing"). */
             category_code: string;
             /**
-             * @description How this agent is triggered: "manual", "scheduled", or "event".
+             * @description Trigger type: "manual", "scheduled", or "event".
              * @enum {string}
              */
             trigger_type: "scheduled" | "manual" | "event";
@@ -13450,13 +13436,13 @@ export interface components {
              *     }
              */
             config: components["schemas"]["ConfigInput"];
-            /** @description The tools to attach to this agent. */
+            /** @description Tools to attach. */
             tools: components["schemas"]["ToolInput"][];
-            /** @description The ID of the role that defines this agent's permissions. */
+            /** @description Role ID defining agent permissions. */
             role_id: string;
         };
         /**
-         * @description CreateAttributeRequest is the request to create a new attribute.
+         * @description Request to create an attribute.
          * @example {
          *       "value": "Red",
          *       "color": "red",
@@ -13464,18 +13450,18 @@ export interface components {
          *     }
          */
         CreateAttributeRequest: {
-            /** @description The value of the attribute. */
+            /** @description Attribute value. */
             value: string;
             /**
-             * @description The color code of the attribute. Randomly assigned if not provided.
+             * @description Color code. Randomly assigned if not provided.
              * @enum {string|null}
              */
             color?: "blue" | "brown" | "default" | "gray" | "green" | "orange" | "pink" | "purple" | "red" | "yellow" | null;
-            /** @description The display order of the attribute. Defaults to last position if not provided. */
+            /** @description Display order. Defaults to last position if not provided. */
             sort_order: number | null;
         };
         /**
-         * @description CreateCarrierRequest is the request to create a new carrier.
+         * @description Request to create a carrier.
          * @example {
          *       "name": "FedEx",
          *       "code": "fedex",
@@ -13483,50 +13469,50 @@ export interface components {
          *     }
          */
         CreateCarrierRequest: {
-            /** @description The display name of the carrier. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The carrier code.
+             * @description Carrier code.
              * @enum {string|null}
              */
             code: "fedex" | "ups" | "usps" | "will_call" | "delivery" | "ltl" | "ltl1" | "freight_collect" | null;
-            /** @description The carrier account number, required for UPS and USPS carriers. */
+            /** @description Carrier account number. Required for UPS and USPS carriers. */
             account_number: string | null;
             /**
-             * @description Whether this carrier is visible in the customer portal.
+             * @description Customer portal visibility.
              * @default visible
              * @enum {string}
              */
             customer_portal_visibility: "visible" | "hidden";
         };
-        /** @description CreateCheckoutSessionRequest is the request to create a customer checkout session. */
+        /** @description Request to create a customer checkout session. */
         CreateCheckoutSessionRequest: {
-            /** @description The ID of the sales order. */
+            /** @description Sales order ID. */
             order_id: string;
-            /** @description The order number for display. */
+            /** @description Order number for display. */
             order_number: string;
-            /** @description The order total in cents. */
+            /** @description Order total in cents. */
             order_total_cents: number;
-            /** @description The customer PO number, if any. */
+            /** @description Customer PO number. */
             customer_po?: string | null;
         };
-        /** @description CreateConsumptionInput holds the input for creating a consumption within a step. */
+        /** @description Consumption input for a production step. */
         CreateConsumptionInput: {
-            /** @description The item ID being consumed. */
+            /** @description Item ID. */
             item_id: string;
-            /** @description The quantity value as a decimal string. */
+            /** @description Quantity value as a decimal string. */
             quantity_value: string;
-            /** @description The quantity unit ID. */
+            /** @description Quantity unit ID. */
             quantity_unit_id: string;
-            /** @description The waste quantity value as a decimal string. */
+            /** @description Waste quantity value as a decimal string. */
             waste_quantity_value: string;
-            /** @description The waste quantity unit ID. */
+            /** @description Waste quantity unit ID. */
             waste_quantity_unit_id: string;
-            /** @description Optional instructions for how this material is consumed. */
+            /** @description Instructions for how this material is consumed. */
             instructions?: string | null;
         };
         /**
-         * @description CreateConsumptionRequest is the request to create a new consumption.
+         * @description Request to create a consumption.
          * @example {
          *       "item_id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "quantity_value": "10.000000000000000000000000000000",
@@ -13537,21 +13523,21 @@ export interface components {
          *     }
          */
         CreateConsumptionRequest: {
-            /** @description The ID of the item being consumed. */
+            /** @description Item ID. */
             item_id: string;
-            /** @description The decimal value of the quantity consumed. */
+            /** @description Consumed quantity value. */
             quantity_value: string;
-            /** @description The unit ID for the quantity consumed. */
+            /** @description Consumed quantity unit ID. */
             quantity_unit_id: string;
-            /** @description The decimal value of the waste quantity. */
+            /** @description Waste quantity value. */
             waste_quantity_value: string;
-            /** @description The unit ID for the waste quantity. */
+            /** @description Waste quantity unit ID. */
             waste_quantity_unit_id: string;
-            /** @description Optional instructions for how this material is consumed. */
+            /** @description Instructions for how this material is consumed. */
             instructions?: string | null;
         };
         /**
-         * @description CreateCustomerProductLineAccessRequest is the request to create product line access for a customer.
+         * @description Request to create product line access for a customer.
          * @example {
          *       "customer_id": "ac_01gf7a8200er3ar3pkfrb6kk29",
          *       "product_line_ids": [
@@ -13560,13 +13546,13 @@ export interface components {
          *     }
          */
         CreateCustomerProductLineAccessRequest: {
-            /** @description The ID of the customer. */
+            /** @description Customer ID. */
             customer_id: string;
-            /** @description The IDs of the product lines to grant access to. */
+            /** @description Product line IDs to grant access to. */
             product_line_ids: string[];
         };
         /**
-         * @description CreateCustomerRequest is the request to create a new customer.
+         * @description Request to create a customer.
          * @example {
          *       "name": "Acme Inc.",
          *       "note": "Key enterprise account",
@@ -13595,73 +13581,73 @@ export interface components {
          *     }
          */
         CreateCustomerRequest: {
-            /** @description The display name of the customer. */
+            /** @description Display name. */
             name: string;
-            /** @description The customer number (auto-generated if omitted). */
+            /** @description Customer number. Auto-generated if omitted. */
             number?: string;
-            /** @description A note about the customer. */
+            /** @description Note. */
             note?: string;
-            /** @description The customer email address. */
+            /** @description Email address. */
             email?: string;
-            /** @description The customer phone number. */
+            /** @description Phone number. */
             phone?: string;
-            /** @description The customer website URL. */
+            /** @description Website URL. */
             url?: string;
             /**
-             * @description The account status code.
+             * @description Account status code.
              * @default normal
              * @enum {string}
              */
             status: "normal" | "preferred" | "hold_shipment" | "hold_all";
             /**
-             * @description Whether the customer is EDI enabled.
+             * @description Whether EDI is enabled.
              * @default false
              */
             is_edi_enabled: boolean;
             /**
-             * @description The commission policy for this customer.
+             * @description Commission policy.
              * @default commission_exempt
              * @enum {string}
              */
             commission_policy: "commission_applied" | "commission_exempt";
             /**
-             * @description The freight policy for this customer.
+             * @description Freight policy.
              * @default billed_freight
              * @enum {string}
              */
             freight_policy: "free_freight" | "billed_freight";
-            /** @description The default carrier ID. */
+            /** @description Default carrier ID. */
             default_carrier_id: string;
-            /** @description The default service level ID. */
+            /** @description Default service level ID. */
             default_service_level_id?: string;
-            /** @description The default payment term ID. */
+            /** @description Default payment term ID. */
             default_payment_term_id: string;
-            /** @description The default shipping term ID. */
+            /** @description Default shipping term ID. */
             default_shipping_term_id: string;
             /**
-             * @description The default priority code.
+             * @description Default priority code.
              * @default normal
              * @enum {string}
              */
             default_priority: "low" | "normal" | "high";
-            /** @description The default sales rep user ID. */
+            /** @description Default sales rep user ID. */
             default_sales_rep_user_id?: string;
-            /** @description The customer price group IDs. */
+            /** @description Price group IDs. */
             customer_price_group_ids: string[];
-            /** @description The customer type group ID. */
+            /** @description Customer type group ID. */
             customer_type_group_id: string;
             /**
-             * @description The carrier billing type.
+             * @description Carrier billing type.
              * @default sender
              * @enum {string}
              */
             carrier_billing_type: "sender" | "third_party";
-            /** @description The carrier billing account number. */
+            /** @description Carrier billing account number. */
             carrier_billing_account?: string;
-            /** @description The credit limit for this customer. */
+            /** @description Credit limit. */
             credit_limit?: components["schemas"]["QuantityInput"];
             /**
-             * @description The bill-to address for this customer.
+             * @description Bill-to address.
              * @example {
              *       "name": "Headquarters",
              *       "is_drop_ship": false,
@@ -13674,7 +13660,7 @@ export interface components {
              */
             bill_to_address: components["schemas"]["AddressInput"];
             /**
-             * @description The ship-to address for this customer.
+             * @description Ship-to address.
              * @example {
              *       "name": "Headquarters",
              *       "is_drop_ship": false,
@@ -13688,20 +13674,20 @@ export interface components {
             ship_to_address: components["schemas"]["AddressInput"];
         };
         /**
-         * @description CreateDCLocationRequest is the request to create a new DC location.
+         * @description Request to create a DC location.
          * @example {
          *       "customer_id": "ac_01gf7a8200er3ar3pkfrb6kk29",
          *       "location": "Warehouse A - Bay 3"
          *     }
          */
         CreateDCLocationRequest: {
-            /** @description The ID of the customer account to associate with this DC location. */
+            /** @description Customer account ID. */
             customer_id: string;
-            /** @description The location description. */
+            /** @description Location description. */
             location: string;
         };
         /**
-         * @description CreateDepartmentRequest is the request to create a new department.
+         * @description Request to create a department.
          * @example {
          *       "name": "Fabrication",
          *       "scanning_station_ids": [
@@ -13713,19 +13699,19 @@ export interface components {
          *     }
          */
         CreateDepartmentRequest: {
-            /** @description The display name of the department. */
+            /** @description Display name. */
             name: string;
-            /** @description Optional notes about the department. */
+            /** @description Notes about the department. */
             notes?: string | null;
-            /** @description The ID of the storage location to associate with this department. */
+            /** @description Storage location ID. */
             location_id?: string | null;
-            /** @description IDs of scanning stations to connect to this department. */
+            /** @description Scanning station IDs to connect. */
             scanning_station_ids: string[];
-            /** @description IDs of machines to connect to this department. */
+            /** @description Machine IDs to connect. */
             machine_ids: string[];
         };
         /**
-         * @description CreateItemCategoryRequest is the request to create a new item category.
+         * @description Request to create an item category.
          * @example {
          *       "name": "Electronics",
          *       "type": "material_category",
@@ -13733,38 +13719,38 @@ export interface components {
          *     }
          */
         CreateItemCategoryRequest: {
-            /** @description The display name of the item category. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The type of item category (material_category or product_category).
+             * @description Item category type (material_category or product_category).
              * @enum {string}
              */
             type: "material_category" | "product_category";
-            /** @description The ID of the unit group to associate with this item category. */
+            /** @description Unit group ID. */
             unit_group_id: string;
         };
         /**
-         * @description CreateLocationRequest is the request to create a new location.
+         * @description Request to create a location.
          * @example {
          *       "name": "Warehouse A",
          *       "type": "building"
          *     }
          */
         CreateLocationRequest: {
-            /** @description The display name of the location. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The code of the location type.
+             * @description Location type code.
              * @enum {string}
              */
             type: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
-            /** @description The ID of the parent location. Null for top-level locations. */
+            /** @description Parent location ID. Null for top-level locations. */
             parent_id?: string | null;
-            /** @description IDs of existing locations to attach as children of this location. */
+            /** @description IDs of child locations to attach. */
             child_ids?: string[] | null;
         };
         /**
-         * @description CreateMachineRequest is the request to create a new machine.
+         * @description Request to create a machine.
          * @example {
          *       "name": "CNC Router",
          *       "serial_number": "SN-2024-0001",
@@ -13772,31 +13758,38 @@ export interface components {
          *     }
          */
         CreateMachineRequest: {
-            /** @description The display name of the machine. */
+            /** @description Display name. */
             name: string;
-            /** @description The serial number of the machine. */
+            /** @description Serial number. */
             serial_number: string;
-            /** @description Optional notes about the machine. */
+            /** @description Notes. */
             notes?: string | null;
-            /** @description The ID of the department this machine belongs to. */
+            /** @description Department ID. */
             department_id: string;
         };
         /**
+         * @description Request to create a material.
          * @example {
          *       "sku": "MAT-001",
          *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         CreateMaterialRequest: {
+            /** @description SKU code. */
             sku: string;
+            /** @description Description. */
             description?: string | null;
+            /** @description Notes. */
             notes?: string | null;
+            /** @description Category ID. */
             category_id: string;
+            /** @description Order point quantity. */
             order_point?: components["schemas"]["QuantityInputRequest"] | null;
+            /** @description Lead time quantity. */
             lead_time?: components["schemas"]["QuantityInputRequest"] | null;
         };
         /**
-         * @description CreateMemoryRequest is the request to create a new agent memory.
+         * @description Request to create an agent memory.
          * @example {
          *       "category": "preference",
          *       "content": "Customer prefers express shipping on all orders.",
@@ -13807,23 +13800,23 @@ export interface components {
          *     }
          */
         CreateMemoryRequest: {
-            /** @description The memory category (e.g. "preference", "fact", "instruction"). */
+            /** @description Memory category (e.g. "preference", "fact", "instruction"). */
             category: string;
-            /** @description The text content of the memory. */
+            /** @description Text content. */
             content: string;
-            /** @description Optional JSON metadata associated with this memory. */
+            /** @description JSON metadata. */
             metadata: Record<string, never>;
-            /** @description The type of entity this memory is scoped to (e.g. "customer", "product"). */
+            /** @description Entity type this memory is scoped to (e.g. "customer", "product"). */
             entity_type?: string | null;
-            /** @description The ID of the entity this memory is scoped to. */
+            /** @description Entity ID. */
             entity_id?: string | null;
-            /** @description A numeric importance score between 0 and 1. */
+            /** @description Importance score between 0 and 1. */
             importance: number;
-            /** @description An ISO 8601 timestamp after which this memory expires. */
+            /** @description ISO 8601 expiration timestamp. */
             expires_at?: string | null;
         };
         /**
-         * @description CreateOrderDiscountRequest is the request to create a new order discount.
+         * @description Request to create an order discount.
          * @example {
          *       "name": "10% Off",
          *       "code": "SAVE10",
@@ -13832,25 +13825,25 @@ export interface components {
          *     }
          */
         CreateOrderDiscountRequest: {
-            /** @description The display name of the discount. */
+            /** @description Display name. */
             name: string;
-            /** @description The unique code for this discount. */
+            /** @description Discount code. */
             code: string;
             /**
              * Format: decimal
-             * @description The percentage value of the discount as a decimal string. Required when discount_type is "percentage".
+             * @description Percentage value as a decimal string. Required when discount_type is "percentage".
              */
             percentage?: string | null;
             /**
              * Format: decimal
-             * @description The fixed amount of the discount as a decimal string. Required when discount_type is "amount".
+             * @description Fixed amount as a decimal string. Required when discount_type is "amount".
              */
             amount?: string | null;
-            /** @description The type of discount: "percentage" or "amount". */
+            /** @description Discount type: "percentage" or "amount". */
             discount_type: string;
         };
         /**
-         * @description CreatePartRequest is the request to create a new part.
+         * @description Request to create a part.
          * @example {
          *       "sku": "BRG-6204-2RS",
          *       "description": "Deep groove ball bearing, 20x47x14mm",
@@ -13858,25 +13851,25 @@ export interface components {
          *     }
          */
         CreatePartRequest: {
-            /** @description The stock keeping unit code. */
+            /** @description SKU. */
             sku: string;
-            /** @description A description of the part. */
+            /** @description Description. */
             description: string | null;
-            /** @description The category ID for the part. */
+            /** @description Category ID. */
             category_id: string;
         };
         /**
-         * @description CreatePaymentTermRequest is the request to create a new payment term.
+         * @description Request to create a payment term.
          * @example {
          *       "name": "Net 30"
          *     }
          */
         CreatePaymentTermRequest: {
-            /** @description The display name of the payment term (e.g. "Net 30"). */
+            /** @description Display name (e.g. "Net 30"). */
             name: string;
         };
         /**
-         * @description CreateProductLineRequest is the request to create a new product line.
+         * @description Request to create a product line.
          * @example {
          *       "name": "Industrial Fasteners",
          *       "unit_group_id": "ug_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -13885,23 +13878,23 @@ export interface components {
          *     }
          */
         CreateProductLineRequest: {
-            /** @description The display name of the product line. */
+            /** @description Display name. */
             name: string;
-            /** @description The ID of the unit group to associate with this product line. */
+            /** @description Unit group ID. */
             unit_group_id: string;
             /**
-             * @description The commission policy for this product line.
+             * @description Commission policy.
              * @enum {string}
              */
             commission_policy: "commission_applied" | "commission_exempt";
             /**
-             * @description The freight policy for this product line.
+             * @description Freight policy.
              * @enum {string}
              */
             freight_policy: "free_freight" | "billed_freight";
         };
         /**
-         * @description CreateProductRequest is the request to create a new product.
+         * @description CreateProductRequest is the request to create a product.
          * @example {
          *       "sku": "ALM-2024-1001",
          *       "description": null,
@@ -13914,57 +13907,57 @@ export interface components {
          *     }
          */
         CreateProductRequest: {
-            /** @description The stock keeping unit code for the product. */
+            /** @description SKU. */
             sku: string;
-            /** @description A description of the product. */
+            /** @description Description. */
             description: string | null;
-            /** @description Additional notes about the product. */
+            /** @description Notes. */
             notes: string | null;
-            /** @description The product type code (e.g. sale, sample). */
+            /** @description Product type code (e.g. sale, sample). */
             type: string;
-            /** @description The ID of the product line to assign to this product. */
+            /** @description Product line ID. */
             product_line_id: string | null;
-            /** @description The ID of the item category. */
+            /** @description Category ID. */
             category_id: string;
-            /** @description Whether this product is visible on the customer portal. */
+            /** @description Whether visible on the customer portal. */
             is_portal_ready: boolean;
-            /** @description The unit price for this product. */
+            /** @description Unit price. */
             unit_price: string | null;
         };
         /**
-         * @description CreateProductTypeRequest is the request to create a new product type.
+         * @description Request to create a product type.
          * @example {
          *       "name": "Sale",
          *       "code": "sale"
          *     }
          */
         CreateProductTypeRequest: {
-            /** @description The display name of the product type. */
+            /** @description Display name. */
             name: string;
-            /** @description The unique code for the product type. */
+            /** @description Unique code. */
             code: string;
         };
-        /** @description CreateProductionInput holds the input for creating a production output. */
+        /** @description Production output input. */
         CreateProductionInput: {
-            /** @description The item ID to produce. */
+            /** @description Item ID. */
             item_id: string;
-            /** @description The quantity value as a decimal string. */
+            /** @description Quantity value as a decimal string. */
             quantity_value: string;
-            /** @description The quantity unit ID. */
+            /** @description Quantity unit ID. */
             quantity_unit_id: string;
         };
         /**
-         * @description CreateProductionRunRequest is the request to create a new production run.
+         * @description Request to create a production run.
          * @example {
          *       "responsible_user_id": "us_01gf7a8200e9pvbd6bgyq395ae"
          *     }
          */
         CreateProductionRunRequest: {
-            /** @description The user ID of the user responsible for this production run. */
+            /** @description Responsible user ID. */
             responsible_user_id: string;
         };
         /**
-         * @description CreateProductionRunResponse represents the result of creating a production run.
+         * @description Result of creating a production run.
          * @example {
          *       "production_run": {
          *         "id": "prru_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -13972,16 +13965,16 @@ export interface components {
          *     }
          */
         CreateProductionRunResponse: {
-            /** @description The created production run. */
+            /** @description Created production run. */
             production_run: components["schemas"]["CreateProductionRunResponseRef"];
         };
-        /** @description CreateProductionRunResponseRef is a lightweight reference to the created production run. */
+        /** @description Lightweight reference to a production run. */
         CreateProductionRunResponseRef: {
-            /** @description The unique identifier of the created production run. */
+            /** @description Production run ID. */
             id: string;
         };
         /**
-         * @description CreateProductionStepRequest is the request to create a new production step.
+         * @description Request to create a production step.
          * @example {
          *       "name": "Mixing",
          *       "leveling_factor": "1.10",
@@ -14019,45 +14012,45 @@ export interface components {
          *     }
          */
         CreateProductionStepRequest: {
-            /** @description The name of the production step. */
+            /** @description Display name. */
             name: string;
-            /** @description Optional notes about the production step. */
+            /** @description Notes. */
             notes?: string | null;
-            /** @description The leveling factor as a decimal string. */
+            /** @description Leveling factor as a decimal string. */
             leveling_factor: string;
-            /** @description The allowances as a decimal string. */
+            /** @description Allowances as a decimal string. */
             allowances: string;
-            /** @description The scanning station ID. */
+            /** @description Scanning station ID. */
             scanning_station_id?: string | null;
-            /** @description The department ID. */
+            /** @description Department ID. */
             department_id?: string | null;
-            /** @description The labor rate configuration. */
+            /** @description Labor rate configuration. */
             labor_rate: components["schemas"]["CreateRateInput"];
-            /** @description The labor time configuration. */
+            /** @description Labor time configuration. */
             labor_time: components["schemas"]["CreateRateInput"];
-            /** @description The overhead rate configuration. */
+            /** @description Overhead rate configuration. */
             overhead_rate: components["schemas"]["CreateRateInput"];
-            /** @description The production output configuration. */
+            /** @description Production output configuration. */
             production: components["schemas"]["CreateProductionInput"];
-            /** @description The consumptions for this step. */
+            /** @description Consumptions. */
             consumptions: components["schemas"]["CreateConsumptionInput"][];
         };
         /**
-         * @description CreatePropertyRequest is the request to create a new property.
+         * @description Request to create a property.
          * @example {
          *       "name": "Color"
          *     }
          */
         CreatePropertyRequest: {
-            /** @description The name of the property. */
+            /** @description Name. */
             name: string;
         };
-        /** @description CreatePurchaseOrderLineInput represents a line item in a create purchase order request. */
+        /** @description Line item input for creating a purchase order. */
         CreatePurchaseOrderLineInput: components["schemas"]["OrderLineInput"];
-        /** @description CreatePurchaseOrderLineRequest is the request to create a new line on a purchase order. */
+        /** @description Request to create a line on a purchase order. */
         CreatePurchaseOrderLineRequest: components["schemas"]["OrderLineInput"];
         /**
-         * @description CreatePurchaseOrderRequest is the request to create a new purchase order.
+         * @description Request to create a purchase order.
          * @example {
          *       "supplier_account_id": "ac_02kn5s7811g9qwce7cizr4e0mq",
          *       "note": "Urgent restock order",
@@ -14084,23 +14077,23 @@ export interface components {
          *     }
          */
         CreatePurchaseOrderRequest: {
-            /** @description The supplier account ID. */
+            /** @description Supplier account ID. */
             supplier_account_id: string;
-            /** @description A note for the order. */
+            /** @description Order note. */
             note?: string | null;
-            /** @description The carrier ID. */
+            /** @description Carrier ID. */
             carrier_id?: string | null;
-            /** @description The service level ID. */
+            /** @description Service level ID. */
             service_level_id?: string | null;
-            /** @description The carrier billing type. */
+            /** @description Carrier billing type. */
             carrier_billing_type?: string | null;
-            /** @description The carrier billing account number. */
+            /** @description Carrier billing account number. */
             carrier_billing_account?: string | null;
-            /** @description The priority code. */
+            /** @description Priority code. */
             priority_code: string;
-            /** @description The shipping term ID. */
+            /** @description Shipping term ID. */
             shipping_term_id?: string | null;
-            /** @description The payment term ID. */
+            /** @description Payment term ID. */
             payment_term_id?: string | null;
             /** @description Bill-to address name. */
             bill_to_name?: string | null;
@@ -14130,24 +14123,24 @@ export interface components {
             ship_to_postal_code?: string | null;
             /** @description Ship-to country. */
             ship_to_country?: string | null;
-            /** @description The order lines to create. */
+            /** @description Order lines to create. */
             lines: components["schemas"]["CreatePurchaseOrderLineInput"][];
-            /** @description The account user IDs for email contacts. */
+            /** @description Account user IDs for email contacts. */
             contact_account_user_ids: string[];
-            /** @description The promised/scheduled delivery date. */
+            /** @description Promised delivery date. */
             promised_at?: string | null;
         };
-        /** @description CreateRateInput holds the input for creating a rate. */
+        /** @description Rate configuration input. */
         CreateRateInput: {
-            /** @description The rate value as a decimal string. */
+            /** @description Value as a decimal string. */
             value: string;
-            /** @description The numerator unit ID. */
+            /** @description Numerator unit ID. */
             numerator_unit_id: string;
-            /** @description The denominator unit ID. */
+            /** @description Denominator unit ID. */
             denominator_unit_id: string;
         };
         /**
-         * @description CreateRegistrationFlowRequest is the request to create a new registration flow.
+         * @description Request to create a registration flow.
          * @example {
          *       "name": "Wholesale Registration",
          *       "customer_group_ids": [
@@ -14162,33 +14155,33 @@ export interface components {
          *     }
          */
         CreateRegistrationFlowRequest: {
-            /** @description The display name of the registration flow. */
+            /** @description Display name. */
             name: string;
-            /** @description The IDs of the customer groups associated with this registration flow. */
+            /** @description Customer group IDs. */
             customer_group_ids: string[];
-            /** @description The IDs of the payment terms associated with this registration flow. */
+            /** @description Payment term IDs. */
             payment_term_ids: string[];
-            /** @description The IDs of the shipping terms associated with this registration flow. */
+            /** @description Shipping term IDs. */
             shipping_term_ids: string[];
         };
         /**
-         * @description The request to create a registration session
+         * @description Request to create a registration session.
          * @example {
          *       "email": "jdoe@augno.com",
          *       "plan_code": "starter"
          *     }
          */
         CreateRegistrationSessionRequest: {
-            /** @description The email address for the registration session. */
+            /** @description Email address. */
             email: string;
             /**
-             * @description The plan code for the registration session.
+             * @description Plan code.
              * @enum {string}
              */
             plan_code: "free" | "starter" | "pro";
         };
         /**
-         * @description CreateRoleRequest is the request to create a new role.
+         * @description CreateRoleRequest is a request to create a role.
          * @example {
          *       "name": "Warehouse Manager",
          *       "permissions": [
@@ -14200,26 +14193,26 @@ export interface components {
          *     }
          */
         CreateRoleRequest: {
-            /** @description The display name of the role. */
+            /** @description Display name. */
             name: string;
-            /** @description The permissions to attach to this role in `<domain>:<action>` format. */
+            /** @description Permissions to attach in `<domain>:<action>` format. */
             permissions: string[];
         };
-        /** @description CreateSalesOrderLineInput represents a line item in a create sales order request. */
+        /** @description Line item input for a create sales order request. */
         CreateSalesOrderLineInput: {
-            /** @description The EDI line item ID. */
+            /** @description EDI line item ID. */
             edi_line_item_id?: string | null;
         } & components["schemas"]["OrderLineInput"];
         /**
-         * @description CreateSalesOrderLineRequest is the request to create a new line on a sales order.
+         * @description Request to create a line on a sales order.
          * @example {}
          */
         CreateSalesOrderLineRequest: {
-            /** @description The EDI line item ID. */
+            /** @description EDI line item ID. */
             edi_line_item_id?: string | null;
         } & components["schemas"]["OrderLineInput"];
         /**
-         * @description CreateSalesOrderRequest is the request to create a new sales order.
+         * @description Request to create a sales order.
          * @example {
          *       "buyer_account_id": "ac_01gf7a8200er3ar3pkfrb6kk29",
          *       "note": "Rush order for trade show",
@@ -14247,31 +14240,31 @@ export interface components {
          *     }
          */
         CreateSalesOrderRequest: {
-            /** @description The customer account ID. */
+            /** @description Buyer account ID. */
             buyer_account_id: string;
-            /** @description The customer purchase order number. */
+            /** @description Customer purchase order number. */
             customer_po_number?: string | null;
-            /** @description A note for the order. */
+            /** @description Order note. */
             note?: string | null;
-            /** @description The carrier ID. */
+            /** @description Carrier ID. */
             carrier_id?: string | null;
-            /** @description The service level ID. */
+            /** @description Service level ID. */
             service_level_id?: string | null;
-            /** @description The carrier billing type. */
+            /** @description Carrier billing type. */
             carrier_billing_type?: string | null;
-            /** @description The carrier billing account number. */
+            /** @description Carrier billing account number. */
             carrier_billing_account?: string | null;
-            /** @description The priority code. */
+            /** @description Priority code. */
             priority_code: string;
-            /** @description The sales rep ID. */
+            /** @description Sales rep ID. */
             sales_rep_id?: string | null;
-            /** @description The shipping term ID. */
+            /** @description Shipping term ID. */
             shipping_term_id?: string | null;
-            /** @description The sales order type code. */
+            /** @description Sales order type code. */
             sales_order_type_code: string;
-            /** @description The payment term ID. */
+            /** @description Payment term ID. */
             payment_term_id?: string | null;
-            /** @description The order discount ID. */
+            /** @description Order discount ID. */
             order_discount_id?: string | null;
             /** @description Bill-to address name. */
             bill_to_name?: string | null;
@@ -14301,11 +14294,11 @@ export interface components {
             ship_to_postal_code?: string | null;
             /** @description Ship-to country. */
             ship_to_country?: string | null;
-            /** @description The order lines to create. */
+            /** @description Order lines to create. */
             lines: components["schemas"]["CreateSalesOrderLineInput"][];
         };
         /**
-         * @description CreateSalesTargetRequest is the request to create a new sales target.
+         * @description Request to create a sales target.
          * @example {
          *       "start_date": "2026-01-01T00:00:00Z",
          *       "end_date": "2026-03-31T00:00:00Z",
@@ -14316,28 +14309,28 @@ export interface components {
         CreateSalesTargetRequest: {
             /**
              * Format: date-time
-             * @description The start date for the sales target.
+             * @description Start date.
              */
             start_date: string;
             /**
              * Format: date-time
-             * @description The end date for the sales target.
+             * @description End date.
              */
             end_date: string;
-            /** @description The target amount value (decimal string). */
+            /** @description Target amount value (decimal string). */
             amount_value: string;
-            /** @description The unit ID for the target amount. */
+            /** @description Amount unit ID. */
             amount_unit_id: string;
         };
         /**
-         * @description The request to create a sandbox.
+         * @description Request to create a sandbox.
          * @example {
          *       "name": "Integration Testing",
          *       "mode": "blank"
          *     }
          */
         CreateSandboxRequest: {
-            /** @description The display name for the sandbox. */
+            /** @description Display name. */
             name: string;
             /**
              * @description Controls whether the sandbox is blank or seeded with tutorial data. Defaults to blank.
@@ -14346,7 +14339,7 @@ export interface components {
             mode?: "blank" | "seeded" | null;
         };
         /**
-         * @description CreateScanningStationRequest is the request to create a new scanning station.
+         * @description Request to create a scanning station.
          * @example {
          *       "name": "Packaging Line 1",
          *       "type": "init_batch",
@@ -14355,32 +14348,32 @@ export interface components {
          *     }
          */
         CreateScanningStationRequest: {
-            /** @description The display name of the scanning station. */
+            /** @description Display name. */
             name: string;
-            /** @description Optional notes about the scanning station. */
+            /** @description Notes. */
             notes?: string;
             /**
-             * @description The type of scanning station.
+             * @description Scanning station type.
              * @enum {string}
              */
             type: "init_batch" | "merge_batch" | "move_batch" | "split_batch";
-            /** @description Whether material check is required at this station. */
+            /** @description Whether material check is required. */
             material_check_required: boolean;
-            /** @description The ID of the department to associate with this scanning station. */
+            /** @description Department ID. */
             department_id: string;
             /**
-             * @description The label size code for the scanning station.
+             * @description Label size code.
              * @enum {string}
              */
             label_size?: "1x1" | "1x3" | "1x4" | "2x4";
             /**
-             * @description The label type code for the scanning station.
+             * @description Label type code.
              * @enum {string}
              */
             label_type?: "tag" | "traveler";
         };
         /**
-         * @description CreateServiceLevelRequest is the request to create a new service level.
+         * @description Request to create a service level.
          * @example {
          *       "name": "Ground Shipping",
          *       "code": "ground",
@@ -14388,48 +14381,48 @@ export interface components {
          *     }
          */
         CreateServiceLevelRequest: {
-            /** @description The display name of the service level. */
+            /** @description Display name. */
             name: string;
-            /** @description The service level code. */
+            /** @description Service level code. */
             code: string;
             /**
-             * @description Whether this service level is visible in the customer portal.
+             * @description Customer portal visibility.
              * @default visible
              * @enum {string}
              */
             customer_portal_visibility: "visible" | "hidden";
-            /** @description Whether this is a default (system-synced) service level. */
+            /** @description Default (system-synced) service level. */
             is_default: boolean;
         };
         /**
-         * @description CreateSessionResponse is the response from creating a registration session.
+         * @description Result of creating a registration session.
          * @example {
          *       "id": "rgfw_01gf7a8200eaj8fke1xvw4h50x",
          *       "object": "registration_session"
          *     }
          */
         CreateSessionResponse: {
-            /** @description The unique identifier of the created registration session. */
+            /** @description Session ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "registration_session";
         };
-        /** @description CreateSettlementAllocationRequest represents a single allocation in a create settlement request. */
+        /** @description CreateSettlementAllocationRequest is an allocation in a create settlement request. */
         CreateSettlementAllocationRequest: {
-            /** @description The ID of the transaction to allocate. */
+            /** @description Transaction ID. */
             transaction_id: string;
-            /** @description The ID of the invoice to allocate against. */
+            /** @description Invoice ID. */
             invoice_id: string;
-            /** @description The amount to allocate as a decimal string. */
+            /** @description Amount to allocate as a decimal string. */
             amount: string;
-            /** @description A note about this allocation. */
+            /** @description Note about this allocation. */
             note: string | null;
         };
         /**
-         * @description CreateSettlementRequest is the request to create a new settlement.
+         * @description CreateSettlementRequest is the request to create a settlement.
          * @example {
          *       "responsible_user_id": "us_01gf7a8200e9pvbd6bgyq395ae",
          *       "allocations": [
@@ -14443,13 +14436,13 @@ export interface components {
          *     }
          */
         CreateSettlementRequest: {
-            /** @description The ID of the user responsible for this settlement. */
+            /** @description Responsible user ID. */
             responsible_user_id: string;
-            /** @description The allocations to create with this settlement. */
+            /** @description Allocations for this settlement. */
             allocations: components["schemas"]["CreateSettlementAllocationRequest"][];
         };
         /**
-         * @description CreateShipmentLineRequest is the request to create a new shipment line.
+         * @description Request to create a shipment line.
          * @example {
          *       "sales_order_line_id": "orln_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "quantity_value": "10.000000000000000000000000000000",
@@ -14457,36 +14450,37 @@ export interface components {
          *     }
          */
         CreateShipmentLineRequest: {
-            /** @description The ID of the sales order line to ship. */
+            /** @description Sales order line ID. */
             sales_order_line_id: string;
-            /** @description The quantity value to ship. */
+            /** @description Quantity value. */
             quantity_value: string;
-            /** @description The ID of the unit for the quantity. */
+            /** @description Quantity unit ID. */
             quantity_unit_id: string;
         };
         /**
-         * @description CreateShippingTermRequest is the request to create a new shipping term.
+         * @description Request to create a shipping term.
          * @example {
          *       "name": "Prepaid",
          *       "type": "carrier_rate_freight"
          *     }
          */
         CreateShippingTermRequest: {
-            /** @description The display name of the shipping term. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The shipping term type.
+             * @description Shipping term type.
              * @enum {string}
              */
             type: "free_freight" | "flat_rate_freight" | "carrier_rate_freight";
-            /** @description The flat rate for this shipping term. */
+            /** @description Flat rate for this shipping term. */
             flat_rate?: components["schemas"]["QuantityInput"] | null;
-            /** @description The minimum order value for free shipping under this term. */
+            /** @description Minimum order value for free shipping. */
             minimum_order_value?: components["schemas"]["QuantityInput"] | null;
-            /** @description The service level IDs that qualify for free shipping. */
+            /** @description Service level IDs that qualify for free shipping. */
             free_shipping_service_level_ids: string[];
         };
         /**
+         * @description Request to create a supplier material.
          * @example {
          *       "material_id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "supplier_part_number": "SUP-PART-001",
@@ -14494,13 +14488,17 @@ export interface components {
          *     }
          */
         CreateSupplierMaterialRequest: {
+            /** @description Material ID. */
             material_id: string;
+            /** @description Supplier part number for this material. */
             supplier_part_number: string;
+            /** @description Supplier description for this material. */
             supplier_description?: string | null;
+            /** @description Active status. */
             is_active: boolean | null;
         };
         /**
-         * @description CreateSupplierRequest is the request to create a new supplier.
+         * @description CreateSupplierRequest is the request to create a supplier.
          * @example {
          *       "name": "Acme Supplies Inc.",
          *       "number": "SUP-001",
@@ -14518,14 +14516,14 @@ export interface components {
          *     }
          */
         CreateSupplierRequest: {
-            /** @description The display name of the supplier. */
+            /** @description Display name. */
             name: string;
-            /** @description The supplier number (must be unique per account). */
+            /** @description Supplier number. Must be unique per account. */
             number: string;
-            /** @description Notes about the supplier. */
+            /** @description Supplier notes. */
             note: string | null;
             /**
-             * @description An optional bill-to address to create inline.
+             * @description Bill-to address to create inline.
              * @example {
              *       "name": "Headquarters",
              *       "is_drop_ship": false,
@@ -14538,7 +14536,7 @@ export interface components {
              */
             bill_to_address: components["schemas"]["AddressInput"] | null;
             /**
-             * @description An optional ship-to address to create inline.
+             * @description Ship-to address to create inline.
              * @example {
              *       "name": "Headquarters",
              *       "is_drop_ship": false,
@@ -14552,7 +14550,7 @@ export interface components {
             ship_to_address: components["schemas"]["AddressInput"] | null;
         };
         /**
-         * @description CreateTerritoryRequest is the request to create a new territory.
+         * @description Request to create a territory.
          * @example {
          *       "state": "NY",
          *       "start_zipcode": 10001,
@@ -14561,19 +14559,19 @@ export interface components {
          *     }
          */
         CreateTerritoryRequest: {
-            /** @description The state this territory covers. */
+            /** @description State this territory covers. */
             state: string;
-            /** @description The start of the zipcode range (501-99999). */
+            /** @description Start of ZIP code range (501-99999). */
             start_zipcode?: number | null;
-            /** @description The end of the zipcode range (501-99999). */
+            /** @description End of ZIP code range (501-99999). */
             end_zipcode?: number | null;
-            /** @description The ID of the sales rep (account user) assigned to this territory. */
+            /** @description Sales rep (account user) ID. */
             sales_rep_id: string;
-            /** @description The ID of the product line this territory is scoped to. */
+            /** @description Product line ID. */
             product_line_id?: string | null;
         };
         /**
-         * @description CreateTransactionRequest is the request to create a new transaction.
+         * @description Request to create a transaction.
          * @example {
          *       "customer_id": "ac_01gf7a8200er3ar3pkfrb6kk29",
          *       "type": "payment",
@@ -14585,23 +14583,23 @@ export interface components {
          *     }
          */
         CreateTransactionRequest: {
-            /** @description The ID of the customer for this transaction. */
+            /** @description Customer ID. */
             customer_id: string;
-            /** @description The transaction type code. */
+            /** @description Transaction type code. */
             type: string;
-            /** @description The transaction amount as a decimal string. */
+            /** @description Transaction amount as a decimal string. */
             amount: string;
-            /** @description The transaction method code. */
+            /** @description Transaction method code. */
             method: string | null;
-            /** @description The adjustment type code, if applicable. */
+            /** @description Adjustment type code. */
             adjustment_type: string | null;
-            /** @description The ID of the user responsible for this transaction. */
+            /** @description Responsible user ID. */
             responsible_user_id: string | null;
-            /** @description A note about this transaction. */
+            /** @description Note. */
             note: string | null;
         };
         /**
-         * @description CreateUnitGroupRequest is the request to create a new unit group.
+         * @description CreateUnitGroupRequest is a request to create a unit group.
          * @example {
          *       "name": "Weight Units",
          *       "type": "mass",
@@ -14617,46 +14615,46 @@ export interface components {
          *     }
          */
         CreateUnitGroupRequest: {
-            /** @description The display name of the unit group. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description Optional notes about the unit group.
+             * @description Notes.
              * @default null
              */
             notes: string;
             /**
-             * @description The unit type code.
+             * @description Unit type.
              * @enum {string}
              */
             type: "currency" | "quantity" | "time" | "mass" | "volume" | "length" | "temperature" | "area";
-            /** @description The base unit ID. */
+            /** @description Base unit ID. */
             base_unit_id: string;
-            /** @description Optional associated units to create with the group. */
+            /** @description Associated units to create with the group. */
             associated_units: components["schemas"]["CreateUnitGroupUnitParam"][];
         };
-        /** @description CreateUnitGroupUnitParam carries data for a single associated unit. */
+        /** @description CreateUnitGroupUnitParam contains parameters for an associated unit. */
         CreateUnitGroupUnitParam: {
-            /** @description The unit ID. */
+            /** @description Unit ID. */
             unit_id: string;
             /**
-             * @description The discount percentage.
+             * @description Discount percentage.
              * @default 1
              */
             discount_percentage: number;
             /**
-             * @description The fixed discount amount.
+             * @description Fixed discount amount.
              * @default 0
              */
             discount_fixed: number;
             /**
-             * @description Whether this associated unit is visible in the customer portal.
+             * @description Customer portal visibility.
              * @default visible
              * @enum {string}
              */
             customer_portal_visibility: "visible" | "hidden";
         };
         /**
-         * @description CreateUnitGroupUnitRequest is the request to create an associated unit within a unit group.
+         * @description CreateUnitGroupUnitRequest is a request to create an associated unit within a unit group.
          * @example {
          *       "unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "discount_percentage": 1,
@@ -14665,27 +14663,27 @@ export interface components {
          *     }
          */
         CreateUnitGroupUnitRequest: {
-            /** @description The unit ID. */
+            /** @description Unit ID. */
             unit_id: string;
             /**
-             * @description The discount percentage.
+             * @description Discount percentage.
              * @default 1
              */
             discount_percentage: number;
             /**
-             * @description The fixed discount amount.
+             * @description Fixed discount amount.
              * @default 0
              */
             discount_fixed: number;
             /**
-             * @description Whether this associated unit is visible in the customer portal.
+             * @description Customer portal visibility.
              * @default visible
              * @enum {string}
              */
             customer_portal_visibility: "visible" | "hidden";
         };
         /**
-         * @description CreateUnitRequest is the request to create a new unit.
+         * @description Request to create a unit.
          * @example {
          *       "name": "Gram",
          *       "abbreviation": "g",
@@ -14697,67 +14695,67 @@ export interface components {
          *     }
          */
         CreateUnitRequest: {
-            /** @description The display name of the unit (e.g. "Gram"). */
+            /** @description Display name of the unit (e.g. "Gram"). */
             name: string;
-            /** @description The short abbreviation for the unit (e.g. "g"). */
+            /** @description Short abbreviation for the unit (e.g. "g"). */
             abbreviation: string;
             /**
-             * @description The unit dimension code.
+             * @description Unit dimension code.
              * @enum {string}
              */
             type: "currency" | "quantity" | "time" | "mass" | "volume" | "length" | "temperature" | "area";
             /**
              * Format: decimal
-             * @description The conversion ratio numerator relative to the base unit, as a decimal string.
+             * @description Conversion ratio numerator relative to the base unit, as a decimal string.
              */
             ratio_numerator: string;
             /**
              * Format: decimal
-             * @description The conversion ratio denominator relative to the base unit, as a decimal string.
+             * @description Conversion ratio denominator relative to the base unit, as a decimal string.
              */
             ratio_denominator: string;
             /**
              * Format: decimal
-             * @description The conversion offset numerator, as a decimal string.
+             * @description Conversion offset numerator, as a decimal string.
              */
             offset_numerator: string;
             /**
              * Format: decimal
-             * @description The conversion offset denominator, as a decimal string.
+             * @description Conversion offset denominator, as a decimal string.
              */
             offset_denominator: string;
         };
         /**
-         * @description The request to create a user for a registration session
+         * @description Request to create a user for a registration session.
          * @example {
          *       "name": "Jane Smith",
          *       "password": "P@ssw0rd123!"
          *     }
          */
         CreateUserRequest: {
-            /** @description Display name for the new user. */
+            /** @description Display name. */
             name: string;
-            /** @description Password for the new user account. */
+            /** @description Password. */
             password: string;
         };
         /**
-         * @description CreateUserResponse is the response from creating a user for a registration session.
+         * @description Result of creating a user for a registration session.
          * @example {
          *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
          *       "object": "user"
          *     }
          */
         CreateUserResponse: {
-            /** @description The ID of the created user. */
+            /** @description User ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "user";
         };
         /**
-         * @description CreateVolumeDiscountRequest is the request to create a new volume discount.
+         * @description Request to create a volume discount.
          * @example {
          *       "name": "Bulk Order Discount",
          *       "tiers": [
@@ -14770,40 +14768,40 @@ export interface components {
          *     }
          */
         CreateVolumeDiscountRequest: {
-            /** @description The display name of the volume discount. */
+            /** @description Display name. */
             name: string;
-            /** @description The tiers for this volume discount. */
+            /** @description Tiers for this volume discount. */
             tiers: components["schemas"]["CreateVolumeDiscountTierInput"][];
-            /** @description The account group IDs to associate as customer groups. */
+            /** @description Account group IDs to associate as customer groups. */
             customer_group_ids: string[];
-            /** @description The product line IDs to associate. */
+            /** @description Product line IDs to associate. */
             product_line_ids: string[];
-            /** @description The item category IDs to associate. */
+            /** @description Item category IDs to associate. */
             category_ids: string[];
-            /** @description The attribute IDs to associate. */
+            /** @description Attribute IDs to associate. */
             attribute_ids: string[];
-            /** @description The unit IDs to associate as acceptable units. */
+            /** @description Unit IDs to associate as acceptable units. */
             unit_ids: string[];
         };
-        /** @description CreateVolumeDiscountTierInput represents a tier to create. */
+        /** @description Volume discount tier to create. */
         CreateVolumeDiscountTierInput: {
-            /** @description The display name for the tier. */
+            /** @description Display name. */
             name: string;
             /**
              * Format: decimal
-             * @description The discount percentage as a decimal string.
+             * @description Discount percentage as a decimal string.
              */
             discount_percentage: string;
             /**
              * Format: decimal
-             * @description The quantity threshold for this tier as a decimal string.
+             * @description Quantity threshold as a decimal string.
              */
             threshold: string;
-            /** @description Optional parent tier ID for tier chaining. */
+            /** @description Parent tier ID for tier chaining. */
             parent_tier_id?: string | null;
         };
         /**
-         * @description CreatedAPIKey represents a newly created API key with the full secret value.
+         * @description Result of creating an API key, with the full secret value.
          * @example {
          *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadyhjtr",
          *       "api_key_info": {
@@ -14849,10 +14847,10 @@ export interface components {
          *     }
          */
         CreatedAPIKey: {
-            /** @description The full API key secret value (only shown once at creation). */
+            /** @description Full secret value. Returned once and cannot be retrieved later. */
             api_key_secret: string;
             /**
-             * @description The API key metadata.
+             * @description API key metadata.
              * @example {
              *       "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
              *       "object": "api_key",
@@ -14897,7 +14895,7 @@ export interface components {
             api_key_info: components["schemas"]["APIKey"];
         };
         /**
-         * @description Customer represents a customer account with full detail.
+         * @description Customer account.
          * @example {
          *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
          *       "object": "customer",
@@ -15127,35 +15125,35 @@ export interface components {
          *     }
          */
         Customer: {
-            /** @description The unique identifier for the customer (account ID). */
+            /** @description Customer ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "customer";
-            /** @description The display name of the customer. */
+            /** @description Display name. */
             name: string;
-            /** @description The external customer number. */
+            /** @description Customer number. */
             number: string;
             /**
-             * @description The customer's account status code.
+             * @description Account status code.
              * @enum {string}
              */
             status: "normal" | "preferred" | "hold_shipment" | "hold_all";
-            /** @description Whether EDI is enabled for this customer. */
+            /** @description Whether EDI is enabled. */
             is_edi_enabled: boolean;
-            /** @description Whether this customer is a parent account. */
+            /** @description Whether this is a parent account. */
             is_parent_account: boolean;
             /**
-             * @description The commission status for this customer.
+             * @description Commission policy.
              * @enum {string}
              */
             commission_policy: "commission_applied" | "commission_exempt";
-            /** @description Notes about the customer. */
+            /** @description Note. */
             note: string | null;
             /**
-             * @description The customer's credit limit.
+             * @description Credit limit.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -15179,16 +15177,16 @@ export interface components {
              *     }
              */
             credit_limit: components["schemas"]["Quantity"] | null;
-            /** @description The customer's contact information. */
+            /** @description Contact information. */
             contact_info: components["schemas"]["CustomerContactInfo"] | null;
-            /** @description The customer's freight preferences. */
+            /** @description Freight preferences. */
             freight_preferences: components["schemas"]["CustomerFreightPreferences"] | null;
-            /** @description The customer's default settings. */
+            /** @description Default settings. */
             defaults: components["schemas"]["CustomerDefaults"] | null;
-            /** @description The customer's notification preferences. */
+            /** @description Notification preferences. */
             notification_preferences: components["schemas"]["CustomerNotificationPreferences"] | null;
             /**
-             * @description The customer's default billing address.
+             * @description Default billing address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -15212,7 +15210,7 @@ export interface components {
              */
             bill_to_address: components["schemas"]["Address"] | null;
             /**
-             * @description The customer's default shipping address.
+             * @description Default shipping address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -15236,7 +15234,7 @@ export interface components {
              */
             ship_to_address: components["schemas"]["Address"] | null;
             /**
-             * @description The customer type group.
+             * @description Customer type group.
              * @example {
              *       "id": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "account_group",
@@ -15251,7 +15249,7 @@ export interface components {
              */
             type: components["schemas"]["AccountGroup"] | null;
             /**
-             * @description The customer's pricing groups.
+             * @description Pricing groups.
              * @example {
              *       "object": "list",
              *       "page_info": {
@@ -15276,56 +15274,56 @@ export interface components {
              *     }
              */
             price_groups: components["schemas"]["List_AccountGroup"] | null;
-            /** @description The parent customer account, if this is a child account. */
+            /** @description Parent account. Present if this is a child account. */
             parent_account: components["schemas"]["Customer"] | null;
-            /** @description The child customer accounts, if this is a parent account. */
+            /** @description Child accounts. Present if this is a parent account. */
             child_accounts: components["schemas"]["List_Customer"] | null;
             /**
              * Format: date-time
-             * @description When this customer was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this customer was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description CustomerAccountSummary represents a minimal customer account summary. */
+        /** @description Minimal customer account summary. */
         CustomerAccountSummary: {
-            /** @description The unique identifier for the account. */
+            /** @description Account ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account";
-            /** @description The display name of the account. */
+            /** @description Display name. */
             name: string;
         };
-        /** @description CustomerContactInfo groups the customer's contact information. */
+        /** @description Customer contact information. */
         CustomerContactInfo: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "customer_contact_info";
-            /** @description The customer's email address. */
+            /** @description Email address. */
             email: string | null;
-            /** @description The customer's phone number. */
+            /** @description Phone number. */
             phone: string | null;
-            /** @description The customer's website URL. */
+            /** @description Website URL. */
             url: string | null;
         };
-        /** @description CustomerDefaults groups the customer's default configuration. */
+        /** @description Customer default configuration. */
         CustomerDefaults: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "customer_defaults";
             /**
-             * @description The default payment term.
+             * @description Default payment term.
              * @example {
              *       "id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "payment_term",
@@ -15342,7 +15340,7 @@ export interface components {
              */
             payment_term: components["schemas"]["PaymentTerm"] | null;
             /**
-             * @description The default shipping term.
+             * @description Default shipping term.
              * @example {
              *       "id": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "shipping_term",
@@ -15371,7 +15369,7 @@ export interface components {
              */
             shipping_term: components["schemas"]["ShippingTerm"] | null;
             /**
-             * @description The default priority.
+             * @description Default priority.
              * @example {
              *       "id": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "priority",
@@ -15388,7 +15386,7 @@ export interface components {
              */
             priority: components["schemas"]["Priority"] | null;
             /**
-             * @description The default sales representative.
+             * @description Default sales rep.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "user",
@@ -15403,20 +15401,20 @@ export interface components {
              */
             sales_rep: components["schemas"]["User"] | null;
         };
-        /** @description CustomerFreightPreferences groups the customer's freight and carrier settings. */
+        /** @description Customer freight and carrier settings. */
         CustomerFreightPreferences: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "customer_freight_preferences";
             /**
-             * @description The freight status for this customer.
+             * @description Freight policy.
              * @enum {string}
              */
             status: "free_freight" | "billed_freight";
             /**
-             * @description The default carrier.
+             * @description Default carrier.
              * @example {
              *       "id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "carrier",
@@ -15447,7 +15445,7 @@ export interface components {
              */
             carrier: components["schemas"]["Carrier"] | null;
             /**
-             * @description The default service level.
+             * @description Default service level.
              * @example {
              *       "id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "service_level",
@@ -15461,25 +15459,25 @@ export interface components {
              */
             service_level: components["schemas"]["ServiceLevel"] | null;
             /**
-             * @description The carrier billing type.
+             * @description Carrier billing type.
              * @enum {string|null}
              */
             billing_type: "sender" | "third_party" | null;
-            /** @description The carrier billing account number. */
+            /** @description Carrier billing account number. */
             billing_account: string | null;
         };
-        /** @description CustomerNotificationPreferences groups the customer's notification settings. */
+        /** @description Customer notification settings. */
         CustomerNotificationPreferences: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "customer_notification_preferences";
-            /** @description Whether the customer accepts invoice emails. */
+            /** @description Whether invoice emails are accepted. */
             accepts_invoice_emails: boolean;
         };
         /**
-         * @description CustomerProductLineAccess represents the product lines accessible to a customer.
+         * @description Product lines accessible to a customer.
          * @example {
          *       "customer": {
          *         "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
@@ -15739,7 +15737,7 @@ export interface components {
          */
         CustomerProductLineAccess: {
             /**
-             * @description The customer.
+             * @description Customer.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -15970,11 +15968,11 @@ export interface components {
              */
             customer: components["schemas"]["Customer"] | null;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "customer_product_line_access";
-            /** @description The product lines accessible to this customer. */
+            /** @description Product lines accessible to this customer. */
             product_lines: components["schemas"]["List_ProductLine"] | null;
             /**
              * Format: date-time
@@ -15988,7 +15986,7 @@ export interface components {
             updated_at: string;
         };
         /**
-         * @description CustomerSummary is a lightweight customer representation for list responses.
+         * @description Lightweight customer representation for list responses.
          * @example {
          *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
          *       "object": "customer_summary",
@@ -16001,34 +15999,34 @@ export interface components {
          *     }
          */
         CustomerSummary: {
-            /** @description The unique identifier for the customer (account ID). */
+            /** @description Customer ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "customer_summary";
-            /** @description The display name of the customer. */
+            /** @description Display name. */
             name: string;
-            /** @description The external customer number. */
+            /** @description Customer number. */
             number: string;
-            /** @description The customer's email address. */
+            /** @description Email address. */
             email: string | null;
-            /** @description The customer type group name. */
+            /** @description Customer type group name. */
             customer_type_group: string | null;
             /**
-             * @description The customer's account status code.
+             * @description Account status code.
              * @enum {string}
              */
             status: "normal" | "preferred" | "hold_shipment" | "hold_all";
             /**
              * Format: date-time
-             * @description When this customer was created.
+             * @description Creation timestamp.
              */
             created_at: string;
         };
         /**
-         * @description DCLocation represents a DC location.
+         * @description DC location resource.
          * @example {
          *       "id": "dclo_01gf7a8200er3ar3pkfrb6kk30",
          *       "object": "dc_location",
@@ -16043,38 +16041,38 @@ export interface components {
          *     }
          */
         DCLocation: {
-            /** @description The unique identifier for the DC location. */
+            /** @description DC location ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "dc_location";
-            /** @description The location description. */
+            /** @description Location description. */
             location: string;
-            /** @description The customer associated with this DC location. */
+            /** @description Associated customer. */
             customer: components["schemas"]["DCLocationCustomer"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the DC location was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the DC location was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description DCLocationCustomer is a lightweight customer sub-resource on a DC location. */
+        /** @description Customer sub-resource on a DC location. */
         DCLocationCustomer: {
-            /** @description The unique identifier for the customer. */
+            /** @description Customer ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "customer";
-            /** @description The display name of the customer. */
+            /** @description Display name. */
             name: string;
         };
         /** @description DateTimeCoordinate represents a time-value data point. */
@@ -16088,7 +16086,7 @@ export interface components {
             y: number;
         };
         /**
-         * @description DeleteManyBatchesRequest is the request to delete multiple batches at once.
+         * @description Request to delete multiple batches.
          * @example {
          *       "batch_ids": [
          *         "bt_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -16096,11 +16094,11 @@ export interface components {
          *     }
          */
         DeleteManyBatchesRequest: {
-            /** @description The IDs of the batches to delete. */
+            /** @description Batch IDs to delete. */
             batch_ids: string[];
         };
         /**
-         * @description Delivery represents a full delivery with lines.
+         * @description Delivery with line items.
          * @example {
          *       "id": "dlv_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "delivery",
@@ -16214,42 +16212,42 @@ export interface components {
          *     }
          */
         Delivery: {
-            /** @description The unique identifier for the delivery. */
+            /** @description Delivery ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "delivery";
-            /** @description The delivery number. */
+            /** @description Delivery number. */
             number: string;
-            /** @description The purchase order associated with this delivery. */
+            /** @description Associated purchase order. */
             purchase_order: components["schemas"]["SalesOrder"] | null;
             /**
-             * @description The delivery status (accepted or rejected).
+             * @description Delivery status (accepted or rejected).
              * @enum {string}
              */
             status: "accepted" | "rejected";
-            /** @description The line items in this delivery. */
+            /** @description Delivery line items. */
             lines: components["schemas"]["List_DeliveryLine"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the delivery was accepted.
+             * @description Accepted timestamp.
              */
             accepted_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the delivery was rejected.
+             * @description Rejected timestamp.
              */
             rejected_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the delivery was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the delivery was last updated.
+             * @description Last update timestamp.
              */
             updated_at: string;
         };
@@ -16263,7 +16261,7 @@ export interface components {
             average_first_shipment_time: components["schemas"]["ChartData"];
         };
         /**
-         * @description DeliveryLine represents a line item in a delivery.
+         * @description Delivery line item.
          * @example {
          *       "id": "dlvl_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "delivery_line",
@@ -16351,15 +16349,15 @@ export interface components {
          *     }
          */
         DeliveryLine: {
-            /** @description The unique identifier for the delivery line. */
+            /** @description Delivery line ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "delivery_line";
             /**
-             * @description The item associated with this line. Nullable if the item has been deleted.
+             * @description Associated item. Null if the item has been deleted.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -16524,7 +16522,7 @@ export interface components {
              */
             item: components["schemas"]["Item"] | null;
             /**
-             * @description The quantity received.
+             * @description Quantity received.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -16549,7 +16547,7 @@ export interface components {
              */
             quantity: components["schemas"]["Quantity"] | null;
             /**
-             * @description The unit cost for this line.
+             * @description Unit cost.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -16591,7 +16589,7 @@ export interface components {
              */
             unit_cost: components["schemas"]["Rate"] | null;
             /**
-             * @description The location where this delivery was received.
+             * @description Receiving location.
              * @example {
              *       "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
              *       "object": "location",
@@ -16624,26 +16622,26 @@ export interface components {
              *     }
              */
             location: components["schemas"]["Location"] | null;
-            /** @description The lot associated with this line. */
+            /** @description Associated lot. */
             lot: components["schemas"]["Lot"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the line was accepted.
+             * @description Accepted timestamp.
              */
             accepted_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the line was rejected.
+             * @description Rejected timestamp.
              */
             rejected_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the line was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the line was last updated.
+             * @description Last update timestamp.
              */
             updated_at: string;
         };
@@ -16671,7 +16669,7 @@ export interface components {
             orders_completed_within_promise_date: number;
         };
         /**
-         * @description DeliverySummary represents a delivery with a line count.
+         * @description Delivery summary with line count.
          * @example {
          *       "id": "dlv_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "delivery",
@@ -16690,42 +16688,42 @@ export interface components {
          *     }
          */
         DeliverySummary: {
-            /** @description The unique identifier for the delivery. */
+            /** @description Delivery ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "delivery";
-            /** @description The delivery number. */
+            /** @description Delivery number. */
             number: string;
-            /** @description The purchase order associated with this delivery. */
+            /** @description Associated purchase order. */
             purchase_order: components["schemas"]["SalesOrder"] | null;
             /**
-             * @description The delivery status (accepted or rejected).
+             * @description Delivery status (accepted or rejected).
              * @enum {string}
              */
             status: "accepted" | "rejected";
-            /** @description The number of lines in this delivery. */
+            /** @description Number of delivery lines. */
             line_count: number;
             /**
              * Format: date-time
-             * @description The timestamp when the delivery was accepted.
+             * @description Accepted timestamp.
              */
             accepted_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the delivery was rejected.
+             * @description Rejected timestamp.
              */
             rejected_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the delivery was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the delivery was last updated.
+             * @description Last update timestamp.
              */
             updated_at: string;
         };
@@ -16787,7 +16785,7 @@ export interface components {
             current_month_sales: number;
         };
         /**
-         * @description Department represents a department within an account.
+         * @description Department resource.
          * @example {
          *       "id": "dp_01gf7a8200er3ar3pkfrb6kk30",
          *       "object": "department",
@@ -16874,19 +16872,19 @@ export interface components {
          *     }
          */
         Department: {
-            /** @description The unique identifier for the department. */
+            /** @description Department ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "department";
-            /** @description The display name of the department. */
+            /** @description Display name. */
             name: string;
-            /** @description Optional notes about the department. */
+            /** @description Notes about the department. */
             notes: string | null;
             /**
-             * @description The location associated with this department.
+             * @description Associated location.
              * @example {
              *       "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
              *       "object": "location",
@@ -16919,23 +16917,23 @@ export interface components {
              *     }
              */
             location: components["schemas"]["Location"] | null;
-            /** @description The scanning stations belonging to this department. */
+            /** @description Scanning stations in this department. */
             scanning_stations: components["schemas"]["List_ScanningStation"] | null;
-            /** @description The machines belonging to this department. */
+            /** @description Machines in this department. */
             machines: components["schemas"]["List_Machine"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the department was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the department was last updated.
+             * @description Last update timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description EDIRun represents an EDI run.
+         * @description EDI run resource.
          * @example {
          *       "id": "edru_01gf7a8200er3ar3pkfrb6kk30",
          *       "object": "edi_run",
@@ -16946,33 +16944,33 @@ export interface components {
          *     }
          */
         EDIRun: {
-            /** @description The unique identifier for the EDI run. */
+            /** @description EDI run ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "edi_run";
             /**
              * Format: date-time
-             * @description The timestamp when the EDI run completed.
+             * @description Timestamp when the EDI run completed.
              */
             completed_at: string;
             /** @description Whether the EDI run succeeded. */
             has_succeeded: boolean;
             /**
              * Format: date-time
-             * @description The timestamp when the EDI run was created.
+             * @description Timestamp when the EDI run was created.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the EDI run was last updated.
+             * @description Timestamp when the EDI run was last updated.
              */
             updated_at: string;
         };
         /**
-         * @description EmailContact represents an email contact sub-resource.
+         * @description Email contact sub-resource.
          * @example {
          *       "id": "ec_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "email_contact",
@@ -16994,15 +16992,15 @@ export interface components {
          *     }
          */
         EmailContact: {
-            /** @description The unique identifier for the email contact. */
+            /** @description Email contact ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "email_contact";
             /**
-             * @description The account user associated with this contact.
+             * @description Account user.
              * @example {
              *       "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "account_user",
@@ -17050,7 +17048,7 @@ export interface components {
             account_user: components["schemas"]["AccountUser"] | null;
         };
         /**
-         * @description EmailLog represents an email log entry.
+         * @description Email log entry.
          * @example {
          *       "id": "eml_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "email_log",
@@ -17102,25 +17100,25 @@ export interface components {
          *     }
          */
         EmailLog: {
-            /** @description The unique identifier for the email log. */
+            /** @description Email log ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "email_log";
             /** @description Whether the email was sent. */
             has_sent: boolean;
-            /** @description The recipient email addresses. */
+            /** @description Recipient email addresses. */
             recipients: string[];
-            /** @description The email subject line. */
+            /** @description Email subject line. */
             subject: string | null;
-            /** @description The filename of any attachment. */
+            /** @description Filename of any attachment. */
             filename: string | null;
-            /** @description The SES message ID returned by AWS. */
+            /** @description SES message ID returned by AWS. */
             ses_message_id: string | null;
             /**
-             * @description The actor who sent the email. Null when the email was sent by the
+             * @description Actor who sent the email. Null when the email was sent by the
              *     system, or when the caller did not request `include=sent_by`.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
@@ -17162,17 +17160,17 @@ export interface components {
             sent_by: components["schemas"]["Actor"] | null;
             /**
              * Format: date-time
-             * @description When this email log was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this email log was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description EmailReceivablesForCustomerRequest is the request to email receivable entries for a specific customer.
+         * @description Request to email receivable entries for a specific customer.
          * @example {
          *       "recipient_emails": [
          *         "jdoe@augno.com"
@@ -17180,24 +17178,24 @@ export interface components {
          *     }
          */
         EmailReceivablesForCustomerRequest: {
-            /** @description The email addresses to send the receivables report to. */
+            /** @description Email addresses to send the receivables report to. */
             recipient_emails: string[];
         };
         /**
-         * @description EmailRecordRequest is the request to email a record to its configured recipients.
+         * @description Request to email a record to its configured recipients.
          * @example {
          *       "id": "inv_abc123",
          *       "type": "invoice"
          *     }
          */
         EmailRecordRequest: {
-            /** @description The ID of the record to email. */
+            /** @description Record ID. */
             id: string;
-            /** @description The type of record: invoice, sales_order, or purchase_order. */
+            /** @description Record type: invoice, sales_order, or purchase_order. */
             type: string;
         };
         /**
-         * @description EnsureBillingCustomerResponse represents the result of ensuring a billing customer exists.
+         * @description Result of ensuring a billing customer exists.
          * @example {
          *       "object": "ensure_billing_customer_response",
          *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
@@ -17207,19 +17205,19 @@ export interface components {
          */
         EnsureBillingCustomerResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "ensure_billing_customer_response";
-            /** @description The ID of the Stripe customer for billing. */
+            /** @description Stripe customer ID. */
             stripe_customer_id: string;
-            /** @description Indicates whether a new Stripe customer was created. */
+            /** @description Whether a Stripe customer was created. */
             created: boolean;
-            /** @description The billing profile ID, if one was created. */
+            /** @description Billing profile ID, if one was created. */
             billing_profile_id: string | null;
         };
         /**
-         * @description EnterpriseInquiry represents a request for an enterprise plan upgrade.
+         * @description Enterprise plan upgrade request.
          * @example {
          *       "id": "enir_01gf7a8200eaj8fke1xvw4h50x",
          *       "object": "enterprise_inquiry",
@@ -17227,10 +17225,10 @@ export interface components {
          *     }
          */
         EnterpriseInquiry: {
-            /** @description The unique identifier for this enterprise inquiry. */
+            /** @description Enterprise inquiry ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "enterprise_inquiry";
@@ -17249,10 +17247,10 @@ export interface components {
          *     }
          */
         Entity: {
-            /** @description The unique identifier for the entity. */
+            /** @description Unique identifier for the entity. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "entity";
@@ -17263,7 +17261,7 @@ export interface components {
             type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
         };
         /**
-         * @description EstimateRateRequest is the request to estimate a shipping rate.
+         * @description Request to estimate a shipping rate.
          * @example {
          *       "carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "service_level_id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -17296,16 +17294,16 @@ export interface components {
          *     }
          */
         EstimateRateRequest: {
-            /** @description The ID of the carrier to estimate rates for. */
+            /** @description Carrier ID. */
             carrier_id: string;
-            /** @description The ID of the service level to estimate rates for. */
+            /** @description Service level ID. */
             service_level_id: string;
-            /** @description The product line IDs for the shipment. */
+            /** @description Product line IDs. */
             product_line_ids: string[];
-            /** @description The customer ID for the shipment. */
+            /** @description Customer ID. */
             customer_id?: string | null;
             /**
-             * @description The origin address.
+             * @description Origin address.
              * @example {
              *       "name": "Headquarters",
              *       "is_drop_ship": false,
@@ -17318,7 +17316,7 @@ export interface components {
              */
             from_address: components["schemas"]["AddressInput"];
             /**
-             * @description The destination address.
+             * @description Destination address.
              * @example {
              *       "name": "Headquarters",
              *       "is_drop_ship": false,
@@ -17330,19 +17328,19 @@ export interface components {
              *     }
              */
             to_address: components["schemas"]["AddressInput"];
-            /** @description The parcels to estimate rates for. */
+            /** @description Parcels to estimate rates for. */
             parcels: components["schemas"]["ParcelInput"][];
-            /** @description The total order value. */
+            /** @description Total order value. */
             order_total?: number | null;
         };
-        /** @description EstimateRateResult represents the result of estimating a rate. */
+        /** @description Result of estimating a shipping rate. */
         EstimateRateResult: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "estimate_rate_result";
-            /** @description The estimated rate amount. */
+            /** @description Estimated rate amount. */
             rate: number;
         };
         /**
@@ -17351,21 +17349,21 @@ export interface components {
          */
         FileDownload: Record<string, never>;
         /**
-         * @description FindOrderDiscountByCodeRequest is the request to find an order discount by code.
+         * @description Request to find an order discount by code.
          * @example {
          *       "code": "SAVE10"
          *     }
          */
         FindOrderDiscountByCodeRequest: {
-            /** @description The discount code to look up. */
+            /** @description Discount code. */
             code: string;
-            /** @description Optional buyer account ID to scope the lookup. */
+            /** @description Buyer account ID to scope the lookup. */
             buyer_account_id?: string | null;
-            /** @description Optional sales order ID to scope the lookup. */
+            /** @description Sales order ID to scope the lookup. */
             sales_order_id?: string | null;
         };
         /**
-         * @description FrequentlyOrderedProduct represents a product frequently ordered by a customer.
+         * @description Product frequently ordered by a customer.
          * @example {
          *       "object": "frequently_ordered_product",
          *       "item": {
@@ -17404,12 +17402,12 @@ export interface components {
          */
         FrequentlyOrderedProduct: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "frequently_ordered_product";
             /**
-             * @description The item associated with this product.
+             * @description Associated item.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -17574,7 +17572,7 @@ export interface components {
              */
             item: components["schemas"]["Item"] | null;
             /**
-             * @description The most commonly ordered unit.
+             * @description Most commonly ordered unit.
              * @example {
              *       "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit",
@@ -17596,43 +17594,43 @@ export interface components {
              *     }
              */
             unit: components["schemas"]["Unit"] | null;
-            /** @description The number of times this product has been ordered. */
+            /** @description Number of times ordered. */
             order_count: number;
         };
-        /** @description Geolocation represents a geolocation sub-resource within an address. */
+        /** @description Geolocation sub-resource. */
         Geolocation: {
-            /** @description The unique identifier for the geolocation. */
+            /** @description Geolocation ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "geolocation";
-            /** @description The first line of the street address. */
+            /** @description First line of the street address. */
             street_line_1: string | null;
-            /** @description The second line of the street address. */
+            /** @description Second line of the street address. */
             street_line_2: string | null;
-            /** @description The city or locality. */
+            /** @description City or locality. */
             locality: string | null;
-            /** @description The state or administrative area. */
+            /** @description State or administrative area. */
             state: string | null;
-            /** @description The postal or zip code. */
+            /** @description Postal or ZIP code. */
             postal_code: string | null;
-            /** @description The two-letter country code. */
+            /** @description Two-letter country code. */
             country: string;
         };
         /**
-         * @description GetPossibleNextStepsRequest is the request to retrieve possible next production steps for a batch.
+         * @description Request to retrieve possible next production steps for a batch.
          * @example {
          *       "scanning_station_id": "scst_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         GetPossibleNextStepsRequest: {
-            /** @description The ID of the scanning station to evaluate next steps from. */
+            /** @description Scanning station ID to evaluate next steps from. */
             scanning_station_id: string;
         };
         /**
-         * @description GetRemainingQuantityToSplitRequest is the request to get the remaining quantity available to split from batches.
+         * @description Request to get the remaining quantity available to split from batches.
          * @example {
          *       "batch_ids": [
          *         "bt_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -17641,13 +17639,13 @@ export interface components {
          *     }
          */
         GetRemainingQuantityToSplitRequest: {
-            /** @description The IDs of the batches to check remaining quantities for. */
+            /** @description Batch IDs to check remaining quantities for. */
             batch_ids: string[];
-            /** @description The ID of the production step to check against. */
+            /** @description Production step ID to check against. */
             production_step_id: string;
         };
         /**
-         * @description GetScanningStationConsumptionRequest is the request to get material consumption data for a scanning station.
+         * @description Request to get material consumption data for a scanning station.
          * @example {
          *       "batch_ids": [
          *         "bt_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -17661,11 +17659,11 @@ export interface components {
          *     }
          */
         GetScanningStationConsumptionRequest: {
-            /** @description The IDs of the batches to calculate consumption for. */
+            /** @description Batch IDs to calculate consumption for. */
             batch_ids: string[];
-            /** @description Optional production step ID to scope the consumption calculation. */
+            /** @description Production step ID to scope the consumption calculation. */
             production_step_id: string | null;
-            /** @description Optional split quantity to factor into the consumption calculation. */
+            /** @description Split quantity to factor into the consumption calculation. */
             split_quantity: components["schemas"]["SplitQuantityInput"] | null;
         };
         /**
@@ -17677,7 +17675,7 @@ export interface components {
          */
         Healthcheck: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "healthcheck";
@@ -17685,33 +17683,33 @@ export interface components {
             status: string;
         };
         /**
-         * @description InitializeBatchRequest is the request to initialize a new batch at a scanning station.
+         * @description Request to initialize a batch at a scanning station.
          * @example {
          *       "batch_id": "bt_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "scanning_station_id": "scst_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         InitializeBatchRequest: {
-            /** @description The ID of the batch to initialize. */
+            /** @description Batch ID. */
             batch_id: string;
-            /** @description The ID of the scanning station where the batch is being initialized. */
+            /** @description Scanning station ID. */
             scanning_station_id: string;
         };
         /**
-         * @description InitiateOAuthRequest is the request to initiate carrier OAuth.
+         * @description Request to initiate carrier OAuth.
          * @example {
          *       "redirect_uri": "https://app.example.com/carriers/oauth/callback",
          *       "state": null
          *     }
          */
         InitiateOAuthRequest: {
-            /** @description The URI to redirect to after OAuth completes. */
+            /** @description Redirect URI after OAuth completes. */
             redirect_uri: string;
-            /** @description An optional opaque state value passed through the OAuth flow. */
+            /** @description Opaque state value passed through the OAuth flow. */
             state: string | null;
         };
         /**
-         * @description InventoryChangeLog represents a single inventory change log entry.
+         * @description InventoryChangeLog is an inventory change log entry.
          * @example {
          *       "id": "icl_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "inventory_change_log",
@@ -17928,20 +17926,20 @@ export interface components {
          *     }
          */
         InventoryChangeLog: {
-            /** @description The unique identifier for the inventory change log. */
+            /** @description Inventory change log ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "inventory_change_log";
             /**
-             * @description The code indicating the type of inventory change action.
+             * @description Inventory action type code.
              * @enum {string}
              */
             action_type: "scan" | "user_action" | "system_action" | "user_correction";
             /**
-             * @description The quantity associated with this change.
+             * @description Quantity for this change.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -17966,7 +17964,7 @@ export interface components {
              */
             quantity: components["schemas"]["Quantity"] | null;
             /**
-             * @description The item affected by this change.
+             * @description Item affected by this change.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -18131,7 +18129,7 @@ export interface components {
              */
             item: components["schemas"]["Item"] | null;
             /**
-             * @description The user responsible for this change.
+             * @description User responsible for this change.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "user",
@@ -18146,7 +18144,7 @@ export interface components {
              */
             responsible_user: components["schemas"]["User"] | null;
             /**
-             * @description The scanning station where this change occurred.
+             * @description Scanning station where this change occurred.
              * @example {
              *       "id": "scst_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "scanning_station",
@@ -18165,19 +18163,19 @@ export interface components {
             responsible_scanning_station: components["schemas"]["ScanningStation"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when this change was recorded.
+             * @description Timestamp when this change was recorded.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when this record was last updated.
+             * @description Timestamp when this record was last updated.
              */
             updated_at: string;
         };
-        /** @description InventoryItem represents an item with its on-hand inventory quantity. */
+        /** @description Item with on-hand inventory quantity. */
         InventoryItem: {
             /**
-             * @description The item details.
+             * @description Item details.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -18341,7 +18339,7 @@ export interface components {
              *     }
              */
             item: components["schemas"]["Item"];
-            /** @description The on-hand quantity. */
+            /** @description On-hand quantity. */
             quantity: components["schemas"]["BaseQuantity"];
         };
         /** @description InventoryReceiptSummaryEntry represents a summary of inventory receipts. */
@@ -18374,7 +18372,7 @@ export interface components {
             newest_receipt_at: string | null;
         };
         /**
-         * @description Invoice represents a full invoice with expandable lines and allocations.
+         * @description Full invoice with expandable lines and allocations.
          * @example {
          *       "id": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "invoice",
@@ -18700,21 +18698,21 @@ export interface components {
          *     }
          */
         Invoice: {
-            /** @description The unique identifier for the invoice. */
+            /** @description Invoice ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "invoice";
-            /** @description The invoice number. */
+            /** @description Invoice number. */
             number: string;
-            /** @description A note attached to this invoice. */
+            /** @description Note attached to the invoice. */
             note: string | null;
-            /** @description The sales order associated with this invoice. */
+            /** @description Sales order associated with this invoice. */
             order: components["schemas"]["SalesOrder"] | null;
             /**
-             * @description The billing address for this invoice.
+             * @description Billing address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -18737,7 +18735,7 @@ export interface components {
              *     }
              */
             billing_address: components["schemas"]["Address"] | null;
-            /** @description The shipment associated with this invoice. */
+            /** @description Shipment associated with this invoice. */
             shipment: components["schemas"]["Shipment"] | null;
             /** @description Whether the invoice has been paid in full. */
             is_paid_in_full: boolean;
@@ -18749,23 +18747,23 @@ export interface components {
             has_been_sent: boolean;
             /** @description Whether the customer accepts invoice emails. */
             accepts_invoice_emails: boolean;
-            /** @description The line items in this invoice. */
+            /** @description Line items in this invoice. */
             lines: components["schemas"]["List_InvoiceLine"] | null;
-            /** @description The allocations against this invoice. */
+            /** @description Allocations against this invoice. */
             allocations: components["schemas"]["List_InvoiceAllocation"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the invoice was created.
+             * @description Timestamp when the invoice was created.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the invoice was last updated.
+             * @description Timestamp when the invoice was last updated.
              */
             updated_at: string;
         };
         /**
-         * @description InvoiceAllocation represents a transaction allocation against an invoice.
+         * @description Transaction allocation against an invoice.
          * @example {
          *       "id": "txal_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "invoice_allocation",
@@ -18800,17 +18798,17 @@ export interface components {
          *     }
          */
         InvoiceAllocation: {
-            /** @description The unique identifier for the allocation. */
+            /** @description Allocation ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "invoice_allocation";
-            /** @description The transaction associated with this allocation. */
+            /** @description Transaction associated with this allocation. */
             transaction: components["schemas"]["Transaction"] | null;
             /**
-             * @description The allocated amount.
+             * @description Allocated amount.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -18834,28 +18832,28 @@ export interface components {
              *     }
              */
             amount: components["schemas"]["Quantity"] | null;
-            /** @description A note about this allocation. */
+            /** @description Note about this allocation. */
             note: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the allocation was created.
+             * @description Timestamp when the allocation was created.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the allocation was last updated.
+             * @description Timestamp when the allocation was last updated.
              */
             updated_at: string;
         };
-        /** @description InvoiceAllocationEntry represents an allocation of a credit against an invoice. */
+        /** @description Allocation of a credit against an invoice. */
         InvoiceAllocationEntry: {
-            /** @description The invoice number. */
+            /** @description Invoice number. */
             invoice_number: string;
-            /** @description The allocated amount as a decimal string. */
+            /** @description Allocated amount as a decimal string. */
             amount: string;
         };
         /**
-         * @description InvoiceForPayment represents an invoice in the customer payment context.
+         * @description Invoice in the customer payment context.
          * @example {
          *       "id": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "invoice_for_payment",
@@ -18939,19 +18937,19 @@ export interface components {
          *     }
          */
         InvoiceForPayment: {
-            /** @description The unique identifier for the invoice. */
+            /** @description Invoice ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "invoice_for_payment";
-            /** @description The invoice number. */
+            /** @description Invoice number. */
             number: string;
-            /** @description The customer's purchase order number. */
+            /** @description Customer's purchase order number. */
             customer_po: string | null;
             /**
-             * @description The customer associated with this invoice.
+             * @description Customer associated with this invoice.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -19184,7 +19182,7 @@ export interface components {
             /** @description Whether the customer is a parent account. */
             is_parent_account: boolean;
             /**
-             * @description The parent account if this is a child account.
+             * @description Parent account if this is a child account.
              * @example {
              *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
              *       "object": "account",
@@ -19201,7 +19199,7 @@ export interface components {
             /** @description Whether the order was prepaid. */
             is_prepaid: boolean;
             /**
-             * @description The billing address for this invoice.
+             * @description Billing address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -19226,26 +19224,26 @@ export interface components {
             billing_address: components["schemas"]["Address"] | null;
             /**
              * Format: decimal
-             * @description The total invoiced amount as a decimal string.
+             * @description Total invoiced amount as a decimal string.
              */
             invoice_total: string;
             /** @description Whether the invoice has been paid in full. */
             is_paid_in_full: boolean;
-            /** @description The allocations against this invoice. */
+            /** @description Allocations against this invoice. */
             allocations: components["schemas"]["List_InvoiceAllocation"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the invoice was created.
+             * @description Timestamp when the invoice was created.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the invoice was last updated.
+             * @description Timestamp when the invoice was last updated.
              */
             updated_at: string;
         };
         /**
-         * @description InvoiceLine represents a line item in an invoice.
+         * @description Line item in an invoice.
          * @example {
          *       "id": "ivln_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "invoice_line",
@@ -19478,15 +19476,15 @@ export interface components {
          *     }
          */
         InvoiceLine: {
-            /** @description The unique identifier for the invoice line. */
+            /** @description Invoice line ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "invoice_line";
             /**
-             * @description The quantity for this line.
+             * @description Quantity for this line.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -19511,7 +19509,7 @@ export interface components {
              */
             quantity: components["schemas"]["Quantity"] | null;
             /**
-             * @description The unit price for this line.
+             * @description Unit price for this line.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -19552,21 +19550,21 @@ export interface components {
              *     }
              */
             unit_price: components["schemas"]["Rate"] | null;
-            /** @description The sales order line associated with this invoice line. */
+            /** @description Sales order line associated with this invoice line. */
             order_line: components["schemas"]["SalesOrderLine"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the line was created.
+             * @description Timestamp when the line was created.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the line was last updated.
+             * @description Timestamp when the line was last updated.
              */
             updated_at: string;
         };
         /**
-         * @description InvoiceSummary represents a lightweight invoice for list views.
+         * @description Lightweight invoice for list views.
          * @example {
          *       "id": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "invoice_summary",
@@ -19644,19 +19642,19 @@ export interface components {
          *     }
          */
         InvoiceSummary: {
-            /** @description The unique identifier for the invoice. */
+            /** @description Invoice ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "invoice_summary";
-            /** @description The invoice number. */
+            /** @description Invoice number. */
             number: string;
-            /** @description A note attached to this invoice. */
+            /** @description Note attached to the invoice. */
             note: string | null;
             /**
-             * @description The customer associated with this invoice.
+             * @description Customer associated with this invoice.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -19886,14 +19884,14 @@ export interface components {
              *     }
              */
             customer: components["schemas"]["Customer"] | null;
-            /** @description The sales order associated with this invoice. */
+            /** @description Sales order associated with this invoice. */
             order: components["schemas"]["SalesOrder"] | null;
-            /** @description The shipment associated with this invoice. */
+            /** @description Shipment associated with this invoice. */
             shipment: components["schemas"]["Shipment"] | null;
-            /** @description The number of line items in this invoice. */
+            /** @description Number of line items. */
             line_count: number;
             /**
-             * @description The billing address for this invoice.
+             * @description Billing address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -19917,12 +19915,12 @@ export interface components {
              */
             billing_address: components["schemas"]["Address"] | null;
             /**
-             * @description The priority code for the customer.
+             * @description Customer priority code.
              * @enum {string}
              */
             priority: "low" | "normal" | "high";
             /**
-             * @description The payment term for this invoice.
+             * @description Payment term.
              * @example {
              *       "id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "payment_term",
@@ -19946,7 +19944,7 @@ export interface components {
             has_been_sent: boolean;
             /**
              * Format: decimal
-             * @description The total invoiced amount as a decimal string.
+             * @description Total invoiced amount as a decimal string.
              */
             total_invoiced: string;
             /** @description Whether the customer accepts invoice emails. */
@@ -19955,17 +19953,17 @@ export interface components {
             customer_is_edi_enabled: boolean;
             /**
              * Format: date-time
-             * @description The timestamp when the invoice was created.
+             * @description Timestamp when the invoice was created.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the invoice was last updated.
+             * @description Timestamp when the invoice was last updated.
              */
             updated_at: string;
         };
         /**
-         * @description Item represents an inventory item (product, material, or part).
+         * @description Item is an inventory item (product, material, or part).
          * @example {
          *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "item",
@@ -20129,26 +20127,26 @@ export interface components {
          *     }
          */
         Item: {
-            /** @description The unique identifier for the item. */
+            /** @description Item ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "item";
-            /** @description The stock keeping unit code. */
+            /** @description Stock keeping unit code. */
             sku: string;
-            /** @description A description of the item. */
+            /** @description Item description. */
             description: string | null;
-            /** @description Additional notes about the item. */
+            /** @description Notes. */
             notes: string | null;
             /**
-             * @description The item type code.
+             * @description Item type code.
              * @enum {string}
              */
             type: "product" | "material" | "part";
             /**
-             * @description The item category.
+             * @description Item category.
              * @example {
              *       "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item_category",
@@ -20168,7 +20166,7 @@ export interface components {
              */
             category: components["schemas"]["ItemCategory"] | null;
             /**
-             * @description The unit value rate for this item.
+             * @description Unit value rate.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -20210,7 +20208,7 @@ export interface components {
              */
             unit_value: components["schemas"]["Rate"] | null;
             /**
-             * @description The unit cost rate for this item.
+             * @description Unit cost rate.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -20252,7 +20250,7 @@ export interface components {
              */
             unit_cost: components["schemas"]["Rate"] | null;
             /**
-             * @description The burn rate for this item.
+             * @description Burn rate.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -20293,23 +20291,23 @@ export interface components {
              *     }
              */
             burn_rate: components["schemas"]["Rate"] | null;
-            /** @description The attributes assigned to this item. */
+            /** @description Attributes assigned to this item. */
             attributes: components["schemas"]["List_Attribute"] | null;
             /** @description Whether the item has unsaved changes. */
             is_dirty: boolean;
             /**
              * Format: date-time
-             * @description The timestamp when the item was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the item was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ItemCategory represents a full item category resource.
+         * @description ItemCategory resource.
          * @example {
          *       "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "item_category",
@@ -20328,28 +20326,28 @@ export interface components {
          *     }
          */
         ItemCategory: {
-            /** @description The unique identifier for the item category. */
+            /** @description Item category ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "item_category";
-            /** @description The display name of the item category. */
+            /** @description Display name. */
             name: string;
-            /** @description Notes about the item category. */
+            /** @description Notes. */
             notes: string | null;
             /**
-             * @description The type of item category.
+             * @description Item category type.
              * @enum {string}
              */
             type: "material_category" | "product_category";
-            /** @description The owner of this resource. */
+            /** @description Owner. */
             owner: components["schemas"]["Owner"] | null;
-            /** @description The properties associated with this item category. */
+            /** @description Properties associated with this item category. */
             properties: components["schemas"]["List_Property"] | null;
             /**
-             * @description The unit group associated with this item category.
+             * @description Unit group associated with this item category.
              * @example {
              *       "id": "ug_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit_group",
@@ -20370,17 +20368,17 @@ export interface components {
             unit_group: components["schemas"]["UnitGroup"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the item category was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the item category was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ItemCosts represents cost breakdown for an item.
+         * @description ItemCosts is the cost breakdown for an item.
          * @example {
          *       "object": "item",
          *       "direct_material_cost": "5.000000000000000000000000000000",
@@ -20410,32 +20408,32 @@ export interface components {
          */
         ItemCosts: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "item";
             /**
              * Format: decimal
-             * @description The direct material cost.
+             * @description Direct material cost.
              */
             direct_material_cost: string;
             /**
              * Format: decimal
-             * @description The direct labor cost.
+             * @description Direct labor cost.
              */
             direct_labor_cost: string;
             /**
              * Format: decimal
-             * @description The overhead cost.
+             * @description Overhead cost.
              */
             overhead_cost: string;
             /**
              * Format: decimal
-             * @description The total cost.
+             * @description Total cost.
              */
             total_cost: string;
             /**
-             * @description The unit for cost values.
+             * @description Unit for cost values.
              * @example {
              *       "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit",
@@ -20459,7 +20457,7 @@ export interface components {
             unit: components["schemas"]["Unit"] | null;
         };
         /**
-         * @description ItemInventory represents inventory quantities for an item.
+         * @description ItemInventory contains inventory quantities for an item.
          * @example {
          *       "object": "item",
          *       "on_hand": {
@@ -20554,34 +20552,34 @@ export interface components {
          */
         ItemInventory: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "item";
-            /** @description The on-hand quantity and its unit. */
+            /** @description On-hand quantity and unit. */
             on_hand: components["schemas"]["QuantityInfo"] | null;
-            /** @description The reserved quantity and its unit. */
+            /** @description Reserved quantity and unit. */
             reserved: components["schemas"]["QuantityInfo"] | null;
-            /** @description The available-to-promise quantity and its unit. */
+            /** @description Available-to-promise quantity and unit. */
             available_to_promise: components["schemas"]["QuantityInfo"] | null;
-            /** @description The short quantity and its unit. */
+            /** @description Short quantity and unit. */
             short: components["schemas"]["QuantityInfo"] | null;
         };
-        /** @description ItemTrendPoint represents a single trend data point. */
+        /** @description ItemTrendPoint is a single trend data point. */
         ItemTrendPoint: {
             /**
              * Format: date-time
-             * @description The date of the trend data point.
+             * @description Timestamp of the data point.
              */
             occurred_at: string;
             /**
              * Format: decimal
-             * @description The value at this date.
+             * @description Value at this date.
              */
             value: string;
         };
         /**
-         * @description ItemTrends represents historical trend data for an item.
+         * @description ItemTrends is the historical trend data for an item.
          * @example {
          *       "object": "item",
          *       "trend_type": "on_hand",
@@ -20604,27 +20602,27 @@ export interface components {
          */
         ItemTrends: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "item";
-            /** @description The trend type that was requested. */
+            /** @description Requested trend type. */
             trend_type: string;
-            /** @description The trend data points. */
+            /** @description Trend data points. */
             points: components["schemas"]["List_ItemTrendPoint"] | null;
         };
-        /** @description ListInventoriesResponse represents the response from listing all item inventories. */
+        /** @description Paginated list of inventory items. */
         ListInventoriesResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
             /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description The inventory items. */
+            /** @description Inventory items. */
             data: components["schemas"]["InventoryItem"][];
-            /** @description The total count. */
+            /** @description Total count. */
             count: number;
         };
         /**
@@ -27226,7 +27224,7 @@ export interface components {
             data: components["schemas"]["VolumeDiscountTier"][];
         };
         /**
-         * @description Location represents a location.
+         * @description Location resource.
          * @example {
          *       "id": "lc_01gf7a8200er3ar3pkfrb6kk30",
          *       "object": "location",
@@ -27259,37 +27257,37 @@ export interface components {
          *     }
          */
         Location: {
-            /** @description The unique identifier for the location. */
+            /** @description Location ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "location";
-            /** @description The display name of the location. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The code of the location type.
+             * @description Location type code.
              * @enum {string}
              */
             type: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
-            /** @description The parent location. Null if this is a top-level location. Expandable. */
+            /** @description Parent location. Null for top-level locations. Expandable. */
             parent: components["schemas"]["Location"] | null;
-            /** @description The child locations. Expandable. */
+            /** @description Child locations. Expandable. */
             children: components["schemas"]["List_Location"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the location was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the location was last updated.
+             * @description Last-updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description LocationType represents a location type.
+         * @description LocationType resource.
          * @example {
          *       "id": "lc_01gf7a8200er3ar3pkfrb6kk31",
          *       "object": "location_type",
@@ -27300,58 +27298,58 @@ export interface components {
          *     }
          */
         LocationType: {
-            /** @description The unique identifier for the location type. */
+            /** @description Location type ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "location_type";
             /**
-             * @description The unique code for this type.
+             * @description Location type code.
              * @enum {string}
              */
             code: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
-            /** @description The display name of the type. */
+            /** @description Display name. */
             name: string;
             /**
              * Format: date-time
-             * @description The timestamp when the type was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the type was last updated.
+             * @description Last-updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description The request to login a user
+         * @description Request to log in a user.
          * @example {
          *       "identifier": "jdoe",
          *       "password": "QgS7Z8Hhj3&1"
          *     }
          */
         LoginRequest: {
-            /** @description The username or email for authentication. */
+            /** @description Username or email for authentication. */
             identifier: string;
-            /** @description The password of the user. */
+            /** @description User password. */
             password: string;
         };
-        /** @description Lot represents a lot sub-resource. */
+        /** @description Lot sub-resource. */
         Lot: {
-            /** @description The unique identifier for the lot. */
+            /** @description Lot ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "lot";
-            /** @description The lot number. */
+            /** @description Lot number. */
             lot_number: string;
         };
         /**
-         * @description Machine represents a machine within an account.
+         * @description Machine within an account.
          * @example {
          *       "id": "mc_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "machine",
@@ -27364,40 +27362,40 @@ export interface components {
          *     }
          */
         Machine: {
-            /** @description The unique identifier for the machine. */
+            /** @description Machine ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "machine";
-            /** @description The display name of the machine. */
+            /** @description Display name. */
             name: string;
-            /** @description The serial number of the machine. */
+            /** @description Serial number. */
             serial_number: string;
-            /** @description Optional notes about the machine. */
+            /** @description Notes. */
             notes: string | null;
-            /** @description The department this machine belongs to. */
+            /** @description Associated department. */
             department: components["schemas"]["Department"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the machine was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the machine was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description The request to exchange a magic login token for a session
+         * @description Request to exchange a magic login token for a session.
          * @example {
          *       "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1Z25vLmNvbSIsInN1YiI6InVzXzAxZ2Y3YTgyMDBlMXNyMjBwZzl3eDZkMmswIiwiZXhwIjoxNzU2ODIzMzI5LCJpYXQiOjE3NTY4MTk3Mjl9.2ZodhtiHDqIQnDjzrJZvqIdEbQbmkgbTaz4OXdbXCWNjzEsy2-5e78XQRu-aZ8MoZ2dusIVKQcN1Tm-arKR0_Q"
          *     }
          */
         MagicLoginRequest: {
-            /** @description The magic login token from the "already registered" email. */
+            /** @description Magic login token from the "already registered" email. */
             token: string;
         };
         /** @description ManufacturingMetrics represents manufacturing performance metrics for a period. */
@@ -27414,7 +27412,7 @@ export interface components {
             labor_efficiency: number;
         };
         /**
-         * @description Material represents a material entity, extending an item with order point and lead time.
+         * @description Material with order point and lead time.
          * @example {
          *       "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "material",
@@ -27628,15 +27626,15 @@ export interface components {
          *     }
          */
         Material: {
-            /** @description The unique identifier for the material. */
+            /** @description Material ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "material";
             /**
-             * @description The item this material extends.
+             * @description Item this material extends.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -27800,24 +27798,24 @@ export interface components {
              *     }
              */
             item: components["schemas"]["Item"] | null;
-            /** @description The order point quantity for this material. */
+            /** @description Order point quantity. */
             order_point: components["schemas"]["QuantityInfo"] | null;
-            /** @description The lead time quantity for this material. */
+            /** @description Lead time quantity. */
             lead_time: components["schemas"]["QuantityInfo"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the material was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the material was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /** @description MaterialAnalyticsEntry represents a single material analytics entry. */
         MaterialAnalyticsEntry: {
-            /** @description The unique identifier for this entry. */
+            /** @description Unique identifier for this entry. */
             id: string;
             /** @description The item ID. */
             item_id: string;
@@ -27841,7 +27839,7 @@ export interface components {
             supplier_part_numbers: string[];
         };
         /**
-         * @description MergeBatchesRequest is the request to merge multiple batches into one.
+         * @description Request to merge multiple batches into one.
          * @example {
          *       "batch_ids": [
          *         "bt_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -27851,15 +27849,15 @@ export interface components {
          *     }
          */
         MergeBatchesRequest: {
-            /** @description The IDs of the batches to merge. */
+            /** @description Batch IDs to merge. */
             batch_ids: string[];
-            /** @description The ID of the scanning station performing the merge. */
+            /** @description Scanning station ID performing the merge. */
             scanning_station_id: string;
-            /** @description The ID of the production step for the merged batch. */
+            /** @description Production step ID for the merged batch. */
             production_step_id: string;
         };
         /**
-         * @description MergeCustomersRequest is the request to merge source customers into a target customer.
+         * @description Request to merge source customers into a target customer.
          * @example {
          *       "source_customer_ids": [
          *         "ac_01gf7a8200er3ar3pkfrb6kk29"
@@ -27867,21 +27865,21 @@ export interface components {
          *     }
          */
         MergeCustomersRequest: {
-            /** @description The IDs of the source customers to merge from. */
+            /** @description Source customer IDs. */
             source_customer_ids: string[];
         };
         /**
-         * @description MessageResource is a simple resource containing a message string.
+         * @description Message resource.
          * @example {
          *       "message": "Operation completed successfully."
          *     }
          */
         MessageResource: {
-            /** @description A human-readable message. */
+            /** @description Human-readable message. */
             message: string;
         };
         /**
-         * @description MoveBatchesRequest is the request to move batches to a new production step.
+         * @description Request to move batches to a production step.
          * @example {
          *       "batch_ids": [
          *         "bt_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -27891,11 +27889,11 @@ export interface components {
          *     }
          */
         MoveBatchesRequest: {
-            /** @description The IDs of the batches to move. */
+            /** @description Batch IDs to move. */
             batch_ids: string[];
-            /** @description The ID of the target production step. */
+            /** @description Target production step ID. */
             production_step_id: string;
-            /** @description The ID of the scanning station performing the move. */
+            /** @description Scanning station ID performing the move. */
             scanning_station_id: string;
         };
         /** @description NewCustomersData represents new customer time series data. */
@@ -27905,15 +27903,15 @@ export interface components {
             /** @description The data points. */
             data: components["schemas"]["DateTimeCoordinate"][];
         };
-        /** @description NotificationPreferenceItem represents a single notification preference toggle. */
+        /** @description Notification preference toggle. */
         NotificationPreferenceItem: {
-            /** @description The notification type code (e.g. "invoice", "order_acknowledgement", "purchase_order_submission"). */
+            /** @description Notification type code (e.g. "invoice", "order_acknowledgement", "purchase_order_submission"). */
             notification_type_code: string;
             /** @description Whether the notification is enabled. */
             enabled: boolean;
         };
         /**
-         * @description OAuthResponse represents the response from initiating carrier OAuth.
+         * @description Response from initiating carrier OAuth.
          * @example {
          *       "object": "oauth_response",
          *       "oauth_url": "https://oauth.fedex.com/authorize?client_id=abc123&redirect_uri=https://app.augno.com/carriers/oauth/callback"
@@ -27921,15 +27919,15 @@ export interface components {
          */
         OAuthResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "oauth_response";
-            /** @description The OAuth URL to redirect the user to. */
+            /** @description OAuth URL to redirect the user to. */
             oauth_url: string;
         };
         /**
-         * @description OAuthStatusResponse represents the OAuth connection status for a carrier.
+         * @description OAuth connection status for a carrier.
          * @example {
          *       "object": "oauth_status_response",
          *       "status": "connected"
@@ -27937,11 +27935,11 @@ export interface components {
          */
         OAuthStatusResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "oauth_status_response";
-            /** @description The OAuth connection status ("connected" or "disconnected"). */
+            /** @description OAuth connection status. Either "connected" or "disconnected". */
             status: string;
         };
         /** @description OeeDepartment represents OEE metrics for a single department. */
@@ -27960,7 +27958,7 @@ export interface components {
             estimated_runtime_hours: number;
         };
         /**
-         * @description OpenBatchSummary represents an aggregated summary of open batches.
+         * @description Aggregated summary of open batches.
          * @example {
          *       "object": "open_batch_summary",
          *       "department_name": "Production",
@@ -28000,14 +27998,14 @@ export interface components {
          */
         OpenBatchSummary: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "open_batch_summary";
-            /** @description The department name. */
+            /** @description Department name. */
             department_name: string;
             /**
-             * @description The item associated with this summary.
+             * @description Item associated with this summary.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -28172,7 +28170,7 @@ export interface components {
              */
             item: components["schemas"]["Item"] | null;
             /**
-             * @description The scanning station associated with this summary.
+             * @description Scanning station associated with this summary.
              * @example {
              *       "id": "scst_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "scanning_station",
@@ -28191,14 +28189,14 @@ export interface components {
             scanning_station: components["schemas"]["ScanningStation"] | null;
             /**
              * Format: decimal
-             * @description The count of open batches.
+             * @description Count of open batches.
              */
             count: string;
-            /** @description The unit abbreviation. */
+            /** @description Unit abbreviation. */
             unit: string;
         };
         /**
-         * @description OpenCreditEntry represents an open (not fully allocated) credit transaction.
+         * @description Open (not fully allocated) credit transaction.
          * @example {
          *       "id": "txn_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "open_credit_entry",
@@ -28226,45 +28224,45 @@ export interface components {
          *     }
          */
         OpenCreditEntry: {
-            /** @description The unique identifier for the transaction. */
+            /** @description Transaction ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "open_credit_entry";
-            /** @description The transaction number. */
+            /** @description Transaction number. */
             number: string;
-            /** @description The original transaction amount as a decimal string. */
+            /** @description Original transaction amount as a decimal string. */
             original_amount: string;
-            /** @description The total amount already allocated as a decimal string. */
+            /** @description Total amount already allocated as a decimal string. */
             allocated_amount: string;
-            /** @description The remaining unallocated amount as a decimal string. */
+            /** @description Remaining unallocated amount as a decimal string. */
             leftover_amount: string;
-            /** @description The customer associated with this transaction. */
+            /** @description Customer associated with this transaction. */
             customer: components["schemas"]["AllocationCustomer"] | null;
-            /** @description The type of transaction. */
+            /** @description Transaction type. */
             transaction_type: string;
-            /** @description The transaction method. */
+            /** @description Transaction method. */
             transaction_method: string | null;
-            /** @description The adjustment type, if applicable. */
+            /** @description Adjustment type, if applicable. */
             adjustment_type: string | null;
-            /** @description The responsible user's name. */
+            /** @description Responsible user's name. */
             responsible_user_name: string | null;
-            /** @description A note about this transaction. */
+            /** @description Note about this transaction. */
             note: string | null;
-            /** @description The Stripe payment ID, if applicable. */
+            /** @description Stripe payment ID, if applicable. */
             stripe_payment_id: string | null;
-            /** @description The allocations against invoices for this transaction. */
+            /** @description Allocations against invoices for this transaction. */
             invoice_allocations: components["schemas"]["InvoiceAllocationEntry"][];
             /**
              * Format: date-time
-             * @description The timestamp when the transaction was created.
+             * @description Creation timestamp.
              */
             created_at: string;
         };
         /**
-         * @description OrderDiscount represents an order discount.
+         * @description Order discount resource.
          * @example {
          *       "id": "ords_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "order_discount",
@@ -28279,48 +28277,48 @@ export interface components {
          *     }
          */
         OrderDiscount: {
-            /** @description The unique identifier for the order discount. */
+            /** @description Order discount ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "order_discount";
-            /** @description The human-readable name for the discount. */
+            /** @description Display name. */
             name: string;
-            /** @description The unique code for this discount. */
+            /** @description Discount code. */
             code: string;
             /**
              * Format: decimal
-             * @description The percentage value of the discount as a decimal string.
+             * @description Percentage value as a decimal string.
              */
             percentage: string;
             /**
              * Format: decimal
-             * @description The fixed amount of the discount as a decimal string.
+             * @description Fixed amount as a decimal string.
              */
             amount: string;
             /**
-             * @description The type of discount: "percentage" or "amount".
+             * @description Discount type: "percentage" or "amount".
              * @enum {string}
              */
             discount_type: "percentage" | "amount";
-            /** @description The number of orders using this discount. */
+            /** @description Number of orders using this discount. */
             order_count: number;
             /**
              * Format: date-time
-             * @description When this discount was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this discount was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /** @description OrderEntry represents a single order entry for analytics. */
         OrderEntry: {
-            /** @description The unique identifier for this entry. */
+            /** @description Unique identifier for this entry. */
             id: string;
             /**
              * Format: date-time
@@ -28460,7 +28458,7 @@ export interface components {
         /** @description Owner describes the provenance of a resource. */
         Owner: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "owner";
@@ -28486,17 +28484,17 @@ export interface components {
             account: components["schemas"]["Account"] | null;
         };
         /**
-         * @description PackPickRequest is the request to pack a pick and create a shipment.
+         * @description PackPickRequest is the request to pack a pick, creating a shipment from the picked lines.
          * @example {
          *       "shipment_case_count": 3
          *     }
          */
         PackPickRequest: {
-            /** @description The number of cases for the shipment. */
+            /** @description Number of cases for the shipment. */
             shipment_case_count: number;
         };
         /**
-         * @description PackPickResponse represents the response from packing a pick.
+         * @description PackPickResponse is the result of packing a pick.
          * @example {
          *       "pick": {
          *         "id": "pk_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -28626,7 +28624,7 @@ export interface components {
          */
         PackPickResponse: {
             /**
-             * @description The updated pick.
+             * @description Updated pick.
              * @example {
              *       "id": "pk_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "pick",
@@ -28752,33 +28750,33 @@ export interface components {
              *     }
              */
             pick: components["schemas"]["PickDetail"] | null;
-            /** @description The shipment number created. */
+            /** @description Created shipment number. */
             shipment_number: string;
         };
         /** @description PageInfo contains cursor-based pagination metadata. */
         PageInfo: {
-            /** @description Cursor to fetch the next page of results, null if no more pages. */
+            /** @description Cursor to fetch the next page, `null` if no more pages. */
             next_cursor: string | null;
-            /** @description Cursor to fetch the previous page of results, null if on the first page. */
+            /** @description Cursor to fetch the previous page, `null` if on the first page. */
             prev_cursor: string | null;
-            /** @description Whether there are more results after this page. */
+            /** @description Whether more results exist after this page. */
             has_next_page: boolean;
-            /** @description Whether there are results before this page. */
+            /** @description Whether results exist before this page. */
             has_prev_page: boolean;
         };
-        /** @description ParcelInput represents a parcel for rate estimation. */
+        /** @description Parcel for rate estimation. */
         ParcelInput: {
-            /** @description The weight of the parcel. */
+            /** @description Weight. */
             weight: number;
-            /** @description The length of the parcel. */
+            /** @description Length. */
             length: number;
-            /** @description The width of the parcel. */
+            /** @description Width. */
             width: number;
-            /** @description The height of the parcel. */
+            /** @description Height. */
             height: number;
         };
         /**
-         * @description Part represents a part (an item specialization).
+         * @description Part resource.
          * @example {
          *       "id": "it_02kn5s7811g9qwce7cizr4e0mq",
          *       "object": "part",
@@ -28941,21 +28939,21 @@ export interface components {
          *     }
          */
         Part: {
-            /** @description The unique identifier for the part (item ID). */
+            /** @description Part ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "part";
-            /** @description The stock keeping unit code. */
+            /** @description SKU. */
             sku: string;
-            /** @description A description of the part. */
+            /** @description Description. */
             description: string | null;
-            /** @description Additional notes about the part. */
+            /** @description Notes. */
             notes: string | null;
             /**
-             * @description The item category.
+             * @description Item category.
              * @example {
              *       "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item_category",
@@ -28975,7 +28973,7 @@ export interface components {
              */
             category: components["schemas"]["ItemCategory"] | null;
             /**
-             * @description The unit value rate for this part.
+             * @description Unit value rate.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -29017,7 +29015,7 @@ export interface components {
              */
             unit_value: components["schemas"]["Rate"] | null;
             /**
-             * @description The unit cost rate for this part.
+             * @description Unit cost rate.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -29059,7 +29057,7 @@ export interface components {
              */
             unit_cost: components["schemas"]["Rate"] | null;
             /**
-             * @description The burn rate for this part.
+             * @description Burn rate.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -29100,23 +29098,23 @@ export interface components {
              *     }
              */
             burn_rate: components["schemas"]["Rate"] | null;
-            /** @description The attributes assigned to this part. */
+            /** @description Attributes. */
             attributes: components["schemas"]["List_Attribute"] | null;
             /** @description Whether the part has unsaved changes. */
             is_dirty: boolean;
             /**
              * Format: date-time
-             * @description The timestamp when the part was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the part was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description PaymentTerm represents an account-owned or default payment term.
+         * @description Payment term resource.
          * @example {
          *       "id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "payment_term",
@@ -29132,35 +29130,35 @@ export interface components {
          *     }
          */
         PaymentTerm: {
-            /** @description The unique identifier for the payment term. */
+            /** @description Payment term ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "payment_term";
-            /** @description The display name of the payment term. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The status of the payment term.
+             * @description Payment term status.
              * @enum {string}
              */
             status: "active|inactive";
-            /** @description The owner of this resource. */
+            /** @description Owner of this resource. */
             owner: components["schemas"]["Owner"] | null;
             /**
              * Format: date-time
-             * @description When this payment term was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this payment term was last updated.
+             * @description Last-updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description Permission represents a single permission within a permission group.
+         * @description Permission within a permission group.
          * @example {
          *       "id": "perm_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "permission",
@@ -29173,20 +29171,20 @@ export interface components {
          *     }
          */
         Permission: {
-            /** @description The unique identifier for the permission. */
+            /** @description Permission ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "permission";
-            /** @description The unique code for this permission. */
+            /** @description Permission code. */
             code: string;
-            /** @description The display name. */
+            /** @description Display name. */
             name: string;
-            /** @description An optional description of what this permission controls. */
+            /** @description Description of what this permission controls. */
             description: string | null;
-            /** @description The code of the permission group this permission belongs to. */
+            /** @description Permission group code. */
             group: string;
             /**
              * Format: date-time
@@ -29200,7 +29198,7 @@ export interface components {
             updated_at: string;
         };
         /**
-         * @description PermissionGroup represents a grouping of related permissions.
+         * @description Grouping of related permissions.
          * @example {
          *       "id": "pg_01jm4r6700f8nwq3v5hx2d9ktq",
          *       "object": "permission_group",
@@ -29238,22 +29236,22 @@ export interface components {
          *     }
          */
         PermissionGroup: {
-            /** @description The unique identifier for the permission group. */
+            /** @description Permission group ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "permission_group";
-            /** @description The unique code for this permission group. */
+            /** @description Permission group code. */
             code: string;
-            /** @description The display name. */
+            /** @description Display name. */
             name: string;
-            /** @description An optional description. */
+            /** @description Description. */
             description: string | null;
-            /** @description The permissions belonging to this group. */
+            /** @description Permissions in this group. */
             permissions: components["schemas"]["List_Permission"] | null;
-            /** @description The owner of this resource. */
+            /** @description Owner of this resource. */
             owner: components["schemas"]["Owner"] | null;
             /**
              * Format: date-time
@@ -29266,27 +29264,27 @@ export interface components {
              */
             updated_at: string;
         };
-        /** @description Pick represents a minimal pick sub-resource. */
+        /** @description Minimal pick sub-resource. */
         Pick: {
-            /** @description The unique identifier for the pick. */
+            /** @description Pick ID. */
             id: string;
-            /** @description The resource type identifier. */
+            /** @description Resource type identifier. */
             object: string;
         };
-        /** @description PickDepartment is a minimal department sub-resource for picks. */
+        /** @description PickDepartment is a department sub-resource for picks. */
         PickDepartment: {
-            /** @description The unique identifier for the department. */
+            /** @description Department ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "department";
-            /** @description The display name of the department. */
+            /** @description Display name. */
             name: string;
         };
         /**
-         * @description PickDetail represents a full pick resource.
+         * @description PickDetail is a full pick resource.
          * @example {
          *       "id": "pk_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "pick",
@@ -29412,19 +29410,19 @@ export interface components {
          *     }
          */
         PickDetail: {
-            /** @description The unique identifier for the pick. */
+            /** @description Pick ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "pick";
-            /** @description The pick number. */
+            /** @description Pick number. */
             number: string;
-            /** @description The sales order associated with this pick. */
+            /** @description Associated sales order. */
             sales_order: components["schemas"]["PickSalesOrder"] | null;
             /**
-             * @description The customer associated with this pick.
+             * @description Associated customer.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -29655,7 +29653,7 @@ export interface components {
              */
             customer: components["schemas"]["Customer"] | null;
             /**
-             * @description The priority of this pick.
+             * @description Pick priority.
              * @example {
              *       "id": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "priority",
@@ -29671,28 +29669,28 @@ export interface components {
              *     }
              */
             priority: components["schemas"]["Priority"] | null;
-            /** @description The pick lines. */
+            /** @description Pick lines. */
             lines: components["schemas"]["List_PickLineDetail"] | null;
-            /** @description The departments associated with this pick. */
+            /** @description Associated departments. */
             departments: components["schemas"]["PickDepartment"][];
             /**
              * Format: date-time
-             * @description The timestamp when the pick was finished.
+             * @description Timestamp when the pick was finished.
              */
             finished_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the pick was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the pick was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description PickLineDetail represents a pick line resource.
+         * @description PickLineDetail is a pick line resource.
          * @example {
          *       "id": "pkln_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "pick_line",
@@ -29751,15 +29749,15 @@ export interface components {
          *     }
          */
         PickLineDetail: {
-            /** @description The unique identifier for the pick line. */
+            /** @description Pick line ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "pick_line";
             /**
-             * @description The quantity picked for this line.
+             * @description Quantity picked for this line.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -29784,7 +29782,7 @@ export interface components {
              */
             quantity: components["schemas"]["Quantity"] | null;
             /**
-             * @description The ordered quantity for this line.
+             * @description Ordered quantity for this line.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -29808,52 +29806,52 @@ export interface components {
              *     }
              */
             ordered_quantity: components["schemas"]["Quantity"] | null;
-            /** @description The sales order line info. */
+            /** @description Associated sales order line. */
             sales_order_line: components["schemas"]["PickSalesOrderLine"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the line was packed.
+             * @description Timestamp when the line was packed.
              */
             packed_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the line was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the line was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description PickSalesOrder is a minimal sales order sub-resource for picks. */
+        /** @description PickSalesOrder is a sales order sub-resource for picks. */
         PickSalesOrder: {
-            /** @description The unique identifier for the sales order. */
+            /** @description Sales order ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sales_order";
         };
-        /** @description PickSalesOrderLine is a minimal sales order line sub-resource for pick lines. */
+        /** @description PickSalesOrderLine is a sales order line sub-resource for pick lines. */
         PickSalesOrderLine: {
-            /** @description The unique identifier for the sales order line. */
+            /** @description Sales order line ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sales_order_line";
-            /** @description The line item number. */
+            /** @description Line item number. */
             line_item_number: number;
-            /** @description The product SKU. */
+            /** @description Product SKU. */
             product_sku: string;
-            /** @description The product description. */
+            /** @description Product description. */
             product_description: string | null;
         };
         /**
-         * @description PickShipmentsResponse represents the response from getting shipments for a pick.
+         * @description PickShipmentsResponse is the result of getting shipments for a pick.
          * @example {
          *       "shipment_numbers": [
          *         "SH-001",
@@ -29863,13 +29861,13 @@ export interface components {
          *     }
          */
         PickShipmentsResponse: {
-            /** @description The shipment numbers associated with the pick. */
+            /** @description Shipment numbers associated with the pick. */
             shipment_numbers: string[];
-            /** @description The total count of matching shipment numbers. */
+            /** @description Total count of matching shipment numbers. */
             count: number;
         };
         /**
-         * @description PickSummary represents a pick in list views.
+         * @description PickSummary is a pick resource for list views.
          * @example {
          *       "id": "pk_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "pick",
@@ -29921,19 +29919,19 @@ export interface components {
          *     }
          */
         PickSummary: {
-            /** @description The unique identifier for the pick. */
+            /** @description Pick ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "pick";
-            /** @description The pick number. */
+            /** @description Pick number. */
             number: string;
-            /** @description The sales order associated with this pick. */
+            /** @description Associated sales order. */
             sales_order: components["schemas"]["PickSalesOrder"] | null;
             /**
-             * @description The customer associated with this pick.
+             * @description Associated customer.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -30164,7 +30162,7 @@ export interface components {
              */
             customer: components["schemas"]["Customer"] | null;
             /**
-             * @description The priority of this pick.
+             * @description Pick priority.
              * @example {
              *       "id": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "priority",
@@ -30182,24 +30180,24 @@ export interface components {
             priority: components["schemas"]["Priority"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the pick was finished.
+             * @description Timestamp when the pick was finished.
              */
             finished_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the pick was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the pick was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description PlanChangeLineItem represents a single line item in a plan change preview. */
+        /** @description Line item in a plan change cost preview. */
         PlanChangeLineItem: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "plan_change_line_item";
@@ -30209,7 +30207,7 @@ export interface components {
             amount: number;
         };
         /**
-         * @description PlanChangeProration represents the cost preview for a plan change.
+         * @description Cost preview for a plan change.
          * @example {
          *       "object": "plan_change_proration",
          *       "net_amount": 4900,
@@ -30237,25 +30235,25 @@ export interface components {
          */
         PlanChangeProration: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "plan_change_proration";
-            /** @description The net amount in cents. */
+            /** @description Net amount in cents. */
             net_amount: number;
-            /** @description The formatted net amount for display (e.g., "$49.00"). */
+            /** @description Formatted net amount for display (e.g., "$49.00"). */
             formatted_net_amount: string;
-            /** @description The estimated monthly bill amount in cents after the change. */
+            /** @description Estimated monthly bill amount in cents after the change. */
             monthly_bill_amount: number;
-            /** @description The formatted monthly bill amount for display. */
+            /** @description Formatted monthly bill amount for display. */
             formatted_monthly_bill_amount: string;
             /** @description Detailed line items from the cost preview. */
             line_items: components["schemas"]["List_PlanChangeLineItem"] | null;
-            /** @description True when the amounts are locally estimated rather than calculated by Stripe. */
+            /** @description Whether the amounts are locally estimated rather than calculated by Stripe. */
             is_estimate: boolean;
         };
         /**
-         * @description PlanLimit represents a resource limit for a pricing plan.
+         * @description Resource limit for a pricing plan.
          * @example {
          *       "object": "plan_limit",
          *       "key": "sandboxes_maximum",
@@ -30264,17 +30262,17 @@ export interface components {
          */
         PlanLimit: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "plan_limit";
-            /** @description The resource key this limit applies to (e.g., "sandboxes", "seats", "invoices"). */
+            /** @description Resource key this limit applies to (e.g., "sandboxes", "seats", "invoices"). */
             key: string;
-            /** @description The maximum allowed value, null means unlimited. */
+            /** @description Maximum allowed value. Null means unlimited. */
             value: number | null;
         };
         /**
-         * @description PricingPlan represents a pricing plan available for purchase.
+         * @description Pricing plan available for purchase.
          * @example {
          *       "id": "pl_01gf7a8200er3ar3pkfrb6kk29",
          *       "object": "pricing_plan",
@@ -30318,41 +30316,41 @@ export interface components {
          *     }
          */
         PricingPlan: {
-            /** @description The unique ID of the plan. */
+            /** @description Plan ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "pricing_plan";
-            /** @description The display name of the plan. */
+            /** @description Display name of the plan. */
             name: string;
             /**
-             * @description The plan type code.
+             * @description Plan type code.
              * @enum {string}
              */
             plan_type: "free" | "starter" | "pro";
-            /** @description The price per seat per month in dollars. */
+            /** @description Price per seat per month in dollars. */
             price_per_seat: number;
-            /** @description The flat monthly price in dollars, if applicable. */
+            /** @description Flat monthly price in dollars, if applicable. */
             price_per_month: number | null;
-            /** @description The minimum number of seats required for this plan. */
+            /** @description Minimum seats required for this plan. */
             seat_minimum: number | null;
-            /** @description The resource limits for this plan. */
+            /** @description Resource limits for this plan. */
             limits: components["schemas"]["PlanLimit"][];
-            /** @description The features to display on the pricing page. */
+            /** @description Features to display on the pricing page. */
             display_features: string[];
-            /** @description The display order for sorting plans on the pricing page. */
+            /** @description Display order for sorting on the pricing page. */
             display_order: number;
             /** @description Whether this plan should be visually highlighted. */
             is_highlighted: boolean;
-            /** @description The call-to-action button text for this plan. */
+            /** @description Call-to-action button text. */
             button_text: string;
-            /** @description The name of the previous plan tier that this plan includes. */
+            /** @description Name of the previous plan tier this plan includes. */
             includes_previous_plan: string | null;
         };
         /**
-         * @description Priority represents a priority level used by sales orders and picks.
+         * @description Priority level used by sales orders and picks.
          * @example {
          *       "id": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "priority",
@@ -30368,35 +30366,35 @@ export interface components {
          *     }
          */
         Priority: {
-            /** @description The unique identifier for the priority. */
+            /** @description Priority ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "priority";
             /**
-             * @description The machine-readable code.
+             * @description Machine-readable code.
              * @enum {string}
              */
             code: "low" | "normal" | "high";
-            /** @description The display name of the priority. */
+            /** @description Display name. */
             name: string;
-            /** @description The owner of this resource. */
+            /** @description Owner of this resource. */
             owner: components["schemas"]["Owner"] | null;
             /**
              * Format: date-time
-             * @description When this priority was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this priority was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description Product represents a product resource with expandable item, product line, and product type.
+         * @description Product with expandable item, product line, and product type.
          * @example {
          *       "id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "product",
@@ -30592,17 +30590,17 @@ export interface components {
          *     }
          */
         Product: {
-            /** @description The unique identifier for the product. */
+            /** @description Product ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "product";
-            /** @description Whether this product is visible on the customer portal. */
+            /** @description Whether visible on the customer portal. */
             is_portal_ready: boolean;
             /**
-             * @description The product type.
+             * @description Product type.
              * @example {
              *       "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "product_type",
@@ -30614,7 +30612,7 @@ export interface components {
              */
             product_type: components["schemas"]["ProductType"] | null;
             /**
-             * @description The product line this product belongs to.
+             * @description Product line.
              * @example {
              *       "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "product_line",
@@ -30635,7 +30633,7 @@ export interface components {
              */
             product_line: components["schemas"]["ProductLine"] | null;
             /**
-             * @description The underlying item for this product.
+             * @description Item.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -30801,17 +30799,17 @@ export interface components {
             item: components["schemas"]["Item"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the product was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the product was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ProductLine represents a full product line resource.
+         * @description Product line resource.
          * @example {
          *       "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "product_line",
@@ -30831,33 +30829,33 @@ export interface components {
          *     }
          */
         ProductLine: {
-            /** @description The unique identifier for the product line. */
+            /** @description Product line ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "product_line";
-            /** @description The display name of the product line. */
+            /** @description Display name. */
             name: string;
-            /** @description Optional description of the product line. */
+            /** @description Description. */
             description: string | null;
-            /** @description Optional notes about the product line. */
+            /** @description Notes. */
             notes: string | null;
             /**
-             * @description The commission policy for this product line.
+             * @description Commission policy.
              * @enum {string}
              */
             commission_policy: "commission_applied" | "commission_exempt";
             /**
-             * @description The freight policy for this product line.
+             * @description Freight policy.
              * @enum {string}
              */
             freight_policy: "free_freight" | "billed_freight";
-            /** @description The owner of this resource. */
+            /** @description Owner. */
             owner: components["schemas"]["Owner"] | null;
             /**
-             * @description The unit group associated with this product line.
+             * @description Unit group.
              * @example {
              *       "id": "ug_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit_group",
@@ -30878,17 +30876,17 @@ export interface components {
             unit_group: components["schemas"]["UnitGroup"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the product line was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the product line was last updated.
+             * @description Last-updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ProductType represents a product type that categorizes products.
+         * @description ProductType resource.
          * @example {
          *       "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "product_type",
@@ -30899,25 +30897,25 @@ export interface components {
          *     }
          */
         ProductType: {
-            /** @description The unique identifier for the product type. */
+            /** @description Product type ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "product_type";
-            /** @description The display name of the product type. */
+            /** @description Display name. */
             name: string;
-            /** @description The unique code for the product type. */
+            /** @description Unique code. */
             code: string;
             /**
              * Format: date-time
-             * @description When this product type was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this product type was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
@@ -30937,7 +30935,7 @@ export interface components {
             seconds_costs: components["schemas"]["CostBreakdown"];
         };
         /**
-         * @description ProductionFlow represents the production flow graph for an item.
+         * @description ProductionFlow is the production flow graph for an item.
          * @example {
          *       "object": "production_flow",
          *       "steps": [
@@ -31159,15 +31157,15 @@ export interface components {
          */
         ProductionFlow: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "production_flow";
-            /** @description The steps in the production flow graph. */
+            /** @description Steps in the production flow graph. */
             steps: components["schemas"]["ProductionFlowStep"][];
         };
         /**
-         * @description ProductionFlowConsumption represents a consumption input of a step.
+         * @description ProductionFlowConsumption is a consumption input of a flow step.
          * @example {
          *       "id": "cp_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "consumption",
@@ -31222,15 +31220,15 @@ export interface components {
          *     }
          */
         ProductionFlowConsumption: {
-            /** @description The unique identifier for the consumption record. */
+            /** @description Consumption record ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "consumption";
             /**
-             * @description The consumed item.
+             * @description Consumed item.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -31239,7 +31237,7 @@ export interface components {
              */
             item: components["schemas"]["ProductionFlowItemRef"] | null;
             /**
-             * @description The consumed quantity.
+             * @description Consumed quantity.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -31264,7 +31262,7 @@ export interface components {
              */
             quantity: components["schemas"]["Quantity"] | null;
             /**
-             * @description The waste quantity.
+             * @description Waste quantity.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -31288,7 +31286,7 @@ export interface components {
              *     }
              */
             waste_quantity: components["schemas"]["Quantity"] | null;
-            /** @description Optional instructions for this consumption. */
+            /** @description Consumption instructions. */
             instructions: string | null;
         };
         /**
@@ -31300,18 +31298,18 @@ export interface components {
          *     }
          */
         ProductionFlowItemRef: {
-            /** @description The unique identifier. */
+            /** @description Item ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "item";
-            /** @description The item SKU. */
+            /** @description Item SKU. */
             sku: string;
         };
         /**
-         * @description ProductionFlowProduction represents the production output of a step.
+         * @description ProductionFlowProduction is the production output of a flow step.
          * @example {
          *       "id": "pn_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "production",
@@ -31344,15 +31342,15 @@ export interface components {
          *     }
          */
         ProductionFlowProduction: {
-            /** @description The unique identifier for the production record. */
+            /** @description Production record ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "production";
             /**
-             * @description The produced item.
+             * @description Produced item.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -31361,7 +31359,7 @@ export interface components {
              */
             item: components["schemas"]["ProductionFlowItemRef"] | null;
             /**
-             * @description The produced quantity.
+             * @description Produced quantity.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -31387,7 +31385,7 @@ export interface components {
             quantity: components["schemas"]["Quantity"] | null;
         };
         /**
-         * @description ProductionFlowStep represents a single step in the production flow.
+         * @description ProductionFlowStep is a step in the production flow.
          * @example {
          *       "id": "prst_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "production_step",
@@ -31603,17 +31601,17 @@ export interface components {
          *     }
          */
         ProductionFlowStep: {
-            /** @description The unique identifier for the production step. */
+            /** @description Production step ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "production_step";
-            /** @description The production step name. */
+            /** @description Production step name. */
             name: string;
             /**
-             * @description The production output for this step.
+             * @description Production output for this step.
              * @example {
              *       "id": "pn_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "production",
@@ -31646,14 +31644,14 @@ export interface components {
              *     }
              */
             production: components["schemas"]["ProductionFlowProduction"] | null;
-            /** @description The consumptions (inputs) for this step. */
+            /** @description Consumptions (inputs) for this step. */
             consumptions: components["schemas"]["ProductionFlowConsumption"][];
-            /** @description The steps that feed into this step. */
+            /** @description Steps that feed into this step. */
             in_steps: components["schemas"]["ProductionFlowStepRef"][];
-            /** @description The steps that this step feeds into. */
+            /** @description Steps that this step feeds into. */
             out_steps: components["schemas"]["ProductionFlowStepRef"][];
             /**
-             * @description The scanning station, if assigned.
+             * @description Scanning station, if assigned.
              * @example {
              *       "id": "prst_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "production_step"
@@ -31662,16 +31660,16 @@ export interface components {
             scanning_station: components["schemas"]["ProductionFlowStepRef"] | null;
             /**
              * Format: decimal
-             * @description The leveling factor as a decimal string.
+             * @description Leveling factor as a decimal string.
              */
             leveling_factor: string;
             /**
              * Format: decimal
-             * @description The allowances as a decimal string.
+             * @description Allowances as a decimal string.
              */
             allowances: string;
             /**
-             * @description The labor rate for this step.
+             * @description Labor rate.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -31713,7 +31711,7 @@ export interface components {
              */
             labor_rate: components["schemas"]["Rate"] | null;
             /**
-             * @description The labor time for this step.
+             * @description Labor time.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -31755,7 +31753,7 @@ export interface components {
              */
             labor_time: components["schemas"]["Rate"] | null;
             /**
-             * @description The overhead rate for this step.
+             * @description Overhead rate.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -31805,16 +31803,16 @@ export interface components {
          *     }
          */
         ProductionFlowStepRef: {
-            /** @description The unique identifier. */
+            /** @description ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
         };
         /**
-         * @description ProductionOutput represents the production output of a production step.
+         * @description Production output of a production step.
          * @example {
          *       "id": "pn_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "production",
@@ -31851,15 +31849,15 @@ export interface components {
          *     }
          */
         ProductionOutput: {
-            /** @description The unique identifier for the production. */
+            /** @description Production ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "production";
             /**
-             * @description The produced item.
+             * @description Produced item.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -31870,7 +31868,7 @@ export interface components {
              */
             produced_item: components["schemas"]["ConsumptionItem"] | null;
             /**
-             * @description The quantity produced.
+             * @description Quantity produced.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -31896,17 +31894,17 @@ export interface components {
             quantity: components["schemas"]["Quantity"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the production was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the production was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ProductionRun represents a production run sub-resource.
+         * @description Production run sub-resource.
          * @example {
          *       "id": "prru_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "production_run",
@@ -31914,18 +31912,18 @@ export interface components {
          *     }
          */
         ProductionRun: {
-            /** @description The unique identifier for the production run. */
+            /** @description Production run ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "production_run";
-            /** @description The production run number. */
+            /** @description Production run number. */
             number: string;
         };
         /**
-         * @description ProductionRunDetail represents a full production run resource for single-object responses.
+         * @description Production run resource for single-object responses.
          * @example {
          *       "id": "prru_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "production_run",
@@ -31939,17 +31937,17 @@ export interface components {
          *     }
          */
         ProductionRunDetail: {
-            /** @description The unique identifier for the production run. */
+            /** @description Production run ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "production_run";
-            /** @description The production run number, unique per account. */
+            /** @description Production run number, unique per account. */
             number: string;
             /**
-             * @description The user responsible for this production run.
+             * @description Responsible user.
              * @example {
              *       "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "account_user",
@@ -31995,31 +31993,31 @@ export interface components {
              *     }
              */
             responsible_user: components["schemas"]["AccountUser"] | null;
-            /** @description The number of batches in this production run. */
+            /** @description Batch count. */
             batch_count: number;
             /**
              * Format: date-time
-             * @description When the production run was started.
+             * @description Start timestamp.
              */
             started_at: string | null;
             /**
              * Format: date-time
-             * @description When the production run was completed.
+             * @description Completion timestamp.
              */
             completed_at: string | null;
             /**
              * Format: date-time
-             * @description When the production run was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When the production run was last updated.
+             * @description Last-updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ProductionRunSummary represents a production run for list views.
+         * @description Production run resource for list views.
          * @example {
          *       "id": "prru_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "production_run",
@@ -32033,17 +32031,17 @@ export interface components {
          *     }
          */
         ProductionRunSummary: {
-            /** @description The unique identifier for the production run. */
+            /** @description Production run ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "production_run";
-            /** @description The production run number, unique per account. */
+            /** @description Production run number, unique per account. */
             number: string;
             /**
-             * @description The user responsible for this production run.
+             * @description Responsible user.
              * @example {
              *       "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "account_user",
@@ -32089,31 +32087,31 @@ export interface components {
              *     }
              */
             responsible_user: components["schemas"]["AccountUser"] | null;
-            /** @description The number of batches in this production run. */
+            /** @description Batch count. */
             batch_count: number;
             /**
              * Format: date-time
-             * @description When the production run was started.
+             * @description Start timestamp.
              */
             started_at: string | null;
             /**
              * Format: date-time
-             * @description When the production run was completed.
+             * @description Completion timestamp.
              */
             completed_at: string | null;
             /**
              * Format: date-time
-             * @description When the production run was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When the production run was last updated.
+             * @description Last-updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ProductionStep represents a production step with all nested data.
+         * @description Production step with all nested data.
          * @example {
          *       "id": "prst_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "production_step",
@@ -32337,29 +32335,29 @@ export interface components {
          *     }
          */
         ProductionStep: {
-            /** @description The unique identifier for the production step. */
+            /** @description Production step ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "production_step";
-            /** @description The display name of the production step. */
+            /** @description Display name. */
             name: string;
-            /** @description Optional notes about the production step. */
+            /** @description Notes. */
             notes: string | null;
             /**
              * Format: decimal
-             * @description The leveling factor as a decimal string.
+             * @description Leveling factor as a decimal string.
              */
             leveling_factor: string;
             /**
              * Format: decimal
-             * @description The allowances as a decimal string.
+             * @description Allowances as a decimal string.
              */
             allowances: string;
             /**
-             * @description The labor rate for this step.
+             * @description Labor rate.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -32401,7 +32399,7 @@ export interface components {
              */
             labor_rate: components["schemas"]["Rate"] | null;
             /**
-             * @description The labor time for this step.
+             * @description Labor time.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -32443,7 +32441,7 @@ export interface components {
              */
             labor_time: components["schemas"]["Rate"] | null;
             /**
-             * @description The overhead rate for this step.
+             * @description Overhead rate.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -32485,7 +32483,7 @@ export interface components {
              */
             overhead_rate: components["schemas"]["Rate"] | null;
             /**
-             * @description The production output for this step.
+             * @description Production output.
              * @example {
              *       "id": "pn_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "production",
@@ -32522,12 +32520,12 @@ export interface components {
              *     }
              */
             production: components["schemas"]["ProductionOutput"] | null;
-            /** @description The consumptions for this step. */
+            /** @description Consumptions. */
             consumptions: components["schemas"]["Consumption"][];
-            /** @description The machines assigned to this step. */
+            /** @description Machines assigned to this step. */
             machines: components["schemas"]["ProductionStepMachine"][];
             /**
-             * @description The scanning station for this step.
+             * @description Scanning station.
              * @example {
              *       "id": "scst_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "scanning_station",
@@ -32535,12 +32533,12 @@ export interface components {
              *     }
              */
             scanning_station: components["schemas"]["ProductionStepScanStation"] | null;
-            /** @description The input steps that feed into this step. */
+            /** @description Input steps feeding into this step. */
             in_steps: components["schemas"]["ProductionStepRef"][];
-            /** @description The output steps that this step feeds into. */
+            /** @description Output steps this step feeds into. */
             out_steps: components["schemas"]["ProductionStepRef"][];
             /**
-             * @description The department this step belongs to.
+             * @description Department.
              * @example {
              *       "id": "dp_01gf7a8200er3ar3pkfrb6kk30",
              *       "object": "department"
@@ -32549,33 +32547,33 @@ export interface components {
             department: components["schemas"]["ProductionStepDepartment"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the production step was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the production step was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ProductionStepDepartment is a department reference on a production step.
+         * @description Department reference on a production step.
          * @example {
          *       "id": "dp_01gf7a8200er3ar3pkfrb6kk30",
          *       "object": "department"
          *     }
          */
         ProductionStepDepartment: {
-            /** @description The unique identifier for the department. */
+            /** @description Department ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "department";
         };
         /**
-         * @description ProductionStepMachine is a machine reference on a production step.
+         * @description Machine reference on a production step.
          * @example {
          *       "id": "mc_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "machine",
@@ -32583,18 +32581,18 @@ export interface components {
          *     }
          */
         ProductionStepMachine: {
-            /** @description The unique identifier for the machine. */
+            /** @description Machine ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "machine";
-            /** @description The display name of the machine. */
+            /** @description Display name. */
             name: string;
         };
         /**
-         * @description ProductionStepRef is a minimal production step reference.
+         * @description Minimal production step reference.
          * @example {
          *       "id": "prst_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "production_step",
@@ -32602,18 +32600,18 @@ export interface components {
          *     }
          */
         ProductionStepRef: {
-            /** @description The unique identifier for the production step. */
+            /** @description Production step ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "production_step";
-            /** @description The display name of the production step. */
+            /** @description Display name. */
             name: string;
         };
         /**
-         * @description ProductionStepScanStation is a scanning station reference on a production step.
+         * @description Scanning station reference on a production step.
          * @example {
          *       "id": "scst_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "scanning_station",
@@ -32621,18 +32619,18 @@ export interface components {
          *     }
          */
         ProductionStepScanStation: {
-            /** @description The unique identifier for the scanning station. */
+            /** @description Scanning station ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "scanning_station";
-            /** @description The display name of the scanning station. */
+            /** @description Display name. */
             name: string;
         };
         /**
-         * @description Property represents a property that groups attributes.
+         * @description Property that groups attributes.
          * @example {
          *       "id": "pp_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "property",
@@ -32643,30 +32641,30 @@ export interface components {
          *     }
          */
         Property: {
-            /** @description The unique identifier for the property. */
+            /** @description Property ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "property";
-            /** @description The name of the property. */
+            /** @description Name. */
             name: string;
-            /** @description The attributes belonging to this property. */
+            /** @description Attributes belonging to this property. */
             attributes: components["schemas"]["List_Attribute"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the property was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the property was last updated.
+             * @description Last update timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description PublicAccount is a minimal account representation for unauthenticated slug lookups.
+         * @description Minimal account representation for unauthenticated slug lookups.
          * @example {
          *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
          *       "object": "public_account",
@@ -32678,19 +32676,19 @@ export interface components {
          *     }
          */
         PublicAccount: {
-            /** @description The unique identifier for the account. */
+            /** @description Account ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "public_account";
-            /** @description The display name of the account. */
+            /** @description Display name. */
             name: string;
-            /** @description The portal slug. */
+            /** @description Portal slug. */
             slug: string;
             /**
-             * @description The default billing address.
+             * @description Default billing address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -32713,13 +32711,13 @@ export interface components {
              *     }
              */
             default_billing_address: components["schemas"]["Address"] | null;
-            /** @description The support email address. */
+            /** @description Support email address. */
             support_email: string | null;
-            /** @description The logo URL. */
+            /** @description Logo URL. */
             logo_url: string | null;
         };
         /**
-         * @description PurchaseOrderDetail represents a full purchase order resource.
+         * @description Full purchase order resource.
          * @example {
          *       "id": "po_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "purchase_order",
@@ -32893,21 +32891,21 @@ export interface components {
          *     }
          */
         PurchaseOrderDetail: {
-            /** @description The unique identifier for the purchase order. */
+            /** @description Purchase order ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "purchase_order";
-            /** @description The purchase order number. */
+            /** @description Purchase order number. */
             number: string;
-            /** @description A note attached to this purchase order. */
+            /** @description Order note. */
             note: string | null;
             /** @description Whether the acknowledgment has been sent. */
             is_acknowledgment_sent: boolean;
             /**
-             * @description The supplier associated with this order.
+             * @description Supplier.
              * @example {
              *       "id": "ac_02kn5s7811g9qwce7cizr4e0mq",
              *       "object": "supplier",
@@ -32917,7 +32915,7 @@ export interface components {
              */
             supplier: components["schemas"]["Supplier"] | null;
             /**
-             * @description The billing address.
+             * @description Billing address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -32941,7 +32939,7 @@ export interface components {
              */
             bill_to_address: components["schemas"]["Address"] | null;
             /**
-             * @description The shipping address.
+             * @description Shipping address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -32965,7 +32963,7 @@ export interface components {
              */
             ship_to_address: components["schemas"]["Address"] | null;
             /**
-             * @description The carrier for this order.
+             * @description Carrier.
              * @example {
              *       "id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "carrier",
@@ -32996,7 +32994,7 @@ export interface components {
              */
             carrier: components["schemas"]["Carrier"] | null;
             /**
-             * @description The service level for this order.
+             * @description Service level.
              * @example {
              *       "id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "service_level",
@@ -33009,16 +33007,16 @@ export interface components {
              *     }
              */
             service_level: components["schemas"]["ServiceLevel"] | null;
-            /** @description The carrier billing type. */
+            /** @description Carrier billing type. */
             carrier_billing_type: string | null;
-            /** @description The carrier billing account number. */
+            /** @description Carrier billing account number. */
             carrier_billing_account: string | null;
-            /** @description The order status. */
+            /** @description Order status. */
             status: components["schemas"]["SalesOrderStatusDetail"] | null;
-            /** @description The order type. */
+            /** @description Order type. */
             type: components["schemas"]["SalesOrderType"] | null;
             /**
-             * @description The priority.
+             * @description Priority.
              * @example {
              *       "id": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "priority",
@@ -33035,7 +33033,7 @@ export interface components {
              */
             priority: components["schemas"]["Priority"] | null;
             /**
-             * @description The payment term.
+             * @description Payment term.
              * @example {
              *       "id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "payment_term",
@@ -33052,7 +33050,7 @@ export interface components {
              */
             payment_term: components["schemas"]["PaymentTerm"] | null;
             /**
-             * @description The shipping term.
+             * @description Shipping term.
              * @example {
              *       "id": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "shipping_term",
@@ -33081,7 +33079,7 @@ export interface components {
              */
             shipping_term: components["schemas"]["ShippingTerm"] | null;
             /**
-             * @description The receiving order associated with this purchase order.
+             * @description Receiving order.
              * @example {
              *       "id": "rcor_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "receiving_order",
@@ -33214,38 +33212,38 @@ export interface components {
              *     }
              */
             receiving_order: components["schemas"]["ReceivingOrder"] | null;
-            /** @description The order lines. */
+            /** @description Order lines. */
             lines: components["schemas"]["List_PurchaseOrderLineDetail"] | null;
-            /** @description The email contacts for this order. */
+            /** @description Email contacts. */
             contacts: components["schemas"]["List_EmailContact"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order was issued.
+             * @description Issued timestamp.
              */
             issued_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order was completed.
+             * @description Completed timestamp.
              */
             completed_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order is scheduled/promised.
+             * @description Scheduled/promised timestamp.
              */
             scheduled_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order was created.
+             * @description Created timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the order was last updated.
+             * @description Updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description PurchaseOrderLineDetail represents a full purchase order line resource.
+         * @description Full purchase order line resource.
          * @example {
          *       "id": "poln_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "purchase_order_line",
@@ -33319,21 +33317,21 @@ export interface components {
          *     }
          */
         PurchaseOrderLineDetail: {
-            /** @description The unique identifier for the purchase order line. */
+            /** @description Purchase order line ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "purchase_order_line";
-            /** @description The line item number. */
+            /** @description Line item number. */
             line_item_number: number;
-            /** @description The product SKU. */
+            /** @description Product SKU. */
             product_sku: string;
-            /** @description The product description. */
+            /** @description Product description. */
             product_description: string | null;
             /**
-             * @description The item associated with this line.
+             * @description Item.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -33498,7 +33496,7 @@ export interface components {
              */
             item: components["schemas"]["Item"] | null;
             /**
-             * @description The quantity ordered.
+             * @description Quantity ordered.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -33523,7 +33521,7 @@ export interface components {
              */
             quantity_ordered: components["schemas"]["Quantity"] | null;
             /**
-             * @description The quantity received.
+             * @description Quantity received.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -33548,7 +33546,7 @@ export interface components {
              */
             quantity_received: components["schemas"]["Quantity"] | null;
             /**
-             * @description The unit price for this line.
+             * @description Unit price.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -33590,7 +33588,7 @@ export interface components {
              */
             unit_price: components["schemas"]["Rate"] | null;
             /**
-             * @description The unit cost for this line.
+             * @description Unit cost.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -33633,17 +33631,17 @@ export interface components {
             unit_cost: components["schemas"]["Rate"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the line was created.
+             * @description Created timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the line was last updated.
+             * @description Updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description PurchaseOrderSummary represents a lightweight purchase order for list views.
+         * @description Lightweight purchase order for list views.
          * @example {
          *       "id": "po_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "purchase_order",
@@ -33686,17 +33684,17 @@ export interface components {
          *     }
          */
         PurchaseOrderSummary: {
-            /** @description The unique identifier for the purchase order. */
+            /** @description Purchase order ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "purchase_order";
-            /** @description The purchase order number. */
+            /** @description Purchase order number. */
             number: string;
             /**
-             * @description The supplier associated with this order.
+             * @description Supplier.
              * @example {
              *       "id": "ac_02kn5s7811g9qwce7cizr4e0mq",
              *       "object": "supplier",
@@ -33705,12 +33703,12 @@ export interface components {
              *     }
              */
             supplier: components["schemas"]["Supplier"] | null;
-            /** @description The order status. */
+            /** @description Order status. */
             status: components["schemas"]["SalesOrderStatusDetail"] | null;
-            /** @description The order type. */
+            /** @description Order type. */
             type: components["schemas"]["SalesOrderType"] | null;
             /**
-             * @description The priority.
+             * @description Priority.
              * @example {
              *       "id": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "priority",
@@ -33726,33 +33724,33 @@ export interface components {
              *     }
              */
             priority: components["schemas"]["Priority"] | null;
-            /** @description The number of line items. */
+            /** @description Line item count. */
             line_count: number;
             /** @description Whether the acknowledgment has been sent. */
             is_acknowledgment_sent: boolean;
             /**
              * Format: date-time
-             * @description The timestamp when the order was issued.
+             * @description Issued timestamp.
              */
             issued_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order was completed.
+             * @description Completed timestamp.
              */
             completed_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order was created.
+             * @description Created timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the order was last updated.
+             * @description Updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description Quantity represents a value with an associated unit.
+         * @description Value with an associated unit.
          * @example {
          *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "quantity",
@@ -33776,22 +33774,22 @@ export interface components {
          *     }
          */
         Quantity: {
-            /** @description The unique identifier for the quantity. */
+            /** @description Quantity ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "quantity";
             /**
              * Format: decimal
-             * @description The decimal value of the quantity.
+             * @description Decimal value.
              */
             value: string;
-            /** @description A human-readable formatted value including the unit (e.g. "$1,234.56" or "100 kg"). */
+            /** @description Formatted value with unit abbreviation (e.g. "$1,234.56" or "100 kg"). */
             display_value: string;
             /**
-             * @description The unit associated with this quantity.
+             * @description Associated unit.
              * @example {
              *       "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit",
@@ -33814,15 +33812,15 @@ export interface components {
              */
             unit: components["schemas"]["Unit"] | null;
         };
-        /** @description QuantityInfo represents a quantity with its associated unit. */
+        /** @description QuantityInfo is a quantity with its associated unit. */
         QuantityInfo: {
             /**
              * Format: decimal
-             * @description The decimal quantity value.
+             * @description Decimal quantity value.
              */
             value: string;
             /**
-             * @description The unit for this quantity.
+             * @description Unit.
              * @example {
              *       "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit",
@@ -33855,8 +33853,11 @@ export interface components {
             /** @description The unit ID for the value. */
             unit_id: string;
         };
+        /** @description QuantityInputRequest is a quantity value and unit. */
         QuantityInputRequest: {
+            /** @description Quantity value. */
             value: string;
+            /** @description Unit ID. */
             unit_id: string;
         };
         /**
@@ -33876,7 +33877,7 @@ export interface components {
             reset_at: string | null;
         };
         /**
-         * @description Rate represents a ratio between two quantities with different units.
+         * @description Rate resource.
          * @example {
          *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "rate",
@@ -33917,20 +33918,20 @@ export interface components {
          *     }
          */
         Rate: {
-            /** @description The unique identifier for the rate. */
+            /** @description Rate ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "rate";
             /**
              * Format: decimal
-             * @description The rate value as a decimal string.
+             * @description Rate value as a decimal string.
              */
             value: string;
             /**
-             * @description The numerator unit for this rate.
+             * @description Numerator unit.
              * @example {
              *       "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit",
@@ -33953,7 +33954,7 @@ export interface components {
              */
             numerator_unit: components["schemas"]["Unit"] | null;
             /**
-             * @description The denominator unit for this rate.
+             * @description Denominator unit.
              * @example {
              *       "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit",
@@ -33975,28 +33976,28 @@ export interface components {
              *     }
              */
             denominator_unit: components["schemas"]["Unit"] | null;
-            /** @description A human-readable formatted value including the unit (e.g. "$25.50 / kg" or "100 kg / hr"). */
+            /** @description Human-readable formatted value (e.g. "$25.50 / kg" or "100 kg / hr"). */
             display_value: string;
             /**
              * Format: date-time
-             * @description When this rate was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this rate was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description RateShopOption represents a single rate shop option. */
+        /** @description Rate shop option. */
         RateShopOption: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "rate_shop_option";
             /**
-             * @description The carrier for this option.
+             * @description Carrier.
              * @example {
              *       "id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "carrier",
@@ -34027,7 +34028,7 @@ export interface components {
              */
             carrier: components["schemas"]["Carrier"] | null;
             /**
-             * @description The service level for this option.
+             * @description Service level.
              * @example {
              *       "id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "service_level",
@@ -34040,13 +34041,13 @@ export interface components {
              *     }
              */
             service_level: components["schemas"]["ServiceLevel"] | null;
-            /** @description The rate amount. */
+            /** @description Rate amount. */
             rate: number;
-            /** @description The estimated delivery days. */
+            /** @description Estimated delivery days. */
             estimated_days: number | null;
         };
         /**
-         * @description RateShopRequest is the request to rate shop across carriers.
+         * @description Request to rate shop across carriers.
          * @example {
          *       "from_address": {
          *         "name": "Origin Warehouse",
@@ -34077,12 +34078,12 @@ export interface components {
          *     }
          */
         RateShopRequest: {
-            /** @description The product line IDs for the shipment. */
+            /** @description Product line IDs. */
             product_line_ids: string[];
-            /** @description The customer ID for the shipment. */
+            /** @description Customer ID. */
             customer_id?: string | null;
             /**
-             * @description The origin address.
+             * @description Origin address.
              * @example {
              *       "name": "Headquarters",
              *       "is_drop_ship": false,
@@ -34095,7 +34096,7 @@ export interface components {
              */
             from_address: components["schemas"]["AddressInput"];
             /**
-             * @description The destination address.
+             * @description Destination address.
              * @example {
              *       "name": "Headquarters",
              *       "is_drop_ship": false,
@@ -34107,27 +34108,27 @@ export interface components {
              *     }
              */
             to_address: components["schemas"]["AddressInput"];
-            /** @description The parcels to rate shop for. */
+            /** @description Parcels to rate shop. */
             parcels: components["schemas"]["ParcelInput"][];
-            /** @description The total order value. */
+            /** @description Total order value. */
             order_total?: number | null;
         };
-        /** @description RateShopResult represents the result of rate shopping. */
+        /** @description Result of rate shopping. */
         RateShopResult: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "rate_shop_result";
-            /** @description The available rate options. */
+            /** @description Available rate options. */
             options: components["schemas"]["List_RateShopOption"] | null;
-            /** @description The exemption type, if applicable. */
+            /** @description Exemption type, if applicable. */
             exemption_type: string | null;
-            /** @description The flat rate amount, if applicable. */
+            /** @description Flat rate amount, if applicable. */
             flat_rate: number | null;
         };
         /**
-         * @description ReceivableEntry represents an outstanding receivable tied to an invoice.
+         * @description Outstanding receivable tied to an invoice.
          * @example {
          *       "object": "receivable_entry",
          *       "invoice": {
@@ -34180,12 +34181,12 @@ export interface components {
          */
         ReceivableEntry: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "receivable_entry";
             /**
-             * @description The invoice associated with this receivable entry.
+             * @description Associated invoice.
              * @example {
              *       "id": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "invoice",
@@ -34512,7 +34513,7 @@ export interface components {
              */
             invoice: components["schemas"]["Invoice"] | null;
             /**
-             * @description The customer who owes the receivable.
+             * @description Customer who owes the receivable.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -34742,20 +34743,20 @@ export interface components {
              *     }
              */
             customer: components["schemas"]["Customer"] | null;
-            /** @description The purchase order number on the invoice, if any. */
+            /** @description Purchase order number, if any. */
             po_number: string | null;
             /**
              * Format: date-time
-             * @description The date the invoice was created.
+             * @description Invoice creation date.
              */
             invoiced_at: string;
-            /** @description The remaining balance on the invoice. */
+            /** @description Remaining balance on the invoice. */
             remaining_balance: string;
             /** @description Whether the invoice has been paid in full. */
             is_paid_in_full: boolean;
         };
         /**
-         * @description ReceivingOrder represents a full receiving order with lines.
+         * @description Receiving order with lines.
          * @example {
          *       "id": "rcor_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "receiving_order",
@@ -34888,19 +34889,19 @@ export interface components {
          *     }
          */
         ReceivingOrder: {
-            /** @description The unique identifier for the receiving order. */
+            /** @description Receiving order ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "receiving_order";
-            /** @description The receiving order number. */
+            /** @description Receiving order number. */
             number: string;
-            /** @description The purchase order associated with this receiving order. */
+            /** @description Purchase order associated with this receiving order. */
             purchase_order: components["schemas"]["SalesOrder"] | null;
             /**
-             * @description The supplier associated with this receiving order.
+             * @description Supplier associated with this receiving order.
              * @example {
              *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
              *       "object": "account",
@@ -34914,28 +34915,28 @@ export interface components {
              *     }
              */
             supplier: components["schemas"]["Account"] | null;
-            /** @description A note on the receiving order. */
+            /** @description Note on the receiving order. */
             note: string | null;
-            /** @description The line items in this receiving order. */
+            /** @description Line items in this receiving order. */
             lines: components["schemas"]["List_ReceivingOrderLine"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the receiving order was completed.
+             * @description Timestamp when the receiving order was completed.
              */
             completed_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the receiving order was created.
+             * @description Timestamp when the receiving order was created.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the receiving order was last updated.
+             * @description Timestamp when the receiving order was last updated.
              */
             updated_at: string;
         };
         /**
-         * @description ReceivingOrderLine represents a line item in a receiving order.
+         * @description Line item in a receiving order.
          * @example {
          *       "id": "rcorln_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "receiving_order_line",
@@ -35042,15 +35043,15 @@ export interface components {
          *     }
          */
         ReceivingOrderLine: {
-            /** @description The unique identifier for the receiving order line. */
+            /** @description Receiving order line ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "receiving_order_line";
             /**
-             * @description The quantity received.
+             * @description Quantity received.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -35075,7 +35076,7 @@ export interface components {
              */
             quantity: components["schemas"]["Quantity"] | null;
             /**
-             * @description The rejected quantity.
+             * @description Rejected quantity.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -35100,7 +35101,7 @@ export interface components {
              */
             rejected_quantity: components["schemas"]["Quantity"] | null;
             /**
-             * @description The order line associated with this receiving order line.
+             * @description Order line associated with this receiving order line.
              * @example {
              *       "id": "orln_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "sales_order_line",
@@ -35180,22 +35181,22 @@ export interface components {
             order_line: components["schemas"]["SalesOrderLineDetail"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the line was stocked.
+             * @description Timestamp when the line was stocked.
              */
             stocked_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the line was created.
+             * @description Timestamp when the line was created.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the line was last updated.
+             * @description Timestamp when the line was last updated.
              */
             updated_at: string;
         };
         /**
-         * @description ReceivingOrderSummary represents a receiving order in list views.
+         * @description Receiving order summary for list views.
          * @example {
          *       "id": "rcor_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "receiving_order",
@@ -35214,19 +35215,19 @@ export interface components {
          *     }
          */
         ReceivingOrderSummary: {
-            /** @description The unique identifier for the receiving order. */
+            /** @description Receiving order ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "receiving_order";
-            /** @description The receiving order number. */
+            /** @description Receiving order number. */
             number: string;
-            /** @description The purchase order associated with this receiving order. */
+            /** @description Purchase order associated with this receiving order. */
             purchase_order: components["schemas"]["SalesOrder"] | null;
             /**
-             * @description The supplier associated with this receiving order.
+             * @description Supplier associated with this receiving order.
              * @example {
              *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
              *       "object": "account",
@@ -35240,46 +35241,46 @@ export interface components {
              *     }
              */
             supplier: components["schemas"]["Account"] | null;
-            /** @description The number of lines in this receiving order. */
+            /** @description Number of lines in this receiving order. */
             line_count: number;
-            /** @description The completion percentage of this receiving order. */
+            /** @description Completion percentage of this receiving order. */
             completion_percentage: number;
             /**
              * Format: date-time
-             * @description The timestamp when the receiving order was completed.
+             * @description Timestamp when the receiving order was completed.
              */
             completed_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the receiving order was created.
+             * @description Timestamp when the receiving order was created.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the receiving order was last updated.
+             * @description Timestamp when the receiving order was last updated.
              */
             updated_at: string;
         };
-        /** @description ReconcileErrorResult represents an error during reconciliation. */
+        /** @description ReconcileErrorResult is an error during reconciliation. */
         ReconcileErrorResult: {
-            /** @description The SKU. */
+            /** @description Item SKU. */
             sku: string;
-            /** @description The error message. */
+            /** @description Error message. */
             error: string;
         };
-        /** @description ReconciledItemResult represents a successfully reconciled item. */
+        /** @description ReconciledItemResult is a successfully reconciled item. */
         ReconciledItemResult: {
-            /** @description The item ID. */
+            /** @description Item ID. */
             item_id: string;
-            /** @description The SKU. */
+            /** @description Item SKU. */
             sku: string;
-            /** @description The previous quantity. */
+            /** @description Previous quantity. */
             previous_quantity: number;
-            /** @description The new quantity. */
+            /** @description New quantity. */
             new_quantity: number;
         };
         /**
-         * @description RegisterCustomerRequest is the request to register a new or existing customer.
+         * @description Request to register a new or existing customer.
          * @example {
          *       "account_slug": "my-company",
          *       "is_existing_customer": false,
@@ -35300,20 +35301,20 @@ export interface components {
          *     }
          */
         RegisterCustomerRequest: {
-            /** @description The slug of the account to register with. */
+            /** @description Account slug. */
             account_slug: string;
             /** @description Whether the registrant is an existing customer. */
             is_existing_customer: boolean;
-            /** @description The customer number, if registering as an existing customer. */
+            /** @description Customer number, if registering as an existing customer. */
             customer_number?: string | null;
-            /** @description The name of the customer. */
+            /** @description Customer name. */
             customer_name?: string | null;
-            /** @description The ID of the customer group to associate with the customer. */
+            /** @description Customer group ID. */
             customer_group_id?: string | null;
-            /** @description The phone number of the customer. */
+            /** @description Phone number. */
             phone?: string | null;
             /**
-             * @description The address of the customer.
+             * @description Customer address.
              * @example {
              *       "name": "Headquarters",
              *       "is_drop_ship": false,
@@ -35325,13 +35326,13 @@ export interface components {
              *     }
              */
             address?: components["schemas"]["AddressInput"] | null;
-            /** @description The ID of the shipping term to associate with the customer. */
+            /** @description Shipping term ID. */
             shipping_term_id?: string | null;
-            /** @description The ID of the payment term to associate with the customer. */
+            /** @description Payment term ID. */
             payment_term_id?: string | null;
         };
         /**
-         * @description The request to register a new user
+         * @description Request to register a user.
          * @example {
          *       "email": "jdoe@augno.com",
          *       "password": "QgS7Z8Hhj3&1",
@@ -35339,17 +35340,17 @@ export interface components {
          *     }
          */
         RegisterRequest: {
-            /** @description The email address for the new user. */
+            /** @description Email address. */
             email: string;
-            /** @description The password for the new user. */
+            /** @description User password. */
             password: string;
-            /** @description The full name of the new user. */
+            /** @description Full name. */
             name: string;
             /** @description When registering from a customer portal, scopes the magic-login link in the "already registered" email. */
             account_slug?: string | null;
         };
         /**
-         * @description RegistrationFlow represents a configured registration flow for customer onboarding.
+         * @description Registration flow for customer onboarding.
          * @example {
          *       "id": "rgfw_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "registration_flow",
@@ -35380,34 +35381,34 @@ export interface components {
          *     }
          */
         RegistrationFlow: {
-            /** @description The unique identifier for the registration flow. */
+            /** @description Registration flow ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "registration_flow";
-            /** @description The display name of the registration flow. */
+            /** @description Display name. */
             name: string;
-            /** @description The customer group options available in this registration flow. */
+            /** @description Customer group options available in this flow. */
             customer_group_options: components["schemas"]["RegistrationFlowOption"][];
-            /** @description The payment term options available in this registration flow. */
+            /** @description Payment term options available in this flow. */
             payment_term_options: components["schemas"]["RegistrationFlowOption"][];
-            /** @description The shipping term options available in this registration flow. */
+            /** @description Shipping term options available in this flow. */
             shipping_term_options: components["schemas"]["RegistrationFlowOption"][];
             /**
              * Format: date-time
-             * @description When this registration flow was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this registration flow was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description RegistrationFlowOption represents a selectable option within a registration flow.
+         * @description Selectable option within a registration flow.
          * @example {
          *       "id": "rgfwo_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "registration_flow_option",
@@ -35415,18 +35416,18 @@ export interface components {
          *     }
          */
         RegistrationFlowOption: {
-            /** @description The unique identifier for the registration flow option. */
+            /** @description Registration flow option ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "registration_flow_option";
-            /** @description The display name of the registration flow option. */
+            /** @description Display name. */
             name: string;
         };
         /**
-         * @description RegistrationSession represents a registration session.
+         * @description Registration session.
          * @example {
          *       "id": "rgfw_01gf7a8200eaj8fke1xvw4h50x",
          *       "object": "registration_session",
@@ -35463,28 +35464,28 @@ export interface components {
          *     }
          */
         RegistrationSession: {
-            /** @description The unique identifier for this registration session. */
+            /** @description Session ID. */
             id: string;
             /**
-             * @description The type of this object.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "registration_session";
-            /** @description The pricing plan code selected during registration. */
+            /** @description Pricing plan code. */
             plan_code: string;
             /**
-             * @description The current step in the registration flow.
+             * @description Current registration step.
              * @enum {string}
              */
             step: "verification" | "user_details" | "account_details" | "review" | "payment" | "completed";
-            /** @description The Stripe customer ID, if one has been created. */
+            /** @description Stripe customer ID. */
             stripe_customer_id: string | null;
-            /** @description The Stripe checkout session ID, if checkout was initiated. */
+            /** @description Stripe checkout session ID. */
             stripe_checkout_session_id: string | null;
-            /** @description Whether payment has been completed for this registration. */
+            /** @description Whether payment has been completed. */
             payment_completed: boolean;
             /**
-             * @description The account being registered.
+             * @description Account being registered.
              * @example {
              *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
              *       "object": "account",
@@ -35503,7 +35504,7 @@ export interface components {
              */
             account: components["schemas"]["RegistrationSessionAccount"] | null;
             /**
-             * @description The user being registered.
+             * @description User being registered.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "user",
@@ -35515,22 +35516,22 @@ export interface components {
             user: components["schemas"]["RegistrationSessionUser"];
             /**
              * Format: date-time
-             * @description When the registration was completed, null if still in progress.
+             * @description Timestamp when registration was completed. Null if still in progress.
              */
             completed_at: string | null;
             /**
              * Format: date-time
-             * @description When this registration session was created.
+             * @description Timestamp when this session was created.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this registration session was last updated.
+             * @description Timestamp when this session was last updated.
              */
             updated_at: string;
         };
         /**
-         * @description RegistrationSessionAccount represents account data within a registration session.
+         * @description Account data within a registration session.
          * @example {
          *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
          *       "object": "account",
@@ -35548,17 +35549,17 @@ export interface components {
          *     }
          */
         RegistrationSessionAccount: {
-            /** @description The account ID, null until account is created. */
+            /** @description Account ID, null until account is created. */
             id: string | null;
             /**
-             * @description Object type identifier for registration session account.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account";
-            /** @description The account's display name. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The account's billing address.
+             * @description Billing address.
              * @example {
              *       "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
              *       "object": "address",
@@ -35573,7 +35574,7 @@ export interface components {
             billing_address: components["schemas"]["RegistrationSessionAddress"];
         };
         /**
-         * @description RegistrationSessionAddress represents an address within a registration session.
+         * @description Address within a registration session.
          * @example {
          *       "id": "ad_01gf7a8200eaj8fke1xvw4h50x",
          *       "object": "address",
@@ -35586,10 +35587,10 @@ export interface components {
          *     }
          */
         RegistrationSessionAddress: {
-            /** @description The address ID, null until address is created. */
+            /** @description Address ID, null until address is created. */
             id: string | null;
             /**
-             * @description Object type identifier for registration session address.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "address";
@@ -35607,7 +35608,7 @@ export interface components {
             country: string | null;
         };
         /**
-         * @description RegistrationSessionUser represents user data within a registration session.
+         * @description User data within a registration session.
          * @example {
          *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
          *       "object": "user",
@@ -35617,25 +35618,25 @@ export interface components {
          *     }
          */
         RegistrationSessionUser: {
-            /** @description The user ID, null until user is created. */
+            /** @description User ID, null until user is created. */
             id: string | null;
             /**
-             * @description Object type identifier for registration session user.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "user";
-            /** @description Email address provided during registration. */
+            /** @description Email address. */
             email: string;
             /**
              * Format: date-time
              * @description Timestamp when email was verified, null if pending.
              */
             email_verified_at: string | null;
-            /** @description Display name provided during registration. */
+            /** @description Display name. */
             name: string | null;
         };
         /**
-         * @description RequestDemoRequest is the request to submit a demo request.
+         * @description Request to submit a demo request.
          * @example {
          *       "name": "Jane Smith",
          *       "email": "jane@example.com",
@@ -35645,19 +35646,19 @@ export interface components {
          *     }
          */
         RequestDemoRequest: {
-            /** @description The name of the person requesting the demo. */
+            /** @description Name of the requester. */
             name: string;
-            /** @description The email address of the person requesting the demo. */
+            /** @description Email address of the requester. */
             email: string;
-            /** @description The company name of the person requesting the demo. */
+            /** @description Company name. */
             company: string;
-            /** @description The phone number of the person requesting the demo. */
+            /** @description Phone number. */
             phone_number: string | null;
-            /** @description An optional message from the person requesting the demo. */
+            /** @description Message from the requester. */
             message: string | null;
         };
         /**
-         * @description RequestLog represents a single API request log entry.
+         * @description RequestLog is an API request log entry.
          * @example {
          *       "id": "rq_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "request_log",
@@ -35730,40 +35731,40 @@ export interface components {
          *     }
          */
         RequestLog: {
-            /** @description The unique identifier for the request log. */
+            /** @description Request log ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "request_log";
-            /** @description The HTTP method. */
+            /** @description HTTP method. */
             method: string;
-            /** @description The request host. */
+            /** @description Request host. */
             host: string;
-            /** @description The request path. */
+            /** @description Request path. */
             path: string;
-            /** @description The normalized route pattern. */
+            /** @description Normalized route pattern. */
             normalized_route: string;
-            /** @description The query parameters as JSON. */
+            /** @description Query parameters as JSON. */
             query_json: string | null;
-            /** @description The HTTP status code. */
+            /** @description HTTP status code. */
             status_code: number;
-            /** @description The request latency in microseconds. */
+            /** @description Request latency in microseconds. */
             latency_us: number;
-            /** @description The API version used. */
+            /** @description API version used. */
             api_version: string | null;
-            /** @description The identity type of the caller. */
+            /** @description Caller identity type. */
             identity_type: string | null;
-            /** @description The client IP address. */
+            /** @description Client IP address. */
             client_ip: string | null;
-            /** @description The user agent string. */
+            /** @description User agent string. */
             user_agent: string | null;
-            /** @description The referrer header. */
+            /** @description Referrer header. */
             referrer: string | null;
-            /** @description The API error code, if any. */
+            /** @description API error code. */
             error_code: string | null;
-            /** @description The error message, if any. */
+            /** @description Error message. */
             error_message: string | null;
             /**
              * Format: date-time
@@ -35776,7 +35777,7 @@ export interface components {
              */
             created_at: string;
             /**
-             * @description The account targeted by the request.
+             * @description Account targeted by the request.
              * @example {
              *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
              *       "object": "account",
@@ -35830,36 +35831,36 @@ export interface components {
              *     }
              */
             actor: components["schemas"]["Actor"] | null;
-            /** @description The user-provided idempotency key value. */
+            /** @description User-provided idempotency key. */
             idempotency_key: string | null;
-            /** @description The JSON request body. */
+            /** @description Request body as JSON. */
             request_body_json: string | null;
-            /** @description The JSON response body. */
+            /** @description Response body as JSON. */
             response_body_json: string | null;
         };
         /**
-         * @description The request to request a password reset
+         * @description Request for a password reset.
          * @example {
          *       "identifier": "jdoe@augno.com"
          *     }
          */
         RequestPasswordResetRequest: {
-            /** @description The username or email of the account to reset. */
+            /** @description Username or email of the account to reset. */
             identifier: string;
-            /** @description The account slug, used to redirect the user back to the original account login portal after password reset. */
+            /** @description Account slug for redirecting to the original login portal after password reset. */
             account_slug?: string | null;
         };
         /**
-         * @description The request to reset a user's password
+         * @description Request to reset a user's password.
          * @example {
          *       "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1Z25vLmNvbSIsInN1YiI6InVzXzAxZ2Y3YTgyMDBlMXNyMjBwZzl3eDZkMmswIiwiZXhwIjoxNzU2ODIzMzI5LCJpYXQiOjE3NTY4MTk3Mjl9.2ZodhtiHDqIQnDjzrJZvqIdEbQbmkgbTaz4OXdbXCWNjzEsy2-5e78XQRu-aZ8MoZ2dusIVKQcN1Tm-arKR0_Q",
          *       "password": "50iR2X0r@bvIH"
          *     }
          */
         ResetPasswordRequest: {
-            /** @description The password reset token (from request_password_reset endpoint). */
+            /** @description Password reset token. */
             token: string;
-            /** @description The new password of the user. */
+            /** @description New password. */
             password: string;
         };
         /**
@@ -35899,13 +35900,13 @@ export interface components {
             request_log_url: string | null;
         };
         /**
-         * @description ResubmitEDIInvoiceRequest is the request to resubmit an invoice via EDI.
+         * @description Request to resubmit an invoice via EDI.
          * @example {
          *       "invoice_id": "inv_abc123"
          *     }
          */
         ResubmitEDIInvoiceRequest: {
-            /** @description The ID of the invoice to resubmit. */
+            /** @description Invoice ID. */
             invoice_id: string;
         };
         /** @description RevenueForecastPoint represents a historical revenue data point. */
@@ -35919,7 +35920,7 @@ export interface components {
             revenue: number;
         };
         /**
-         * @description Role represents a role reference.
+         * @description Role resource.
          * @example {
          *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *       "object": "role",
@@ -35951,37 +35952,37 @@ export interface components {
          *     }
          */
         Role: {
-            /** @description The unique identifier for the role. */
+            /** @description Role ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "role";
-            /** @description The display name of the role. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The role type code.
+             * @description Role type code.
              * @enum {string}
              */
             type: "admin" | "user" | "scanner" | "sales_rep" | "agent";
-            /** @description The owner of this resource. */
+            /** @description Owner of this resource. */
             owner: components["schemas"]["Owner"] | null;
-            /** @description The permissions for this role in `{domain}:{action}` format. */
+            /** @description Permissions in `{domain}:{action}` format. */
             permissions: string[] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the role was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the role was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description The request to rotate an API key, optionally overriding the expiration
+         * @description Request to rotate an API key.
          * @example {
          *       "expires_at": "2026-12-31T23:59:59Z"
          *     }
@@ -35989,13 +35990,13 @@ export interface components {
         RotateAPIKeyRequest: {
             /**
              * Format: date-time
-             * @description Optional expiration time override for the new API key.
+             * @description Expiration time override.
              */
             expires_at?: string;
         };
         /** @description SalesEntry represents a single sales transaction entry for analytics. */
         SalesEntry: {
-            /** @description The unique identifier for this entry. */
+            /** @description Unique identifier for this entry. */
             id: string;
             /**
              * Format: date-time
@@ -36094,20 +36095,20 @@ export interface components {
              */
             invoiced_at: string;
         };
-        /** @description SalesOrder represents a sales order sub-resource. */
+        /** @description Sales order sub-resource. */
         SalesOrder: {
-            /** @description The unique identifier for the sales order. */
+            /** @description Sales order ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sales_order";
-            /** @description The sales order number. */
+            /** @description Sales order number. */
             number: string;
         };
         /**
-         * @description SalesOrderDetail represents a full sales order resource.
+         * @description Full sales order resource.
          * @example {
          *       "id": "or_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "sales_order",
@@ -36308,23 +36309,23 @@ export interface components {
          *     }
          */
         SalesOrderDetail: {
-            /** @description The unique identifier for the sales order. */
+            /** @description Sales order ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sales_order";
-            /** @description The sales order number. */
+            /** @description Sales order number. */
             number: string;
-            /** @description The customer purchase order number. */
+            /** @description Customer purchase order number. */
             customer_po: string | null;
-            /** @description A note attached to this sales order. */
+            /** @description Order note. */
             note: string | null;
             /** @description Whether the acknowledgment has been sent. */
             is_acknowledgment_sent: boolean;
             /**
-             * @description The customer associated with this order.
+             * @description Associated customer.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -36555,7 +36556,7 @@ export interface components {
              */
             customer: components["schemas"]["Customer"] | null;
             /**
-             * @description The billing address.
+             * @description Billing address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -36579,7 +36580,7 @@ export interface components {
              */
             bill_to_address: components["schemas"]["Address"] | null;
             /**
-             * @description The shipping address.
+             * @description Shipping address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -36603,7 +36604,7 @@ export interface components {
              */
             ship_to_address: components["schemas"]["Address"] | null;
             /**
-             * @description The carrier for this order.
+             * @description Carrier.
              * @example {
              *       "id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "carrier",
@@ -36634,7 +36635,7 @@ export interface components {
              */
             carrier: components["schemas"]["Carrier"] | null;
             /**
-             * @description The service level for this order.
+             * @description Service level.
              * @example {
              *       "id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "service_level",
@@ -36647,12 +36648,12 @@ export interface components {
              *     }
              */
             service_level: components["schemas"]["ServiceLevel"] | null;
-            /** @description The carrier billing type. */
+            /** @description Carrier billing type. */
             carrier_billing_type: string | null;
-            /** @description The carrier billing account number. */
+            /** @description Carrier billing account number. */
             carrier_billing_account: string | null;
             /**
-             * @description The sales representative. Uses Actor sub-resource.
+             * @description Sales representative. Uses Actor sub-resource.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "actor",
@@ -36691,12 +36692,12 @@ export interface components {
              *     }
              */
             sales_rep: components["schemas"]["Actor"] | null;
-            /** @description The order status. */
+            /** @description Order status. */
             status: components["schemas"]["SalesOrderStatusDetail"] | null;
-            /** @description The order type. */
+            /** @description Order type. */
             type: components["schemas"]["SalesOrderType"] | null;
             /**
-             * @description The priority.
+             * @description Priority.
              * @example {
              *       "id": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "priority",
@@ -36713,7 +36714,7 @@ export interface components {
              */
             priority: components["schemas"]["Priority"] | null;
             /**
-             * @description The payment term.
+             * @description Payment term.
              * @example {
              *       "id": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "payment_term",
@@ -36730,7 +36731,7 @@ export interface components {
              */
             payment_term: components["schemas"]["PaymentTerm"] | null;
             /**
-             * @description The shipping term.
+             * @description Shipping term.
              * @example {
              *       "id": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "shipping_term",
@@ -36759,7 +36760,7 @@ export interface components {
              */
             shipping_term: components["schemas"]["ShippingTerm"] | null;
             /**
-             * @description The order discount.
+             * @description Order discount.
              * @example {
              *       "id": "ords_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "order_discount",
@@ -36775,7 +36776,7 @@ export interface components {
              */
             order_discount: components["schemas"]["OrderDiscount"] | null;
             /**
-             * @description The production run associated with this order.
+             * @description Associated production run.
              * @example {
              *       "id": "prru_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "production_run",
@@ -36783,57 +36784,57 @@ export interface components {
              *     }
              */
             production_run: components["schemas"]["ProductionRun"] | null;
-            /** @description The pick associated with this order. */
+            /** @description Associated pick. */
             pick: components["schemas"]["Pick"] | null;
-            /** @description The order lines. */
+            /** @description Order lines. */
             lines: components["schemas"]["List_SalesOrderLineDetail"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order was issued.
+             * @description Issued timestamp.
              */
             issued_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order was completed/fulfilled.
+             * @description Completed timestamp.
              */
             completed_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp of the first shipment.
+             * @description First shipment timestamp.
              */
             first_ship_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order expired.
+             * @description Expiration timestamp.
              */
             expired_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order is promised.
+             * @description Promised timestamp.
              */
             promised_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the order was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description SalesOrderLine is a minimal sales order line sub-resource. */
+        /** @description Minimal sales order line sub-resource. */
         SalesOrderLine: {
-            /** @description The unique identifier for the sales order line. */
+            /** @description Sales order line ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sales_order";
             /**
-             * @description The item associated with this order line.
+             * @description Item associated with this order line.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -36999,7 +37000,7 @@ export interface components {
             item: components["schemas"]["Item"] | null;
         };
         /**
-         * @description SalesOrderLineDetail represents a full sales order line resource.
+         * @description Full sales order line resource.
          * @example {
          *       "id": "orln_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "sales_order_line",
@@ -37077,21 +37078,21 @@ export interface components {
          *     }
          */
         SalesOrderLineDetail: {
-            /** @description The unique identifier for the sales order line. */
+            /** @description Sales order line ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sales_order_line";
-            /** @description The line item number. */
+            /** @description Line item number. */
             line_item_number: number;
-            /** @description The product SKU. */
+            /** @description Product SKU. */
             product_sku: string;
-            /** @description The product description. */
+            /** @description Product description. */
             product_description: string | null;
             /**
-             * @description The item associated with this line.
+             * @description Associated item.
              * @example {
              *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "item",
@@ -37256,7 +37257,7 @@ export interface components {
              */
             item: components["schemas"]["Item"] | null;
             /**
-             * @description The quantity ordered.
+             * @description Quantity ordered.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -37281,7 +37282,7 @@ export interface components {
              */
             quantity_ordered: components["schemas"]["Quantity"] | null;
             /**
-             * @description The quantity picked.
+             * @description Quantity picked.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -37306,7 +37307,7 @@ export interface components {
              */
             quantity_picked: components["schemas"]["Quantity"] | null;
             /**
-             * @description The quantity packed.
+             * @description Quantity packed.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -37331,7 +37332,7 @@ export interface components {
              */
             quantity_packed: components["schemas"]["Quantity"] | null;
             /**
-             * @description The quantity invoiced.
+             * @description Quantity invoiced.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -37356,7 +37357,7 @@ export interface components {
              */
             quantity_invoiced: components["schemas"]["Quantity"] | null;
             /**
-             * @description The unit price for this line.
+             * @description Unit price.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -37398,7 +37399,7 @@ export interface components {
              */
             unit_price: components["schemas"]["Rate"] | null;
             /**
-             * @description The unit cost for this line.
+             * @description Unit cost.
              * @example {
              *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "rate",
@@ -37439,26 +37440,26 @@ export interface components {
              *     }
              */
             unit_cost: components["schemas"]["Rate"] | null;
-            /** @description The EDI line item ID. */
+            /** @description EDI line item ID. */
             edi_line_item_id: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the line was completed.
+             * @description Completed timestamp.
              */
             completed_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the line was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the line was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description SalesOrderStatus represents a sales order status lookup value.
+         * @description Sales order status lookup value.
          * @example {
          *       "id": "orss_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "sales_order_status",
@@ -37474,47 +37475,47 @@ export interface components {
          *     }
          */
         SalesOrderStatus: {
-            /** @description The unique identifier for the sales order status. */
+            /** @description Sales order status ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sales_order_status";
             /**
-             * @description The machine-readable code for this status.
+             * @description Machine-readable status code.
              * @enum {string}
              */
             code: "estimate" | "issued" | "fulfilled";
-            /** @description The display name of the sales order status. */
+            /** @description Display name. */
             name: string;
-            /** @description The owner of this resource. */
+            /** @description Owner. */
             owner: components["schemas"]["Owner"] | null;
             /**
              * Format: date-time
-             * @description When this sales order status was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this sales order status was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description SalesOrderStatusDetail represents a sales order status sub-resource. */
+        /** @description Sales order status sub-resource. */
         SalesOrderStatusDetail: {
-            /** @description The status code. */
+            /** @description Status code. */
             code: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sales_order_status";
-            /** @description The display name of the status. */
+            /** @description Display name. */
             name: string;
         };
         /**
-         * @description SalesOrderSummary represents a lightweight sales order for list views.
+         * @description Lightweight sales order for list views.
          * @example {
          *       "id": "or_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "sales_order",
@@ -37576,19 +37577,19 @@ export interface components {
          *     }
          */
         SalesOrderSummary: {
-            /** @description The unique identifier for the sales order. */
+            /** @description Sales order ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sales_order";
-            /** @description The sales order number. */
+            /** @description Sales order number. */
             number: string;
-            /** @description The customer purchase order number. */
+            /** @description Customer purchase order number. */
             customer_po: string | null;
             /**
-             * @description The customer associated with this order.
+             * @description Associated customer.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -37818,12 +37819,12 @@ export interface components {
              *     }
              */
             customer: components["schemas"]["Customer"] | null;
-            /** @description The order status. */
+            /** @description Order status. */
             status: components["schemas"]["SalesOrderStatusDetail"] | null;
-            /** @description The order type. */
+            /** @description Order type. */
             type: components["schemas"]["SalesOrderType"] | null;
             /**
-             * @description The priority.
+             * @description Priority.
              * @example {
              *       "id": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "priority",
@@ -37839,45 +37840,45 @@ export interface components {
              *     }
              */
             priority: components["schemas"]["Priority"] | null;
-            /** @description The number of line items. */
+            /** @description Line item count. */
             line_count: number;
             /** @description Whether the acknowledgment has been sent. */
             is_acknowledgment_sent: boolean;
             /**
              * Format: date-time
-             * @description The timestamp when the order was issued.
+             * @description Issued timestamp.
              */
             issued_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order was completed.
+             * @description Completed timestamp.
              */
             completed_at: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the order was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the order was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description SalesOrderType represents a sales order type sub-resource. */
+        /** @description Sales order type sub-resource. */
         SalesOrderType: {
-            /** @description The type code. */
+            /** @description Type code. */
             code: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sales_order_type";
-            /** @description The display name of the type. */
+            /** @description Display name. */
             name: string;
         };
         /**
-         * @description SalesTarget represents a sales target for an account user.
+         * @description Sales target for an account user.
          * @example {
          *       "id": "ta_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "sales_target",
@@ -37920,25 +37921,25 @@ export interface components {
          *     }
          */
         SalesTarget: {
-            /** @description The unique identifier for the sales target. */
+            /** @description Sales target ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sales_target";
             /**
              * Format: date-time
-             * @description The start date for this sales target.
+             * @description Start date.
              */
             start_at: string;
             /**
              * Format: date-time
-             * @description The end date for this sales target.
+             * @description End date.
              */
             end_at: string;
             /**
-             * @description The sales representative this target belongs to.
+             * @description Sales representative.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "user",
@@ -37953,7 +37954,7 @@ export interface components {
              */
             sales_rep: components["schemas"]["User"] | null;
             /**
-             * @description The target amount. Contains the value and unit.
+             * @description Target amount.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -37979,17 +37980,17 @@ export interface components {
             amount: components["schemas"]["Quantity"] | null;
             /**
              * Format: date-time
-             * @description When the sales target was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When the sales target was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description Sandbox represents an isolated testing environment for an account.
+         * @description Sandbox account for isolated testing.
          * @example {
          *       "id": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "sandbox",
@@ -38010,17 +38011,17 @@ export interface components {
          *     }
          */
         Sandbox: {
-            /** @description The unique identifier for the sandbox. */
+            /** @description Sandbox ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sandbox";
-            /** @description The display name of the sandbox. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The owner account of this sandbox.
+             * @description Owner account.
              * @example {
              *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
              *       "object": "account",
@@ -38046,7 +38047,7 @@ export interface components {
             updated_at: string;
         };
         /**
-         * @description ScanningConsumption represents the material consumption data for a scanning operation.
+         * @description Material consumption data for a scanning operation.
          * @example {
          *       "sku": "ALM-2024-1001",
          *       "object": "scanning_consumption",
@@ -38058,32 +38059,32 @@ export interface components {
          *     }
          */
         ScanningConsumption: {
-            /** @description The stock keeping unit code. */
+            /** @description SKU. */
             sku: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "scanning_consumption";
             /**
              * Format: decimal
-             * @description The demand measure value.
+             * @description Demand measure value.
              */
             demand_measure: string;
-            /** @description The demand unit abbreviation. */
+            /** @description Demand unit abbreviation. */
             demand_unit: string;
             /**
              * Format: decimal
-             * @description The inventory measure value.
+             * @description Inventory measure value.
              */
             inventory_measure: string;
-            /** @description The inventory unit abbreviation. */
+            /** @description Inventory unit abbreviation. */
             inventory_unit: string;
-            /** @description Optional instructions for this consumption. */
+            /** @description Consumption instructions. */
             instructions: string | null;
         };
         /**
-         * @description ScanningProductionStepInfo provides production step information for the scanning next-steps response.
+         * @description Production step information for the scanning next-steps response.
          * @example {
          *       "id": "prst_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "scanning_production_step_info",
@@ -38092,20 +38093,20 @@ export interface components {
          *     }
          */
         ScanningProductionStepInfo: {
-            /** @description The unique identifier for the production step. */
+            /** @description Production step ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "scanning_production_step_info";
-            /** @description The display name of the production step. */
+            /** @description Display name. */
             name: string;
-            /** @description Whether this production step supports multi-part batches. */
+            /** @description Whether this step supports multi-part batches. */
             is_multi_part: boolean;
         };
         /**
-         * @description ScanningStation represents a scanning station with all its details.
+         * @description Scanning station resource.
          * @example {
          *       "id": "scst_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "scanning_station",
@@ -38122,51 +38123,51 @@ export interface components {
          *     }
          */
         ScanningStation: {
-            /** @description The unique identifier for the scanning station. */
+            /** @description Scanning station ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "scanning_station";
-            /** @description The display name of the scanning station. */
+            /** @description Display name. */
             name: string;
-            /** @description Optional notes about the scanning station. */
+            /** @description Notes. */
             notes: string | null;
             /**
-             * @description The type of scanning station.
+             * @description Scanning station type.
              * @enum {string}
              */
             type: "init_batch" | "merge_batch" | "move_batch" | "split_batch";
             /**
-             * @description The label size code for the scanning station.
+             * @description Label size code.
              * @enum {string|null}
              */
             label_size: "1x1" | "1x3" | "1x4" | "2x4" | null;
             /**
-             * @description The label type code for the scanning station.
+             * @description Label type code.
              * @enum {string|null}
              */
             label_type: "tag" | "traveler" | null;
-            /** @description Whether material check is required at this station. */
+            /** @description Whether material check is required. */
             material_check_required: boolean;
-            /** @description The department this scanning station belongs to. */
+            /** @description Department. */
             department: components["schemas"]["Department"] | null;
-            /** @description The production steps connected to this scanning station. */
+            /** @description Connected production steps. */
             production_steps: components["schemas"]["List_ProductionStep"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the scanning station was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the scanning station was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ServiceLevel represents a shipping service level for a carrier.
+         * @description Shipping service level for a carrier.
          * @example {
          *       "id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "service_level",
@@ -38179,46 +38180,47 @@ export interface components {
          *     }
          */
         ServiceLevel: {
-            /** @description The unique identifier for the service level. */
+            /** @description Service level ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "service_level";
-            /** @description The display name of the service level. */
+            /** @description Display name. */
             name: string;
-            /** @description The service level token identifying this shipping service level. */
+            /** @description Service level token. */
             service_level_token: string;
             /**
-             * @description Whether this service level is visible in the customer portal.
+             * @description Customer portal visibility.
              * @enum {string}
              */
             customer_portal_visibility: "visible" | "hidden";
-            /** @description Whether this is the default service level for the carrier. */
+            /** @description Default service level for the carrier. */
             is_default: boolean;
             /**
              * Format: date-time
-             * @description When the service level was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When the service level was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
+         * @description Request to set or remove the monthly spending cap.
          * @example {
          *       "cap_cents": 50000
          *     }
          */
         SetSpendingCapRequest: {
-            /** @description The monthly spending cap in cents. Null to remove the cap. */
+            /** @description Monthly spending cap in cents. Null removes the cap. */
             cap_cents: number | null;
         };
         /**
-         * @description Settlement represents a full settlement with expandable allocations.
+         * @description Settlement with expandable allocations.
          * @example {
          *       "id": "sl_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "settlement",
@@ -38245,19 +38247,19 @@ export interface components {
          *     }
          */
         Settlement: {
-            /** @description The unique identifier for the settlement. */
+            /** @description Settlement ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "settlement";
-            /** @description The settlement number. */
+            /** @description Settlement number. */
             number: string;
-            /** @description A note attached to this settlement. */
+            /** @description Note attached to this settlement. */
             note: string | null;
             /**
-             * @description The user responsible for this settlement.
+             * @description Responsible user.
              * @example {
              *       "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "account_user",
@@ -38303,21 +38305,21 @@ export interface components {
              *     }
              */
             responsible_user: components["schemas"]["AccountUser"] | null;
-            /** @description The transaction allocations in this settlement. */
+            /** @description Transaction allocations in this settlement. */
             allocations: components["schemas"]["List_TransactionAllocation"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the settlement was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the settlement was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description SettlementSummary represents a lightweight settlement for list views.
+         * @description SettlementSummary is a lightweight settlement for list views.
          * @example {
          *       "id": "sl_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "settlement_summary",
@@ -38339,42 +38341,42 @@ export interface components {
          *     }
          */
         SettlementSummary: {
-            /** @description The unique identifier for the settlement. */
+            /** @description Settlement ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "settlement_summary";
-            /** @description The settlement number. */
+            /** @description Settlement number. */
             number: string;
-            /** @description The number of allocations in this settlement. */
+            /** @description Number of allocations in this settlement. */
             allocation_count: number;
-            /** @description The total payment amount as a decimal string. */
+            /** @description Total payment amount as a decimal string. */
             total_payments: string | null;
-            /** @description The total rebate amount as a decimal string. */
+            /** @description Total rebate amount as a decimal string. */
             total_rebates: string | null;
-            /** @description The total adjustment amount as a decimal string. */
+            /** @description Total adjustment amount as a decimal string. */
             total_adjustments: string | null;
-            /** @description The total credit amount as a decimal string. */
+            /** @description Total credit amount as a decimal string. */
             total_credits: string | null;
-            /** @description The invoice numbers included in this settlement. */
+            /** @description Invoice numbers included in this settlement. */
             invoice_numbers: string[];
-            /** @description The customer names included in this settlement. */
+            /** @description Customer names included in this settlement. */
             customer_names: string[];
             /**
              * Format: date-time
-             * @description The timestamp when the settlement was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the settlement was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description SetupBillingResponse is the response from setting up billing for a registration.
+         * @description Result of setting up billing for a registration.
          * @example {
          *       "object": "setup_billing_response",
          *       "stripe_customer_id": "cus_OG9R5zKr5xJHHp",
@@ -38384,19 +38386,19 @@ export interface components {
          */
         SetupBillingResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "setup_billing_response";
-            /** @description The Stripe customer ID created for this registration. */
+            /** @description Stripe customer ID. */
             stripe_customer_id: string;
-            /** @description The Stripe Setup Intent client secret for Stripe.js payment collection. */
+            /** @description Stripe Setup Intent client secret for Stripe.js payment collection. */
             client_secret: string;
-            /** @description The Stripe publishable key for Stripe.js initialization. */
+            /** @description Stripe publishable key for Stripe.js initialization. */
             publishable_key: string;
         };
         /**
-         * @description ShipShipmentRequest is the request to mark a shipment as shipped.
+         * @description Request to mark a shipment as shipped.
          * @example {
          *       "email_customer": true
          *     }
@@ -38405,31 +38407,31 @@ export interface components {
             /** @description Whether to email the customer a shipping notification. */
             email_customer: boolean;
         };
-        /** @description Shipment is a minimal shipment sub-resource. */
+        /** @description Minimal shipment sub-resource. */
         Shipment: {
-            /** @description The unique identifier for the shipment. */
+            /** @description Shipment ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "shipment";
-            /** @description The shipment number. */
+            /** @description Shipment number. */
             number: string;
         };
-        /** @description ShipmentBilling represents carrier billing info on a shipment. */
+        /** @description Carrier billing info on a shipment. */
         ShipmentBilling: {
-            /** @description The carrier billing type (e.g. "third_party"). */
+            /** @description Carrier billing type (e.g. "third_party"). */
             type: string;
-            /** @description The carrier billing account number. */
+            /** @description Carrier billing account number. */
             account: string | null;
-            /** @description The billing address country. */
+            /** @description Billing address country. */
             country: string | null;
-            /** @description The billing address postal code. */
+            /** @description Billing address postal code. */
             zip: string | null;
         };
         /**
-         * @description ShipmentDetail represents a full shipment API resource.
+         * @description Full shipment resource.
          * @example {
          *       "id": "sh_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "shipment",
@@ -38463,30 +38465,30 @@ export interface components {
          *     }
          */
         ShipmentDetail: {
-            /** @description The unique identifier for the shipment. */
+            /** @description Shipment ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "shipment";
-            /** @description The shipment number. */
+            /** @description Shipment number. */
             number: string;
-            /** @description A note attached to this shipment. */
+            /** @description Note attached to this shipment. */
             note: string | null;
-            /** @description The bill of lading number. */
+            /** @description Bill of lading number. */
             bill_of_lading: string | null;
-            /** @description The master tracking number for this shipment. */
+            /** @description Master tracking number. */
             master_tracking_number: string | null;
-            /** @description The shipment status. */
+            /** @description Shipment status. */
             status: components["schemas"]["ShipmentStatus"];
             /**
              * Format: date-time
-             * @description The timestamp when the shipment was shipped.
+             * @description Timestamp when shipped.
              */
             shipped_at: string | null;
             /**
-             * @description The sales order associated with this shipment.
+             * @description Associated sales order.
              * @example {
              *       "id": "or_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "sales_order",
@@ -38688,7 +38690,7 @@ export interface components {
              */
             sales_order: components["schemas"]["SalesOrderDetail"] | null;
             /**
-             * @description The customer associated with this shipment.
+             * @description Associated customer.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -38919,7 +38921,7 @@ export interface components {
              */
             customer: components["schemas"]["Customer"] | null;
             /**
-             * @description The carrier for this shipment.
+             * @description Carrier.
              * @example {
              *       "id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "carrier",
@@ -38950,7 +38952,7 @@ export interface components {
              */
             carrier: components["schemas"]["Carrier"] | null;
             /**
-             * @description The service level for this shipment.
+             * @description Service level.
              * @example {
              *       "id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "service_level",
@@ -38964,7 +38966,7 @@ export interface components {
              */
             service_level: components["schemas"]["ServiceLevel"] | null;
             /**
-             * @description The shipping address.
+             * @description Shipping address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -38988,7 +38990,7 @@ export interface components {
              */
             shipping_address: components["schemas"]["Address"] | null;
             /**
-             * @description The user who shipped this shipment.
+             * @description User who shipped this shipment.
              * @example {
              *       "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "account_user",
@@ -39035,7 +39037,7 @@ export interface components {
              */
             shipped_by: components["schemas"]["AccountUser"] | null;
             /**
-             * @description The invoice associated with this shipment.
+             * @description Associated invoice.
              * @example {
              *       "id": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "invoice",
@@ -39362,7 +39364,7 @@ export interface components {
              */
             invoice: components["schemas"]["Invoice"] | null;
             /**
-             * @description The pick associated with this shipment's order.
+             * @description Pick associated with this shipment's order.
              * @example {
              *       "id": "pk_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "pick",
@@ -39488,25 +39490,25 @@ export interface components {
              *     }
              */
             pick: components["schemas"]["PickDetail"] | null;
-            /** @description The carrier billing information. */
+            /** @description Carrier billing information. */
             billing: components["schemas"]["ShipmentBilling"] | null;
-            /** @description The shipment lines. */
+            /** @description Shipment lines. */
             lines: components["schemas"]["List_ShipmentLine"] | null;
-            /** @description The shipping cases. */
+            /** @description Shipping cases. */
             shipping_cases: components["schemas"]["List_ShippingCaseDetail"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the shipment was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the shipment was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ShipmentLine represents a shipment line API resource.
+         * @description Shipment line resource.
          * @example {
          *       "id": "shln_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "shipment_line",
@@ -39523,15 +39525,15 @@ export interface components {
          *     }
          */
         ShipmentLine: {
-            /** @description The unique identifier for the shipment line. */
+            /** @description Shipment line ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "shipment_line";
             /**
-             * @description The sales order line associated with this shipment line.
+             * @description Associated sales order line.
              * @example {
              *       "id": "orln_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "sales_order_line",
@@ -39610,7 +39612,7 @@ export interface components {
              */
             sales_order_line: components["schemas"]["SalesOrderLineDetail"] | null;
             /**
-             * @description The quantity shipped.
+             * @description Quantity shipped.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -39636,24 +39638,24 @@ export interface components {
             quantity: components["schemas"]["Quantity"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the shipment line was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the shipment line was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description ShipmentStatus is a sub-resource for shipment status. */
+        /** @description Shipment status sub-resource. */
         ShipmentStatus: {
-            /** @description The status code. */
+            /** @description Status code. */
             code: string;
-            /** @description The display name of the status. */
+            /** @description Display name. */
             name: string;
         };
         /**
-         * @description ShipmentSummary is the list view of a shipment.
+         * @description Shipment list view resource.
          * @example {
          *       "id": "sh_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "shipment_summary",
@@ -39675,30 +39677,30 @@ export interface components {
          *     }
          */
         ShipmentSummary: {
-            /** @description The unique identifier for the shipment. */
+            /** @description Shipment ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "shipment_summary";
-            /** @description The shipment number. */
+            /** @description Shipment number. */
             number: string;
-            /** @description A note attached to this shipment. */
+            /** @description Note attached to this shipment. */
             note: string | null;
-            /** @description The bill of lading number. */
+            /** @description Bill of lading number. */
             bill_of_lading: string | null;
-            /** @description The master tracking number for this shipment. */
+            /** @description Master tracking number. */
             master_tracking_number: string | null;
-            /** @description The shipment status. */
+            /** @description Shipment status. */
             status: components["schemas"]["ShipmentStatus"];
             /**
              * Format: date-time
-             * @description The timestamp when the shipment was shipped.
+             * @description Timestamp when shipped.
              */
             shipped_at: string | null;
             /**
-             * @description The sales order associated with this shipment.
+             * @description Associated sales order.
              * @example {
              *       "id": "or_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "sales_order",
@@ -39900,7 +39902,7 @@ export interface components {
              */
             sales_order: components["schemas"]["SalesOrderDetail"] | null;
             /**
-             * @description The customer associated with this shipment.
+             * @description Associated customer.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -40131,7 +40133,7 @@ export interface components {
              */
             customer: components["schemas"]["Customer"] | null;
             /**
-             * @description The carrier for this shipment.
+             * @description Carrier.
              * @example {
              *       "id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "carrier",
@@ -40162,7 +40164,7 @@ export interface components {
              */
             carrier: components["schemas"]["Carrier"] | null;
             /**
-             * @description The service level for this shipment.
+             * @description Service level.
              * @example {
              *       "id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "service_level",
@@ -40177,17 +40179,17 @@ export interface components {
             service_level: components["schemas"]["ServiceLevel"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the shipment was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the shipment was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ShippingCase represents a physical shipping case within a shipment.
+         * @description Physical shipping case within a shipment.
          * @example {
          *       "id": "shcs_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "shipping_case",
@@ -40244,26 +40246,26 @@ export interface components {
          *     }
          */
         ShippingCase: {
-            /** @description The unique identifier for the shipping case. */
+            /** @description Shipping case ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "shipping_case";
-            /** @description The human-readable case number. */
+            /** @description Human-readable case number. */
             number: string;
-            /** @description The Serial Shipping Container Code. */
+            /** @description Serial Shipping Container Code. */
             sscc: string | null;
-            /** @description The carrier tracking number for this case. */
+            /** @description Carrier tracking number. */
             tracking_number: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the case was shipped.
+             * @description Shipped timestamp.
              */
             shipped_at: string | null;
             /**
-             * @description The freight amount for this case.
+             * @description Freight amount.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -40288,7 +40290,7 @@ export interface components {
              */
             freight_amount: components["schemas"]["Quantity"] | null;
             /**
-             * @description The freight weight for this case.
+             * @description Freight weight.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -40313,7 +40315,7 @@ export interface components {
              */
             freight_weight: components["schemas"]["Quantity"] | null;
             /**
-             * @description The shipment this case belongs to.
+             * @description Associated shipment.
              * @example {
              *       "id": "sh_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "shipment",
@@ -40348,7 +40350,7 @@ export interface components {
              */
             shipment: components["schemas"]["ShipmentDetail"] | null;
             /**
-             * @description The carrier for this case.
+             * @description Carrier.
              * @example {
              *       "id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "carrier",
@@ -40380,41 +40382,41 @@ export interface components {
             carrier: components["schemas"]["Carrier"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the shipping case was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the shipping case was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description ShippingCaseDetail represents a shipping case in shipment detail views. */
+        /** @description Shipping case resource in shipment detail views. */
         ShippingCaseDetail: {
-            /** @description The unique identifier for the shipping case. */
+            /** @description Shipping case ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "shipping_case";
-            /** @description The human-readable case number. */
+            /** @description Human-readable case number. */
             number: string;
-            /** @description The Serial Shipping Container Code. */
+            /** @description Serial Shipping Container Code. */
             sscc: string | null;
-            /** @description The carrier tracking number for this case. */
+            /** @description Carrier tracking number. */
             tracking_number: string | null;
-            /** @description The Shippo transaction ID for this case. */
+            /** @description Shippo transaction ID. */
             shippo_transaction_id: string | null;
-            /** @description The URL for the shipping label. */
+            /** @description Shipping label URL. */
             shipping_label_url: string | null;
             /**
              * Format: date-time
-             * @description The timestamp when the case was shipped.
+             * @description Timestamp when shipped.
              */
             shipped_at: string | null;
             /**
-             * @description The freight amount for this case.
+             * @description Freight amount.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -40439,7 +40441,7 @@ export interface components {
              */
             freight_amount: components["schemas"]["Quantity"] | null;
             /**
-             * @description The freight weight for this case.
+             * @description Freight weight.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -40464,7 +40466,7 @@ export interface components {
              */
             freight_weight: components["schemas"]["Quantity"] | null;
             /**
-             * @description The carrier for this case.
+             * @description Carrier.
              * @example {
              *       "id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "carrier",
@@ -40496,17 +40498,17 @@ export interface components {
             carrier: components["schemas"]["Carrier"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the shipping case was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the shipping case was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description ShippingCaseLabelURL represents the response for a shipping case label URL.
+         * @description Shipping case label URL.
          * @example {
          *       "object": "shipping_case_label_url",
          *       "url": null
@@ -40514,15 +40516,15 @@ export interface components {
          */
         ShippingCaseLabelURL: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "shipping_case_label_url";
-            /** @description The presigned URL for the label, or null if no label exists. */
+            /** @description Presigned label URL, or null if no label exists. */
             url: string | null;
         };
         /**
-         * @description ShippingTerm represents a shipping term configuration.
+         * @description ShippingTerm resource.
          * @example {
          *       "id": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "shipping_term",
@@ -40550,24 +40552,24 @@ export interface components {
          *     }
          */
         ShippingTerm: {
-            /** @description The unique identifier for the shipping term. */
+            /** @description Shipping term ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "shipping_term";
-            /** @description The display name of the shipping term. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The shipping term type.
+             * @description Shipping term type.
              * @enum {string}
              */
             type: "free_freight" | "flat_rate_freight" | "carrier_rate_freight";
-            /** @description The owner of this resource. */
+            /** @description Owner. */
             owner: components["schemas"]["Owner"] | null;
             /**
-             * @description The flat rate quantity for this shipping term, if any.
+             * @description Flat rate quantity, if any.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -40592,7 +40594,7 @@ export interface components {
              */
             flat_rate: components["schemas"]["Quantity"] | null;
             /**
-             * @description The minimum order value quantity for this shipping term, if any.
+             * @description Minimum order value quantity, if any.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -40616,7 +40618,7 @@ export interface components {
              *     }
              */
             minimum_order_value: components["schemas"]["Quantity"] | null;
-            /** @description The service levels that qualify for free shipping under this term. */
+            /** @description Service levels that qualify for free shipping. */
             free_shipping_service_levels: components["schemas"]["List_ServiceLevel"] | null;
             /**
              * Format: date-time
@@ -40629,15 +40631,15 @@ export interface components {
              */
             updated_at: string;
         };
-        /** @description SkippedItemResult represents a skipped item during reconciliation. */
+        /** @description SkippedItemResult is a skipped item during reconciliation. */
         SkippedItemResult: {
-            /** @description The SKU. */
+            /** @description Item SKU. */
             sku: string;
-            /** @description The reason for skipping. */
+            /** @description Reason for skipping. */
             reason: string;
         };
         /**
-         * @description SpendingCapResponse represents the monthly agent spending cap for an account.
+         * @description Monthly agent spending cap for an account.
          * @example {
          *       "object": "spending_cap_response",
          *       "cap_cents": 5000
@@ -40645,15 +40647,15 @@ export interface components {
          */
         SpendingCapResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "spending_cap_response";
-            /** @description The monthly spending cap in cents. Null means no cap (unlimited). */
+            /** @description Monthly spending cap in cents. Null means no cap. */
             cap_cents: number | null;
         };
         /**
-         * @description SplitBatchRequest is the request to split a batch into multiple parts.
+         * @description Request to split batches into multiple parts.
          * @example {
          *       "batch_ids": [
          *         "bt_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -40671,43 +40673,43 @@ export interface components {
          *     }
          */
         SplitBatchRequest: {
-            /** @description The IDs of the batches to split. */
+            /** @description Batch IDs to split. */
             batch_ids: string[];
-            /** @description The ID of the scanning station performing the split. */
+            /** @description Scanning station ID performing the split. */
             scanning_station_id: string;
-            /** @description The ID of the production step for the split. */
+            /** @description Production step ID for the split. */
             production_step_id: string;
-            /** @description The first split quantity (required). */
+            /** @description First split quantity. */
             firsts: components["schemas"]["SplitQuantityInput"];
-            /** @description The second split quantity (optional). */
+            /** @description Second split quantity. */
             seconds: components["schemas"]["SplitQuantityInput"] | null;
-            /** @description The waste quantity (optional). */
+            /** @description Waste quantity. */
             waste: components["schemas"]["SplitQuantityInput"] | null;
-            /** @description Whether to close the original batch after splitting. */
+            /** @description Whether to close the original batches after splitting. */
             close_batch: boolean;
         };
-        /** @description SplitQuantityInput represents a quantity input for a split operation. */
+        /** @description Quantity input for a split operation. */
         SplitQuantityInput: {
-            /** @description An optional identifier for this split quantity. */
+            /** @description Identifier for this split quantity. */
             id: string;
-            /** @description The decimal measure value. */
+            /** @description Decimal measure value. */
             measure: string;
-            /** @description The ID of the unit for this quantity. */
+            /** @description Unit ID. */
             unit_id: string;
         };
-        /** @description StockLineItemRequest represents a single line item in a stocking request. */
+        /** @description Line item in a stocking request. */
         StockLineItemRequest: {
-            /** @description The ID of the receiving order line to stock. */
+            /** @description Receiving order line ID. */
             receiving_order_line_id: string;
-            /** @description The lot number to assign. */
+            /** @description Lot number to assign. */
             lot_number?: string | null;
-            /** @description The rejected quantity value. */
+            /** @description Rejected quantity value. */
             rejected_quantity?: string | null;
-            /** @description The storage allocations for this line item. */
+            /** @description Storage allocations for this line item. */
             allocations: components["schemas"]["AllocationRequest"][];
         };
         /**
-         * @description StockReceivingOrderRequest is the request to stock a receiving order.
+         * @description Request to stock a receiving order.
          * @example {
          *       "line_items": [
          *         {
@@ -40723,11 +40725,11 @@ export interface components {
          *     }
          */
         StockReceivingOrderRequest: {
-            /** @description The line items to stock with allocation details. */
+            /** @description Line items to stock with allocation details. */
             line_items: components["schemas"]["StockLineItemRequest"][];
         };
         /**
-         * @description StripePublishableKey represents the Stripe publishable key for an account.
+         * @description Stripe publishable key for an account.
          * @example {
          *       "object": "stripe_publishable_key",
          *       "publishable_key": "pk_test_example123"
@@ -40735,15 +40737,15 @@ export interface components {
          */
         StripePublishableKey: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "stripe_publishable_key";
-            /** @description The Stripe publishable key. */
+            /** @description Stripe publishable key. */
             publishable_key: string;
         };
         /**
-         * @description StripeStatus represents whether an account has a Stripe integration.
+         * @description Stripe integration status for an account.
          * @example {
          *       "object": "stripe_status",
          *       "has_stripe_integration": true
@@ -40751,15 +40753,15 @@ export interface components {
          */
         StripeStatus: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "stripe_status";
-            /** @description Whether the account has a Stripe integration configured. */
+            /** @description Whether a Stripe integration is configured. */
             has_stripe_integration: boolean;
         };
         /**
-         * @description SubmitFeedbackRequest is the request to submit user feedback.
+         * @description Request to submit user feedback.
          * @example {
          *       "question": "How would you rate this feature?",
          *       "answer": "Very useful, but could use better documentation.",
@@ -40767,15 +40769,15 @@ export interface components {
          *     }
          */
         SubmitFeedbackRequest: {
-            /** @description The question that was presented to the user. */
+            /** @description Question presented to the user. */
             question: string;
-            /** @description The user's answer to the question. */
+            /** @description Answer to the question. */
             answer: string;
-            /** @description The URL of the page where the feedback was submitted. */
+            /** @description URL of the page where feedback was submitted. */
             page_url: string | null;
         };
         /**
-         * @description SubscriptionInfo represents v2 subscription status information.
+         * @description Subscription status information.
          * @example {
          *       "object": "subscription_info",
          *       "servicing_status": "active",
@@ -40784,17 +40786,17 @@ export interface components {
          */
         SubscriptionInfo: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "subscription_info";
-            /** @description The servicing status of the pricing plan subscription (e.g., "active", "canceled"). */
+            /** @description Servicing status of the subscription (e.g., "active", "canceled"). */
             servicing_status: string;
-            /** @description The collection status (e.g., "current", "paused"). */
+            /** @description Collection status (e.g., "current", "paused"). */
             collection_status: string;
         };
         /**
-         * @description Supplier represents a supplier sub-resource.
+         * @description Supplier sub-resource.
          * @example {
          *       "id": "ac_02kn5s7811g9qwce7cizr4e0mq",
          *       "object": "supplier",
@@ -40803,20 +40805,20 @@ export interface components {
          *     }
          */
         Supplier: {
-            /** @description The unique identifier for the supplier. */
+            /** @description Supplier ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "supplier";
-            /** @description The display name of the supplier. */
+            /** @description Display name. */
             name: string;
-            /** @description The supplier number. */
+            /** @description Supplier number. */
             number: string;
         };
         /**
-         * @description SupplierDetail represents a full supplier record returned by the API.
+         * @description SupplierDetail is the full supplier resource.
          * @example {
          *       "id": "ac_02kn5s7811g9qwce7cizr4e0mq",
          *       "object": "supplier",
@@ -40869,21 +40871,21 @@ export interface components {
          *     }
          */
         SupplierDetail: {
-            /** @description The unique identifier for the supplier. */
+            /** @description Supplier ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "supplier";
-            /** @description The display name of the supplier. */
+            /** @description Display name. */
             name: string;
-            /** @description The supplier number. */
+            /** @description Supplier number. */
             number: string;
-            /** @description Notes about the supplier. */
+            /** @description Supplier notes. */
             note: string | null;
             /**
-             * @description The default billing address.
+             * @description Default billing address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -40907,7 +40909,7 @@ export interface components {
              */
             bill_to_address: components["schemas"]["Address"] | null;
             /**
-             * @description The default shipping address.
+             * @description Default shipping address.
              * @example {
              *       "id": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "address",
@@ -40930,21 +40932,21 @@ export interface components {
              *     }
              */
             ship_to_address: components["schemas"]["Address"] | null;
-            /** @description The number of materials associated with this supplier. */
+            /** @description Number of associated materials. */
             material_count: number;
             /**
              * Format: date-time
-             * @description When this supplier was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this supplier was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description SupplierMaterial represents a link between a supplier and a material.
+         * @description Supplier material resource.
          * @example {
          *       "id": "suml_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "supplier_material",
@@ -41167,15 +41169,15 @@ export interface components {
          *     }
          */
         SupplierMaterial: {
-            /** @description The unique identifier for the supplier material. */
+            /** @description Supplier material ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "supplier_material";
             /**
-             * @description The material this supplier provides.
+             * @description Material provided by this supplier.
              * @example {
              *       "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "material",
@@ -41389,25 +41391,25 @@ export interface components {
              *     }
              */
             material: components["schemas"]["Material"] | null;
-            /** @description The supplier's part number for this material. */
+            /** @description Supplier part number for this material. */
             supplier_part_number: string;
-            /** @description The supplier's description for this material. */
+            /** @description Supplier description for this material. */
             supplier_description: string | null;
-            /** @description Whether this supplier material is active. */
+            /** @description Active status. */
             is_active: boolean;
             /**
              * Format: date-time
-             * @description The timestamp when the supplier material was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the supplier material was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description SupplierSummary represents a lightweight supplier record for list results.
+         * @description SupplierSummary is the lightweight supplier resource for list results.
          * @example {
          *       "id": "ac_02kn5s7811g9qwce7cizr4e0mq",
          *       "object": "supplier_summary",
@@ -41418,37 +41420,37 @@ export interface components {
          *     }
          */
         SupplierSummary: {
-            /** @description The unique identifier for the supplier. */
+            /** @description Supplier ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "supplier_summary";
-            /** @description The display name of the supplier. */
+            /** @description Display name. */
             name: string;
-            /** @description The supplier number. */
+            /** @description Supplier number. */
             number: string;
-            /** @description The number of materials associated with this supplier. */
+            /** @description Number of associated materials. */
             material_count: number;
             /**
              * Format: date-time
-             * @description When this supplier was created.
+             * @description Creation timestamp.
              */
             created_at: string;
         };
         /**
-         * @description SwitchAccountRequest is the request to switch the user's current account.
+         * @description Request to switch the authenticated user's active account.
          * @example {
          *       "account_id": "ac_01gf7a8200eaj8fke1xvw4h50x"
          *     }
          */
         SwitchAccountRequest: {
-            /** @description The ID of the account to switch to. */
+            /** @description Account ID. */
             account_id: string;
         };
         /**
-         * @description SwitchPlanResponse represents the result of initiating a plan switch.
+         * @description Result of initiating a plan switch.
          * @example {
          *       "object": "switch_plan_response",
          *       "success": true,
@@ -41457,17 +41459,17 @@ export interface components {
          */
         SwitchPlanResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "switch_plan_response";
             /** @description Whether the plan switch was initiated successfully. */
             success: boolean;
-            /** @description The billing intent ID, if a v2 billing intent was created. */
+            /** @description Billing intent ID, if a billing intent was created. */
             intent_id: string | null;
         };
         /**
-         * @description SysProperty represents a system property counter.
+         * @description System property counter.
          * @example {
          *       "id": "sypp_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "sys_property",
@@ -41483,44 +41485,44 @@ export interface components {
          *     }
          */
         SysProperty: {
-            /** @description The unique identifier for the system property. */
+            /** @description System property ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sys_property";
-            /** @description The system property type. */
+            /** @description System property type. */
             type: components["schemas"]["SysPropertyType"] | null;
-            /** @description The current counter value. */
+            /** @description Current counter value. */
             value: number;
             /**
              * Format: date-time
-             * @description The timestamp when the system property was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the system property was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description SysPropertyType represents a system property type. */
+        /** @description System property type. */
         SysPropertyType: {
-            /** @description The unique identifier for the system property type. */
+            /** @description System property type ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sys_property_type";
-            /** @description The display name of the type. */
+            /** @description Display name. */
             name: string;
-            /** @description The code of the type. */
+            /** @description Type code. */
             code: string;
         };
         /**
-         * @description SysPropertyValue represents a system property value response.
+         * @description System property value response.
          * @example {
          *       "object": "sys_property_value",
          *       "value": "42"
@@ -41528,15 +41530,15 @@ export interface components {
          */
         SysPropertyValue: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "sys_property_value";
-            /** @description The string value. */
+            /** @description Counter value as a string. */
             value: string;
         };
         /**
-         * @description Tenancy represents the authenticated user's tenancy context.
+         * @description Authenticated user's tenancy context.
          * @example {
          *       "object": "tenancy",
          *       "current_account": null,
@@ -41547,40 +41549,40 @@ export interface components {
          */
         Tenancy: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "tenancy";
-            /** @description The current account the user is operating in. */
+            /** @description Current account the user is operating in. */
             current_account: components["schemas"]["TenancyCurrentAccount"] | null;
-            /** @description The sandbox accounts available to the user. */
+            /** @description Sandbox accounts available to the user. */
             sandboxes: components["schemas"]["TenancySandboxAccount"][];
-            /** @description The owner account for the user's tenancy. */
+            /** @description Owner account for the user's tenancy. */
             owner_account: components["schemas"]["TenancyOwnerAccount"] | null;
             /** @description Other accounts the user has access to. */
             other_accounts: components["schemas"]["TenancyOtherAccount"][];
         };
-        /** @description TenancyCurrentAccount represents the account the user is currently operating in. */
+        /** @description Account the user is currently operating in. */
         TenancyCurrentAccount: {
-            /** @description The unique identifier for the account. */
+            /** @description Account ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account";
-            /** @description The display name of the account. */
+            /** @description Display name. */
             name: string;
-            /** @description The type of the account. */
+            /** @description Account type. */
             type: string;
-            /** @description The onboarding status of the account. */
+            /** @description Onboarding status. */
             onboarding_status: string;
-            /** @description The plan the account is on. */
+            /** @description Plan code. */
             plan: string;
-            /** @description The account's unique slug. */
+            /** @description Account slug. */
             slug: string | null;
             /**
-             * @description The user's role in this account.
+             * @description Role in this account.
              * @example {
              *       "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "role",
@@ -41613,46 +41615,46 @@ export interface components {
              */
             role: components["schemas"]["Role"] | null;
         };
-        /** @description TenancyOtherAccount represents another account the user has access to. */
+        /** @description Additional account the user has access to. */
         TenancyOtherAccount: {
-            /** @description The unique identifier for the account. */
+            /** @description Account ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account";
-            /** @description The display name of the account. */
+            /** @description Display name. */
             name: string;
-            /** @description The type of the account. */
+            /** @description Account type. */
             type: string;
         };
-        /** @description TenancyOwnerAccount represents the owner account for the user's tenancy. */
+        /** @description Owner account for the user's tenancy. */
         TenancyOwnerAccount: {
-            /** @description The unique identifier for the owner account. */
+            /** @description Account ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account";
-            /** @description The display name of the owner account. */
+            /** @description Display name. */
             name: string;
         };
-        /** @description TenancySandboxAccount represents a sandbox account available to the user. */
+        /** @description Sandbox account available to the user. */
         TenancySandboxAccount: {
-            /** @description The unique identifier for the sandbox account. */
+            /** @description Account ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "account";
-            /** @description The display name of the sandbox account. */
+            /** @description Display name. */
             name: string;
         };
         /**
-         * @description Territory represents a sales rep territory assignment.
+         * @description Sales rep territory assignment.
          * @example {
          *       "id": "te_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "territory",
@@ -41666,21 +41668,21 @@ export interface components {
          *     }
          */
         Territory: {
-            /** @description The unique identifier for the territory. */
+            /** @description Territory ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "territory";
-            /** @description The state this territory covers. */
+            /** @description State this territory covers. */
             state: string;
-            /** @description The start of the zipcode range. */
+            /** @description Start of ZIP code range. */
             start_zipcode: number | null;
-            /** @description The end of the zipcode range. */
+            /** @description End of ZIP code range. */
             end_zipcode: number | null;
             /**
-             * @description The sales rep assigned to this territory.
+             * @description Sales rep assigned to this territory.
              * @example {
              *       "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "account_user",
@@ -41727,7 +41729,7 @@ export interface components {
              */
             sales_rep: components["schemas"]["AccountUser"] | null;
             /**
-             * @description The product line this territory is scoped to.
+             * @description Product line this territory is scoped to.
              * @example {
              *       "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "product_line",
@@ -41759,7 +41761,7 @@ export interface components {
             updated_at: string;
         };
         /**
-         * @description ToolGroup represents a logical grouping of platform tools.
+         * @description Logical grouping of platform tools.
          * @example {
          *       "id": "tgrp_01k0b1seed0product000000",
          *       "object": "tool_group",
@@ -41772,25 +41774,25 @@ export interface components {
          *     }
          */
         ToolGroup: {
-            /** @description The unique identifier for the group. */
+            /** @description Group ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "tool_group";
-            /** @description The display name of the group. */
+            /** @description Display name. */
             name: string;
-            /** @description A description of the tool group. */
+            /** @description Description. */
             description: string;
-            /** @description A URL-friendly slug for the group. */
+            /** @description URL-friendly slug. */
             slug: string;
-            /** @description An icon identifier for the group (e.g. a Material Icon name). */
+            /** @description Icon identifier (e.g. a Material Icon name). */
             icon: string;
-            /** @description Sort order for display purposes. */
+            /** @description Display sort order. */
             sort_order: number;
             /**
-             * @description The tools belonging to this group.
+             * @description Tools belonging to this group.
              * @example {
              *       "object": "list",
              *       "page_info": {
@@ -41817,7 +41819,7 @@ export interface components {
             tools: components["schemas"]["List_AvailableTool"] | null;
         };
         /**
-         * @description ToolInput represents a tool to attach to an agent definition.
+         * @description Tool to attach to an agent definition.
          * @example {
          *       "tool_id": "tdef_01k0b1seed0searchproduct0",
          *       "sort_order": 1,
@@ -41825,27 +41827,27 @@ export interface components {
          *     }
          */
         ToolInput: {
-            /** @description The identifier of the available tool to attach. */
+            /** @description Available tool ID. */
             tool_id: string;
-            /** @description Optional JSON configuration for this tool instance. */
+            /** @description JSON configuration for this tool instance. */
             config_json: string;
             /** @description Display order among the agent's tools (lower values appear first). */
             sort_order: number;
-            /** @description Whether actions from this tool require human review before execution. */
+            /** @description Requires human review before execution. */
             require_review: boolean;
         };
-        /** @description Transaction is a minimal transaction sub-resource. */
+        /** @description Minimal transaction sub-resource. */
         Transaction: {
-            /** @description The unique identifier for the transaction. */
+            /** @description Transaction ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "transaction";
         };
         /**
-         * @description TransactionAllocation represents an allocation of a transaction against an invoice.
+         * @description Allocation of a transaction against an invoice.
          * @example {
          *       "id": "txal_01jm4r67aab8nwq3v5hx2d9ktp",
          *       "object": "transaction_allocation",
@@ -41881,15 +41883,15 @@ export interface components {
          *     }
          */
         TransactionAllocation: {
-            /** @description The unique identifier for the allocation. */
+            /** @description Allocation ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "transaction_allocation";
             /**
-             * @description The allocated amount.
+             * @description Allocated amount.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -41913,12 +41915,12 @@ export interface components {
              *     }
              */
             amount: components["schemas"]["Quantity"] | null;
-            /** @description A note about this allocation. */
+            /** @description Note. */
             note: string | null;
-            /** @description The transaction associated with this allocation. */
+            /** @description Associated transaction. */
             transaction: components["schemas"]["Transaction"] | null;
             /**
-             * @description The invoice associated with this allocation.
+             * @description Associated invoice.
              * @example {
              *       "id": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "invoice_summary",
@@ -41998,17 +42000,17 @@ export interface components {
             invoice: components["schemas"]["InvoiceSummary"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the allocation was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the allocation was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description TransactionDetail represents a full transaction API resource.
+         * @description Full transaction resource.
          * @example {
          *       "id": "tx_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "transaction",
@@ -42073,17 +42075,17 @@ export interface components {
          *     }
          */
         TransactionDetail: {
-            /** @description The unique identifier for the transaction. */
+            /** @description Transaction ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "transaction";
-            /** @description The transaction number. */
+            /** @description Transaction number. */
             number: string;
             /**
-             * @description The transaction amount.
+             * @description Transaction amount.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -42108,7 +42110,7 @@ export interface components {
              */
             amount: components["schemas"]["Quantity"] | null;
             /**
-             * @description The customer associated with this transaction.
+             * @description Associated customer.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -42339,7 +42341,7 @@ export interface components {
              */
             customer: components["schemas"]["Customer"] | null;
             /**
-             * @description The user responsible for this transaction.
+             * @description Responsible user.
              * @example {
              *       "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "account_user",
@@ -42385,10 +42387,10 @@ export interface components {
              *     }
              */
             responsible_user: components["schemas"]["AccountUser"] | null;
-            /** @description A note attached to this transaction. */
+            /** @description Note. */
             note: string | null;
             /**
-             * @description The type of this transaction.
+             * @description Transaction type.
              * @example {
              *       "id": "txtp_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "transaction_type",
@@ -42398,7 +42400,7 @@ export interface components {
              */
             transaction_type: components["schemas"]["TransactionType"] | null;
             /**
-             * @description The method used for this transaction.
+             * @description Transaction method.
              * @example {
              *       "id": "txmd_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "transaction_method",
@@ -42408,7 +42410,7 @@ export interface components {
              */
             transaction_method: components["schemas"]["TransactionMethod"] | null;
             /**
-             * @description The adjustment type, if this is an adjustment transaction.
+             * @description Adjustment type.
              * @example {
              *       "id": "adjt_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "adjustment_type",
@@ -42424,27 +42426,27 @@ export interface components {
              *     }
              */
             adjustment_type: components["schemas"]["AdjustmentType"] | null;
-            /** @description Whether this transaction is fully allocated against invoices. */
+            /** @description Whether fully allocated against invoices. */
             is_fully_allocated: boolean;
-            /** @description The Stripe payment ID associated with this transaction. */
+            /** @description Stripe payment ID. */
             stripe_payment_id: string | null;
-            /** @description The number of allocations for this transaction. */
+            /** @description Number of allocations. */
             allocation_count: number;
-            /** @description The allocations for this transaction. */
+            /** @description Allocations. */
             allocations: components["schemas"]["List_TransactionAllocation"] | null;
             /**
              * Format: date-time
-             * @description The timestamp when the transaction was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the transaction was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description TransactionMethod represents a method used for a transaction.
+         * @description Transaction method resource.
          * @example {
          *       "id": "txmd_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "transaction_method",
@@ -42453,23 +42455,23 @@ export interface components {
          *     }
          */
         TransactionMethod: {
-            /** @description The unique identifier for the transaction method. */
+            /** @description Transaction method ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "transaction_method";
-            /** @description The display name of the transaction method. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The machine-readable code for the transaction method.
+             * @description Machine-readable code.
              * @enum {string}
              */
             code: "cash" | "check" | "credit_card" | "gift_card" | "ach";
         };
         /**
-         * @description TransactionSummary represents a lightweight transaction for list views.
+         * @description Lightweight transaction for list views.
          * @example {
          *       "id": "tx_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "transaction_summary",
@@ -42516,17 +42518,17 @@ export interface components {
          *     }
          */
         TransactionSummary: {
-            /** @description The unique identifier for the transaction. */
+            /** @description Transaction ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "transaction_summary";
-            /** @description The transaction number. */
+            /** @description Transaction number. */
             number: string;
             /**
-             * @description The transaction amount.
+             * @description Transaction amount.
              * @example {
              *       "id": "qty_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "quantity",
@@ -42551,7 +42553,7 @@ export interface components {
              */
             amount: components["schemas"]["Quantity"] | null;
             /**
-             * @description The customer associated with this transaction.
+             * @description Associated customer.
              * @example {
              *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
              *       "object": "customer",
@@ -42782,7 +42784,7 @@ export interface components {
              */
             customer: components["schemas"]["Customer"] | null;
             /**
-             * @description The type of this transaction.
+             * @description Transaction type.
              * @example {
              *       "id": "txtp_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "transaction_type",
@@ -42792,7 +42794,7 @@ export interface components {
              */
             transaction_type: components["schemas"]["TransactionType"] | null;
             /**
-             * @description The method used for this transaction.
+             * @description Transaction method.
              * @example {
              *       "id": "txmd_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "transaction_method",
@@ -42802,7 +42804,7 @@ export interface components {
              */
             transaction_method: components["schemas"]["TransactionMethod"] | null;
             /**
-             * @description The adjustment type, if this is an adjustment transaction.
+             * @description Adjustment type.
              * @example {
              *       "id": "adjt_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "adjustment_type",
@@ -42818,23 +42820,23 @@ export interface components {
              *     }
              */
             adjustment_type: components["schemas"]["AdjustmentType"] | null;
-            /** @description Whether this transaction is fully allocated against invoices. */
+            /** @description Whether fully allocated against invoices. */
             is_fully_allocated: boolean;
-            /** @description The number of allocations for this transaction. */
+            /** @description Number of allocations. */
             allocation_count: number;
             /**
              * Format: date-time
-             * @description The timestamp when the transaction was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description The timestamp when the transaction was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description TransactionType represents a type of transaction.
+         * @description Transaction type resource.
          * @example {
          *       "id": "txtp_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "transaction_type",
@@ -42843,23 +42845,23 @@ export interface components {
          *     }
          */
         TransactionType: {
-            /** @description The unique identifier for the transaction type. */
+            /** @description Transaction type ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "transaction_type";
-            /** @description The display name of the transaction type. */
+            /** @description Display name. */
             name: string;
             /**
-             * @description The machine-readable code for the transaction type.
+             * @description Machine-readable code.
              * @enum {string}
              */
             code: "payment" | "credit_memo" | "adjustment" | "rebate";
         };
         /**
-         * @description TriggerConfig holds trigger-type-specific settings.
+         * @description Trigger-type-specific configuration.
          *     For "scheduled": CronSchedule is populated.
          *     For "event": EventFilters is populated.
          *     For "manual": all fields are empty.
@@ -42874,7 +42876,7 @@ export interface components {
          */
         TriggerConfig: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "trigger_config";
@@ -42886,7 +42888,7 @@ export interface components {
             event_filters: string[];
         };
         /**
-         * @description TriggerConfigInput holds trigger-type-specific settings for agent creation/update requests.
+         * @description Trigger-type-specific settings for agent creation/update requests.
          * @example {
          *       "cron_schedule": null,
          *       "timezone": null,
@@ -42904,20 +42906,20 @@ export interface components {
             event_filters: string[];
         };
         /**
-         * @description TriggerRunRequest is the request to trigger a new agent run.
+         * @description Request to trigger an agent run.
          * @example {
          *       "agent_definition_id": "agdf_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "input": "Process the latest incoming orders."
          *     }
          */
         TriggerRunRequest: {
-            /** @description The ID of the agent definition to run. */
+            /** @description Agent definition ID. */
             agent_definition_id: string;
-            /** @description Optional input text to provide to the agent at the start of the run. */
+            /** @description Input text for the agent. */
             input: string;
         };
         /**
-         * @description Unit represents a unit of measurement used for conversions and product quantities.
+         * @description Unit of measurement used for conversions and product quantities.
          * @example {
          *       "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "unit",
@@ -42939,45 +42941,45 @@ export interface components {
          *     }
          */
         Unit: {
-            /** @description The unique identifier for the unit. */
+            /** @description Unit ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "unit";
-            /** @description The display name of the unit (e.g. "Gram", "Kilogram"). */
+            /** @description Display name of the unit (e.g. "Gram", "Kilogram"). */
             name: string;
-            /** @description The short abbreviation for the unit (e.g. "g", "kg"). */
+            /** @description Short abbreviation for the unit (e.g. "g", "kg"). */
             abbreviation: string;
             /**
-             * @description The unit dimension.
+             * @description Unit dimension.
              * @enum {string}
              */
             type: "currency" | "quantity" | "time" | "mass" | "volume" | "length" | "temperature" | "area";
             /**
              * Format: decimal
-             * @description The conversion ratio numerator relative to the base unit in the same dimension.
+             * @description Conversion ratio numerator relative to the base unit in the same dimension.
              */
             ratio_numerator: string;
             /**
              * Format: decimal
-             * @description The conversion ratio denominator relative to the base unit in the same dimension.
+             * @description Conversion ratio denominator relative to the base unit in the same dimension.
              */
             ratio_denominator: string;
             /**
              * Format: decimal
-             * @description The conversion offset numerator, used for temperature-like conversions. Zero for most unit types.
+             * @description Conversion offset numerator, used for temperature-like conversions. Zero for most unit types.
              */
             offset_numerator: string;
             /**
              * Format: decimal
-             * @description The conversion offset denominator. Typically 1.
+             * @description Conversion offset denominator. Typically 1.
              */
             offset_denominator: string;
-            /** @description Whether this unit is the base unit for its dimension. Conversion ratios are relative to this unit. */
+            /** @description Whether this is the base unit for its dimension. Conversion ratios are relative to this unit. */
             is_base_unit: boolean;
-            /** @description The owner of this resource. */
+            /** @description Owner of this resource. */
             owner: components["schemas"]["Owner"] | null;
             /**
              * Format: date-time
@@ -42991,7 +42993,7 @@ export interface components {
             updated_at: string;
         };
         /**
-         * @description UnitGroup represents a unit group resource with base unit and associated units.
+         * @description UnitGroup is a unit group resource.
          * @example {
          *       "id": "ug_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "unit_group",
@@ -43010,24 +43012,24 @@ export interface components {
          *     }
          */
         UnitGroup: {
-            /** @description The unique identifier for the unit group. */
+            /** @description Unit group ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "unit_group";
-            /** @description The display name of the unit group. */
+            /** @description Display name. */
             name: string;
-            /** @description Notes about the unit group. */
+            /** @description Notes. */
             notes: string | null;
             /**
-             * @description The unit type.
+             * @description Unit type.
              * @enum {string}
              */
             type: "currency" | "quantity" | "time" | "mass" | "volume" | "length" | "temperature" | "area";
             /**
-             * @description The base unit for this group.
+             * @description Base unit.
              * @example {
              *       "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit",
@@ -43049,32 +43051,32 @@ export interface components {
              *     }
              */
             base_unit: components["schemas"]["Unit"] | null;
-            /** @description The associated units in this group. */
+            /** @description Associated units. */
             associated_units: components["schemas"]["List_UnitGroupUnit"] | null;
-            /** @description The owner of this resource. */
+            /** @description Owner. */
             owner: components["schemas"]["Owner"] | null;
             /**
              * Format: date-time
-             * @description When this unit group was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this unit group was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
-        /** @description UnitGroupUnit represents an associated unit within a unit group. */
+        /** @description UnitGroupUnit is an associated unit within a unit group. */
         UnitGroupUnit: {
-            /** @description The unique identifier for the unit group unit. */
+            /** @description Unit group unit ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "unit_group_unit";
             /**
-             * @description The unit. Expandable.
+             * @description Unit.
              * @example {
              *       "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit",
@@ -43096,28 +43098,28 @@ export interface components {
              *     }
              */
             unit: components["schemas"]["Unit"] | null;
-            /** @description The discount percentage for this associated unit. */
+            /** @description Discount percentage. */
             discount_percentage: number;
-            /** @description The fixed discount amount for this associated unit. */
+            /** @description Fixed discount amount. */
             discount_fixed: number;
             /**
-             * @description Whether this associated unit is visible in the customer portal.
+             * @description Customer portal visibility.
              * @enum {string}
              */
             customer_portal_visibility: "visible" | "hidden";
             /**
              * Format: date-time
-             * @description When this associated unit was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this associated unit was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description UpdateAccountGroupProductLineAccessRequest is the request to update product line access for an account group.
+         * @description UpdateAccountGroupProductLineAccessRequest is a request to update product line access for an account group.
          * @example {
          *       "product_line_ids": [
          *         "pl_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -43125,106 +43127,106 @@ export interface components {
          *     }
          */
         UpdateAccountGroupProductLineAccessRequest: {
-            /** @description The IDs of the product lines to grant access to. */
+            /** @description Product line IDs to grant access to. */
             product_line_ids?: string[];
         };
         /**
-         * @description UpdateAccountGroupRequest is the request to partially update an account group.
+         * @description Request to partially update an account group.
          * @example {
          *       "name": "Updated Wholesale Customers"
          *     }
          */
         UpdateAccountGroupRequest: {
-            /** @description The display name of the account group. */
+            /** @description Display name. */
             name?: string;
-            /** @description An optional description of the account group. */
+            /** @description Description. */
             description?: string | null;
             /**
-             * @description The commission status code.
+             * @description Commission policy.
              * @enum {string}
              */
             commission_policy?: "commission_applied" | "commission_exempt";
             /**
-             * @description The freight status code.
+             * @description Freight policy.
              * @enum {string}
              */
             freight_policy?: "free_freight" | "billed_freight";
         };
         /**
-         * @description UpdateAccountIntegrationRequest is the request to update an account integration.
+         * @description Request to update an account integration.
          * @example {
          *       "name": "Updated Stripe Integration"
          *     }
          */
         UpdateAccountIntegrationRequest: {
-            /** @description The human-readable name for the integration. */
+            /** @description Display name of the integration. */
             name?: string;
-            /** @description Whether this integration is currently active. */
+            /** @description Whether the integration is active. */
             is_active?: boolean;
         };
         /**
-         * @description UpdateAccountPriceRequest is the request to partially update an account price.
+         * @description Request to partially update an account price.
          * @example {
          *       "rate_value": "30.000000000000000000000000000000"
          *     }
          */
         UpdateAccountPriceRequest: {
-            /** @description The ID of the recipient (customer) account. */
+            /** @description Recipient account ID. */
             recipient_account_id?: string;
-            /** @description The ID of the product line this price applies to. */
+            /** @description Product line ID. */
             product_line_id?: string;
-            /** @description The rate value as a decimal string. */
+            /** @description Rate value as a decimal string. */
             rate_value?: string;
-            /** @description The ID of the numerator unit for the rate. */
+            /** @description Rate numerator unit ID. */
             rate_numerator_unit_id?: string;
-            /** @description The ID of the denominator unit for the rate. */
+            /** @description Rate denominator unit ID. */
             rate_denominator_unit_id?: string;
-            /** @description The IDs of item categories to constrain this price to. Replaces existing categories. */
+            /** @description Item category IDs to constrain this price to. Replaces existing categories. */
             category_ids?: string[];
-            /** @description The IDs of attributes to constrain this price to. Replaces existing attributes. */
+            /** @description Attribute IDs to constrain this price to. Replaces existing attributes. */
             attribute_ids?: string[];
         };
         /**
-         * @description UpdateAccountRequest is the request to partially update an account.
+         * @description Request to partially update an account.
          * @example {
          *       "name": "Acme Inc."
          *     }
          */
         UpdateAccountRequest: {
-            /** @description The display name of the account. */
+            /** @description Display name. */
             name?: string;
-            /** @description The support email address. */
+            /** @description Support email address. */
             support_email?: string;
-            /** @description The support phone number. */
+            /** @description Support phone number. */
             phone_number?: string;
-            /** @description The portal slug. */
+            /** @description Portal slug. */
             slug?: string;
-            /** @description The website URL. */
+            /** @description Website URL. */
             website_url?: string;
-            /** @description The Facebook handle. */
+            /** @description Facebook handle. */
             facebook_handle?: string;
-            /** @description The Instagram handle. */
+            /** @description Instagram handle. */
             instagram_handle?: string;
-            /** @description The LinkedIn handle. */
+            /** @description LinkedIn handle. */
             linkedin_handle?: string;
-            /** @description The Twitter handle. */
+            /** @description Twitter handle. */
             twitter_handle?: string;
         };
         /**
-         * @description UpdateAccountUserPasswordRequest is the request to update an account user's password.
+         * @description Request to update an account user's password.
          * @example {
          *       "requester_password": "QgS7Z8Hhj3&1",
          *       "new_password": "50iR2X0r@bvIH"
          *     }
          */
         UpdateAccountUserPasswordRequest: {
-            /** @description The requester's current password for verification. */
+            /** @description Requester's current password. */
             requester_password: string;
-            /** @description The new password to set for the account user. */
+            /** @description New password. */
             new_password: string;
         };
         /**
-         * @description UpdateAccountUserRequest is the request to partially update an account user.
+         * @description Request to partially update an account user.
          * @example {
          *       "name": "John Doe",
          *       "role_id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -43232,62 +43234,62 @@ export interface components {
          *     }
          */
         UpdateAccountUserRequest: {
-            /** @description The user's display name. */
+            /** @description Display name. */
             name?: string;
-            /** @description The user's email address. */
+            /** @description Email address. */
             email?: string;
-            /** @description The user's username. */
+            /** @description Username. */
             username?: string;
-            /** @description The ID of the role to assign. */
+            /** @description Role ID. */
             role_id?: string | null;
-            /** @description The ID of the department to assign. */
+            /** @description Department ID. */
             department_id?: string | null;
         };
         /**
-         * @description UpdateAddressRequest is the request to partially update an address.
+         * @description Request to partially update an address.
          * @example {
          *       "name": "Warehouse"
          *     }
          */
         UpdateAddressRequest: {
-            /** @description The display name of the address. */
+            /** @description Display name of the address. */
             name?: string;
-            /** @description The phone number associated with this address. */
+            /** @description Phone number associated with the address. */
             phone?: string | null;
-            /** @description The email address associated with this address. */
+            /** @description Email address associated with the address. */
             email?: string | null;
-            /** @description Whether this is a drop ship address. */
+            /** @description Whether the address is a drop ship location. */
             is_drop_ship?: boolean;
-            /** @description The first line of the street address. */
+            /** @description First line of the street address. */
             street_line_1?: string;
-            /** @description The second line of the street address. */
+            /** @description Second line of the street address. */
             street_line_2?: string | null;
-            /** @description The city or locality. */
+            /** @description City or locality. */
             locality?: string;
-            /** @description The state or administrative area. */
+            /** @description State or administrative area. */
             state?: string;
-            /** @description The postal or zip code. */
+            /** @description Postal or ZIP code. */
             postal_code?: string;
-            /** @description The two-letter country code. */
+            /** @description Two-letter country code. */
             country?: string;
         };
         /**
-         * @description UpdateAgentRequest is the request to partially update an agent definition.
+         * @description Request to partially update an agent definition.
          * @example {
          *       "name": "Inventory Monitor"
          *     }
          */
         UpdateAgentRequest: {
-            /** @description The display name of the agent. */
+            /** @description Display name. */
             name?: string;
-            /** @description A unique URL-friendly identifier for the agent. */
+            /** @description URL-friendly identifier. */
             slug?: string;
-            /** @description A human-readable description of what the agent does. */
+            /** @description Description of what the agent does. */
             description?: string | null;
-            /** @description The category code that classifies this agent (e.g. "order_processing"). */
+            /** @description Category code (e.g. "order_processing"). */
             category_code?: string;
             /**
-             * @description How this agent is triggered: "manual", "scheduled", or "event".
+             * @description Trigger type: "manual", "scheduled", or "event".
              * @enum {string}
              */
             trigger_type?: "scheduled" | "manual" | "event";
@@ -43308,76 +43310,76 @@ export interface components {
              *     }
              */
             config?: components["schemas"]["ConfigInput"];
-            /** @description The tools to attach to this agent. Replaces the existing tool set when provided. */
+            /** @description Tools to attach. Replaces the existing tool set when provided. */
             tools?: components["schemas"]["ToolInput"][];
-            /** @description The ID of the role that defines this agent's permissions. */
+            /** @description Role ID defining agent permissions. */
             role_id?: string | null;
         };
         /**
-         * @description UpdateAgentStatusRequest is the request to update the per-account status of an agent.
+         * @description Request to update the per-account status of an agent.
          * @example {
          *       "status_code": "active"
          *     }
          */
         UpdateAgentStatusRequest: {
-            /** @description The new account-level status code: "active" or "inactive". */
+            /** @description Account-level status code: "active" or "inactive". */
             status_code: string;
         };
         /**
-         * @description UpdateAttributeRequest is the request to update an attribute.
+         * @description Request to update an attribute.
          * @example {
          *       "value": "Blue"
          *     }
          */
         UpdateAttributeRequest: {
-            /** @description The new value of the attribute. */
+            /** @description Attribute value. */
             value?: string;
             /**
-             * @description The new color code of the attribute.
+             * @description Color code.
              * @enum {string}
              */
             color?: "blue" | "brown" | "default" | "gray" | "green" | "orange" | "pink" | "purple" | "red" | "yellow";
-            /** @description The new display order of the attribute. */
+            /** @description Display order. */
             sort_order?: number;
         };
         /**
-         * @description UpdateCarrierRequest is the request to update a carrier.
+         * @description Request to update a carrier.
          * @example {
          *       "name": "FedEx Express"
          *     }
          */
         UpdateCarrierRequest: {
-            /** @description The new display name for the carrier. */
+            /** @description Display name. */
             name?: string;
             /**
-             * @description Whether this carrier is visible in the customer portal.
+             * @description Customer portal visibility.
              * @enum {string}
              */
             customer_portal_visibility?: "visible" | "hidden";
         };
         /**
-         * @description UpdateConsumptionRequest is the request to partially update a consumption.
+         * @description Request to partially update a consumption.
          * @example {
          *       "quantity_value": "20.000000000000000000000000000000",
          *       "quantity_unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         UpdateConsumptionRequest: {
-            /** @description The ID of the item being consumed. */
+            /** @description Item ID. */
             item_id?: string;
-            /** @description The decimal value of the quantity consumed. */
+            /** @description Consumed quantity value. */
             quantity_value?: string;
-            /** @description The unit ID for the quantity consumed. */
+            /** @description Consumed quantity unit ID. */
             quantity_unit_id?: string;
-            /** @description The decimal value of the waste quantity. */
+            /** @description Waste quantity value. */
             waste_quantity_value?: string;
-            /** @description The unit ID for the waste quantity. */
+            /** @description Waste quantity unit ID. */
             waste_quantity_unit_id?: string;
-            /** @description Optional instructions for how this material is consumed. */
+            /** @description Instructions for how this material is consumed. */
             instructions?: string | null;
         };
         /**
-         * @description UpdateCustomerProductLineAccessRequest is the request to update product line access for a customer.
+         * @description Request to update product line access for a customer.
          * @example {
          *       "product_line_ids": [
          *         "pl_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -43385,11 +43387,11 @@ export interface components {
          *     }
          */
         UpdateCustomerProductLineAccessRequest: {
-            /** @description The IDs of the product lines to grant access to. */
+            /** @description Product line IDs to grant access to. */
             product_line_ids?: string[];
         };
         /**
-         * @description UpdateCustomerRequest is the request to partially update a customer.
+         * @description Request to partially update a customer.
          * @example {
          *       "name": "Acme Corp Updated",
          *       "note": "Updated account notes",
@@ -43399,107 +43401,107 @@ export interface components {
          *     }
          */
         UpdateCustomerRequest: {
-            /** @description The customer name. */
+            /** @description Customer name. */
             name?: string;
-            /** @description The customer number. */
+            /** @description Customer number. */
             number?: string;
-            /** @description A note about the customer. */
+            /** @description Note. */
             note?: string | null;
             /**
-             * @description The status code.
+             * @description Account status code.
              * @enum {string}
              */
             status?: "normal" | "preferred" | "hold_shipment" | "hold_all";
-            /** @description The customer email address. Send null to clear. */
+            /** @description Email address. Send null to clear. */
             email?: string | null;
-            /** @description The customer phone number. Send null to clear. */
+            /** @description Phone number. Send null to clear. */
             phone?: string | null;
-            /** @description The customer website URL. Send null to clear. */
+            /** @description Website URL. Send null to clear. */
             url?: string | null;
-            /** @description Whether the customer is EDI enabled. */
+            /** @description Whether EDI is enabled. */
             is_edi_enabled?: boolean;
             /**
-             * @description The commission policy for this customer.
+             * @description Commission policy.
              * @enum {string}
              */
             commission_policy?: "commission_applied" | "commission_exempt";
             /**
-             * @description The freight policy for this customer.
+             * @description Freight policy.
              * @enum {string}
              */
             freight_policy?: "free_freight" | "billed_freight";
-            /** @description The default carrier ID. */
+            /** @description Default carrier ID. */
             default_carrier_id?: string;
-            /** @description The default service level ID. */
+            /** @description Default service level ID. */
             default_service_level_id?: string | null;
-            /** @description The default payment term ID. */
+            /** @description Default payment term ID. */
             default_payment_term_id?: string;
-            /** @description The default shipping term ID. */
+            /** @description Default shipping term ID. */
             default_shipping_term_id?: string;
             /**
-             * @description The default priority code.
+             * @description Default priority code.
              * @enum {string}
              */
             default_priority?: "low" | "normal" | "high";
-            /** @description The default sales rep user ID. */
+            /** @description Default sales rep user ID. */
             default_sales_rep_user_id?: string | null;
-            /** @description The bill-to address ID. */
+            /** @description Bill-to address ID. */
             bill_to_address_id?: string | null;
-            /** @description The ship-to address ID. */
+            /** @description Ship-to address ID. */
             ship_to_address_id?: string | null;
-            /** @description The customer price group IDs. When provided, replaces all existing price groups. */
+            /** @description Price group IDs. Replaces all existing price groups when provided. */
             customer_price_group_ids?: string[];
-            /** @description The customer type group ID. */
+            /** @description Customer type group ID. */
             customer_type_group_id?: string;
             /**
-             * @description The carrier billing type.
+             * @description Carrier billing type.
              * @enum {string}
              */
             carrier_billing_type?: "sender" | "third_party";
-            /** @description The carrier billing account number. */
+            /** @description Carrier billing account number. */
             carrier_billing_account?: string | null;
-            /** @description The credit limit for this customer. Send null to clear. */
+            /** @description Credit limit. Send null to clear. */
             credit_limit?: components["schemas"]["QuantityInput"] | null;
         };
         /**
-         * @description UpdateDCLocationRequest is the request to partially update a DC location.
+         * @description Request to partially update a DC location.
          * @example {
          *       "location": "Warehouse B - Bay 1"
          *     }
          */
         UpdateDCLocationRequest: {
-            /** @description The ID of the customer account to associate with this DC location. */
+            /** @description Customer account ID. */
             customer_id?: string;
-            /** @description The location description. */
+            /** @description Location description. */
             location?: string;
         };
         /**
-         * @description UpdateDepartmentRequest is the request to partially update a department.
+         * @description Request to partially update a department.
          * @example {
          *       "name": "Production"
          *     }
          */
         UpdateDepartmentRequest: {
-            /** @description The display name of the department. */
+            /** @description Display name. */
             name?: string;
-            /** @description Optional notes about the department. */
+            /** @description Notes about the department. */
             notes?: string | null;
-            /** @description The ID of the storage location to associate with this department. */
+            /** @description Storage location ID. */
             location_id?: string;
-            /** @description IDs of scanning stations to connect to this department (additive). */
+            /** @description Scanning station IDs to connect (additive). */
             scanning_station_ids: string[];
-            /** @description IDs of machines to connect to this department (additive). */
+            /** @description Machine IDs to connect (additive). */
             machine_ids: string[];
         };
         /**
-         * @description UpdateInvoiceRequest is the request to partially update an invoice.
+         * @description Request to partially update an invoice.
          * @example {
          *       "note": "Payment received via wire transfer",
          *       "has_been_sent": true
          *     }
          */
         UpdateInvoiceRequest: {
-            /** @description A note to attach to the invoice. */
+            /** @description Note to attach to the invoice. */
             note?: string;
             /** @description Whether the invoice has been sent. */
             has_been_sent?: boolean;
@@ -43509,15 +43511,15 @@ export interface components {
             is_paid_in_full?: boolean;
         };
         /**
-         * @description UpdateItemCategoryRequest is the request to partially update an item category.
+         * @description Request to partially update an item category.
          * @example {
          *       "name": "Electronic Components"
          *     }
          */
         UpdateItemCategoryRequest: {
-            /** @description The display name of the item category. */
+            /** @description Display name. */
             name?: string;
-            /** @description Optional notes about the item category. */
+            /** @description Notes. */
             notes?: string;
         };
         /**
@@ -43531,90 +43533,96 @@ export interface components {
          *     }
          */
         UpdateItemInventoryRequest: {
-            /** @description The quantity change to apply. */
+            /** @description Quantity change to apply. */
             quantity_change?: number;
             /** @description Whether to reconcile (force to exact value) or adjust (add delta). */
             reconcile?: boolean;
-            /** @description Optional customer to update inventory for. */
+            /** @description Customer ID. */
             customer_id?: string;
-            /** @description Optional location. */
+            /** @description Location ID. */
             location_id?: string;
-            /** @description Optional lot number. */
+            /** @description Lot number. */
             lot_number?: string;
-            /** @description The unit ID for the quantity change. */
+            /** @description Unit ID for the quantity change. */
             unit_id?: string;
         };
         /**
-         * @description UpdateLocationRequest is the request to partially update a location.
+         * @description Request to partially update a location.
          * @example {
          *       "name": "Warehouse B",
          *       "child_ids": {}
          *     }
          */
         UpdateLocationRequest: {
-            /** @description The display name of the location. */
+            /** @description Display name. */
             name?: string;
             /**
-             * @description The code of the location type.
+             * @description Location type code.
              * @enum {string}
              */
             type?: "building" | "section" | "aisle" | "rack" | "shelf" | "bin";
-            /** @description The ID of the parent location. Send null to clear. */
+            /** @description Parent location ID. Send null to clear. */
             parent_id?: string | null;
-            /** @description The IDs of child locations. When provided, replaces all current children. Send null to clear. */
+            /** @description Child location IDs. Replaces all current children when provided. Send null to clear. */
             child_ids?: string[] | null;
         };
         /**
-         * @description UpdateMachineRequest is the request to partially update a machine.
+         * @description Request to partially update a machine.
          * @example {
          *       "name": "Updated CNC Router"
          *     }
          */
         UpdateMachineRequest: {
-            /** @description The display name of the machine. */
+            /** @description Display name. */
             name?: string;
-            /** @description The serial number of the machine. */
+            /** @description Serial number. */
             serial_number?: string;
-            /** @description Optional notes about the machine. */
+            /** @description Notes. */
             notes?: string;
         };
         /**
+         * @description Request to update a material.
          * @example {
          *       "sku": "MAT-001-UPDATED"
          *     }
          */
         UpdateMaterialRequest: {
+            /** @description SKU code. */
             sku?: string;
+            /** @description Description. */
             description?: string;
+            /** @description Notes. */
             notes?: string;
+            /** @description Order point quantity. */
             order_point?: components["schemas"]["QuantityInputRequest"];
+            /** @description Lead time quantity. */
             lead_time?: components["schemas"]["QuantityInputRequest"];
         };
         /**
-         * @description UpdateMemoryRequest is the request to update an existing agent memory.
+         * @description Request to update an agent memory.
          * @example {
          *       "content": "Customer prefers next-day shipping on all orders.",
          *       "importance": 0.9
          *     }
          */
         UpdateMemoryRequest: {
-            /** @description The memory category (e.g. "preference", "fact", "instruction"). */
+            /** @description Memory category (e.g. "preference", "fact", "instruction"). */
             category: string;
-            /** @description The text content of the memory. */
+            /** @description Text content. */
             content: string;
-            /** @description Optional JSON metadata associated with this memory. */
+            /** @description JSON metadata. */
             metadata: Record<string, never>;
-            /** @description The type of entity this memory is scoped to (e.g. "customer", "product"). */
+            /** @description Entity type this memory is scoped to (e.g. "customer", "product"). */
             entity_type?: string | null;
-            /** @description The ID of the entity this memory is scoped to. */
+            /** @description Entity ID. */
             entity_id?: string | null;
-            /** @description A numeric importance score between 0 and 1. */
+            /** @description Importance score between 0 and 1. */
             importance: number;
-            /** @description An ISO 8601 timestamp after which this memory expires. */
+            /** @description ISO 8601 expiration timestamp. */
             expires_at?: string | null;
         };
         /**
-         * @description UpdateNotificationPreferencesRequest is the request to update notification preferences for an account user.
+         * @description Request to update notification preferences for an account user.
          * @example {
          *       "preferences": [
          *         {
@@ -43629,36 +43637,36 @@ export interface components {
          *     }
          */
         UpdateNotificationPreferencesRequest: {
-            /** @description The notification preferences to update. */
+            /** @description Notification preferences to update. */
             preferences: components["schemas"]["NotificationPreferenceItem"][];
         };
         /**
-         * @description UpdateOrderDiscountRequest is the request to partially update an order discount.
+         * @description Request to partially update an order discount.
          * @example {
          *       "name": "15% Off",
          *       "code": "SAVE15"
          *     }
          */
         UpdateOrderDiscountRequest: {
-            /** @description The display name of the discount. */
+            /** @description Display name. */
             name?: string;
-            /** @description The unique code for this discount. */
+            /** @description Discount code. */
             code?: string;
             /**
              * Format: decimal
-             * @description The percentage value of the discount as a decimal string.
+             * @description Percentage value as a decimal string.
              */
             percentage?: string;
             /**
              * Format: decimal
-             * @description The fixed amount of the discount as a decimal string.
+             * @description Fixed amount as a decimal string.
              */
             amount?: string;
-            /** @description The type of discount: "percentage" or "amount". */
+            /** @description Discount type: "percentage" or "amount". */
             discount_type?: string;
         };
         /**
-         * @description UpdatePartRequest is the request to partially update a part.
+         * @description Request to partially update a part.
          * @example {
          *       "sku": "BRG-6204-2RS",
          *       "description": "Deep groove ball bearing, 20x47x14mm",
@@ -43666,34 +43674,34 @@ export interface components {
          *     }
          */
         UpdatePartRequest: {
-            /** @description The part SKU. */
+            /** @description SKU. */
             sku?: string;
-            /** @description The part description. */
+            /** @description Description. */
             description: string | null;
-            /** @description Optional notes about the part. */
+            /** @description Notes. */
             notes: string | null;
         };
         /**
-         * @description The request to update a user's password
+         * @description Request to update a user's password.
          * @example {
          *       "old_password": "QgS7Z8Hhj3&1",
          *       "new_password": "50iR2X0r@bvIH"
          *     }
          */
         UpdatePasswordRequest: {
-            /** @description The user's current password. */
+            /** @description Current password. */
             old_password: string;
-            /** @description The new password to be set. */
+            /** @description New password. */
             new_password: string;
         };
         /**
-         * @description UpdatePaymentTermRequest is the request to partially update a payment term.
+         * @description Request to partially update a payment term.
          * @example {
          *       "name": "Net 60"
          *     }
          */
         UpdatePaymentTermRequest: {
-            /** @description The display name of the payment term. */
+            /** @description Display name. */
             name?: string;
         };
         /**
@@ -43703,7 +43711,7 @@ export interface components {
          *     }
          */
         UpdatePickLineRequest: {
-            /** @description The quantity value to set for this line. */
+            /** @description Quantity value to set for this line. */
             quantity_value?: string;
         };
         /**
@@ -43713,31 +43721,31 @@ export interface components {
          *     }
          */
         UpdatePickRequest: {
-            /** @description The pick number. */
+            /** @description Pick number. */
             number?: string;
-            /** @description The timestamp when the pick was finished. Pass an empty string to clear. */
+            /** @description Timestamp when the pick was finished. Pass an empty string to clear. */
             finished_at?: string | null;
         };
         /**
-         * @description UpdateProductLineRequest is the request to partially update a product line.
+         * @description Request to partially update a product line.
          * @example {
          *       "name": "Updated Product Line"
          *     }
          */
         UpdateProductLineRequest: {
-            /** @description The display name of the product line. */
+            /** @description Display name. */
             name?: string;
             /**
-             * @description The commission policy for this product line.
+             * @description Commission policy.
              * @enum {string}
              */
             commission_policy?: "commission_applied" | "commission_exempt";
             /**
-             * @description The freight policy for this product line.
+             * @description Freight policy.
              * @enum {string}
              */
             freight_policy?: "free_freight" | "billed_freight";
-            /** @description The ID of the unit group to associate with this product line. */
+            /** @description Unit group ID. */
             unit_group_id?: string;
         };
         /**
@@ -43747,30 +43755,30 @@ export interface components {
          *     }
          */
         UpdateProductRequest: {
-            /** @description The stock keeping unit code. */
+            /** @description SKU. */
             sku?: string;
-            /** @description A description of the product. */
+            /** @description Description. */
             description?: string;
-            /** @description Additional notes about the product. */
+            /** @description Notes. */
             notes?: string;
-            /** @description Whether this product is visible on the customer portal. */
+            /** @description Whether visible on the customer portal. */
             is_portal_ready?: boolean;
         };
         /**
-         * @description UpdateProductTypeRequest is the request to partially update a product type.
+         * @description Request to partially update a product type.
          * @example {
          *       "name": "Service",
          *       "code": "service"
          *     }
          */
         UpdateProductTypeRequest: {
-            /** @description The display name of the product type. */
+            /** @description Display name. */
             name?: string;
-            /** @description The unique code for the product type. */
+            /** @description Unique code. */
             code?: string;
         };
         /**
-         * @description UpdateProductionRequest is the request to update a production output.
+         * @description Request to update a production output.
          * @example {
          *       "item_id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "quantity_value": "500",
@@ -43778,28 +43786,28 @@ export interface components {
          *     }
          */
         UpdateProductionRequest: {
-            /** @description The new item ID. */
+            /** @description Item ID. */
             item_id?: string;
-            /** @description The new quantity value as a decimal string. */
+            /** @description Quantity value as a decimal string. */
             quantity_value?: string;
-            /** @description The new quantity unit ID. */
+            /** @description Quantity unit ID. */
             quantity_unit_id?: string;
         };
         /**
-         * @description UpdateProductionRunRequest is the request to update an existing production run.
+         * @description Request to update a production run.
          * @example {
          *       "number": "PR-00042",
          *       "responsible_user_id": "us_01gf7a8200e9pvbd6bgyq395ae"
          *     }
          */
         UpdateProductionRunRequest: {
-            /** @description The new production run number. */
+            /** @description Production run number. */
             number: string;
-            /** @description The user ID of the new responsible user. */
+            /** @description Responsible user ID. */
             responsible_user_id: string;
         };
         /**
-         * @description UpdateProductionStepRequest is the request to update a production step.
+         * @description Request to update a production step.
          * @example {
          *       "name": "Assembly Step A",
          *       "leveling_factor": "1.15",
@@ -43807,27 +43815,27 @@ export interface components {
          *     }
          */
         UpdateProductionStepRequest: {
-            /** @description The new name. */
+            /** @description Display name. */
             name?: string;
-            /** @description The new leveling factor as a decimal string. */
+            /** @description Leveling factor as a decimal string. */
             leveling_factor?: string;
-            /** @description The new allowances as a decimal string. */
+            /** @description Allowances as a decimal string. */
             allowances?: string;
-            /** @description The new scanning station ID. */
+            /** @description Scanning station ID. */
             scanning_station_id?: string;
         };
         /**
-         * @description UpdatePropertyRequest is the request to update a property.
+         * @description Request to update a property.
          * @example {
          *       "name": "Size"
          *     }
          */
         UpdatePropertyRequest: {
-            /** @description The new name of the property. */
+            /** @description Name. */
             name?: string;
         };
         /**
-         * @description UpdatePurchaseOrderLineRequest is the request to update a purchase order line.
+         * @description Request to update a purchase order line.
          * @example {
          *       "product_id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "product_sku": "RAW-100",
@@ -43836,42 +43844,42 @@ export interface components {
          *     }
          */
         UpdatePurchaseOrderLineRequest: {
-            /** @description The product ID. */
+            /** @description Product ID. */
             product_id?: string | null;
-            /** @description The item ID. */
+            /** @description Item ID. */
             item_id?: string | null;
-            /** @description The product SKU. */
+            /** @description Product SKU. */
             product_sku?: string;
-            /** @description The product description. */
+            /** @description Product description. */
             product_description?: string;
             /**
              * Format: decimal
-             * @description The quantity value.
+             * @description Quantity value.
              */
             quantity_value?: string;
-            /** @description The quantity unit ID. */
+            /** @description Quantity unit ID. */
             quantity_unit_id?: string;
             /**
              * Format: decimal
-             * @description The unit price value.
+             * @description Unit price value.
              */
             unit_price_value?: string;
-            /** @description The unit price numerator unit ID. */
+            /** @description Unit price numerator unit ID. */
             unit_price_numerator_unit_id?: string;
-            /** @description The unit price denominator unit ID. */
+            /** @description Unit price denominator unit ID. */
             unit_price_denominator_unit_id?: string;
             /**
              * Format: decimal
-             * @description The unit cost value.
+             * @description Unit cost value.
              */
             unit_cost_value?: string;
-            /** @description The unit cost numerator unit ID. */
+            /** @description Unit cost numerator unit ID. */
             unit_cost_numerator_unit_id?: string;
-            /** @description The unit cost denominator unit ID. */
+            /** @description Unit cost denominator unit ID. */
             unit_cost_denominator_unit_id?: string;
         };
         /**
-         * @description UpdatePurchaseOrderRequest is the request to update a purchase order.
+         * @description Request to update a purchase order.
          * @example {
          *       "note": "Updated delivery notes",
          *       "number": "PO-001",
@@ -43880,81 +43888,81 @@ export interface components {
          *     }
          */
         UpdatePurchaseOrderRequest: {
-            /** @description A note for the order. */
+            /** @description Order note. */
             note?: string;
-            /** @description The purchase order number. */
+            /** @description Purchase order number. */
             number?: string;
-            /** @description The priority code. */
+            /** @description Priority code. */
             priority_code?: string;
-            /** @description The billing address ID. */
+            /** @description Billing address ID. */
             billing_address_id?: string | null;
-            /** @description The shipping address ID. */
+            /** @description Shipping address ID. */
             shipping_address_id?: string | null;
-            /** @description The promised/scheduled delivery date. */
+            /** @description Promised delivery date. */
             promised_at?: string;
-            /** @description The account user IDs for email contacts (replaces existing). */
+            /** @description Account user IDs for email contacts. Replaces existing contacts. */
             contact_account_user_ids: string[];
         };
         /**
-         * @description UpdateQuantityRequest is the request to partially update a quantity.
+         * @description Request to partially update a quantity.
          * @example {
          *       "value": "50.000000000000000000000000000000",
          *       "unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         UpdateQuantityRequest: {
-            /** @description The new decimal value of the quantity. */
+            /** @description Decimal value. */
             value?: string;
-            /** @description The new unit ID for this quantity. */
+            /** @description Unit ID. */
             unit_id?: string;
-            /** @description The ID of the parent resource that owns this quantity. */
+            /** @description Owner resource ID. */
             object_id?: string;
-            /** @description The type of the parent resource (e.g. "item", "production_step"). */
+            /** @description Owner resource type (e.g. "item", "production_step"). */
             object_type?: string;
         };
         /**
-         * @description UpdateRateRequest is the request to partially update a rate.
+         * @description Request to partially update a rate.
          * @example {
          *       "value": "25.500000000000000000000000000000",
          *       "numerator_unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         UpdateRateRequest: {
-            /** @description The new decimal value of the rate. */
+            /** @description Decimal value of the rate. */
             value?: string;
-            /** @description The new numerator unit ID for this rate. */
+            /** @description Numerator unit ID. */
             numerator_unit_id?: string;
-            /** @description The new denominator unit ID for this rate. */
+            /** @description Denominator unit ID. */
             denominator_unit_id?: string;
-            /** @description The ID of the parent resource that owns this rate. */
+            /** @description Parent resource ID. */
             object_id?: string;
-            /** @description The type of the parent resource (e.g. "item", "production_step"). */
+            /** @description Parent resource type (e.g. "item", "production_step"). */
             object_type?: string;
         };
         /**
-         * @description UpdateReceivingOrderLineRequest is the request to update a receiving order line's quantity.
+         * @description Request to update a receiving order line's quantity.
          * @example {
          *       "quantity_value": "50"
          *     }
          */
         UpdateReceivingOrderLineRequest: {
-            /** @description The quantity value to set for this line. */
+            /** @description Quantity value to set for this line. */
             quantity_value?: string;
         };
         /**
-         * @description UpdateRegistrationFlowRequest is the request to partially update a registration flow.
+         * @description Request to partially update a registration flow.
          * @example {
          *       "name": "Wholesale Registration Updated"
          *     }
          */
         UpdateRegistrationFlowRequest: {
-            /** @description The display name of the registration flow. */
+            /** @description Display name. */
             name?: string;
-            /** @description The IDs of the customer groups associated with this registration flow. */
+            /** @description Customer group IDs. */
             customer_group_ids: string[];
-            /** @description The IDs of the payment terms associated with this registration flow. */
+            /** @description Payment term IDs. */
             payment_term_ids: string[];
-            /** @description The IDs of the shipping terms associated with this registration flow. */
+            /** @description Shipping term IDs. */
             shipping_term_ids: string[];
             /** @description Whether to replace customer groups. */
             has_customer_group_ids: boolean;
@@ -43964,7 +43972,7 @@ export interface components {
             has_shipping_term_ids: boolean;
         };
         /**
-         * @description UpdateRoleRequest is the request to update a role.
+         * @description UpdateRoleRequest is a request to update a role.
          * @example {
          *       "name": "Updated Manager",
          *       "permissions": [
@@ -43974,13 +43982,13 @@ export interface components {
          *     }
          */
         UpdateRoleRequest: {
-            /** @description The new display name for the role. */
+            /** @description Display name. */
             name: string;
-            /** @description The full set of permissions to replace existing ones with in `<domain>:<action>` format. If omitted, permissions are not changed. */
+            /** @description Permissions in `<domain>:<action>` format. Replaces all existing permissions; omit to leave unchanged. */
             permissions: string[];
         };
         /**
-         * @description UpdateSalesOrderLineRequest is the request to update a sales order line.
+         * @description Request to update a sales order line.
          * @example {
          *       "product_id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "product_sku": "WIDGET-001",
@@ -43989,44 +43997,44 @@ export interface components {
          *     }
          */
         UpdateSalesOrderLineRequest: {
-            /** @description The product ID. */
+            /** @description Product ID. */
             product_id?: string;
-            /** @description The item ID. */
+            /** @description Item ID. */
             item_id?: string;
-            /** @description The product SKU. */
+            /** @description Product SKU. */
             product_sku?: string;
-            /** @description The product description. */
+            /** @description Product description. */
             product_description?: string;
             /**
              * Format: decimal
-             * @description The quantity value.
+             * @description Quantity value.
              */
             quantity_value?: string;
-            /** @description The quantity unit ID. */
+            /** @description Quantity unit ID. */
             quantity_unit_id?: string;
             /**
              * Format: decimal
-             * @description The unit price value.
+             * @description Unit price value.
              */
             unit_price_value?: string;
-            /** @description The unit price numerator unit ID. */
+            /** @description Unit price numerator unit ID. */
             unit_price_numerator_unit_id?: string;
-            /** @description The unit price denominator unit ID. */
+            /** @description Unit price denominator unit ID. */
             unit_price_denominator_unit_id?: string;
             /**
              * Format: decimal
-             * @description The unit cost value.
+             * @description Unit cost value.
              */
             unit_cost_value?: string;
-            /** @description The unit cost numerator unit ID. */
+            /** @description Unit cost numerator unit ID. */
             unit_cost_numerator_unit_id?: string;
-            /** @description The unit cost denominator unit ID. */
+            /** @description Unit cost denominator unit ID. */
             unit_cost_denominator_unit_id?: string;
-            /** @description The EDI line item ID. */
+            /** @description EDI line item ID. */
             edi_line_item_id?: string;
         };
         /**
-         * @description UpdateSalesOrderRequest is the request to update a sales order.
+         * @description Request to update a sales order.
          * @example {
          *       "note": "Updated shipping instructions",
          *       "carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
@@ -44036,27 +44044,27 @@ export interface components {
          *     }
          */
         UpdateSalesOrderRequest: {
-            /** @description The customer purchase order number. */
+            /** @description Customer purchase order number. */
             customer_po_number?: string;
-            /** @description A note for the order. */
+            /** @description Order note. */
             note?: string;
-            /** @description The carrier ID. */
+            /** @description Carrier ID. */
             carrier_id?: string | null;
-            /** @description The service level ID. */
+            /** @description Service level ID. */
             service_level_id?: string | null;
-            /** @description The carrier billing type. */
+            /** @description Carrier billing type. */
             carrier_billing_type?: string;
-            /** @description The carrier billing account number. */
+            /** @description Carrier billing account number. */
             carrier_billing_account?: string;
-            /** @description The priority code. */
+            /** @description Priority code. */
             priority_code?: string;
-            /** @description The sales rep ID. */
+            /** @description Sales rep ID. */
             sales_rep_id?: string | null;
-            /** @description The shipping term ID. */
+            /** @description Shipping term ID. */
             shipping_term_id?: string | null;
-            /** @description The payment term ID. */
+            /** @description Payment term ID. */
             payment_term_id?: string | null;
-            /** @description The order discount ID. */
+            /** @description Order discount ID. */
             order_discount_id?: string | null;
             /** @description Bill-to address name. */
             bill_to_name?: string;
@@ -44086,60 +44094,60 @@ export interface components {
             ship_to_postal_code?: string;
             /** @description Ship-to country. */
             ship_to_country?: string;
-            /** @description The order number. */
+            /** @description Order number. */
             number?: string;
-            /** @description Whether the order acknowledgment has been sent. */
+            /** @description Whether the acknowledgment has been sent. */
             is_acknowledgment_sent?: boolean;
             /**
              * Format: date-time
-             * @description The promised delivery date.
+             * @description Promised delivery date.
              */
             promised_at?: string;
-            /** @description The customer (buyer account) ID. */
+            /** @description Customer ID. */
             customer_id?: string | null;
         };
         /**
-         * @description UpdateScanningStationRequest is the request to partially update a scanning station.
+         * @description Request to partially update a scanning station.
          * @example {
          *       "name": "Station B"
          *     }
          */
         UpdateScanningStationRequest: {
-            /** @description The display name of the scanning station. */
+            /** @description Display name. */
             name?: string;
-            /** @description Optional notes about the scanning station. */
+            /** @description Notes. */
             notes?: string | null;
             /**
-             * @description The label size code for the scanning station.
+             * @description Label size code.
              * @enum {string}
              */
             label_size?: "1x1" | "1x3" | "1x4" | "2x4";
             /**
-             * @description The label type code for the scanning station.
+             * @description Label type code.
              * @enum {string}
              */
             label_type?: "tag" | "traveler";
-            /** @description Whether material check is required at this station. */
+            /** @description Whether material check is required. */
             material_check_required?: boolean;
         };
         /**
-         * @description UpdateServiceLevelRequest is the request to update a service level.
+         * @description Request to update a service level.
          * @example {
          *       "name": "Express Shipping"
          *     }
          */
         UpdateServiceLevelRequest: {
-            /** @description The new display name for the service level. */
+            /** @description Display name. */
             name?: string;
-            /** @description The new service level code. */
+            /** @description Service level code. */
             code?: string;
             /**
-             * @description Whether this service level is visible in the customer portal.
+             * @description Customer portal visibility.
              * @enum {string}
              */
             customer_portal_visibility?: "visible" | "hidden";
         };
-        /** @description UpdateSessionDataRequest holds the mutable form data fields for updating a session */
+        /** @description Mutable form data for a session update. */
         UpdateSessionDataRequest: {
             /** @description Display name for the user. */
             user_name?: string;
@@ -44159,7 +44167,7 @@ export interface components {
             billing_address_country?: string;
         };
         /**
-         * @description The request to update a registration session
+         * @description Request to update a registration session.
          * @example {
          *       "step": "user_details",
          *       "session_data": {
@@ -44170,11 +44178,11 @@ export interface components {
          */
         UpdateSessionRequest: {
             /**
-             * @description The step to advance the session to.
+             * @description Step to advance the session to.
              * @enum {string}
              */
             step?: "verification" | "user_details" | "account_details" | "review" | "payment" | "completed";
-            /** @description The session data to merge into the existing session data. */
+            /** @description Session data to merge into the existing session. */
             session_data?: components["schemas"]["UpdateSessionDataRequest"];
         };
         /**
@@ -44186,46 +44194,46 @@ export interface components {
          *     }
          */
         UpdateSettlementRequest: {
-            /** @description The new settlement number. */
+            /** @description Settlement number. */
             number: string | null;
-            /** @description The new note for this settlement. */
+            /** @description Note for this settlement. */
             note: string;
-            /** @description The ID of the responsible user for this settlement. */
+            /** @description Responsible user ID. */
             responsible_user_id: string;
         };
         /**
-         * @description UpdateShipmentLineRequest is the request to partially update a shipment line.
+         * @description Request to partially update a shipment line.
          * @example {
          *       "quantity_value": "5.000000000000000000000000000000",
          *       "quantity_unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         UpdateShipmentLineRequest: {
-            /** @description The quantity value to set. */
+            /** @description Quantity value. */
             quantity_value?: string;
-            /** @description The ID of the unit for the quantity. */
+            /** @description Quantity unit ID. */
             quantity_unit_id?: string;
         };
         /**
-         * @description UpdateShipmentRequest is the request to partially update a shipment.
+         * @description Request to partially update a shipment.
          * @example {
          *       "note": "Updated shipping note"
          *     }
          */
         UpdateShipmentRequest: {
-            /** @description An optional note for the shipment. */
+            /** @description Note for the shipment. */
             note?: string;
-            /** @description The shipment number. */
+            /** @description Shipment number. */
             number?: string;
-            /** @description The master tracking number for the shipment. */
+            /** @description Master tracking number. */
             master_tracking_number?: string;
-            /** @description The ID of the carrier for this shipment. */
+            /** @description Carrier ID. */
             carrier_id?: string;
-            /** @description The ID of the service level for this shipment. */
+            /** @description Service level ID. */
             service_level_id?: string | null;
         };
         /**
-         * @description UpdateShippingCaseRequest is the request to update a shipping case.
+         * @description Request to update a shipping case.
          * @example {
          *       "tracking_number": "1Z999AA10123456784",
          *       "freight_amount_value": null,
@@ -44235,19 +44243,19 @@ export interface components {
          *     }
          */
         UpdateShippingCaseRequest: {
-            /** @description The new tracking number. */
+            /** @description Tracking number. */
             tracking_number: string;
-            /** @description The new freight amount value. */
+            /** @description Freight amount value. */
             freight_amount_value: string | null;
-            /** @description The new freight amount unit ID. */
+            /** @description Freight amount unit ID. */
             freight_amount_unit_id: string | null;
-            /** @description The new freight weight value. */
+            /** @description Freight weight value. */
             freight_weight_value: string | null;
-            /** @description The new freight weight unit ID. */
+            /** @description Freight weight unit ID. */
             freight_weight_unit_id: string | null;
         };
         /**
-         * @description UpdateShippingTermRequest is the request to partially update a shipping term.
+         * @description Request to partially update a shipping term.
          *     All fields are optional. Absent fields are left unchanged. Send an explicit
          *     JSON null for flat_rate, minimum_order_value, or free_shipping_service_level_ids
          *     to clear the existing value.
@@ -44259,28 +44267,32 @@ export interface components {
          *     }
          */
         UpdateShippingTermRequest: {
-            /** @description The display name of the shipping term. */
+            /** @description Display name. */
             name?: string;
             /**
-             * @description The shipping term type.
+             * @description Shipping term type.
              * @enum {string}
              */
             type?: "free_freight" | "flat_rate_freight" | "carrier_rate_freight";
-            /** @description The flat rate for this shipping term. Send null to clear. */
+            /** @description Flat rate. Send null to clear. */
             flat_rate?: components["schemas"]["QuantityInput"] | null;
-            /** @description The minimum order value for free shipping under this term. Send null to clear. */
+            /** @description Minimum order value for free shipping. Send null to clear. */
             minimum_order_value?: components["schemas"]["QuantityInput"] | null;
-            /** @description The service level IDs that qualify for free shipping. Send null to clear. */
+            /** @description Service level IDs that qualify for free shipping. Send null to clear. */
             free_shipping_service_level_ids?: string[] | null;
         };
         /**
+         * @description Request to update a supplier material.
          * @example {
          *       "supplier_part_number": "SUP-PART-002"
          *     }
          */
         UpdateSupplierMaterialRequest: {
+            /** @description Supplier part number for this material. */
             supplier_part_number?: string;
+            /** @description Supplier description for this material. */
             supplier_description?: string | null;
+            /** @description Active status. */
             is_active?: boolean;
         };
         /**
@@ -44295,65 +44307,65 @@ export interface components {
          *     }
          */
         UpdateSupplierRequest: {
-            /** @description The new display name. */
+            /** @description Display name. */
             name: string;
-            /** @description The new supplier number. */
+            /** @description Supplier number. */
             number: string | null;
-            /** @description The new note. Set update_note to true to apply. */
+            /** @description Note value. Set update_note to true to apply. */
             note: string | null;
-            /** @description Whether to update the note field (allows setting to null). */
+            /** @description Whether to update the note field. Allows clearing to null. */
             update_note: boolean;
-            /** @description The ID of the bill-to address to set. */
+            /** @description Bill-to address ID. */
             bill_to_address_id: string | null;
-            /** @description The ID of the ship-to address to set. */
+            /** @description Ship-to address ID. */
             ship_to_address_id: string | null;
         };
         /**
-         * @description UpdateSysPropertyRequest is the request to update a system property value.
+         * @description Request to update a system property.
          * @example {
          *       "value": 30
          *     }
          */
         UpdateSysPropertyRequest: {
-            /** @description The new value for the system property. */
+            /** @description Counter value. */
             value?: number;
         };
         /**
-         * @description UpdateTerritoryRequest is the request to partially update a territory.
+         * @description Request to partially update a territory.
          * @example {
          *       "state": "CA"
          *     }
          */
         UpdateTerritoryRequest: {
-            /** @description The state this territory covers. */
+            /** @description State this territory covers. */
             state?: string;
-            /** @description The start of the zipcode range (501-99999). */
+            /** @description Start of ZIP code range (501-99999). */
             start_zipcode?: number;
-            /** @description The end of the zipcode range (501-99999). */
+            /** @description End of ZIP code range (501-99999). */
             end_zipcode?: number;
-            /** @description The ID of the sales rep (account user) assigned to this territory. */
+            /** @description Sales rep (account user) ID. */
             sales_rep_id?: string;
-            /** @description The ID of the product line this territory is scoped to. */
+            /** @description Product line ID. */
             product_line_id?: string;
-            /** @description Set to true to remove the product line from this territory. */
+            /** @description Set to true to remove the product line. */
             clear_product_line?: boolean;
-            /** @description Set to true to remove the start zipcode from this territory. */
+            /** @description Set to true to remove the start ZIP code. */
             clear_start_zipcode?: boolean;
-            /** @description Set to true to remove the end zipcode from this territory. */
+            /** @description Set to true to remove the end ZIP code. */
             clear_end_zipcode?: boolean;
         };
         /**
-         * @description UpdateTransactionAllocationRequest is the request to update a transaction allocation.
+         * @description Request to update a transaction allocation.
          * @example {
          *       "amount": "150.00"
          *     }
          */
         UpdateTransactionAllocationRequest: {
-            /** @description The new allocation amount as a decimal string. */
+            /** @description Allocation amount as a decimal string. */
             amount: string;
         };
         /**
-         * @description UpdateTransactionRequest is the request to update a transaction.
+         * @description Request to update a transaction.
          * @example {
          *       "number": null,
          *       "note": "Updated payment note",
@@ -44368,17 +44380,17 @@ export interface components {
          *     }
          */
         UpdateTransactionRequest: {
-            /** @description The new transaction number. */
+            /** @description Transaction number. */
             number: string | null;
-            /** @description The new note for this transaction. */
+            /** @description Note. */
             note: string;
-            /** @description The new amount as a decimal string. */
+            /** @description Amount as a decimal string. */
             amount: string;
-            /** @description The new transaction method code. */
+            /** @description Transaction method code. */
             method: string;
-            /** @description The new adjustment type code. */
+            /** @description Adjustment type code. */
             adjustment_type: string | null;
-            /** @description The new responsible user ID. */
+            /** @description Responsible user ID. */
             responsible_user_id: string | null;
             /** @description Set to true to clear the responsible user. */
             clear_responsible_user: boolean;
@@ -44386,81 +44398,81 @@ export interface components {
             clear_transaction_method: boolean;
             /** @description Set to true to clear the adjustment type. */
             clear_adjustment_type: boolean;
-            /** @description The allocation status of the transaction. */
+            /** @description Allocation status. */
             is_fully_allocated: boolean | null;
         };
         /**
-         * @description UpdateUnitGroupRequest is the request to partially update a unit group.
+         * @description UpdateUnitGroupRequest is a request to partially update a unit group.
          * @example {
          *       "name": "Weight Units (Updated)",
          *       "base_unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         UpdateUnitGroupRequest: {
-            /** @description The display name of the unit group. */
+            /** @description Display name. */
             name?: string;
-            /** @description Optional notes about the unit group. Set to null to clear. */
+            /** @description Notes. Set to null to clear. */
             notes?: string | null;
-            /** @description The base unit ID. */
+            /** @description Base unit ID. */
             base_unit_id?: string;
-            /** @description If provided, upserts associated units. Existing associated units not in the list are preserved. */
+            /** @description Upserts associated units when provided. Existing units not in the list are preserved. */
             associated_units?: components["schemas"]["CreateUnitGroupUnitParam"][];
         };
         /**
-         * @description UpdateUnitGroupUnitRequest is the request to update an associated unit.
+         * @description UpdateUnitGroupUnitRequest is a request to update an associated unit.
          * @example {
          *       "unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "discount_percentage": 0.9
          *     }
          */
         UpdateUnitGroupUnitRequest: {
-            /** @description The unit ID. */
+            /** @description Unit ID. */
             unit_id?: string;
-            /** @description The discount percentage. */
+            /** @description Discount percentage. */
             discount_percentage?: number;
-            /** @description The fixed discount amount. */
+            /** @description Fixed discount amount. */
             discount_fixed?: number;
             /**
-             * @description Whether this associated unit is visible in the customer portal.
+             * @description Customer portal visibility.
              * @enum {string}
              */
             customer_portal_visibility?: "visible" | "hidden";
         };
         /**
-         * @description UpdateUnitRequest is the request to partially update a unit.
+         * @description Request to partially update a unit.
          * @example {
          *       "name": "Kilogram",
          *       "abbreviation": "kg"
          *     }
          */
         UpdateUnitRequest: {
-            /** @description The display name of the unit. */
+            /** @description Display name of the unit. */
             name?: string;
-            /** @description The short abbreviation for the unit. */
+            /** @description Short abbreviation for the unit. */
             abbreviation?: string;
             /**
              * Format: decimal
-             * @description The conversion ratio numerator, as a decimal string.
+             * @description Conversion ratio numerator, as a decimal string.
              */
             ratio_numerator?: string;
             /**
              * Format: decimal
-             * @description The conversion ratio denominator, as a decimal string.
+             * @description Conversion ratio denominator, as a decimal string.
              */
             ratio_denominator?: string;
             /**
              * Format: decimal
-             * @description The conversion offset numerator, as a decimal string.
+             * @description Conversion offset numerator, as a decimal string.
              */
             offset_numerator?: string;
             /**
              * Format: decimal
-             * @description The conversion offset denominator, as a decimal string.
+             * @description Conversion offset denominator, as a decimal string.
              */
             offset_denominator?: string;
         };
         /**
-         * @description UpdateUserRequest is the request to update a user.
+         * @description Request to update a user.
          * @example {
          *       "name": "John Doe",
          *       "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
@@ -44468,18 +44480,18 @@ export interface components {
          *     }
          */
         UpdateUserRequest: {
-            /** @description The user's display name. */
+            /** @description Display name. */
             name: string;
-            /** @description URL to the user's profile image. */
+            /** @description Profile image URL. */
             image_url: string;
             /**
              * Format: date-time
-             * @description When the user's email was verified. Set to null to mark as unverified.
+             * @description Email verification timestamp. Set to null to mark as unverified.
              */
             email_verified: string | null;
         };
         /**
-         * @description UpdateVolumeDiscountRequest is the request to partially update a volume discount.
+         * @description Request to partially update a volume discount.
          * @example {
          *       "name": "Updated Bulk Discount",
          *       "tiers": [
@@ -44493,19 +44505,19 @@ export interface components {
          *     }
          */
         UpdateVolumeDiscountRequest: {
-            /** @description The display name of the volume discount. */
+            /** @description Display name. */
             name?: string;
-            /** @description The tiers for this volume discount (upsert semantics). */
+            /** @description Tiers (upsert semantics). */
             tiers: components["schemas"]["UpdateVolumeDiscountTierInput"][];
-            /** @description The account group IDs to set as customer groups. */
+            /** @description Account group IDs to set as customer groups. */
             customer_group_ids: string[];
-            /** @description The product line IDs to set. */
+            /** @description Product line IDs to set. */
             product_line_ids: string[];
-            /** @description The item category IDs to set. */
+            /** @description Item category IDs to set. */
             category_ids: string[];
-            /** @description The attribute IDs to set. */
+            /** @description Attribute IDs to set. */
             attribute_ids: string[];
-            /** @description The unit IDs to set as acceptable units. */
+            /** @description Unit IDs to set as acceptable units. */
             unit_ids: string[];
             /** @description Whether to replace tiers. */
             has_tiers: boolean;
@@ -44520,27 +44532,27 @@ export interface components {
             /** @description Whether to replace units. */
             has_units: boolean;
         };
-        /** @description UpdateVolumeDiscountTierInput represents a tier to upsert. */
+        /** @description Volume discount tier to upsert. */
         UpdateVolumeDiscountTierInput: {
-            /** @description The ID of an existing tier to update. Omit for new tiers. */
+            /** @description Existing tier ID. Omit for new tiers. */
             id?: string;
-            /** @description The display name for the tier. */
+            /** @description Display name. */
             name?: string;
             /**
              * Format: decimal
-             * @description The discount percentage as a decimal string.
+             * @description Discount percentage as a decimal string.
              */
             discount_percentage?: string;
             /**
              * Format: decimal
-             * @description The quantity threshold for this tier as a decimal string.
+             * @description Quantity threshold as a decimal string.
              */
             threshold?: string;
-            /** @description Optional parent tier ID for tier chaining. */
+            /** @description Parent tier ID for tier chaining. */
             parent_tier_id?: string | null;
         };
         /**
-         * @description UpsertSalesTargetRequest is the request to create or update a sales target.
+         * @description Request to create or update a sales target.
          * @example {
          *       "start_date": "2026-04-01T00:00:00Z",
          *       "end_date": "2026-06-30T00:00:00Z",
@@ -44551,21 +44563,21 @@ export interface components {
         UpsertSalesTargetRequest: {
             /**
              * Format: date-time
-             * @description The start date for the sales target.
+             * @description Start date.
              */
             start_date: string;
             /**
              * Format: date-time
-             * @description The end date for the sales target.
+             * @description End date.
              */
             end_date: string;
-            /** @description The target amount value (decimal string). */
+            /** @description Target amount value (decimal string). */
             amount_value: string;
-            /** @description The unit ID for the target amount. */
+            /** @description Amount unit ID. */
             amount_unit_id: string;
         };
         /**
-         * @description UsageItem represents a single usage metric with current value and optional limit.
+         * @description Usage metric with current value and optional limit.
          * @example {
          *       "object": "usage_item",
          *       "current": 5,
@@ -44574,17 +44586,17 @@ export interface components {
          */
         UsageItem: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "usage_item";
-            /** @description The current usage count. */
+            /** @description Current usage count. */
             current: number;
-            /** @description The maximum allowed usage, null means unlimited. */
+            /** @description Maximum allowed usage. Null means unlimited. */
             limit: number | null;
         };
         /**
-         * @description A user in the Augno system.
+         * @description User resource.
          * @example {
          *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
          *       "object": "user",
@@ -44598,59 +44610,59 @@ export interface components {
          *     }
          */
         User: {
-            /** @description The unique identifier for this user. */
+            /** @description User ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "user";
-            /** @description The user's email address. */
+            /** @description Email address. */
             email: string | null;
-            /** @description The user's display name. */
+            /** @description Display name. */
             name: string | null;
-            /** @description The user's unique username. */
+            /** @description Username. */
             username: string | null;
             /**
              * Format: date-time
-             * @description When the user's email was verified, null if unverified.
+             * @description Email verified timestamp, null if unverified.
              */
             email_verified_at: string | null;
-            /** @description URL to the user's profile image. */
+            /** @description Profile image URL. */
             image_url: string | null;
             /**
              * Format: date-time
-             * @description When this user was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this user was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description UserPhotoURL holds a presigned URL for a user's profile photo.
+         * @description Presigned URL for a user's profile photo.
          * @example {
          *       "url": null
          *     }
          */
         UserPhotoURL: {
-            /** @description The presigned URL for the profile photo, or null if no photo exists. */
+            /** @description Presigned URL for the profile photo, or null if no photo exists. */
             url: string | null;
         };
         /**
-         * @description UserPhotoUploadResult is the response for a user photo upload.
+         * @description Result of a user photo upload.
          * @example {
          *       "success": true
          *     }
          */
         UserPhotoUploadResult: {
-            /** @description Whether the upload was successful. */
+            /** @description Upload success status. */
             success: boolean;
         };
         /**
-         * @description ValidateAddressRequest is the request to validate an address.
+         * @description Request to validate an address.
          * @example {
          *       "address_line_1": "123 Main St",
          *       "city": "Springfield",
@@ -44660,17 +44672,17 @@ export interface components {
          *     }
          */
         ValidateAddressRequest: {
-            /** @description The first line of the street address. */
+            /** @description First line of the street address. */
             address_line_1: string;
-            /** @description The second line of the street address. */
+            /** @description Second line of the street address. */
             address_line_2?: string;
-            /** @description The city. */
+            /** @description City. */
             city: string;
-            /** @description The state or administrative area. */
+            /** @description State or administrative area. */
             state: string;
-            /** @description The postal or zip code. */
+            /** @description Postal or ZIP code. */
             postal_code: string;
-            /** @description The country name or code. */
+            /** @description Country name or code. */
             country: string;
         };
         /**
@@ -44682,13 +44694,13 @@ export interface components {
          *     }
          */
         ValidateProductsRequest: {
-            /** @description A map of arbitrary keys to SKU values to validate. */
+            /** @description Map of arbitrary keys to SKU values. */
             products_map: {
                 [key: string]: string;
             };
         };
         /**
-         * @description ValidateProductsResponse represents the response for the validate products endpoint.
+         * @description ValidateProductsResponse is the response for the validate products endpoint.
          * @example {
          *       "object": "map",
          *       "products": {
@@ -44890,24 +44902,24 @@ export interface components {
          */
         ValidateProductsResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "map";
-            /** @description The validated products keyed by the original map key. */
+            /** @description Validated products keyed by original map key. */
             products: {
                 [key: string]: {
                     /**
                      * Format: date-time
-                     * @description The timestamp when the product was created.
+                     * @description Creation timestamp.
                      */
                     created_at: string;
-                    /** @description The unique identifier for the product. */
+                    /** @description Product ID. */
                     id: string;
-                    /** @description Whether this product is visible on the customer portal. */
+                    /** @description Whether visible on the customer portal. */
                     is_portal_ready: boolean;
                     /**
-                     * @description The underlying item for this product.
+                     * @description Item.
                      * @example {
                      *       "attributes": {
                      *         "data": [
@@ -45072,12 +45084,12 @@ export interface components {
                      */
                     item: components["schemas"]["Item"] | null;
                     /**
-                     * @description The resource type identifier.
+                     * @description Resource type identifier.
                      * @enum {string}
                      */
                     object: "product";
                     /**
-                     * @description The product line this product belongs to.
+                     * @description Product line.
                      * @example {
                      *       "commission_policy": "commission_exempt",
                      *       "created_at": "2026-05-10T00:00:00Z",
@@ -45098,7 +45110,7 @@ export interface components {
                      */
                     product_line: components["schemas"]["ProductLine"] | null;
                     /**
-                     * @description The product type.
+                     * @description Product type.
                      * @example {
                      *       "code": "sale",
                      *       "created_at": "2026-05-10T00:00:00Z",
@@ -45111,14 +45123,14 @@ export interface components {
                     product_type: components["schemas"]["ProductType"] | null;
                     /**
                      * Format: date-time
-                     * @description The timestamp when the product was last updated.
+                     * @description Last updated timestamp.
                      */
                     updated_at: string;
                 };
             };
         };
         /**
-         * @description ValidateUnitsRequest is the request to validate units by abbreviation.
+         * @description Request to validate units by abbreviation.
          * @example {
          *       "unit_map": {
          *         "0": "kg"
@@ -45126,13 +45138,13 @@ export interface components {
          *     }
          */
         ValidateUnitsRequest: {
-            /** @description A map of arbitrary keys to unit abbreviation values to validate. */
+            /** @description Map of arbitrary keys to unit abbreviation values to validate. */
             unit_map: {
                 [key: string]: string;
             };
         };
         /**
-         * @description ValidateUnitsResponse represents the response for the validate units endpoint.
+         * @description Result of unit abbreviation validation.
          * @example {
          *       "object": "map",
          *       "units": {
@@ -45160,55 +45172,55 @@ export interface components {
          */
         ValidateUnitsResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "map";
-            /** @description The validated units keyed by the original map key. */
+            /** @description Validated units keyed by the original map key. */
             units: {
                 [key: string]: {
-                    /** @description The short abbreviation for the unit (e.g. "g", "kg"). */
+                    /** @description Short abbreviation for the unit (e.g. "g", "kg"). */
                     abbreviation: string;
                     /**
                      * Format: date-time
                      * @description When this unit was created.
                      */
                     created_at: string;
-                    /** @description The unique identifier for the unit. */
+                    /** @description Unit ID. */
                     id: string;
-                    /** @description Whether this unit is the base unit for its dimension. Conversion ratios are relative to this unit. */
+                    /** @description Whether this is the base unit for its dimension. Conversion ratios are relative to this unit. */
                     is_base_unit: boolean;
-                    /** @description The display name of the unit (e.g. "Gram", "Kilogram"). */
+                    /** @description Display name of the unit (e.g. "Gram", "Kilogram"). */
                     name: string;
                     /**
-                     * @description The resource type identifier.
+                     * @description Resource type identifier.
                      * @enum {string}
                      */
                     object: "unit";
                     /**
                      * Format: decimal
-                     * @description The conversion offset denominator. Typically 1.
+                     * @description Conversion offset denominator. Typically 1.
                      */
                     offset_denominator: string;
                     /**
                      * Format: decimal
-                     * @description The conversion offset numerator, used for temperature-like conversions. Zero for most unit types.
+                     * @description Conversion offset numerator, used for temperature-like conversions. Zero for most unit types.
                      */
                     offset_numerator: string;
-                    /** @description The owner of this resource. */
+                    /** @description Owner of this resource. */
                     owner: components["schemas"]["Owner"] | null;
                     /**
                      * Format: decimal
-                     * @description The conversion ratio denominator relative to the base unit in the same dimension.
+                     * @description Conversion ratio denominator relative to the base unit in the same dimension.
                      */
                     ratio_denominator: string;
                     /**
                      * Format: decimal
-                     * @description The conversion ratio numerator relative to the base unit in the same dimension.
+                     * @description Conversion ratio numerator relative to the base unit in the same dimension.
                      */
                     ratio_numerator: string;
                     /**
-                     * @description The unit dimension.
+                     * @description Unit dimension.
                      * @enum {string}
                      */
                     type: "currency" | "quantity" | "time" | "mass" | "volume" | "length" | "temperature" | "area";
@@ -45221,7 +45233,7 @@ export interface components {
             };
         };
         /**
-         * @description ValidatedAddress represents the result of address validation.
+         * @description Result of address validation.
          * @example {
          *       "object": "validated_address",
          *       "is_valid": true,
@@ -45241,21 +45253,21 @@ export interface components {
          */
         ValidatedAddress: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "validated_address";
-            /** @description Whether the address is considered valid. */
+            /** @description Whether the address is valid. */
             is_valid: boolean;
-            /** @description The formatted address as returned by the validation service. */
+            /** @description Formatted address from the validation service. */
             formatted_address: string | null;
-            /** @description The standardized address components. */
+            /** @description Standardized address components. */
             components: components["schemas"]["AddressComponents"] | null;
-            /** @description Validation messages describing any issues found. */
+            /** @description Validation messages for issues found. */
             validation_messages: string[];
         };
         /**
-         * @description VolumeDiscount represents a volume discount with tiered pricing.
+         * @description Volume discount with tiered pricing.
          * @example {
          *       "id": "quds_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "volume_discount",
@@ -45290,19 +45302,19 @@ export interface components {
          *     }
          */
         VolumeDiscount: {
-            /** @description The unique identifier for the volume discount. */
+            /** @description Volume discount ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "volume_discount";
-            /** @description The human-readable name for the volume discount. */
+            /** @description Display name. */
             name: string;
-            /** @description The tiers for this volume discount. */
+            /** @description Tiers. */
             tiers: components["schemas"]["List_VolumeDiscountTier"] | null;
             /**
-             * @description The customer groups associated with this volume discount.
+             * @description Customer groups associated with this volume discount.
              * @example {
              *       "object": "list",
              *       "page_info": {
@@ -45327,14 +45339,14 @@ export interface components {
              *     }
              */
             customer_groups: components["schemas"]["List_AccountGroup"] | null;
-            /** @description The product lines associated with this volume discount. */
+            /** @description Product lines associated with this volume discount. */
             product_lines: components["schemas"]["List_ProductLine"] | null;
-            /** @description The item categories associated with this volume discount. */
+            /** @description Item categories associated with this volume discount. */
             categories: components["schemas"]["List_ItemCategory"] | null;
-            /** @description The attributes associated with this volume discount. */
+            /** @description Attributes associated with this volume discount. */
             attributes: components["schemas"]["List_Attribute"] | null;
             /**
-             * @description The acceptable units for this volume discount.
+             * @description Acceptable units for this volume discount.
              * @example {
              *       "object": "list",
              *       "page_info": {
@@ -45369,17 +45381,17 @@ export interface components {
             acceptable_units: components["schemas"]["List_Unit"] | null;
             /**
              * Format: date-time
-             * @description When this volume discount was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this volume discount was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description VolumeDiscountTier represents a tier within a volume discount.
+         * @description Tier within a volume discount.
          * @example {
          *       "id": "qudstr_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "volume_discount_tier",
@@ -45391,38 +45403,38 @@ export interface components {
          *     }
          */
         VolumeDiscountTier: {
-            /** @description The unique identifier for the volume discount tier. */
+            /** @description Volume discount tier ID. */
             id: string;
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "volume_discount_tier";
-            /** @description The human-readable name for the tier. */
+            /** @description Display name. */
             name: string;
             /**
              * Format: decimal
-             * @description The discount percentage as a decimal string.
+             * @description Discount percentage as a decimal string.
              */
             discount_percentage: string;
             /**
              * Format: decimal
-             * @description The quantity threshold for this tier as a decimal string.
+             * @description Quantity threshold as a decimal string.
              */
             threshold: string;
             /**
              * Format: date-time
-             * @description When this tier was created.
+             * @description Creation timestamp.
              */
             created_at: string;
             /**
              * Format: date-time
-             * @description When this tier was last updated.
+             * @description Last updated timestamp.
              */
             updated_at: string;
         };
         /**
-         * @description WebhookResponse represents the result of processing a webhook.
+         * @description Result of processing a webhook.
          * @example {
          *       "object": "webhook_response",
          *       "received": true
@@ -45430,7 +45442,7 @@ export interface components {
          */
         WebhookResponse: {
             /**
-             * @description The resource type identifier.
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "webhook_response";
@@ -45779,7 +45791,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the agent definition to retrieve. */
+                /** @description ID of the agent definition to retrieve. */
                 id: string;
             };
             cookie?: never;
@@ -45872,7 +45884,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the agent definition to delete. */
+                /** @description Agent definition ID. */
                 id: string;
             };
             cookie?: never;
@@ -45913,7 +45925,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the agent definition to update. */
+                /** @description Agent definition ID. */
                 id: string;
             };
             cookie?: never;
@@ -46024,7 +46036,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the agent definition to update. */
+                /** @description Agent definition ID. */
                 id: string;
             };
             cookie?: never;
@@ -46225,7 +46237,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the alert to retrieve. */
+                /** @description Alert ID. */
                 id: string;
             };
             cookie?: never;
@@ -46282,7 +46294,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the alert to acknowledge. */
+                /** @description Alert ID. */
                 id: string;
             };
             cookie?: never;
@@ -46345,12 +46357,12 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter by memory category (e.g. "preference", "fact").
+                 * @description Category filter (e.g. "preference", "fact").
                  * @example example
                  */
                 category?: string;
                 /**
-                 * @description Filter by entity type (e.g. "customer", "product").
+                 * @description Entity type filter (e.g. "customer", "product").
                  * @example example
                  */
                 entity_type?: string;
@@ -46477,7 +46489,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the memory to retrieve. */
+                /** @description Memory ID. */
                 id: string;
             };
             cookie?: never;
@@ -46527,7 +46539,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the memory to delete. */
+                /** @description Memory ID. */
                 id: string;
             };
             cookie?: never;
@@ -46560,7 +46572,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the memory to update. */
+                /** @description Memory ID. */
                 id: string;
             };
             cookie?: never;
@@ -46635,12 +46647,12 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter by run status code (e.g. "running", "completed", "failed").
+                 * @description Run status filter (e.g. "running", "completed", "failed").
                  * @example example
                  */
                 status?: string;
                 /**
-                 * @description Filter by agent definition ID.
+                 * @description Agent definition ID filter.
                  * @example example
                  */
                 agent_definition_id?: string;
@@ -47026,7 +47038,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the agent run to retrieve. */
+                /** @description Agent run ID. */
                 id: string;
             };
             cookie?: never;
@@ -47204,7 +47216,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the agent run to cancel. */
+                /** @description Agent run ID. */
                 id: string;
             };
             cookie?: never;
@@ -47382,7 +47394,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the agent run to continue. */
+                /** @description Agent run ID. */
                 id: string;
             };
             cookie?: never;
@@ -47929,12 +47941,12 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter API keys by status.
+                 * @description API key statuses to filter by.
                  * @example [
                  *       "active"
                  *     ]
                  */
-                "status[]"?: ("active" | "expired" | "revoked")[];
+                "statuses[]"?: ("active" | "expired" | "revoked")[];
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
@@ -48210,7 +48222,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the API key to retrieve. */
+                /** @description API key ID. */
                 id: string;
             };
             cookie?: never;
@@ -48284,7 +48296,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the API key to revoke. */
+                /** @description API key ID. */
                 id: string;
             };
             cookie?: never;
@@ -48325,7 +48337,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The unique identifier for the API key to rotate. */
+                /** @description API key ID to rotate. */
                 id: string;
             };
             cookie?: never;
@@ -48407,14 +48419,14 @@ export interface operations {
             };
         };
     };
-    "create-new-password": {
+    "update-password": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description The request body for Create New Password */
+        /** @description The request body for Update Password */
         requestBody?: {
             content: {
                 /**
@@ -48427,7 +48439,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Successful response for Create New Password */
+            /** @description Successful response for Update Password */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -48566,17 +48578,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor for fetching the next page, from a previous response's next_cursor field.
+                 * @description Cursor from a previous response's next_cursor field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Maximum number of results to return per page (default: 100, max: 1000).
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Optional search query to filter results.
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -48705,7 +48717,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The session ID. */
+                /** @description Session ID. */
                 session_id: string;
             };
             cookie?: never;
@@ -48773,7 +48785,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The session ID. */
+                /** @description Session ID. */
                 session_id: string;
             };
             cookie?: never;
@@ -48855,7 +48867,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The session ID. */
+                /** @description Session ID. */
                 session_id: string;
             };
             cookie?: never;
@@ -48893,7 +48905,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The session ID. */
+                /** @description Session ID. */
                 session_id: string;
             };
             cookie?: never;
@@ -48942,7 +48954,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The session ID (from path). */
+                /** @description Session ID. */
                 session_id: string;
             };
             cookie?: never;
@@ -48975,7 +48987,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The session ID. */
+                /** @description Session ID. */
                 session_id: string;
             };
             cookie?: never;
@@ -49015,7 +49027,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The session ID. */
+                /** @description Session ID. */
                 session_id: string;
             };
             cookie?: never;
@@ -49064,7 +49076,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The verification token from the email link. */
+                /** @description Verification token from the email link. */
                 token: string;
             };
             cookie?: never;
@@ -49330,17 +49342,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor for fetching the next page, from a previous response's next_cursor field.
+                 * @description Cursor from a previous response's next_cursor field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Maximum number of results to return per page (default: 100, max: 1000).
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Optional search query to filter results.
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -49430,7 +49442,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the target pricing plan to preview switching to. */
+                /** @description Target pricing plan ID. */
                 id: string;
             };
             cookie?: never;
@@ -49488,7 +49500,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the target pricing plan to switch to. */
+                /** @description Target pricing plan ID. */
                 id: string;
             };
             cookie?: never;
@@ -49721,7 +49733,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the product line. */
+                /** @description Product line ID. */
                 id: string;
             };
             cookie?: never;
@@ -49826,7 +49838,7 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter by item category type code (material_category or product_category).
+                 * @description Filter by item category type (material_category or product_category).
                  * @example material_category
                  */
                 type?: "material_category" | "product_category";
@@ -49944,7 +49956,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the item category to retrieve. */
+                /** @description Item category ID. */
                 id: string;
             };
             cookie?: never;
@@ -49994,7 +50006,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the item category to delete. */
+                /** @description Item category ID. */
                 id: string;
             };
             cookie?: never;
@@ -50035,7 +50047,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the item category to update. */
+                /** @description Item category ID. */
                 id: string;
             };
             cookie?: never;
@@ -50095,9 +50107,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the item category. */
+                /** @description Item category ID. */
                 id: string;
-                /** @description The ID of the property to add. */
+                /** @description Property ID. */
                 property_id: string;
             };
             cookie?: never;
@@ -50130,9 +50142,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the item category. */
+                /** @description Item category ID. */
                 id: string;
-                /** @description The ID of the property to remove. */
+                /** @description Property ID. */
                 property_id: string;
             };
             cookie?: never;
@@ -50165,9 +50177,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the item category. */
+                /** @description Item category ID. */
                 id: string;
-                /** @description The ID of the new unit group. */
+                /** @description Unit group ID. */
                 unit_group_id: string;
             };
             cookie?: never;
@@ -50601,7 +50613,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the item to retrieve. */
+                /** @description Item ID. */
                 id: string;
             };
             cookie?: never;
@@ -50796,7 +50808,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the item to retrieve costs for. */
+                /** @description Item ID. */
                 id: string;
             };
             cookie?: never;
@@ -50856,7 +50868,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the item to retrieve inventory for. */
+                /** @description Item ID. */
                 id: string;
             };
             cookie?: never;
@@ -50981,7 +50993,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the item to update inventory for. */
+                /** @description Item ID. */
                 id: string;
             };
             cookie?: never;
@@ -51027,14 +51039,14 @@ export interface operations {
         parameters: {
             query: {
                 /**
-                 * @description The type of trend to retrieve (e.g. "on_hand", "cost").
+                 * @description Trend type (e.g. "on_hand", "cost").
                  * @example example
                  */
                 trend_type: string;
             };
             header?: never;
             path: {
-                /** @description The ID of the item to retrieve trends for. */
+                /** @description Item ID. */
                 id: string;
             };
             cookie?: never;
@@ -51216,7 +51228,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the product line to retrieve. */
+                /** @description Product line ID. */
                 id: string;
             };
             cookie?: never;
@@ -51267,7 +51279,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the product line to delete. */
+                /** @description Product line ID. */
                 id: string;
             };
             cookie?: never;
@@ -51308,7 +51320,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the product line to update. */
+                /** @description Product line ID. */
                 id: string;
             };
             cookie?: never;
@@ -51485,7 +51497,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID or code of the product type to retrieve. */
+                /** @description Product type ID or code. */
                 id: string;
             };
             cookie?: never;
@@ -51527,7 +51539,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the product type to delete. */
+                /** @description Product type ID. */
                 id: string;
             };
             cookie?: never;
@@ -51560,7 +51572,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the product type to update. */
+                /** @description Product type ID. */
                 id: string;
             };
             cookie?: never;
@@ -51647,12 +51659,12 @@ export interface operations {
                  */
                 "attribute_ids[]"?: string[];
                 /**
-                 * @description Filter products created on or after this date.
+                 * @description Start of creation date range.
                  * @example example
                  */
                 start_date?: string;
                 /**
-                 * @description Filter products created on or before this date.
+                 * @description End of creation date range.
                  * @example example
                  */
                 end_date?: string;
@@ -52396,7 +52408,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the product to retrieve. */
+                /** @description Product ID. */
                 id: string;
             };
             cookie?: never;
@@ -52623,7 +52635,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the product to delete. */
+                /** @description Product ID. */
                 id: string;
             };
             cookie?: never;
@@ -52850,7 +52862,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the product to update. */
+                /** @description Product ID. */
                 id: string;
             };
             cookie?: never;
@@ -53087,9 +53099,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the product to update. */
+                /** @description Product ID. */
                 id: string;
-                /** @description The ID of the new product line. */
+                /** @description Product line ID. */
                 product_line_id: string;
             };
             cookie?: never;
@@ -53433,7 +53445,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the property to retrieve. */
+                /** @description Property ID. */
                 id: string;
             };
             cookie?: never;
@@ -53475,7 +53487,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the property to delete. */
+                /** @description Property ID. */
                 id: string;
             };
             cookie?: never;
@@ -53516,7 +53528,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the property to update. */
+                /** @description Property ID. */
                 id: string;
             };
             cookie?: never;
@@ -53584,7 +53596,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the property to list attributes for. */
+                /** @description Property ID. */
                 property_id: string;
             };
             cookie?: never;
@@ -53616,7 +53628,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the property to create the attribute under. */
+                /** @description Property ID. */
                 property_id: string;
             };
             cookie?: never;
@@ -53671,9 +53683,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the property. */
+                /** @description Property ID. */
                 property_id: string;
-                /** @description The ID of the attribute to retrieve. */
+                /** @description Attribute ID. */
                 id: string;
             };
             cookie?: never;
@@ -53716,9 +53728,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the property. */
+                /** @description Property ID. */
                 property_id: string;
-                /** @description The ID of the attribute to delete. */
+                /** @description Attribute ID. */
                 id: string;
             };
             cookie?: never;
@@ -53751,9 +53763,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the property. */
+                /** @description Property ID. */
                 property_id: string;
-                /** @description The ID of the attribute to update. */
+                /** @description Attribute ID. */
                 id: string;
             };
             cookie?: never;
@@ -53820,7 +53832,7 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter by unit type code (e.g. "mass", "quantity").
+                 * @description Unit type filter (e.g. "mass", "quantity").
                  * @example currency
                  */
                 type?: "currency" | "quantity" | "time" | "mass" | "volume" | "length" | "temperature" | "area";
@@ -53975,7 +53987,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the unit group to retrieve. */
+                /** @description Unit group ID. */
                 id: string;
             };
             cookie?: never;
@@ -54025,7 +54037,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the unit group to delete. */
+                /** @description Unit group ID. */
                 id: string;
             };
             cookie?: never;
@@ -54066,7 +54078,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the unit group to update. */
+                /** @description Unit group ID. */
                 id: string;
             };
             cookie?: never;
@@ -54135,7 +54147,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the unit group. */
+                /** @description Unit group ID. */
                 unitGroupId: string;
             };
             cookie?: never;
@@ -54175,7 +54187,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the unit group. */
+                /** @description Unit group ID. */
                 unitGroupId: string;
             };
             cookie?: never;
@@ -54228,9 +54240,9 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the unit group. */
+                /** @description Unit group ID. */
                 unitGroupId: string;
-                /** @description The ID of the unit group unit to retrieve. */
+                /** @description Unit group unit ID. */
                 id: string;
             };
             cookie?: never;
@@ -54262,9 +54274,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the unit group. */
+                /** @description Unit group ID. */
                 unitGroupId: string;
-                /** @description The ID of the associated unit to delete. */
+                /** @description Unit group unit ID. */
                 id: string;
             };
             cookie?: never;
@@ -54305,9 +54317,9 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the unit group. */
+                /** @description Unit group ID. */
                 unitGroupId: string;
-                /** @description The ID of the associated unit. */
+                /** @description Unit group unit ID. */
                 id: string;
             };
             cookie?: never;
@@ -54593,7 +54605,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the unit to retrieve. */
+                /** @description Unit ID. */
                 id: string;
             };
             cookie?: never;
@@ -54646,7 +54658,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the unit to delete. */
+                /** @description Unit ID. */
                 id: string;
             };
             cookie?: never;
@@ -54687,7 +54699,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the unit to update. */
+                /** @description Unit ID. */
                 id: string;
             };
             cookie?: never;
@@ -54993,14 +55005,14 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description An optional session token for grouping with a previous autocomplete request.
+                 * @description Session token for grouping with a previous autocomplete request.
                  * @example example
                  */
                 session_token?: string;
             };
             header?: never;
             path: {
-                /** @description The Google Places ID to look up. */
+                /** @description Google Places ID. */
                 id: string;
             };
             cookie?: never;
@@ -55043,16 +55055,16 @@ export interface operations {
             };
         };
     };
-    "get-address-suggestions": {
+    "list-address-suggestions": {
         parameters: {
             query: {
                 /**
-                 * @description The text input for autocomplete.
+                 * @description Autocomplete input text.
                  * @example example
                  */
                 input: string;
                 /**
-                 * @description An optional session token for grouping autocomplete requests.
+                 * @description Session token for grouping autocomplete requests.
                  * @example example
                  */
                 session_token?: string;
@@ -55063,7 +55075,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Address Suggestions */
+            /** @description Successful response for List Address Suggestions */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -55619,17 +55631,17 @@ export interface operations {
                  */
                 end_date?: string;
                 /**
-                 * @description Resource type, matching the object type of the audited entity.
+                 * @description Resource type of the audited entity.
                  * @example account
                  */
                 resource_type?: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
                 /**
-                 * @description Resource ID (type_id of the audited resource).
+                 * @description Audited resource ID.
                  * @example example
                  */
                 resource_id?: string;
                 /**
-                 * @description Actor ID (user ID or API key type_id).
+                 * @description Actor ID.
                  * @example example
                  */
                 actor_id?: string;
@@ -55639,7 +55651,7 @@ export interface operations {
                  */
                 action?: "create" | "update" | "delete" | "restore" | "archive";
                 /**
-                 * @description Actor's home account ID.
+                 * @description Actor home account ID.
                  * @example example
                  */
                 account_id?: string;
@@ -55770,7 +55782,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the audit event to retrieve. */
+                /** @description Audit event ID. */
                 id: string;
             };
             cookie?: never;
@@ -55993,7 +56005,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the email log to retrieve. */
+                /** @description Email log ID. */
                 id: string;
             };
             cookie?: never;
@@ -56115,7 +56127,7 @@ export interface operations {
                  */
                 error_code?: string;
                 /**
-                 * @description Filter: actor's home account ID.
+                 * @description Filter: actor home account ID.
                  * @example example
                  */
                 account_id?: string;
@@ -56269,7 +56281,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the request log to retrieve. */
+                /** @description Request log ID. */
                 id: string;
             };
             cookie?: never;
@@ -56372,17 +56384,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor for fetching the next page, from a previous response's next_cursor field.
+                 * @description Cursor from a previous response's next_cursor field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Maximum number of results to return per page (default: 100, max: 1000).
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Optional search query to filter results.
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -56532,7 +56544,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the sandbox to retrieve. */
+                /** @description Sandbox ID. */
                 id: string;
             };
             cookie?: never;
@@ -56584,7 +56596,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the sandbox to delete. */
+                /** @description Sandbox ID. */
                 id: string;
             };
             cookie?: never;
@@ -56688,7 +56700,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the system property to retrieve. */
+                /** @description System property ID. */
                 id: string;
             };
             cookie?: never;
@@ -56735,7 +56747,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the system property to update. */
+                /** @description System property ID. */
                 id: string;
             };
             cookie?: never;
@@ -56792,7 +56804,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The type code of the system property (e.g. transaction_number). */
+                /** @description System property type code (e.g. transaction_number). */
                 type_code: string;
             };
             cookie?: never;
@@ -56830,7 +56842,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The customer account ID. */
+                /** @description Customer account ID. */
                 account_id: string;
             };
             cookie?: never;
@@ -56896,7 +56908,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The customer account ID to list invoices for. */
+                /** @description Customer account ID. */
                 account_id: string;
             };
             cookie?: never;
@@ -57046,14 +57058,14 @@ export interface operations {
                  */
                 type?: string;
                 /**
-                 * @description Whether to include transactions from child accounts. Defaults to true.
+                 * @description Include transactions from child accounts. Defaults to true.
                  * @example true
                  */
                 include_child_accounts?: boolean;
             };
             header?: never;
             path: {
-                /** @description The customer account ID. */
+                /** @description Customer account ID. */
                 account_id: string;
             };
             cookie?: never;
@@ -57419,7 +57431,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the invoice to retrieve. */
+                /** @description Invoice ID. */
                 id: string;
             };
             cookie?: never;
@@ -57776,7 +57788,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the invoice to update. */
+                /** @description Invoice ID. */
                 id: string;
             };
             cookie?: never;
@@ -58142,7 +58154,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the payment term to retrieve. */
+                /** @description Payment term ID. */
                 id: string;
             };
             cookie?: never;
@@ -58189,7 +58201,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the payment term to delete. */
+                /** @description Payment term ID. */
                 id: string;
             };
             cookie?: never;
@@ -58230,7 +58242,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the payment term to update. */
+                /** @description Payment term ID. */
                 id: string;
             };
             cookie?: never;
@@ -58301,7 +58313,7 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Optional cutoff date for the receivables snapshot.
+                 * @description Cutoff date for the receivables snapshot.
                  * @example example
                  */
                 cutoff_date?: string;
@@ -58413,14 +58425,14 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Optional cutoff date for the receivables snapshot.
+                 * @description Cutoff date for the receivables snapshot.
                  * @example example
                  */
                 cutoff_date?: string;
             };
             header?: never;
             path: {
-                /** @description The customer account ID. */
+                /** @description Customer account ID. */
                 account_id: string;
             };
             cookie?: never;
@@ -58513,14 +58525,14 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Optional cutoff date for the receivables snapshot.
+                 * @description Cutoff date for the receivables snapshot.
                  * @example example
                  */
                 cutoff_date?: string;
             };
             header?: never;
             path: {
-                /** @description The customer account ID. */
+                /** @description Customer account ID. */
                 account_id: string;
             };
             cookie?: never;
@@ -58730,7 +58742,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the settlement to retrieve. */
+                /** @description Settlement ID. */
                 id: string;
             };
             cookie?: never;
@@ -58788,7 +58800,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the settlement to delete. */
+                /** @description Settlement ID. */
                 id: string;
             };
             cookie?: never;
@@ -58846,7 +58858,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the settlement to update. */
+                /** @description Settlement ID. */
                 id: string;
             };
             cookie?: never;
@@ -59013,7 +59025,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the transaction allocation to delete. */
+                /** @description Transaction allocation ID. */
                 id: string;
             };
             cookie?: never;
@@ -59046,7 +59058,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the transaction allocation to update. */
+                /** @description Transaction allocation ID. */
                 id: string;
             };
             cookie?: never;
@@ -59510,7 +59522,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the transaction to retrieve. */
+                /** @description Transaction ID. */
                 id: string;
             };
             cookie?: never;
@@ -59606,7 +59618,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the transaction to delete. */
+                /** @description Transaction ID. */
                 id: string;
             };
             cookie?: never;
@@ -59702,7 +59714,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the transaction to update. */
+                /** @description Transaction ID. */
                 id: string;
             };
             cookie?: never;
@@ -59836,7 +59848,7 @@ export interface operations {
                  */
                 role_type?: "admin" | "user" | "scanner" | "sales_rep" | "agent";
                 /**
-                 * @description Whether to include removed account users in the results.
+                 * @description Whether to include removed account users.
                  * @example true
                  */
                 include_removed?: boolean;
@@ -60036,7 +60048,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the account user to retrieve. */
+                /** @description Account user ID. */
                 id: string;
             };
             cookie?: never;
@@ -60113,7 +60125,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account user to delete. */
+                /** @description Account user ID. */
                 id: string;
             };
             cookie?: never;
@@ -60146,7 +60158,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account user to update. */
+                /** @description Account user ID. */
                 id: string;
             };
             cookie?: never;
@@ -60235,7 +60247,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account user to lock. */
+                /** @description Account user ID. */
                 id: string;
             };
             cookie?: never;
@@ -60268,7 +60280,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The user ID of the account user. */
+                /** @description Account user ID. */
                 id: string;
             };
             cookie?: never;
@@ -60364,7 +60376,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account user whose password to update. */
+                /** @description Account user ID. */
                 id: string;
             };
             cookie?: never;
@@ -60408,7 +60420,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account user to restore. */
+                /** @description Account user ID. */
                 id: string;
             };
             cookie?: never;
@@ -60441,7 +60453,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account user to unlock. */
+                /** @description Account user ID. */
                 id: string;
             };
             cookie?: never;
@@ -60482,7 +60494,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the account to retrieve. */
+                /** @description Account ID. */
                 id: string;
             };
             cookie?: never;
@@ -60535,7 +60547,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the account to update. */
+                /** @description Account ID. */
                 id: string;
             };
             cookie?: never;
@@ -60590,7 +60602,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account. */
+                /** @description Account ID. */
                 id: string;
             };
             cookie?: never;
@@ -60630,7 +60642,7 @@ export interface operations {
                 "Content-Type"?: string;
             };
             path: {
-                /** @description The ID of the account. */
+                /** @description Account ID. */
                 id: string;
             };
             cookie?: never;
@@ -60744,7 +60756,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The account ID of the child to add. */
+                /** @description Child account ID. */
                 child_account_id: string;
             };
             cookie?: never;
@@ -60797,7 +60809,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The account ID of the child to remove. */
+                /** @description Child account ID. */
                 child_account_id: string;
             };
             cookie?: never;
@@ -61019,7 +61031,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account integration to update. */
+                /** @description Account integration ID. */
                 id: string;
             };
             cookie?: never;
@@ -61072,7 +61084,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account integration to delete. */
+                /** @description Account integration ID. */
                 id: string;
             };
             cookie?: never;
@@ -61259,7 +61271,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The vendor account ID to list customer accounts for. */
+                /** @description Vendor account ID. */
                 vendor_account_id: string;
             };
             cookie?: never;
@@ -61403,7 +61415,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The portal slug to look up. */
+                /** @description Portal slug. */
                 slug: string;
             };
             cookie?: never;
@@ -61637,7 +61649,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the role to retrieve. */
+                /** @description Role ID. */
                 id: string;
             };
             cookie?: never;
@@ -61700,7 +61712,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the role to delete. */
+                /** @description Role ID. */
                 id: string;
             };
             cookie?: never;
@@ -61741,7 +61753,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the role to update. */
+                /** @description Role ID. */
                 id: string;
             };
             cookie?: never;
@@ -61818,7 +61830,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the user to retrieve. */
+                /** @description User ID. */
                 id: string;
             };
             cookie?: never;
@@ -61863,7 +61875,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the user to update. */
+                /** @description User ID. */
                 id: string;
             };
             cookie?: never;
@@ -61920,7 +61932,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the user. */
+                /** @description User ID. */
                 id: string;
             };
             cookie?: never;
@@ -61960,7 +61972,7 @@ export interface operations {
                 "Content-Type"?: string;
             };
             path: {
-                /** @description The ID of the user. */
+                /** @description User ID. */
                 id: string;
             };
             cookie?: never;
@@ -61992,14 +62004,14 @@ export interface operations {
             };
         };
     };
-    "analyze-open-batch-summaries": {
+    "get-open-batch-summaries": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description The request body for Analyze Open Batch Summaries */
+        /** @description The request body for Get Open Batch Summaries */
         requestBody?: {
             content: {
                 /**
@@ -62016,7 +62028,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Successful response for Analyze Open Batch Summaries */
+            /** @description Successful response for Get Open Batch Summaries */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -64268,7 +64280,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the batch to delete. */
+                /** @description Batch ID. */
                 id: string;
             };
             cookie?: never;
@@ -64671,7 +64683,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the batch to retrieve the flow for. */
+                /** @description Batch ID. */
                 id: string;
             };
             cookie?: never;
@@ -65090,7 +65102,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the batch. */
+                /** @description Batch ID. */
                 id: string;
             };
             cookie?: never;
@@ -65337,7 +65349,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the carrier whose service levels to list. */
+                /** @description Carrier ID. */
                 carrier_id: string;
             };
             cookie?: never;
@@ -65369,7 +65381,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the carrier. */
+                /** @description Carrier ID. */
                 carrier_id: string;
             };
             cookie?: never;
@@ -65425,9 +65437,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the carrier. */
+                /** @description Carrier ID. */
                 carrier_id: string;
-                /** @description The ID of the service level to retrieve. */
+                /** @description Service level ID. */
                 id: string;
             };
             cookie?: never;
@@ -65471,9 +65483,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the carrier. */
+                /** @description Carrier ID. */
                 carrier_id: string;
-                /** @description The ID of the service level to delete. */
+                /** @description Service level ID. */
                 id: string;
             };
             cookie?: never;
@@ -65506,9 +65518,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the carrier. */
+                /** @description Carrier ID. */
                 carrier_id: string;
-                /** @description The ID of the service level to update. */
+                /** @description Service level ID. */
                 id: string;
             };
             cookie?: never;
@@ -65570,7 +65582,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the carrier to retrieve. */
+                /** @description Carrier ID. */
                 id: string;
             };
             cookie?: never;
@@ -65631,7 +65643,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the carrier to delete. */
+                /** @description Carrier ID. */
                 id: string;
             };
             cookie?: never;
@@ -65672,7 +65684,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the carrier to update. */
+                /** @description Carrier ID. */
                 id: string;
             };
             cookie?: never;
@@ -65743,7 +65755,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the carrier. */
+                /** @description Carrier ID. */
                 id: string;
             };
             cookie?: never;
@@ -65792,7 +65804,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the carrier. */
+                /** @description Carrier ID. */
                 id: string;
             };
             cookie?: never;
@@ -65853,7 +65865,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the carrier. */
+                /** @description Carrier ID. */
                 id: string;
             };
             cookie?: never;
@@ -66023,7 +66035,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the DC location to retrieve. */
+                /** @description DC location ID. */
                 id: string;
             };
             cookie?: never;
@@ -66069,7 +66081,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the DC location to delete. */
+                /** @description DC location ID. */
                 id: string;
             };
             cookie?: never;
@@ -66102,7 +66114,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the DC location to update. */
+                /** @description DC location ID. */
                 id: string;
             };
             cookie?: never;
@@ -66257,7 +66269,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the delivery to retrieve. */
+                /** @description Delivery ID. */
                 id: string;
             };
             cookie?: never;
@@ -66683,7 +66695,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the department to retrieve. */
+                /** @description Department ID. */
                 id: string;
             };
             cookie?: never;
@@ -66801,7 +66813,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the department to delete. */
+                /** @description Department ID. */
                 id: string;
             };
             cookie?: never;
@@ -66834,7 +66846,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the department to update. */
+                /** @description Department ID. */
                 id: string;
             };
             cookie?: never;
@@ -66976,7 +66988,7 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter by whether the EDI run succeeded.
+                 * @description Success status filter.
                  * @example true
                  */
                 has_succeeded?: boolean;
@@ -67033,7 +67045,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the EDI run to retrieve. */
+                /** @description EDI run ID. */
                 id: string;
             };
             cookie?: never;
@@ -67565,7 +67577,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the inventory change log to retrieve. */
+                /** @description Inventory change log ID. */
                 id: string;
             };
             cookie?: never;
@@ -67879,7 +67891,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID or code of the location type to retrieve. */
+                /** @description Location type ID or code. */
                 id: string;
             };
             cookie?: never;
@@ -68061,7 +68073,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the location to retrieve. */
+                /** @description Location ID. */
                 id: string;
             };
             cookie?: never;
@@ -68125,7 +68137,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the location to delete. */
+                /** @description Location ID. */
                 id: string;
             };
             cookie?: never;
@@ -68166,7 +68178,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the location to update. */
+                /** @description Location ID. */
                 id: string;
             };
             cookie?: never;
@@ -68347,7 +68359,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the machine to retrieve. */
+                /** @description Machine ID. */
                 id: string;
             };
             cookie?: never;
@@ -68391,7 +68403,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the machine to delete. */
+                /** @description Machine ID. */
                 id: string;
             };
             cookie?: never;
@@ -68424,7 +68436,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the machine to update. */
+                /** @description Machine ID. */
                 id: string;
             };
             cookie?: never;
@@ -68492,22 +68504,22 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Query parameter: category_ids for List Materials
+                 * @description Filter by category IDs.
                  * @example []
                  */
                 "category_ids[]"?: string[];
                 /**
-                 * @description Query parameter: attribute_ids for List Materials
+                 * @description Filter by attribute IDs.
                  * @example []
                  */
                 "attribute_ids[]"?: string[];
                 /**
-                 * @description Query parameter: start_date for List Materials
+                 * @description Filter to materials created on or after this date.
                  * @example example
                  */
                 start_date?: string;
                 /**
-                 * @description Query parameter: end_date for List Materials
+                 * @description Filter to materials created on or before this date.
                  * @example example
                  */
                 end_date?: string;
@@ -69035,7 +69047,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description Path parameter: id for Get Material */
+                /** @description Material ID. */
                 id: string;
             };
             cookie?: never;
@@ -69280,7 +69292,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Path parameter: id for Delete Material */
+                /** @description Material ID. */
                 id: string;
             };
             cookie?: never;
@@ -69525,7 +69537,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Path parameter: id for Update Material */
+                /** @description Material ID. */
                 id: string;
             };
             cookie?: never;
@@ -70244,7 +70256,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The item ID of the part to retrieve. */
+                /** @description Part ID. */
                 id: string;
             };
             cookie?: never;
@@ -70438,7 +70450,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The item ID of the part to delete. */
+                /** @description Part ID. */
                 id: string;
             };
             cookie?: never;
@@ -70640,7 +70652,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The item ID of the part to update. */
+                /** @description Part ID. */
                 id: string;
             };
             cookie?: never;
@@ -71161,7 +71173,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the pick to update. */
+                /** @description Pick ID. */
                 id: string;
             };
             cookie?: never;
@@ -71328,7 +71340,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the pick to pack. */
+                /** @description Pick ID. */
                 id: string;
             };
             cookie?: never;
@@ -71498,7 +71510,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the pick. */
+                /** @description Pick ID. */
                 id: string;
             };
             cookie?: never;
@@ -71655,7 +71667,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the pick to void. */
+                /** @description Pick ID. */
                 id: string;
             };
             cookie?: never;
@@ -71816,19 +71828,19 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description The maximum number of results to return.
+                 * @description Maximum number of results to return.
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description The number of results to skip.
+                 * @description Number of results to skip.
                  * @example 100
                  */
                 offset?: number;
             };
             header?: never;
             path: {
-                /** @description The ID of the pick. */
+                /** @description Pick ID. */
                 id: string;
             };
             cookie?: never;
@@ -71869,9 +71881,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the pick. */
+                /** @description Pick ID. */
                 pickId: string;
-                /** @description The ID of the pick line to update. */
+                /** @description Pick line ID. */
                 id: string;
             };
             cookie?: never;
@@ -71971,9 +71983,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the pick. */
+                /** @description Pick ID. */
                 pickId: string;
-                /** @description The ID of the pick line to pick. */
+                /** @description Pick line ID. */
                 id: string;
             };
             cookie?: never;
@@ -72063,9 +72075,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the pick. */
+                /** @description Pick ID. */
                 pickId: string;
-                /** @description The ID of the pick line to void. */
+                /** @description Pick line ID. */
                 id: string;
             };
             cookie?: never;
@@ -72196,7 +72208,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the item to get the production flow for. */
+                /** @description Item ID. */
                 item_id: string;
             };
             cookie?: never;
@@ -72610,7 +72622,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the production run to retrieve. */
+                /** @description Production run ID. */
                 id: string;
             };
             cookie?: never;
@@ -72655,7 +72667,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the production run to delete. */
+                /** @description Production run ID. */
                 id: string;
             };
             cookie?: never;
@@ -72696,7 +72708,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the production run to update. */
+                /** @description Production run ID. */
                 id: string;
             };
             cookie?: never;
@@ -72768,7 +72780,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the production run. */
+                /** @description Production run ID. */
                 id: string;
             };
             cookie?: never;
@@ -73182,7 +73194,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the production run. */
+                /** @description Production run ID. */
                 id: string;
             };
             cookie?: never;
@@ -74056,7 +74068,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the production step to retrieve. */
+                /** @description Production step ID. */
                 id: string;
             };
             cookie?: never;
@@ -74311,7 +74323,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the production step to delete. */
+                /** @description Production step ID. */
                 id: string;
             };
             cookie?: never;
@@ -74344,7 +74356,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the production step to update. */
+                /** @description Production step ID. */
                 id: string;
             };
             cookie?: never;
@@ -74619,7 +74631,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the production step. */
+                /** @description Production step ID. */
                 production_step_id: string;
             };
             cookie?: never;
@@ -74732,9 +74744,9 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the production step. */
+                /** @description Production step ID. */
                 production_step_id: string;
-                /** @description The ID of the consumption to retrieve. */
+                /** @description Consumption ID. */
                 id: string;
             };
             cookie?: never;
@@ -74832,9 +74844,9 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the production step. */
+                /** @description Production step ID. */
                 production_step_id: string;
-                /** @description The ID of the consumption to delete. */
+                /** @description Consumption ID. */
                 id: string;
             };
             cookie?: never;
@@ -74932,9 +74944,9 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the production step. */
+                /** @description Production step ID. */
                 production_step_id: string;
-                /** @description The ID of the consumption to update. */
+                /** @description Consumption ID. */
                 id: string;
             };
             cookie?: never;
@@ -75035,9 +75047,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the production step. */
+                /** @description Production step ID. */
                 production_step_id: string;
-                /** @description The ID of the production to retrieve. */
+                /** @description Production ID. */
                 id: string;
             };
             cookie?: never;
@@ -75105,9 +75117,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the production step. */
+                /** @description Production step ID. */
                 production_step_id: string;
-                /** @description The ID of the production to update. */
+                /** @description Production ID. */
                 id: string;
             };
             cookie?: never;
@@ -75672,7 +75684,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the purchase order to retrieve. */
+                /** @description Purchase order ID. */
                 id: string;
             };
             cookie?: never;
@@ -75877,7 +75889,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the purchase order to delete. */
+                /** @description Purchase order ID. */
                 id: string;
             };
             cookie?: never;
@@ -75918,7 +75930,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the purchase order to update. */
+                /** @description Purchase order ID. */
                 id: string;
             };
             cookie?: never;
@@ -76144,7 +76156,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the purchase order. */
+                /** @description Purchase order ID. */
                 id: string;
             };
             cookie?: never;
@@ -76360,7 +76372,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the purchase order. */
+                /** @description Purchase order ID. */
                 id: string;
             };
             cookie?: never;
@@ -76470,9 +76482,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the purchase order. */
+                /** @description Purchase order ID. */
                 id: string;
-                /** @description The ID of the purchase order line to delete. */
+                /** @description Purchase order line ID. */
                 lineId: string;
             };
             cookie?: never;
@@ -76505,9 +76517,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the purchase order. */
+                /** @description Purchase order ID. */
                 id: string;
-                /** @description The ID of the purchase order line. */
+                /** @description Purchase order line ID. */
                 lineId: string;
             };
             cookie?: never;
@@ -76633,7 +76645,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the quantity to update. */
+                /** @description Quantity ID. */
                 id: string;
             };
             cookie?: never;
@@ -76707,7 +76719,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the rate to update. */
+                /** @description Rate ID. */
                 id: string;
             };
             cookie?: never;
@@ -76889,7 +76901,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the receiving order to retrieve. */
+                /** @description Receiving order ID. */
                 id: string;
             };
             cookie?: never;
@@ -77053,7 +77065,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the receiving order to receive. */
+                /** @description Receiving order ID. */
                 id: string;
             };
             cookie?: never;
@@ -77217,7 +77229,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the receiving order to stock. */
+                /** @description Receiving order ID. */
                 id: string;
             };
             cookie?: never;
@@ -77401,7 +77413,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the receiving order to void. */
+                /** @description Receiving order ID. */
                 id: string;
             };
             cookie?: never;
@@ -77565,9 +77577,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the receiving order. */
+                /** @description Receiving order ID. */
                 receivingOrderId: string;
-                /** @description The ID of the receiving order line to update. */
+                /** @description Receiving order line ID. */
                 id: string;
             };
             cookie?: never;
@@ -77715,9 +77727,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the receiving order. */
+                /** @description Receiving order ID. */
                 receivingOrderId: string;
-                /** @description The ID of the receiving order line to receive. */
+                /** @description Receiving order line ID. */
                 id: string;
             };
             cookie?: never;
@@ -77855,9 +77867,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the receiving order. */
+                /** @description Receiving order ID. */
                 receivingOrderId: string;
-                /** @description The ID of the receiving order line to void. */
+                /** @description Receiving order line ID. */
                 id: string;
             };
             cookie?: never;
@@ -78121,7 +78133,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the scanning station to retrieve. */
+                /** @description Scanning station ID. */
                 id: string;
             };
             cookie?: never;
@@ -78169,7 +78181,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the scanning station to delete. */
+                /** @description Scanning station ID. */
                 id: string;
             };
             cookie?: never;
@@ -78210,7 +78222,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the scanning station to update. */
+                /** @description Scanning station ID. */
                 id: string;
             };
             cookie?: never;
@@ -78284,7 +78296,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the scanning station to list batches for. */
+                /** @description Scanning station ID. */
                 id: string;
             };
             cookie?: never;
@@ -78698,7 +78710,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the scanning station. */
+                /** @description Scanning station ID. */
                 id: string;
             };
             cookie?: never;
@@ -78770,7 +78782,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the scanning station. */
+                /** @description Scanning station ID. */
                 id: string;
             };
             cookie?: never;
@@ -79068,7 +79080,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the shipment to retrieve. */
+                /** @description Shipment ID. */
                 id: string;
             };
             cookie?: never;
@@ -79133,7 +79145,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the shipment to delete. */
+                /** @description Shipment ID. */
                 id: string;
             };
             cookie?: never;
@@ -79174,7 +79186,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the shipment to update. */
+                /** @description Shipment ID. */
                 id: string;
             };
             cookie?: never;
@@ -79257,7 +79269,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the shipment to ship. */
+                /** @description Shipment ID. */
                 id: string;
             };
             cookie?: never;
@@ -79332,7 +79344,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the shipment to void. */
+                /** @description Shipment ID. */
                 id: string;
             };
             cookie?: never;
@@ -79413,7 +79425,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the shipment to list lines for. */
+                /** @description Shipment ID. */
                 shipment_id: string;
             };
             cookie?: never;
@@ -79445,7 +79457,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the shipment to add the line to. */
+                /** @description Shipment ID. */
                 shipment_id: string;
             };
             cookie?: never;
@@ -79505,9 +79517,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the shipment. */
+                /** @description Shipment ID. */
                 shipment_id: string;
-                /** @description The ID of the shipment line to retrieve. */
+                /** @description Shipment line ID. */
                 id: string;
             };
             cookie?: never;
@@ -79555,9 +79567,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the shipment. */
+                /** @description Shipment ID. */
                 shipment_id: string;
-                /** @description The ID of the shipment line to delete. */
+                /** @description Shipment line ID. */
                 id: string;
             };
             cookie?: never;
@@ -79590,9 +79602,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the shipment. */
+                /** @description Shipment ID. */
                 shipment_id: string;
-                /** @description The ID of the shipment line to update. */
+                /** @description Shipment line ID. */
                 id: string;
             };
             cookie?: never;
@@ -79659,7 +79671,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the shipping case to retrieve. */
+                /** @description Shipping case ID. */
                 id: string;
             };
             cookie?: never;
@@ -79747,7 +79759,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the shipping case to delete. */
+                /** @description Shipping case ID. */
                 id: string;
             };
             cookie?: never;
@@ -79788,7 +79800,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the shipping case to update. */
+                /** @description Shipping case ID. */
                 id: string;
             };
             cookie?: never;
@@ -79890,7 +79902,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the shipping case. */
+                /** @description Shipping case ID. */
                 id: string;
             };
             cookie?: never;
@@ -80101,7 +80113,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the shipping term to retrieve. */
+                /** @description Shipping term ID. */
                 id: string;
             };
             cookie?: never;
@@ -80160,7 +80172,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the shipping term to delete. */
+                /** @description Shipping term ID. */
                 id: string;
             };
             cookie?: never;
@@ -80201,7 +80213,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the shipping term to update. */
+                /** @description Shipping term ID. */
                 id: string;
             };
             cookie?: never;
@@ -80287,17 +80299,17 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter suppliers that have materials for these item IDs.
+                 * @description Item IDs filter. Returns suppliers with materials for these items.
                  * @example []
                  */
                 "item_ids[]"?: string[];
                 /**
-                 * @description Filter by start date (created after).
+                 * @description Start date filter (created after).
                  * @example example
                  */
                 start_date?: string;
                 /**
-                 * @description Filter by end date (created before).
+                 * @description End date filter (created before).
                  * @example example
                  */
                 end_date?: string;
@@ -80507,7 +80519,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the supplier to retrieve. */
+                /** @description Supplier ID. */
                 id: string;
             };
             cookie?: never;
@@ -80591,7 +80603,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the supplier to delete. */
+                /** @description Supplier ID. */
                 id: string;
             };
             cookie?: never;
@@ -80675,7 +80687,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the supplier to update. */
+                /** @description Supplier ID. */
                 id: string;
             };
             cookie?: never;
@@ -80797,7 +80809,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description Path parameter: supplier_id for List Supplier Materials */
+                /** @description Supplier ID. */
                 supplier_id: string;
             };
             cookie?: never;
@@ -81062,7 +81074,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Path parameter: supplier_id for Create Supplier Material */
+                /** @description Supplier ID. */
                 supplier_id: string;
             };
             cookie?: never;
@@ -81336,9 +81348,9 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description Path parameter: supplier_id for Get Supplier Material */
+                /** @description Supplier ID. */
                 supplier_id: string;
-                /** @description Path parameter: id for Get Supplier Material */
+                /** @description Supplier material ID. */
                 id: string;
             };
             cookie?: never;
@@ -81592,9 +81604,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Path parameter: supplier_id for Delete Supplier Material */
+                /** @description Supplier ID. */
                 supplier_id: string;
-                /** @description Path parameter: id for Delete Supplier Material */
+                /** @description Supplier material ID. */
                 id: string;
             };
             cookie?: never;
@@ -81848,9 +81860,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Path parameter: supplier_id for Update Supplier Material */
+                /** @description Supplier ID. */
                 supplier_id: string;
-                /** @description Path parameter: id for Update Supplier Material */
+                /** @description Supplier material ID. */
                 id: string;
             };
             cookie?: never;
@@ -82128,7 +82140,7 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter by account group type code.
+                 * @description Account group type filter.
                  * @example pricing_group
                  */
                 type?: "pricing_group" | "type_group";
@@ -82236,19 +82248,19 @@ export interface operations {
             };
         };
     };
-    "retrieve-account-group": {
+    "get-account-group": {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account group to retrieve. */
+                /** @description Account group ID. */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Retrieve Account Group */
+            /** @description Successful response for Get Account Group */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -82286,7 +82298,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account group to delete. */
+                /** @description Account group ID. */
                 id: string;
             };
             cookie?: never;
@@ -82319,7 +82331,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account group to update. */
+                /** @description Account group ID. */
                 id: string;
             };
             cookie?: never;
@@ -82388,7 +82400,7 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter by recipient account ID.
+                 * @description Recipient account ID filter.
                  * @example example
                  */
                 recipient_account_id?: string;
@@ -82760,7 +82772,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the account price to retrieve. */
+                /** @description Account price ID. */
                 id: string;
             };
             cookie?: never;
@@ -82922,7 +82934,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account price to delete. */
+                /** @description Account price ID. */
                 id: string;
             };
             cookie?: never;
@@ -82963,7 +82975,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the account price to update. */
+                /** @description Account price ID. */
                 id: string;
             };
             cookie?: never;
@@ -83221,7 +83233,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID or code of the account status to retrieve. */
+                /** @description Account status ID or code. */
                 id: string;
             };
             cookie?: never;
@@ -83284,7 +83296,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The user ID (sales rep) whose targets to list. */
+                /** @description Sales rep user ID. */
                 id: string;
             };
             cookie?: never;
@@ -83369,7 +83381,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The user ID (sales rep) to create the target for. */
+                /** @description Sales rep user ID. */
                 id: string;
             };
             cookie?: never;
@@ -83456,9 +83468,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The user ID (sales rep) for the target. */
+                /** @description Sales rep user ID. */
                 id: string;
-                /** @description The sales target ID to create or update. */
+                /** @description Sales target ID. */
                 target_id: string;
             };
             cookie?: never;
@@ -83568,7 +83580,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the account to list territories for. */
+                /** @description Account ID. */
                 account_id: string;
             };
             cookie?: never;
@@ -83632,7 +83644,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the account to create the territory for. */
+                /** @description Account ID. */
                 account_id: string;
             };
             cookie?: never;
@@ -83698,9 +83710,9 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the account that owns the territory. */
+                /** @description Account ID. */
                 account_id: string;
-                /** @description The ID of the territory to retrieve. */
+                /** @description Territory ID. */
                 id: string;
             };
             cookie?: never;
@@ -83745,9 +83757,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account that owns the territory. */
+                /** @description Account ID. */
                 account_id: string;
-                /** @description The ID of the territory to delete. */
+                /** @description Territory ID. */
                 id: string;
             };
             cookie?: never;
@@ -83788,9 +83800,9 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the account that owns the territory. */
+                /** @description Account ID. */
                 account_id: string;
-                /** @description The ID of the territory to update. */
+                /** @description Territory ID. */
                 id: string;
             };
             cookie?: never;
@@ -83990,7 +84002,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the address to retrieve. */
+                /** @description Address ID. */
                 id: string;
             };
             cookie?: never;
@@ -84044,7 +84056,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the address to delete. */
+                /** @description Address ID. */
                 id: string;
             };
             cookie?: never;
@@ -84077,7 +84089,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the address to update. */
+                /** @description Address ID. */
                 id: string;
             };
             cookie?: never;
@@ -84739,7 +84751,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the customer to retrieve. */
+                /** @description Customer ID. */
                 id: string;
             };
             cookie?: never;
@@ -85000,7 +85012,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the customer to delete. */
+                /** @description Customer ID. */
                 id: string;
             };
             cookie?: never;
@@ -85041,7 +85053,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the customer to update. */
+                /** @description Customer ID. */
                 id: string;
             };
             cookie?: never;
@@ -85324,7 +85336,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the target customer to merge into. */
+                /** @description Target customer ID. */
                 id: string;
             };
             cookie?: never;
@@ -85597,7 +85609,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the customer. */
+                /** @description Customer ID. */
                 id: string;
             };
             cookie?: never;
@@ -85856,7 +85868,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the order discount to retrieve. */
+                /** @description Order discount ID. */
                 id: string;
             };
             cookie?: never;
@@ -85902,7 +85914,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the order discount to delete. */
+                /** @description Order discount ID. */
                 id: string;
             };
             cookie?: never;
@@ -85948,7 +85960,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the order discount to update. */
+                /** @description Order discount ID. */
                 id: string;
             };
             cookie?: never;
@@ -86091,7 +86103,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID or code of the priority to retrieve. */
+                /** @description Priority ID or code. */
                 id: string;
             };
             cookie?: never;
@@ -86320,7 +86332,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account group. */
+                /** @description Account group ID. */
                 account_group_id: string;
             };
             cookie?: never;
@@ -86394,7 +86406,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account group. */
+                /** @description Account group ID. */
                 account_group_id: string;
             };
             cookie?: never;
@@ -86427,7 +86439,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the account group. */
+                /** @description Account group ID. */
                 account_group_id: string;
             };
             cookie?: never;
@@ -87127,7 +87139,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the customer. */
+                /** @description Customer ID. */
                 customer_id: string;
             };
             cookie?: never;
@@ -87417,7 +87429,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the customer. */
+                /** @description Customer ID. */
                 customer_id: string;
             };
             cookie?: never;
@@ -87450,7 +87462,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the customer. */
+                /** @description Customer ID. */
                 customer_id: string;
             };
             cookie?: never;
@@ -87916,7 +87928,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The slug of the registration flow to retrieve. */
+                /** @description Registration flow slug. */
                 slug: string;
             };
             cookie?: never;
@@ -87978,7 +87990,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the registration flow to retrieve. */
+                /** @description Registration flow ID. */
                 id: string;
             };
             cookie?: never;
@@ -88040,7 +88052,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the registration flow to delete. */
+                /** @description Registration flow ID. */
                 id: string;
             };
             cookie?: never;
@@ -88073,7 +88085,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the registration flow to update. */
+                /** @description Registration flow ID. */
                 id: string;
             };
             cookie?: never;
@@ -88704,7 +88716,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the sales order to retrieve. */
+                /** @description Sales order ID. */
                 id: string;
             };
             cookie?: never;
@@ -88936,7 +88948,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the sales order to delete. */
+                /** @description Sales order ID. */
                 id: string;
             };
             cookie?: never;
@@ -88977,7 +88989,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the sales order to update. */
+                /** @description Sales order ID. */
                 id: string;
             };
             cookie?: never;
@@ -89231,7 +89243,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the sales order. */
+                /** @description Sales order ID. */
                 id: string;
             };
             cookie?: never;
@@ -89474,7 +89486,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the sales order. */
+                /** @description Sales order ID. */
                 id: string;
             };
             cookie?: never;
@@ -89513,7 +89525,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the sales order. */
+                /** @description Sales order ID. */
                 id: string;
             };
             cookie?: never;
@@ -89555,7 +89567,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the sales order. */
+                /** @description Sales order ID. */
                 id: string;
             };
             cookie?: never;
@@ -89670,9 +89682,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the sales order. */
+                /** @description Sales order ID. */
                 id: string;
-                /** @description The ID of the sales order line to delete. */
+                /** @description Sales order line ID. */
                 lineId: string;
             };
             cookie?: never;
@@ -89705,9 +89717,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the sales order. */
+                /** @description Sales order ID. */
                 id: string;
-                /** @description The ID of the sales order line. */
+                /** @description Sales order line ID. */
                 lineId: string;
             };
             cookie?: never;
@@ -90007,7 +90019,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description The ID of the volume discount to retrieve. */
+                /** @description Volume discount ID. */
                 id: string;
             };
             cookie?: never;
@@ -90073,7 +90085,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the volume discount to delete. */
+                /** @description Volume discount ID. */
                 id: string;
             };
             cookie?: never;
@@ -90106,7 +90118,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ID of the volume discount to update. */
+                /** @description Volume discount ID. */
                 id: string;
             };
             cookie?: never;
