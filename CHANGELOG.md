@@ -1,5 +1,11 @@
 # @augno/internal-sdk
 
+## 3.3.6
+
+### Patch Changes
+
+- 3a69089: Sync types from API v0.11.2
+
 ## 3.3.5
 
 ### Patch Changes
