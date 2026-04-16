@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance when working with code in this repository.
 
 ## Project Overview
 
@@ -10,14 +10,43 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | Command | Purpose |
 |---------|---------|
+| `bun run link:all` | Regenerate OpenAPI spec from `api/`, rebuild types, and yalc-link into `dashboard/` |
+| `bun run unlink:all` | Restore `dashboard/` to the latest published version and remove yalc artefacts |
+| `bun run yalc:watch` | Continuously rebuild and push to yalc consumers (after `link:all`) |
 | `npm run build` | Compile TypeScript (`tsc`) |
 | `npm run check-types` | Type-check without emitting (`tsc --noEmit`) |
 | `npm run generate` | Regenerate `src/types.ts` from `specs/internal_openapi_spec.json` |
-| `npm run yalc:publish` | Build and publish locally via yalc for testing in other projects |
-| `npm run yalc:watch` | Build, publish via yalc, then watch for changes |
 | `npm run release` | Build and publish via changesets (uses bun) |
 
 There are no tests or linting configured.
+
+## Prototyping an SDK change against dashboard
+
+The SDK is a GitHub Packages dep of `dashboard/`. To test a change without publishing, from this directory:
+
+```bash
+bun run link:all
+```
+
+This is end-to-end: it regenerates the OpenAPI spec in `../api/` (`make openapi`), copies the spec into `./specs/`, regenerates types (`bun run generate`), builds, publishes to yalc, and links into `../dashboard/` (`yalc add @augno/internal-sdk` at dashboard root + strip-from-workspace-package.jsons Bun workaround + `bun install`).
+
+For continuous rebuild as you edit `src/`:
+
+```bash
+bun run yalc:watch
+```
+
+Then iterate in dashboard (`cd ../dashboard && bun run dev:frontend`).
+
+**Always tear down before committing** — `file:.yalc/...` refs, `.yalc/` directories, and `yalc.lock` entries must not land in a PR:
+
+```bash
+bun run unlink:all
+```
+
+Unlinking queries GitHub Packages for the latest published version, restores dashboard's `package.json` entries (root + workspace packages), and removes every yalc artefact. If the `npm view` call fails (missing / expired token in dashboard's `.npmrc`), the script aborts before mutating any file, so you won't be left half-restored.
+
+See the monorepo root `CLAUDE.md` for the cross-package picture.
 
 ## Architecture
 

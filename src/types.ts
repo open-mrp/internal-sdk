@@ -748,6 +748,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/auth/scanner-passwords": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update Scanner Password
+         * @description Rotates the password for a scanner-role account user backing a scanning station. Requires the caller's current password for verification.
+         */
+        post: operations["update-scanner-password"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/auth/users": {
         parameters: {
             query?: never;
@@ -2148,6 +2168,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/core/audit-events/resource-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Audit Event Resource Types
+         * @description Returns the full set of resource types that may appear on audit events.
+         */
+        get: operations["list-audit-event-resource-types"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/core/audit-events/{id}": {
         parameters: {
             query?: never;
@@ -2842,11 +2882,7 @@ export interface paths {
         get: operations["get-account-user"];
         put?: never;
         post?: never;
-        /**
-         * Delete Account User
-         * @description Soft-deletes an account user, setting their status to removed.
-         */
-        delete: operations["delete-account-user"];
+        delete?: never;
         options?: never;
         head?: never;
         /**
@@ -2856,27 +2892,7 @@ export interface paths {
         patch: operations["update-account-user"];
         trace?: never;
     };
-    "/v1/identity/account-users/{id}/lock": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Lock Account User
-         * @description Locks an account user, preventing them from accessing the account.
-         */
-        post: operations["lock-account-user"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/identity/account-users/{id}/notification-preferences": {
+    "/v1/identity/account-users/{id}/status": {
         parameters: {
             query?: never;
             header?: never;
@@ -2885,71 +2901,11 @@ export interface paths {
         };
         get?: never;
         /**
-         * Update Notification Preferences
-         * @description Updates notification preferences for an account user.
+         * Update Account User Status
+         * @description Transitions an account user to a target status.
          */
-        put: operations["update-notification-preferences"];
+        put: operations["update-account-user-status"];
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/identity/account-users/{id}/password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Update Account User Password
-         * @description Updates an account user's password. Requires the requester's current password for verification.
-         */
-        put: operations["update-account-user-password"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/identity/account-users/{id}/restore": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Restore Account User
-         * @description Restores a removed account user, setting their status to active.
-         */
-        post: operations["restore-account-user"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/identity/account-users/{id}/unlock": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Unlock Account User
-         * @description Unlocks an account user, restoring their access to the account.
-         */
-        post: operations["unlock-account-user"];
         delete?: never;
         options?: never;
         head?: never;
@@ -7757,7 +7713,6 @@ export interface components {
          *       "email": "john@augno.com",
          *       "username": null,
          *       "image_url": null,
-         *       "is_verified": true,
          *       "status": "active",
          *       "role": {
          *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -7810,8 +7765,6 @@ export interface components {
             username: string | null;
             /** @description Profile image URL. */
             image_url: string | null;
-            /** @description Whether the user's email is verified. */
-            is_verified: boolean;
             /**
              * @description Account user status.
              * @enum {string}
@@ -10162,7 +10115,7 @@ export interface components {
              * @description Resource type of the audited entity.
              * @enum {string}
              */
-            resource_type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
+            resource_type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "account_plan";
             /** @description Audited resource ID. */
             resource_id: string;
             /**
@@ -13346,10 +13299,12 @@ export interface components {
          *       "username": "jdoe",
          *       "password": "QgS7Z8Hhj3&1",
          *       "role_id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *       "is_sales_rep": false,
-         *       "receives_order_acknowledgements": true,
-         *       "receives_invoice_notifications": false,
-         *       "receives_purchase_order_submission_notifications": false
+         *       "preferences": [
+         *         {
+         *           "notification_type_code": "order_acknowledgement",
+         *           "enabled": true
+         *         }
+         *       ]
          *     }
          */
         CreateAccountUserRequest: {
@@ -13359,20 +13314,14 @@ export interface components {
             email: string | null;
             /** @description Username. */
             username: string | null;
-            /** @description Password. */
+            /** @description Password (only valid for scanner-role users backing a scanning station). */
             password: string | null;
             /** @description Role ID. Expandable. */
             role_id?: string | null;
             /** @description Department ID. Expandable. */
             department_id?: string | null;
-            /** @description Whether the user is a sales representative. */
-            is_sales_rep?: boolean | null;
-            /** @description Whether the user receives order acknowledgement notifications. */
-            receives_order_acknowledgements: boolean;
-            /** @description Whether the user receives invoice notifications. */
-            receives_invoice_notifications: boolean;
-            /** @description Whether the user receives purchase order submission notifications. */
-            receives_purchase_order_submission_notifications: boolean;
+            /** @description Notification preferences to create for the new user (external targets only). */
+            preferences: components["schemas"]["NotificationPreferenceItem"][];
         };
         /**
          * @description Request to create an agent definition.
@@ -13722,7 +13671,7 @@ export interface components {
             /** @description Display name. */
             name: string;
             /**
-             * @description Item category type (material_category or product_category).
+             * @description Item category type. Material categories are used to group materials, while product categories are used to group products and parts.
              * @enum {string}
              */
             type: "material_category" | "product_category";
@@ -14333,10 +14282,11 @@ export interface components {
             /** @description Display name. */
             name: string;
             /**
-             * @description Controls whether the sandbox is blank or seeded with tutorial data. Defaults to blank.
+             * @description Controls whether the sandbox is blank or seeded with sample data.
+             * @default blank
              * @enum {string|null}
              */
-            mode?: "blank" | "seeded" | null;
+            mode: "blank" | "seeded" | null;
         };
         /**
          * @description Request to create a scanning station.
@@ -14357,7 +14307,7 @@ export interface components {
              * @enum {string}
              */
             type: "init_batch" | "merge_batch" | "move_batch" | "split_batch";
-            /** @description Whether material check is required. */
+            /** @description Whether material check is required. If `true`, the operator at this station must manually verify the material before proceeding. */
             material_check_required: boolean;
             /** @description Department ID. */
             department_id: string;
@@ -15986,46 +15936,6 @@ export interface components {
             updated_at: string;
         };
         /**
-         * @description Lightweight customer representation for list responses.
-         * @example {
-         *       "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
-         *       "object": "customer_summary",
-         *       "name": "Acme Inc.",
-         *       "number": "100042",
-         *       "email": "orders@acme.com",
-         *       "customer_type_group": "Wholesale Customers",
-         *       "status": "normal",
-         *       "created_at": "2026-05-10T00:00:00Z"
-         *     }
-         */
-        CustomerSummary: {
-            /** @description Customer ID. */
-            id: string;
-            /**
-             * @description Resource type identifier.
-             * @enum {string}
-             */
-            object: "customer_summary";
-            /** @description Display name. */
-            name: string;
-            /** @description Customer number. */
-            number: string;
-            /** @description Email address. */
-            email: string | null;
-            /** @description Customer type group name. */
-            customer_type_group: string | null;
-            /**
-             * @description Account status code.
-             * @enum {string}
-             */
-            status: "normal" | "preferred" | "hold_shipment" | "hold_all";
-            /**
-             * Format: date-time
-             * @description Creation timestamp.
-             */
-            created_at: string;
-        };
-        /**
          * @description DC location resource.
          * @example {
          *       "id": "dclo_01gf7a8200er3ar3pkfrb6kk30",
@@ -16981,7 +16891,6 @@ export interface components {
          *         "email": null,
          *         "username": null,
          *         "image_url": null,
-         *         "is_verified": false,
          *         "status": "",
          *         "role": null,
          *         "department": null,
@@ -17008,7 +16917,6 @@ export interface components {
              *       "email": "john@augno.com",
              *       "username": null,
              *       "image_url": null,
-             *       "is_verified": true,
              *       "status": "active",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -17258,7 +17166,7 @@ export interface components {
              * @description The resource kind that this entity references (e.g. "user", "customer", "sales_order").
              * @enum {string}
              */
-            type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
+            type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "account_plan";
         };
         /**
          * @description Request to estimate a shipping rate.
@@ -21034,7 +20942,6 @@ export interface components {
          *           "email": "john@augno.com",
          *           "username": null,
          *           "image_url": null,
-         *           "is_verified": true,
          *           "status": "active",
          *           "role": {
          *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -23118,41 +23025,6 @@ export interface components {
             data: components["schemas"]["CustomerProductLineAccess"][];
         };
         /**
-         * @description A paginated list of CustomerSummary resources
-         * @example {
-         *       "object": "list",
-         *       "page_info": {
-         *         "next_cursor": "ac_01gf7a8200er3ar3pkfrb6kk29",
-         *         "prev_cursor": null,
-         *         "has_next_page": true,
-         *         "has_prev_page": false
-         *       },
-         *       "data": [
-         *         {
-         *           "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
-         *           "object": "customer_summary",
-         *           "name": "Acme Inc.",
-         *           "number": "100042",
-         *           "email": "orders@acme.com",
-         *           "customer_type_group": "Wholesale Customers",
-         *           "status": "normal",
-         *           "created_at": "2026-05-10T00:00:00Z"
-         *         }
-         *       ]
-         *     }
-         */
-        List_CustomerSummary: {
-            /**
-             * @description Object type for CustomerSummary list
-             * @enum {string}
-             */
-            object: "list";
-            /** @description Pagination metadata for CustomerSummary list */
-            page_info: components["schemas"]["PageInfo"];
-            /** @description Array of CustomerSummary resources in this page */
-            data: components["schemas"]["CustomerSummary"][];
-        };
-        /**
          * @description A paginated list of DCLocation resources
          * @example {
          *       "object": "list",
@@ -24501,6 +24373,30 @@ export interface components {
             page_info: components["schemas"]["PageInfo"];
             /** @description Array of Material resources in this page */
             data: components["schemas"]["Material"][];
+        };
+        /**
+         * @description A paginated list of ObjectType resources
+         * @example {
+         *       "object": "list",
+         *       "page_info": {
+         *         "next_cursor": null,
+         *         "prev_cursor": null,
+         *         "has_next_page": true,
+         *         "has_prev_page": false
+         *       },
+         *       "data": []
+         *     }
+         */
+        List_ObjectType: {
+            /**
+             * @description Object type for ObjectType list
+             * @enum {string}
+             */
+            object: "list";
+            /** @description Pagination metadata for ObjectType list */
+            page_info: components["schemas"]["PageInfo"];
+            /** @description Array of ObjectType resources in this page */
+            data: ("account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "account_plan")[];
         };
         /**
          * @description A paginated list of OpenBatchSummary resources
@@ -26883,7 +26779,6 @@ export interface components {
          *             "email": null,
          *             "username": null,
          *             "image_url": null,
-         *             "is_verified": false,
          *             "status": "",
          *             "role": null,
          *             "department": null,
@@ -27903,11 +27798,14 @@ export interface components {
             /** @description The data points. */
             data: components["schemas"]["DateTimeCoordinate"][];
         };
-        /** @description Notification preference toggle. */
+        /** @description NotificationPreferenceItem toggles a single account-relation notification type. */
         NotificationPreferenceItem: {
-            /** @description Notification type code (e.g. "invoice", "order_acknowledgement", "purchase_order_submission"). */
-            notification_type_code: string;
-            /** @description Whether the notification is enabled. */
+            /**
+             * @description Notification type code. Must match a value of constants.AccountRelationNotificationType.
+             * @enum {string}
+             */
+            notification_type_code: "invoice" | "order_acknowledgement" | "purchase_order_submission";
+            /** @description Whether this notification type is enabled for the account user. */
             enabled: boolean;
         };
         /**
@@ -31809,7 +31707,7 @@ export interface components {
              * @description Resource type identifier.
              * @enum {string}
              */
-            object: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
+            object: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "account_plan";
         };
         /**
          * @description Production output of a production step.
@@ -31955,7 +31853,6 @@ export interface components {
              *       "email": "john@augno.com",
              *       "username": null,
              *       "image_url": null,
-             *       "is_verified": true,
              *       "status": "active",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -32049,7 +31946,6 @@ export interface components {
              *       "email": "john@augno.com",
              *       "username": null,
              *       "image_url": null,
-             *       "is_verified": true,
              *       "status": "active",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -38233,7 +38129,6 @@ export interface components {
          *         "email": null,
          *         "username": null,
          *         "image_url": null,
-         *         "is_verified": false,
          *         "status": "",
          *         "role": null,
          *         "department": null,
@@ -38267,7 +38162,6 @@ export interface components {
              *       "email": "john@augno.com",
              *       "username": null,
              *       "image_url": null,
-             *       "is_verified": true,
              *       "status": "active",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -38998,7 +38892,6 @@ export interface components {
              *       "email": "john@augno.com",
              *       "username": null,
              *       "image_url": null,
-             *       "is_verified": true,
              *       "status": "active",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -41561,6 +41454,38 @@ export interface components {
             owner_account: components["schemas"]["TenancyOwnerAccount"] | null;
             /** @description Other accounts the user has access to. */
             other_accounts: components["schemas"]["TenancyOtherAccount"][];
+            /** @description In-progress registration session, if one exists. */
+            pending_registration: components["schemas"]["TenancyPendingRegistration"] | null;
+        };
+        /** @description TenancyAccountPlan is the resolved plan for the current account. */
+        TenancyAccountPlan: {
+            /** @description Plan type ID. */
+            type_id: string;
+            /**
+             * @description Resource type identifier.
+             * @enum {string}
+             */
+            object: "account_plan";
+            /** @description Display name. */
+            name: string;
+            /** @description Plan type code. */
+            plan_type_code: string;
+            /** @description Plan version. */
+            version: number;
+            /** @description Price per seat per month. */
+            price_per_seat: number;
+            /** @description Flat monthly price, if applicable. */
+            price_per_month: number | null;
+            /** @description Minimum seats required for this plan. */
+            seat_minimum: number | null;
+            /** @description Resource limits; null value means unlimited. */
+            limits: {
+                [key: string]: number;
+            };
+            /** @description Feature flags. */
+            features: {
+                [key: string]: boolean;
+            };
         };
         /** @description Account the user is currently operating in. */
         TenancyCurrentAccount: {
@@ -41614,6 +41539,10 @@ export interface components {
              *     }
              */
             role: components["schemas"]["Role"] | null;
+            /** @description Internal Stripe customer ID for this account. */
+            internal_stripe_customer_id: string | null;
+            /** @description Full plan details for this account, including limits and features. */
+            account_plan: components["schemas"]["TenancyAccountPlan"] | null;
         };
         /** @description Additional account the user has access to. */
         TenancyOtherAccount: {
@@ -41640,6 +41569,23 @@ export interface components {
             object: "account";
             /** @description Display name. */
             name: string;
+        };
+        /**
+         * @description TenancyPendingRegistration represents an in-progress registration session
+         *     for the authenticated user.
+         */
+        TenancyPendingRegistration: {
+            /** @description Registration session ID. */
+            session_id: string;
+            /** @description Plan code selected during registration. */
+            plan_code: string;
+            /** @description Current step in the registration flow. */
+            step: string;
+            /**
+             * Format: date-time
+             * @description Session creation timestamp.
+             */
+            created_at: string;
         };
         /** @description Sandbox account available to the user. */
         TenancySandboxAccount: {
@@ -41690,7 +41636,6 @@ export interface components {
              *       "email": "john@augno.com",
              *       "username": null,
              *       "image_url": null,
-             *       "is_verified": true,
              *       "status": "active",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -42044,7 +41989,6 @@ export interface components {
          *         "email": null,
          *         "username": null,
          *         "image_url": null,
-         *         "is_verified": false,
          *         "status": "",
          *         "role": null,
          *         "department": null,
@@ -42349,7 +42293,6 @@ export interface components {
              *       "email": "john@augno.com",
              *       "username": null,
              *       "image_url": null,
-             *       "is_verified": true,
              *       "status": "active",
              *       "role": {
              *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -43213,19 +43156,6 @@ export interface components {
             twitter_handle?: string;
         };
         /**
-         * @description Request to update an account user's password.
-         * @example {
-         *       "requester_password": "QgS7Z8Hhj3&1",
-         *       "new_password": "50iR2X0r@bvIH"
-         *     }
-         */
-        UpdateAccountUserPasswordRequest: {
-            /** @description Requester's current password. */
-            requester_password: string;
-            /** @description New password. */
-            new_password: string;
-        };
-        /**
          * @description Request to partially update an account user.
          * @example {
          *       "name": "John Doe",
@@ -43244,6 +43174,21 @@ export interface components {
             role_id?: string | null;
             /** @description Department ID. */
             department_id?: string | null;
+            /** @description Notification preferences to toggle (external targets only). */
+            preferences: components["schemas"]["NotificationPreferenceItem"][];
+        };
+        /**
+         * @description Request to transition an account user to a target status.
+         * @example {
+         *       "status": "disabled"
+         *     }
+         */
+        UpdateAccountUserStatusRequest: {
+            /**
+             * @description Target status.
+             * @enum {string}
+             */
+            status: "active" | "disabled" | "removed";
         };
         /**
          * @description Request to partially update an address.
@@ -43620,25 +43565,6 @@ export interface components {
             importance: number;
             /** @description ISO 8601 expiration timestamp. */
             expires_at?: string | null;
-        };
-        /**
-         * @description Request to update notification preferences for an account user.
-         * @example {
-         *       "preferences": [
-         *         {
-         *           "notification_type_code": "invoice",
-         *           "enabled": true
-         *         },
-         *         {
-         *           "notification_type_code": "order_acknowledgement",
-         *           "enabled": false
-         *         }
-         *       ]
-         *     }
-         */
-        UpdateNotificationPreferencesRequest: {
-            /** @description Notification preferences to update. */
-            preferences: components["schemas"]["NotificationPreferenceItem"][];
         };
         /**
          * @description Request to partially update an order discount.
@@ -44107,6 +44033,22 @@ export interface components {
             customer_id?: string | null;
         };
         /**
+         * @description Request to update a scanner-role account user's password.
+         * @example {
+         *       "account_user_id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+         *       "requester_password": "QgS7Z8Hhj3&1",
+         *       "new_password": "50iR2X0r@bvIH"
+         *     }
+         */
+        UpdateScannerPasswordRequest: {
+            /** @description Target scanner account user ID. */
+            account_user_id: string;
+            /** @description Requester's current password (the caller's own password, for verification). */
+            requester_password: string;
+            /** @description New password to set for the scanner user. */
+            new_password: string;
+        };
+        /**
          * @description Request to partially update a scanning station.
          * @example {
          *       "name": "Station B"
@@ -44127,7 +44069,7 @@ export interface components {
              * @enum {string}
              */
             label_type?: "tag" | "traveler";
-            /** @description Whether material check is required. */
+            /** @description Whether material check is required. If `true`, the operator at this station must manually verify the material before proceeding. */
             material_check_required?: boolean;
         };
         /**
@@ -44146,6 +44088,8 @@ export interface components {
              * @enum {string}
              */
             customer_portal_visibility?: "visible" | "hidden";
+            /** @description Whether this is the tenant's preferred default service level for the carrier. */
+            is_default?: boolean;
         };
         /** @description Mutable form data for a session update. */
         UpdateSessionDataRequest: {
@@ -49126,6 +49070,48 @@ export interface operations {
                      *     }
                      */
                     "application/json": components["schemas"]["RegistrationSession"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "update-scanner-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The request body for Update Scanner Password */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "account_user_id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+                 *       "requester_password": "QgS7Z8Hhj3&1",
+                 *       "new_password": "50iR2X0r@bvIH"
+                 *     }
+                 */
+                "application/json": components["schemas"]["UpdateScannerPasswordRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Update Scanner Password */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {} */
+                    "application/json": Record<string, never>;
                 };
             };
             /** @description Error response */
@@ -55631,10 +55617,12 @@ export interface operations {
                  */
                 end_date?: string;
                 /**
-                 * @description Resource type of the audited entity.
-                 * @example account
+                 * @description Resource types of the audited entity. Repeat the query parameter to filter by multiple types.
+                 * @example [
+                 *       "account"
+                 *     ]
                  */
-                resource_type?: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "customer_summary" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner";
+                "resource_types[]"?: ("account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "account_plan")[];
                 /**
                  * @description Audited resource ID.
                  * @example example
@@ -55756,6 +55744,47 @@ export interface operations {
                      *     }
                      */
                     "application/json": components["schemas"]["List_AuditEvent"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "list-audit-event-resource-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for List Audit Event Resource Types */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "object": "list",
+                     *       "page_info": {
+                     *         "next_cursor": null,
+                     *         "prev_cursor": null,
+                     *         "has_next_page": true,
+                     *         "has_prev_page": false
+                     *       },
+                     *       "data": []
+                     *     }
+                     */
+                    "application/json": components["schemas"]["List_ObjectType"];
                 };
             };
             /** @description Error response */
@@ -56132,10 +56161,10 @@ export interface operations {
                  */
                 account_id?: string;
                 /**
-                 * @description Filter: actor ID.
-                 * @example example
+                 * @description Filter: actor IDs (repeatable).
+                 * @example []
                  */
-                actor_id?: string;
+                "actor_id[]"?: string[];
                 /**
                  * @description Filter: actor type ("user" or "api_key").
                  * @example example
@@ -56146,6 +56175,21 @@ export interface operations {
                  * @example example
                  */
                 actor_name?: string;
+                /**
+                 * @description Filter: normalized route templates (repeatable, exact match).
+                 * @example []
+                 */
+                "normalized_route[]"?: string[];
+                /**
+                 * @description Filter: request hosts (repeatable, exact match).
+                 * @example []
+                 */
+                "host[]"?: string[];
+                /**
+                 * @description Filter: minimum latency in microseconds.
+                 * @example 100
+                 */
+                min_latency_us?: number;
                 /**
                  * @description When true, string filters use exact match instead of partial (LIKE).
                  * @example true
@@ -57121,7 +57165,6 @@ export interface operations {
                      *             "email": null,
                      *             "username": null,
                      *             "image_url": null,
-                     *             "is_verified": false,
                      *             "status": "",
                      *             "role": null,
                      *             "department": null,
@@ -58702,7 +58745,6 @@ export interface operations {
                      *         "email": null,
                      *         "username": null,
                      *         "image_url": null,
-                     *         "is_verified": false,
                      *         "status": "",
                      *         "role": null,
                      *         "department": null,
@@ -58768,7 +58810,6 @@ export interface operations {
                      *         "email": null,
                      *         "username": null,
                      *         "image_url": null,
-                     *         "is_verified": false,
                      *         "status": "",
                      *         "role": null,
                      *         "department": null,
@@ -58826,7 +58867,6 @@ export interface operations {
                      *         "email": null,
                      *         "username": null,
                      *         "image_url": null,
-                     *         "is_verified": false,
                      *         "status": "",
                      *         "role": null,
                      *         "department": null,
@@ -58896,7 +58936,6 @@ export interface operations {
                      *         "email": null,
                      *         "username": null,
                      *         "image_url": null,
-                     *         "is_verified": false,
                      *         "status": "",
                      *         "role": null,
                      *         "department": null,
@@ -59465,7 +59504,6 @@ export interface operations {
                      *         "email": null,
                      *         "username": null,
                      *         "image_url": null,
-                     *         "is_verified": false,
                      *         "status": "",
                      *         "role": null,
                      *         "department": null,
@@ -59569,7 +59607,6 @@ export interface operations {
                      *         "email": null,
                      *         "username": null,
                      *         "image_url": null,
-                     *         "is_verified": false,
                      *         "status": "",
                      *         "role": null,
                      *         "department": null,
@@ -59665,7 +59702,6 @@ export interface operations {
                      *         "email": null,
                      *         "username": null,
                      *         "image_url": null,
-                     *         "is_verified": false,
                      *         "status": "",
                      *         "role": null,
                      *         "department": null,
@@ -59780,7 +59816,6 @@ export interface operations {
                      *         "email": null,
                      *         "username": null,
                      *         "image_url": null,
-                     *         "is_verified": false,
                      *         "status": "",
                      *         "role": null,
                      *         "department": null,
@@ -59882,7 +59917,6 @@ export interface operations {
                      *           "email": "john@augno.com",
                      *           "username": null,
                      *           "image_url": null,
-                     *           "is_verified": true,
                      *           "status": "active",
                      *           "role": {
                      *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -59960,10 +59994,12 @@ export interface operations {
                  *       "username": "jdoe",
                  *       "password": "QgS7Z8Hhj3&1",
                  *       "role_id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                 *       "is_sales_rep": false,
-                 *       "receives_order_acknowledgements": true,
-                 *       "receives_invoice_notifications": false,
-                 *       "receives_purchase_order_submission_notifications": false
+                 *       "preferences": [
+                 *         {
+                 *           "notification_type_code": "order_acknowledgement",
+                 *           "enabled": true
+                 *         }
+                 *       ]
                  *     }
                  */
                 "application/json": components["schemas"]["CreateAccountUserRequest"];
@@ -59984,7 +60020,6 @@ export interface operations {
                      *       "email": "john@augno.com",
                      *       "username": null,
                      *       "image_url": null,
-                     *       "is_verified": true,
                      *       "status": "active",
                      *       "role": {
                      *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -60069,7 +60104,6 @@ export interface operations {
                      *       "email": "john@augno.com",
                      *       "username": null,
                      *       "image_url": null,
-                     *       "is_verified": true,
                      *       "status": "active",
                      *       "role": {
                      *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -60107,39 +60141,6 @@ export interface operations {
                      *     }
                      */
                     "application/json": components["schemas"]["AccountUser"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "delete-account-user": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Account user ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response for Delete Account User */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": Record<string, never>;
                 };
             };
             /** @description Error response */
@@ -60191,7 +60192,6 @@ export interface operations {
                      *       "email": "john@augno.com",
                      *       "username": null,
                      *       "image_url": null,
-                     *       "is_verified": true,
                      *       "status": "active",
                      *       "role": {
                      *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
@@ -60242,7 +60242,7 @@ export interface operations {
             };
         };
     };
-    "lock-account-user": {
+    "update-account-user-status": {
         parameters: {
             query?: never;
             header?: never;
@@ -60252,215 +60252,19 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response for Lock Account User */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": Record<string, never>;
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "update-notification-preferences": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Account user ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        /** @description The request body for Update Notification Preferences */
+        /** @description The request body for Update Account User Status */
         requestBody?: {
             content: {
                 /**
                  * @example {
-                 *       "preferences": [
-                 *         {
-                 *           "notification_type_code": "invoice",
-                 *           "enabled": true
-                 *         },
-                 *         {
-                 *           "notification_type_code": "order_acknowledgement",
-                 *           "enabled": false
-                 *         }
-                 *       ]
+                 *       "status": "disabled"
                  *     }
                  */
-                "application/json": components["schemas"]["UpdateNotificationPreferencesRequest"];
+                "application/json": components["schemas"]["UpdateAccountUserStatusRequest"];
             };
         };
         responses: {
-            /** @description Successful response for Update Notification Preferences */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
-                     *       "object": "account_user",
-                     *       "name": "John Doe",
-                     *       "email": "john@augno.com",
-                     *       "username": null,
-                     *       "image_url": null,
-                     *       "is_verified": true,
-                     *       "status": "active",
-                     *       "role": {
-                     *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *         "object": "role",
-                     *         "name": "Admin",
-                     *         "type": "admin",
-                     *         "owner": {
-                     *           "object": "owner",
-                     *           "type": "account",
-                     *           "account": {
-                     *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
-                     *             "object": "account",
-                     *             "name": "Acme Inc.",
-                     *             "default_billing_address": null,
-                     *             "default_shipping_address": null,
-                     *             "branding": null,
-                     *             "portal": null,
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           }
-                     *         },
-                     *         "permissions": [
-                     *           "customers:create",
-                     *           "customers:read",
-                     *           "customers:update",
-                     *           "customers:delete"
-                     *         ],
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "department": null,
-                     *       "last_used_at": null,
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "updated_at": "2026-05-10T00:23:00Z"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["AccountUser"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "update-account-user-password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Account user ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        /** @description The request body for Update Account User Password */
-        requestBody?: {
-            content: {
-                /**
-                 * @example {
-                 *       "requester_password": "QgS7Z8Hhj3&1",
-                 *       "new_password": "50iR2X0r@bvIH"
-                 *     }
-                 */
-                "application/json": components["schemas"]["UpdateAccountUserPasswordRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful response for Update Account User Password */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": Record<string, never>;
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "restore-account-user": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Account user ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response for Restore Account User */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": Record<string, never>;
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "unlock-account-user": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Account user ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response for Unlock Account User */
+            /** @description Successful response for Update Account User Status */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -84292,6 +84096,13 @@ export interface operations {
                  * @example example
                  */
                 end_date?: string;
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "bill_to_address"
+                 *     ]
+                 */
+                "include[]"?: ("bill_to_address" | "ship_to_address" | "type" | "parent_account" | "freight_preferences.carrier" | "freight_preferences.service_level" | "defaults.payment_term" | "defaults.shipping_term" | "defaults.sales_rep" | "defaults.priority" | "contact_info" | "freight_preferences" | "defaults" | "notification_preferences" | "price_groups" | "child_accounts" | "credit_limit")[];
             };
             header?: never;
             path?: never;
@@ -84305,30 +84116,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "object": "list",
-                     *       "page_info": {
-                     *         "next_cursor": "ac_01gf7a8200er3ar3pkfrb6kk29",
-                     *         "prev_cursor": null,
-                     *         "has_next_page": true,
-                     *         "has_prev_page": false
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "id": "ac_01gf7a8200er3ar3pkfrb6kk29",
-                     *           "object": "customer_summary",
-                     *           "name": "Acme Inc.",
-                     *           "number": "100042",
-                     *           "email": "orders@acme.com",
-                     *           "customer_type_group": "Wholesale Customers",
-                     *           "status": "normal",
-                     *           "created_at": "2026-05-10T00:00:00Z"
-                     *         }
-                     *       ]
-                     *     }
-                     */
-                    "application/json": components["schemas"]["List_CustomerSummary"];
+                    "application/json": components["schemas"]["List_Customer"];
                 };
             };
             /** @description Error response */
