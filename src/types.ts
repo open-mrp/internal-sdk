@@ -45452,17 +45452,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Agents
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Agents
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Agents
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -46082,17 +46082,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Agent Alerts
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Agent Alerts
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Agent Alerts
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -46286,17 +46286,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Agent Memories
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Agent Memories
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Agent Memories
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -46576,17 +46576,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Runs
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Runs
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Runs
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -47519,17 +47519,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Tool Groups
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Tool Groups
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Tool Groups
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -47594,17 +47594,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Tools
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Tools
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Tools
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -47870,17 +47870,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List API Keys
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List API Keys
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List API Keys
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -48522,7 +48522,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's next_cursor field, used to fetch the next page.
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
@@ -49328,7 +49328,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's next_cursor field, used to fetch the next page.
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
@@ -49639,17 +49639,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Catalog Product Lines
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Catalog Product Lines
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Catalog Product Lines
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -49702,17 +49702,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Catalog Products
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Catalog Products
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Catalog Products
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -49809,17 +49809,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Item Categories
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Item Categories
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Item Categories
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -50197,17 +50197,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Items
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Items
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Items
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -51084,17 +51084,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Product Lines
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Product Lines
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Product Lines
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -51366,17 +51366,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Product Types
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Product Types
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Product Types
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -51610,17 +51610,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Products
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Products
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Products
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -53313,17 +53313,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Properties
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Properties
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Properties
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -53565,17 +53565,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Attributes
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Attributes
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Attributes
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -53803,17 +53803,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Unit Groups
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Unit Groups
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Unit Groups
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -54347,17 +54347,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Units
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Units
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Units
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -55592,17 +55592,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Audit Events
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Audit Events
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Audit Events
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -55911,17 +55911,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Email Logs
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Email Logs
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Email Logs
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -56116,17 +56116,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Request Logs
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Request Logs
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Request Logs
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -56428,7 +56428,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's next_cursor field, used to fetch the next page.
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
@@ -56672,17 +56672,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List System Properties
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List System Properties
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List System Properties
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -56930,17 +56930,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Customer Invoices
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Customer Invoices
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Customer Invoices
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -57077,17 +57077,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Account Transactions
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Account Transactions
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Account Transactions
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -57214,17 +57214,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Adjustment Types
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Adjustment Types
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Adjustment Types
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -57292,17 +57292,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Invoices
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Invoices
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Invoices
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -57950,17 +57950,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Open Credits
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Open Credits
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Open Credits
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -58048,17 +58048,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Payment Terms
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Payment Terms
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Payment Terms
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -58341,17 +58341,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Receivables
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Receivables
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Receivables
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -58453,17 +58453,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Receivables by Customer
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Receivables by Customer
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Receivables by Customer
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -58606,17 +58606,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Settlements
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Settlements
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Settlements
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -58966,17 +58966,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Allocation Entries
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Allocation Entries
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Allocation Entries
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -59173,17 +59173,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Transaction Methods
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Transaction Methods
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Transaction Methods
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -59237,17 +59237,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Transaction Types
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Transaction Types
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Transaction Types
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -59301,17 +59301,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Transactions
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Transactions
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Transactions
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -59863,17 +59863,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Account Users
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Account Users
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Account Users
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -60482,17 +60482,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Child Accounts
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Child Accounts
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Child Accounts
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -60645,17 +60645,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Account Integrations
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Account Integrations
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Account Integrations
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -61058,17 +61058,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Customer Accounts
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Customer Accounts
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Customer Accounts
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -61118,17 +61118,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Permission Groups
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Permission Groups
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Permission Groups
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -61261,17 +61261,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Roles
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Roles
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Roles
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -64966,17 +64966,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Carriers
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Carriers
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Carriers
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -65136,17 +65136,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Service Levels
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Service Levels
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Service Levels
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -65706,17 +65706,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List DC Locations
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List DC Locations
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List DC Locations
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -65973,17 +65973,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Deliveries
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Deliveries
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Deliveries
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -66217,17 +66217,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Departments
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Departments
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Departments
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -66777,17 +66777,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List EDI Runs
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List EDI Runs
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List EDI Runs
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -66968,17 +66968,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Inventories
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Inventories
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Inventories
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -67013,17 +67013,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Inventory Change Logs
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Inventory Change Logs
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Inventory Change Logs
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -67628,17 +67628,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Location Types
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Location Types
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Location Types
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -67736,17 +67736,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Locations
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Locations
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Locations
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -68056,17 +68056,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Machines
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Machines
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Machines
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -68293,17 +68293,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Materials
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Materials
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Materials
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -69595,17 +69595,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Parts
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Parts
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Parts
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -70661,17 +70661,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Picks
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Picks
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Picks
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -72263,17 +72263,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Production Runs
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Production Runs
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Production Runs
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -72567,17 +72567,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Batches by Production Run
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Batches by Production Run
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Batches by Production Run
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -73433,17 +73433,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Production Steps
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Production Steps
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Production Steps
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -75002,17 +75002,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Purchase Orders
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Purchase Orders
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Purchase Orders
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -75408,17 +75408,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Purchase Order Statuses
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Purchase Order Statuses
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Purchase Order Statuses
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -76605,17 +76605,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Receiving Orders
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Receiving Orders
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Receiving Orders
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -77810,17 +77810,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Scanning Stations
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Scanning Stations
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Scanning Stations
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -78083,17 +78083,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Batches by Scanning Station
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Batches by Scanning Station
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Batches by Scanning Station
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -78628,17 +78628,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Shipments
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Shipments
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Shipments
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -79212,17 +79212,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Shipment Lines
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Shipment Lines
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Shipment Lines
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -79743,17 +79743,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Shipping Terms
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Shipping Terms
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Shipping Terms
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -80088,17 +80088,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Suppliers
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Suppliers
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Suppliers
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -80589,17 +80589,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Supplier Materials
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Supplier Materials
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Supplier Materials
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -81929,17 +81929,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Account Groups
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Account Groups
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Account Groups
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -82189,17 +82189,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Account Prices
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Account Prices
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Account Prices
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -82950,17 +82950,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Account Statuses
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Account Statuses
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Account Statuses
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -83083,17 +83083,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Sales Targets
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Sales Targets
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Sales Targets
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -83360,17 +83360,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Territories
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Territories
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Territories
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -83660,17 +83660,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Addresses
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Addresses
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Addresses
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -83996,17 +83996,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Customers
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Customers
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Customers
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -85476,17 +85476,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Order Discounts
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Order Discounts
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Order Discounts
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -85804,17 +85804,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Priorities
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Priorities
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Priorities
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -85937,17 +85937,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Account Group Product Line Access
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Account Group Product Line Access
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Account Group Product Line Access
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -86312,17 +86312,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Customer Product Line Access
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Customer Product Line Access
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Customer Product Line Access
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -87551,17 +87551,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Registration Flows
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Registration Flows
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Registration Flows
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -87944,17 +87944,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Sales Orders
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Sales Orders
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Sales Orders
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -88417,17 +88417,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Sales Order Statuses
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Sales Order Statuses
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Sales Order Statuses
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
@@ -89628,17 +89628,17 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Query parameter: cursor for List Volume Discounts
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
                  * @example example
                  */
                 cursor?: string;
                 /**
-                 * @description Query parameter: limit for List Volume Discounts
+                 * @description Maximum number of results per page (default: 100, max: 1000).
                  * @example 100
                  */
                 limit?: number;
                 /**
-                 * @description Query parameter: q for List Volume Discounts
+                 * @description Search query used to filter results.
                  * @example example
                  */
                 q?: string;
