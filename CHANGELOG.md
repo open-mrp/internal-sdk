@@ -1,5 +1,11 @@
 # @augno/internal-sdk
 
+## 3.4.0
+
+### Minor Changes
+
+- 02968e9: feat: account-user endpoints
+
 ## 3.3.7
 
 ### Patch Changes
