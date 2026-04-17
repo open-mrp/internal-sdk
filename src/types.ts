@@ -7313,6 +7313,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -14920,6 +14935,21 @@ export interface components {
          *           "service_level_token": "fedex_ground",
          *           "customer_portal_visibility": "visible",
          *           "is_default": false,
+         *           "owner": {
+         *             "object": "owner",
+         *             "type": "account",
+         *             "account": {
+         *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *               "object": "account",
+         *               "name": "Acme Inc.",
+         *               "default_billing_address": null,
+         *               "default_shipping_address": null,
+         *               "branding": null,
+         *               "portal": null,
+         *               "created_at": "2026-05-10T00:00:00Z",
+         *               "updated_at": "2026-05-10T00:23:00Z"
+         *             }
+         *           },
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         },
@@ -15403,6 +15433,21 @@ export interface components {
              *       "service_level_token": "fedex_ground",
              *       "customer_portal_visibility": "visible",
              *       "is_default": false,
+             *       "owner": {
+             *         "object": "owner",
+             *         "type": "account",
+             *         "account": {
+             *           "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *           "object": "account",
+             *           "name": "Acme Inc.",
+             *           "default_billing_address": null,
+             *           "default_shipping_address": null,
+             *           "branding": null,
+             *           "portal": null,
+             *           "created_at": "2026-05-10T00:00:00Z",
+             *           "updated_at": "2026-05-10T00:23:00Z"
+             *         }
+             *       },
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -15503,6 +15548,21 @@ export interface components {
          *             "service_level_token": "fedex_ground",
          *             "customer_portal_visibility": "visible",
          *             "is_default": false,
+         *             "owner": {
+         *               "object": "owner",
+         *               "type": "account",
+         *               "account": {
+         *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *                 "object": "account",
+         *                 "name": "Acme Inc.",
+         *                 "default_billing_address": null,
+         *                 "default_shipping_address": null,
+         *                 "branding": null,
+         *                 "portal": null,
+         *                 "created_at": "2026-05-10T00:00:00Z",
+         *                 "updated_at": "2026-05-10T00:23:00Z"
+         *               }
+         *             },
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           },
@@ -15762,6 +15822,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -18932,6 +19007,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -19637,6 +19727,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -22829,6 +22934,21 @@ export interface components {
          *                 "service_level_token": "fedex_ground",
          *                 "customer_portal_visibility": "visible",
          *                 "is_default": false,
+         *                 "owner": {
+         *                   "object": "owner",
+         *                   "type": "account",
+         *                   "account": {
+         *                     "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *                     "object": "account",
+         *                     "name": "Acme Inc.",
+         *                     "default_billing_address": null,
+         *                     "default_shipping_address": null,
+         *                     "branding": null,
+         *                     "portal": null,
+         *                     "created_at": "2026-05-10T00:00:00Z",
+         *                     "updated_at": "2026-05-10T00:23:00Z"
+         *                   }
+         *                 },
          *                 "created_at": "2026-05-10T00:00:00Z",
          *                 "updated_at": "2026-05-10T00:23:00Z"
          *               },
@@ -27837,7 +27957,7 @@ export interface components {
              * @enum {string}
              */
             object: "oauth_status_response";
-            /** @description OAuth connection status. Either "connected" or "disconnected". */
+            /** @description OAuth connection status. One of "connected", "authorization_pending", or "disconnected". */
             status: string;
         };
         /** @description OeeDepartment represents OEE metrics for a single department. */
@@ -29395,6 +29515,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -29904,6 +30039,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -32898,6 +33048,21 @@ export interface components {
              *       "service_level_token": "fedex_ground",
              *       "customer_portal_visibility": "visible",
              *       "is_default": false,
+             *       "owner": {
+             *         "object": "owner",
+             *         "type": "account",
+             *         "account": {
+             *           "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *           "object": "account",
+             *           "name": "Acme Inc.",
+             *           "default_billing_address": null,
+             *           "default_shipping_address": null,
+             *           "branding": null,
+             *           "portal": null,
+             *           "created_at": "2026-05-10T00:00:00Z",
+             *           "updated_at": "2026-05-10T00:23:00Z"
+             *         }
+             *       },
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -33932,6 +34097,21 @@ export interface components {
              *       "service_level_token": "fedex_ground",
              *       "customer_portal_visibility": "visible",
              *       "is_default": false,
+             *       "owner": {
+             *         "object": "owner",
+             *         "type": "account",
+             *         "account": {
+             *           "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *           "object": "account",
+             *           "name": "Acme Inc.",
+             *           "default_billing_address": null,
+             *           "default_shipping_address": null,
+             *           "branding": null,
+             *           "portal": null,
+             *           "created_at": "2026-05-10T00:00:00Z",
+             *           "updated_at": "2026-05-10T00:23:00Z"
+             *         }
+             *       },
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -34484,6 +34664,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -36296,6 +36491,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -36539,6 +36749,21 @@ export interface components {
              *       "service_level_token": "fedex_ground",
              *       "customer_portal_visibility": "visible",
              *       "is_default": false,
+             *       "owner": {
+             *         "object": "owner",
+             *         "type": "account",
+             *         "account": {
+             *           "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *           "object": "account",
+             *           "name": "Acme Inc.",
+             *           "default_billing_address": null,
+             *           "default_shipping_address": null,
+             *           "branding": null,
+             *           "portal": null,
+             *           "created_at": "2026-05-10T00:00:00Z",
+             *           "updated_at": "2026-05-10T00:23:00Z"
+             *         }
+             *       },
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -37560,6 +37785,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -38071,6 +38311,21 @@ export interface components {
          *       "service_level_token": "fedex_ground",
          *       "customer_portal_visibility": "visible",
          *       "is_default": false,
+         *       "owner": {
+         *         "object": "owner",
+         *         "type": "account",
+         *         "account": {
+         *           "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *           "object": "account",
+         *           "name": "Acme Inc.",
+         *           "default_billing_address": null,
+         *           "default_shipping_address": null,
+         *           "branding": null,
+         *           "portal": null,
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "updated_at": "2026-05-10T00:23:00Z"
+         *         }
+         *       },
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z"
          *     }
@@ -38094,6 +38349,8 @@ export interface components {
             customer_portal_visibility: "visible" | "hidden";
             /** @description Default service level for the carrier. */
             is_default: boolean;
+            /** @description Owner. */
+            owner: components["schemas"]["Owner"] | null;
             /**
              * Format: date-time
              * @description Creation timestamp.
@@ -38659,6 +38916,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -38854,6 +39126,21 @@ export interface components {
              *       "service_level_token": "fedex_ground",
              *       "customer_portal_visibility": "visible",
              *       "is_default": false,
+             *       "owner": {
+             *         "object": "owner",
+             *         "type": "account",
+             *         "account": {
+             *           "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *           "object": "account",
+             *           "name": "Acme Inc.",
+             *           "default_billing_address": null,
+             *           "default_shipping_address": null,
+             *           "branding": null,
+             *           "portal": null,
+             *           "created_at": "2026-05-10T00:00:00Z",
+             *           "updated_at": "2026-05-10T00:23:00Z"
+             *         }
+             *       },
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -39870,6 +40157,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -40065,6 +40367,21 @@ export interface components {
              *       "service_level_token": "fedex_ground",
              *       "customer_portal_visibility": "visible",
              *       "is_default": false,
+             *       "owner": {
+             *         "object": "owner",
+             *         "type": "account",
+             *         "account": {
+             *           "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *           "object": "account",
+             *           "name": "Acme Inc.",
+             *           "default_billing_address": null,
+             *           "default_shipping_address": null,
+             *           "branding": null,
+             *           "portal": null,
+             *           "created_at": "2026-05-10T00:00:00Z",
+             *           "updated_at": "2026-05-10T00:23:00Z"
+             *         }
+             *       },
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -42129,6 +42446,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -42571,6 +42903,21 @@ export interface components {
              *           "service_level_token": "fedex_ground",
              *           "customer_portal_visibility": "visible",
              *           "is_default": false,
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
@@ -65150,6 +65497,13 @@ export interface operations {
                  * @example example
                  */
                 q?: string;
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "owner"
+                 *     ]
+                 */
+                "include[]"?: ("owner" | "owner.account")[];
             };
             header?: never;
             path: {
@@ -65182,7 +65536,15 @@ export interface operations {
     };
     "create-service-level": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "owner"
+                 *     ]
+                 */
+                "include[]"?: ("owner" | "owner.account")[];
+            };
             header?: never;
             path: {
                 /** @description Carrier ID. */
@@ -65218,6 +65580,21 @@ export interface operations {
                      *       "service_level_token": "fedex_ground",
                      *       "customer_portal_visibility": "visible",
                      *       "is_default": false,
+                     *       "owner": {
+                     *         "object": "owner",
+                     *         "type": "account",
+                     *         "account": {
+                     *           "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *           "object": "account",
+                     *           "name": "Acme Inc.",
+                     *           "default_billing_address": null,
+                     *           "default_shipping_address": null,
+                     *           "branding": null,
+                     *           "portal": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       },
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -65238,7 +65615,15 @@ export interface operations {
     };
     "get-service-level": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "owner"
+                 *     ]
+                 */
+                "include[]"?: ("owner" | "owner.account")[];
+            };
             header?: never;
             path: {
                 /** @description Carrier ID. */
@@ -65264,6 +65649,21 @@ export interface operations {
                      *       "service_level_token": "fedex_ground",
                      *       "customer_portal_visibility": "visible",
                      *       "is_default": false,
+                     *       "owner": {
+                     *         "object": "owner",
+                     *         "type": "account",
+                     *         "account": {
+                     *           "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *           "object": "account",
+                     *           "name": "Acme Inc.",
+                     *           "default_billing_address": null,
+                     *           "default_shipping_address": null,
+                     *           "branding": null,
+                     *           "portal": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       },
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -65319,7 +65719,15 @@ export interface operations {
     };
     "update-service-level": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "owner"
+                 *     ]
+                 */
+                "include[]"?: ("owner" | "owner.account")[];
+            };
             header?: never;
             path: {
                 /** @description Carrier ID. */
@@ -65355,6 +65763,21 @@ export interface operations {
                      *       "service_level_token": "fedex_ground",
                      *       "customer_portal_visibility": "visible",
                      *       "is_default": false,
+                     *       "owner": {
+                     *         "object": "owner",
+                     *         "type": "account",
+                     *         "account": {
+                     *           "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *           "object": "account",
+                     *           "name": "Acme Inc.",
+                     *           "default_billing_address": null,
+                     *           "default_shipping_address": null,
+                     *           "branding": null,
+                     *           "portal": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       },
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -84261,6 +84684,21 @@ export interface operations {
                      *           "service_level_token": "fedex_ground",
                      *           "customer_portal_visibility": "visible",
                      *           "is_default": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "account",
+                     *             "account": {
+                     *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *               "object": "account",
+                     *               "name": "Acme Inc.",
+                     *               "default_billing_address": null,
+                     *               "default_shipping_address": null,
+                     *               "branding": null,
+                     *               "portal": null,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           },
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
@@ -84627,6 +85065,21 @@ export interface operations {
                      *           "service_level_token": "fedex_ground",
                      *           "customer_portal_visibility": "visible",
                      *           "is_default": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "account",
+                     *             "account": {
+                     *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *               "object": "account",
+                     *               "name": "Acme Inc.",
+                     *               "default_billing_address": null,
+                     *               "default_shipping_address": null,
+                     *               "branding": null,
+                     *               "portal": null,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           },
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
@@ -84943,6 +85396,21 @@ export interface operations {
                      *           "service_level_token": "fedex_ground",
                      *           "customer_portal_visibility": "visible",
                      *           "is_default": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "account",
+                     *             "account": {
+                     *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *               "object": "account",
+                     *               "name": "Acme Inc.",
+                     *               "default_billing_address": null,
+                     *               "default_shipping_address": null,
+                     *               "branding": null,
+                     *               "portal": null,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           },
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
@@ -85224,6 +85692,21 @@ export interface operations {
                      *           "service_level_token": "fedex_ground",
                      *           "customer_portal_visibility": "visible",
                      *           "is_default": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "account",
+                     *             "account": {
+                     *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *               "object": "account",
+                     *               "name": "Acme Inc.",
+                     *               "default_billing_address": null,
+                     *               "default_shipping_address": null,
+                     *               "branding": null,
+                     *               "portal": null,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           },
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
@@ -86424,6 +86907,21 @@ export interface operations {
                      *                 "service_level_token": "fedex_ground",
                      *                 "customer_portal_visibility": "visible",
                      *                 "is_default": false,
+                     *                 "owner": {
+                     *                   "object": "owner",
+                     *                   "type": "account",
+                     *                   "account": {
+                     *                     "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                     "object": "account",
+                     *                     "name": "Acme Inc.",
+                     *                     "default_billing_address": null,
+                     *                     "default_shipping_address": null,
+                     *                     "branding": null,
+                     *                     "portal": null,
+                     *                     "created_at": "2026-05-10T00:00:00Z",
+                     *                     "updated_at": "2026-05-10T00:23:00Z"
+                     *                   }
+                     *                 },
                      *                 "created_at": "2026-05-10T00:00:00Z",
                      *                 "updated_at": "2026-05-10T00:23:00Z"
                      *               },
@@ -86726,6 +87224,21 @@ export interface operations {
                      *             "service_level_token": "fedex_ground",
                      *             "customer_portal_visibility": "visible",
                      *             "is_default": false,
+                     *             "owner": {
+                     *               "object": "owner",
+                     *               "type": "account",
+                     *               "account": {
+                     *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                 "object": "account",
+                     *                 "name": "Acme Inc.",
+                     *                 "default_billing_address": null,
+                     *                 "default_shipping_address": null,
+                     *                 "branding": null,
+                     *                 "portal": null,
+                     *                 "created_at": "2026-05-10T00:00:00Z",
+                     *                 "updated_at": "2026-05-10T00:23:00Z"
+                     *               }
+                     *             },
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
@@ -87016,6 +87529,21 @@ export interface operations {
                      *             "service_level_token": "fedex_ground",
                      *             "customer_portal_visibility": "visible",
                      *             "is_default": false,
+                     *             "owner": {
+                     *               "object": "owner",
+                     *               "type": "account",
+                     *               "account": {
+                     *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                 "object": "account",
+                     *                 "name": "Acme Inc.",
+                     *                 "default_billing_address": null,
+                     *                 "default_shipping_address": null,
+                     *                 "branding": null,
+                     *                 "portal": null,
+                     *                 "created_at": "2026-05-10T00:00:00Z",
+                     *                 "updated_at": "2026-05-10T00:23:00Z"
+                     *               }
+                     *             },
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
@@ -87351,6 +87879,21 @@ export interface operations {
                      *             "service_level_token": "fedex_ground",
                      *             "customer_portal_visibility": "visible",
                      *             "is_default": false,
+                     *             "owner": {
+                     *               "object": "owner",
+                     *               "type": "account",
+                     *               "account": {
+                     *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                 "object": "account",
+                     *                 "name": "Acme Inc.",
+                     *                 "default_billing_address": null,
+                     *                 "default_shipping_address": null,
+                     *                 "branding": null,
+                     *                 "portal": null,
+                     *                 "created_at": "2026-05-10T00:00:00Z",
+                     *                 "updated_at": "2026-05-10T00:23:00Z"
+                     *               }
+                     *             },
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
