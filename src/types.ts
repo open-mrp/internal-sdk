@@ -13867,7 +13867,9 @@ export interface components {
          *       "product_line_id": null,
          *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "is_portal_ready": true,
-         *       "unit_price": null
+         *       "unit_price": null,
+         *       "unit_cost": null,
+         *       "burn_rate": null
          *     }
          */
         CreateProductRequest: {
@@ -13885,8 +13887,14 @@ export interface components {
             category_id: string;
             /** @description Whether visible on the customer portal. */
             is_portal_ready: boolean;
-            /** @description Unit price. */
+            /** @description Unit price (written into the unit_value rate). Defaults to "0". */
             unit_price: string | null;
+            /** @description Initial unit cost (written into the unit_cost rate). Defaults to "0". */
+            unit_cost: string | null;
+            /** @description Initial burn rate (written into the burn_rate rate). Defaults to "0". */
+            burn_rate: string | null;
+            /** @description Attribute IDs to connect to the product at creation time. */
+            attribute_ids: string[];
         };
         /**
          * @description Request to create a product type.
@@ -14260,6 +14268,10 @@ export interface components {
             ship_to_country?: string | null;
             /** @description Order lines to create. */
             lines: components["schemas"]["CreateSalesOrderLineInput"][];
+            /** @description Account users who should receive order acknowledgement emails. */
+            acknowledgement_email_contacts: components["schemas"]["SalesOrderEmailContactInput"][];
+            /** @description Account users who should receive invoice emails. */
+            invoice_email_contacts: components["schemas"]["SalesOrderEmailContactInput"][];
         };
         /**
          * @description Request to create a sales target.
@@ -36945,6 +36957,11 @@ export interface components {
              */
             updated_at: string;
         };
+        /** @description SalesOrderEmailContactInput represents an account user subscribed to a sales-order email notification type. */
+        SalesOrderEmailContactInput: {
+            /** @description Account user ID to receive the notification. */
+            account_user_id: string;
+        };
         /** @description Minimal sales order line sub-resource. */
         SalesOrderLine: {
             /** @description Sales order line ID. */
@@ -44378,6 +44395,16 @@ export interface components {
             promised_at?: string;
             /** @description Customer ID. */
             customer_id?: string | null;
+            /**
+             * @description When set, replaces acknowledgement email contacts on the order.
+             *     An empty list clears all contacts; omitted leaves existing contacts untouched.
+             */
+            acknowledgement_email_contacts?: components["schemas"]["SalesOrderEmailContactInput"][];
+            /**
+             * @description When set, replaces invoice email contacts on the order.
+             *     An empty list clears all contacts; omitted leaves existing contacts untouched.
+             */
+            invoice_email_contacts?: components["schemas"]["SalesOrderEmailContactInput"][];
         };
         /**
          * @description Request to update a scanner-role account user's password.
@@ -52265,7 +52292,9 @@ export interface operations {
                  *       "product_line_id": null,
                  *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
                  *       "is_portal_ready": true,
-                 *       "unit_price": null
+                 *       "unit_price": null,
+                 *       "unit_cost": null,
+                 *       "burn_rate": null
                  *     }
                  */
                 "application/json": components["schemas"]["CreateProductRequest"];
@@ -57581,7 +57610,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path?: never;
@@ -61485,7 +61514,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path?: never;
@@ -83393,7 +83422,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path?: never;
@@ -83456,7 +83485,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path: {
@@ -86307,7 +86336,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path?: never;
@@ -86370,7 +86399,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path: {
@@ -88980,7 +89009,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path?: never;
