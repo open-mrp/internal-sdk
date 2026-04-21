@@ -57581,7 +57581,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path?: never;
@@ -61485,7 +61485,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path?: never;
@@ -83393,7 +83393,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path?: never;
@@ -83456,7 +83456,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path: {
@@ -86307,7 +86307,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path?: never;
@@ -86370,7 +86370,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path: {
@@ -88980,7 +88980,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account")[];
+                "include[]"?: "owner"[];
             };
             header?: never;
             path?: never;
