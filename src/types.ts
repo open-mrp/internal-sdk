@@ -45846,17 +45846,17 @@ export interface operations {
                  *       "active"
                  *     ]
                  */
-                "status[]"?: ("active" | "inactive")[];
+                "statuses[]"?: ("active" | "inactive")[];
                 /**
                  * @description Filter by definition type (e.g. "system", "custom").
                  * @example []
                  */
-                "definition_type[]"?: string[];
+                "definition_types[]"?: string[];
                 /**
                  * @description Filter by trigger type (e.g. "manual", "scheduled", "event").
                  * @example []
                  */
-                "trigger_type[]"?: string[];
+                "trigger_types[]"?: string[];
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
@@ -55993,31 +55993,29 @@ export interface operations {
                  */
                 end_date?: string;
                 /**
-                 * @description Resource types of the audited entity (repeatable, exact match).
+                 * @description Resource types of the audited entity.
                  * @example [
                  *       "account"
                  *     ]
                  */
                 "resource_types[]"?: ("account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "account_plan")[];
                 /**
-                 * @description Audited resource IDs (repeatable, exact match).
+                 * @description Audited resource IDs.
                  * @example []
                  */
-                "resource_id[]"?: string[];
+                "resource_ids[]"?: string[];
                 /**
-                 * @description Actor IDs (repeatable, exact match). Each value is a user.id when
-                 *     identity_type=user, or an api_key.type_id when identity_type=api_key —
-                 *     not an account_user.id.
+                 * @description Actor identifier. `user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
                  * @example []
                  */
-                "actor_id[]"?: string[];
+                "actor_ids[]"?: string[];
                 /**
-                 * @description Audit actions (repeatable, exact match).
+                 * @description Audit actions.
                  * @example [
                  *       "create"
                  *     ]
                  */
-                "action[]"?: ("create" | "update" | "delete" | "restore" | "archive")[];
+                "actions[]"?: ("create" | "update" | "delete" | "restore" | "archive")[];
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
@@ -56506,59 +56504,61 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter: start of date range for occurred_at.
+                 * @description Start of date range for occurred_at.
                  * @example example
                  */
                 start_date?: string;
                 /**
-                 * @description Filter: end of date range for occurred_at.
+                 * @description End of date range for occurred_at.
                  * @example example
                  */
                 end_date?: string;
                 /**
-                 * @description Filter: HTTP methods (repeatable, exact match).
+                 * @description HTTP methods.
+                 * @example [
+                 *       "GET"
+                 *     ]
+                 */
+                "methods[]"?: ("GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS")[];
+                /**
+                 * @description HTTP status codes.
                  * @example []
                  */
-                "method[]"?: string[];
+                "status_codes[]"?: number[];
                 /**
-                 * @description Filter: HTTP status codes (repeatable, exact match).
+                 * @description API error codes.
                  * @example []
                  */
-                "status_code[]"?: number[];
+                "error_codes[]"?: string[];
                 /**
-                 * @description Filter: API error codes (repeatable, exact match).
+                 * @description Actor home account IDs.
                  * @example []
                  */
-                "error_code[]"?: string[];
+                "account_ids[]"?: string[];
                 /**
-                 * @description Filter: actor home account IDs (repeatable, exact match).
+                 * @description Actor identifier. `user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
                  * @example []
                  */
-                "account_id[]"?: string[];
+                "actor_ids[]"?: string[];
                 /**
-                 * @description Filter: actor IDs (repeatable, exact match). Each value is a user.id when
-                 *     identity_type=user, or an api_key.type_id when identity_type=api_key —
-                 *     not an account_user.id.
+                 * @description Actor types.
+                 * @example [
+                 *       "user"
+                 *     ]
+                 */
+                "actor_types[]"?: ("user" | "api_key" | "agent")[];
+                /**
+                 * @description Normalized route templates.
                  * @example []
                  */
-                "actor_id[]"?: string[];
+                "normalized_routes[]"?: string[];
                 /**
-                 * @description Filter: actor types (repeatable, exact match — "user" or "api_key").
+                 * @description Request hosts.
                  * @example []
                  */
-                "actor_type[]"?: string[];
+                "hosts[]"?: string[];
                 /**
-                 * @description Filter: normalized route templates (repeatable, exact match).
-                 * @example []
-                 */
-                "normalized_route[]"?: string[];
-                /**
-                 * @description Filter: request hosts (repeatable, exact match).
-                 * @example []
-                 */
-                "host[]"?: string[];
-                /**
-                 * @description Filter: minimum latency in microseconds.
+                 * @description Minimum latency in microseconds.
                  * @example 100
                  */
                 min_latency_us?: number;
@@ -61646,7 +61646,7 @@ export interface operations {
                  * @description Filter by role type code(s).
                  * @example []
                  */
-                "role_type[]"?: string[];
+                "role_types[]"?: string[];
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
