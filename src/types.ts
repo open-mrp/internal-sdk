@@ -35982,10 +35982,16 @@ export interface components {
          *     }
          */
         ResponseError: {
-            /** @description A machine-readable code for the error. */
-            code: string;
-            /** @description The type of error. */
-            type: string;
+            /**
+             * @description A machine-readable code for the error.
+             * @enum {string}
+             */
+            code: "expired_token" | "api_key_expired" | "api_key_revoked" | "invalid_credentials" | "insufficient_permissions" | "payment_required" | "validation_failed" | "missing_field" | "invalid_format" | "method_not_allowed" | "resource_not_found" | "resource_exists" | "resource_conflict" | "resource_gone" | "idempotency_in_progress" | "limit_exceeded" | "registration_closed" | "rate_limit_exceeded" | "parameter_missing" | "parameter_invalid" | "parameter_unknown" | "parameters_exclusive" | "internal_error" | "service_unavailable" | "external_service_error" | "timeout" | "connection_error" | "request_timeout" | "client_closed_request" | "api_version_required" | "api_version_invalid" | "api_version_too_old";
+            /**
+             * @description The type of error.
+             * @enum {string}
+             */
+            type: "api_error" | "idempotency_error" | "invalid_request_error";
             /** @description A human-readable message providing more details about the error. */
             message: string;
             /** @description The parameter that caused the error, if applicable. */
@@ -56005,7 +56011,7 @@ export interface operations {
                  */
                 "resource_ids[]"?: string[];
                 /**
-                 * @description Actor identifier. `user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
+                 * @description Actor identifier. `account_user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
                  * @example []
                  */
                 "actor_ids[]"?: string[];
@@ -56527,16 +56533,18 @@ export interface operations {
                 "status_codes[]"?: number[];
                 /**
                  * @description API error codes.
-                 * @example []
+                 * @example [
+                 *       "expired_token"
+                 *     ]
                  */
-                "error_codes[]"?: string[];
+                "error_codes[]"?: ("expired_token" | "api_key_expired" | "api_key_revoked" | "invalid_credentials" | "insufficient_permissions" | "payment_required" | "validation_failed" | "missing_field" | "invalid_format" | "method_not_allowed" | "resource_not_found" | "resource_exists" | "resource_conflict" | "resource_gone" | "idempotency_in_progress" | "limit_exceeded" | "registration_closed" | "rate_limit_exceeded" | "parameter_missing" | "parameter_invalid" | "parameter_unknown" | "parameters_exclusive" | "internal_error" | "service_unavailable" | "external_service_error" | "timeout" | "connection_error" | "request_timeout" | "client_closed_request" | "api_version_required" | "api_version_invalid" | "api_version_too_old")[];
                 /**
                  * @description Actor home account IDs.
                  * @example []
                  */
                 "account_ids[]"?: string[];
                 /**
-                 * @description Actor identifier. `user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
+                 * @description Actor identifier. `account_user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
                  * @example []
                  */
                 "actor_ids[]"?: string[];
