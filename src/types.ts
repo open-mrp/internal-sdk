@@ -10438,7 +10438,6 @@ export interface components {
          *             }
          *           ]
          *         },
-         *         "is_dirty": false,
          *         "created_at": "2026-05-10T00:00:00Z",
          *         "updated_at": "2026-05-10T00:23:00Z"
          *       },
@@ -10815,7 +10814,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -11429,7 +11427,6 @@ export interface components {
          *               }
          *             ]
          *           },
-         *           "is_dirty": false,
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         },
@@ -11810,7 +11807,6 @@ export interface components {
              *             }
              *           ]
              *         },
-             *         "is_dirty": false,
              *         "created_at": "2026-05-10T00:00:00Z",
              *         "updated_at": "2026-05-10T00:23:00Z"
              *       },
@@ -12426,7 +12422,6 @@ export interface components {
          *             "unit_cost": null,
          *             "burn_rate": null,
          *             "attributes": null,
-         *             "is_dirty": false,
          *             "created_at": "0001-01-01T00:00:00Z",
          *             "updated_at": "0001-01-01T00:00:00Z"
          *           },
@@ -12478,7 +12473,6 @@ export interface components {
          *         "unit_cost": null,
          *         "burn_rate": null,
          *         "attributes": null,
-         *         "is_dirty": false,
          *         "created_at": "0001-01-01T00:00:00Z",
          *         "updated_at": "0001-01-01T00:00:00Z"
          *       },
@@ -12662,7 +12656,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -13594,7 +13587,7 @@ export interface components {
              * @enum {string}
              */
             default_priority: "low" | "normal" | "high";
-            /** @description Default sales rep user ID. */
+            /** @description The ID of the account user to assign as the default sales rep. */
             default_sales_rep_user_id?: string;
             /** @description Price group IDs. */
             customer_price_group_ids: string[];
@@ -13751,6 +13744,17 @@ export interface components {
             order_point?: components["schemas"]["QuantityInputRequest"] | null;
             /** @description Lead time quantity. */
             lead_time?: components["schemas"]["QuantityInputRequest"] | null;
+            /**
+             * @description Initial unit price. When set, numerator must be a currency unit and
+             *     denominator must not be.
+             */
+            unit_price?: components["schemas"]["RateInput"] | null;
+            /** @description Initial unit cost. Same currency rule as unit_price. */
+            unit_cost?: components["schemas"]["RateInput"] | null;
+            /** @description Initial burn rate (waste / scrap). No currency requirement. */
+            burn_rate?: components["schemas"]["RateInput"] | null;
+            /** @description Attribute IDs to connect to the material at creation time. */
+            attribute_ids: string[];
         };
         /**
          * @description Request to create an agent memory.
@@ -13819,8 +13823,21 @@ export interface components {
             sku: string;
             /** @description Description. */
             description: string | null;
+            /** @description Notes. */
+            notes?: string | null;
             /** @description Category ID. */
             category_id: string;
+            /**
+             * @description Initial unit price. When set, numerator must be a currency unit and
+             *     denominator must not be.
+             */
+            unit_price?: components["schemas"]["RateInput"] | null;
+            /** @description Initial unit cost. Same currency rule as unit_price. */
+            unit_cost?: components["schemas"]["RateInput"] | null;
+            /** @description Initial burn rate (waste / scrap). No currency requirement. */
+            burn_rate?: components["schemas"]["RateInput"] | null;
+            /** @description Attribute IDs to connect to the part at creation time. */
+            attribute_ids: string[];
         };
         /**
          * @description Request to create a payment term.
@@ -13865,11 +13882,7 @@ export interface components {
          *       "notes": null,
          *       "type": "sale",
          *       "product_line_id": null,
-         *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-         *       "is_portal_ready": true,
-         *       "unit_price": null,
-         *       "unit_cost": null,
-         *       "burn_rate": null
+         *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         CreateProductRequest: {
@@ -13879,20 +13892,30 @@ export interface components {
             description: string | null;
             /** @description Notes. */
             notes: string | null;
-            /** @description Product type code (e.g. sale, sample). */
-            type: string;
+            /**
+             * @description Product type code (e.g. sale, sample).
+             * @enum {string}
+             */
+            type: "sale" | "service" | "shipping" | "credit" | "return" | "tax";
             /** @description Product line ID. */
             product_line_id: string | null;
             /** @description Category ID. */
             category_id: string;
-            /** @description Whether visible on the customer portal. */
-            is_portal_ready: boolean;
-            /** @description Unit price (written into the unit_value rate). Defaults to "0". */
-            unit_price: string | null;
-            /** @description Initial unit cost (written into the unit_cost rate). Defaults to "0". */
-            unit_cost: string | null;
-            /** @description Initial burn rate (written into the burn_rate rate). Defaults to "0". */
-            burn_rate: string | null;
+            /**
+             * @description Whether visible in the customer portal.
+             * @default hidden
+             * @enum {string}
+             */
+            portal_visibility: "visible" | "hidden";
+            /**
+             * @description Initial unit price. When set, numerator must be a currency unit and
+             *     denominator must not be.
+             */
+            unit_price?: components["schemas"]["RateInput"] | null;
+            /** @description Initial unit cost. Same currency rule as unit_price. */
+            unit_cost?: components["schemas"]["RateInput"] | null;
+            /** @description Initial burn rate (waste / scrap). No currency requirement. */
+            burn_rate?: components["schemas"]["RateInput"] | null;
             /** @description Attribute IDs to connect to the product at creation time. */
             attribute_ids: string[];
         };
@@ -14037,7 +14060,7 @@ export interface components {
          *       "ship_to_country": "US",
          *       "lines": [
          *         {
-         *           "product_id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "product_id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "product_sku": "RAW-100",
          *           "quantity_unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "quantity_value": "500",
@@ -14200,7 +14223,7 @@ export interface components {
          *       "ship_to_country": "US",
          *       "lines": [
          *         {
-         *           "product_id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "product_id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "product_sku": "WIDGET-001",
          *           "quantity_unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "quantity_value": "10",
@@ -16130,7 +16153,6 @@ export interface components {
          *               "unit_cost": null,
          *               "burn_rate": null,
          *               "attributes": null,
-         *               "is_dirty": false,
          *               "created_at": "0001-01-01T00:00:00Z",
          *               "updated_at": "0001-01-01T00:00:00Z"
          *             },
@@ -16274,7 +16296,6 @@ export interface components {
          *         "unit_cost": null,
          *         "burn_rate": null,
          *         "attributes": null,
-         *         "is_dirty": false,
          *         "created_at": "0001-01-01T00:00:00Z",
          *         "updated_at": "0001-01-01T00:00:00Z"
          *       },
@@ -16512,7 +16533,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -17373,7 +17393,6 @@ export interface components {
          *         "unit_cost": null,
          *         "burn_rate": null,
          *         "attributes": null,
-         *         "is_dirty": false,
          *         "created_at": "0001-01-01T00:00:00Z",
          *         "updated_at": "0001-01-01T00:00:00Z"
          *       },
@@ -17560,7 +17579,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -17887,7 +17905,6 @@ export interface components {
          *             }
          *           ]
          *         },
-         *         "is_dirty": false,
          *         "created_at": "2026-05-10T00:00:00Z",
          *         "updated_at": "2026-05-10T00:23:00Z"
          *       },
@@ -18117,7 +18134,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -18328,7 +18344,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -18635,7 +18650,6 @@ export interface components {
          *                     }
          *                   ]
          *                 },
-         *                 "is_dirty": false,
          *                 "created_at": "2026-05-10T00:00:00Z",
          *                 "updated_at": "2026-05-10T00:23:00Z"
          *               }
@@ -19476,7 +19490,6 @@ export interface components {
          *               }
          *             ]
          *           },
-         *           "is_dirty": false,
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         }
@@ -20146,7 +20159,6 @@ export interface components {
          *           }
          *         ]
          *       },
-         *       "is_dirty": false,
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z"
          *     }
@@ -20318,8 +20330,6 @@ export interface components {
             burn_rate: components["schemas"]["Rate"] | null;
             /** @description Attributes assigned to this item. */
             attributes: components["schemas"]["List_Attribute"] | null;
-            /** @description Whether the item has unsaved changes. */
-            is_dirty: boolean;
             /**
              * Format: date-time
              * @description Creation timestamp.
@@ -21993,7 +22003,6 @@ export interface components {
          *                 }
          *               ]
          *             },
-         *             "is_dirty": false,
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           },
@@ -22389,7 +22398,6 @@ export interface components {
          *                   }
          *                 ]
          *               },
-         *               "is_dirty": false,
          *               "created_at": "2026-05-10T00:00:00Z",
          *               "updated_at": "2026-05-10T00:23:00Z"
          *             },
@@ -22716,7 +22724,6 @@ export interface components {
          *                 "unit_cost": null,
          *                 "burn_rate": null,
          *                 "attributes": null,
-         *                 "is_dirty": false,
          *                 "created_at": "0001-01-01T00:00:00Z",
          *                 "updated_at": "0001-01-01T00:00:00Z"
          *               },
@@ -23499,7 +23506,6 @@ export interface components {
          *             "unit_cost": null,
          *             "burn_rate": null,
          *             "attributes": null,
-         *             "is_dirty": false,
          *             "created_at": "0001-01-01T00:00:00Z",
          *             "updated_at": "0001-01-01T00:00:00Z"
          *           },
@@ -23727,7 +23733,6 @@ export interface components {
          *                 }
          *               ]
          *             },
-         *             "is_dirty": false,
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           },
@@ -24171,7 +24176,6 @@ export interface components {
          *               }
          *             ]
          *           },
-         *           "is_dirty": false,
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         }
@@ -24441,7 +24445,6 @@ export interface components {
          *                 }
          *               ]
          *             },
-         *             "is_dirty": false,
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           },
@@ -24556,7 +24559,6 @@ export interface components {
          *             "unit_cost": null,
          *             "burn_rate": null,
          *             "attributes": null,
-         *             "is_dirty": false,
          *             "created_at": "0001-01-01T00:00:00Z",
          *             "updated_at": "0001-01-01T00:00:00Z"
          *           },
@@ -24683,169 +24685,175 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "it_02kn5s7811g9qwce7cizr4e0mq",
+         *         "next_cursor": "pt_02kn5s7811g9qwce7cizr4e0mq",
          *         "prev_cursor": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
          *       "data": [
          *         {
-         *           "id": "it_02kn5s7811g9qwce7cizr4e0mq",
+         *           "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
          *           "object": "part",
-         *           "sku": "BRG-6204-2RS",
-         *           "description": "Sealed ball bearing, 20mm bore, 47mm OD",
-         *           "notes": null,
-         *           "category": {
-         *             "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-         *             "object": "item_category",
-         *             "name": "Electronics",
+         *           "item": {
+         *             "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+         *             "object": "item",
+         *             "sku": "ALM-2024-1001",
+         *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *             "notes": null,
-         *             "type": "material_category",
-         *             "owner": {
-         *               "object": "owner",
-         *               "type": "system",
-         *               "account": null
+         *             "type": "product",
+         *             "category": {
+         *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+         *               "object": "item_category",
+         *               "name": "Electronics",
+         *               "notes": null,
+         *               "type": "material_category",
+         *               "owner": {
+         *                 "object": "owner",
+         *                 "type": "system",
+         *                 "account": null
+         *               },
+         *               "properties": null,
+         *               "unit_group": null,
+         *               "created_at": "2026-05-10T00:00:00Z",
+         *               "updated_at": "2026-05-10T00:23:00Z"
          *             },
-         *             "properties": null,
-         *             "unit_group": null,
+         *             "unit_value": {
+         *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+         *               "object": "rate",
+         *               "value": "25.500000000000000000000000000000",
+         *               "numerator_unit": {
+         *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *                 "object": "unit",
+         *                 "name": "US Dollar",
+         *                 "abbreviation": "USD",
+         *                 "type": "currency",
+         *                 "ratio_numerator": "",
+         *                 "ratio_denominator": "",
+         *                 "offset_numerator": "",
+         *                 "offset_denominator": "",
+         *                 "is_base_unit": false,
+         *                 "owner": null,
+         *                 "created_at": "0001-01-01T00:00:00Z",
+         *                 "updated_at": "0001-01-01T00:00:00Z"
+         *               },
+         *               "denominator_unit": {
+         *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *                 "object": "unit",
+         *                 "name": "Kilogram",
+         *                 "abbreviation": "kg",
+         *                 "type": "mass",
+         *                 "ratio_numerator": "",
+         *                 "ratio_denominator": "",
+         *                 "offset_numerator": "",
+         *                 "offset_denominator": "",
+         *                 "is_base_unit": false,
+         *                 "owner": null,
+         *                 "created_at": "0001-01-01T00:00:00Z",
+         *                 "updated_at": "0001-01-01T00:00:00Z"
+         *               },
+         *               "display_value": "$25.50 / kg",
+         *               "created_at": "2026-05-10T00:00:00Z",
+         *               "updated_at": "2026-05-10T00:23:00Z"
+         *             },
+         *             "unit_cost": {
+         *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+         *               "object": "rate",
+         *               "value": "25.500000000000000000000000000000",
+         *               "numerator_unit": {
+         *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *                 "object": "unit",
+         *                 "name": "US Dollar",
+         *                 "abbreviation": "USD",
+         *                 "type": "currency",
+         *                 "ratio_numerator": "",
+         *                 "ratio_denominator": "",
+         *                 "offset_numerator": "",
+         *                 "offset_denominator": "",
+         *                 "is_base_unit": false,
+         *                 "owner": null,
+         *                 "created_at": "0001-01-01T00:00:00Z",
+         *                 "updated_at": "0001-01-01T00:00:00Z"
+         *               },
+         *               "denominator_unit": {
+         *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *                 "object": "unit",
+         *                 "name": "Kilogram",
+         *                 "abbreviation": "kg",
+         *                 "type": "mass",
+         *                 "ratio_numerator": "",
+         *                 "ratio_denominator": "",
+         *                 "offset_numerator": "",
+         *                 "offset_denominator": "",
+         *                 "is_base_unit": false,
+         *                 "owner": null,
+         *                 "created_at": "0001-01-01T00:00:00Z",
+         *                 "updated_at": "0001-01-01T00:00:00Z"
+         *               },
+         *               "display_value": "$25.50 / kg",
+         *               "created_at": "2026-05-10T00:00:00Z",
+         *               "updated_at": "2026-05-10T00:23:00Z"
+         *             },
+         *             "burn_rate": {
+         *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+         *               "object": "rate",
+         *               "value": "25.500000000000000000000000000000",
+         *               "numerator_unit": {
+         *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *                 "object": "unit",
+         *                 "name": "US Dollar",
+         *                 "abbreviation": "USD",
+         *                 "type": "currency",
+         *                 "ratio_numerator": "",
+         *                 "ratio_denominator": "",
+         *                 "offset_numerator": "",
+         *                 "offset_denominator": "",
+         *                 "is_base_unit": false,
+         *                 "owner": null,
+         *                 "created_at": "0001-01-01T00:00:00Z",
+         *                 "updated_at": "0001-01-01T00:00:00Z"
+         *               },
+         *               "denominator_unit": {
+         *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *                 "object": "unit",
+         *                 "name": "Kilogram",
+         *                 "abbreviation": "kg",
+         *                 "type": "mass",
+         *                 "ratio_numerator": "",
+         *                 "ratio_denominator": "",
+         *                 "offset_numerator": "",
+         *                 "offset_denominator": "",
+         *                 "is_base_unit": false,
+         *                 "owner": null,
+         *                 "created_at": "0001-01-01T00:00:00Z",
+         *                 "updated_at": "0001-01-01T00:00:00Z"
+         *               },
+         *               "display_value": "$25.50 / kg",
+         *               "created_at": "2026-05-10T00:00:00Z",
+         *               "updated_at": "2026-05-10T00:23:00Z"
+         *             },
+         *             "attributes": {
+         *               "object": "list",
+         *               "page_info": {
+         *                 "next_cursor": null,
+         *                 "prev_cursor": null,
+         *                 "has_next_page": false,
+         *                 "has_prev_page": false
+         *               },
+         *               "data": [
+         *                 {
+         *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+         *                   "object": "attribute",
+         *                   "value": "Premium",
+         *                   "color": "red",
+         *                   "sort_order": 1,
+         *                   "created_at": "2026-05-10T00:00:00Z",
+         *                   "updated_at": "2026-05-10T00:23:00Z"
+         *                 }
+         *               ]
+         *             },
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           },
-         *           "unit_value": {
-         *             "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-         *             "object": "rate",
-         *             "value": "25.500000000000000000000000000000",
-         *             "numerator_unit": {
-         *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *               "object": "unit",
-         *               "name": "US Dollar",
-         *               "abbreviation": "USD",
-         *               "type": "currency",
-         *               "ratio_numerator": "",
-         *               "ratio_denominator": "",
-         *               "offset_numerator": "",
-         *               "offset_denominator": "",
-         *               "is_base_unit": false,
-         *               "owner": null,
-         *               "created_at": "0001-01-01T00:00:00Z",
-         *               "updated_at": "0001-01-01T00:00:00Z"
-         *             },
-         *             "denominator_unit": {
-         *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *               "object": "unit",
-         *               "name": "Kilogram",
-         *               "abbreviation": "kg",
-         *               "type": "mass",
-         *               "ratio_numerator": "",
-         *               "ratio_denominator": "",
-         *               "offset_numerator": "",
-         *               "offset_denominator": "",
-         *               "is_base_unit": false,
-         *               "owner": null,
-         *               "created_at": "0001-01-01T00:00:00Z",
-         *               "updated_at": "0001-01-01T00:00:00Z"
-         *             },
-         *             "display_value": "$25.50 / kg",
-         *             "created_at": "2026-05-10T00:00:00Z",
-         *             "updated_at": "2026-05-10T00:23:00Z"
-         *           },
-         *           "unit_cost": {
-         *             "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-         *             "object": "rate",
-         *             "value": "25.500000000000000000000000000000",
-         *             "numerator_unit": {
-         *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *               "object": "unit",
-         *               "name": "US Dollar",
-         *               "abbreviation": "USD",
-         *               "type": "currency",
-         *               "ratio_numerator": "",
-         *               "ratio_denominator": "",
-         *               "offset_numerator": "",
-         *               "offset_denominator": "",
-         *               "is_base_unit": false,
-         *               "owner": null,
-         *               "created_at": "0001-01-01T00:00:00Z",
-         *               "updated_at": "0001-01-01T00:00:00Z"
-         *             },
-         *             "denominator_unit": {
-         *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *               "object": "unit",
-         *               "name": "Kilogram",
-         *               "abbreviation": "kg",
-         *               "type": "mass",
-         *               "ratio_numerator": "",
-         *               "ratio_denominator": "",
-         *               "offset_numerator": "",
-         *               "offset_denominator": "",
-         *               "is_base_unit": false,
-         *               "owner": null,
-         *               "created_at": "0001-01-01T00:00:00Z",
-         *               "updated_at": "0001-01-01T00:00:00Z"
-         *             },
-         *             "display_value": "$25.50 / kg",
-         *             "created_at": "2026-05-10T00:00:00Z",
-         *             "updated_at": "2026-05-10T00:23:00Z"
-         *           },
-         *           "burn_rate": {
-         *             "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-         *             "object": "rate",
-         *             "value": "25.500000000000000000000000000000",
-         *             "numerator_unit": {
-         *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *               "object": "unit",
-         *               "name": "US Dollar",
-         *               "abbreviation": "USD",
-         *               "type": "currency",
-         *               "ratio_numerator": "",
-         *               "ratio_denominator": "",
-         *               "offset_numerator": "",
-         *               "offset_denominator": "",
-         *               "is_base_unit": false,
-         *               "owner": null,
-         *               "created_at": "0001-01-01T00:00:00Z",
-         *               "updated_at": "0001-01-01T00:00:00Z"
-         *             },
-         *             "denominator_unit": {
-         *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *               "object": "unit",
-         *               "name": "Kilogram",
-         *               "abbreviation": "kg",
-         *               "type": "mass",
-         *               "ratio_numerator": "",
-         *               "ratio_denominator": "",
-         *               "offset_numerator": "",
-         *               "offset_denominator": "",
-         *               "is_base_unit": false,
-         *               "owner": null,
-         *               "created_at": "0001-01-01T00:00:00Z",
-         *               "updated_at": "0001-01-01T00:00:00Z"
-         *             },
-         *             "display_value": "$25.50 / kg",
-         *             "created_at": "2026-05-10T00:00:00Z",
-         *             "updated_at": "2026-05-10T00:23:00Z"
-         *           },
-         *           "attributes": {
-         *             "object": "list",
-         *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
-         *               "has_next_page": false,
-         *               "has_prev_page": false
-         *             },
-         *             "data": [
-         *               {
-         *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-         *                 "object": "attribute",
-         *                 "value": "Premium",
-         *                 "color": "red",
-         *                 "sort_order": 1,
-         *                 "created_at": "2026-05-10T00:00:00Z",
-         *                 "updated_at": "2026-05-10T00:23:00Z"
-         *               }
-         *             ]
-         *           },
-         *           "is_dirty": false,
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         }
@@ -25180,24 +25188,17 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "next_cursor": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
          *         "prev_cursor": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
          *       "data": [
          *         {
-         *           "id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "product",
-         *           "is_portal_ready": true,
-         *           "product_type": {
-         *             "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-         *             "object": "product_type",
-         *             "name": "Sale",
-         *             "code": "sale",
-         *             "created_at": "2026-05-10T00:00:00Z",
-         *             "updated_at": "2026-05-10T00:23:00Z"
-         *           },
+         *           "type": "sale",
+         *           "portal_visibility": "visible",
          *           "product_line": {
          *             "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "product_line",
@@ -25372,7 +25373,6 @@ export interface components {
          *                 }
          *               ]
          *             },
-         *             "is_dirty": false,
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           },
@@ -26642,7 +26642,6 @@ export interface components {
          *                   }
          *                 ]
          *               },
-         *               "is_dirty": false,
          *               "created_at": "2026-05-10T00:00:00Z",
          *               "updated_at": "2026-05-10T00:23:00Z"
          *             },
@@ -27600,7 +27599,6 @@ export interface components {
          *             }
          *           ]
          *         },
-         *         "is_dirty": false,
          *         "created_at": "2026-05-10T00:00:00Z",
          *         "updated_at": "2026-05-10T00:23:00Z"
          *       },
@@ -27819,7 +27817,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -28004,7 +28001,6 @@ export interface components {
          *         "unit_cost": null,
          *         "burn_rate": null,
          *         "attributes": null,
-         *         "is_dirty": false,
          *         "created_at": "0001-01-01T00:00:00Z",
          *         "updated_at": "0001-01-01T00:00:00Z"
          *       },
@@ -28193,7 +28189,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -28808,162 +28803,168 @@ export interface components {
         /**
          * @description Part resource.
          * @example {
-         *       "id": "it_02kn5s7811g9qwce7cizr4e0mq",
+         *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
          *       "object": "part",
-         *       "sku": "BRG-6204-2RS",
-         *       "description": "Sealed ball bearing, 20mm bore, 47mm OD",
-         *       "notes": null,
-         *       "category": {
-         *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "object": "item_category",
-         *         "name": "Electronics",
+         *       "item": {
+         *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "object": "item",
+         *         "sku": "ALM-2024-1001",
+         *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *         "notes": null,
-         *         "type": "material_category",
-         *         "owner": {
-         *           "object": "owner",
-         *           "type": "system",
-         *           "account": null
+         *         "type": "product",
+         *         "category": {
+         *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "object": "item_category",
+         *           "name": "Electronics",
+         *           "notes": null,
+         *           "type": "material_category",
+         *           "owner": {
+         *             "object": "owner",
+         *             "type": "system",
+         *             "account": null
+         *           },
+         *           "properties": null,
+         *           "unit_group": null,
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "updated_at": "2026-05-10T00:23:00Z"
          *         },
-         *         "properties": null,
-         *         "unit_group": null,
+         *         "unit_value": {
+         *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "object": "rate",
+         *           "value": "25.500000000000000000000000000000",
+         *           "numerator_unit": {
+         *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *             "object": "unit",
+         *             "name": "US Dollar",
+         *             "abbreviation": "USD",
+         *             "type": "currency",
+         *             "ratio_numerator": "",
+         *             "ratio_denominator": "",
+         *             "offset_numerator": "",
+         *             "offset_denominator": "",
+         *             "is_base_unit": false,
+         *             "owner": null,
+         *             "created_at": "0001-01-01T00:00:00Z",
+         *             "updated_at": "0001-01-01T00:00:00Z"
+         *           },
+         *           "denominator_unit": {
+         *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *             "object": "unit",
+         *             "name": "Kilogram",
+         *             "abbreviation": "kg",
+         *             "type": "mass",
+         *             "ratio_numerator": "",
+         *             "ratio_denominator": "",
+         *             "offset_numerator": "",
+         *             "offset_denominator": "",
+         *             "is_base_unit": false,
+         *             "owner": null,
+         *             "created_at": "0001-01-01T00:00:00Z",
+         *             "updated_at": "0001-01-01T00:00:00Z"
+         *           },
+         *           "display_value": "$25.50 / kg",
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "updated_at": "2026-05-10T00:23:00Z"
+         *         },
+         *         "unit_cost": {
+         *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "object": "rate",
+         *           "value": "25.500000000000000000000000000000",
+         *           "numerator_unit": {
+         *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *             "object": "unit",
+         *             "name": "US Dollar",
+         *             "abbreviation": "USD",
+         *             "type": "currency",
+         *             "ratio_numerator": "",
+         *             "ratio_denominator": "",
+         *             "offset_numerator": "",
+         *             "offset_denominator": "",
+         *             "is_base_unit": false,
+         *             "owner": null,
+         *             "created_at": "0001-01-01T00:00:00Z",
+         *             "updated_at": "0001-01-01T00:00:00Z"
+         *           },
+         *           "denominator_unit": {
+         *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *             "object": "unit",
+         *             "name": "Kilogram",
+         *             "abbreviation": "kg",
+         *             "type": "mass",
+         *             "ratio_numerator": "",
+         *             "ratio_denominator": "",
+         *             "offset_numerator": "",
+         *             "offset_denominator": "",
+         *             "is_base_unit": false,
+         *             "owner": null,
+         *             "created_at": "0001-01-01T00:00:00Z",
+         *             "updated_at": "0001-01-01T00:00:00Z"
+         *           },
+         *           "display_value": "$25.50 / kg",
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "updated_at": "2026-05-10T00:23:00Z"
+         *         },
+         *         "burn_rate": {
+         *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+         *           "object": "rate",
+         *           "value": "25.500000000000000000000000000000",
+         *           "numerator_unit": {
+         *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *             "object": "unit",
+         *             "name": "US Dollar",
+         *             "abbreviation": "USD",
+         *             "type": "currency",
+         *             "ratio_numerator": "",
+         *             "ratio_denominator": "",
+         *             "offset_numerator": "",
+         *             "offset_denominator": "",
+         *             "is_base_unit": false,
+         *             "owner": null,
+         *             "created_at": "0001-01-01T00:00:00Z",
+         *             "updated_at": "0001-01-01T00:00:00Z"
+         *           },
+         *           "denominator_unit": {
+         *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *             "object": "unit",
+         *             "name": "Kilogram",
+         *             "abbreviation": "kg",
+         *             "type": "mass",
+         *             "ratio_numerator": "",
+         *             "ratio_denominator": "",
+         *             "offset_numerator": "",
+         *             "offset_denominator": "",
+         *             "is_base_unit": false,
+         *             "owner": null,
+         *             "created_at": "0001-01-01T00:00:00Z",
+         *             "updated_at": "0001-01-01T00:00:00Z"
+         *           },
+         *           "display_value": "$25.50 / kg",
+         *           "created_at": "2026-05-10T00:00:00Z",
+         *           "updated_at": "2026-05-10T00:23:00Z"
+         *         },
+         *         "attributes": {
+         *           "object": "list",
+         *           "page_info": {
+         *             "next_cursor": null,
+         *             "prev_cursor": null,
+         *             "has_next_page": false,
+         *             "has_prev_page": false
+         *           },
+         *           "data": [
+         *             {
+         *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+         *               "object": "attribute",
+         *               "value": "Premium",
+         *               "color": "red",
+         *               "sort_order": 1,
+         *               "created_at": "2026-05-10T00:00:00Z",
+         *               "updated_at": "2026-05-10T00:23:00Z"
+         *             }
+         *           ]
+         *         },
          *         "created_at": "2026-05-10T00:00:00Z",
          *         "updated_at": "2026-05-10T00:23:00Z"
          *       },
-         *       "unit_value": {
-         *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "object": "rate",
-         *         "value": "25.500000000000000000000000000000",
-         *         "numerator_unit": {
-         *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *           "object": "unit",
-         *           "name": "US Dollar",
-         *           "abbreviation": "USD",
-         *           "type": "currency",
-         *           "ratio_numerator": "",
-         *           "ratio_denominator": "",
-         *           "offset_numerator": "",
-         *           "offset_denominator": "",
-         *           "is_base_unit": false,
-         *           "owner": null,
-         *           "created_at": "0001-01-01T00:00:00Z",
-         *           "updated_at": "0001-01-01T00:00:00Z"
-         *         },
-         *         "denominator_unit": {
-         *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *           "object": "unit",
-         *           "name": "Kilogram",
-         *           "abbreviation": "kg",
-         *           "type": "mass",
-         *           "ratio_numerator": "",
-         *           "ratio_denominator": "",
-         *           "offset_numerator": "",
-         *           "offset_denominator": "",
-         *           "is_base_unit": false,
-         *           "owner": null,
-         *           "created_at": "0001-01-01T00:00:00Z",
-         *           "updated_at": "0001-01-01T00:00:00Z"
-         *         },
-         *         "display_value": "$25.50 / kg",
-         *         "created_at": "2026-05-10T00:00:00Z",
-         *         "updated_at": "2026-05-10T00:23:00Z"
-         *       },
-         *       "unit_cost": {
-         *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "object": "rate",
-         *         "value": "25.500000000000000000000000000000",
-         *         "numerator_unit": {
-         *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *           "object": "unit",
-         *           "name": "US Dollar",
-         *           "abbreviation": "USD",
-         *           "type": "currency",
-         *           "ratio_numerator": "",
-         *           "ratio_denominator": "",
-         *           "offset_numerator": "",
-         *           "offset_denominator": "",
-         *           "is_base_unit": false,
-         *           "owner": null,
-         *           "created_at": "0001-01-01T00:00:00Z",
-         *           "updated_at": "0001-01-01T00:00:00Z"
-         *         },
-         *         "denominator_unit": {
-         *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *           "object": "unit",
-         *           "name": "Kilogram",
-         *           "abbreviation": "kg",
-         *           "type": "mass",
-         *           "ratio_numerator": "",
-         *           "ratio_denominator": "",
-         *           "offset_numerator": "",
-         *           "offset_denominator": "",
-         *           "is_base_unit": false,
-         *           "owner": null,
-         *           "created_at": "0001-01-01T00:00:00Z",
-         *           "updated_at": "0001-01-01T00:00:00Z"
-         *         },
-         *         "display_value": "$25.50 / kg",
-         *         "created_at": "2026-05-10T00:00:00Z",
-         *         "updated_at": "2026-05-10T00:23:00Z"
-         *       },
-         *       "burn_rate": {
-         *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "object": "rate",
-         *         "value": "25.500000000000000000000000000000",
-         *         "numerator_unit": {
-         *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *           "object": "unit",
-         *           "name": "US Dollar",
-         *           "abbreviation": "USD",
-         *           "type": "currency",
-         *           "ratio_numerator": "",
-         *           "ratio_denominator": "",
-         *           "offset_numerator": "",
-         *           "offset_denominator": "",
-         *           "is_base_unit": false,
-         *           "owner": null,
-         *           "created_at": "0001-01-01T00:00:00Z",
-         *           "updated_at": "0001-01-01T00:00:00Z"
-         *         },
-         *         "denominator_unit": {
-         *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *           "object": "unit",
-         *           "name": "Kilogram",
-         *           "abbreviation": "kg",
-         *           "type": "mass",
-         *           "ratio_numerator": "",
-         *           "ratio_denominator": "",
-         *           "offset_numerator": "",
-         *           "offset_denominator": "",
-         *           "is_base_unit": false,
-         *           "owner": null,
-         *           "created_at": "0001-01-01T00:00:00Z",
-         *           "updated_at": "0001-01-01T00:00:00Z"
-         *         },
-         *         "display_value": "$25.50 / kg",
-         *         "created_at": "2026-05-10T00:00:00Z",
-         *         "updated_at": "2026-05-10T00:23:00Z"
-         *       },
-         *       "attributes": {
-         *         "object": "list",
-         *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
-         *           "has_next_page": false,
-         *           "has_prev_page": false
-         *         },
-         *         "data": [
-         *           {
-         *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-         *             "object": "attribute",
-         *             "value": "Premium",
-         *             "color": "red",
-         *             "sort_order": 1,
-         *             "created_at": "2026-05-10T00:00:00Z",
-         *             "updated_at": "2026-05-10T00:23:00Z"
-         *           }
-         *         ]
-         *       },
-         *       "is_dirty": false,
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z"
          *     }
@@ -28976,162 +28977,170 @@ export interface components {
              * @enum {string}
              */
             object: "part";
-            /** @description SKU. */
-            sku: string;
-            /** @description Description. */
-            description: string | null;
-            /** @description Notes. */
-            notes: string | null;
             /**
-             * @description Item category.
+             * @description Item.
              * @example {
-             *       "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-             *       "object": "item_category",
-             *       "name": "Electronics",
+             *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+             *       "object": "item",
+             *       "sku": "ALM-2024-1001",
+             *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
              *       "notes": null,
-             *       "type": "material_category",
-             *       "owner": {
-             *         "object": "owner",
-             *         "type": "system",
-             *         "account": null
+             *       "type": "product",
+             *       "category": {
+             *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "item_category",
+             *         "name": "Electronics",
+             *         "notes": null,
+             *         "type": "material_category",
+             *         "owner": {
+             *           "object": "owner",
+             *           "type": "system",
+             *           "account": null
+             *         },
+             *         "properties": null,
+             *         "unit_group": null,
+             *         "created_at": "2026-05-10T00:00:00Z",
+             *         "updated_at": "2026-05-10T00:23:00Z"
              *       },
-             *       "properties": null,
-             *       "unit_group": null,
+             *       "unit_value": {
+             *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "rate",
+             *         "value": "25.500000000000000000000000000000",
+             *         "numerator_unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "USD",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         },
+             *         "denominator_unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "Kilogram",
+             *           "abbreviation": "kg",
+             *           "type": "mass",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         },
+             *         "display_value": "$25.50 / kg",
+             *         "created_at": "2026-05-10T00:00:00Z",
+             *         "updated_at": "2026-05-10T00:23:00Z"
+             *       },
+             *       "unit_cost": {
+             *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "rate",
+             *         "value": "25.500000000000000000000000000000",
+             *         "numerator_unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "USD",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         },
+             *         "denominator_unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "Kilogram",
+             *           "abbreviation": "kg",
+             *           "type": "mass",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         },
+             *         "display_value": "$25.50 / kg",
+             *         "created_at": "2026-05-10T00:00:00Z",
+             *         "updated_at": "2026-05-10T00:23:00Z"
+             *       },
+             *       "burn_rate": {
+             *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "rate",
+             *         "value": "25.500000000000000000000000000000",
+             *         "numerator_unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "US Dollar",
+             *           "abbreviation": "USD",
+             *           "type": "currency",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         },
+             *         "denominator_unit": {
+             *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *           "object": "unit",
+             *           "name": "Kilogram",
+             *           "abbreviation": "kg",
+             *           "type": "mass",
+             *           "ratio_numerator": "",
+             *           "ratio_denominator": "",
+             *           "offset_numerator": "",
+             *           "offset_denominator": "",
+             *           "is_base_unit": false,
+             *           "owner": null,
+             *           "created_at": "0001-01-01T00:00:00Z",
+             *           "updated_at": "0001-01-01T00:00:00Z"
+             *         },
+             *         "display_value": "$25.50 / kg",
+             *         "created_at": "2026-05-10T00:00:00Z",
+             *         "updated_at": "2026-05-10T00:23:00Z"
+             *       },
+             *       "attributes": {
+             *         "object": "list",
+             *         "page_info": {
+             *           "next_cursor": null,
+             *           "prev_cursor": null,
+             *           "has_next_page": false,
+             *           "has_prev_page": false
+             *         },
+             *         "data": [
+             *           {
+             *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+             *             "object": "attribute",
+             *             "value": "Premium",
+             *             "color": "red",
+             *             "sort_order": 1,
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           }
+             *         ]
+             *       },
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
              */
-            category: components["schemas"]["ItemCategory"] | null;
-            /**
-             * @description Unit value rate.
-             * @example {
-             *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-             *       "object": "rate",
-             *       "value": "25.500000000000000000000000000000",
-             *       "numerator_unit": {
-             *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-             *         "object": "unit",
-             *         "name": "US Dollar",
-             *         "abbreviation": "USD",
-             *         "type": "currency",
-             *         "ratio_numerator": "",
-             *         "ratio_denominator": "",
-             *         "offset_numerator": "",
-             *         "offset_denominator": "",
-             *         "is_base_unit": false,
-             *         "owner": null,
-             *         "created_at": "0001-01-01T00:00:00Z",
-             *         "updated_at": "0001-01-01T00:00:00Z"
-             *       },
-             *       "denominator_unit": {
-             *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-             *         "object": "unit",
-             *         "name": "Kilogram",
-             *         "abbreviation": "kg",
-             *         "type": "mass",
-             *         "ratio_numerator": "",
-             *         "ratio_denominator": "",
-             *         "offset_numerator": "",
-             *         "offset_denominator": "",
-             *         "is_base_unit": false,
-             *         "owner": null,
-             *         "created_at": "0001-01-01T00:00:00Z",
-             *         "updated_at": "0001-01-01T00:00:00Z"
-             *       },
-             *       "display_value": "$25.50 / kg",
-             *       "created_at": "2026-05-10T00:00:00Z",
-             *       "updated_at": "2026-05-10T00:23:00Z"
-             *     }
-             */
-            unit_value: components["schemas"]["Rate"] | null;
-            /**
-             * @description Unit cost rate.
-             * @example {
-             *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-             *       "object": "rate",
-             *       "value": "25.500000000000000000000000000000",
-             *       "numerator_unit": {
-             *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-             *         "object": "unit",
-             *         "name": "US Dollar",
-             *         "abbreviation": "USD",
-             *         "type": "currency",
-             *         "ratio_numerator": "",
-             *         "ratio_denominator": "",
-             *         "offset_numerator": "",
-             *         "offset_denominator": "",
-             *         "is_base_unit": false,
-             *         "owner": null,
-             *         "created_at": "0001-01-01T00:00:00Z",
-             *         "updated_at": "0001-01-01T00:00:00Z"
-             *       },
-             *       "denominator_unit": {
-             *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-             *         "object": "unit",
-             *         "name": "Kilogram",
-             *         "abbreviation": "kg",
-             *         "type": "mass",
-             *         "ratio_numerator": "",
-             *         "ratio_denominator": "",
-             *         "offset_numerator": "",
-             *         "offset_denominator": "",
-             *         "is_base_unit": false,
-             *         "owner": null,
-             *         "created_at": "0001-01-01T00:00:00Z",
-             *         "updated_at": "0001-01-01T00:00:00Z"
-             *       },
-             *       "display_value": "$25.50 / kg",
-             *       "created_at": "2026-05-10T00:00:00Z",
-             *       "updated_at": "2026-05-10T00:23:00Z"
-             *     }
-             */
-            unit_cost: components["schemas"]["Rate"] | null;
-            /**
-             * @description Burn rate.
-             * @example {
-             *       "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-             *       "object": "rate",
-             *       "value": "25.500000000000000000000000000000",
-             *       "numerator_unit": {
-             *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-             *         "object": "unit",
-             *         "name": "US Dollar",
-             *         "abbreviation": "USD",
-             *         "type": "currency",
-             *         "ratio_numerator": "",
-             *         "ratio_denominator": "",
-             *         "offset_numerator": "",
-             *         "offset_denominator": "",
-             *         "is_base_unit": false,
-             *         "owner": null,
-             *         "created_at": "0001-01-01T00:00:00Z",
-             *         "updated_at": "0001-01-01T00:00:00Z"
-             *       },
-             *       "denominator_unit": {
-             *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-             *         "object": "unit",
-             *         "name": "Kilogram",
-             *         "abbreviation": "kg",
-             *         "type": "mass",
-             *         "ratio_numerator": "",
-             *         "ratio_denominator": "",
-             *         "offset_numerator": "",
-             *         "offset_denominator": "",
-             *         "is_base_unit": false,
-             *         "owner": null,
-             *         "created_at": "0001-01-01T00:00:00Z",
-             *         "updated_at": "0001-01-01T00:00:00Z"
-             *       },
-             *       "display_value": "$25.50 / kg",
-             *       "created_at": "2026-05-10T00:00:00Z",
-             *       "updated_at": "2026-05-10T00:23:00Z"
-             *     }
-             */
-            burn_rate: components["schemas"]["Rate"] | null;
-            /** @description Attributes. */
-            attributes: components["schemas"]["List_Attribute"] | null;
-            /** @description Whether the part has unsaved changes. */
-            is_dirty: boolean;
+            item: components["schemas"]["Item"] | null;
             /**
              * Format: date-time
              * @description Creation timestamp.
@@ -30456,17 +30465,10 @@ export interface components {
         /**
          * @description Product with expandable item, product line, and product type.
          * @example {
-         *       "id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+         *       "id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "product",
-         *       "is_portal_ready": true,
-         *       "product_type": {
-         *         "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "object": "product_type",
-         *         "name": "Sale",
-         *         "code": "sale",
-         *         "created_at": "2026-05-10T00:00:00Z",
-         *         "updated_at": "2026-05-10T00:23:00Z"
-         *       },
+         *       "type": "sale",
+         *       "portal_visibility": "visible",
          *       "product_line": {
          *         "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
          *         "object": "product_line",
@@ -30641,7 +30643,6 @@ export interface components {
          *             }
          *           ]
          *         },
-         *         "is_dirty": false,
          *         "created_at": "2026-05-10T00:00:00Z",
          *         "updated_at": "2026-05-10T00:23:00Z"
          *       },
@@ -30657,20 +30658,16 @@ export interface components {
              * @enum {string}
              */
             object: "product";
-            /** @description Whether visible on the customer portal. */
-            is_portal_ready: boolean;
             /**
-             * @description Product type.
-             * @example {
-             *       "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-             *       "object": "product_type",
-             *       "name": "Sale",
-             *       "code": "sale",
-             *       "created_at": "2026-05-10T00:00:00Z",
-             *       "updated_at": "2026-05-10T00:23:00Z"
-             *     }
+             * @description Product type code.
+             * @enum {string}
              */
-            product_type: components["schemas"]["ProductType"] | null;
+            type: "sale" | "service" | "shipping" | "credit" | "return" | "tax";
+            /**
+             * @description Product portal visibility.
+             * @enum {string}
+             */
+            portal_visibility: "visible" | "hidden";
             /**
              * @description Product line.
              * @example {
@@ -30851,7 +30848,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -30966,8 +30962,11 @@ export interface components {
             object: "product_type";
             /** @description Display name. */
             name: string;
-            /** @description Unique code. */
-            code: string;
+            /**
+             * @description Unique code.
+             * @enum {string}
+             */
+            code: "sale" | "service" | "shipping" | "credit" | "return" | "tax";
             /**
              * Format: date-time
              * @description Creation timestamp.
@@ -33562,7 +33561,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -34062,6 +34060,24 @@ export interface components {
              */
             updated_at: string;
         };
+        /**
+         * @description RateInput represents a rate (value with numerator and denominator units) for
+         *     create requests. Mirrors the gRPC CreateRateInput message — when a caller
+         *     passes a cost-typed rate (unit_price, unit_cost, labor_rate, overhead_rate),
+         *     the core service enforces that the numerator unit is currency and the
+         *     denominator unit is not.
+         */
+        RateInput: {
+            /**
+             * Format: decimal
+             * @description Decimal value of the rate.
+             */
+            value: string;
+            /** @description Numerator unit ID (e.g. the "$" in "$5/ea"). */
+            numerator_unit_id: string;
+            /** @description Denominator unit ID (e.g. the "ea" in "$5/ea"). */
+            denominator_unit_id: string;
+        };
         /** @description Rate shop option. */
         RateShopOption: {
             /**
@@ -34542,7 +34558,6 @@ export interface components {
              *                     }
              *                   ]
              *                 },
-             *                 "is_dirty": false,
              *                 "created_at": "2026-05-10T00:00:00Z",
              *                 "updated_at": "2026-05-10T00:23:00Z"
              *               }
@@ -35982,10 +35997,16 @@ export interface components {
          *     }
          */
         ResponseError: {
-            /** @description A machine-readable code for the error. */
-            code: string;
-            /** @description The type of error. */
-            type: string;
+            /**
+             * @description A machine-readable code for the error.
+             * @enum {string}
+             */
+            code: "expired_token" | "api_key_expired" | "api_key_revoked" | "invalid_credentials" | "insufficient_permissions" | "payment_required" | "validation_failed" | "missing_field" | "invalid_format" | "method_not_allowed" | "resource_not_found" | "resource_exists" | "resource_conflict" | "resource_gone" | "idempotency_in_progress" | "limit_exceeded" | "registration_closed" | "rate_limit_exceeded" | "parameter_missing" | "parameter_invalid" | "parameter_unknown" | "parameters_exclusive" | "internal_error" | "service_unavailable" | "external_service_error" | "timeout" | "connection_error" | "request_timeout" | "client_closed_request" | "api_version_required" | "api_version_invalid" | "api_version_too_old";
+            /**
+             * @description The type of error.
+             * @enum {string}
+             */
+            type: "api_error" | "idempotency_error" | "invalid_request_error";
             /** @description A human-readable message providing more details about the error. */
             message: string;
             /** @description The parameter that caused the error, if applicable. */
@@ -37130,7 +37151,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -37388,7 +37408,6 @@ export interface components {
              *           }
              *         ]
              *       },
-             *       "is_dirty": false,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
@@ -39502,7 +39521,6 @@ export interface components {
              *                     }
              *                   ]
              *                 },
-             *                 "is_dirty": false,
              *                 "created_at": "2026-05-10T00:00:00Z",
              *                 "updated_at": "2026-05-10T00:23:00Z"
              *               }
@@ -41337,7 +41355,6 @@ export interface components {
          *               }
          *             ]
          *           },
-         *           "is_dirty": false,
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         },
@@ -41565,7 +41582,6 @@ export interface components {
              *             }
              *           ]
              *         },
-             *         "is_dirty": false,
              *         "created_at": "2026-05-10T00:00:00Z",
              *         "updated_at": "2026-05-10T00:23:00Z"
              *       },
@@ -43752,7 +43768,7 @@ export interface components {
              * @enum {string}
              */
             default_priority?: "low" | "normal" | "high";
-            /** @description Default sales rep user ID. */
+            /** @description The ID of the account user to assign as the default sales rep. */
             default_sales_rep_user_id?: string | null;
             /** @description Bill-to address ID. */
             bill_to_address_id?: string | null;
@@ -44051,8 +44067,11 @@ export interface components {
             description?: string;
             /** @description Notes. */
             notes?: string;
-            /** @description Whether visible on the customer portal. */
-            is_portal_ready?: boolean;
+            /**
+             * @description Whether visible in the customer portal.
+             * @enum {string}
+             */
+            portal_visibility?: "visible" | "hidden";
         };
         /**
          * @description Request to partially update a product type.
@@ -44127,7 +44146,7 @@ export interface components {
         /**
          * @description Request to update a purchase order line.
          * @example {
-         *       "product_id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+         *       "product_id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "product_sku": "RAW-100",
          *       "quantity_value": "250",
          *       "unit_price_value": "15.00"
@@ -44280,7 +44299,7 @@ export interface components {
         /**
          * @description Request to update a sales order line.
          * @example {
-         *       "product_id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+         *       "product_id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "product_sku": "WIDGET-001",
          *       "quantity_value": "20",
          *       "unit_price_value": "30.00"
@@ -45024,8 +45043,7 @@ export interface components {
          *       "products": {
          *         "0": {
          *           "created_at": "2026-05-10T00:00:00Z",
-         *           "id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
-         *           "is_portal_ready": true,
+         *           "id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "item": {
          *             "attributes": {
          *               "data": [
@@ -45104,7 +45122,6 @@ export interface components {
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
          *             "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-         *             "is_dirty": false,
          *             "notes": null,
          *             "object": "item",
          *             "sku": "ALM-2024-1001",
@@ -45188,6 +45205,7 @@ export interface components {
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           },
          *           "object": "product",
+         *           "portal_visibility": "visible",
          *           "product_line": {
          *             "commission_policy": "commission_exempt",
          *             "created_at": "2026-05-10T00:00:00Z",
@@ -45205,14 +45223,7 @@ export interface components {
          *             "unit_group": null,
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           },
-         *           "product_type": {
-         *             "code": "sale",
-         *             "created_at": "2026-05-10T00:00:00Z",
-         *             "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-         *             "name": "Sale",
-         *             "object": "product_type",
-         *             "updated_at": "2026-05-10T00:23:00Z"
-         *           },
+         *           "type": "sale",
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         }
          *       }
@@ -45234,8 +45245,6 @@ export interface components {
                     created_at: string;
                     /** @description Product ID. */
                     id: string;
-                    /** @description Whether visible on the customer portal. */
-                    is_portal_ready: boolean;
                     /**
                      * @description Item.
                      * @example {
@@ -45316,7 +45325,6 @@ export interface components {
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *       "is_dirty": false,
                      *       "notes": null,
                      *       "object": "item",
                      *       "sku": "ALM-2024-1001",
@@ -45407,6 +45415,11 @@ export interface components {
                      */
                     object: "product";
                     /**
+                     * @description Product portal visibility.
+                     * @enum {string}
+                     */
+                    portal_visibility: "visible" | "hidden";
+                    /**
                      * @description Product line.
                      * @example {
                      *       "commission_policy": "commission_exempt",
@@ -45428,17 +45441,10 @@ export interface components {
                      */
                     product_line: components["schemas"]["ProductLine"] | null;
                     /**
-                     * @description Product type.
-                     * @example {
-                     *       "code": "sale",
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *       "name": "Sale",
-                     *       "object": "product_type",
-                     *       "updated_at": "2026-05-10T00:23:00Z"
-                     *     }
+                     * @description Product type code.
+                     * @enum {string}
                      */
-                    product_type: components["schemas"]["ProductType"] | null;
+                    type: "sale" | "service" | "shipping" | "credit" | "return" | "tax";
                     /**
                      * Format: date-time
                      * @description Last updated timestamp.
@@ -50142,7 +50148,6 @@ export interface operations {
                      *                 "unit_cost": null,
                      *                 "burn_rate": null,
                      *                 "attributes": null,
-                     *                 "is_dirty": false,
                      *                 "created_at": "0001-01-01T00:00:00Z",
                      *                 "updated_at": "0001-01-01T00:00:00Z"
                      *               },
@@ -50631,7 +50636,7 @@ export interface operations {
                  *       "category"
                  *     ]
                  */
-                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate")[];
+                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate" | "attributes")[];
             };
             header?: never;
             path?: never;
@@ -50812,7 +50817,6 @@ export interface operations {
                      *               }
                      *             ]
                      *           },
-                     *           "is_dirty": false,
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         }
@@ -50969,7 +50973,7 @@ export interface operations {
                  *       "category"
                  *     ]
                  */
-                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate")[];
+                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate" | "attributes")[];
             };
             header?: never;
             path: {
@@ -51144,7 +51148,6 @@ export interface operations {
                      *           }
                      *         ]
                      *       },
-                     *       "is_dirty": false,
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -52036,10 +52039,10 @@ export interface operations {
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
-                 *       "product_type"
+                 *       "product_line"
                  *     ]
                  */
-                "include[]"?: ("product_type" | "product_line" | "product_line.unit_group" | "item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+                "include[]"?: ("product_line" | "product_line.unit_group" | "item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
             };
             header?: never;
             path?: never;
@@ -52057,24 +52060,17 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "next_cursor": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "prev_cursor": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
                      *       "data": [
                      *         {
-                     *           "id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "product",
-                     *           "is_portal_ready": true,
-                     *           "product_type": {
-                     *             "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "product_type",
-                     *             "name": "Sale",
-                     *             "code": "sale",
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           },
+                     *           "type": "sale",
+                     *           "portal_visibility": "visible",
                      *           "product_line": {
                      *             "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "product_line",
@@ -52249,7 +52245,6 @@ export interface operations {
                      *                 }
                      *               ]
                      *             },
-                     *             "is_dirty": false,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
@@ -52290,11 +52285,7 @@ export interface operations {
                  *       "notes": null,
                  *       "type": "sale",
                  *       "product_line_id": null,
-                 *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                 *       "is_portal_ready": true,
-                 *       "unit_price": null,
-                 *       "unit_cost": null,
-                 *       "burn_rate": null
+                 *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp"
                  *     }
                  */
                 "application/json": components["schemas"]["CreateProductRequest"];
@@ -52309,17 +52300,10 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "product",
-                     *       "is_portal_ready": true,
-                     *       "product_type": {
-                     *         "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "product_type",
-                     *         "name": "Sale",
-                     *         "code": "sale",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
+                     *       "type": "sale",
+                     *       "portal_visibility": "visible",
                      *       "product_line": {
                      *         "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "object": "product_line",
@@ -52494,7 +52478,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -52549,8 +52532,7 @@ export interface operations {
                      *       "products": {
                      *         "0": {
                      *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "is_portal_ready": true,
+                     *           "id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "item": {
                      *             "attributes": {
                      *               "data": [
@@ -52629,7 +52611,6 @@ export interface operations {
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *             "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "is_dirty": false,
                      *             "notes": null,
                      *             "object": "item",
                      *             "sku": "ALM-2024-1001",
@@ -52713,6 +52694,7 @@ export interface operations {
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
                      *           "object": "product",
+                     *           "portal_visibility": "visible",
                      *           "product_line": {
                      *             "commission_policy": "commission_exempt",
                      *             "created_at": "2026-05-10T00:00:00Z",
@@ -52730,14 +52712,7 @@ export interface operations {
                      *             "unit_group": null,
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
-                     *           "product_type": {
-                     *             "code": "sale",
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "name": "Sale",
-                     *             "object": "product_type",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           },
+                     *           "type": "sale",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         }
                      *       }
@@ -52763,10 +52738,10 @@ export interface operations {
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
-                 *       "product_type"
+                 *       "product_line"
                  *     ]
                  */
-                "include[]"?: ("product_type" | "product_line" | "product_line.unit_group" | "item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+                "include[]"?: ("product_line" | "product_line.unit_group" | "item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
             };
             header?: never;
             path: {
@@ -52785,17 +52760,10 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "product",
-                     *       "is_portal_ready": true,
-                     *       "product_type": {
-                     *         "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "product_type",
-                     *         "name": "Sale",
-                     *         "code": "sale",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
+                     *       "type": "sale",
+                     *       "portal_visibility": "visible",
                      *       "product_line": {
                      *         "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "object": "product_line",
@@ -52970,7 +52938,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -53012,17 +52979,10 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "product",
-                     *       "is_portal_ready": true,
-                     *       "product_type": {
-                     *         "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "product_type",
-                     *         "name": "Sale",
-                     *         "code": "sale",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
+                     *       "type": "sale",
+                     *       "portal_visibility": "visible",
                      *       "product_line": {
                      *         "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "object": "product_line",
@@ -53197,7 +53157,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -53249,17 +53208,10 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "product",
-                     *       "is_portal_ready": true,
-                     *       "product_type": {
-                     *         "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "product_type",
-                     *         "name": "Sale",
-                     *         "code": "sale",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
+                     *       "type": "sale",
+                     *       "portal_visibility": "visible",
                      *       "product_line": {
                      *         "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "object": "product_line",
@@ -53434,7 +53386,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -53478,17 +53429,10 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "product",
-                     *       "is_portal_ready": true,
-                     *       "product_type": {
-                     *         "id": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "product_type",
-                     *         "name": "Sale",
-                     *         "code": "sale",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
+                     *       "type": "sale",
+                     *       "portal_visibility": "visible",
                      *       "product_line": {
                      *         "id": "pl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "object": "product_line",
@@ -53663,7 +53607,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -56005,7 +55948,7 @@ export interface operations {
                  */
                 "resource_ids[]"?: string[];
                 /**
-                 * @description Actor identifier. `user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
+                 * @description Actor identifier. `account_user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
                  * @example []
                  */
                 "actor_ids[]"?: string[];
@@ -56527,16 +56470,18 @@ export interface operations {
                 "status_codes[]"?: number[];
                 /**
                  * @description API error codes.
-                 * @example []
+                 * @example [
+                 *       "expired_token"
+                 *     ]
                  */
-                "error_codes[]"?: string[];
+                "error_codes[]"?: ("expired_token" | "api_key_expired" | "api_key_revoked" | "invalid_credentials" | "insufficient_permissions" | "payment_required" | "validation_failed" | "missing_field" | "invalid_format" | "method_not_allowed" | "resource_not_found" | "resource_exists" | "resource_conflict" | "resource_gone" | "idempotency_in_progress" | "limit_exceeded" | "registration_closed" | "rate_limit_exceeded" | "parameter_missing" | "parameter_invalid" | "parameter_unknown" | "parameters_exclusive" | "internal_error" | "service_unavailable" | "external_service_error" | "timeout" | "connection_error" | "request_timeout" | "client_closed_request" | "api_version_required" | "api_version_invalid" | "api_version_too_old")[];
                 /**
                  * @description Actor home account IDs.
                  * @example []
                  */
                 "account_ids[]"?: string[];
                 /**
-                 * @description Actor identifier. `user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
+                 * @description Actor identifier. `account_user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
                  * @example []
                  */
                 "actor_ids[]"?: string[];
@@ -58122,7 +58067,6 @@ export interface operations {
                      *                     }
                      *                   ]
                      *                 },
-                     *                 "is_dirty": false,
                      *                 "created_at": "2026-05-10T00:00:00Z",
                      *                 "updated_at": "2026-05-10T00:23:00Z"
                      *               }
@@ -62230,7 +62174,6 @@ export interface operations {
                      *             "unit_cost": null,
                      *             "burn_rate": null,
                      *             "attributes": null,
-                     *             "is_dirty": false,
                      *             "created_at": "0001-01-01T00:00:00Z",
                      *             "updated_at": "0001-01-01T00:00:00Z"
                      *           },
@@ -62496,7 +62439,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -62907,7 +62849,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -63321,7 +63262,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -63735,7 +63675,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -64157,7 +64096,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -64625,7 +64563,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -65039,7 +64976,6 @@ export interface operations {
                      *                   }
                      *                 ]
                      *               },
-                     *               "is_dirty": false,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
                      *             },
@@ -66564,7 +66500,6 @@ export interface operations {
                      *               "unit_cost": null,
                      *               "burn_rate": null,
                      *               "attributes": null,
-                     *               "is_dirty": false,
                      *               "created_at": "0001-01-01T00:00:00Z",
                      *               "updated_at": "0001-01-01T00:00:00Z"
                      *             },
@@ -67707,7 +67642,6 @@ export interface operations {
                      *                 }
                      *               ]
                      *             },
-                     *             "is_dirty": false,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
@@ -68020,7 +67954,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -68960,7 +68893,6 @@ export interface operations {
                      *                 }
                      *               ]
                      *             },
-                     *             "is_dirty": false,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
@@ -69215,7 +69147,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -69468,7 +69399,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -69713,7 +69643,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -69968,7 +69897,6 @@ export interface operations {
                      *             }
                      *           ]
                      *         },
-                     *         "is_dirty": false,
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
@@ -70075,10 +70003,10 @@ export interface operations {
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
-                 *       "category"
+                 *       "item"
                  *     ]
                  */
-                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate")[];
+                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
             };
             header?: never;
             path?: never;
@@ -70096,169 +70024,175 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "it_02kn5s7811g9qwce7cizr4e0mq",
+                     *         "next_cursor": "pt_02kn5s7811g9qwce7cizr4e0mq",
                      *         "prev_cursor": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
                      *       "data": [
                      *         {
-                     *           "id": "it_02kn5s7811g9qwce7cizr4e0mq",
+                     *           "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
                      *           "object": "part",
-                     *           "sku": "BRG-6204-2RS",
-                     *           "description": "Sealed ball bearing, 20mm bore, 47mm OD",
-                     *           "notes": null,
-                     *           "category": {
-                     *             "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "item_category",
-                     *             "name": "Electronics",
+                     *           "item": {
+                     *             "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "item",
+                     *             "sku": "ALM-2024-1001",
+                     *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *             "notes": null,
-                     *             "type": "material_category",
-                     *             "owner": {
-                     *               "object": "owner",
-                     *               "type": "system",
-                     *               "account": null
+                     *             "type": "product",
+                     *             "category": {
+                     *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "item_category",
+                     *               "name": "Electronics",
+                     *               "notes": null,
+                     *               "type": "material_category",
+                     *               "owner": {
+                     *                 "object": "owner",
+                     *                 "type": "system",
+                     *                 "account": null
+                     *               },
+                     *               "properties": null,
+                     *               "unit_group": null,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
                      *             },
-                     *             "properties": null,
-                     *             "unit_group": null,
+                     *             "unit_value": {
+                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "rate",
+                     *               "value": "25.500000000000000000000000000000",
+                     *               "numerator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "US Dollar",
+                     *                 "abbreviation": "USD",
+                     *                 "type": "currency",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "denominator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "Kilogram",
+                     *                 "abbreviation": "kg",
+                     *                 "type": "mass",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "display_value": "$25.50 / kg",
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "unit_cost": {
+                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "rate",
+                     *               "value": "25.500000000000000000000000000000",
+                     *               "numerator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "US Dollar",
+                     *                 "abbreviation": "USD",
+                     *                 "type": "currency",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "denominator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "Kilogram",
+                     *                 "abbreviation": "kg",
+                     *                 "type": "mass",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "display_value": "$25.50 / kg",
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "burn_rate": {
+                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "rate",
+                     *               "value": "25.500000000000000000000000000000",
+                     *               "numerator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "US Dollar",
+                     *                 "abbreviation": "USD",
+                     *                 "type": "currency",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "denominator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "Kilogram",
+                     *                 "abbreviation": "kg",
+                     *                 "type": "mass",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "display_value": "$25.50 / kg",
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "attributes": {
+                     *               "object": "list",
+                     *               "page_info": {
+                     *                 "next_cursor": null,
+                     *                 "prev_cursor": null,
+                     *                 "has_next_page": false,
+                     *                 "has_prev_page": false
+                     *               },
+                     *               "data": [
+                     *                 {
+                     *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                   "object": "attribute",
+                     *                   "value": "Premium",
+                     *                   "color": "red",
+                     *                   "sort_order": 1,
+                     *                   "created_at": "2026-05-10T00:00:00Z",
+                     *                   "updated_at": "2026-05-10T00:23:00Z"
+                     *                 }
+                     *               ]
+                     *             },
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
-                     *           "unit_value": {
-                     *             "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "rate",
-                     *             "value": "25.500000000000000000000000000000",
-                     *             "numerator_unit": {
-                     *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "unit",
-                     *               "name": "US Dollar",
-                     *               "abbreviation": "USD",
-                     *               "type": "currency",
-                     *               "ratio_numerator": "",
-                     *               "ratio_denominator": "",
-                     *               "offset_numerator": "",
-                     *               "offset_denominator": "",
-                     *               "is_base_unit": false,
-                     *               "owner": null,
-                     *               "created_at": "0001-01-01T00:00:00Z",
-                     *               "updated_at": "0001-01-01T00:00:00Z"
-                     *             },
-                     *             "denominator_unit": {
-                     *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "unit",
-                     *               "name": "Kilogram",
-                     *               "abbreviation": "kg",
-                     *               "type": "mass",
-                     *               "ratio_numerator": "",
-                     *               "ratio_denominator": "",
-                     *               "offset_numerator": "",
-                     *               "offset_denominator": "",
-                     *               "is_base_unit": false,
-                     *               "owner": null,
-                     *               "created_at": "0001-01-01T00:00:00Z",
-                     *               "updated_at": "0001-01-01T00:00:00Z"
-                     *             },
-                     *             "display_value": "$25.50 / kg",
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           },
-                     *           "unit_cost": {
-                     *             "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "rate",
-                     *             "value": "25.500000000000000000000000000000",
-                     *             "numerator_unit": {
-                     *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "unit",
-                     *               "name": "US Dollar",
-                     *               "abbreviation": "USD",
-                     *               "type": "currency",
-                     *               "ratio_numerator": "",
-                     *               "ratio_denominator": "",
-                     *               "offset_numerator": "",
-                     *               "offset_denominator": "",
-                     *               "is_base_unit": false,
-                     *               "owner": null,
-                     *               "created_at": "0001-01-01T00:00:00Z",
-                     *               "updated_at": "0001-01-01T00:00:00Z"
-                     *             },
-                     *             "denominator_unit": {
-                     *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "unit",
-                     *               "name": "Kilogram",
-                     *               "abbreviation": "kg",
-                     *               "type": "mass",
-                     *               "ratio_numerator": "",
-                     *               "ratio_denominator": "",
-                     *               "offset_numerator": "",
-                     *               "offset_denominator": "",
-                     *               "is_base_unit": false,
-                     *               "owner": null,
-                     *               "created_at": "0001-01-01T00:00:00Z",
-                     *               "updated_at": "0001-01-01T00:00:00Z"
-                     *             },
-                     *             "display_value": "$25.50 / kg",
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           },
-                     *           "burn_rate": {
-                     *             "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "rate",
-                     *             "value": "25.500000000000000000000000000000",
-                     *             "numerator_unit": {
-                     *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "unit",
-                     *               "name": "US Dollar",
-                     *               "abbreviation": "USD",
-                     *               "type": "currency",
-                     *               "ratio_numerator": "",
-                     *               "ratio_denominator": "",
-                     *               "offset_numerator": "",
-                     *               "offset_denominator": "",
-                     *               "is_base_unit": false,
-                     *               "owner": null,
-                     *               "created_at": "0001-01-01T00:00:00Z",
-                     *               "updated_at": "0001-01-01T00:00:00Z"
-                     *             },
-                     *             "denominator_unit": {
-                     *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "unit",
-                     *               "name": "Kilogram",
-                     *               "abbreviation": "kg",
-                     *               "type": "mass",
-                     *               "ratio_numerator": "",
-                     *               "ratio_denominator": "",
-                     *               "offset_numerator": "",
-                     *               "offset_denominator": "",
-                     *               "is_base_unit": false,
-                     *               "owner": null,
-                     *               "created_at": "0001-01-01T00:00:00Z",
-                     *               "updated_at": "0001-01-01T00:00:00Z"
-                     *             },
-                     *             "display_value": "$25.50 / kg",
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           },
-                     *           "attributes": {
-                     *             "object": "list",
-                     *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
-                     *               "has_next_page": false,
-                     *               "has_prev_page": false
-                     *             },
-                     *             "data": [
-                     *               {
-                     *                 "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "attribute",
-                     *                 "value": "Premium",
-                     *                 "color": "red",
-                     *                 "sort_order": 1,
-                     *                 "created_at": "2026-05-10T00:00:00Z",
-                     *                 "updated_at": "2026-05-10T00:23:00Z"
-                     *               }
-                     *             ]
-                     *           },
-                     *           "is_dirty": false,
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         }
@@ -70285,10 +70219,10 @@ export interface operations {
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
-                 *       "category"
+                 *       "item"
                  *     ]
                  */
-                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate")[];
+                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
             };
             header?: never;
             path?: never;
@@ -70316,162 +70250,168 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "id": "it_02kn5s7811g9qwce7cizr4e0mq",
+                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
                      *       "object": "part",
-                     *       "sku": "BRG-6204-2RS",
-                     *       "description": "Sealed ball bearing, 20mm bore, 47mm OD",
-                     *       "notes": null,
-                     *       "category": {
-                     *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item_category",
-                     *         "name": "Electronics",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "type": "material_category",
-                     *         "owner": {
-                     *           "object": "owner",
-                     *           "type": "system",
-                     *           "account": null
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
-                     *         "properties": null,
-                     *         "unit_group": null,
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
-                     *       "unit_value": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "unit_cost": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "burn_rate": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "attributes": {
-                     *         "object": "list",
-                     *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
-                     *           "has_next_page": false,
-                     *           "has_prev_page": false
-                     *         },
-                     *         "data": [
-                     *           {
-                     *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "attribute",
-                     *             "value": "Premium",
-                     *             "color": "red",
-                     *             "sort_order": 1,
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           }
-                     *         ]
-                     *       },
-                     *       "is_dirty": false,
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -70496,10 +70436,10 @@ export interface operations {
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
-                 *       "category"
+                 *       "item"
                  *     ]
                  */
-                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate")[];
+                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
             };
             header?: never;
             path: {
@@ -70518,162 +70458,168 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "id": "it_02kn5s7811g9qwce7cizr4e0mq",
+                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
                      *       "object": "part",
-                     *       "sku": "BRG-6204-2RS",
-                     *       "description": "Sealed ball bearing, 20mm bore, 47mm OD",
-                     *       "notes": null,
-                     *       "category": {
-                     *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item_category",
-                     *         "name": "Electronics",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "type": "material_category",
-                     *         "owner": {
-                     *           "object": "owner",
-                     *           "type": "system",
-                     *           "account": null
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
-                     *         "properties": null,
-                     *         "unit_group": null,
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
-                     *       "unit_value": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "unit_cost": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "burn_rate": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "attributes": {
-                     *         "object": "list",
-                     *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
-                     *           "has_next_page": false,
-                     *           "has_prev_page": false
-                     *         },
-                     *         "data": [
-                     *           {
-                     *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "attribute",
-                     *             "value": "Premium",
-                     *             "color": "red",
-                     *             "sort_order": 1,
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           }
-                     *         ]
-                     *       },
-                     *       "is_dirty": false,
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -70712,162 +70658,168 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "id": "it_02kn5s7811g9qwce7cizr4e0mq",
+                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
                      *       "object": "part",
-                     *       "sku": "BRG-6204-2RS",
-                     *       "description": "Sealed ball bearing, 20mm bore, 47mm OD",
-                     *       "notes": null,
-                     *       "category": {
-                     *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item_category",
-                     *         "name": "Electronics",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "type": "material_category",
-                     *         "owner": {
-                     *           "object": "owner",
-                     *           "type": "system",
-                     *           "account": null
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
-                     *         "properties": null,
-                     *         "unit_group": null,
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
-                     *       "unit_value": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "unit_cost": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "burn_rate": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "attributes": {
-                     *         "object": "list",
-                     *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
-                     *           "has_next_page": false,
-                     *           "has_prev_page": false
-                     *         },
-                     *         "data": [
-                     *           {
-                     *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "attribute",
-                     *             "value": "Premium",
-                     *             "color": "red",
-                     *             "sort_order": 1,
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           }
-                     *         ]
-                     *       },
-                     *       "is_dirty": false,
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -70892,10 +70844,10 @@ export interface operations {
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
-                 *       "category"
+                 *       "item"
                  *     ]
                  */
-                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate")[];
+                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
             };
             header?: never;
             path: {
@@ -70926,162 +70878,168 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "id": "it_02kn5s7811g9qwce7cizr4e0mq",
+                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
                      *       "object": "part",
-                     *       "sku": "BRG-6204-2RS",
-                     *       "description": "Sealed ball bearing, 20mm bore, 47mm OD",
-                     *       "notes": null,
-                     *       "category": {
-                     *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item_category",
-                     *         "name": "Electronics",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
                      *         "notes": null,
-                     *         "type": "material_category",
-                     *         "owner": {
-                     *           "object": "owner",
-                     *           "type": "system",
-                     *           "account": null
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
-                     *         "properties": null,
-                     *         "unit_group": null,
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
                      *         "created_at": "2026-05-10T00:00:00Z",
                      *         "updated_at": "2026-05-10T00:23:00Z"
                      *       },
-                     *       "unit_value": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "unit_cost": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "burn_rate": {
-                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "rate",
-                     *         "value": "25.500000000000000000000000000000",
-                     *         "numerator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "US Dollar",
-                     *           "abbreviation": "USD",
-                     *           "type": "currency",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "denominator_unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "",
-                     *           "ratio_denominator": "",
-                     *           "offset_numerator": "",
-                     *           "offset_denominator": "",
-                     *           "is_base_unit": false,
-                     *           "owner": null,
-                     *           "created_at": "0001-01-01T00:00:00Z",
-                     *           "updated_at": "0001-01-01T00:00:00Z"
-                     *         },
-                     *         "display_value": "$25.50 / kg",
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "attributes": {
-                     *         "object": "list",
-                     *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
-                     *           "has_next_page": false,
-                     *           "has_prev_page": false
-                     *         },
-                     *         "data": [
-                     *           {
-                     *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "attribute",
-                     *             "value": "Premium",
-                     *             "color": "red",
-                     *             "sort_order": 1,
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           }
-                     *         ]
-                     *       },
-                     *       "is_dirty": false,
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -73210,7 +73168,6 @@ export interface operations {
                      *                 }
                      *               ]
                      *             },
-                     *             "is_dirty": false,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
@@ -73646,7 +73603,6 @@ export interface operations {
                      *                 }
                      *               ]
                      *             },
-                     *             "is_dirty": false,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
@@ -75597,7 +75553,7 @@ export interface operations {
                  *       "ship_to_country": "US",
                  *       "lines": [
                  *         {
-                 *           "product_id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+                 *           "product_id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                  *           "product_sku": "RAW-100",
                  *           "quantity_unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
                  *           "quantity_value": "500",
@@ -76776,7 +76732,7 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "product_id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+                 *       "product_id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                  *       "product_sku": "RAW-100",
                  *       "quantity_value": "250",
                  *       "unit_price_value": "15.00"
@@ -78726,7 +78682,6 @@ export interface operations {
                      *                 }
                      *               ]
                      *             },
-                     *             "is_dirty": false,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
@@ -81242,7 +81197,6 @@ export interface operations {
                      *                   }
                      *                 ]
                      *               },
-                     *               "is_dirty": false,
                      *               "created_at": "2026-05-10T00:00:00Z",
                      *               "updated_at": "2026-05-10T00:23:00Z"
                      *             },
@@ -81510,7 +81464,6 @@ export interface operations {
                      *               }
                      *             ]
                      *           },
-                     *           "is_dirty": false,
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
@@ -81774,7 +81727,6 @@ export interface operations {
                      *               }
                      *             ]
                      *           },
-                     *           "is_dirty": false,
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
@@ -82030,7 +81982,6 @@ export interface operations {
                      *               }
                      *             ]
                      *           },
-                     *           "is_dirty": false,
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
@@ -82296,7 +82247,6 @@ export interface operations {
                      *               }
                      *             ]
                      *           },
-                     *           "is_dirty": false,
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
@@ -85942,7 +85892,6 @@ export interface operations {
                      *             "unit_cost": null,
                      *             "burn_rate": null,
                      *             "attributes": null,
-                     *             "is_dirty": false,
                      *             "created_at": "0001-01-01T00:00:00Z",
                      *             "updated_at": "0001-01-01T00:00:00Z"
                      *           },
@@ -88704,7 +88653,7 @@ export interface operations {
                  *       "ship_to_country": "US",
                  *       "lines": [
                  *         {
-                 *           "product_id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+                 *           "product_id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                  *           "product_sku": "WIDGET-001",
                  *           "quantity_unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
                  *           "quantity_value": "10",
@@ -90085,7 +90034,7 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "product_id": "pr_01jm4r6700f8nwq3v5hx2d9ktp",
+                 *       "product_id": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
                  *       "product_sku": "WIDGET-001",
                  *       "quantity_value": "20",
                  *       "unit_price_value": "30.00"
