@@ -1320,6 +1320,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/catalog/materials/actions/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Export Materials
+         * @description Exports all matching materials as an Excel file.
+         */
+        get: operations["export-materials"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/catalog/materials/{id}": {
         parameters: {
             query?: never;
@@ -1366,6 +1386,26 @@ export interface paths {
          * @description Creates a part with the specified SKU and category.
          */
         post: operations["create-part"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/parts/actions/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Export Parts
+         * @description Exports all matching parts as an Excel file.
+         */
+        get: operations["export-parts"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1522,6 +1562,26 @@ export interface paths {
          * @description Creates a product.
          */
         post: operations["create-product"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/products/actions/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Export Products
+         * @description Exports all matching products as an Excel file.
+         */
+        get: operations["export-products"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -53368,6 +53428,61 @@ export interface operations {
             };
         };
     };
+    "export-materials": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Optional search query.
+                 * @example example
+                 */
+                q?: string;
+                /**
+                 * @description Filter by category IDs.
+                 * @example []
+                 */
+                "category_ids[]"?: string[];
+                /**
+                 * @description Filter by attribute IDs.
+                 * @example []
+                 */
+                "attribute_ids[]"?: string[];
+                /**
+                 * @description Start of creation date range.
+                 * @example example
+                 */
+                start_date?: string;
+                /**
+                 * @description End of creation date range.
+                 * @example example
+                 */
+                end_date?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Export Materials */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileDownload"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
     "retrieve-material": {
         parameters: {
             query?: {
@@ -54581,6 +54696,61 @@ export interface operations {
                      *     }
                      */
                     "application/json": components["schemas"]["Part"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "export-parts": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Optional search query.
+                 * @example example
+                 */
+                q?: string;
+                /**
+                 * @description Filter by category IDs.
+                 * @example []
+                 */
+                "category_ids[]"?: string[];
+                /**
+                 * @description Filter by attribute IDs.
+                 * @example []
+                 */
+                "attribute_ids[]"?: string[];
+                /**
+                 * @description Start of creation date range.
+                 * @example example
+                 */
+                start_date?: string;
+                /**
+                 * @description End of creation date range.
+                 * @example example
+                 */
+                end_date?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Export Parts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileDownload"];
                 };
             };
             /** @description Error response */
@@ -56251,6 +56421,71 @@ export interface operations {
                      *     }
                      */
                     "application/json": components["schemas"]["Product"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "export-products": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Optional search query.
+                 * @example example
+                 */
+                q?: string;
+                /**
+                 * @description Filter by category IDs.
+                 * @example []
+                 */
+                "category_ids[]"?: string[];
+                /**
+                 * @description Filter by attribute IDs.
+                 * @example []
+                 */
+                "attribute_ids[]"?: string[];
+                /**
+                 * @description Filter by product line IDs.
+                 * @example []
+                 */
+                "product_line_ids[]"?: string[];
+                /**
+                 * @description Filter by customer IDs.
+                 * @example []
+                 */
+                "customer_ids[]"?: string[];
+                /**
+                 * @description Start of creation date range.
+                 * @example example
+                 */
+                start_date?: string;
+                /**
+                 * @description End of creation date range.
+                 * @example example
+                 */
+                end_date?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Export Products */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileDownload"];
                 };
             };
             /** @description Error response */
