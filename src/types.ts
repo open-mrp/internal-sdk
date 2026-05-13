@@ -56,10 +56,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Agent
+         * Retrieve Agent
          * @description Returns an agent definition by ID.
          */
-        get: operations["get-agent"];
+        get: operations["retrieve-agent"];
         put?: never;
         post?: never;
         /**
@@ -124,10 +124,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Agent Alert
+         * Retrieve Agent Alert
          * @description Returns an agent alert by ID.
          */
-        get: operations["get-agent-alert"];
+        get: operations["retrieve-agent-alert"];
         put?: never;
         post?: never;
         delete?: never;
@@ -188,10 +188,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Agent Memory
+         * Retrieve Agent Memory
          * @description Returns an agent memory by ID.
          */
-        get: operations["get-agent-memory"];
+        get: operations["retrieve-agent-memory"];
         put?: never;
         post?: never;
         /**
@@ -240,10 +240,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Run
+         * Retrieve Run
          * @description Returns an agent run by ID.
          */
-        get: operations["get-run"];
+        get: operations["retrieve-run"];
         put?: never;
         post?: never;
         delete?: never;
@@ -464,10 +464,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get API Key
+         * Retrieve API Key
          * @description Returns API key metadata by ID.
          */
-        get: operations["get-api-key"];
+        get: operations["retrieve-api-key"];
         put?: never;
         post?: never;
         /**
@@ -612,10 +612,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Registration Session
+         * Retrieve Registration Session
          * @description Returns a registration session by ID, including its current step and associated user and account details.
          */
-        get: operations["get-registration-session"];
+        get: operations["retrieve-registration-session"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1024,10 +1024,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Item Category
+         * Retrieve Item Category
          * @description Returns an item category by ID. Includes account-specific and global system categories.
          */
-        get: operations["get-item-category"];
+        get: operations["retrieve-item-category"];
         put?: never;
         post?: never;
         /**
@@ -1176,11 +1176,55 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Item
+         * Retrieve Item
          * @description Returns an item by ID.
          */
-        get: operations["get-item"];
+        get: operations["retrieve-item"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/items/{id}/attributes/{attribute_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Add Item Attribute
+         * @description Adds an attribute to an item. If the attribute is already associated with the item, this is a no-op.
+         */
+        put: operations["add-item-attribute"];
+        post?: never;
+        /**
+         * Remove Item Attribute
+         * @description Removes an attribute from an item.
+         */
+        delete: operations["remove-item-attribute"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/items/{id}/category/{category_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change Item Category
+         * @description Changes the category of an item. When the category changes, the item's rate units are updated to the new category's base unit.
+         */
+        put: operations["change-item-category"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1216,10 +1260,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Item Inventory
+         * Retrieve Item Inventory
          * @description Returns inventory quantities for an item, including on-hand, reserved, available-to-promise, and short amounts.
          */
-        get: operations["get-item-inventory"];
+        get: operations["retrieve-item-inventory"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1227,7 +1271,7 @@ export interface paths {
         head?: never;
         /**
          * Update Item Inventory
-         * @description Adjusts or reconciles inventory for an item. In reconcile mode, inventory is set to the exact value; in adjust mode, the quantity change is added to the current inventory.
+         * @description Adjusts or reconciles inventory for an item. When operation is reconcile, inventory is set to the exact value; when operation is adjust, the quantity change is added to the current inventory.
          */
         patch: operations["update-item-inventory"];
         trace?: never;
@@ -1250,6 +1294,110 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/materials": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Materials
+         * @description Returns a paginated list of materials.
+         */
+        get: operations["list-materials"];
+        put?: never;
+        /**
+         * Create Material
+         * @description Creates a material.
+         */
+        post: operations["create-material"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/materials/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieve Material
+         * @description Returns a material by ID.
+         */
+        get: operations["retrieve-material"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete Material
+         * @description Deletes a material by ID.
+         */
+        delete: operations["delete-material"];
+        options?: never;
+        head?: never;
+        /**
+         * Update Material
+         * @description Partially updates a material.
+         */
+        patch: operations["update-material"];
+        trace?: never;
+    };
+    "/v1/catalog/parts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Parts
+         * @description Returns a paginated list of parts for the current account.
+         */
+        get: operations["list-parts"];
+        put?: never;
+        /**
+         * Create Part
+         * @description Creates a part with the specified SKU and category.
+         */
+        post: operations["create-part"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/parts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieve Part
+         * @description Returns a part by ID.
+         */
+        get: operations["retrieve-part"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete Part
+         * @description Deletes a part. Sets the deleted_at timestamp rather than removing the record.
+         */
+        delete: operations["delete-part"];
+        options?: never;
+        head?: never;
+        /**
+         * Update Part
+         * @description Partially updates a part. Fields not provided retain their current values.
+         */
+        patch: operations["update-part"];
         trace?: never;
     };
     "/v1/catalog/product-lines": {
@@ -1284,10 +1432,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Product Line
+         * Retrieve Product Line
          * @description Returns a product line by ID, including system-owned product lines accessible to the account.
          */
-        get: operations["get-product-line"];
+        get: operations["retrieve-product-line"];
         put?: never;
         post?: never;
         /**
@@ -1336,10 +1484,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Product Type
+         * Retrieve Product Type
          * @description Returns a product type by ID or code.
          */
-        get: operations["get-product-type"];
+        get: operations["retrieve-product-type"];
         put?: never;
         post?: never;
         /**
@@ -1408,10 +1556,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Product
+         * Retrieve Product
          * @description Returns a product by ID.
          */
-        get: operations["get-product"];
+        get: operations["retrieve-product"];
         put?: never;
         post?: never;
         /**
@@ -1480,10 +1628,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Property
+         * Retrieve Property
          * @description Returns a property by ID.
          */
-        get: operations["get-property"];
+        get: operations["retrieve-property"];
         put?: never;
         post?: never;
         /**
@@ -1532,10 +1680,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Attribute
+         * Retrieve Attribute
          * @description Returns an attribute by ID within a property.
          */
-        get: operations["get-attribute"];
+        get: operations["retrieve-attribute"];
         put?: never;
         post?: never;
         /**
@@ -1584,10 +1732,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Unit Group
+         * Retrieve Unit Group
          * @description Returns a unit group by ID.
          */
-        get: operations["get-unit-group"];
+        get: operations["retrieve-unit-group"];
         put?: never;
         post?: never;
         /**
@@ -1604,7 +1752,7 @@ export interface paths {
         patch: operations["update-unit-group"];
         trace?: never;
     };
-    "/v1/catalog/unit-groups/{unitGroupId}/units": {
+    "/v1/catalog/unit-groups/{unit_group_id}/units": {
         parameters: {
             query?: never;
             header?: never;
@@ -1628,7 +1776,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/catalog/unit-groups/{unitGroupId}/units/{id}": {
+    "/v1/catalog/unit-groups/{unit_group_id}/units/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1636,10 +1784,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Unit Group Unit
+         * Retrieve Unit Group Unit
          * @description Returns an associated unit within a unit group by ID.
          */
-        get: operations["get-unit-group-unit"];
+        get: operations["retrieve-unit-group-unit"];
         put?: never;
         post?: never;
         /**
@@ -1708,10 +1856,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Unit
+         * Retrieve Unit
          * @description Returns a unit by ID, including both account-owned and global system units.
          */
-        get: operations["get-unit"];
+        get: operations["retrieve-unit"];
         put?: never;
         post?: never;
         /**
@@ -1836,10 +1984,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Address Details
+         * Retrieve Address Details
          * @description Returns parsed address components for a Google Places ID.
          */
-        get: operations["get-address-details"];
+        get: operations["retrieve-address-details"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2196,10 +2344,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Audit Event
+         * Retrieve Audit Event
          * @description Returns an audit event by ID.
          */
-        get: operations["get-audit-event"];
+        get: operations["retrieve-audit-event"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2236,10 +2384,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Email Log
+         * Retrieve Email Log
          * @description Returns an email log by ID.
          */
-        get: operations["get-email-log"];
+        get: operations["retrieve-email-log"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2276,10 +2424,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Request Log
+         * Retrieve Request Log
          * @description Returns a request log by ID.
          */
-        get: operations["get-request-log"];
+        get: operations["retrieve-request-log"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2320,10 +2468,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Sandbox
+         * Retrieve Sandbox
          * @description Returns a sandbox by ID.
          */
-        get: operations["get-sandbox"];
+        get: operations["retrieve-sandbox"];
         put?: never;
         post?: never;
         /**
@@ -2364,10 +2512,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get System Property
+         * Retrieve System Property
          * @description Returns a system property by ID.
          */
-        get: operations["get-system-property"];
+        get: operations["retrieve-system-property"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2508,10 +2656,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Invoice
+         * Retrieve Invoice
          * @description Returns an invoice by ID.
          */
-        get: operations["get-invoice"];
+        get: operations["retrieve-invoice"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2576,10 +2724,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Payment Term
+         * Retrieve Payment Term
          * @description Returns a payment term by ID.
          */
-        get: operations["get-payment-term"];
+        get: operations["retrieve-payment-term"];
         put?: never;
         post?: never;
         /**
@@ -2688,10 +2836,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Settlement
+         * Retrieve Settlement
          * @description Returns a settlement by ID.
          */
-        get: operations["get-settlement"];
+        get: operations["retrieve-settlement"];
         put?: never;
         post?: never;
         /**
@@ -2824,10 +2972,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Transaction
+         * Retrieve Transaction
          * @description Returns a transaction by ID.
          */
-        get: operations["get-transaction"];
+        get: operations["retrieve-transaction"];
         put?: never;
         post?: never;
         /**
@@ -2859,7 +3007,7 @@ export interface paths {
         put?: never;
         /**
          * Create Account User
-         * @description Creates an account user and invites them to the account.
+         * @description Creates a new account user and invites them to the target account.
          */
         post: operations["create-account-user"];
         delete?: never;
@@ -2876,10 +3024,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Account User
+         * Retrieve Account User
          * @description Returns an account user by ID.
          */
-        get: operations["get-account-user"];
+        get: operations["retrieve-account-user"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2892,7 +3040,7 @@ export interface paths {
         patch: operations["update-account-user"];
         trace?: never;
     };
-    "/v1/identity/account-users/{id}/status": {
+    "/v1/identity/account-users/{id}/actions/activate": {
         parameters: {
             query?: never;
             header?: never;
@@ -2901,10 +3049,50 @@ export interface paths {
         };
         get?: never;
         /**
-         * Update Account User Status
-         * @description Transitions an account user to a target status.
+         * Activate Account User
+         * @description Activates a disabled or removed account user.
          */
-        put: operations["update-account-user-status"];
+        put: operations["activate-account-user"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/identity/account-users/{id}/actions/disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Disable Account User
+         * @description Disables an account user. Disabled users will not be able to access the target account.
+         */
+        put: operations["disable-account-user"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/identity/account-users/{id}/actions/remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Remove Account User
+         * @description Removes a user from the target account.
+         */
+        put: operations["remove-account-user"];
         post?: never;
         delete?: never;
         options?: never;
@@ -2920,10 +3108,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Account
+         * Retrieve Account
          * @description Returns an account by ID.
          */
-        get: operations["get-account"];
+        get: operations["retrieve-account"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3200,10 +3388,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Account by Slug
+         * Retrieve Account by Slug
          * @description Returns a public account by portal slug. Unauthenticated.
          */
-        get: operations["get-account-by-slug"];
+        get: operations["retrieve-account-by-slug"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3227,7 +3415,7 @@ export interface paths {
         put?: never;
         /**
          * Create Role
-         * @description Creates a custom role with the specified permissions.
+         * @description Creates a new role with the specified permissions.
          */
         post: operations["create-role"];
         delete?: never;
@@ -3244,15 +3432,15 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Role
+         * Retrieve Role
          * @description Returns a role by ID, including its structured permissions.
          */
-        get: operations["get-role"];
+        get: operations["retrieve-role"];
         put?: never;
         post?: never;
         /**
          * Delete Role
-         * @description Deletes an account-owned role and its associated permissions. Global roles cannot be deleted.
+         * @description Deletes a role and its associated permissions. Global roles cannot be deleted.
          */
         delete: operations["delete-role"];
         options?: never;
@@ -3272,10 +3460,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get User
+         * Retrieve User
          * @description Returns a user by ID.
          */
-        get: operations["get-user"];
+        get: operations["retrieve-user"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3588,10 +3776,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Service Level
+         * Retrieve Service Level
          * @description Returns a service level by ID.
          */
-        get: operations["get-service-level"];
+        get: operations["retrieve-service-level"];
         put?: never;
         post?: never;
         /**
@@ -3603,7 +3791,7 @@ export interface paths {
         head?: never;
         /**
          * Update Service Level
-         * @description Partially updates a service level's name, code, and portal visibility.
+         * @description Partially updates a service level.
          */
         patch: operations["update-service-level"];
         trace?: never;
@@ -3616,10 +3804,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Carrier
+         * Retrieve Carrier
          * @description Returns a carrier by ID.
          */
-        get: operations["get-carrier"];
+        get: operations["retrieve-carrier"];
         put?: never;
         post?: never;
         /**
@@ -3728,10 +3916,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get DC Location
+         * Retrieve DC Location
          * @description Returns a DC location by ID.
          */
-        get: operations["get-dc-location"];
+        get: operations["retrieve-dc-location"];
         put?: never;
         post?: never;
         /**
@@ -3776,10 +3964,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Delivery
+         * Retrieve Delivery
          * @description Returns a delivery by ID, including all delivery lines.
          */
-        get: operations["get-delivery"];
+        get: operations["retrieve-delivery"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3820,10 +4008,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Department
+         * Retrieve Department
          * @description Returns a department by ID.
          */
-        get: operations["get-department"];
+        get: operations["retrieve-department"];
         put?: never;
         post?: never;
         /**
@@ -3868,10 +4056,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get EDI Run
+         * Retrieve EDI Run
          * @description Returns an EDI run by ID.
          */
-        get: operations["get-edi-run"];
+        get: operations["retrieve-edi-run"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3988,10 +4176,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Inventory Change Log
+         * Retrieve Inventory Change Log
          * @description Returns an inventory change log by ID.
          */
-        get: operations["get-inventory-change-log"];
+        get: operations["retrieve-inventory-change-log"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4028,10 +4216,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Location Type
+         * Retrieve Location Type
          * @description Returns a location type by ID or code.
          */
-        get: operations["get-location-type"];
+        get: operations["retrieve-location-type"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4072,10 +4260,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Location
+         * Retrieve Location
          * @description Returns a location by ID.
          */
-        get: operations["get-location"];
+        get: operations["retrieve-location"];
         put?: never;
         post?: never;
         /**
@@ -4124,10 +4312,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Machine
+         * Retrieve Machine
          * @description Returns a machine by ID.
          */
-        get: operations["get-machine"];
+        get: operations["retrieve-machine"];
         put?: never;
         post?: never;
         /**
@@ -4142,110 +4330,6 @@ export interface paths {
          * @description Partially updates a machine.
          */
         patch: operations["update-machine"];
-        trace?: never;
-    };
-    "/v1/operations/materials": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Materials
-         * @description Returns a paginated list of materials.
-         */
-        get: operations["list-materials"];
-        put?: never;
-        /**
-         * Create Material
-         * @description Creates a material.
-         */
-        post: operations["create-material"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/operations/materials/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Material
-         * @description Returns a material by ID.
-         */
-        get: operations["get-material"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Material
-         * @description Deletes a material by ID.
-         */
-        delete: operations["delete-material"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Material
-         * @description Partially updates a material.
-         */
-        patch: operations["update-material"];
-        trace?: never;
-    };
-    "/v1/operations/parts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Parts
-         * @description Returns a paginated list of parts for the current account.
-         */
-        get: operations["list-parts"];
-        put?: never;
-        /**
-         * Create Part
-         * @description Creates a part with the specified SKU and category.
-         */
-        post: operations["create-part"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/operations/parts/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Part
-         * @description Returns a part by ID.
-         */
-        get: operations["get-part"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Part
-         * @description Deletes a part. Sets the deleted_at timestamp rather than removing the record.
-         */
-        delete: operations["delete-part"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Part
-         * @description Partially updates a part. Fields not provided retain their current values.
-         */
-        patch: operations["update-part"];
         trace?: never;
     };
     "/v1/operations/picks": {
@@ -4276,10 +4360,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Pick
+         * Retrieve Pick
          * @description Returns a pick by ID.
          */
-        get: operations["get-pick"];
+        get: operations["retrieve-pick"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4372,7 +4456,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/operations/picks/{pickId}/lines/{id}": {
+    "/v1/operations/picks/{pick_id}/lines/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -4392,7 +4476,7 @@ export interface paths {
         patch: operations["update-pick-line"];
         trace?: never;
     };
-    "/v1/operations/picks/{pickId}/lines/{id}/actions/pick": {
+    "/v1/operations/picks/{pick_id}/lines/{id}/actions/pick": {
         parameters: {
             query?: never;
             header?: never;
@@ -4412,7 +4496,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/operations/picks/{pickId}/lines/{id}/actions/void": {
+    "/v1/operations/picks/{pick_id}/lines/{id}/actions/void": {
         parameters: {
             query?: never;
             header?: never;
@@ -4504,10 +4588,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Production Run
+         * Retrieve Production Run
          * @description Returns a production run by ID.
          */
-        get: operations["get-production-run"];
+        get: operations["retrieve-production-run"];
         put?: never;
         post?: never;
         /**
@@ -4600,10 +4684,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Production Step
+         * Retrieve Production Step
          * @description Returns a production step by ID.
          */
-        get: operations["get-production-step"];
+        get: operations["retrieve-production-step"];
         put?: never;
         post?: never;
         /**
@@ -4648,10 +4732,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Consumption
+         * Retrieve Consumption
          * @description Returns a consumption by ID within a production step.
          */
-        get: operations["get-consumption"];
+        get: operations["retrieve-consumption"];
         put?: never;
         post?: never;
         /**
@@ -4676,10 +4760,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Production
+         * Retrieve Production
          * @description Returns a production output by ID within a production step.
          */
-        get: operations["get-production"];
+        get: operations["retrieve-production"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4764,10 +4848,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Purchase Order
+         * Retrieve Purchase Order
          * @description Returns a purchase order by ID.
          */
-        get: operations["get-purchase-order"];
+        get: operations["retrieve-purchase-order"];
         put?: never;
         post?: never;
         /**
@@ -4824,7 +4908,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/operations/purchase-orders/{id}/lines/{lineId}": {
+    "/v1/operations/purchase-orders/{id}/lines/{line_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -4916,10 +5000,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Receiving Order
+         * Retrieve Receiving Order
          * @description Returns a receiving order by ID.
          */
-        get: operations["get-receiving-order"];
+        get: operations["retrieve-receiving-order"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4988,7 +5072,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/operations/receiving-orders/{receivingOrderId}/lines/{id}": {
+    "/v1/operations/receiving-orders/{receiving_order_id}/lines/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -5008,7 +5092,7 @@ export interface paths {
         patch: operations["update-receiving-order-line"];
         trace?: never;
     };
-    "/v1/operations/receiving-orders/{receivingOrderId}/lines/{id}/actions/receive": {
+    "/v1/operations/receiving-orders/{receiving_order_id}/lines/{id}/actions/receive": {
         parameters: {
             query?: never;
             header?: never;
@@ -5028,7 +5112,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/operations/receiving-orders/{receivingOrderId}/lines/{id}/actions/void": {
+    "/v1/operations/receiving-orders/{receiving_order_id}/lines/{id}/actions/void": {
         parameters: {
             query?: never;
             header?: never;
@@ -5080,10 +5164,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Scanning Station
+         * Retrieve Scanning Station
          * @description Returns a scanning station by ID.
          */
-        get: operations["get-scanning-station"];
+        get: operations["retrieve-scanning-station"];
         put?: never;
         post?: never;
         /**
@@ -5228,10 +5312,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Shipment
+         * Retrieve Shipment
          * @description Returns a shipment by ID.
          */
-        get: operations["get-shipment"];
+        get: operations["retrieve-shipment"];
         put?: never;
         post?: never;
         /**
@@ -5320,10 +5404,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Shipment Line
+         * Retrieve Shipment Line
          * @description Returns a shipment line by ID.
          */
-        get: operations["get-shipment-line"];
+        get: operations["retrieve-shipment-line"];
         put?: never;
         post?: never;
         /**
@@ -5348,10 +5432,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Shipping Case
+         * Retrieve Shipping Case
          * @description Returns a shipping case by ID.
          */
-        get: operations["get-shipping-case"];
+        get: operations["retrieve-shipping-case"];
         put?: never;
         post?: never;
         /**
@@ -5420,10 +5504,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Shipping Term
+         * Retrieve Shipping Term
          * @description Returns a shipping term by ID.
          */
-        get: operations["get-shipping-term"];
+        get: operations["retrieve-shipping-term"];
         put?: never;
         post?: never;
         /**
@@ -5492,10 +5576,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Supplier
+         * Retrieve Supplier
          * @description Returns a supplier by ID.
          */
-        get: operations["get-supplier"];
+        get: operations["retrieve-supplier"];
         put?: never;
         post?: never;
         /**
@@ -5544,10 +5628,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Supplier Material
+         * Retrieve Supplier Material
          * @description Returns a supplier material by ID.
          */
-        get: operations["get-supplier-material"];
+        get: operations["retrieve-supplier-material"];
         put?: never;
         post?: never;
         /**
@@ -5596,10 +5680,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Account Group
+         * Retrieve Account Group
          * @description Returns an account group by ID.
          */
-        get: operations["get-account-group"];
+        get: operations["retrieve-account-group"];
         put?: never;
         post?: never;
         /**
@@ -5648,10 +5732,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Account Price
+         * Retrieve Account Price
          * @description Returns an account price by ID.
          */
-        get: operations["get-account-price"];
+        get: operations["retrieve-account-price"];
         put?: never;
         post?: never;
         /**
@@ -5696,10 +5780,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Account Status
+         * Retrieve Account Status
          * @description Returns an account status by ID or code.
          */
-        get: operations["get-account-status"];
+        get: operations["retrieve-account-status"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5784,10 +5868,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Territory
+         * Retrieve Territory
          * @description Returns a territory by ID.
          */
-        get: operations["get-territory"];
+        get: operations["retrieve-territory"];
         put?: never;
         post?: never;
         /**
@@ -5819,7 +5903,7 @@ export interface paths {
         put?: never;
         /**
          * Create Address
-         * @description Creates an address.
+         * @description Creates an address for the targeted account.
          */
         post: operations["create-address"];
         delete?: never;
@@ -5836,10 +5920,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Address
-         * @description Returns an address by ID.
+         * Retrieve Address
+         * @description Retrieves an address by ID.
          */
-        get: operations["get-address"];
+        get: operations["retrieve-address"];
         put?: never;
         post?: never;
         /**
@@ -5948,10 +6032,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Customer
+         * Retrieve Customer
          * @description Returns a customer by ID.
          */
-        get: operations["get-customer"];
+        get: operations["retrieve-customer"];
         put?: never;
         post?: never;
         /**
@@ -6060,10 +6144,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Order Discount
+         * Retrieve Order Discount
          * @description Returns an order discount by ID.
          */
-        get: operations["get-order-discount"];
+        get: operations["retrieve-order-discount"];
         put?: never;
         post?: never;
         /**
@@ -6108,10 +6192,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Priority
+         * Retrieve Priority
          * @description Returns a priority by ID or code.
          */
-        get: operations["get-priority"];
+        get: operations["retrieve-priority"];
         put?: never;
         post?: never;
         delete?: never;
@@ -6152,10 +6236,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Account Group Product Line Access
+         * Retrieve Account Group Product Line Access
          * @description Returns product line access for an account group.
          */
-        get: operations["get-account-group-product-line-access"];
+        get: operations["retrieve-account-group-product-line-access"];
         put?: never;
         post?: never;
         /**
@@ -6204,10 +6288,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Customer Product Line Access
+         * Retrieve Customer Product Line Access
          * @description Returns the product line access for a customer.
          */
-        get: operations["get-customer-product-line-access"];
+        get: operations["retrieve-customer-product-line-access"];
         put?: never;
         post?: never;
         /**
@@ -6256,10 +6340,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Registration Flow by Slug
+         * Retrieve Registration Flow by Slug
          * @description Returns a registration flow by slug.
          */
-        get: operations["get-registration-flow-by-slug"];
+        get: operations["retrieve-registration-flow-by-slug"];
         put?: never;
         post?: never;
         delete?: never;
@@ -6276,10 +6360,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Registration Flow
+         * Retrieve Registration Flow
          * @description Returns a registration flow by ID.
          */
-        get: operations["get-registration-flow"];
+        get: operations["retrieve-registration-flow"];
         put?: never;
         post?: never;
         /**
@@ -6368,10 +6452,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Sales Order
+         * Retrieve Sales Order
          * @description Returns a sales order by ID.
          */
-        get: operations["get-sales-order"];
+        get: operations["retrieve-sales-order"];
         put?: never;
         post?: never;
         /**
@@ -6468,7 +6552,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/sales/sales-orders/{id}/lines/{lineId}": {
+    "/v1/sales/sales-orders/{id}/lines/{line_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -6524,10 +6608,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Volume Discount
+         * Retrieve Volume Discount
          * @description Returns a volume discount by ID.
          */
-        get: operations["get-volume-discount"];
+        get: operations["retrieve-volume-discount"];
         put?: never;
         post?: never;
         /**
@@ -6577,7 +6661,7 @@ export interface components {
          *         "type": "invalid_request_error",
          *         "message": "The request was invalid.",
          *         "param": "email",
-         *         "doc_url": "https://docs.augno.com/api/errors#validation-failed",
+         *         "doc_url": "https://docs.augno.com/api/errors#validation_failed",
          *         "is_transient": false,
          *         "quota": null,
          *         "request_log_url": null
@@ -6592,7 +6676,7 @@ export interface components {
              *       "type": "invalid_request_error",
              *       "message": "The request was invalid.",
              *       "param": "email",
-             *       "doc_url": "https://docs.augno.com/api/errors#validation-failed",
+             *       "doc_url": "https://docs.augno.com/api/errors#validation_failed",
              *       "is_transient": false,
              *       "quota": null,
              *       "request_log_url": "https://augno.com/dashboard/request-logs/rq_fbv1ygmybo3eauykr74"
@@ -6653,7 +6737,7 @@ export interface components {
             object: "api_key";
             /** @description Human-readable name for the API key. */
             name: string;
-            /** @description Redacted key value. */
+            /** @description Redacted key value safe for display. */
             redacted_value: string;
             /**
              * @description Assigned role.
@@ -6746,7 +6830,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -6770,7 +6854,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -6855,7 +6939,7 @@ export interface components {
             support_email: string | null;
             /** @description Support phone number. */
             phone_number: string | null;
-            /** @description Logo URL (S3 key). */
+            /** @description Logo URL. */
             logo_url: string | null;
             /** @description Facebook handle. */
             facebook_handle: string | null;
@@ -7109,8 +7193,8 @@ export interface components {
          *         "name": "Acme Inc.",
          *         "number": "",
          *         "status": "",
-         *         "is_edi_enabled": false,
-         *         "is_parent_account": false,
+         *         "edi_status": "",
+         *         "relationship_type": "",
          *         "commission_policy": "",
          *         "note": null,
          *         "credit_limit": null,
@@ -7245,8 +7329,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -7388,13 +7472,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -7409,7 +7524,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -7429,7 +7544,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -7872,7 +7987,7 @@ export interface components {
              *             "type": "init_batch",
              *             "label_size": null,
              *             "label_type": null,
-             *             "material_check_required": false,
+             *             "operator_requirement": "none",
              *             "department": null,
              *             "production_steps": null,
              *             "created_at": "2026-05-10T00:00:00Z",
@@ -7976,7 +8091,7 @@ export interface components {
             type: "user" | "api_key" | "agent";
             /** @description Display name. */
             name: string | null;
-            /** @description Human-readable handle (email for users, redacted value for API keys, slug for agents). */
+            /** @description Human-readable handle (`email` for users, `redacted_value` for API keys, `slug` for agents). */
             handle: string | null;
             /**
              * @description Assigned role.
@@ -8063,7 +8178,7 @@ export interface components {
          *       "name": "Headquarters",
          *       "phone": null,
          *       "email": null,
-         *       "is_drop_ship": false,
+         *       "type": "standard",
          *       "geolocation": {
          *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *         "object": "geolocation",
@@ -8092,8 +8207,11 @@ export interface components {
             phone: string | null;
             /** @description Email address associated with the address. */
             email: string | null;
-            /** @description Whether the address is a drop ship location. */
-            is_drop_ship: boolean;
+            /**
+             * @description Address type.
+             * @enum {string}
+             */
+            type: "standard" | "drop_ship";
             /** @description Geolocation details for the address. */
             geolocation: components["schemas"]["Geolocation"] | null;
             /**
@@ -8161,7 +8279,6 @@ export interface components {
          * @description Request to create an address.
          * @example {
          *       "name": "Headquarters",
-         *       "is_drop_ship": false,
          *       "street_line_1": "123 Main St",
          *       "locality": "Springfield",
          *       "state": "IL",
@@ -8176,8 +8293,12 @@ export interface components {
             phone?: string | null;
             /** @description Email address associated with the address. */
             email?: string | null;
-            /** @description Whether the address is a drop ship location. */
-            is_drop_ship: boolean;
+            /**
+             * @description Address type.
+             * @default standard
+             * @enum {string}
+             */
+            type: "standard" | "drop_ship";
             /** @description First line of the street address. */
             street_line_1?: string | null;
             /** @description Second line of the street address. */
@@ -8233,7 +8354,7 @@ export interface components {
          *     }
          */
         AdjustmentType: {
-            /** @description Adjustment type ID. */
+            /** @description Adjustment ID. */
             id: string;
             /**
              * @description Resource type identifier.
@@ -8325,9 +8446,9 @@ export interface components {
             label: string | null;
             /** @description Action description. */
             description: string | null;
-            /** @description Action input. */
+            /** @description Action input. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
             input: Record<string, never> | null;
-            /** @description Action output. */
+            /** @description Action output. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
             output: Record<string, never> | null;
             /** @description Error message if the action failed. */
             error_message: string | null;
@@ -8443,8 +8564,8 @@ export interface components {
             title: string;
             /** @description Alert description. */
             message: string | null;
-            /** @description Additional metadata as JSON. */
-            metadata: Record<string, never>;
+            /** @description Additional metadata as JSON. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            metadata: Record<string, never> | null;
             /**
              * Format: date-time
              * @description Acknowledgment timestamp.
@@ -8936,9 +9057,9 @@ export interface components {
             tool: components["schemas"]["AvailableTool"];
             /**
              * @description Instance-specific configuration for this tool.
-             *     Must conform to the tool's config_schema.
+             *     Must conform to the tool's config_schema. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string.
              */
-            config: Record<string, never>;
+            config: Record<string, never> | null;
             /** @description Sort order within the agent. */
             sort_order: number;
             /** @description Requires human review before execution. */
@@ -8975,8 +9096,8 @@ export interface components {
             category: string;
             /** @description Memory content. */
             content: string;
-            /** @description Arbitrary metadata as JSON. */
-            metadata: Record<string, never>;
+            /** @description Arbitrary metadata as JSON. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            metadata: Record<string, never> | null;
             /**
              * @description Associated entity.
              * @example {
@@ -9161,10 +9282,10 @@ export interface components {
              * @enum {string}
              */
             trigger_type: "scheduled" | "manual" | "event";
-            /** @description Input provided to the agent. */
-            input: Record<string, never>;
-            /** @description Output produced by the agent. */
-            output: Record<string, never>;
+            /** @description Input provided to the agent. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            input: Record<string, never> | null;
+            /** @description Output produced by the agent. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            output: Record<string, never> | null;
             /** @description Error message if the run failed. */
             error_message: string | null;
             /**
@@ -9381,7 +9502,7 @@ export interface components {
              *     }
              */
             actor: components["schemas"]["Actor"] | null;
-            /** @description Metadata for the step. */
+            /** @description Metadata for the step. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
             metadata: Record<string, never> | null;
             /**
              * Format: date-time
@@ -10032,6 +10153,8 @@ export interface components {
             color: "blue" | "brown" | "default" | "gray" | "green" | "orange" | "pink" | "purple" | "red" | "yellow";
             /** @description Display order. */
             sort_order: number;
+            /** @description Property this attribute belongs to (set when the attribute is returned under item.attributes). */
+            property?: components["schemas"]["Property"] | null;
             /**
              * Format: date-time
              * @description Creation timestamp.
@@ -10130,7 +10253,7 @@ export interface components {
              * @description Resource type of the audited entity.
              * @enum {string}
              */
-            resource_type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "account_plan";
+            resource_type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "created_api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "message" | "account_plan";
             /** @description Audited resource ID. */
             resource_id: string;
             /**
@@ -10175,8 +10298,8 @@ export interface components {
             actor: components["schemas"]["Actor"] | null;
             /** @description Field-level changes recorded for this event. */
             changes: components["schemas"]["List_AuditFieldChange"] | null;
-            /** @description Arbitrary JSON metadata for the mutation (e.g. reason, source, tags). */
-            metadata: Record<string, never>;
+            /** @description Arbitrary JSON metadata for the mutation (e.g. reason, source, tags). Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            metadata: Record<string, never> | null;
             /** @description Originating HTTP request ID. */
             request_id: string | null;
             /** @description Idempotency key of the originating request. */
@@ -10198,10 +10321,10 @@ export interface components {
         AuditFieldChange: {
             /** @description Name of the changed field. */
             field: string;
-            /** @description Previous value as a JSON fragment. Null for creation events. */
-            old_value: Record<string, never>;
-            /** @description New value as a JSON fragment. Null for deletion events. */
-            new_value: Record<string, never>;
+            /** @description Previous value as a JSON fragment. Null for creation events. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            old_value: Record<string, never> | null;
+            /** @description New value as a JSON fragment. Null for deletion events. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            new_value: Record<string, never> | null;
         };
         /**
          * @description Platform tool that can be attached to agents.
@@ -10245,7 +10368,7 @@ export interface components {
              *         }
              *       }
              *     }
-             *     ```
+             *     ``` Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string.
              */
             config_schema: Record<string, never> | null;
             /** @description Tool category. */
@@ -10512,7 +10635,7 @@ export interface components {
          *         "type": "init_batch",
          *         "label_size": null,
          *         "label_type": null,
-         *         "material_check_required": false,
+         *         "operator_requirement": "none",
          *         "department": null,
          *         "production_steps": null,
          *         "created_at": "2026-05-10T00:00:00Z",
@@ -10570,7 +10693,7 @@ export interface components {
          *               "type": "init_batch",
          *               "label_size": null,
          *               "label_type": null,
-         *               "material_check_required": false,
+         *               "operator_requirement": "none",
          *               "department": null,
          *               "production_steps": null,
          *               "created_at": "2026-05-10T00:00:00Z",
@@ -10904,7 +11027,7 @@ export interface components {
              *       "type": "init_batch",
              *       "label_size": null,
              *       "label_type": null,
-             *       "material_check_required": false,
+             *       "operator_requirement": "none",
              *       "department": null,
              *       "production_steps": null,
              *       "created_at": "2026-05-10T00:00:00Z",
@@ -10966,7 +11089,7 @@ export interface components {
              *             "type": "init_batch",
              *             "label_size": null,
              *             "label_type": null,
-             *             "material_check_required": false,
+             *             "operator_requirement": "none",
              *             "department": null,
              *             "production_steps": null,
              *             "created_at": "2026-05-10T00:00:00Z",
@@ -11501,7 +11624,7 @@ export interface components {
          *           "type": "init_batch",
          *           "label_size": null,
          *           "label_type": null,
-         *           "material_check_required": false,
+         *           "operator_requirement": "none",
          *           "department": null,
          *           "production_steps": null,
          *           "created_at": "2026-05-10T00:00:00Z",
@@ -11559,7 +11682,7 @@ export interface components {
          *                 "type": "init_batch",
          *                 "label_size": null,
          *                 "label_type": null,
-         *                 "material_check_required": false,
+         *                 "operator_requirement": "none",
          *                 "department": null,
          *                 "production_steps": null,
          *                 "created_at": "2026-05-10T00:00:00Z",
@@ -11881,7 +12004,7 @@ export interface components {
              *         "type": "init_batch",
              *         "label_size": null,
              *         "label_type": null,
-             *         "material_check_required": false,
+             *         "operator_requirement": "none",
              *         "department": null,
              *         "production_steps": null,
              *         "created_at": "2026-05-10T00:00:00Z",
@@ -11939,7 +12062,7 @@ export interface components {
              *               "type": "init_batch",
              *               "label_size": null,
              *               "label_type": null,
-             *               "material_check_required": false,
+             *               "operator_requirement": "none",
              *               "department": null,
              *               "production_steps": null,
              *               "created_at": "2026-05-10T00:00:00Z",
@@ -12069,8 +12192,8 @@ export interface components {
         BulkCreateItemResult: {
             /** @description The SKU of the item. */
             sku: string;
-            /** @description Whether the item was created successfully. */
-            success: boolean;
+            /** @description Outcome of the create attempt: "created" or "failed". */
+            status: string;
             /** @description The error message if the item failed to create. */
             error: string | null;
             /** @description The ID of the created item. */
@@ -12145,8 +12268,8 @@ export interface components {
         BulkCreateProductionStepResult: {
             /** @description The name of the production step. */
             name: string;
-            /** @description Whether the production step was created or updated successfully. */
-            success: boolean;
+            /** @description Outcome of the operation for this step: "created" or "failed". */
+            status: string;
             /** @description The error message if the step failed. */
             error: string | null;
             /** @description The ID of the created or updated production step. */
@@ -13199,7 +13322,7 @@ export interface components {
             name: string;
             /**
              * Format: date-time
-             * @description Expiration time. If not set, the key does not expire.
+             * @description Expiration timestamp. If not set, the key does not expire.
              */
             expires_at?: string;
         };
@@ -13309,26 +13432,29 @@ export interface components {
          *       "role_id": "rl_01gf7a8200er3ar3pkfrb6kk29",
          *       "preferences": [
          *         {
-         *           "notification_type_code": "order_acknowledgement",
+         *           "notification_type": "order_acknowledgement",
          *           "enabled": true
          *         }
          *       ]
          *     }
          */
         CreateAccountUserRequest: {
-            /** @description Display name. */
+            /** @description User display name. */
             name: string | null;
-            /** @description Email address. */
+            /** @description User email address. */
             email: string | null;
-            /** @description Username. */
+            /** @description Unique username (3–255 chars; letters, numbers, underscores, hyphens). */
             username: string | null;
-            /** @description Password (only valid for scanner-role users backing a scanning station). */
+            /**
+             * @description Password. Only used for scanner-role users (scanning stations).
+             *     Must be 8–72 chars and include upper, lower, number, and special character.
+             */
             password: string | null;
-            /** @description Role ID. Expandable. */
+            /** @description Role assigned to the user. */
             role_id?: string | null;
-            /** @description Department ID. Expandable. */
+            /** @description Department assigned to the user. */
             department_id?: string | null;
-            /** @description Notification preferences to create for the new user (external targets only). */
+            /** @description Notification preferences for the user (external targets only). */
             preferences: components["schemas"]["NotificationPreferenceItem"][];
         };
         /**
@@ -13422,7 +13548,8 @@ export interface components {
          * @example {
          *       "name": "FedEx",
          *       "code": "fedex",
-         *       "account_number": null
+         *       "account_number": "1234567890",
+         *       "customer_portal_visibility": "visible"
          *     }
          */
         CreateCarrierRequest: {
@@ -13436,7 +13563,7 @@ export interface components {
             /** @description Carrier account number. Required for UPS and USPS carriers. */
             account_number: string | null;
             /**
-             * @description Customer portal visibility.
+             * @description Whether this carrier will be available for customers to select in the customer portal.
              * @default visible
              * @enum {string}
              */
@@ -13519,7 +13646,6 @@ export interface components {
          *       "customer_type_group_id": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "bill_to_address": {
          *         "name": "Acme Inc.",
-         *         "is_drop_ship": false,
          *         "street_line_1": "123 Main St",
          *         "locality": "New York",
          *         "state": "NY",
@@ -13528,7 +13654,6 @@ export interface components {
          *       },
          *       "ship_to_address": {
          *         "name": "Acme Inc.",
-         *         "is_drop_ship": false,
          *         "street_line_1": "123 Main St",
          *         "locality": "New York",
          *         "state": "NY",
@@ -13557,10 +13682,11 @@ export interface components {
              */
             status: "normal" | "preferred" | "hold_shipment" | "hold_all";
             /**
-             * @description Whether EDI is enabled.
-             * @default false
+             * @description EDI status.
+             * @default disabled
+             * @enum {string}
              */
-            is_edi_enabled: boolean;
+            edi_status: "enabled" | "disabled";
             /**
              * @description Commission policy.
              * @default commission_exempt
@@ -13588,7 +13714,7 @@ export interface components {
              */
             default_priority: "low" | "normal" | "high";
             /** @description The ID of the account user to assign as the default sales rep. */
-            default_sales_rep_user_id?: string;
+            default_sales_rep_id?: string;
             /** @description Price group IDs. */
             customer_price_group_ids: string[];
             /** @description Customer type group ID. */
@@ -13607,7 +13733,6 @@ export interface components {
              * @description Bill-to address.
              * @example {
              *       "name": "Headquarters",
-             *       "is_drop_ship": false,
              *       "street_line_1": "123 Main St",
              *       "locality": "Springfield",
              *       "state": "IL",
@@ -13620,7 +13745,6 @@ export interface components {
              * @description Ship-to address.
              * @example {
              *       "name": "Headquarters",
-             *       "is_drop_ship": false,
              *       "street_line_1": "123 Main St",
              *       "locality": "Springfield",
              *       "state": "IL",
@@ -13772,8 +13896,8 @@ export interface components {
             category: string;
             /** @description Text content. */
             content: string;
-            /** @description JSON metadata. */
-            metadata: Record<string, never>;
+            /** @description JSON metadata. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            metadata: Record<string, never> | null;
             /** @description Entity type this memory is scoped to (e.g. "customer", "product"). */
             entity_type?: string | null;
             /** @description Entity ID. */
@@ -13861,15 +13985,15 @@ export interface components {
         CreateProductLineRequest: {
             /** @description Display name. */
             name: string;
-            /** @description Unit group ID. */
+            /** @description Unit group ID associated with this product line. This unit group dictates the units that products in this product line may be purchased in. */
             unit_group_id: string;
             /**
-             * @description Commission policy.
+             * @description Commission policy of products in this product line.
              * @enum {string}
              */
             commission_policy: "commission_applied" | "commission_exempt";
             /**
-             * @description Freight policy.
+             * @description Freight policy for all items in this product line.
              * @enum {string}
              */
             freight_policy: "free_freight" | "billed_freight";
@@ -14343,8 +14467,10 @@ export interface components {
          * @example {
          *       "name": "Packaging Line 1",
          *       "type": "init_batch",
-         *       "material_check_required": false,
-         *       "department_id": "dp_01gf7a8200er3ar3pkfrb6kk30"
+         *       "operator_requirement": "none",
+         *       "department_id": "dp_01gf7a8200er3ar3pkfrb6kk30",
+         *       "label_size": "1x1",
+         *       "label_type": "tag"
          *     }
          */
         CreateScanningStationRequest: {
@@ -14357,8 +14483,11 @@ export interface components {
              * @enum {string}
              */
             type: "init_batch" | "merge_batch" | "move_batch" | "split_batch";
-            /** @description Whether material check is required. If `true`, the operator at this station must manually verify the material before proceeding. */
-            material_check_required: boolean;
+            /**
+             * @description Operator requirement behavior for this station.
+             * @enum {string}
+             */
+            operator_requirement: "none" | "material_check";
             /** @description Department ID. */
             department_id: string;
             /**
@@ -14386,12 +14515,12 @@ export interface components {
             /** @description Service level code. */
             code: string;
             /**
-             * @description Customer portal visibility.
+             * @description Whether this service level will be available for customers to select in the customer portal.
              * @default visible
              * @enum {string}
              */
             customer_portal_visibility: "visible" | "hidden";
-            /** @description Default (system-synced) service level. */
+            /** @description Default service levels are the default-selected service level for that carrier. */
             is_default: boolean;
         };
         /**
@@ -14505,7 +14634,6 @@ export interface components {
          *       "note": "Primary raw materials supplier",
          *       "bill_to_address": {
          *         "name": "Acme Supplies Inc.",
-         *         "is_drop_ship": false,
          *         "street_line_1": "456 Industrial Pkwy",
          *         "locality": "Chicago",
          *         "state": "IL",
@@ -14526,7 +14654,6 @@ export interface components {
              * @description Bill-to address to create inline.
              * @example {
              *       "name": "Headquarters",
-             *       "is_drop_ship": false,
              *       "street_line_1": "123 Main St",
              *       "locality": "Springfield",
              *       "state": "IL",
@@ -14539,7 +14666,6 @@ export interface components {
              * @description Ship-to address to create inline.
              * @example {
              *       "name": "Headquarters",
-             *       "is_drop_ship": false,
              *       "street_line_1": "123 Main St",
              *       "locality": "Springfield",
              *       "state": "IL",
@@ -14711,7 +14837,7 @@ export interface components {
             ratio_numerator: string;
             /**
              * Format: decimal
-             * @description Conversion ratio denominator relative to the base unit, as a decimal string.
+             * @description Conversion ratio denominator relative to the base unit, as a decimal string. Must not be zero.
              */
             ratio_denominator: string;
             /**
@@ -14721,7 +14847,7 @@ export interface components {
             offset_numerator: string;
             /**
              * Format: decimal
-             * @description Conversion offset denominator, as a decimal string.
+             * @description Conversion offset denominator, as a decimal string. Must not be zero.
              */
             offset_denominator: string;
         };
@@ -14803,6 +14929,7 @@ export interface components {
         /**
          * @description Result of creating an API key, with the full secret value.
          * @example {
+         *       "object": "created_api_key",
          *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadyhjtr",
          *       "api_key_info": {
          *         "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
@@ -14847,6 +14974,11 @@ export interface components {
          *     }
          */
         CreatedAPIKey: {
+            /**
+             * @description Resource type identifier.
+             * @enum {string}
+             */
+            object: "created_api_key";
             /** @description Full secret value. Returned once and cannot be retrieved later. */
             api_key_secret: string;
             /**
@@ -14902,8 +15034,8 @@ export interface components {
          *       "name": "Acme Inc.",
          *       "number": "100042",
          *       "status": "normal",
-         *       "is_edi_enabled": false,
-         *       "is_parent_account": false,
+         *       "edi_status": "disabled",
+         *       "relationship_type": "standalone",
          *       "commission_policy": "commission_applied",
          *       "note": "Preferred customer since 2020.",
          *       "credit_limit": {
@@ -15045,13 +15177,44 @@ export interface components {
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         },
          *         "sales_rep": {
-         *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *           "object": "user",
-         *           "email": "jdoe@augno.com",
+         *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+         *           "object": "account_user",
          *           "name": "John Doe",
-         *           "username": "jdoe",
-         *           "email_verified_at": "2026-06-10T00:00:00Z",
-         *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+         *           "email": "john@augno.com",
+         *           "username": null,
+         *           "image_url": null,
+         *           "status": "active",
+         *           "role": {
+         *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *             "object": "role",
+         *             "name": "Admin",
+         *             "type": "admin",
+         *             "owner": {
+         *               "object": "owner",
+         *               "type": "account",
+         *               "account": {
+         *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *                 "object": "account",
+         *                 "name": "Acme Inc.",
+         *                 "default_billing_address": null,
+         *                 "default_shipping_address": null,
+         *                 "branding": null,
+         *                 "portal": null,
+         *                 "created_at": "2026-05-10T00:00:00Z",
+         *                 "updated_at": "2026-05-10T00:23:00Z"
+         *               }
+         *             },
+         *             "permissions": [
+         *               "customers:create",
+         *               "customers:read",
+         *               "customers:update",
+         *               "customers:delete"
+         *             ],
+         *             "created_at": "2026-05-10T00:00:00Z",
+         *             "updated_at": "2026-05-10T00:23:00Z"
+         *           },
+         *           "department": null,
+         *           "last_used_at": null,
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         }
@@ -15066,7 +15229,7 @@ export interface components {
          *         "name": "Headquarters",
          *         "phone": null,
          *         "email": null,
-         *         "is_drop_ship": false,
+         *         "type": "standard",
          *         "geolocation": {
          *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "geolocation",
@@ -15086,7 +15249,7 @@ export interface components {
          *         "name": "Headquarters",
          *         "phone": null,
          *         "email": null,
-         *         "is_drop_ship": false,
+         *         "type": "standard",
          *         "geolocation": {
          *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "geolocation",
@@ -15156,10 +15319,16 @@ export interface components {
              * @enum {string}
              */
             status: "normal" | "preferred" | "hold_shipment" | "hold_all";
-            /** @description Whether EDI is enabled. */
-            is_edi_enabled: boolean;
-            /** @description Whether this is a parent account. */
-            is_parent_account: boolean;
+            /**
+             * @description EDI status.
+             * @enum {string}
+             */
+            edi_status: "enabled" | "disabled";
+            /**
+             * @description Customer relationship type.
+             * @enum {string}
+             */
+            relationship_type: "standalone" | "parent" | "child";
             /**
              * @description Commission policy.
              * @enum {string}
@@ -15208,7 +15377,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -15232,7 +15401,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -15403,18 +15572,49 @@ export interface components {
             /**
              * @description Default sales rep.
              * @example {
-             *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *       "object": "user",
-             *       "email": "jdoe@augno.com",
+             *       "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *       "object": "account_user",
              *       "name": "John Doe",
-             *       "username": "jdoe",
-             *       "email_verified_at": "2026-06-10T00:00:00Z",
-             *       "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *       "email": "john@augno.com",
+             *       "username": null,
+             *       "image_url": null,
+             *       "status": "active",
+             *       "role": {
+             *         "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *         "object": "role",
+             *         "name": "Admin",
+             *         "type": "admin",
+             *         "owner": {
+             *           "object": "owner",
+             *           "type": "account",
+             *           "account": {
+             *             "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *             "object": "account",
+             *             "name": "Acme Inc.",
+             *             "default_billing_address": null,
+             *             "default_shipping_address": null,
+             *             "branding": null,
+             *             "portal": null,
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           }
+             *         },
+             *         "permissions": [
+             *           "customers:create",
+             *           "customers:read",
+             *           "customers:update",
+             *           "customers:delete"
+             *         ],
+             *         "created_at": "2026-05-10T00:00:00Z",
+             *         "updated_at": "2026-05-10T00:23:00Z"
+             *       },
+             *       "department": null,
+             *       "last_used_at": null,
              *       "created_at": "2026-05-10T00:00:00Z",
              *       "updated_at": "2026-05-10T00:23:00Z"
              *     }
              */
-            sales_rep: components["schemas"]["User"] | null;
+            sales_rep: components["schemas"]["AccountUser"] | null;
         };
         /** @description Customer freight and carrier settings. */
         CustomerFreightPreferences: {
@@ -15515,8 +15715,8 @@ export interface components {
          *         "name": "Acme Inc.",
          *         "number": "100042",
          *         "status": "normal",
-         *         "is_edi_enabled": false,
-         *         "is_parent_account": false,
+         *         "edi_status": "disabled",
+         *         "relationship_type": "standalone",
          *         "commission_policy": "commission_applied",
          *         "note": "Preferred customer since 2020.",
          *         "credit_limit": {
@@ -15658,13 +15858,44 @@ export interface components {
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           },
          *           "sales_rep": {
-         *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *             "object": "user",
-         *             "email": "jdoe@augno.com",
+         *             "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+         *             "object": "account_user",
          *             "name": "John Doe",
-         *             "username": "jdoe",
-         *             "email_verified_at": "2026-06-10T00:00:00Z",
-         *             "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+         *             "email": "john@augno.com",
+         *             "username": null,
+         *             "image_url": null,
+         *             "status": "active",
+         *             "role": {
+         *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *               "object": "role",
+         *               "name": "Admin",
+         *               "type": "admin",
+         *               "owner": {
+         *                 "object": "owner",
+         *                 "type": "account",
+         *                 "account": {
+         *                   "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *                   "object": "account",
+         *                   "name": "Acme Inc.",
+         *                   "default_billing_address": null,
+         *                   "default_shipping_address": null,
+         *                   "branding": null,
+         *                   "portal": null,
+         *                   "created_at": "2026-05-10T00:00:00Z",
+         *                   "updated_at": "2026-05-10T00:23:00Z"
+         *                 }
+         *               },
+         *               "permissions": [
+         *                 "customers:create",
+         *                 "customers:read",
+         *                 "customers:update",
+         *                 "customers:delete"
+         *               ],
+         *               "created_at": "2026-05-10T00:00:00Z",
+         *               "updated_at": "2026-05-10T00:23:00Z"
+         *             },
+         *             "department": null,
+         *             "last_used_at": null,
          *             "created_at": "2026-05-10T00:00:00Z",
          *             "updated_at": "2026-05-10T00:23:00Z"
          *           }
@@ -15679,7 +15910,7 @@ export interface components {
          *           "name": "Headquarters",
          *           "phone": null,
          *           "email": null,
-         *           "is_drop_ship": false,
+         *           "type": "standard",
          *           "geolocation": {
          *             "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "geolocation",
@@ -15699,7 +15930,7 @@ export interface components {
          *           "name": "Headquarters",
          *           "phone": null,
          *           "email": null,
-         *           "is_drop_ship": false,
+         *           "type": "standard",
          *           "geolocation": {
          *             "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "geolocation",
@@ -15789,8 +16020,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -15932,13 +16163,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -15953,7 +16215,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -15973,7 +16235,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -16855,7 +17117,7 @@ export interface components {
          *             "type": "init_batch",
          *             "label_size": null,
          *             "label_type": null,
-         *             "material_check_required": false,
+         *             "operator_requirement": "none",
          *             "department": null,
          *             "production_steps": null,
          *             "created_at": "2026-05-10T00:00:00Z",
@@ -17067,7 +17329,7 @@ export interface components {
          * @example {
          *       "id": "eml_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "object": "email_log",
-         *       "has_sent": true,
+         *       "send_status": "sent",
          *       "recipients": [
          *         "customer@example.com"
          *       ],
@@ -17122,8 +17384,11 @@ export interface components {
              * @enum {string}
              */
             object: "email_log";
-            /** @description Whether the email was sent. */
-            has_sent: boolean;
+            /**
+             * @description Email send status.
+             * @enum {string}
+             */
+            send_status: "sent" | "pending";
             /** @description Recipient email addresses. */
             recipients: string[];
             /** @description Email subject line. */
@@ -17133,8 +17398,7 @@ export interface components {
             /** @description SES message ID returned by AWS. */
             ses_message_id: string | null;
             /**
-             * @description Actor who sent the email. Null when the email was sent by the
-             *     system, or when the caller did not request `include=sent_by`.
+             * @description Actor who sent the email. Null when the email was sent by the system.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "actor",
@@ -17273,7 +17537,7 @@ export interface components {
              * @description The resource kind that this entity references (e.g. "user", "customer", "sales_order").
              * @enum {string}
              */
-            type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "account_plan";
+            type: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "created_api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "message" | "account_plan";
         };
         /**
          * @description Request to estimate a shipping rate.
@@ -17282,7 +17546,6 @@ export interface components {
          *       "service_level_id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "from_address": {
          *         "name": "Origin Warehouse",
-         *         "is_drop_ship": false,
          *         "street_line_1": "123 Main Street",
          *         "locality": "San Francisco",
          *         "state": "CA",
@@ -17291,7 +17554,6 @@ export interface components {
          *       },
          *       "to_address": {
          *         "name": "Destination",
-         *         "is_drop_ship": false,
          *         "street_line_1": "456 Oak Avenue",
          *         "locality": "Los Angeles",
          *         "state": "CA",
@@ -17321,7 +17583,6 @@ export interface components {
              * @description Origin address.
              * @example {
              *       "name": "Headquarters",
-             *       "is_drop_ship": false,
              *       "street_line_1": "123 Main St",
              *       "locality": "Springfield",
              *       "state": "IL",
@@ -17334,7 +17595,6 @@ export interface components {
              * @description Destination address.
              * @example {
              *       "name": "Headquarters",
-             *       "is_drop_ship": false,
              *       "street_line_1": "123 Main St",
              *       "locality": "Springfield",
              *       "state": "IL",
@@ -17927,7 +18187,7 @@ export interface components {
          *         "type": "init_batch",
          *         "label_size": null,
          *         "label_type": null,
-         *         "material_check_required": false,
+         *         "operator_requirement": "none",
          *         "department": null,
          *         "production_steps": null,
          *         "created_at": "2026-05-10T00:00:00Z",
@@ -18164,7 +18424,7 @@ export interface components {
              *       "type": "init_batch",
              *       "label_size": null,
              *       "label_type": null,
-             *       "material_check_required": false,
+             *       "operator_requirement": "none",
              *       "department": null,
              *       "production_steps": null,
              *       "created_at": "2026-05-10T00:00:00Z",
@@ -18399,7 +18659,7 @@ export interface components {
          *         "name": "Headquarters",
          *         "phone": null,
          *         "email": null,
-         *         "is_drop_ship": false,
+         *         "type": "standard",
          *         "geolocation": {
          *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "geolocation",
@@ -18728,7 +18988,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -18874,8 +19134,8 @@ export interface components {
          *         "name": "Acme Inc.",
          *         "number": "100042",
          *         "status": "",
-         *         "is_edi_enabled": false,
-         *         "is_parent_account": false,
+         *         "edi_status": "",
+         *         "relationship_type": "",
          *         "commission_policy": "",
          *         "note": null,
          *         "credit_limit": null,
@@ -18965,8 +19225,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -19108,13 +19368,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -19129,7 +19420,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -19149,7 +19440,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -19230,7 +19521,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -19599,8 +19890,8 @@ export interface components {
          *         "name": "Acme Inc.",
          *         "number": "100042",
          *         "status": "",
-         *         "is_edi_enabled": false,
-         *         "is_parent_account": false,
+         *         "edi_status": "",
+         *         "relationship_type": "",
          *         "commission_policy": "",
          *         "note": null,
          *         "credit_limit": null,
@@ -19630,7 +19921,7 @@ export interface components {
          *         "name": "Headquarters",
          *         "phone": null,
          *         "email": null,
-         *         "is_drop_ship": false,
+         *         "type": "standard",
          *         "geolocation": {
          *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "geolocation",
@@ -19684,8 +19975,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -19827,13 +20118,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -19848,7 +20170,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -19868,7 +20190,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -19936,7 +20258,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -20377,19 +20699,37 @@ export interface components {
              * @enum {string}
              */
             type: "material_category" | "product_category";
-            /** @description Owner. */
+            /** @description Owner of the item category. */
             owner: components["schemas"]["Owner"] | null;
             /** @description Properties associated with this item category. */
             properties: components["schemas"]["List_Property"] | null;
             /**
-             * @description Unit group associated with this item category.
+             * @description Unit group associated with this item category. This unit group dictates the available units that items in this category may embody in your production process.
              * @example {
              *       "id": "ug_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit_group",
              *       "name": "Weight",
              *       "notes": null,
              *       "type": "mass",
-             *       "base_unit": null,
+             *       "base_unit": {
+             *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "unit",
+             *         "name": "Kilogram",
+             *         "abbreviation": "kg",
+             *         "type": "mass",
+             *         "ratio_numerator": "1000",
+             *         "ratio_denominator": "1",
+             *         "offset_numerator": "0",
+             *         "offset_denominator": "1",
+             *         "is_base_unit": false,
+             *         "owner": {
+             *           "object": "owner",
+             *           "type": "system",
+             *           "account": null
+             *         },
+             *         "created_at": "2026-05-10T00:00:00Z",
+             *         "updated_at": "2026-05-10T00:23:00Z"
+             *       },
              *       "associated_units": null,
              *       "owner": {
              *         "object": "owner",
@@ -20661,7 +21001,7 @@ export interface components {
             count: number;
         };
         /**
-         * @description A paginated list of APIKey resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -20716,17 +21056,17 @@ export interface components {
          */
         List_APIKey: {
             /**
-             * @description Object type for APIKey list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for APIKey list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of APIKey resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["APIKey"][];
         };
         /**
-         * @description A paginated list of AccountGroup resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -20752,17 +21092,17 @@ export interface components {
          */
         List_AccountGroup: {
             /**
-             * @description Object type for AccountGroup list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AccountGroup list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AccountGroup resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AccountGroup"][];
         };
         /**
-         * @description A paginated list of AccountGroupProductLineAccess resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -20817,17 +21157,17 @@ export interface components {
          */
         List_AccountGroupProductLineAccess: {
             /**
-             * @description Object type for AccountGroupProductLineAccess list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AccountGroupProductLineAccess list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AccountGroupProductLineAccess resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AccountGroupProductLineAccess"][];
         };
         /**
-         * @description A paginated list of AccountIntegration resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -20851,17 +21191,17 @@ export interface components {
          */
         List_AccountIntegration: {
             /**
-             * @description Object type for AccountIntegration list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AccountIntegration list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AccountIntegration resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AccountIntegration"][];
         };
         /**
-         * @description A paginated list of AccountPrice resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -20880,8 +21220,8 @@ export interface components {
          *             "name": "Acme Inc.",
          *             "number": "",
          *             "status": "",
-         *             "is_edi_enabled": false,
-         *             "is_parent_account": false,
+         *             "edi_status": "",
+         *             "relationship_type": "",
          *             "commission_policy": "",
          *             "note": null,
          *             "credit_limit": null,
@@ -21004,17 +21344,17 @@ export interface components {
          */
         List_AccountPrice: {
             /**
-             * @description Object type for AccountPrice list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AccountPrice list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AccountPrice resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AccountPrice"][];
         };
         /**
-         * @description A paginated list of AccountStatus resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21042,17 +21382,17 @@ export interface components {
          */
         List_AccountStatus: {
             /**
-             * @description Object type for AccountStatus list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AccountStatus list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AccountStatus resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AccountStatus"][];
         };
         /**
-         * @description A paginated list of AccountUser resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21109,17 +21449,17 @@ export interface components {
          */
         List_AccountUser: {
             /**
-             * @description Object type for AccountUser list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AccountUser list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AccountUser resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AccountUser"][];
         };
         /**
-         * @description A paginated list of Address resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21135,7 +21475,7 @@ export interface components {
          *           "name": "Headquarters",
          *           "phone": null,
          *           "email": null,
-         *           "is_drop_ship": false,
+         *           "type": "standard",
          *           "geolocation": {
          *             "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *             "object": "geolocation",
@@ -21154,17 +21494,17 @@ export interface components {
          */
         List_Address: {
             /**
-             * @description Object type for Address list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Address list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Address resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Address"][];
         };
         /**
-         * @description A paginated list of AddressSuggestion resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21186,17 +21526,17 @@ export interface components {
          */
         List_AddressSuggestion: {
             /**
-             * @description Object type for AddressSuggestion list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AddressSuggestion list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AddressSuggestion resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AddressSuggestion"][];
         };
         /**
-         * @description A paginated list of AdjustmentType resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21224,29 +21564,29 @@ export interface components {
          */
         List_AdjustmentType: {
             /**
-             * @description Object type for AdjustmentType list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AdjustmentType list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AdjustmentType resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AdjustmentType"][];
         };
-        /** @description A paginated list of AgentAction resources */
+        /** @description List represents a paginated list of resources. */
         List_AgentAction: {
             /**
-             * @description Object type for AgentAction list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AgentAction list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AgentAction resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AgentAction"][];
         };
         /**
-         * @description A paginated list of AgentAlert resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21276,17 +21616,17 @@ export interface components {
          */
         List_AgentAlert: {
             /**
-             * @description Object type for AgentAlert list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AgentAlert list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AgentAlert resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AgentAlert"][];
         };
         /**
-         * @description A paginated list of AgentDefinition resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21360,29 +21700,29 @@ export interface components {
          */
         List_AgentDefinition: {
             /**
-             * @description Object type for AgentDefinition list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AgentDefinition list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AgentDefinition resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AgentDefinition"][];
         };
-        /** @description A paginated list of AgentDefinitionTool resources */
+        /** @description List represents a paginated list of resources. */
         List_AgentDefinitionTool: {
             /**
-             * @description Object type for AgentDefinitionTool list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AgentDefinitionTool list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AgentDefinitionTool resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AgentDefinitionTool"][];
         };
         /**
-         * @description A paginated list of AgentMemory resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21413,17 +21753,17 @@ export interface components {
          */
         List_AgentMemory: {
             /**
-             * @description Object type for AgentMemory list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AgentMemory list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AgentMemory resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AgentMemory"][];
         };
         /**
-         * @description A paginated list of AgentRun resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21574,29 +21914,29 @@ export interface components {
          */
         List_AgentRun: {
             /**
-             * @description Object type for AgentRun list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AgentRun list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AgentRun resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AgentRun"][];
         };
-        /** @description A paginated list of AgentRunStep resources */
+        /** @description List represents a paginated list of resources. */
         List_AgentRunStep: {
             /**
-             * @description Object type for AgentRunStep list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AgentRunStep list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AgentRunStep resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AgentRunStep"][];
         };
         /**
-         * @description A paginated list of AgentTokenUsage resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21622,17 +21962,17 @@ export interface components {
          */
         List_AgentTokenUsage: {
             /**
-             * @description Object type for AgentTokenUsage list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AgentTokenUsage list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AgentTokenUsage resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AgentTokenUsage"][];
         };
         /**
-         * @description A paginated list of AllocationEntry resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21671,29 +22011,29 @@ export interface components {
          */
         List_AllocationEntry: {
             /**
-             * @description Object type for AllocationEntry list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AllocationEntry list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AllocationEntry resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AllocationEntry"][];
         };
-        /** @description A paginated list of Attribute resources */
+        /** @description List represents a paginated list of resources. */
         List_Attribute: {
             /**
-             * @description Object type for Attribute list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Attribute list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Attribute resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Attribute"][];
         };
         /**
-         * @description A paginated list of AuditEvent resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21775,29 +22115,29 @@ export interface components {
          */
         List_AuditEvent: {
             /**
-             * @description Object type for AuditEvent list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AuditEvent list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AuditEvent resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AuditEvent"][];
         };
-        /** @description A paginated list of AuditFieldChange resources */
+        /** @description List represents a paginated list of resources. */
         List_AuditFieldChange: {
             /**
-             * @description Object type for AuditFieldChange list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AuditFieldChange list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AuditFieldChange resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AuditFieldChange"][];
         };
         /**
-         * @description A paginated list of AvailableTool resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -21823,17 +22163,17 @@ export interface components {
          */
         List_AvailableTool: {
             /**
-             * @description Object type for AvailableTool list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for AvailableTool list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of AvailableTool resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["AvailableTool"][];
         };
         /**
-         * @description A paginated list of Batch resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -22077,7 +22417,7 @@ export interface components {
          *             "type": "init_batch",
          *             "label_size": null,
          *             "label_type": null,
-         *             "material_check_required": false,
+         *             "operator_requirement": "none",
          *             "department": null,
          *             "production_steps": null,
          *             "created_at": "2026-05-10T00:00:00Z",
@@ -22135,7 +22475,7 @@ export interface components {
          *                   "type": "init_batch",
          *                   "label_size": null,
          *                   "label_type": null,
-         *                   "material_check_required": false,
+         *                   "operator_requirement": "none",
          *                   "department": null,
          *                   "production_steps": null,
          *                   "created_at": "2026-05-10T00:00:00Z",
@@ -22216,17 +22556,17 @@ export interface components {
          */
         List_Batch: {
             /**
-             * @description Object type for Batch list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Batch list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Batch resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Batch"][];
         };
         /**
-         * @description A paginated list of BatchFlowNode resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -22472,7 +22812,7 @@ export interface components {
          *               "type": "init_batch",
          *               "label_size": null,
          *               "label_type": null,
-         *               "material_check_required": false,
+         *               "operator_requirement": "none",
          *               "department": null,
          *               "production_steps": null,
          *               "created_at": "2026-05-10T00:00:00Z",
@@ -22530,7 +22870,7 @@ export interface components {
          *                     "type": "init_batch",
          *                     "label_size": null,
          *                     "label_type": null,
-         *                     "material_check_required": false,
+         *                     "operator_requirement": "none",
          *                     "department": null,
          *                     "production_steps": null,
          *                     "created_at": "2026-05-10T00:00:00Z",
@@ -22614,29 +22954,29 @@ export interface components {
          */
         List_BatchFlowNode: {
             /**
-             * @description Object type for BatchFlowNode list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for BatchFlowNode list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of BatchFlowNode resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["BatchFlowNode"][];
         };
-        /** @description A paginated list of BatchLot resources */
+        /** @description List represents a paginated list of resources. */
         List_BatchLot: {
             /**
-             * @description Object type for BatchLot list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for BatchLot list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of BatchLot resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["BatchLot"][];
         };
         /**
-         * @description A paginated list of Carrier resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -22678,17 +23018,17 @@ export interface components {
          */
         List_Carrier: {
             /**
-             * @description Object type for Carrier list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Carrier list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Carrier resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Carrier"][];
         };
         /**
-         * @description A paginated list of CatalogCategory resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -22748,17 +23088,17 @@ export interface components {
          */
         List_CatalogCategory: {
             /**
-             * @description Object type for CatalogCategory list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for CatalogCategory list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of CatalogCategory resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["CatalogCategory"][];
         };
         /**
-         * @description A paginated list of CatalogProductLine resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -22778,17 +23118,17 @@ export interface components {
          */
         List_CatalogProductLine: {
             /**
-             * @description Object type for CatalogProductLine list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for CatalogProductLine list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of CatalogProductLine resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["CatalogProductLine"][];
         };
         /**
-         * @description A paginated list of ChildAccount resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -22822,29 +23162,29 @@ export interface components {
          */
         List_ChildAccount: {
             /**
-             * @description Object type for ChildAccount list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ChildAccount list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ChildAccount resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ChildAccount"][];
         };
-        /** @description A paginated list of Customer resources */
+        /** @description List represents a paginated list of resources. */
         List_Customer: {
             /**
-             * @description Object type for Customer list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Customer list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Customer resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Customer"][];
         };
         /**
-         * @description A paginated list of CustomerAccountSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -22858,17 +23198,17 @@ export interface components {
          */
         List_CustomerAccountSummary: {
             /**
-             * @description Object type for CustomerAccountSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for CustomerAccountSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of CustomerAccountSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["CustomerAccountSummary"][];
         };
         /**
-         * @description A paginated list of CustomerProductLineAccess resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -22885,8 +23225,8 @@ export interface components {
          *             "name": "Acme Inc.",
          *             "number": "100042",
          *             "status": "normal",
-         *             "is_edi_enabled": false,
-         *             "is_parent_account": false,
+         *             "edi_status": "disabled",
+         *             "relationship_type": "standalone",
          *             "commission_policy": "commission_applied",
          *             "note": "Preferred customer since 2020.",
          *             "credit_limit": {
@@ -23028,13 +23368,44 @@ export interface components {
          *                 "updated_at": "2026-05-10T00:23:00Z"
          *               },
          *               "sales_rep": {
-         *                 "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-         *                 "object": "user",
-         *                 "email": "jdoe@augno.com",
+         *                 "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+         *                 "object": "account_user",
          *                 "name": "John Doe",
-         *                 "username": "jdoe",
-         *                 "email_verified_at": "2026-06-10T00:00:00Z",
-         *                 "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+         *                 "email": "john@augno.com",
+         *                 "username": null,
+         *                 "image_url": null,
+         *                 "status": "active",
+         *                 "role": {
+         *                   "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *                   "object": "role",
+         *                   "name": "Admin",
+         *                   "type": "admin",
+         *                   "owner": {
+         *                     "object": "owner",
+         *                     "type": "account",
+         *                     "account": {
+         *                       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+         *                       "object": "account",
+         *                       "name": "Acme Inc.",
+         *                       "default_billing_address": null,
+         *                       "default_shipping_address": null,
+         *                       "branding": null,
+         *                       "portal": null,
+         *                       "created_at": "2026-05-10T00:00:00Z",
+         *                       "updated_at": "2026-05-10T00:23:00Z"
+         *                     }
+         *                   },
+         *                   "permissions": [
+         *                     "customers:create",
+         *                     "customers:read",
+         *                     "customers:update",
+         *                     "customers:delete"
+         *                   ],
+         *                   "created_at": "2026-05-10T00:00:00Z",
+         *                   "updated_at": "2026-05-10T00:23:00Z"
+         *                 },
+         *                 "department": null,
+         *                 "last_used_at": null,
          *                 "created_at": "2026-05-10T00:00:00Z",
          *                 "updated_at": "2026-05-10T00:23:00Z"
          *               }
@@ -23049,7 +23420,7 @@ export interface components {
          *               "name": "Headquarters",
          *               "phone": null,
          *               "email": null,
-         *               "is_drop_ship": false,
+         *               "type": "standard",
          *               "geolocation": {
          *                 "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *                 "object": "geolocation",
@@ -23069,7 +23440,7 @@ export interface components {
          *               "name": "Headquarters",
          *               "phone": null,
          *               "email": null,
-         *               "is_drop_ship": false,
+         *               "type": "standard",
          *               "geolocation": {
          *                 "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *                 "object": "geolocation",
@@ -23154,17 +23525,17 @@ export interface components {
          */
         List_CustomerProductLineAccess: {
             /**
-             * @description Object type for CustomerProductLineAccess list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for CustomerProductLineAccess list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of CustomerProductLineAccess resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["CustomerProductLineAccess"][];
         };
         /**
-         * @description A paginated list of DCLocation resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -23191,29 +23562,29 @@ export interface components {
          */
         List_DCLocation: {
             /**
-             * @description Object type for DCLocation list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for DCLocation list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of DCLocation resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["DCLocation"][];
         };
-        /** @description A paginated list of DeliveryLine resources */
+        /** @description List represents a paginated list of resources. */
         List_DeliveryLine: {
             /**
-             * @description Object type for DeliveryLine list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for DeliveryLine list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of DeliveryLine resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["DeliveryLine"][];
         };
         /**
-         * @description A paginated list of DeliverySummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -23244,17 +23615,17 @@ export interface components {
          */
         List_DeliverySummary: {
             /**
-             * @description Object type for DeliverySummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for DeliverySummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of DeliverySummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["DeliverySummary"][];
         };
         /**
-         * @description A paginated list of Department resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -23316,7 +23687,7 @@ export interface components {
          *                 "type": "init_batch",
          *                 "label_size": null,
          *                 "label_type": null,
-         *                 "material_check_required": false,
+         *                 "operator_requirement": "none",
          *                 "department": null,
          *                 "production_steps": null,
          *                 "created_at": "2026-05-10T00:00:00Z",
@@ -23353,17 +23724,17 @@ export interface components {
          */
         List_Department: {
             /**
-             * @description Object type for Department list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Department list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Department resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Department"][];
         };
         /**
-         * @description A paginated list of EDIRun resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -23386,29 +23757,29 @@ export interface components {
          */
         List_EDIRun: {
             /**
-             * @description Object type for EDIRun list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for EDIRun list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of EDIRun resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["EDIRun"][];
         };
-        /** @description A paginated list of EmailContact resources */
+        /** @description List represents a paginated list of resources. */
         List_EmailContact: {
             /**
-             * @description Object type for EmailContact list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for EmailContact list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of EmailContact resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["EmailContact"][];
         };
         /**
-         * @description A paginated list of EmailLog resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -23421,7 +23792,7 @@ export interface components {
          *         {
          *           "id": "eml_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "email_log",
-         *           "has_sent": true,
+         *           "send_status": "sent",
          *           "recipients": [
          *             "customer@example.com"
          *           ],
@@ -23472,17 +23843,17 @@ export interface components {
          */
         List_EmailLog: {
             /**
-             * @description Object type for EmailLog list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for EmailLog list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of EmailLog resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["EmailLog"][];
         };
         /**
-         * @description A paginated list of FrequentlyOrderedProduct resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -23531,17 +23902,17 @@ export interface components {
          */
         List_FrequentlyOrderedProduct: {
             /**
-             * @description Object type for FrequentlyOrderedProduct list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for FrequentlyOrderedProduct list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of FrequentlyOrderedProduct resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["FrequentlyOrderedProduct"][];
         };
         /**
-         * @description A paginated list of InventoryChangeLog resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -23755,7 +24126,7 @@ export interface components {
          *             "type": "init_batch",
          *             "label_size": null,
          *             "label_type": null,
-         *             "material_check_required": false,
+         *             "operator_requirement": "none",
          *             "department": null,
          *             "production_steps": null,
          *             "created_at": "2026-05-10T00:00:00Z",
@@ -23769,29 +24140,29 @@ export interface components {
          */
         List_InventoryChangeLog: {
             /**
-             * @description Object type for InventoryChangeLog list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for InventoryChangeLog list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of InventoryChangeLog resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["InventoryChangeLog"][];
         };
-        /** @description A paginated list of InvoiceAllocation resources */
+        /** @description List represents a paginated list of resources. */
         List_InvoiceAllocation: {
             /**
-             * @description Object type for InvoiceAllocation list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for InvoiceAllocation list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of InvoiceAllocation resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["InvoiceAllocation"][];
         };
         /**
-         * @description A paginated list of InvoiceForPayment resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -23812,8 +24183,8 @@ export interface components {
          *             "name": "Acme Inc.",
          *             "number": "100042",
          *             "status": "",
-         *             "is_edi_enabled": false,
-         *             "is_parent_account": false,
+         *             "edi_status": "",
+         *             "relationship_type": "",
          *             "commission_policy": "",
          *             "note": null,
          *             "credit_limit": null,
@@ -23887,29 +24258,29 @@ export interface components {
          */
         List_InvoiceForPayment: {
             /**
-             * @description Object type for InvoiceForPayment list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for InvoiceForPayment list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of InvoiceForPayment resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["InvoiceForPayment"][];
         };
-        /** @description A paginated list of InvoiceLine resources */
+        /** @description List represents a paginated list of resources. */
         List_InvoiceLine: {
             /**
-             * @description Object type for InvoiceLine list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for InvoiceLine list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of InvoiceLine resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["InvoiceLine"][];
         };
         /**
-         * @description A paginated list of InvoiceSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -23930,8 +24301,8 @@ export interface components {
          *             "name": "Acme Inc.",
          *             "number": "100042",
          *             "status": "",
-         *             "is_edi_enabled": false,
-         *             "is_parent_account": false,
+         *             "edi_status": "",
+         *             "relationship_type": "",
          *             "commission_policy": "",
          *             "note": null,
          *             "credit_limit": null,
@@ -23961,7 +24332,7 @@ export interface components {
          *             "name": "Headquarters",
          *             "phone": null,
          *             "email": null,
-         *             "is_drop_ship": false,
+         *             "type": "standard",
          *             "geolocation": {
          *               "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *               "object": "geolocation",
@@ -23999,17 +24370,17 @@ export interface components {
          */
         List_InvoiceSummary: {
             /**
-             * @description Object type for InvoiceSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for InvoiceSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of InvoiceSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["InvoiceSummary"][];
         };
         /**
-         * @description A paginated list of Item resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -24184,53 +24555,53 @@ export interface components {
          */
         List_Item: {
             /**
-             * @description Object type for Item list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Item list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Item resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Item"][];
         };
-        /** @description A paginated list of ItemCategory resources */
+        /** @description List represents a paginated list of resources. */
         List_ItemCategory: {
             /**
-             * @description Object type for ItemCategory list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ItemCategory list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ItemCategory resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ItemCategory"][];
         };
-        /** @description A paginated list of ItemTrendPoint resources */
+        /** @description List represents a paginated list of resources. */
         List_ItemTrendPoint: {
             /**
-             * @description Object type for ItemTrendPoint list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ItemTrendPoint list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ItemTrendPoint resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ItemTrendPoint"][];
         };
-        /** @description A paginated list of Location resources */
+        /** @description List represents a paginated list of resources. */
         List_Location: {
             /**
-             * @description Object type for Location list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Location list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Location resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Location"][];
         };
         /**
-         * @description A paginated list of LocationType resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -24253,29 +24624,29 @@ export interface components {
          */
         List_LocationType: {
             /**
-             * @description Object type for LocationType list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for LocationType list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of LocationType resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["LocationType"][];
         };
-        /** @description A paginated list of Machine resources */
+        /** @description List represents a paginated list of resources. */
         List_Machine: {
             /**
-             * @description Object type for Machine list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Machine list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Machine resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Machine"][];
         };
         /**
-         * @description A paginated list of Material resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -24500,17 +24871,17 @@ export interface components {
          */
         List_Material: {
             /**
-             * @description Object type for Material list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Material list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Material resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Material"][];
         };
         /**
-         * @description A paginated list of ObjectType resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -24524,17 +24895,17 @@ export interface components {
          */
         List_ObjectType: {
             /**
-             * @description Object type for ObjectType list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ObjectType list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ObjectType resources in this page */
-            data: ("account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "account_plan")[];
+            /** @description Resources in this page. */
+            data: ("account" | "actor" | "entity" | "user" | "address" | "api_key" | "created_api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "message" | "account_plan")[];
         };
         /**
-         * @description A paginated list of OpenBatchSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -24570,7 +24941,7 @@ export interface components {
          *             "type": "init_batch",
          *             "label_size": null,
          *             "label_type": null,
-         *             "material_check_required": false,
+         *             "operator_requirement": "none",
          *             "department": null,
          *             "production_steps": null,
          *             "created_at": "2026-05-10T00:00:00Z",
@@ -24584,17 +24955,17 @@ export interface components {
          */
         List_OpenBatchSummary: {
             /**
-             * @description Object type for OpenBatchSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for OpenBatchSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of OpenBatchSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["OpenBatchSummary"][];
         };
         /**
-         * @description A paginated list of OpenCreditEntry resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -24634,17 +25005,17 @@ export interface components {
          */
         List_OpenCreditEntry: {
             /**
-             * @description Object type for OpenCreditEntry list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for OpenCreditEntry list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of OpenCreditEntry resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["OpenCreditEntry"][];
         };
         /**
-         * @description A paginated list of OrderDiscount resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -24671,17 +25042,17 @@ export interface components {
          */
         List_OrderDiscount: {
             /**
-             * @description Object type for OrderDiscount list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for OrderDiscount list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of OrderDiscount resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["OrderDiscount"][];
         };
         /**
-         * @description A paginated list of Part resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -24862,17 +25233,17 @@ export interface components {
          */
         List_Part: {
             /**
-             * @description Object type for Part list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Part list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Part resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Part"][];
         };
         /**
-         * @description A paginated list of PaymentTerm resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -24900,29 +25271,29 @@ export interface components {
          */
         List_PaymentTerm: {
             /**
-             * @description Object type for PaymentTerm list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for PaymentTerm list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of PaymentTerm resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["PaymentTerm"][];
         };
-        /** @description A paginated list of Permission resources */
+        /** @description List represents a paginated list of resources. */
         List_Permission: {
             /**
-             * @description Object type for Permission list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Permission list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Permission resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Permission"][];
         };
         /**
-         * @description A paginated list of PermissionGroup resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -24972,29 +25343,29 @@ export interface components {
          */
         List_PermissionGroup: {
             /**
-             * @description Object type for PermissionGroup list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for PermissionGroup list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of PermissionGroup resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["PermissionGroup"][];
         };
-        /** @description A paginated list of PickLineDetail resources */
+        /** @description List represents a paginated list of resources. */
         List_PickLineDetail: {
             /**
-             * @description Object type for PickLineDetail list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for PickLineDetail list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of PickLineDetail resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["PickLineDetail"][];
         };
         /**
-         * @description A paginated list of PickSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25018,8 +25389,8 @@ export interface components {
          *             "name": "Acme Inc.",
          *             "number": "100042",
          *             "status": "",
-         *             "is_edi_enabled": false,
-         *             "is_parent_account": false,
+         *             "edi_status": "",
+         *             "relationship_type": "",
          *             "commission_policy": "",
          *             "note": null,
          *             "credit_limit": null,
@@ -25058,29 +25429,29 @@ export interface components {
          */
         List_PickSummary: {
             /**
-             * @description Object type for PickSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for PickSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of PickSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["PickSummary"][];
         };
-        /** @description A paginated list of PlanChangeLineItem resources */
+        /** @description List represents a paginated list of resources. */
         List_PlanChangeLineItem: {
             /**
-             * @description Object type for PlanChangeLineItem list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for PlanChangeLineItem list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of PlanChangeLineItem resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["PlanChangeLineItem"][];
         };
         /**
-         * @description A paginated list of PricingPlan resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25136,17 +25507,17 @@ export interface components {
          */
         List_PricingPlan: {
             /**
-             * @description Object type for PricingPlan list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for PricingPlan list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of PricingPlan resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["PricingPlan"][];
         };
         /**
-         * @description A paginated list of Priority resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25174,17 +25545,17 @@ export interface components {
          */
         List_Priority: {
             /**
-             * @description Object type for Priority list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Priority list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Priority resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Priority"][];
         };
         /**
-         * @description A paginated list of Product resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25384,29 +25755,29 @@ export interface components {
          */
         List_Product: {
             /**
-             * @description Object type for Product list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Product list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Product resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Product"][];
         };
-        /** @description A paginated list of ProductLine resources */
+        /** @description List represents a paginated list of resources. */
         List_ProductLine: {
             /**
-             * @description Object type for ProductLine list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ProductLine list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ProductLine resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ProductLine"][];
         };
         /**
-         * @description A paginated list of ProductType resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25429,17 +25800,17 @@ export interface components {
          */
         List_ProductType: {
             /**
-             * @description Object type for ProductType list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ProductType list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ProductType resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ProductType"][];
         };
         /**
-         * @description A paginated list of ProductionRunSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25465,53 +25836,53 @@ export interface components {
          */
         List_ProductionRunSummary: {
             /**
-             * @description Object type for ProductionRunSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ProductionRunSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ProductionRunSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ProductionRunSummary"][];
         };
-        /** @description A paginated list of ProductionStep resources */
+        /** @description List represents a paginated list of resources. */
         List_ProductionStep: {
             /**
-             * @description Object type for ProductionStep list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ProductionStep list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ProductionStep resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ProductionStep"][];
         };
-        /** @description A paginated list of Property resources */
+        /** @description List represents a paginated list of resources. */
         List_Property: {
             /**
-             * @description Object type for Property list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Property list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Property resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Property"][];
         };
-        /** @description A paginated list of PurchaseOrderLineDetail resources */
+        /** @description List represents a paginated list of resources. */
         List_PurchaseOrderLineDetail: {
             /**
-             * @description Object type for PurchaseOrderLineDetail list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for PurchaseOrderLineDetail list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of PurchaseOrderLineDetail resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["PurchaseOrderLineDetail"][];
         };
         /**
-         * @description A paginated list of PurchaseOrderSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25566,29 +25937,29 @@ export interface components {
          */
         List_PurchaseOrderSummary: {
             /**
-             * @description Object type for PurchaseOrderSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for PurchaseOrderSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of PurchaseOrderSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["PurchaseOrderSummary"][];
         };
-        /** @description A paginated list of RateShopOption resources */
+        /** @description List represents a paginated list of resources. */
         List_RateShopOption: {
             /**
-             * @description Object type for RateShopOption list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for RateShopOption list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of RateShopOption resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["RateShopOption"][];
         };
         /**
-         * @description A paginated list of ReceivableEntry resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25624,8 +25995,8 @@ export interface components {
          *             "name": "Acme Inc.",
          *             "number": "100042",
          *             "status": "",
-         *             "is_edi_enabled": false,
-         *             "is_parent_account": false,
+         *             "edi_status": "",
+         *             "relationship_type": "",
          *             "commission_policy": "",
          *             "note": null,
          *             "credit_limit": null,
@@ -25652,29 +26023,29 @@ export interface components {
          */
         List_ReceivableEntry: {
             /**
-             * @description Object type for ReceivableEntry list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ReceivableEntry list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ReceivableEntry resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ReceivableEntry"][];
         };
-        /** @description A paginated list of ReceivingOrderLine resources */
+        /** @description List represents a paginated list of resources. */
         List_ReceivingOrderLine: {
             /**
-             * @description Object type for ReceivingOrderLine list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ReceivingOrderLine list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ReceivingOrderLine resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ReceivingOrderLine"][];
         };
         /**
-         * @description A paginated list of ReceivingOrderSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25705,17 +26076,17 @@ export interface components {
          */
         List_ReceivingOrderSummary: {
             /**
-             * @description Object type for ReceivingOrderSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ReceivingOrderSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ReceivingOrderSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ReceivingOrderSummary"][];
         };
         /**
-         * @description A paginated list of RegistrationFlow resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25758,17 +26129,17 @@ export interface components {
          */
         List_RegistrationFlow: {
             /**
-             * @description Object type for RegistrationFlow list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for RegistrationFlow list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of RegistrationFlow resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["RegistrationFlow"][];
         };
         /**
-         * @description A paginated list of RegistrationSession resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25817,17 +26188,17 @@ export interface components {
          */
         List_RegistrationSession: {
             /**
-             * @description Object type for RegistrationSession list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for RegistrationSession list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of RegistrationSession resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["RegistrationSession"][];
         };
         /**
-         * @description A paginated list of RequestLog resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25844,11 +26215,12 @@ export interface components {
          *           "host": "https://api.augno.com",
          *           "path": "/v1/core/sandboxes",
          *           "normalized_route": "/v1/core/sandboxes",
-         *           "query_json": "{\"limit\":10}",
+         *           "query_params": {
+         *             "limit": 10
+         *           },
          *           "status_code": 200,
          *           "latency_us": 12345,
          *           "api_version": "2026-01-01",
-         *           "identity_type": "user",
          *           "client_ip": "198.51.100.7",
          *           "user_agent": "Mozilla/5.0",
          *           "referrer": null,
@@ -25904,25 +26276,34 @@ export interface components {
          *             }
          *           },
          *           "idempotency_key": null,
-         *           "request_body_json": null,
-         *           "response_body_json": "{\"object\":\"list\",\"data\":[...]}"
+         *           "request_body": null,
+         *           "response_body": {
+         *             "data": [],
+         *             "object": "list",
+         *             "page_info": {
+         *               "has_next_page": false,
+         *               "has_prev_page": false,
+         *               "next_cursor": null,
+         *               "prev_cursor": null
+         *             }
+         *           }
          *         }
          *       ]
          *     }
          */
         List_RequestLog: {
             /**
-             * @description Object type for RequestLog list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for RequestLog list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of RequestLog resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["RequestLog"][];
         };
         /**
-         * @description A paginated list of Role resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -25966,29 +26347,29 @@ export interface components {
          */
         List_Role: {
             /**
-             * @description Object type for Role list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Role list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Role resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Role"][];
         };
-        /** @description A paginated list of SalesOrderLineDetail resources */
+        /** @description List represents a paginated list of resources. */
         List_SalesOrderLineDetail: {
             /**
-             * @description Object type for SalesOrderLineDetail list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for SalesOrderLineDetail list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of SalesOrderLineDetail resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["SalesOrderLineDetail"][];
         };
         /**
-         * @description A paginated list of SalesOrderStatus resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26016,17 +26397,17 @@ export interface components {
          */
         List_SalesOrderStatus: {
             /**
-             * @description Object type for SalesOrderStatus list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for SalesOrderStatus list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of SalesOrderStatus resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["SalesOrderStatus"][];
         };
         /**
-         * @description A paginated list of SalesOrderSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26047,8 +26428,8 @@ export interface components {
          *             "name": "Acme Inc.",
          *             "number": "100042",
          *             "status": "",
-         *             "is_edi_enabled": false,
-         *             "is_parent_account": false,
+         *             "edi_status": "",
+         *             "relationship_type": "",
          *             "commission_policy": "",
          *             "note": null,
          *             "credit_limit": null,
@@ -26100,17 +26481,17 @@ export interface components {
          */
         List_SalesOrderSummary: {
             /**
-             * @description Object type for SalesOrderSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for SalesOrderSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of SalesOrderSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["SalesOrderSummary"][];
         };
         /**
-         * @description A paginated list of SalesTarget resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26165,17 +26546,17 @@ export interface components {
          */
         List_SalesTarget: {
             /**
-             * @description Object type for SalesTarget list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for SalesTarget list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of SalesTarget resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["SalesTarget"][];
         };
         /**
-         * @description A paginated list of Sandbox resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26208,17 +26589,17 @@ export interface components {
          */
         List_Sandbox: {
             /**
-             * @description Object type for Sandbox list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Sandbox list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Sandbox resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Sandbox"][];
         };
         /**
-         * @description A paginated list of ScanningConsumption resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26242,17 +26623,17 @@ export interface components {
          */
         List_ScanningConsumption: {
             /**
-             * @description Object type for ScanningConsumption list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ScanningConsumption list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ScanningConsumption resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ScanningConsumption"][];
         };
         /**
-         * @description A paginated list of ScanningProductionStepInfo resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26273,41 +26654,41 @@ export interface components {
          */
         List_ScanningProductionStepInfo: {
             /**
-             * @description Object type for ScanningProductionStepInfo list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ScanningProductionStepInfo list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ScanningProductionStepInfo resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ScanningProductionStepInfo"][];
         };
-        /** @description A paginated list of ScanningStation resources */
+        /** @description List represents a paginated list of resources. */
         List_ScanningStation: {
             /**
-             * @description Object type for ScanningStation list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ScanningStation list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ScanningStation resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ScanningStation"][];
         };
-        /** @description A paginated list of ServiceLevel resources */
+        /** @description List represents a paginated list of resources. */
         List_ServiceLevel: {
             /**
-             * @description Object type for ServiceLevel list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ServiceLevel list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ServiceLevel resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ServiceLevel"][];
         };
         /**
-         * @description A paginated list of SettlementSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26341,29 +26722,29 @@ export interface components {
          */
         List_SettlementSummary: {
             /**
-             * @description Object type for SettlementSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for SettlementSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of SettlementSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["SettlementSummary"][];
         };
-        /** @description A paginated list of ShipmentLine resources */
+        /** @description List represents a paginated list of resources. */
         List_ShipmentLine: {
             /**
-             * @description Object type for ShipmentLine list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ShipmentLine list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ShipmentLine resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ShipmentLine"][];
         };
         /**
-         * @description A paginated list of ShipmentSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26397,29 +26778,29 @@ export interface components {
          */
         List_ShipmentSummary: {
             /**
-             * @description Object type for ShipmentSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ShipmentSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ShipmentSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ShipmentSummary"][];
         };
-        /** @description A paginated list of ShippingCaseDetail resources */
+        /** @description List represents a paginated list of resources. */
         List_ShippingCaseDetail: {
             /**
-             * @description Object type for ShippingCaseDetail list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ShippingCaseDetail list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ShippingCaseDetail resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ShippingCaseDetail"][];
         };
         /**
-         * @description A paginated list of ShippingTerm resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26459,17 +26840,17 @@ export interface components {
          */
         List_ShippingTerm: {
             /**
-             * @description Object type for ShippingTerm list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ShippingTerm list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ShippingTerm resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ShippingTerm"][];
         };
         /**
-         * @description A paginated list of SupplierMaterial resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26694,7 +27075,7 @@ export interface components {
          *           },
          *           "supplier_part_number": "SUP-PART-001",
          *           "supplier_description": null,
-         *           "is_active": true,
+         *           "status": "active",
          *           "created_at": "2026-05-10T00:00:00Z",
          *           "updated_at": "2026-05-10T00:23:00Z"
          *         }
@@ -26703,17 +27084,17 @@ export interface components {
          */
         List_SupplierMaterial: {
             /**
-             * @description Object type for SupplierMaterial list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for SupplierMaterial list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of SupplierMaterial resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["SupplierMaterial"][];
         };
         /**
-         * @description A paginated list of SupplierSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26736,17 +27117,17 @@ export interface components {
          */
         List_SupplierSummary: {
             /**
-             * @description Object type for SupplierSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for SupplierSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of SupplierSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["SupplierSummary"][];
         };
         /**
-         * @description A paginated list of SysProperty resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26774,17 +27155,17 @@ export interface components {
          */
         List_SysProperty: {
             /**
-             * @description Object type for SysProperty list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for SysProperty list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of SysProperty resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["SysProperty"][];
         };
         /**
-         * @description A paginated list of Territory resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26810,17 +27191,17 @@ export interface components {
          */
         List_Territory: {
             /**
-             * @description Object type for Territory list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Territory list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Territory resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Territory"][];
         };
         /**
-         * @description A paginated list of ToolGroup resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26845,29 +27226,29 @@ export interface components {
          */
         List_ToolGroup: {
             /**
-             * @description Object type for ToolGroup list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for ToolGroup list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of ToolGroup resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["ToolGroup"][];
         };
-        /** @description A paginated list of TransactionAllocation resources */
+        /** @description List represents a paginated list of resources. */
         List_TransactionAllocation: {
             /**
-             * @description Object type for TransactionAllocation list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for TransactionAllocation list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of TransactionAllocation resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["TransactionAllocation"][];
         };
         /**
-         * @description A paginated list of TransactionDetail resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26943,17 +27324,17 @@ export interface components {
          */
         List_TransactionDetail: {
             /**
-             * @description Object type for TransactionDetail list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for TransactionDetail list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of TransactionDetail resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["TransactionDetail"][];
         };
         /**
-         * @description A paginated list of TransactionMethod resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -26974,17 +27355,17 @@ export interface components {
          */
         List_TransactionMethod: {
             /**
-             * @description Object type for TransactionMethod list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for TransactionMethod list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of TransactionMethod resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["TransactionMethod"][];
         };
         /**
-         * @description A paginated list of TransactionSummary resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -27043,17 +27424,17 @@ export interface components {
          */
         List_TransactionSummary: {
             /**
-             * @description Object type for TransactionSummary list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for TransactionSummary list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of TransactionSummary resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["TransactionSummary"][];
         };
         /**
-         * @description A paginated list of TransactionType resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -27074,17 +27455,17 @@ export interface components {
          */
         List_TransactionType: {
             /**
-             * @description Object type for TransactionType list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for TransactionType list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of TransactionType resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["TransactionType"][];
         };
         /**
-         * @description A paginated list of Unit resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -27118,17 +27499,17 @@ export interface components {
          */
         List_Unit: {
             /**
-             * @description Object type for Unit list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for Unit list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of Unit resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["Unit"][];
         };
         /**
-         * @description A paginated list of UnitGroup resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -27144,7 +27525,25 @@ export interface components {
          *           "name": "Weight",
          *           "notes": null,
          *           "type": "mass",
-         *           "base_unit": null,
+         *           "base_unit": {
+         *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *             "object": "unit",
+         *             "name": "Kilogram",
+         *             "abbreviation": "kg",
+         *             "type": "mass",
+         *             "ratio_numerator": "1000",
+         *             "ratio_denominator": "1",
+         *             "offset_numerator": "0",
+         *             "offset_denominator": "1",
+         *             "is_base_unit": false,
+         *             "owner": {
+         *               "object": "owner",
+         *               "type": "system",
+         *               "account": null
+         *             },
+         *             "created_at": "2026-05-10T00:00:00Z",
+         *             "updated_at": "2026-05-10T00:23:00Z"
+         *           },
          *           "associated_units": null,
          *           "owner": {
          *             "object": "owner",
@@ -27159,29 +27558,29 @@ export interface components {
          */
         List_UnitGroup: {
             /**
-             * @description Object type for UnitGroup list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for UnitGroup list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of UnitGroup resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["UnitGroup"][];
         };
-        /** @description A paginated list of UnitGroupUnit resources */
+        /** @description List represents a paginated list of resources. */
         List_UnitGroupUnit: {
             /**
-             * @description Object type for UnitGroupUnit list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for UnitGroupUnit list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of UnitGroupUnit resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["UnitGroupUnit"][];
         };
         /**
-         * @description A paginated list of VolumeDiscount resources
+         * @description List represents a paginated list of resources.
          * @example {
          *       "object": "list",
          *       "page_info": {
@@ -27228,25 +27627,25 @@ export interface components {
          */
         List_VolumeDiscount: {
             /**
-             * @description Object type for VolumeDiscount list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for VolumeDiscount list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of VolumeDiscount resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["VolumeDiscount"][];
         };
-        /** @description A paginated list of VolumeDiscountTier resources */
+        /** @description List represents a paginated list of resources. */
         List_VolumeDiscountTier: {
             /**
-             * @description Object type for VolumeDiscountTier list
+             * @description Resource type identifier.
              * @enum {string}
              */
             object: "list";
-            /** @description Pagination metadata for VolumeDiscountTier list */
+            /** @description Pagination metadata. */
             page_info: components["schemas"]["PageInfo"];
-            /** @description Array of VolumeDiscountTier resources in this page */
+            /** @description Resources in this page. */
             data: components["schemas"]["VolumeDiscountTier"][];
         };
         /**
@@ -27324,7 +27723,7 @@ export interface components {
          *     }
          */
         LocationType: {
-            /** @description Location type ID. */
+            /** @description Location ID. */
             id: string;
             /**
              * @description Resource type identifier.
@@ -27895,10 +28294,16 @@ export interface components {
         /**
          * @description Message resource.
          * @example {
+         *       "object": "message",
          *       "message": "Operation completed successfully."
          *     }
          */
         MessageResource: {
+            /**
+             * @description Resource type identifier.
+             * @enum {string}
+             */
+            object: "message";
             /** @description Human-readable message. */
             message: string;
         };
@@ -27930,10 +28335,10 @@ export interface components {
         /** @description NotificationPreferenceItem toggles a single account-relation notification type. */
         NotificationPreferenceItem: {
             /**
-             * @description Notification type code. Must match a value of constants.AccountRelationNotificationType.
+             * @description Notification type.
              * @enum {string}
              */
-            notification_type_code: "invoice" | "order_acknowledgement" | "purchase_order_submission";
+            notification_type: "invoice" | "order_acknowledgement" | "purchase_order_submission";
             /** @description Whether this notification type is enabled for the account user. */
             enabled: boolean;
         };
@@ -28012,7 +28417,7 @@ export interface components {
          *         "type": "init_batch",
          *         "label_size": null,
          *         "label_type": null,
-         *         "material_check_required": false,
+         *         "operator_requirement": "none",
          *         "department": null,
          *         "production_steps": null,
          *         "created_at": "2026-05-10T00:00:00Z",
@@ -28204,7 +28609,7 @@ export interface components {
              *       "type": "init_batch",
              *       "label_size": null,
              *       "label_type": null,
-             *       "material_check_required": false,
+             *       "operator_requirement": "none",
              *       "department": null,
              *       "production_steps": null,
              *       "created_at": "2026-05-10T00:00:00Z",
@@ -28381,7 +28786,7 @@ export interface components {
             product_line_id: string | null;
             /** @description The product line name. */
             product_line: string | null;
-            /** @description The product type ID. */
+            /** @description The product ID. */
             product_type_id: string;
             /** @description The item ID. */
             item_id: string;
@@ -28535,8 +28940,8 @@ export interface components {
          *           "name": "Acme Inc.",
          *           "number": "100042",
          *           "status": "",
-         *           "is_edi_enabled": false,
-         *           "is_parent_account": false,
+         *           "edi_status": "",
+         *           "relationship_type": "",
          *           "commission_policy": "",
          *           "note": null,
          *           "credit_limit": null,
@@ -28664,8 +29069,8 @@ export interface components {
              *         "name": "Acme Inc.",
              *         "number": "100042",
              *         "status": "",
-             *         "is_edi_enabled": false,
-             *         "is_parent_account": false,
+             *         "edi_status": "",
+             *         "relationship_type": "",
              *         "commission_policy": "",
              *         "note": null,
              *         "credit_limit": null,
@@ -29182,7 +29587,7 @@ export interface components {
              * @description Payment term status.
              * @enum {string}
              */
-            status: "active|inactive";
+            status: "active" | "inactive";
             /** @description Owner of this resource. */
             owner: components["schemas"]["Owner"] | null;
             /**
@@ -29338,8 +29743,8 @@ export interface components {
          *         "name": "Acme Inc.",
          *         "number": "100042",
          *         "status": "",
-         *         "is_edi_enabled": false,
-         *         "is_parent_account": false,
+         *         "edi_status": "",
+         *         "relationship_type": "",
          *         "commission_policy": "",
          *         "note": null,
          *         "credit_limit": null,
@@ -29468,8 +29873,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -29611,13 +30016,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -29632,7 +30068,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -29652,7 +30088,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -29936,8 +30372,8 @@ export interface components {
          *         "name": "Acme Inc.",
          *         "number": "100042",
          *         "status": "",
-         *         "is_edi_enabled": false,
-         *         "is_parent_account": false,
+         *         "edi_status": "",
+         *         "relationship_type": "",
          *         "commission_policy": "",
          *         "note": null,
          *         "credit_limit": null,
@@ -29992,8 +30428,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -30135,13 +30571,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -30156,7 +30623,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -30176,7 +30643,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -30899,26 +31366,44 @@ export interface components {
             /** @description Notes. */
             notes: string | null;
             /**
-             * @description Commission policy.
+             * @description Commission policy of products in this product line.
              * @enum {string}
              */
             commission_policy: "commission_applied" | "commission_exempt";
             /**
-             * @description Freight policy.
+             * @description Freight policy for all items in this product line.
              * @enum {string}
              */
             freight_policy: "free_freight" | "billed_freight";
-            /** @description Owner. */
+            /** @description Owner of the product line. */
             owner: components["schemas"]["Owner"] | null;
             /**
-             * @description Unit group.
+             * @description Unit group associated with this product line. This unit group dictates the available units that products in this product line may embody in your production process.
              * @example {
              *       "id": "ug_01jm4r6700f8nwq3v5hx2d9ktp",
              *       "object": "unit_group",
              *       "name": "Weight",
              *       "notes": null,
              *       "type": "mass",
-             *       "base_unit": null,
+             *       "base_unit": {
+             *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "object": "unit",
+             *         "name": "Kilogram",
+             *         "abbreviation": "kg",
+             *         "type": "mass",
+             *         "ratio_numerator": "1000",
+             *         "ratio_denominator": "1",
+             *         "offset_numerator": "0",
+             *         "offset_denominator": "1",
+             *         "is_base_unit": false,
+             *         "owner": {
+             *           "object": "owner",
+             *           "type": "system",
+             *           "account": null
+             *         },
+             *         "created_at": "2026-05-10T00:00:00Z",
+             *         "updated_at": "2026-05-10T00:23:00Z"
+             *       },
              *       "associated_units": null,
              *       "owner": {
              *         "object": "owner",
@@ -30953,7 +31438,7 @@ export interface components {
          *     }
          */
         ProductType: {
-            /** @description Product type ID. */
+            /** @description Product ID. */
             id: string;
             /**
              * @description Resource type identifier.
@@ -31868,7 +32353,7 @@ export interface components {
              * @description Resource type identifier.
              * @enum {string}
              */
-            object: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "account_plan";
+            object: "account" | "actor" | "entity" | "user" | "address" | "api_key" | "created_api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "message" | "account_plan";
         };
         /**
          * @description Production output of a production step.
@@ -32705,7 +33190,7 @@ export interface components {
              * @enum {string}
              */
             object: "property";
-            /** @description Name. */
+            /** @description Display name. */
             name: string;
             /** @description Attributes belonging to this property. */
             attributes: components["schemas"]["List_Attribute"] | null;
@@ -32752,7 +33237,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -32793,7 +33278,7 @@ export interface components {
          *         "name": "Headquarters",
          *         "phone": null,
          *         "email": null,
-         *         "is_drop_ship": false,
+         *         "type": "standard",
          *         "geolocation": {
          *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "geolocation",
@@ -32813,7 +33298,7 @@ export interface components {
          *         "name": "Headquarters",
          *         "phone": null,
          *         "email": null,
-         *         "is_drop_ship": false,
+         *         "type": "standard",
          *         "geolocation": {
          *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "geolocation",
@@ -32979,7 +33464,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -33003,7 +33488,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -34060,22 +34545,15 @@ export interface components {
              */
             updated_at: string;
         };
-        /**
-         * @description RateInput represents a rate (value with numerator and denominator units) for
-         *     create requests. Mirrors the gRPC CreateRateInput message — when a caller
-         *     passes a cost-typed rate (unit_price, unit_cost, labor_rate, overhead_rate),
-         *     the core service enforces that the numerator unit is currency and the
-         *     denominator unit is not.
-         */
         RateInput: {
             /**
              * Format: decimal
              * @description Decimal value of the rate.
              */
             value: string;
-            /** @description Numerator unit ID (e.g. the "$" in "$5/ea"). */
+            /** @description Numerator unit ID. */
             numerator_unit_id: string;
-            /** @description Denominator unit ID (e.g. the "ea" in "$5/ea"). */
+            /** @description Denominator unit ID. */
             denominator_unit_id: string;
         };
         /** @description Rate shop option. */
@@ -34155,7 +34633,6 @@ export interface components {
          * @example {
          *       "from_address": {
          *         "name": "Origin Warehouse",
-         *         "is_drop_ship": false,
          *         "street_line_1": "123 Main Street",
          *         "locality": "San Francisco",
          *         "state": "CA",
@@ -34164,7 +34641,6 @@ export interface components {
          *       },
          *       "to_address": {
          *         "name": "Destination",
-         *         "is_drop_ship": false,
          *         "street_line_1": "456 Oak Avenue",
          *         "locality": "Los Angeles",
          *         "state": "CA",
@@ -34190,7 +34666,6 @@ export interface components {
              * @description Origin address.
              * @example {
              *       "name": "Headquarters",
-             *       "is_drop_ship": false,
              *       "street_line_1": "123 Main St",
              *       "locality": "Springfield",
              *       "state": "IL",
@@ -34203,7 +34678,6 @@ export interface components {
              * @description Destination address.
              * @example {
              *       "name": "Headquarters",
-             *       "is_drop_ship": false,
              *       "street_line_1": "123 Main St",
              *       "locality": "Springfield",
              *       "state": "IL",
@@ -34259,8 +34733,8 @@ export interface components {
          *         "name": "Acme Inc.",
          *         "number": "100042",
          *         "status": "",
-         *         "is_edi_enabled": false,
-         *         "is_parent_account": false,
+         *         "edi_status": "",
+         *         "relationship_type": "",
          *         "commission_policy": "",
          *         "note": null,
          *         "credit_limit": null,
@@ -34307,7 +34781,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -34623,8 +35097,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -34766,13 +35240,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -34787,7 +35292,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -34807,7 +35312,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -35407,7 +35912,6 @@ export interface components {
          *       "phone": "+15551234567",
          *       "address": {
          *         "name": "Headquarters",
-         *         "is_drop_ship": false,
          *         "street_line_1": "123 Main St",
          *         "locality": "Springfield",
          *         "state": "IL",
@@ -35435,7 +35939,6 @@ export interface components {
              * @description Customer address.
              * @example {
              *       "name": "Headquarters",
-             *       "is_drop_ship": false,
              *       "street_line_1": "123 Main St",
              *       "locality": "Springfield",
              *       "state": "IL",
@@ -35784,11 +36287,12 @@ export interface components {
          *       "host": "https://api.augno.com",
          *       "path": "/v1/core/sandboxes",
          *       "normalized_route": "/v1/core/sandboxes",
-         *       "query_json": "{\"limit\":10}",
+         *       "query_params": {
+         *         "limit": 10
+         *       },
          *       "status_code": 200,
          *       "latency_us": 12345,
          *       "api_version": "2026-01-01",
-         *       "identity_type": "user",
          *       "client_ip": "198.51.100.7",
          *       "user_agent": "Mozilla/5.0",
          *       "referrer": null,
@@ -35844,8 +36348,17 @@ export interface components {
          *         }
          *       },
          *       "idempotency_key": null,
-         *       "request_body_json": null,
-         *       "response_body_json": "{\"object\":\"list\",\"data\":[...]}"
+         *       "request_body": null,
+         *       "response_body": {
+         *         "data": [],
+         *         "object": "list",
+         *         "page_info": {
+         *           "has_next_page": false,
+         *           "has_prev_page": false,
+         *           "next_cursor": null,
+         *           "prev_cursor": null
+         *         }
+         *       }
          *     }
          */
         RequestLog: {
@@ -35858,25 +36371,23 @@ export interface components {
             object: "request_log";
             /** @description HTTP method. */
             method: string;
-            /** @description Request host. */
+            /** @description Request host. Usually `api.augno.com`. */
             host: string;
-            /** @description Request path. */
+            /** @description Non-normalized request path. */
             path: string;
-            /** @description Normalized route pattern. */
+            /** @description _Normalized_ route template. For example `PATCH /v1/sales/customers/{id}` is the normalized route for a request route `PUT /v1/sales/customers/ac_...`. */
             normalized_route: string;
-            /** @description Query parameters as JSON. */
-            query_json: string | null;
+            /** @description Query parameters. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            query_params: Record<string, never> | null;
             /** @description HTTP status code. */
             status_code: number;
             /** @description Request latency in microseconds. */
             latency_us: number;
             /** @description API version used. */
             api_version: string | null;
-            /** @description Caller identity type. */
-            identity_type: string | null;
             /** @description Client IP address. */
             client_ip: string | null;
-            /** @description User agent string. */
+            /** @description User agent. */
             user_agent: string | null;
             /** @description Referrer header. */
             referrer: string | null;
@@ -35895,7 +36406,7 @@ export interface components {
              */
             created_at: string;
             /**
-             * @description Account targeted by the request.
+             * @description Account _targeted_ by the request.
              * @example {
              *       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
              *       "object": "account",
@@ -35910,7 +36421,7 @@ export interface components {
              */
             account: components["schemas"]["Account"] | null;
             /**
-             * @description Actor details (user or API key).
+             * @description Actor who made the request.
              * @example {
              *       "id": "us_01gf7a8200e9pvbd6bgyq395ae",
              *       "object": "actor",
@@ -35951,10 +36462,10 @@ export interface components {
             actor: components["schemas"]["Actor"] | null;
             /** @description User-provided idempotency key. */
             idempotency_key: string | null;
-            /** @description Request body as JSON. */
-            request_body_json: string | null;
-            /** @description Response body as JSON. */
-            response_body_json: string | null;
+            /** @description Request body. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            request_body: Record<string, never> | null;
+            /** @description Response body. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            response_body: Record<string, never> | null;
         };
         /**
          * @description Request for a password reset.
@@ -35990,7 +36501,7 @@ export interface components {
          *       "type": "invalid_request_error",
          *       "message": "The request was invalid.",
          *       "param": "email",
-         *       "doc_url": "https://docs.augno.com/api/errors#validation-failed",
+         *       "doc_url": "https://docs.augno.com/api/errors#validation_failed",
          *       "is_transient": false,
          *       "quota": null,
          *       "request_log_url": "https://augno.com/dashboard/request-logs/rq_fbv1ygmybo3eauykr74"
@@ -36114,7 +36625,7 @@ export interface components {
         RotateAPIKeyRequest: {
             /**
              * Format: date-time
-             * @description Expiration time override.
+             * @description Expiration timestamp override. If omitted, the previous key's expiration is used.
              */
             expires_at?: string;
         };
@@ -36158,7 +36669,7 @@ export interface components {
             product_line_id: string | null;
             /** @description The product line name. */
             product_line: string | null;
-            /** @description The product type ID. */
+            /** @description The product ID. */
             product_type_id: string;
             /** @description The item ID. */
             item_id: string;
@@ -36246,8 +36757,8 @@ export interface components {
          *         "name": "Acme Inc.",
          *         "number": "100042",
          *         "status": "",
-         *         "is_edi_enabled": false,
-         *         "is_parent_account": false,
+         *         "edi_status": "",
+         *         "relationship_type": "",
          *         "commission_policy": "",
          *         "note": null,
          *         "credit_limit": null,
@@ -36270,7 +36781,7 @@ export interface components {
          *         "name": "Headquarters",
          *         "phone": null,
          *         "email": null,
-         *         "is_drop_ship": false,
+         *         "type": "standard",
          *         "geolocation": {
          *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "geolocation",
@@ -36290,7 +36801,7 @@ export interface components {
          *         "name": "Headquarters",
          *         "phone": null,
          *         "email": null,
-         *         "is_drop_ship": false,
+         *         "type": "standard",
          *         "geolocation": {
          *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "geolocation",
@@ -36456,8 +36967,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -36599,13 +37110,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -36620,7 +37162,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -36640,7 +37182,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -36702,7 +37244,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -36726,7 +37268,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -37684,8 +38226,8 @@ export interface components {
          *         "name": "Acme Inc.",
          *         "number": "100042",
          *         "status": "",
-         *         "is_edi_enabled": false,
-         *         "is_parent_account": false,
+         *         "edi_status": "",
+         *         "relationship_type": "",
          *         "commission_policy": "",
          *         "note": null,
          *         "credit_limit": null,
@@ -37753,8 +38295,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -37896,13 +38438,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -37917,7 +38490,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -37937,7 +38510,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -38287,7 +38860,7 @@ export interface components {
          *       "type": "init_batch",
          *       "label_size": null,
          *       "label_type": null,
-         *       "material_check_required": false,
+         *       "operator_requirement": "none",
          *       "department": null,
          *       "production_steps": null,
          *       "created_at": "2026-05-10T00:00:00Z",
@@ -38321,8 +38894,11 @@ export interface components {
              * @enum {string|null}
              */
             label_type: "tag" | "traveler" | null;
-            /** @description Whether material check is required. */
-            material_check_required: boolean;
+            /**
+             * @description Operator requirement behavior for this station.
+             * @enum {string}
+             */
+            operator_requirement: "none" | "material_check";
             /** @description Department. */
             department: components["schemas"]["Department"] | null;
             /** @description Connected production steps. */
@@ -38689,8 +39265,8 @@ export interface components {
              *         "name": "Acme Inc.",
              *         "number": "100042",
              *         "status": "",
-             *         "is_edi_enabled": false,
-             *         "is_parent_account": false,
+             *         "edi_status": "",
+             *         "relationship_type": "",
              *         "commission_policy": "",
              *         "note": null,
              *         "credit_limit": null,
@@ -38713,7 +39289,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -38733,7 +39309,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -38884,8 +39460,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -39027,13 +39603,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -39048,7 +39655,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -39068,7 +39675,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -39190,7 +39797,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -39270,7 +39877,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -39594,8 +40201,8 @@ export interface components {
              *         "name": "Acme Inc.",
              *         "number": "100042",
              *         "status": "",
-             *         "is_edi_enabled": false,
-             *         "is_parent_account": false,
+             *         "edi_status": "",
+             *         "relationship_type": "",
              *         "commission_policy": "",
              *         "note": null,
              *         "credit_limit": null,
@@ -39929,8 +40536,8 @@ export interface components {
              *         "name": "Acme Inc.",
              *         "number": "100042",
              *         "status": "",
-             *         "is_edi_enabled": false,
-             *         "is_parent_account": false,
+             *         "edi_status": "",
+             *         "relationship_type": "",
              *         "commission_policy": "",
              *         "note": null,
              *         "credit_limit": null,
@@ -39953,7 +40560,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -39973,7 +40580,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -40124,8 +40731,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -40267,13 +40874,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -40288,7 +40926,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -40308,7 +40946,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -41076,7 +41714,7 @@ export interface components {
          *         "name": "Headquarters",
          *         "phone": null,
          *         "email": null,
-         *         "is_drop_ship": false,
+         *         "type": "standard",
          *         "geolocation": {
          *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "geolocation",
@@ -41096,7 +41734,7 @@ export interface components {
          *         "name": "Headquarters",
          *         "phone": null,
          *         "email": null,
-         *         "is_drop_ship": false,
+         *         "type": "standard",
          *         "geolocation": {
          *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
          *           "object": "geolocation",
@@ -41137,7 +41775,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -41161,7 +41799,7 @@ export interface components {
              *       "name": "Headquarters",
              *       "phone": null,
              *       "email": null,
-             *       "is_drop_ship": false,
+             *       "type": "standard",
              *       "geolocation": {
              *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *         "object": "geolocation",
@@ -41407,7 +42045,7 @@ export interface components {
          *       },
          *       "supplier_part_number": "SUP-PART-001",
          *       "supplier_description": null,
-         *       "is_active": true,
+         *       "status": "active",
          *       "created_at": "2026-05-10T00:00:00Z",
          *       "updated_at": "2026-05-10T00:23:00Z"
          *     }
@@ -41638,8 +42276,11 @@ export interface components {
             supplier_part_number: string;
             /** @description Supplier description for this material. */
             supplier_description: string | null;
-            /** @description Active status. */
-            is_active: boolean;
+            /**
+             * @description Whether this supplier material link is active.
+             * @enum {string}
+             */
+            status: "active" | "inactive";
             /**
              * Format: date-time
              * @description Creation timestamp.
@@ -41752,7 +42393,7 @@ export interface components {
         };
         /** @description System property type. */
         SysPropertyType: {
-            /** @description System property type ID. */
+            /** @description System property ID. */
             id: string;
             /**
              * @description Resource type identifier.
@@ -41809,7 +42450,7 @@ export interface components {
         };
         /** @description TenancyAccountPlan is the resolved plan for the current account. */
         TenancyAccountPlan: {
-            /** @description Plan type ID. */
+            /** @description Plan ID. */
             type_id: string;
             /**
              * @description Resource type identifier.
@@ -42227,8 +42868,8 @@ export interface components {
              *         "name": "Acme Inc.",
              *         "number": "100042",
              *         "status": "",
-             *         "is_edi_enabled": false,
-             *         "is_parent_account": false,
+             *         "edi_status": "",
+             *         "relationship_type": "",
              *         "commission_policy": "",
              *         "note": null,
              *         "credit_limit": null,
@@ -42258,7 +42899,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -42411,8 +43052,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -42554,13 +43195,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -42575,7 +43247,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -42595,7 +43267,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -42868,8 +43540,8 @@ export interface components {
              *       "name": "Acme Inc.",
              *       "number": "100042",
              *       "status": "normal",
-             *       "is_edi_enabled": false,
-             *       "is_parent_account": false,
+             *       "edi_status": "disabled",
+             *       "relationship_type": "standalone",
              *       "commission_policy": "commission_applied",
              *       "note": "Preferred customer since 2020.",
              *       "credit_limit": {
@@ -43011,13 +43683,44 @@ export interface components {
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         },
              *         "sales_rep": {
-             *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-             *           "object": "user",
-             *           "email": "jdoe@augno.com",
+             *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "account_user",
              *           "name": "John Doe",
-             *           "username": "jdoe",
-             *           "email_verified_at": "2026-06-10T00:00:00Z",
-             *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+             *           "email": "john@augno.com",
+             *           "username": null,
+             *           "image_url": null,
+             *           "status": "active",
+             *           "role": {
+             *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *             "object": "role",
+             *             "name": "Admin",
+             *             "type": "admin",
+             *             "owner": {
+             *               "object": "owner",
+             *               "type": "account",
+             *               "account": {
+             *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *                 "object": "account",
+             *                 "name": "Acme Inc.",
+             *                 "default_billing_address": null,
+             *                 "default_shipping_address": null,
+             *                 "branding": null,
+             *                 "portal": null,
+             *                 "created_at": "2026-05-10T00:00:00Z",
+             *                 "updated_at": "2026-05-10T00:23:00Z"
+             *               }
+             *             },
+             *             "permissions": [
+             *               "customers:create",
+             *               "customers:read",
+             *               "customers:update",
+             *               "customers:delete"
+             *             ],
+             *             "created_at": "2026-05-10T00:00:00Z",
+             *             "updated_at": "2026-05-10T00:23:00Z"
+             *           },
+             *           "department": null,
+             *           "last_used_at": null,
              *           "created_at": "2026-05-10T00:00:00Z",
              *           "updated_at": "2026-05-10T00:23:00Z"
              *         }
@@ -43032,7 +43735,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -43052,7 +43755,7 @@ export interface components {
              *         "name": "Headquarters",
              *         "phone": null,
              *         "email": null,
-             *         "is_drop_ship": false,
+             *         "type": "standard",
              *         "geolocation": {
              *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
              *           "object": "geolocation",
@@ -43168,7 +43871,7 @@ export interface components {
          *     }
          */
         TransactionType: {
-            /** @description Transaction type ID. */
+            /** @description Transaction ID. */
             id: string;
             /**
              * @description Resource type identifier.
@@ -43287,7 +43990,7 @@ export interface components {
             ratio_numerator: string;
             /**
              * Format: decimal
-             * @description Conversion ratio denominator relative to the base unit in the same dimension.
+             * @description Conversion ratio denominator relative to the base unit in the same dimension. Cannot be zero.
              */
             ratio_denominator: string;
             /**
@@ -43297,7 +44000,7 @@ export interface components {
             offset_numerator: string;
             /**
              * Format: decimal
-             * @description Conversion offset denominator. Typically 1.
+             * @description Conversion offset denominator. Typically 1. Cannot be zero.
              */
             offset_denominator: string;
             /** @description Whether this is the base unit for its dimension. Conversion ratios are relative to this unit. */
@@ -43323,7 +44026,25 @@ export interface components {
          *       "name": "Weight",
          *       "notes": null,
          *       "type": "mass",
-         *       "base_unit": null,
+         *       "base_unit": {
+         *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "object": "unit",
+         *         "name": "Kilogram",
+         *         "abbreviation": "kg",
+         *         "type": "mass",
+         *         "ratio_numerator": "1000",
+         *         "ratio_denominator": "1",
+         *         "offset_numerator": "0",
+         *         "offset_denominator": "1",
+         *         "is_base_unit": false,
+         *         "owner": {
+         *           "object": "owner",
+         *           "type": "system",
+         *           "account": null
+         *         },
+         *         "created_at": "2026-05-10T00:00:00Z",
+         *         "updated_at": "2026-05-10T00:23:00Z"
+         *       },
          *       "associated_units": null,
          *       "owner": {
          *         "object": "owner",
@@ -43544,31 +44265,18 @@ export interface components {
          *     }
          */
         UpdateAccountUserRequest: {
-            /** @description Display name. */
+            /** @description User display name. */
             name?: string;
-            /** @description Email address. */
+            /** @description User email address. */
             email?: string;
-            /** @description Username. */
+            /** @description Unique username (3–255 chars; letters, numbers, underscores, hyphens). */
             username?: string;
-            /** @description Role ID. */
+            /** @description Role assigned to the user. */
             role_id?: string | null;
-            /** @description Department ID. */
+            /** @description Department assigned to the user. */
             department_id?: string | null;
-            /** @description Notification preferences to toggle (external targets only). */
+            /** @description Notification preferences to update (external targets only). */
             preferences: components["schemas"]["NotificationPreferenceItem"][];
-        };
-        /**
-         * @description Request to transition an account user to a target status.
-         * @example {
-         *       "status": "disabled"
-         *     }
-         */
-        UpdateAccountUserStatusRequest: {
-            /**
-             * @description Target status.
-             * @enum {string}
-             */
-            status: "active" | "disabled" | "removed";
         };
         /**
          * @description Request to partially update an address.
@@ -43583,8 +44291,11 @@ export interface components {
             phone?: string | null;
             /** @description Email address associated with the address. */
             email?: string | null;
-            /** @description Whether the address is a drop ship location. */
-            is_drop_ship?: boolean;
+            /**
+             * @description Address type.
+             * @enum {string}
+             */
+            type?: "standard" | "drop_ship";
             /** @description First line of the street address. */
             street_line_1?: string;
             /** @description Second line of the street address. */
@@ -43664,7 +44375,7 @@ export interface components {
              * @enum {string}
              */
             color?: "blue" | "brown" | "default" | "gray" | "green" | "orange" | "pink" | "purple" | "red" | "yellow";
-            /** @description Display order. */
+            /** @description Display order. Must be a positive integer. */
             sort_order?: number;
         };
         /**
@@ -43677,7 +44388,7 @@ export interface components {
             /** @description Display name. */
             name?: string;
             /**
-             * @description Customer portal visibility.
+             * @description Whether this carrier will be available for customers to select in the customer portal.
              * @enum {string}
              */
             customer_portal_visibility?: "visible" | "hidden";
@@ -43743,8 +44454,11 @@ export interface components {
             phone?: string | null;
             /** @description Website URL. Send null to clear. */
             url?: string | null;
-            /** @description Whether EDI is enabled. */
-            is_edi_enabled?: boolean;
+            /**
+             * @description EDI status.
+             * @enum {string}
+             */
+            edi_status?: "enabled" | "disabled";
             /**
              * @description Commission policy.
              * @enum {string}
@@ -43769,7 +44483,7 @@ export interface components {
              */
             default_priority?: "low" | "normal" | "high";
             /** @description The ID of the account user to assign as the default sales rep. */
-            default_sales_rep_user_id?: string | null;
+            default_sales_rep_id?: string | null;
             /** @description Bill-to address ID. */
             bill_to_address_id?: string | null;
             /** @description Ship-to address ID. */
@@ -43851,7 +44565,7 @@ export interface components {
          * @description UpdateItemInventoryRequest is the request to adjust or reconcile inventory for an item.
          * @example {
          *       "quantity_change": 10.5,
-         *       "reconcile": false,
+         *       "operation": "adjust",
          *       "customer_id": "ac_01gf7a8200er3ar3pkfrb6kk29",
          *       "location_id": "lc_01gf7a8200er3ar3pkfrb6kk30",
          *       "unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -43860,8 +44574,11 @@ export interface components {
         UpdateItemInventoryRequest: {
             /** @description Quantity change to apply. */
             quantity_change?: number;
-            /** @description Whether to reconcile (force to exact value) or adjust (add delta). */
-            reconcile?: boolean;
+            /**
+             * @description How quantity_change is applied: adjust adds to current inventory; reconcile sets inventory to the exact value.
+             * @enum {string}
+             */
+            operation?: "adjust" | "reconcile";
             /** @description Customer ID. */
             customer_id?: string;
             /** @description Location ID. */
@@ -43922,6 +44639,8 @@ export interface components {
             order_point?: components["schemas"]["QuantityInputRequest"];
             /** @description Lead time quantity. */
             lead_time?: components["schemas"]["QuantityInputRequest"];
+            /** @description Updated unit cost. Same currency rule as on create. */
+            unit_cost?: components["schemas"]["RateInput"] | null;
         };
         /**
          * @description Request to update an agent memory.
@@ -43935,8 +44654,8 @@ export interface components {
             category: string;
             /** @description Text content. */
             content: string;
-            /** @description JSON metadata. */
-            metadata: Record<string, never>;
+            /** @description JSON metadata. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
+            metadata: Record<string, never> | null;
             /** @description Entity type this memory is scoped to (e.g. "customer", "product"). */
             entity_type?: string | null;
             /** @description Entity ID. */
@@ -44042,16 +44761,16 @@ export interface components {
             /** @description Display name. */
             name?: string;
             /**
-             * @description Commission policy.
+             * @description Commission policy of products in this product line.
              * @enum {string}
              */
             commission_policy?: "commission_applied" | "commission_exempt";
             /**
-             * @description Freight policy.
+             * @description Freight policy for all items in this product line.
              * @enum {string}
              */
             freight_policy?: "free_freight" | "billed_freight";
-            /** @description Unit group ID. */
+            /** @description Unit group ID associated with this product line. This unit group dictates the units that products in this product line may be purchased in. */
             unit_group_id?: string;
         };
         /**
@@ -44064,14 +44783,16 @@ export interface components {
             /** @description SKU. */
             sku?: string;
             /** @description Description. */
-            description?: string;
+            description?: string | null;
             /** @description Notes. */
-            notes?: string;
+            notes?: string | null;
             /**
              * @description Whether visible in the customer portal.
              * @enum {string}
              */
             portal_visibility?: "visible" | "hidden";
+            /** @description Updated unit price. Numerator must be a currency unit; denominator must not be. */
+            unit_price?: components["schemas"]["RateInput"] | null;
         };
         /**
          * @description Request to partially update a product type.
@@ -44462,8 +45183,11 @@ export interface components {
              * @enum {string}
              */
             label_type?: "tag" | "traveler";
-            /** @description Whether material check is required. If `true`, the operator at this station must manually verify the material before proceeding. */
-            material_check_required?: boolean;
+            /**
+             * @description Operator requirement behavior for this station.
+             * @enum {string}
+             */
+            operator_requirement?: "none" | "material_check";
         };
         /**
          * @description Request to update a service level.
@@ -44477,11 +45201,11 @@ export interface components {
             /** @description Service level code. */
             code?: string;
             /**
-             * @description Customer portal visibility.
+             * @description Whether this service level will be available for customers to select in the customer portal.
              * @enum {string}
              */
             customer_portal_visibility?: "visible" | "hidden";
-            /** @description Whether this is the tenant's preferred default service level for the carrier. */
+            /** @description Default service levels are the default-selected service level for that carrier. */
             is_default?: boolean;
         };
         /** @description Mutable form data for a session update. */
@@ -44794,7 +45518,7 @@ export interface components {
             ratio_numerator?: string;
             /**
              * Format: decimal
-             * @description Conversion ratio denominator, as a decimal string.
+             * @description Conversion ratio denominator, as a decimal string. Must not be zero.
              */
             ratio_denominator?: string;
             /**
@@ -44804,7 +45528,7 @@ export interface components {
             offset_numerator?: string;
             /**
              * Format: decimal
-             * @description Conversion offset denominator, as a decimal string.
+             * @description Conversion offset denominator, as a decimal string. Must not be zero.
              */
             offset_denominator?: string;
         };
@@ -45523,7 +46247,7 @@ export interface components {
                     object: "unit";
                     /**
                      * Format: decimal
-                     * @description Conversion offset denominator. Typically 1.
+                     * @description Conversion offset denominator. Typically 1. Cannot be zero.
                      */
                     offset_denominator: string;
                     /**
@@ -45535,7 +46259,7 @@ export interface components {
                     owner: components["schemas"]["Owner"] | null;
                     /**
                      * Format: decimal
-                     * @description Conversion ratio denominator relative to the base unit in the same dimension.
+                     * @description Conversion ratio denominator relative to the base unit in the same dimension. Cannot be zero.
                      */
                     ratio_denominator: string;
                     /**
@@ -45560,7 +46284,7 @@ export interface components {
          * @description Result of address validation.
          * @example {
          *       "object": "validated_address",
-         *       "is_valid": true,
+         *       "status": "valid",
          *       "formatted_address": "123 Main St, Springfield, IL 62701, USA",
          *       "components": {
          *         "object": "address_components",
@@ -45581,8 +46305,11 @@ export interface components {
              * @enum {string}
              */
             object: "validated_address";
-            /** @description Whether the address is valid. */
-            is_valid: boolean;
+            /**
+             * @description Address validation status.
+             * @enum {string}
+             */
+            status: "valid" | "invalid";
             /** @description Formatted address from the validation service. */
             formatted_address: string | null;
             /** @description Standardized address components. */
@@ -45847,22 +46574,26 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter by account-level status. Defaults to "active".
+                 * @description Filter by account-level status.
                  * @example [
                  *       "active"
                  *     ]
                  */
                 "statuses[]"?: ("active" | "inactive")[];
                 /**
-                 * @description Filter by definition type (e.g. "system", "custom").
-                 * @example []
+                 * @description Filter by definition type.
+                 * @example [
+                 *       "system"
+                 *     ]
                  */
-                "definition_types[]"?: string[];
+                "definition_types[]"?: ("system" | "custom")[];
                 /**
-                 * @description Filter by trigger type (e.g. "manual", "scheduled", "event").
-                 * @example []
+                 * @description Filter by trigger type.
+                 * @example [
+                 *       "scheduled"
+                 *     ]
                  */
-                "trigger_types[]"?: string[];
+                "trigger_types[]"?: ("scheduled" | "manual" | "event")[];
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
@@ -46102,7 +46833,7 @@ export interface operations {
             };
         };
     };
-    "get-agent": {
+    "retrieve-agent": {
         parameters: {
             query?: {
                 /**
@@ -46122,7 +46853,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Agent */
+            /** @description Successful response for Retrieve Agent */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -46548,7 +47279,7 @@ export interface operations {
             };
         };
     };
-    "get-agent-alert": {
+    "retrieve-agent-alert": {
         parameters: {
             query?: {
                 /**
@@ -46568,7 +47299,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Agent Alert */
+            /** @description Successful response for Retrieve Agent Alert */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -46808,7 +47539,7 @@ export interface operations {
             };
         };
     };
-    "get-agent-memory": {
+    "retrieve-agent-memory": {
         parameters: {
             query?: never;
             header?: never;
@@ -46820,7 +47551,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Agent Memory */
+            /** @description Successful response for Retrieve Agent Memory */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -47349,7 +48080,7 @@ export interface operations {
             };
         };
     };
-    "get-run": {
+    "retrieve-run": {
         parameters: {
             query?: {
                 /**
@@ -47369,7 +48100,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Run */
+            /** @description Successful response for Retrieve Run */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -48394,6 +49125,7 @@ export interface operations {
                 content: {
                     /**
                      * @example {
+                     *       "object": "created_api_key",
                      *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadyhjtr",
                      *       "api_key_info": {
                      *         "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
@@ -48476,6 +49208,7 @@ export interface operations {
                 content: {
                     /**
                      * @example {
+                     *       "object": "created_api_key",
                      *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadyhjtr",
                      *       "api_key_info": {
                      *         "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
@@ -48533,7 +49266,7 @@ export interface operations {
             };
         };
     };
-    "get-api-key": {
+    "retrieve-api-key": {
         parameters: {
             query?: {
                 /**
@@ -48553,7 +49286,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get API Key */
+            /** @description Successful response for Retrieve API Key */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -48686,6 +49419,7 @@ export interface operations {
                 content: {
                     /**
                      * @example {
+                     *       "object": "created_api_key",
                      *       "api_key_secret": "aug_sk_prod_RhxFDvTdDnb0bgtcoA5P79_60EmH4h9j9ZldsuU9XyngXlpu8NqdIlGTQw8OM8cGeCadyhjtr",
                      *       "api_key_info": {
                      *         "id": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
@@ -49036,7 +49770,7 @@ export interface operations {
             };
         };
     };
-    "get-registration-session": {
+    "retrieve-registration-session": {
         parameters: {
             query?: never;
             header?: never;
@@ -49048,7 +49782,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Registration Session */
+            /** @description Successful response for Retrieve Registration Session */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -50203,7 +50937,7 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter by item category type (material_category or product_category).
+                 * @description Filter by item category type.
                  * @example material_category
                  */
                 type?: "material_category" | "product_category";
@@ -50213,7 +50947,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account" | "properties" | "unit_group")[];
+                "include[]"?: ("owner" | "owner.account" | "properties" | "unit_group" | "unit_group.base_unit" | "unit_group.associated_units" | "unit_group.associated_units.unit")[];
             };
             header?: never;
             path?: never;
@@ -50250,7 +50984,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account" | "properties" | "unit_group")[];
+                "include[]"?: ("owner" | "owner.account" | "properties" | "unit_group" | "unit_group.base_unit" | "unit_group.associated_units" | "unit_group.associated_units.unit")[];
             };
             header?: never;
             path?: never;
@@ -50308,7 +51042,7 @@ export interface operations {
             };
         };
     };
-    "get-item-category": {
+    "retrieve-item-category": {
         parameters: {
             query?: {
                 /**
@@ -50317,7 +51051,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account" | "properties" | "unit_group")[];
+                "include[]"?: ("owner" | "owner.account" | "properties" | "unit_group" | "unit_group.base_unit" | "unit_group.associated_units" | "unit_group.associated_units.unit")[];
             };
             header?: never;
             path: {
@@ -50328,7 +51062,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Item Category */
+            /** @description Successful response for Retrieve Item Category */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -50408,7 +51142,7 @@ export interface operations {
                  *       "owner"
                  *     ]
                  */
-                "include[]"?: ("owner" | "owner.account" | "properties" | "unit_group")[];
+                "include[]"?: ("owner" | "owner.account" | "properties" | "unit_group" | "unit_group.base_unit" | "unit_group.associated_units" | "unit_group.associated_units.unit")[];
             };
             header?: never;
             path: {
@@ -50621,22 +51355,32 @@ export interface operations {
                  */
                 end_date?: string;
                 /**
-                 * @description When true, search query must match exactly rather than partial match.
-                 * @example true
+                 * @description How the search query is matched against items (default: partial).
+                 * @example exact
                  */
-                is_exact_match?: boolean;
+                match_mode?: "exact" | "partial";
                 /**
-                 * @description When true, only return items that are initial subassemblies.
-                 * @example true
+                 * @description Which subassemblies to include when listing (default: all).
+                 * @example all
                  */
-                only_initial_subassemblies?: boolean;
+                subassembly_filter?: "all" | "initial_only";
+                /**
+                 * @description Filter by product line IDs (only items whose product belongs to one of these lines).
+                 * @example []
+                 */
+                "product_line_ids[]"?: string[];
+                /**
+                 * @description Filter by customer account IDs (only items whose product line is accessible to any of these customers).
+                 * @example []
+                 */
+                "customer_ids[]"?: string[];
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
                  *       "category"
                  *     ]
                  */
-                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate" | "attributes")[];
+                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate" | "attributes" | "category.unit_group" | "category.properties" | "category.unit_group.base_unit" | "category.unit_group.associated_units" | "category.unit_group.associated_units.unit")[];
             };
             header?: never;
             path?: never;
@@ -50964,7 +51708,7 @@ export interface operations {
             };
         };
     };
-    "get-item": {
+    "retrieve-item": {
         parameters: {
             query?: {
                 /**
@@ -50973,7 +51717,7 @@ export interface operations {
                  *       "category"
                  *     ]
                  */
-                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate" | "attributes")[];
+                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate" | "attributes" | "category.unit_group" | "category.properties" | "category.unit_group.base_unit" | "category.unit_group.associated_units" | "category.unit_group.associated_units.unit")[];
             };
             header?: never;
             path: {
@@ -50984,7 +51728,619 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Item */
+            /** @description Successful response for Retrieve Item */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "item",
+                     *       "sku": "ALM-2024-1001",
+                     *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *       "notes": null,
+                     *       "type": "product",
+                     *       "category": {
+                     *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item_category",
+                     *         "name": "Electronics",
+                     *         "notes": null,
+                     *         "type": "material_category",
+                     *         "owner": {
+                     *           "object": "owner",
+                     *           "type": "system",
+                     *           "account": null
+                     *         },
+                     *         "properties": null,
+                     *         "unit_group": null,
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "unit_value": {
+                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "rate",
+                     *         "value": "25.500000000000000000000000000000",
+                     *         "numerator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "USD",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "denominator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "display_value": "$25.50 / kg",
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "unit_cost": {
+                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "rate",
+                     *         "value": "25.500000000000000000000000000000",
+                     *         "numerator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "USD",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "denominator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "display_value": "$25.50 / kg",
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "burn_rate": {
+                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "rate",
+                     *         "value": "25.500000000000000000000000000000",
+                     *         "numerator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "USD",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "denominator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "display_value": "$25.50 / kg",
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "attributes": {
+                     *         "object": "list",
+                     *         "page_info": {
+                     *           "next_cursor": null,
+                     *           "prev_cursor": null,
+                     *           "has_next_page": false,
+                     *           "has_prev_page": false
+                     *         },
+                     *         "data": [
+                     *           {
+                     *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "attribute",
+                     *             "value": "Premium",
+                     *             "color": "red",
+                     *             "sort_order": 1,
+                     *             "created_at": "2026-05-10T00:00:00Z",
+                     *             "updated_at": "2026-05-10T00:23:00Z"
+                     *           }
+                     *         ]
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Item"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "add-item-attribute": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "category"
+                 *     ]
+                 */
+                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate" | "attributes" | "category.unit_group" | "category.properties" | "category.unit_group.base_unit" | "category.unit_group.associated_units" | "category.unit_group.associated_units.unit")[];
+            };
+            header?: never;
+            path: {
+                /** @description Item ID. */
+                id: string;
+                /** @description Attribute ID. */
+                attribute_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Add Item Attribute */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "item",
+                     *       "sku": "ALM-2024-1001",
+                     *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *       "notes": null,
+                     *       "type": "product",
+                     *       "category": {
+                     *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item_category",
+                     *         "name": "Electronics",
+                     *         "notes": null,
+                     *         "type": "material_category",
+                     *         "owner": {
+                     *           "object": "owner",
+                     *           "type": "system",
+                     *           "account": null
+                     *         },
+                     *         "properties": null,
+                     *         "unit_group": null,
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "unit_value": {
+                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "rate",
+                     *         "value": "25.500000000000000000000000000000",
+                     *         "numerator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "USD",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "denominator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "display_value": "$25.50 / kg",
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "unit_cost": {
+                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "rate",
+                     *         "value": "25.500000000000000000000000000000",
+                     *         "numerator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "USD",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "denominator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "display_value": "$25.50 / kg",
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "burn_rate": {
+                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "rate",
+                     *         "value": "25.500000000000000000000000000000",
+                     *         "numerator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "USD",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "denominator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "display_value": "$25.50 / kg",
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "attributes": {
+                     *         "object": "list",
+                     *         "page_info": {
+                     *           "next_cursor": null,
+                     *           "prev_cursor": null,
+                     *           "has_next_page": false,
+                     *           "has_prev_page": false
+                     *         },
+                     *         "data": [
+                     *           {
+                     *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "attribute",
+                     *             "value": "Premium",
+                     *             "color": "red",
+                     *             "sort_order": 1,
+                     *             "created_at": "2026-05-10T00:00:00Z",
+                     *             "updated_at": "2026-05-10T00:23:00Z"
+                     *           }
+                     *         ]
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Item"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "remove-item-attribute": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "category"
+                 *     ]
+                 */
+                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate" | "attributes" | "category.unit_group" | "category.properties" | "category.unit_group.base_unit" | "category.unit_group.associated_units" | "category.unit_group.associated_units.unit")[];
+            };
+            header?: never;
+            path: {
+                /** @description Item ID. */
+                id: string;
+                /** @description Attribute ID. */
+                attribute_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Remove Item Attribute */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "item",
+                     *       "sku": "ALM-2024-1001",
+                     *       "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *       "notes": null,
+                     *       "type": "product",
+                     *       "category": {
+                     *         "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item_category",
+                     *         "name": "Electronics",
+                     *         "notes": null,
+                     *         "type": "material_category",
+                     *         "owner": {
+                     *           "object": "owner",
+                     *           "type": "system",
+                     *           "account": null
+                     *         },
+                     *         "properties": null,
+                     *         "unit_group": null,
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "unit_value": {
+                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "rate",
+                     *         "value": "25.500000000000000000000000000000",
+                     *         "numerator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "USD",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "denominator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "display_value": "$25.50 / kg",
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "unit_cost": {
+                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "rate",
+                     *         "value": "25.500000000000000000000000000000",
+                     *         "numerator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "USD",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "denominator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "display_value": "$25.50 / kg",
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "burn_rate": {
+                     *         "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "rate",
+                     *         "value": "25.500000000000000000000000000000",
+                     *         "numerator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "US Dollar",
+                     *           "abbreviation": "USD",
+                     *           "type": "currency",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "denominator_unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "",
+                     *           "ratio_denominator": "",
+                     *           "offset_numerator": "",
+                     *           "offset_denominator": "",
+                     *           "is_base_unit": false,
+                     *           "owner": null,
+                     *           "created_at": "0001-01-01T00:00:00Z",
+                     *           "updated_at": "0001-01-01T00:00:00Z"
+                     *         },
+                     *         "display_value": "$25.50 / kg",
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "attributes": {
+                     *         "object": "list",
+                     *         "page_info": {
+                     *           "next_cursor": null,
+                     *           "prev_cursor": null,
+                     *           "has_next_page": false,
+                     *           "has_prev_page": false
+                     *         },
+                     *         "data": [
+                     *           {
+                     *             "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "attribute",
+                     *             "value": "Premium",
+                     *             "color": "red",
+                     *             "sort_order": 1,
+                     *             "created_at": "2026-05-10T00:00:00Z",
+                     *             "updated_at": "2026-05-10T00:23:00Z"
+                     *           }
+                     *         ]
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Item"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "change-item-category": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "category"
+                 *     ]
+                 */
+                "include[]"?: ("category" | "unit_value" | "unit_cost" | "burn_rate" | "attributes" | "category.unit_group" | "category.properties" | "category.unit_group.base_unit" | "category.unit_group.associated_units" | "category.unit_group.associated_units.unit")[];
+            };
+            header?: never;
+            path: {
+                /** @description Item ID. */
+                id: string;
+                /** @description Category ID. */
+                category_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Change Item Category */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -51226,7 +52582,7 @@ export interface operations {
             };
         };
     };
-    "get-item-inventory": {
+    "retrieve-item-inventory": {
         parameters: {
             query?: never;
             header?: never;
@@ -51238,7 +52594,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Item Inventory */
+            /** @description Successful response for Retrieve Item Inventory */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -51367,7 +52723,7 @@ export interface operations {
                 /**
                  * @example {
                  *       "quantity_change": 10.5,
-                 *       "reconcile": false,
+                 *       "operation": "adjust",
                  *       "customer_id": "ac_01gf7a8200er3ar3pkfrb6kk29",
                  *       "location_id": "lc_01gf7a8200er3ar3pkfrb6kk30",
                  *       "unit_id": "un_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -51444,6 +52800,2415 @@ export interface operations {
                      *     }
                      */
                     "application/json": components["schemas"]["ItemTrends"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "list-materials": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @example example
+                 */
+                cursor?: string;
+                /**
+                 * @description Maximum number of results per page (default: 100, max: 1000).
+                 * @example 100
+                 */
+                limit?: number;
+                /**
+                 * @description Search query used to filter results.
+                 * @example example
+                 */
+                q?: string;
+                /**
+                 * @description Filter by category IDs.
+                 * @example []
+                 */
+                "category_ids[]"?: string[];
+                /**
+                 * @description Filter by attribute IDs.
+                 * @example []
+                 */
+                "attribute_ids[]"?: string[];
+                /**
+                 * @description Filter to materials created on or after this date.
+                 * @example example
+                 */
+                start_date?: string;
+                /**
+                 * @description Filter to materials created on or before this date.
+                 * @example example
+                 */
+                end_date?: string;
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "item"
+                 *     ]
+                 */
+                "include[]"?: ("item" | "item.category" | "item.category.properties" | "item.category.unit_group" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for List Materials */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "object": "list",
+                     *       "page_info": {
+                     *         "next_cursor": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "prev_cursor": null,
+                     *         "has_next_page": true,
+                     *         "has_prev_page": false
+                     *       },
+                     *       "data": [
+                     *         {
+                     *           "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "material",
+                     *           "item": {
+                     *             "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "item",
+                     *             "sku": "ALM-2024-1001",
+                     *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *             "notes": null,
+                     *             "type": "product",
+                     *             "category": {
+                     *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "item_category",
+                     *               "name": "Electronics",
+                     *               "notes": null,
+                     *               "type": "material_category",
+                     *               "owner": {
+                     *                 "object": "owner",
+                     *                 "type": "system",
+                     *                 "account": null
+                     *               },
+                     *               "properties": null,
+                     *               "unit_group": null,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "unit_value": {
+                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "rate",
+                     *               "value": "25.500000000000000000000000000000",
+                     *               "numerator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "US Dollar",
+                     *                 "abbreviation": "USD",
+                     *                 "type": "currency",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "denominator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "Kilogram",
+                     *                 "abbreviation": "kg",
+                     *                 "type": "mass",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "display_value": "$25.50 / kg",
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "unit_cost": {
+                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "rate",
+                     *               "value": "25.500000000000000000000000000000",
+                     *               "numerator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "US Dollar",
+                     *                 "abbreviation": "USD",
+                     *                 "type": "currency",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "denominator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "Kilogram",
+                     *                 "abbreviation": "kg",
+                     *                 "type": "mass",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "display_value": "$25.50 / kg",
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "burn_rate": {
+                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "rate",
+                     *               "value": "25.500000000000000000000000000000",
+                     *               "numerator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "US Dollar",
+                     *                 "abbreviation": "USD",
+                     *                 "type": "currency",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "denominator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "Kilogram",
+                     *                 "abbreviation": "kg",
+                     *                 "type": "mass",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "display_value": "$25.50 / kg",
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "attributes": {
+                     *               "object": "list",
+                     *               "page_info": {
+                     *                 "next_cursor": null,
+                     *                 "prev_cursor": null,
+                     *                 "has_next_page": false,
+                     *                 "has_prev_page": false
+                     *               },
+                     *               "data": [
+                     *                 {
+                     *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                   "object": "attribute",
+                     *                   "value": "Premium",
+                     *                   "color": "red",
+                     *                   "sort_order": 1,
+                     *                   "created_at": "2026-05-10T00:00:00Z",
+                     *                   "updated_at": "2026-05-10T00:23:00Z"
+                     *                 }
+                     *               ]
+                     *             },
+                     *             "created_at": "2026-05-10T00:00:00Z",
+                     *             "updated_at": "2026-05-10T00:23:00Z"
+                     *           },
+                     *           "order_point": {
+                     *             "value": "100.000000000000000000000000000000",
+                     *             "unit": {
+                     *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "unit",
+                     *               "name": "Kilogram",
+                     *               "abbreviation": "kg",
+                     *               "type": "mass",
+                     *               "ratio_numerator": "1000",
+                     *               "ratio_denominator": "1",
+                     *               "offset_numerator": "0",
+                     *               "offset_denominator": "1",
+                     *               "is_base_unit": false,
+                     *               "owner": {
+                     *                 "object": "owner",
+                     *                 "type": "system",
+                     *                 "account": null
+                     *               },
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           },
+                     *           "lead_time": {
+                     *             "value": "100.000000000000000000000000000000",
+                     *             "unit": {
+                     *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "unit",
+                     *               "name": "Kilogram",
+                     *               "abbreviation": "kg",
+                     *               "type": "mass",
+                     *               "ratio_numerator": "1000",
+                     *               "ratio_denominator": "1",
+                     *               "offset_numerator": "0",
+                     *               "offset_denominator": "1",
+                     *               "is_base_unit": false,
+                     *               "owner": {
+                     *                 "object": "owner",
+                     *                 "type": "system",
+                     *                 "account": null
+                     *               },
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           },
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       ]
+                     *     }
+                     */
+                    "application/json": components["schemas"]["List_Material"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "create-material": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "item"
+                 *     ]
+                 */
+                "include[]"?: ("item" | "item.category" | "item.category.properties" | "item.category.unit_group" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The request body for Create Material */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "sku": "MAT-001",
+                 *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp"
+                 *     }
+                 */
+                "application/json": components["schemas"]["CreateMaterialRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Create Material */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "material",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *         "notes": null,
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "order_point": {
+                     *         "value": "100.000000000000000000000000000000",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "1000",
+                     *           "ratio_denominator": "1",
+                     *           "offset_numerator": "0",
+                     *           "offset_denominator": "1",
+                     *           "is_base_unit": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       },
+                     *       "lead_time": {
+                     *         "value": "100.000000000000000000000000000000",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "1000",
+                     *           "ratio_denominator": "1",
+                     *           "offset_numerator": "0",
+                     *           "offset_denominator": "1",
+                     *           "is_base_unit": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Material"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "retrieve-material": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "item"
+                 *     ]
+                 */
+                "include[]"?: ("item" | "item.category" | "item.category.properties" | "item.category.unit_group" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+            };
+            header?: never;
+            path: {
+                /** @description Material ID. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Retrieve Material */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "material",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *         "notes": null,
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "order_point": {
+                     *         "value": "100.000000000000000000000000000000",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "1000",
+                     *           "ratio_denominator": "1",
+                     *           "offset_numerator": "0",
+                     *           "offset_denominator": "1",
+                     *           "is_base_unit": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       },
+                     *       "lead_time": {
+                     *         "value": "100.000000000000000000000000000000",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "1000",
+                     *           "ratio_denominator": "1",
+                     *           "offset_numerator": "0",
+                     *           "offset_denominator": "1",
+                     *           "is_base_unit": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Material"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "delete-material": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Material ID. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Delete Material */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "material",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *         "notes": null,
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "order_point": {
+                     *         "value": "100.000000000000000000000000000000",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "1000",
+                     *           "ratio_denominator": "1",
+                     *           "offset_numerator": "0",
+                     *           "offset_denominator": "1",
+                     *           "is_base_unit": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       },
+                     *       "lead_time": {
+                     *         "value": "100.000000000000000000000000000000",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "1000",
+                     *           "ratio_denominator": "1",
+                     *           "offset_numerator": "0",
+                     *           "offset_denominator": "1",
+                     *           "is_base_unit": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Material"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "update-material": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "item"
+                 *     ]
+                 */
+                "include[]"?: ("item" | "item.category" | "item.category.properties" | "item.category.unit_group" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+            };
+            header?: never;
+            path: {
+                /** @description Material ID. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The request body for Update Material */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "sku": "MAT-001-UPDATED"
+                 *     }
+                 */
+                "application/json": components["schemas"]["UpdateMaterialRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Update Material */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *       "object": "material",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *         "notes": null,
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "order_point": {
+                     *         "value": "100.000000000000000000000000000000",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "1000",
+                     *           "ratio_denominator": "1",
+                     *           "offset_numerator": "0",
+                     *           "offset_denominator": "1",
+                     *           "is_base_unit": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       },
+                     *       "lead_time": {
+                     *         "value": "100.000000000000000000000000000000",
+                     *         "unit": {
+                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "unit",
+                     *           "name": "Kilogram",
+                     *           "abbreviation": "kg",
+                     *           "type": "mass",
+                     *           "ratio_numerator": "1000",
+                     *           "ratio_denominator": "1",
+                     *           "offset_numerator": "0",
+                     *           "offset_denominator": "1",
+                     *           "is_base_unit": false,
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Material"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "list-parts": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @example example
+                 */
+                cursor?: string;
+                /**
+                 * @description Maximum number of results per page (default: 100, max: 1000).
+                 * @example 100
+                 */
+                limit?: number;
+                /**
+                 * @description Search query used to filter results.
+                 * @example example
+                 */
+                q?: string;
+                /**
+                 * @description Filter by category IDs.
+                 * @example []
+                 */
+                "category_ids[]"?: string[];
+                /**
+                 * @description Filter by attribute IDs.
+                 * @example []
+                 */
+                "attribute_ids[]"?: string[];
+                /**
+                 * @description Filter parts created on or after this date.
+                 * @example example
+                 */
+                start_date?: string;
+                /**
+                 * @description Filter parts created on or before this date.
+                 * @example example
+                 */
+                end_date?: string;
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "item"
+                 *     ]
+                 */
+                "include[]"?: ("item" | "item.category" | "item.category.properties" | "item.category.unit_group" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for List Parts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "object": "list",
+                     *       "page_info": {
+                     *         "next_cursor": "pt_02kn5s7811g9qwce7cizr4e0mq",
+                     *         "prev_cursor": null,
+                     *         "has_next_page": true,
+                     *         "has_prev_page": false
+                     *       },
+                     *       "data": [
+                     *         {
+                     *           "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
+                     *           "object": "part",
+                     *           "item": {
+                     *             "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "item",
+                     *             "sku": "ALM-2024-1001",
+                     *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *             "notes": null,
+                     *             "type": "product",
+                     *             "category": {
+                     *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "item_category",
+                     *               "name": "Electronics",
+                     *               "notes": null,
+                     *               "type": "material_category",
+                     *               "owner": {
+                     *                 "object": "owner",
+                     *                 "type": "system",
+                     *                 "account": null
+                     *               },
+                     *               "properties": null,
+                     *               "unit_group": null,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "unit_value": {
+                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "rate",
+                     *               "value": "25.500000000000000000000000000000",
+                     *               "numerator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "US Dollar",
+                     *                 "abbreviation": "USD",
+                     *                 "type": "currency",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "denominator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "Kilogram",
+                     *                 "abbreviation": "kg",
+                     *                 "type": "mass",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "display_value": "$25.50 / kg",
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "unit_cost": {
+                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "rate",
+                     *               "value": "25.500000000000000000000000000000",
+                     *               "numerator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "US Dollar",
+                     *                 "abbreviation": "USD",
+                     *                 "type": "currency",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "denominator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "Kilogram",
+                     *                 "abbreviation": "kg",
+                     *                 "type": "mass",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "display_value": "$25.50 / kg",
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "burn_rate": {
+                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "rate",
+                     *               "value": "25.500000000000000000000000000000",
+                     *               "numerator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "US Dollar",
+                     *                 "abbreviation": "USD",
+                     *                 "type": "currency",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "denominator_unit": {
+                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                 "object": "unit",
+                     *                 "name": "Kilogram",
+                     *                 "abbreviation": "kg",
+                     *                 "type": "mass",
+                     *                 "ratio_numerator": "",
+                     *                 "ratio_denominator": "",
+                     *                 "offset_numerator": "",
+                     *                 "offset_denominator": "",
+                     *                 "is_base_unit": false,
+                     *                 "owner": null,
+                     *                 "created_at": "0001-01-01T00:00:00Z",
+                     *                 "updated_at": "0001-01-01T00:00:00Z"
+                     *               },
+                     *               "display_value": "$25.50 / kg",
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "attributes": {
+                     *               "object": "list",
+                     *               "page_info": {
+                     *                 "next_cursor": null,
+                     *                 "prev_cursor": null,
+                     *                 "has_next_page": false,
+                     *                 "has_prev_page": false
+                     *               },
+                     *               "data": [
+                     *                 {
+                     *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *                   "object": "attribute",
+                     *                   "value": "Premium",
+                     *                   "color": "red",
+                     *                   "sort_order": 1,
+                     *                   "created_at": "2026-05-10T00:00:00Z",
+                     *                   "updated_at": "2026-05-10T00:23:00Z"
+                     *                 }
+                     *               ]
+                     *             },
+                     *             "created_at": "2026-05-10T00:00:00Z",
+                     *             "updated_at": "2026-05-10T00:23:00Z"
+                     *           },
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         }
+                     *       ]
+                     *     }
+                     */
+                    "application/json": components["schemas"]["List_Part"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "create-part": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "item"
+                 *     ]
+                 */
+                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The request body for Create Part */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "sku": "BRG-6204-2RS",
+                 *       "description": "Deep groove ball bearing, 20x47x14mm",
+                 *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp"
+                 *     }
+                 */
+                "application/json": components["schemas"]["CreatePartRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Create Part */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
+                     *       "object": "part",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *         "notes": null,
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Part"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "retrieve-part": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "item"
+                 *     ]
+                 */
+                "include[]"?: ("item" | "item.category" | "item.category.properties" | "item.category.unit_group" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+            };
+            header?: never;
+            path: {
+                /** @description Part ID. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Retrieve Part */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
+                     *       "object": "part",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *         "notes": null,
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Part"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "delete-part": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Part ID. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Delete Part */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
+                     *       "object": "part",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *         "notes": null,
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Part"];
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "update-part": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "item"
+                 *     ]
+                 */
+                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+            };
+            header?: never;
+            path: {
+                /** @description Part ID. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The request body for Update Part */
+        requestBody?: {
+            content: {
+                /**
+                 * @example {
+                 *       "sku": "BRG-6204-2RS",
+                 *       "description": "Deep groove ball bearing, 20x47x14mm",
+                 *       "notes": null
+                 *     }
+                 */
+                "application/json": components["schemas"]["UpdatePartRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful response for Update Part */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
+                     *       "object": "part",
+                     *       "item": {
+                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "item",
+                     *         "sku": "ALM-2024-1001",
+                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
+                     *         "notes": null,
+                     *         "type": "product",
+                     *         "category": {
+                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "item_category",
+                     *           "name": "Electronics",
+                     *           "notes": null,
+                     *           "type": "material_category",
+                     *           "owner": {
+                     *             "object": "owner",
+                     *             "type": "system",
+                     *             "account": null
+                     *           },
+                     *           "properties": null,
+                     *           "unit_group": null,
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_value": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "unit_cost": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "burn_rate": {
+                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *           "object": "rate",
+                     *           "value": "25.500000000000000000000000000000",
+                     *           "numerator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "US Dollar",
+                     *             "abbreviation": "USD",
+                     *             "type": "currency",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "denominator_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "",
+                     *             "ratio_denominator": "",
+                     *             "offset_numerator": "",
+                     *             "offset_denominator": "",
+                     *             "is_base_unit": false,
+                     *             "owner": null,
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "updated_at": "0001-01-01T00:00:00Z"
+                     *           },
+                     *           "display_value": "$25.50 / kg",
+                     *           "created_at": "2026-05-10T00:00:00Z",
+                     *           "updated_at": "2026-05-10T00:23:00Z"
+                     *         },
+                     *         "attributes": {
+                     *           "object": "list",
+                     *           "page_info": {
+                     *             "next_cursor": null,
+                     *             "prev_cursor": null,
+                     *             "has_next_page": false,
+                     *             "has_prev_page": false
+                     *           },
+                     *           "data": [
+                     *             {
+                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *               "object": "attribute",
+                     *               "value": "Premium",
+                     *               "color": "red",
+                     *               "sort_order": 1,
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             }
+                     *           ]
+                     *         },
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
+                     *       "created_at": "2026-05-10T00:00:00Z",
+                     *       "updated_at": "2026-05-10T00:23:00Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["Part"];
                 };
             };
             /** @description Error response */
@@ -51578,7 +55343,7 @@ export interface operations {
             };
         };
     };
-    "get-product-line": {
+    "retrieve-product-line": {
         parameters: {
             query?: {
                 /**
@@ -51598,7 +55363,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Product Line */
+            /** @description Successful response for Retrieve Product Line */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -51855,19 +55620,19 @@ export interface operations {
             };
         };
     };
-    "get-product-type": {
+    "retrieve-product-type": {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description Product type ID or code. */
+                /** @description Product ID or code. */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Product Type */
+            /** @description Successful response for Retrieve Product Type */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -51902,7 +55667,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Product type ID. */
+                /** @description Product ID. */
                 id: string;
             };
             cookie?: never;
@@ -51935,7 +55700,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Product type ID. */
+                /** @description Product ID. */
                 id: string;
             };
             cookie?: never;
@@ -52032,17 +55797,17 @@ export interface operations {
                  */
                 end_date?: string;
                 /**
-                 * @description Filter by portal ready status.
-                 * @example true
+                 * @description Filter by customer portal visibility.
+                 * @example visible
                  */
-                is_portal_ready?: boolean;
+                portal_visibility?: "visible" | "hidden";
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
                  *       "product_line"
                  *     ]
                  */
-                "include[]"?: ("product_line" | "product_line.unit_group" | "item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+                "include[]"?: ("product_line" | "product_line.unit_group" | "item" | "item.category" | "item.category.properties" | "item.category.unit_group" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
             };
             header?: never;
             path?: never;
@@ -52501,7 +56266,15 @@ export interface operations {
     };
     "validate-products": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "product_line"
+                 *     ]
+                 */
+                "include[]"?: ("product_line" | "product_line.unit_group" | "item" | "item.category" | "item.category.properties" | "item.category.unit_group" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -52732,7 +56505,7 @@ export interface operations {
             };
         };
     };
-    "get-product": {
+    "retrieve-product": {
         parameters: {
             query?: {
                 /**
@@ -52741,7 +56514,7 @@ export interface operations {
                  *       "product_line"
                  *     ]
                  */
-                "include[]"?: ("product_line" | "product_line.unit_group" | "item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+                "include[]"?: ("product_line" | "product_line.unit_group" | "item" | "item.category" | "item.category.properties" | "item.category.unit_group" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
             };
             header?: never;
             path: {
@@ -52752,7 +56525,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Product */
+            /** @description Successful response for Retrieve Product */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -53180,7 +56953,15 @@ export interface operations {
     };
     "update-product": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "product_line"
+                 *     ]
+                 */
+                "include[]"?: ("product_line" | "product_line.unit_group" | "item" | "item.category" | "item.category.properties" | "item.category.unit_group" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
+            };
             header?: never;
             path: {
                 /** @description Product ID. */
@@ -53737,7 +57518,7 @@ export interface operations {
             };
         };
     };
-    "get-property": {
+    "retrieve-property": {
         parameters: {
             query?: {
                 /**
@@ -53757,7 +57538,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Property */
+            /** @description Successful response for Retrieve Property */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -53983,7 +57764,7 @@ export interface operations {
             };
         };
     };
-    "get-attribute": {
+    "retrieve-attribute": {
         parameters: {
             query?: never;
             header?: never;
@@ -53997,7 +57778,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Attribute */
+            /** @description Successful response for Retrieve Attribute */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -54137,7 +57918,7 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Unit type filter (e.g. "mass", "quantity").
+                 * @description Filter by the unit type.
                  * @example currency
                  */
                 type?: "currency" | "quantity" | "time" | "mass" | "volume" | "length" | "temperature" | "area";
@@ -54177,7 +57958,25 @@ export interface operations {
                      *           "name": "Weight",
                      *           "notes": null,
                      *           "type": "mass",
-                     *           "base_unit": null,
+                     *           "base_unit": {
+                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "unit",
+                     *             "name": "Kilogram",
+                     *             "abbreviation": "kg",
+                     *             "type": "mass",
+                     *             "ratio_numerator": "1000",
+                     *             "ratio_denominator": "1",
+                     *             "offset_numerator": "0",
+                     *             "offset_denominator": "1",
+                     *             "is_base_unit": false,
+                     *             "owner": {
+                     *               "object": "owner",
+                     *               "type": "system",
+                     *               "account": null
+                     *             },
+                     *             "created_at": "2026-05-10T00:00:00Z",
+                     *             "updated_at": "2026-05-10T00:23:00Z"
+                     *           },
                      *           "associated_units": null,
                      *           "owner": {
                      *             "object": "owner",
@@ -54254,7 +58053,25 @@ export interface operations {
                      *       "name": "Weight",
                      *       "notes": null,
                      *       "type": "mass",
-                     *       "base_unit": null,
+                     *       "base_unit": {
+                     *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "unit",
+                     *         "name": "Kilogram",
+                     *         "abbreviation": "kg",
+                     *         "type": "mass",
+                     *         "ratio_numerator": "1000",
+                     *         "ratio_denominator": "1",
+                     *         "offset_numerator": "0",
+                     *         "offset_denominator": "1",
+                     *         "is_base_unit": false,
+                     *         "owner": {
+                     *           "object": "owner",
+                     *           "type": "system",
+                     *           "account": null
+                     *         },
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
                      *       "associated_units": null,
                      *       "owner": {
                      *         "object": "owner",
@@ -54279,7 +58096,7 @@ export interface operations {
             };
         };
     };
-    "get-unit-group": {
+    "retrieve-unit-group": {
         parameters: {
             query?: {
                 /**
@@ -54299,7 +58116,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Unit Group */
+            /** @description Successful response for Retrieve Unit Group */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -54312,7 +58129,25 @@ export interface operations {
                      *       "name": "Weight",
                      *       "notes": null,
                      *       "type": "mass",
-                     *       "base_unit": null,
+                     *       "base_unit": {
+                     *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "unit",
+                     *         "name": "Kilogram",
+                     *         "abbreviation": "kg",
+                     *         "type": "mass",
+                     *         "ratio_numerator": "1000",
+                     *         "ratio_denominator": "1",
+                     *         "offset_numerator": "0",
+                     *         "offset_denominator": "1",
+                     *         "is_base_unit": false,
+                     *         "owner": {
+                     *           "object": "owner",
+                     *           "type": "system",
+                     *           "account": null
+                     *         },
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
                      *       "associated_units": null,
                      *       "owner": {
                      *         "object": "owner",
@@ -54414,7 +58249,25 @@ export interface operations {
                      *       "name": "Weight",
                      *       "notes": null,
                      *       "type": "mass",
-                     *       "base_unit": null,
+                     *       "base_unit": {
+                     *         "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "unit",
+                     *         "name": "Kilogram",
+                     *         "abbreviation": "kg",
+                     *         "type": "mass",
+                     *         "ratio_numerator": "1000",
+                     *         "ratio_denominator": "1",
+                     *         "offset_numerator": "0",
+                     *         "offset_denominator": "1",
+                     *         "is_base_unit": false,
+                     *         "owner": {
+                     *           "object": "owner",
+                     *           "type": "system",
+                     *           "account": null
+                     *         },
+                     *         "created_at": "2026-05-10T00:00:00Z",
+                     *         "updated_at": "2026-05-10T00:23:00Z"
+                     *       },
                      *       "associated_units": null,
                      *       "owner": {
                      *         "object": "owner",
@@ -54453,7 +58306,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Unit group ID. */
-                unitGroupId: string;
+                unit_group_id: string;
             };
             cookie?: never;
         };
@@ -54493,7 +58346,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Unit group ID. */
-                unitGroupId: string;
+                unit_group_id: string;
             };
             cookie?: never;
         };
@@ -54532,7 +58385,7 @@ export interface operations {
             };
         };
     };
-    "get-unit-group-unit": {
+    "retrieve-unit-group-unit": {
         parameters: {
             query?: {
                 /**
@@ -54546,7 +58399,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Unit group ID. */
-                unitGroupId: string;
+                unit_group_id: string;
                 /** @description Unit group unit ID. */
                 id: string;
             };
@@ -54554,7 +58407,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Unit Group Unit */
+            /** @description Successful response for Retrieve Unit Group Unit */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -54580,7 +58433,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Unit group ID. */
-                unitGroupId: string;
+                unit_group_id: string;
                 /** @description Unit group unit ID. */
                 id: string;
             };
@@ -54623,7 +58476,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Unit group ID. */
-                unitGroupId: string;
+                unit_group_id: string;
                 /** @description Unit group unit ID. */
                 id: string;
             };
@@ -54897,7 +58750,7 @@ export interface operations {
             };
         };
     };
-    "get-unit": {
+    "retrieve-unit": {
         parameters: {
             query?: {
                 /**
@@ -54917,7 +58770,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Unit */
+            /** @description Successful response for Retrieve Unit */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -55182,6 +59035,7 @@ export interface operations {
                 content: {
                     /**
                      * @example {
+                     *       "object": "message",
                      *       "message": "Operation completed successfully."
                      *     }
                      */
@@ -55228,6 +59082,7 @@ export interface operations {
                 content: {
                     /**
                      * @example {
+                     *       "object": "message",
                      *       "message": "Operation completed successfully."
                      *     }
                      */
@@ -55277,7 +59132,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "object": "validated_address",
-                     *       "is_valid": true,
+                     *       "status": "valid",
                      *       "formatted_address": "123 Main St, Springfield, IL 62701, USA",
                      *       "components": {
                      *         "object": "address_components",
@@ -55306,7 +59161,7 @@ export interface operations {
             };
         };
     };
-    "get-address-details": {
+    "retrieve-address-details": {
         parameters: {
             query?: {
                 /**
@@ -55324,7 +59179,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Address Details */
+            /** @description Successful response for Retrieve Address Details */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -55926,34 +59781,34 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Start of date range for occurred_at.
+                 * @description Restricts results to audit events on or after this timestamp.
                  * @example example
                  */
                 start_date?: string;
                 /**
-                 * @description End of date range for occurred_at.
+                 * @description Restricts results to audit events on or before this timestamp.
                  * @example example
                  */
                 end_date?: string;
                 /**
-                 * @description Resource types of the audited entity.
+                 * @description Filter by the resource type of the audited entity.
                  * @example [
                  *       "account"
                  *     ]
                  */
-                "resource_types[]"?: ("account" | "actor" | "entity" | "user" | "address" | "api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "account_plan")[];
+                "resource_types[]"?: ("account" | "actor" | "entity" | "user" | "address" | "api_key" | "created_api_key" | "refresh_token" | "list" | "sandbox" | "registration_session" | "pricing_plan" | "plan_change" | "enterprise_inquiry" | "request_log" | "audit_event" | "role" | "unit" | "account_affiliation" | "agent_definition" | "available_tool" | "agent_definition_tool" | "agent_account_status" | "agent_run" | "agent_action" | "agent_run_step" | "agent_token_usage" | "agent_memory" | "agent_alert" | "tool_group" | "payment_term" | "shipping_term" | "quantity" | "account_group" | "account_status" | "geolocation" | "account_user" | "department" | "account_integration" | "account_price" | "product_line" | "item_category" | "attribute" | "rate" | "account_group_product_line_access" | "sales_target" | "adjustment_type" | "account_branding" | "account_portal" | "account_logo_url" | "public_account" | "property" | "carrier" | "service_level" | "item" | "product" | "batch" | "batch_flow_node" | "scanning_consumption" | "open_batch_summary" | "scanning_production_step_info" | "scanning_station" | "production_step" | "production_run" | "machine" | "child_account" | "unit_group" | "unit_group_unit" | "consumption" | "customer_product_line_access" | "customer" | "frequently_ordered_product" | "priority" | "delivery" | "delivery_line" | "sales_order" | "sales_order_line" | "sales_order_type" | "location" | "location_type" | "lot" | "email_log" | "inventory_change_log" | "invoice" | "invoice_summary" | "invoice_line" | "invoice_allocation" | "invoice_for_payment" | "shipment" | "shipment_summary" | "shipment_line" | "shipping_case" | "shipping_case_label_url" | "settlement" | "settlement_summary" | "role_permission" | "registration_flow" | "registration_flow_option" | "transaction" | "transaction_summary" | "transaction_method" | "transaction_type" | "transaction_allocation" | "usage_item" | "agent_token_detail" | "account_usage_response" | "subscription_info" | "billing_portal_session_response" | "switch_plan_response" | "ensure_billing_customer_response" | "spending_cap_response" | "agent_spend_info" | "webhook_response" | "address_suggestion" | "address_components" | "address_details_result" | "validated_address" | "plan_limit" | "plan_change_proration" | "plan_change_line_item" | "setup_billing_response" | "confirm_payment_response" | "oauth_response" | "oauth_status_response" | "stripe_publishable_key" | "stripe_status" | "healthcheck" | "agent_definition_config" | "trigger_config" | "customer_contact_info" | "customer_freight_preferences" | "customer_defaults" | "customer_notification_preferences" | "order_discount" | "sales_order_status" | "material" | "supplier_material" | "part" | "permission_group" | "permission" | "pick" | "pick_line" | "product_type" | "production" | "production_flow" | "map" | "purchase_order" | "purchase_order_line" | "supplier" | "supplier_summary" | "receivable_entry" | "receiving_order" | "receiving_order_line" | "email_contact" | "allocation_entry" | "open_credit_entry" | "volume_discount" | "volume_discount_tier" | "analyze_deliveries_response" | "analyze_manufacturing_response" | "analyze_manufacturing_batch_response" | "analyze_quarterly_orders_response" | "analyze_new_customers_response" | "analyze_oee_response" | "catalog_product_line" | "catalog_category" | "catalog_product" | "catalog_property" | "catalog_attribute" | "dc_location" | "edi_run" | "inventory_item" | "analyze_weeks_of_sales_response" | "bulk_reconcile_items_response" | "sys_property" | "sys_property_type" | "sys_property_value" | "territory" | "tenancy" | "checkout_session" | "estimate_rate_result" | "rate_shop_option" | "rate_shop_result" | "owner" | "message" | "account_plan")[];
                 /**
-                 * @description Audited resource IDs.
+                 * @description Filter by the audited resource IDs.
                  * @example []
                  */
                 "resource_ids[]"?: string[];
                 /**
-                 * @description Actor identifier. `account_user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
+                 * @description Filter by the actor identifier. `account_user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
                  * @example []
                  */
                 "actor_ids[]"?: string[];
                 /**
-                 * @description Audit actions.
+                 * @description Filter by the audit actions.
                  * @example [
                  *       "create"
                  *     ]
@@ -56114,7 +59969,7 @@ export interface operations {
             };
         };
     };
-    "get-audit-event": {
+    "retrieve-audit-event": {
         parameters: {
             query?: {
                 /**
@@ -56134,7 +59989,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Audit Event */
+            /** @description Successful response for Retrieve Audit Event */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -56274,7 +60129,7 @@ export interface operations {
                      *         {
                      *           "id": "eml_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "email_log",
-                     *           "has_sent": true,
+                     *           "send_status": "sent",
                      *           "recipients": [
                      *             "customer@example.com"
                      *           ],
@@ -56337,7 +60192,7 @@ export interface operations {
             };
         };
     };
-    "get-email-log": {
+    "retrieve-email-log": {
         parameters: {
             query?: {
                 /**
@@ -56357,7 +60212,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Email Log */
+            /** @description Successful response for Retrieve Email Log */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -56367,7 +60222,7 @@ export interface operations {
                      * @example {
                      *       "id": "eml_01jm4r6700f8nwq3v5hx2d9ktp",
                      *       "object": "email_log",
-                     *       "has_sent": true,
+                     *       "send_status": "sent",
                      *       "recipients": [
                      *         "customer@example.com"
                      *       ],
@@ -56447,66 +60302,71 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Start of date range for occurred_at.
+                 * @description Restricts results to request logs on or after this timestamp.
                  * @example example
                  */
                 start_date?: string;
                 /**
-                 * @description End of date range for occurred_at.
+                 * @description Restricts results to request logs on or before this timestamp.
                  * @example example
                  */
                 end_date?: string;
                 /**
-                 * @description HTTP methods.
+                 * @description Filter by the HTTP method.
                  * @example [
                  *       "GET"
                  *     ]
                  */
                 "methods[]"?: ("GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS")[];
                 /**
-                 * @description HTTP status codes.
+                 * @description Filter by the HTTP status code.
                  * @example []
                  */
                 "status_codes[]"?: number[];
                 /**
-                 * @description API error codes.
+                 * @description Filter by API error code.
                  * @example [
                  *       "expired_token"
                  *     ]
                  */
                 "error_codes[]"?: ("expired_token" | "api_key_expired" | "api_key_revoked" | "invalid_credentials" | "insufficient_permissions" | "payment_required" | "validation_failed" | "missing_field" | "invalid_format" | "method_not_allowed" | "resource_not_found" | "resource_exists" | "resource_conflict" | "resource_gone" | "idempotency_in_progress" | "limit_exceeded" | "registration_closed" | "rate_limit_exceeded" | "parameter_missing" | "parameter_invalid" | "parameter_unknown" | "parameters_exclusive" | "internal_error" | "service_unavailable" | "external_service_error" | "timeout" | "connection_error" | "request_timeout" | "client_closed_request" | "api_version_required" | "api_version_invalid" | "api_version_too_old")[];
                 /**
-                 * @description Actor home account IDs.
+                 * @description Filter by the account ID _targeted_ by the request. The actor may be operating on behalf of a separate account.
                  * @example []
                  */
                 "account_ids[]"?: string[];
                 /**
-                 * @description Actor identifier. `account_user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
+                 * @description Filter by the actor identifier. `account_user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
                  * @example []
                  */
                 "actor_ids[]"?: string[];
                 /**
-                 * @description Actor types.
+                 * @description Filter by the actor type.
                  * @example [
                  *       "user"
                  *     ]
                  */
                 "actor_types[]"?: ("user" | "api_key" | "agent")[];
                 /**
-                 * @description Normalized route templates.
+                 * @description Filter by the _normalized_ route template. For example `PATCH /v1/sales/customers/{id}` is the normalized route for a request route `PUT /v1/sales/customers/ac_...`.
                  * @example []
                  */
                 "normalized_routes[]"?: string[];
                 /**
-                 * @description Request hosts.
+                 * @description Filter by the request host. Typically, `api.augno.com`.
                  * @example []
                  */
                 "hosts[]"?: string[];
                 /**
-                 * @description Minimum latency in microseconds.
+                 * @description Filter by the minimum latency in microseconds.
                  * @example 100
                  */
                 min_latency_us?: number;
+                /**
+                 * @description Filter by the user-provided idempotency key.
+                 * @example example
+                 */
+                idempotency_key?: string;
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
@@ -56544,11 +60404,12 @@ export interface operations {
                      *           "host": "https://api.augno.com",
                      *           "path": "/v1/core/sandboxes",
                      *           "normalized_route": "/v1/core/sandboxes",
-                     *           "query_json": "{\"limit\":10}",
+                     *           "query_params": {
+                     *             "limit": 10
+                     *           },
                      *           "status_code": 200,
                      *           "latency_us": 12345,
                      *           "api_version": "2026-01-01",
-                     *           "identity_type": "user",
                      *           "client_ip": "198.51.100.7",
                      *           "user_agent": "Mozilla/5.0",
                      *           "referrer": null,
@@ -56604,8 +60465,17 @@ export interface operations {
                      *             }
                      *           },
                      *           "idempotency_key": null,
-                     *           "request_body_json": null,
-                     *           "response_body_json": "{\"object\":\"list\",\"data\":[...]}"
+                     *           "request_body": null,
+                     *           "response_body": {
+                     *             "data": [],
+                     *             "object": "list",
+                     *             "page_info": {
+                     *               "has_next_page": false,
+                     *               "has_prev_page": false,
+                     *               "next_cursor": null,
+                     *               "prev_cursor": null
+                     *             }
+                     *           }
                      *         }
                      *       ]
                      *     }
@@ -56624,7 +60494,7 @@ export interface operations {
             };
         };
     };
-    "get-request-log": {
+    "retrieve-request-log": {
         parameters: {
             query?: {
                 /**
@@ -56633,7 +60503,7 @@ export interface operations {
                  *       "account"
                  *     ]
                  */
-                "include[]"?: ("account" | "actor" | "actor.role" | "actor.role.permissions" | "query_json" | "request_body_json" | "response_body_json")[];
+                "include[]"?: ("account" | "actor" | "actor.role" | "actor.role.permissions" | "query_params" | "request_body" | "response_body")[];
             };
             header?: never;
             path: {
@@ -56644,7 +60514,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Request Log */
+            /** @description Successful response for Retrieve Request Log */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -56658,11 +60528,12 @@ export interface operations {
                      *       "host": "https://api.augno.com",
                      *       "path": "/v1/core/sandboxes",
                      *       "normalized_route": "/v1/core/sandboxes",
-                     *       "query_json": "{\"limit\":10}",
+                     *       "query_params": {
+                     *         "limit": 10
+                     *       },
                      *       "status_code": 200,
                      *       "latency_us": 12345,
                      *       "api_version": "2026-01-01",
-                     *       "identity_type": "user",
                      *       "client_ip": "198.51.100.7",
                      *       "user_agent": "Mozilla/5.0",
                      *       "referrer": null,
@@ -56718,8 +60589,17 @@ export interface operations {
                      *         }
                      *       },
                      *       "idempotency_key": null,
-                     *       "request_body_json": null,
-                     *       "response_body_json": "{\"object\":\"list\",\"data\":[...]}"
+                     *       "request_body": null,
+                     *       "response_body": {
+                     *         "data": [],
+                     *         "object": "list",
+                     *         "page_info": {
+                     *           "has_next_page": false,
+                     *           "has_prev_page": false,
+                     *           "next_cursor": null,
+                     *           "prev_cursor": null
+                     *         }
+                     *       }
                      *     }
                      */
                     "application/json": components["schemas"]["RequestLog"];
@@ -56887,7 +60767,7 @@ export interface operations {
             };
         };
     };
-    "get-sandbox": {
+    "retrieve-sandbox": {
         parameters: {
             query?: {
                 /**
@@ -56907,7 +60787,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Sandbox */
+            /** @description Successful response for Retrieve Sandbox */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -57051,7 +60931,7 @@ export interface operations {
             };
         };
     };
-    "get-system-property": {
+    "retrieve-system-property": {
         parameters: {
             query?: never;
             header?: never;
@@ -57063,7 +60943,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get System Property */
+            /** @description Successful response for Retrieve System Property */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -57298,8 +61178,8 @@ export interface operations {
                      *             "name": "Acme Inc.",
                      *             "number": "100042",
                      *             "status": "",
-                     *             "is_edi_enabled": false,
-                     *             "is_parent_account": false,
+                     *             "edi_status": "",
+                     *             "relationship_type": "",
                      *             "commission_policy": "",
                      *             "note": null,
                      *             "credit_limit": null,
@@ -57692,8 +61572,8 @@ export interface operations {
                      *             "name": "Acme Inc.",
                      *             "number": "100042",
                      *             "status": "",
-                     *             "is_edi_enabled": false,
-                     *             "is_parent_account": false,
+                     *             "edi_status": "",
+                     *             "relationship_type": "",
                      *             "commission_policy": "",
                      *             "note": null,
                      *             "credit_limit": null,
@@ -57723,7 +61603,7 @@ export interface operations {
                      *             "name": "Headquarters",
                      *             "phone": null,
                      *             "email": null,
-                     *             "is_drop_ship": false,
+                     *             "type": "standard",
                      *             "geolocation": {
                      *               "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *               "object": "geolocation",
@@ -57773,7 +61653,7 @@ export interface operations {
             };
         };
     };
-    "get-invoice": {
+    "retrieve-invoice": {
         parameters: {
             query?: {
                 /**
@@ -57793,7 +61673,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Invoice */
+            /** @description Successful response for Retrieve Invoice */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -57816,7 +61696,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -58178,8 +62058,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -58209,7 +62089,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -58495,7 +62375,7 @@ export interface operations {
             };
         };
     };
-    "get-payment-term": {
+    "retrieve-payment-term": {
         parameters: {
             query?: {
                 /**
@@ -58515,7 +62395,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Payment Term */
+            /** @description Successful response for Retrieve Payment Term */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -58720,8 +62600,8 @@ export interface operations {
                      *             "name": "Acme Inc.",
                      *             "number": "100042",
                      *             "status": "",
-                     *             "is_edi_enabled": false,
-                     *             "is_parent_account": false,
+                     *             "edi_status": "",
+                     *             "relationship_type": "",
                      *             "commission_policy": "",
                      *             "note": null,
                      *             "credit_limit": null,
@@ -58835,8 +62715,8 @@ export interface operations {
                      *             "name": "Acme Inc.",
                      *             "number": "100042",
                      *             "status": "",
-                     *             "is_edi_enabled": false,
-                     *             "is_parent_account": false,
+                     *             "edi_status": "",
+                     *             "relationship_type": "",
                      *             "commission_policy": "",
                      *             "note": null,
                      *             "credit_limit": null,
@@ -59082,7 +62962,7 @@ export interface operations {
             };
         };
     };
-    "get-settlement": {
+    "retrieve-settlement": {
         parameters: {
             query?: {
                 /**
@@ -59102,7 +62982,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Settlement */
+            /** @description Successful response for Retrieve Settlement */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -59858,7 +63738,7 @@ export interface operations {
             };
         };
     };
-    "get-transaction": {
+    "retrieve-transaction": {
         parameters: {
             query?: {
                 /**
@@ -59878,7 +63758,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Transaction */
+            /** @description Successful response for Retrieve Transaction */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -60194,10 +64074,17 @@ export interface operations {
                  */
                 role_type?: "admin" | "user" | "scanner" | "sales_rep" | "agent";
                 /**
-                 * @description Whether to include removed account users.
-                 * @example true
+                 * @description Controls whether removed account users are included.
+                 * @example excluded
                  */
-                include_removed?: boolean;
+                removed_scope?: "excluded" | "included";
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "role"
+                 *     ]
+                 */
+                "include[]"?: ("role" | "department")[];
             };
             header?: never;
             path?: never;
@@ -60307,7 +64194,7 @@ export interface operations {
                  *       "role_id": "rl_01gf7a8200er3ar3pkfrb6kk29",
                  *       "preferences": [
                  *         {
-                 *           "notification_type_code": "order_acknowledgement",
+                 *           "notification_type": "order_acknowledgement",
                  *           "enabled": true
                  *         }
                  *       ]
@@ -60381,7 +64268,7 @@ export interface operations {
             };
         };
     };
-    "get-account-user": {
+    "retrieve-account-user": {
         parameters: {
             query?: {
                 /**
@@ -60401,7 +64288,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Account User */
+            /** @description Successful response for Retrieve Account User */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -60467,7 +64354,15 @@ export interface operations {
     };
     "update-account-user": {
         parameters: {
-            query?: never;
+            query?: {
+                /**
+                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
+                 * @example [
+                 *       "role"
+                 *     ]
+                 */
+                "include[]"?: ("role" | "department")[];
+            };
             header?: never;
             path: {
                 /** @description Account user ID. */
@@ -60553,7 +64448,7 @@ export interface operations {
             };
         };
     };
-    "update-account-user-status": {
+    "activate-account-user": {
         parameters: {
             query?: never;
             header?: never;
@@ -60563,19 +64458,9 @@ export interface operations {
             };
             cookie?: never;
         };
-        /** @description The request body for Update Account User Status */
-        requestBody?: {
-            content: {
-                /**
-                 * @example {
-                 *       "status": "disabled"
-                 *     }
-                 */
-                "application/json": components["schemas"]["UpdateAccountUserStatusRequest"];
-            };
-        };
+        requestBody?: never;
         responses: {
-            /** @description Successful response for Update Account User Status */
+            /** @description Successful response for Activate Account User */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -60596,7 +64481,73 @@ export interface operations {
             };
         };
     };
-    "get-account": {
+    "disable-account-user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Account user ID. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Disable Account User */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {} */
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "remove-account-user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Account user ID. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response for Remove Account User */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {} */
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIErrorResponse"];
+                };
+            };
+        };
+    };
+    "retrieve-account": {
         parameters: {
             query?: {
                 /**
@@ -60616,7 +64567,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Account */
+            /** @description Successful response for Retrieve Account */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -61525,7 +65476,7 @@ export interface operations {
             };
         };
     };
-    "get-account-by-slug": {
+    "retrieve-account-by-slug": {
         parameters: {
             query?: never;
             header?: never;
@@ -61537,7 +65488,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Account by Slug */
+            /** @description Successful response for Retrieve Account by Slug */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -61587,10 +65538,12 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Filter by role type code(s).
-                 * @example []
+                 * @description Filter by role types.
+                 * @example [
+                 *       "admin"
+                 *     ]
                  */
-                "role_types[]"?: string[];
+                "types[]"?: ("admin" | "user" | "scanner" | "sales_rep" | "agent")[];
                 /**
                  * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
                  * @example [
@@ -61751,7 +65704,7 @@ export interface operations {
             };
         };
     };
-    "get-role": {
+    "retrieve-role": {
         parameters: {
             query?: {
                 /**
@@ -61771,7 +65724,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Role */
+            /** @description Successful response for Retrieve Role */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -61940,7 +65893,7 @@ export interface operations {
             };
         };
     };
-    "get-user": {
+    "retrieve-user": {
         parameters: {
             query?: never;
             header?: never;
@@ -61952,7 +65905,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get User */
+            /** @description Successful response for Retrieve User */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -62185,7 +66138,7 @@ export interface operations {
                      *             "type": "init_batch",
                      *             "label_size": null,
                      *             "label_type": null,
-                     *             "material_check_required": false,
+                     *             "operator_requirement": "none",
                      *             "department": null,
                      *             "production_steps": null,
                      *             "created_at": "2026-05-10T00:00:00Z",
@@ -62513,7 +66466,7 @@ export interface operations {
                      *         "type": "init_batch",
                      *         "label_size": null,
                      *         "label_type": null,
-                     *         "material_check_required": false,
+                     *         "operator_requirement": "none",
                      *         "department": null,
                      *         "production_steps": null,
                      *         "created_at": "2026-05-10T00:00:00Z",
@@ -62571,7 +66524,7 @@ export interface operations {
                      *               "type": "init_batch",
                      *               "label_size": null,
                      *               "label_type": null,
-                     *               "material_check_required": false,
+                     *               "operator_requirement": "none",
                      *               "department": null,
                      *               "production_steps": null,
                      *               "created_at": "2026-05-10T00:00:00Z",
@@ -62923,7 +66876,7 @@ export interface operations {
                      *         "type": "init_batch",
                      *         "label_size": null,
                      *         "label_type": null,
-                     *         "material_check_required": false,
+                     *         "operator_requirement": "none",
                      *         "department": null,
                      *         "production_steps": null,
                      *         "created_at": "2026-05-10T00:00:00Z",
@@ -62981,7 +66934,7 @@ export interface operations {
                      *               "type": "init_batch",
                      *               "label_size": null,
                      *               "label_type": null,
-                     *               "material_check_required": false,
+                     *               "operator_requirement": "none",
                      *               "department": null,
                      *               "production_steps": null,
                      *               "created_at": "2026-05-10T00:00:00Z",
@@ -63336,7 +67289,7 @@ export interface operations {
                      *         "type": "init_batch",
                      *         "label_size": null,
                      *         "label_type": null,
-                     *         "material_check_required": false,
+                     *         "operator_requirement": "none",
                      *         "department": null,
                      *         "production_steps": null,
                      *         "created_at": "2026-05-10T00:00:00Z",
@@ -63394,7 +67347,7 @@ export interface operations {
                      *               "type": "init_batch",
                      *               "label_size": null,
                      *               "label_type": null,
-                     *               "material_check_required": false,
+                     *               "operator_requirement": "none",
                      *               "department": null,
                      *               "production_steps": null,
                      *               "created_at": "2026-05-10T00:00:00Z",
@@ -63749,7 +67702,7 @@ export interface operations {
                      *         "type": "init_batch",
                      *         "label_size": null,
                      *         "label_type": null,
-                     *         "material_check_required": false,
+                     *         "operator_requirement": "none",
                      *         "department": null,
                      *         "production_steps": null,
                      *         "created_at": "2026-05-10T00:00:00Z",
@@ -63807,7 +67760,7 @@ export interface operations {
                      *               "type": "init_batch",
                      *               "label_size": null,
                      *               "label_type": null,
-                     *               "material_check_required": false,
+                     *               "operator_requirement": "none",
                      *               "department": null,
                      *               "production_steps": null,
                      *               "created_at": "2026-05-10T00:00:00Z",
@@ -64170,7 +68123,7 @@ export interface operations {
                      *         "type": "init_batch",
                      *         "label_size": null,
                      *         "label_type": null,
-                     *         "material_check_required": false,
+                     *         "operator_requirement": "none",
                      *         "department": null,
                      *         "production_steps": null,
                      *         "created_at": "2026-05-10T00:00:00Z",
@@ -64228,7 +68181,7 @@ export interface operations {
                      *               "type": "init_batch",
                      *               "label_size": null,
                      *               "label_type": null,
-                     *               "material_check_required": false,
+                     *               "operator_requirement": "none",
                      *               "department": null,
                      *               "production_steps": null,
                      *               "created_at": "2026-05-10T00:00:00Z",
@@ -64637,7 +68590,7 @@ export interface operations {
                      *         "type": "init_batch",
                      *         "label_size": null,
                      *         "label_type": null,
-                     *         "material_check_required": false,
+                     *         "operator_requirement": "none",
                      *         "department": null,
                      *         "production_steps": null,
                      *         "created_at": "2026-05-10T00:00:00Z",
@@ -64695,7 +68648,7 @@ export interface operations {
                      *               "type": "init_batch",
                      *               "label_size": null,
                      *               "label_type": null,
-                     *               "material_check_required": false,
+                     *               "operator_requirement": "none",
                      *               "department": null,
                      *               "production_steps": null,
                      *               "created_at": "2026-05-10T00:00:00Z",
@@ -65050,7 +69003,7 @@ export interface operations {
                      *               "type": "init_batch",
                      *               "label_size": null,
                      *               "label_type": null,
-                     *               "material_check_required": false,
+                     *               "operator_requirement": "none",
                      *               "department": null,
                      *               "production_steps": null,
                      *               "created_at": "2026-05-10T00:00:00Z",
@@ -65108,7 +69061,7 @@ export interface operations {
                      *                     "type": "init_batch",
                      *                     "label_size": null,
                      *                     "label_type": null,
-                     *                     "material_check_required": false,
+                     *                     "operator_requirement": "none",
                      *                     "department": null,
                      *                     "production_steps": null,
                      *                     "created_at": "2026-05-10T00:00:00Z",
@@ -65379,7 +69332,8 @@ export interface operations {
                  * @example {
                  *       "name": "FedEx",
                  *       "code": "fedex",
-                 *       "account_number": null
+                 *       "account_number": "1234567890",
+                 *       "customer_portal_visibility": "visible"
                  *     }
                  */
                 "application/json": components["schemas"]["CreateCarrierRequest"];
@@ -65569,7 +69523,7 @@ export interface operations {
             };
         };
     };
-    "get-service-level": {
+    "retrieve-service-level": {
         parameters: {
             query?: {
                 /**
@@ -65591,7 +69545,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Service Level */
+            /** @description Successful response for Retrieve Service Level */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -65752,7 +69706,7 @@ export interface operations {
             };
         };
     };
-    "get-carrier": {
+    "retrieve-carrier": {
         parameters: {
             query?: {
                 /**
@@ -65772,7 +69726,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Carrier */
+            /** @description Successful response for Retrieve Carrier */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -66205,7 +70159,7 @@ export interface operations {
             };
         };
     };
-    "get-dc-location": {
+    "retrieve-dc-location": {
         parameters: {
             query?: {
                 /**
@@ -66225,7 +70179,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get DC Location */
+            /** @description Successful response for Retrieve DC Location */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -66447,7 +70401,7 @@ export interface operations {
             };
         };
     };
-    "get-delivery": {
+    "retrieve-delivery": {
         parameters: {
             query?: never;
             header?: never;
@@ -66459,7 +70413,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Delivery */
+            /** @description Successful response for Retrieve Delivery */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -66684,7 +70638,7 @@ export interface operations {
                      *                 "type": "init_batch",
                      *                 "label_size": null,
                      *                 "label_type": null,
-                     *                 "material_check_required": false,
+                     *                 "operator_requirement": "none",
                      *                 "department": null,
                      *                 "production_steps": null,
                      *                 "created_at": "2026-05-10T00:00:00Z",
@@ -66817,7 +70771,7 @@ export interface operations {
                      *             "type": "init_batch",
                      *             "label_size": null,
                      *             "label_type": null,
-                     *             "material_check_required": false,
+                     *             "operator_requirement": "none",
                      *             "department": null,
                      *             "production_steps": null,
                      *             "created_at": "2026-05-10T00:00:00Z",
@@ -66864,7 +70818,7 @@ export interface operations {
             };
         };
     };
-    "get-department": {
+    "retrieve-department": {
         parameters: {
             query?: {
                 /**
@@ -66884,7 +70838,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Department */
+            /** @description Successful response for Retrieve Department */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -66943,7 +70897,7 @@ export interface operations {
                      *             "type": "init_batch",
                      *             "label_size": null,
                      *             "label_type": null,
-                     *             "material_check_required": false,
+                     *             "operator_requirement": "none",
                      *             "department": null,
                      *             "production_steps": null,
                      *             "created_at": "2026-05-10T00:00:00Z",
@@ -67104,7 +71058,7 @@ export interface operations {
                      *             "type": "init_batch",
                      *             "label_size": null,
                      *             "label_type": null,
-                     *             "material_check_required": false,
+                     *             "operator_requirement": "none",
                      *             "department": null,
                      *             "production_steps": null,
                      *             "created_at": "2026-05-10T00:00:00Z",
@@ -67222,7 +71176,7 @@ export interface operations {
             };
         };
     };
-    "get-edi-run": {
+    "retrieve-edi-run": {
         parameters: {
             query?: never;
             header?: never;
@@ -67234,7 +71188,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get EDI Run */
+            /** @description Successful response for Retrieve EDI Run */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -67281,6 +71235,7 @@ export interface operations {
                 content: {
                     /**
                      * @example {
+                     *       "object": "message",
                      *       "message": "Operation completed successfully."
                      *     }
                      */
@@ -67325,6 +71280,7 @@ export interface operations {
                 content: {
                     /**
                      * @example {
+                     *       "object": "message",
                      *       "message": "Operation completed successfully."
                      *     }
                      */
@@ -67664,7 +71620,7 @@ export interface operations {
                      *             "type": "init_batch",
                      *             "label_size": null,
                      *             "label_type": null,
-                     *             "material_check_required": false,
+                     *             "operator_requirement": "none",
                      *             "department": null,
                      *             "production_steps": null,
                      *             "created_at": "2026-05-10T00:00:00Z",
@@ -67745,7 +71701,7 @@ export interface operations {
             };
         };
     };
-    "get-inventory-change-log": {
+    "retrieve-inventory-change-log": {
         parameters: {
             query?: {
                 /**
@@ -67765,7 +71721,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Inventory Change Log */
+            /** @description Successful response for Retrieve Inventory Change Log */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -67976,7 +71932,7 @@ export interface operations {
                      *         "type": "init_batch",
                      *         "label_size": null,
                      *         "label_type": null,
-                     *         "material_check_required": false,
+                     *         "operator_requirement": "none",
                      *         "department": null,
                      *         "production_steps": null,
                      *         "created_at": "2026-05-10T00:00:00Z",
@@ -68066,19 +72022,19 @@ export interface operations {
             };
         };
     };
-    "get-location-type": {
+    "retrieve-location-type": {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description Location type ID or code. */
+                /** @description Location ID or code. */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Location Type */
+            /** @description Successful response for Retrieve Location Type */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -68240,7 +72196,7 @@ export interface operations {
             };
         };
     };
-    "get-location": {
+    "retrieve-location": {
         parameters: {
             query?: {
                 /**
@@ -68260,7 +72216,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Location */
+            /** @description Successful response for Retrieve Location */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -68526,7 +72482,7 @@ export interface operations {
             };
         };
     };
-    "get-machine": {
+    "retrieve-machine": {
         parameters: {
             query?: {
                 /**
@@ -68546,7 +72502,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Machine */
+            /** @description Successful response for Retrieve Machine */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -68665,2399 +72621,6 @@ export interface operations {
             };
         };
     };
-    "list-materials": {
-        parameters: {
-            query?: {
-                /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
-                 * @example example
-                 */
-                cursor?: string;
-                /**
-                 * @description Maximum number of results per page (default: 100, max: 1000).
-                 * @example 100
-                 */
-                limit?: number;
-                /**
-                 * @description Search query used to filter results.
-                 * @example example
-                 */
-                q?: string;
-                /**
-                 * @description Filter by category IDs.
-                 * @example []
-                 */
-                "category_ids[]"?: string[];
-                /**
-                 * @description Filter by attribute IDs.
-                 * @example []
-                 */
-                "attribute_ids[]"?: string[];
-                /**
-                 * @description Filter to materials created on or after this date.
-                 * @example example
-                 */
-                start_date?: string;
-                /**
-                 * @description Filter to materials created on or before this date.
-                 * @example example
-                 */
-                end_date?: string;
-                /**
-                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
-                 * @example [
-                 *       "item"
-                 *     ]
-                 */
-                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate")[];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response for List Materials */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "object": "list",
-                     *       "page_info": {
-                     *         "next_cursor": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
-                     *         "has_next_page": true,
-                     *         "has_prev_page": false
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "material",
-                     *           "item": {
-                     *             "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "item",
-                     *             "sku": "ALM-2024-1001",
-                     *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *             "notes": null,
-                     *             "type": "product",
-                     *             "category": {
-                     *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "item_category",
-                     *               "name": "Electronics",
-                     *               "notes": null,
-                     *               "type": "material_category",
-                     *               "owner": {
-                     *                 "object": "owner",
-                     *                 "type": "system",
-                     *                 "account": null
-                     *               },
-                     *               "properties": null,
-                     *               "unit_group": null,
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             },
-                     *             "unit_value": {
-                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "rate",
-                     *               "value": "25.500000000000000000000000000000",
-                     *               "numerator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "US Dollar",
-                     *                 "abbreviation": "USD",
-                     *                 "type": "currency",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "denominator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "Kilogram",
-                     *                 "abbreviation": "kg",
-                     *                 "type": "mass",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "display_value": "$25.50 / kg",
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             },
-                     *             "unit_cost": {
-                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "rate",
-                     *               "value": "25.500000000000000000000000000000",
-                     *               "numerator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "US Dollar",
-                     *                 "abbreviation": "USD",
-                     *                 "type": "currency",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "denominator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "Kilogram",
-                     *                 "abbreviation": "kg",
-                     *                 "type": "mass",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "display_value": "$25.50 / kg",
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             },
-                     *             "burn_rate": {
-                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "rate",
-                     *               "value": "25.500000000000000000000000000000",
-                     *               "numerator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "US Dollar",
-                     *                 "abbreviation": "USD",
-                     *                 "type": "currency",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "denominator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "Kilogram",
-                     *                 "abbreviation": "kg",
-                     *                 "type": "mass",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "display_value": "$25.50 / kg",
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             },
-                     *             "attributes": {
-                     *               "object": "list",
-                     *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
-                     *                 "has_next_page": false,
-                     *                 "has_prev_page": false
-                     *               },
-                     *               "data": [
-                     *                 {
-                     *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                   "object": "attribute",
-                     *                   "value": "Premium",
-                     *                   "color": "red",
-                     *                   "sort_order": 1,
-                     *                   "created_at": "2026-05-10T00:00:00Z",
-                     *                   "updated_at": "2026-05-10T00:23:00Z"
-                     *                 }
-                     *               ]
-                     *             },
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           },
-                     *           "order_point": {
-                     *             "value": "100.000000000000000000000000000000",
-                     *             "unit": {
-                     *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "unit",
-                     *               "name": "Kilogram",
-                     *               "abbreviation": "kg",
-                     *               "type": "mass",
-                     *               "ratio_numerator": "1000",
-                     *               "ratio_denominator": "1",
-                     *               "offset_numerator": "0",
-                     *               "offset_denominator": "1",
-                     *               "is_base_unit": false,
-                     *               "owner": {
-                     *                 "object": "owner",
-                     *                 "type": "system",
-                     *                 "account": null
-                     *               },
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             }
-                     *           },
-                     *           "lead_time": {
-                     *             "value": "100.000000000000000000000000000000",
-                     *             "unit": {
-                     *               "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "unit",
-                     *               "name": "Kilogram",
-                     *               "abbreviation": "kg",
-                     *               "type": "mass",
-                     *               "ratio_numerator": "1000",
-                     *               "ratio_denominator": "1",
-                     *               "offset_numerator": "0",
-                     *               "offset_denominator": "1",
-                     *               "is_base_unit": false,
-                     *               "owner": {
-                     *                 "object": "owner",
-                     *                 "type": "system",
-                     *                 "account": null
-                     *               },
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             }
-                     *           },
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         }
-                     *       ]
-                     *     }
-                     */
-                    "application/json": components["schemas"]["List_Material"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "create-material": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description The request body for Create Material */
-        requestBody?: {
-            content: {
-                /**
-                 * @example {
-                 *       "sku": "MAT-001",
-                 *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp"
-                 *     }
-                 */
-                "application/json": components["schemas"]["CreateMaterialRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful response for Create Material */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *       "object": "material",
-                     *       "item": {
-                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item",
-                     *         "sku": "ALM-2024-1001",
-                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "notes": null,
-                     *         "type": "product",
-                     *         "category": {
-                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "item_category",
-                     *           "name": "Electronics",
-                     *           "notes": null,
-                     *           "type": "material_category",
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "properties": null,
-                     *           "unit_group": null,
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_value": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_cost": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "burn_rate": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "attributes": {
-                     *           "object": "list",
-                     *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
-                     *             "has_next_page": false,
-                     *             "has_prev_page": false
-                     *           },
-                     *           "data": [
-                     *             {
-                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "attribute",
-                     *               "value": "Premium",
-                     *               "color": "red",
-                     *               "sort_order": 1,
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             }
-                     *           ]
-                     *         },
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "order_point": {
-                     *         "value": "100.000000000000000000000000000000",
-                     *         "unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "1000",
-                     *           "ratio_denominator": "1",
-                     *           "offset_numerator": "0",
-                     *           "offset_denominator": "1",
-                     *           "is_base_unit": false,
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         }
-                     *       },
-                     *       "lead_time": {
-                     *         "value": "100.000000000000000000000000000000",
-                     *         "unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "1000",
-                     *           "ratio_denominator": "1",
-                     *           "offset_numerator": "0",
-                     *           "offset_denominator": "1",
-                     *           "is_base_unit": false,
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         }
-                     *       },
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "updated_at": "2026-05-10T00:23:00Z"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["Material"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "get-material": {
-        parameters: {
-            query?: {
-                /**
-                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
-                 * @example [
-                 *       "item"
-                 *     ]
-                 */
-                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate")[];
-            };
-            header?: never;
-            path: {
-                /** @description Material ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response for Get Material */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *       "object": "material",
-                     *       "item": {
-                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item",
-                     *         "sku": "ALM-2024-1001",
-                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "notes": null,
-                     *         "type": "product",
-                     *         "category": {
-                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "item_category",
-                     *           "name": "Electronics",
-                     *           "notes": null,
-                     *           "type": "material_category",
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "properties": null,
-                     *           "unit_group": null,
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_value": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_cost": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "burn_rate": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "attributes": {
-                     *           "object": "list",
-                     *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
-                     *             "has_next_page": false,
-                     *             "has_prev_page": false
-                     *           },
-                     *           "data": [
-                     *             {
-                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "attribute",
-                     *               "value": "Premium",
-                     *               "color": "red",
-                     *               "sort_order": 1,
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             }
-                     *           ]
-                     *         },
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "order_point": {
-                     *         "value": "100.000000000000000000000000000000",
-                     *         "unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "1000",
-                     *           "ratio_denominator": "1",
-                     *           "offset_numerator": "0",
-                     *           "offset_denominator": "1",
-                     *           "is_base_unit": false,
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         }
-                     *       },
-                     *       "lead_time": {
-                     *         "value": "100.000000000000000000000000000000",
-                     *         "unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "1000",
-                     *           "ratio_denominator": "1",
-                     *           "offset_numerator": "0",
-                     *           "offset_denominator": "1",
-                     *           "is_base_unit": false,
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         }
-                     *       },
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "updated_at": "2026-05-10T00:23:00Z"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["Material"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "delete-material": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Material ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response for Delete Material */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *       "object": "material",
-                     *       "item": {
-                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item",
-                     *         "sku": "ALM-2024-1001",
-                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "notes": null,
-                     *         "type": "product",
-                     *         "category": {
-                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "item_category",
-                     *           "name": "Electronics",
-                     *           "notes": null,
-                     *           "type": "material_category",
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "properties": null,
-                     *           "unit_group": null,
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_value": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_cost": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "burn_rate": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "attributes": {
-                     *           "object": "list",
-                     *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
-                     *             "has_next_page": false,
-                     *             "has_prev_page": false
-                     *           },
-                     *           "data": [
-                     *             {
-                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "attribute",
-                     *               "value": "Premium",
-                     *               "color": "red",
-                     *               "sort_order": 1,
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             }
-                     *           ]
-                     *         },
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "order_point": {
-                     *         "value": "100.000000000000000000000000000000",
-                     *         "unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "1000",
-                     *           "ratio_denominator": "1",
-                     *           "offset_numerator": "0",
-                     *           "offset_denominator": "1",
-                     *           "is_base_unit": false,
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         }
-                     *       },
-                     *       "lead_time": {
-                     *         "value": "100.000000000000000000000000000000",
-                     *         "unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "1000",
-                     *           "ratio_denominator": "1",
-                     *           "offset_numerator": "0",
-                     *           "offset_denominator": "1",
-                     *           "is_base_unit": false,
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         }
-                     *       },
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "updated_at": "2026-05-10T00:23:00Z"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["Material"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "update-material": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Material ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        /** @description The request body for Update Material */
-        requestBody?: {
-            content: {
-                /**
-                 * @example {
-                 *       "sku": "MAT-001-UPDATED"
-                 *     }
-                 */
-                "application/json": components["schemas"]["UpdateMaterialRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful response for Update Material */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "id": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *       "object": "material",
-                     *       "item": {
-                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item",
-                     *         "sku": "ALM-2024-1001",
-                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "notes": null,
-                     *         "type": "product",
-                     *         "category": {
-                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "item_category",
-                     *           "name": "Electronics",
-                     *           "notes": null,
-                     *           "type": "material_category",
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "properties": null,
-                     *           "unit_group": null,
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_value": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_cost": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "burn_rate": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "attributes": {
-                     *           "object": "list",
-                     *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
-                     *             "has_next_page": false,
-                     *             "has_prev_page": false
-                     *           },
-                     *           "data": [
-                     *             {
-                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "attribute",
-                     *               "value": "Premium",
-                     *               "color": "red",
-                     *               "sort_order": 1,
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             }
-                     *           ]
-                     *         },
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "order_point": {
-                     *         "value": "100.000000000000000000000000000000",
-                     *         "unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "1000",
-                     *           "ratio_denominator": "1",
-                     *           "offset_numerator": "0",
-                     *           "offset_denominator": "1",
-                     *           "is_base_unit": false,
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         }
-                     *       },
-                     *       "lead_time": {
-                     *         "value": "100.000000000000000000000000000000",
-                     *         "unit": {
-                     *           "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "unit",
-                     *           "name": "Kilogram",
-                     *           "abbreviation": "kg",
-                     *           "type": "mass",
-                     *           "ratio_numerator": "1000",
-                     *           "ratio_denominator": "1",
-                     *           "offset_numerator": "0",
-                     *           "offset_denominator": "1",
-                     *           "is_base_unit": false,
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         }
-                     *       },
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "updated_at": "2026-05-10T00:23:00Z"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["Material"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "list-parts": {
-        parameters: {
-            query?: {
-                /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
-                 * @example example
-                 */
-                cursor?: string;
-                /**
-                 * @description Maximum number of results per page (default: 100, max: 1000).
-                 * @example 100
-                 */
-                limit?: number;
-                /**
-                 * @description Search query used to filter results.
-                 * @example example
-                 */
-                q?: string;
-                /**
-                 * @description Filter by category IDs.
-                 * @example []
-                 */
-                "category_ids[]"?: string[];
-                /**
-                 * @description Filter by attribute IDs.
-                 * @example []
-                 */
-                "attribute_ids[]"?: string[];
-                /**
-                 * @description Filter parts created on or after this date.
-                 * @example example
-                 */
-                start_date?: string;
-                /**
-                 * @description Filter parts created on or before this date.
-                 * @example example
-                 */
-                end_date?: string;
-                /**
-                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
-                 * @example [
-                 *       "item"
-                 *     ]
-                 */
-                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response for List Parts */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "object": "list",
-                     *       "page_info": {
-                     *         "next_cursor": "pt_02kn5s7811g9qwce7cizr4e0mq",
-                     *         "prev_cursor": null,
-                     *         "has_next_page": true,
-                     *         "has_prev_page": false
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
-                     *           "object": "part",
-                     *           "item": {
-                     *             "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "item",
-                     *             "sku": "ALM-2024-1001",
-                     *             "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *             "notes": null,
-                     *             "type": "product",
-                     *             "category": {
-                     *               "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "item_category",
-                     *               "name": "Electronics",
-                     *               "notes": null,
-                     *               "type": "material_category",
-                     *               "owner": {
-                     *                 "object": "owner",
-                     *                 "type": "system",
-                     *                 "account": null
-                     *               },
-                     *               "properties": null,
-                     *               "unit_group": null,
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             },
-                     *             "unit_value": {
-                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "rate",
-                     *               "value": "25.500000000000000000000000000000",
-                     *               "numerator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "US Dollar",
-                     *                 "abbreviation": "USD",
-                     *                 "type": "currency",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "denominator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "Kilogram",
-                     *                 "abbreviation": "kg",
-                     *                 "type": "mass",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "display_value": "$25.50 / kg",
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             },
-                     *             "unit_cost": {
-                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "rate",
-                     *               "value": "25.500000000000000000000000000000",
-                     *               "numerator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "US Dollar",
-                     *                 "abbreviation": "USD",
-                     *                 "type": "currency",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "denominator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "Kilogram",
-                     *                 "abbreviation": "kg",
-                     *                 "type": "mass",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "display_value": "$25.50 / kg",
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             },
-                     *             "burn_rate": {
-                     *               "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "rate",
-                     *               "value": "25.500000000000000000000000000000",
-                     *               "numerator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "US Dollar",
-                     *                 "abbreviation": "USD",
-                     *                 "type": "currency",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "denominator_unit": {
-                     *                 "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                 "object": "unit",
-                     *                 "name": "Kilogram",
-                     *                 "abbreviation": "kg",
-                     *                 "type": "mass",
-                     *                 "ratio_numerator": "",
-                     *                 "ratio_denominator": "",
-                     *                 "offset_numerator": "",
-                     *                 "offset_denominator": "",
-                     *                 "is_base_unit": false,
-                     *                 "owner": null,
-                     *                 "created_at": "0001-01-01T00:00:00Z",
-                     *                 "updated_at": "0001-01-01T00:00:00Z"
-                     *               },
-                     *               "display_value": "$25.50 / kg",
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             },
-                     *             "attributes": {
-                     *               "object": "list",
-                     *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
-                     *                 "has_next_page": false,
-                     *                 "has_prev_page": false
-                     *               },
-                     *               "data": [
-                     *                 {
-                     *                   "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *                   "object": "attribute",
-                     *                   "value": "Premium",
-                     *                   "color": "red",
-                     *                   "sort_order": 1,
-                     *                   "created_at": "2026-05-10T00:00:00Z",
-                     *                   "updated_at": "2026-05-10T00:23:00Z"
-                     *                 }
-                     *               ]
-                     *             },
-                     *             "created_at": "2026-05-10T00:00:00Z",
-                     *             "updated_at": "2026-05-10T00:23:00Z"
-                     *           },
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         }
-                     *       ]
-                     *     }
-                     */
-                    "application/json": components["schemas"]["List_Part"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "create-part": {
-        parameters: {
-            query?: {
-                /**
-                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
-                 * @example [
-                 *       "item"
-                 *     ]
-                 */
-                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description The request body for Create Part */
-        requestBody?: {
-            content: {
-                /**
-                 * @example {
-                 *       "sku": "BRG-6204-2RS",
-                 *       "description": "Deep groove ball bearing, 20x47x14mm",
-                 *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp"
-                 *     }
-                 */
-                "application/json": components["schemas"]["CreatePartRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful response for Create Part */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
-                     *       "object": "part",
-                     *       "item": {
-                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item",
-                     *         "sku": "ALM-2024-1001",
-                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "notes": null,
-                     *         "type": "product",
-                     *         "category": {
-                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "item_category",
-                     *           "name": "Electronics",
-                     *           "notes": null,
-                     *           "type": "material_category",
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "properties": null,
-                     *           "unit_group": null,
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_value": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_cost": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "burn_rate": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "attributes": {
-                     *           "object": "list",
-                     *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
-                     *             "has_next_page": false,
-                     *             "has_prev_page": false
-                     *           },
-                     *           "data": [
-                     *             {
-                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "attribute",
-                     *               "value": "Premium",
-                     *               "color": "red",
-                     *               "sort_order": 1,
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             }
-                     *           ]
-                     *         },
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "updated_at": "2026-05-10T00:23:00Z"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["Part"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "get-part": {
-        parameters: {
-            query?: {
-                /**
-                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
-                 * @example [
-                 *       "item"
-                 *     ]
-                 */
-                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
-            };
-            header?: never;
-            path: {
-                /** @description Part ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response for Get Part */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
-                     *       "object": "part",
-                     *       "item": {
-                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item",
-                     *         "sku": "ALM-2024-1001",
-                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "notes": null,
-                     *         "type": "product",
-                     *         "category": {
-                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "item_category",
-                     *           "name": "Electronics",
-                     *           "notes": null,
-                     *           "type": "material_category",
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "properties": null,
-                     *           "unit_group": null,
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_value": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_cost": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "burn_rate": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "attributes": {
-                     *           "object": "list",
-                     *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
-                     *             "has_next_page": false,
-                     *             "has_prev_page": false
-                     *           },
-                     *           "data": [
-                     *             {
-                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "attribute",
-                     *               "value": "Premium",
-                     *               "color": "red",
-                     *               "sort_order": 1,
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             }
-                     *           ]
-                     *         },
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "updated_at": "2026-05-10T00:23:00Z"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["Part"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "delete-part": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Part ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response for Delete Part */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
-                     *       "object": "part",
-                     *       "item": {
-                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item",
-                     *         "sku": "ALM-2024-1001",
-                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "notes": null,
-                     *         "type": "product",
-                     *         "category": {
-                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "item_category",
-                     *           "name": "Electronics",
-                     *           "notes": null,
-                     *           "type": "material_category",
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "properties": null,
-                     *           "unit_group": null,
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_value": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_cost": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "burn_rate": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "attributes": {
-                     *           "object": "list",
-                     *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
-                     *             "has_next_page": false,
-                     *             "has_prev_page": false
-                     *           },
-                     *           "data": [
-                     *             {
-                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "attribute",
-                     *               "value": "Premium",
-                     *               "color": "red",
-                     *               "sort_order": 1,
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             }
-                     *           ]
-                     *         },
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "updated_at": "2026-05-10T00:23:00Z"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["Part"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
-    "update-part": {
-        parameters: {
-            query?: {
-                /**
-                 * @description Sub-objects to expand in the response. When omitted, sub-objects are returned as `null`.
-                 * @example [
-                 *       "item"
-                 *     ]
-                 */
-                "include[]"?: ("item" | "item.category" | "item.unit_value" | "item.unit_cost" | "item.burn_rate" | "item.attributes")[];
-            };
-            header?: never;
-            path: {
-                /** @description Part ID. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        /** @description The request body for Update Part */
-        requestBody?: {
-            content: {
-                /**
-                 * @example {
-                 *       "sku": "BRG-6204-2RS",
-                 *       "description": "Deep groove ball bearing, 20x47x14mm",
-                 *       "notes": null
-                 *     }
-                 */
-                "application/json": components["schemas"]["UpdatePartRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful response for Update Part */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "id": "pt_02kn5s7811g9qwce7cizr4e0mq",
-                     *       "object": "part",
-                     *       "item": {
-                     *         "id": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "object": "item",
-                     *         "sku": "ALM-2024-1001",
-                     *         "description": "6061-T6 aluminum sheet, 4ft x 8ft, 0.125in thick",
-                     *         "notes": null,
-                     *         "type": "product",
-                     *         "category": {
-                     *           "id": "ic_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "item_category",
-                     *           "name": "Electronics",
-                     *           "notes": null,
-                     *           "type": "material_category",
-                     *           "owner": {
-                     *             "object": "owner",
-                     *             "type": "system",
-                     *             "account": null
-                     *           },
-                     *           "properties": null,
-                     *           "unit_group": null,
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_value": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "unit_cost": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "burn_rate": {
-                     *           "id": "ra_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *           "object": "rate",
-                     *           "value": "25.500000000000000000000000000000",
-                     *           "numerator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "US Dollar",
-                     *             "abbreviation": "USD",
-                     *             "type": "currency",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "denominator_unit": {
-                     *             "id": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *             "object": "unit",
-                     *             "name": "Kilogram",
-                     *             "abbreviation": "kg",
-                     *             "type": "mass",
-                     *             "ratio_numerator": "",
-                     *             "ratio_denominator": "",
-                     *             "offset_numerator": "",
-                     *             "offset_denominator": "",
-                     *             "is_base_unit": false,
-                     *             "owner": null,
-                     *             "created_at": "0001-01-01T00:00:00Z",
-                     *             "updated_at": "0001-01-01T00:00:00Z"
-                     *           },
-                     *           "display_value": "$25.50 / kg",
-                     *           "created_at": "2026-05-10T00:00:00Z",
-                     *           "updated_at": "2026-05-10T00:23:00Z"
-                     *         },
-                     *         "attributes": {
-                     *           "object": "list",
-                     *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
-                     *             "has_next_page": false,
-                     *             "has_prev_page": false
-                     *           },
-                     *           "data": [
-                     *             {
-                     *               "id": "at_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *               "object": "attribute",
-                     *               "value": "Premium",
-                     *               "color": "red",
-                     *               "sort_order": 1,
-                     *               "created_at": "2026-05-10T00:00:00Z",
-                     *               "updated_at": "2026-05-10T00:23:00Z"
-                     *             }
-                     *           ]
-                     *         },
-                     *         "created_at": "2026-05-10T00:00:00Z",
-                     *         "updated_at": "2026-05-10T00:23:00Z"
-                     *       },
-                     *       "created_at": "2026-05-10T00:00:00Z",
-                     *       "updated_at": "2026-05-10T00:23:00Z"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["Part"];
-                };
-            };
-            /** @description Error response */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["APIErrorResponse"];
-                };
-            };
-        };
-    };
     "list-picks": {
         parameters: {
             query?: {
@@ -71148,8 +72711,8 @@ export interface operations {
                      *             "name": "Acme Inc.",
                      *             "number": "100042",
                      *             "status": "",
-                     *             "is_edi_enabled": false,
-                     *             "is_parent_account": false,
+                     *             "edi_status": "",
+                     *             "relationship_type": "",
                      *             "commission_policy": "",
                      *             "note": null,
                      *             "credit_limit": null,
@@ -71200,7 +72763,7 @@ export interface operations {
             };
         };
     };
-    "get-pick": {
+    "retrieve-pick": {
         parameters: {
             query?: {
                 /**
@@ -71213,14 +72776,14 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description Path parameter: id for Get Pick */
+                /** @description Path parameter: id for Retrieve Pick */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Pick */
+            /** @description Successful response for Retrieve Pick */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -71241,8 +72804,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -71416,8 +72979,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -71584,8 +73147,8 @@ export interface operations {
                      *           "name": "Acme Inc.",
                      *           "number": "100042",
                      *           "status": "",
-                     *           "is_edi_enabled": false,
-                     *           "is_parent_account": false,
+                     *           "edi_status": "",
+                     *           "relationship_type": "",
                      *           "commission_policy": "",
                      *           "note": null,
                      *           "credit_limit": null,
@@ -71743,8 +73306,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -71900,8 +73463,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -72087,7 +73650,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Pick ID. */
-                pickId: string;
+                pick_id: string;
                 /** @description Pick line ID. */
                 id: string;
             };
@@ -72189,7 +73752,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Pick ID. */
-                pickId: string;
+                pick_id: string;
                 /** @description Pick line ID. */
                 id: string;
             };
@@ -72281,7 +73844,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Pick ID. */
-                pickId: string;
+                pick_id: string;
                 /** @description Pick line ID. */
                 id: string;
             };
@@ -72814,7 +74377,7 @@ export interface operations {
             };
         };
     };
-    "get-production-run": {
+    "retrieve-production-run": {
         parameters: {
             query?: {
                 /**
@@ -72834,7 +74397,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Production Run */
+            /** @description Successful response for Retrieve Production Run */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -73242,7 +74805,7 @@ export interface operations {
                      *             "type": "init_batch",
                      *             "label_size": null,
                      *             "label_type": null,
-                     *             "material_check_required": false,
+                     *             "operator_requirement": "none",
                      *             "department": null,
                      *             "production_steps": null,
                      *             "created_at": "2026-05-10T00:00:00Z",
@@ -73300,7 +74863,7 @@ export interface operations {
                      *                   "type": "init_batch",
                      *                   "label_size": null,
                      *                   "label_type": null,
-                     *                   "material_check_required": false,
+                     *                   "operator_requirement": "none",
                      *                   "department": null,
                      *                   "production_steps": null,
                      *                   "created_at": "2026-05-10T00:00:00Z",
@@ -73677,7 +75240,7 @@ export interface operations {
                      *             "type": "init_batch",
                      *             "label_size": null,
                      *             "label_type": null,
-                     *             "material_check_required": false,
+                     *             "operator_requirement": "none",
                      *             "department": null,
                      *             "production_steps": null,
                      *             "created_at": "2026-05-10T00:00:00Z",
@@ -73735,7 +75298,7 @@ export interface operations {
                      *                   "type": "init_batch",
                      *                   "label_size": null,
                      *                   "label_type": null,
-                     *                   "material_check_required": false,
+                     *                   "operator_requirement": "none",
                      *                   "department": null,
                      *                   "production_steps": null,
                      *                   "created_at": "2026-05-10T00:00:00Z",
@@ -74266,7 +75829,7 @@ export interface operations {
             };
         };
     };
-    "get-production-step": {
+    "retrieve-production-step": {
         parameters: {
             query?: never;
             header?: never;
@@ -74278,7 +75841,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Production Step */
+            /** @description Successful response for Retrieve Production Step */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -74934,7 +76497,7 @@ export interface operations {
             };
         };
     };
-    "get-consumption": {
+    "retrieve-consumption": {
         parameters: {
             query?: {
                 /**
@@ -74956,7 +76519,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Consumption */
+            /** @description Successful response for Retrieve Consumption */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -75245,7 +76808,7 @@ export interface operations {
             };
         };
     };
-    "get-production": {
+    "retrieve-production": {
         parameters: {
             query?: never;
             header?: never;
@@ -75259,7 +76822,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Production */
+            /** @description Successful response for Retrieve Production */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -75593,7 +77156,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -75613,7 +77176,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -75874,7 +77437,7 @@ export interface operations {
             };
         };
     };
-    "get-purchase-order": {
+    "retrieve-purchase-order": {
         parameters: {
             query?: {
                 /**
@@ -75894,7 +77457,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Purchase Order */
+            /** @description Successful response for Retrieve Purchase Order */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -75919,7 +77482,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -75939,7 +77502,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -76178,7 +77741,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -76198,7 +77761,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -76402,7 +77965,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -76422,7 +77985,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -76688,7 +78251,7 @@ export interface operations {
                 /** @description Purchase order ID. */
                 id: string;
                 /** @description Purchase order line ID. */
-                lineId: string;
+                line_id: string;
             };
             cookie?: never;
         };
@@ -76723,7 +78286,7 @@ export interface operations {
                 /** @description Purchase order ID. */
                 id: string;
                 /** @description Purchase order line ID. */
-                lineId: string;
+                line_id: string;
             };
             cookie?: never;
         };
@@ -77099,7 +78662,7 @@ export interface operations {
             };
         };
     };
-    "get-receiving-order": {
+    "retrieve-receiving-order": {
         parameters: {
             query?: never;
             header?: never;
@@ -77111,7 +78674,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Receiving Order */
+            /** @description Successful response for Retrieve Receiving Order */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -77781,7 +79344,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Receiving order ID. */
-                receivingOrderId: string;
+                receiving_order_id: string;
                 /** @description Receiving order line ID. */
                 id: string;
             };
@@ -77931,7 +79494,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Receiving order ID. */
-                receivingOrderId: string;
+                receiving_order_id: string;
                 /** @description Receiving order line ID. */
                 id: string;
             };
@@ -78071,7 +79634,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Receiving order ID. */
-                receivingOrderId: string;
+                receiving_order_id: string;
                 /** @description Receiving order line ID. */
                 id: string;
             };
@@ -78279,8 +79842,10 @@ export interface operations {
                  * @example {
                  *       "name": "Packaging Line 1",
                  *       "type": "init_batch",
-                 *       "material_check_required": false,
-                 *       "department_id": "dp_01gf7a8200er3ar3pkfrb6kk30"
+                 *       "operator_requirement": "none",
+                 *       "department_id": "dp_01gf7a8200er3ar3pkfrb6kk30",
+                 *       "label_size": "1x1",
+                 *       "label_type": "tag"
                  *     }
                  */
                 "application/json": components["schemas"]["CreateScanningStationRequest"];
@@ -78302,7 +79867,7 @@ export interface operations {
                      *       "type": "init_batch",
                      *       "label_size": null,
                      *       "label_type": null,
-                     *       "material_check_required": false,
+                     *       "operator_requirement": "none",
                      *       "department": null,
                      *       "production_steps": null,
                      *       "created_at": "2026-05-10T00:00:00Z",
@@ -78323,7 +79888,7 @@ export interface operations {
             };
         };
     };
-    "get-scanning-station": {
+    "retrieve-scanning-station": {
         parameters: {
             query?: {
                 /**
@@ -78343,7 +79908,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Scanning Station */
+            /** @description Successful response for Retrieve Scanning Station */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -78358,7 +79923,7 @@ export interface operations {
                      *       "type": "init_batch",
                      *       "label_size": null,
                      *       "label_type": null,
-                     *       "material_check_required": false,
+                     *       "operator_requirement": "none",
                      *       "department": null,
                      *       "production_steps": null,
                      *       "created_at": "2026-05-10T00:00:00Z",
@@ -78457,7 +80022,7 @@ export interface operations {
                      *       "type": "init_batch",
                      *       "label_size": null,
                      *       "label_type": null,
-                     *       "material_check_required": false,
+                     *       "operator_requirement": "none",
                      *       "department": null,
                      *       "production_steps": null,
                      *       "created_at": "2026-05-10T00:00:00Z",
@@ -78756,7 +80321,7 @@ export interface operations {
                      *             "type": "init_batch",
                      *             "label_size": null,
                      *             "label_type": null,
-                     *             "material_check_required": false,
+                     *             "operator_requirement": "none",
                      *             "department": null,
                      *             "production_steps": null,
                      *             "created_at": "2026-05-10T00:00:00Z",
@@ -78814,7 +80379,7 @@ export interface operations {
                      *                   "type": "init_batch",
                      *                   "label_size": null,
                      *                   "label_type": null,
-                     *                   "material_check_required": false,
+                     *                   "operator_requirement": "none",
                      *                   "department": null,
                      *                   "production_steps": null,
                      *                   "created_at": "2026-05-10T00:00:00Z",
@@ -79155,7 +80720,6 @@ export interface operations {
                  *       "service_level_id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
                  *       "from_address": {
                  *         "name": "Origin Warehouse",
-                 *         "is_drop_ship": false,
                  *         "street_line_1": "123 Main Street",
                  *         "locality": "San Francisco",
                  *         "state": "CA",
@@ -79164,7 +80728,6 @@ export interface operations {
                  *       },
                  *       "to_address": {
                  *         "name": "Destination",
-                 *         "is_drop_ship": false,
                  *         "street_line_1": "456 Oak Avenue",
                  *         "locality": "Los Angeles",
                  *         "state": "CA",
@@ -79219,7 +80782,6 @@ export interface operations {
                  * @example {
                  *       "from_address": {
                  *         "name": "Origin Warehouse",
-                 *         "is_drop_ship": false,
                  *         "street_line_1": "123 Main Street",
                  *         "locality": "San Francisco",
                  *         "state": "CA",
@@ -79228,7 +80790,6 @@ export interface operations {
                  *       },
                  *       "to_address": {
                  *         "name": "Destination",
-                 *         "is_drop_ship": false,
                  *         "street_line_1": "456 Oak Avenue",
                  *         "locality": "Los Angeles",
                  *         "state": "CA",
@@ -79269,7 +80830,7 @@ export interface operations {
             };
         };
     };
-    "get-shipment": {
+    "retrieve-shipment": {
         parameters: {
             query?: {
                 /**
@@ -79289,7 +80850,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Shipment */
+            /** @description Successful response for Retrieve Shipment */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -79714,7 +81275,7 @@ export interface operations {
             };
         };
     };
-    "get-shipment-line": {
+    "retrieve-shipment-line": {
         parameters: {
             query?: never;
             header?: never;
@@ -79728,7 +81289,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Shipment Line */
+            /** @description Successful response for Retrieve Shipment Line */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -79860,7 +81421,7 @@ export interface operations {
             };
         };
     };
-    "get-shipping-case": {
+    "retrieve-shipping-case": {
         parameters: {
             query?: {
                 /**
@@ -79880,7 +81441,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Shipping Case */
+            /** @description Successful response for Retrieve Shipping Case */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -80302,7 +81863,7 @@ export interface operations {
             };
         };
     };
-    "get-shipping-term": {
+    "retrieve-shipping-term": {
         parameters: {
             query?: {
                 /**
@@ -80322,7 +81883,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Shipping Term */
+            /** @description Successful response for Retrieve Shipping Term */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -80580,7 +82141,6 @@ export interface operations {
                  *       "note": "Primary raw materials supplier",
                  *       "bill_to_address": {
                  *         "name": "Acme Supplies Inc.",
-                 *         "is_drop_ship": false,
                  *         "street_line_1": "456 Industrial Pkwy",
                  *         "locality": "Chicago",
                  *         "state": "IL",
@@ -80613,7 +82173,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -80633,7 +82193,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -80708,7 +82268,7 @@ export interface operations {
             };
         };
     };
-    "get-supplier": {
+    "retrieve-supplier": {
         parameters: {
             query?: {
                 /**
@@ -80728,7 +82288,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Supplier */
+            /** @description Successful response for Retrieve Supplier */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -80747,7 +82307,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -80767,7 +82327,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -80831,7 +82391,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -80851,7 +82411,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -80930,7 +82490,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -80950,7 +82510,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -81249,7 +82809,7 @@ export interface operations {
                      *           },
                      *           "supplier_part_number": "SUP-PART-001",
                      *           "supplier_description": null,
-                     *           "is_active": true,
+                     *           "status": "active",
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         }
@@ -81516,7 +83076,7 @@ export interface operations {
                      *       },
                      *       "supplier_part_number": "SUP-PART-001",
                      *       "supplier_description": null,
-                     *       "is_active": true,
+                     *       "status": "active",
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -81535,7 +83095,7 @@ export interface operations {
             };
         };
     };
-    "get-supplier-material": {
+    "retrieve-supplier-material": {
         parameters: {
             query?: {
                 /**
@@ -81557,7 +83117,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Supplier Material */
+            /** @description Successful response for Retrieve Supplier Material */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -81779,7 +83339,7 @@ export interface operations {
                      *       },
                      *       "supplier_part_number": "SUP-PART-001",
                      *       "supplier_description": null,
-                     *       "is_active": true,
+                     *       "status": "active",
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -82034,7 +83594,7 @@ export interface operations {
                      *       },
                      *       "supplier_part_number": "SUP-PART-001",
                      *       "supplier_description": null,
-                     *       "is_active": true,
+                     *       "status": "active",
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -82299,7 +83859,7 @@ export interface operations {
                      *       },
                      *       "supplier_part_number": "SUP-PART-001",
                      *       "supplier_description": null,
-                     *       "is_active": true,
+                     *       "status": "active",
                      *       "created_at": "2026-05-10T00:00:00Z",
                      *       "updated_at": "2026-05-10T00:23:00Z"
                      *     }
@@ -82445,7 +84005,7 @@ export interface operations {
             };
         };
     };
-    "get-account-group": {
+    "retrieve-account-group": {
         parameters: {
             query?: never;
             header?: never;
@@ -82457,7 +84017,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Account Group */
+            /** @description Successful response for Retrieve Account Group */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -82633,8 +84193,8 @@ export interface operations {
                      *             "name": "Acme Inc.",
                      *             "number": "",
                      *             "status": "",
-                     *             "is_edi_enabled": false,
-                     *             "is_parent_account": false,
+                     *             "edi_status": "",
+                     *             "relationship_type": "",
                      *             "commission_policy": "",
                      *             "note": null,
                      *             "credit_limit": null,
@@ -82822,8 +84382,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -82956,7 +84516,7 @@ export interface operations {
             };
         };
     };
-    "get-account-price": {
+    "retrieve-account-price": {
         parameters: {
             query?: {
                 /**
@@ -82976,7 +84536,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Account Price */
+            /** @description Successful response for Retrieve Account Price */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -82992,8 +84552,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -83205,8 +84765,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -83417,7 +84977,7 @@ export interface operations {
             };
         };
     };
-    "get-account-status": {
+    "retrieve-account-status": {
         parameters: {
             query?: {
                 /**
@@ -83437,7 +84997,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Account Status */
+            /** @description Successful response for Retrieve Account Status */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -83894,7 +85454,7 @@ export interface operations {
             };
         };
     };
-    "get-territory": {
+    "retrieve-territory": {
         parameters: {
             query?: {
                 /**
@@ -83916,7 +85476,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Territory */
+            /** @description Successful response for Retrieve Territory */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -84068,10 +85628,10 @@ export interface operations {
                  */
                 q?: string;
                 /**
-                 * @description Query parameter: drop_ship for List Addresses
-                 * @example true
+                 * @description Filter by address type.
+                 * @example standard
                  */
-                drop_ship?: boolean;
+                type?: "standard" | "drop_ship";
             };
             header?: never;
             path?: never;
@@ -84101,7 +85661,7 @@ export interface operations {
                      *           "name": "Headquarters",
                      *           "phone": null,
                      *           "email": null,
-                     *           "is_drop_ship": false,
+                     *           "type": "standard",
                      *           "geolocation": {
                      *             "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "geolocation",
@@ -84145,7 +85705,6 @@ export interface operations {
                 /**
                  * @example {
                  *       "name": "Headquarters",
-                 *       "is_drop_ship": false,
                  *       "street_line_1": "123 Main St",
                  *       "locality": "Springfield",
                  *       "state": "IL",
@@ -84170,7 +85729,7 @@ export interface operations {
                      *       "name": "Headquarters",
                      *       "phone": null,
                      *       "email": null,
-                     *       "is_drop_ship": false,
+                     *       "type": "standard",
                      *       "geolocation": {
                      *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "object": "geolocation",
@@ -84199,7 +85758,7 @@ export interface operations {
             };
         };
     };
-    "get-address": {
+    "retrieve-address": {
         parameters: {
             query?: never;
             header?: never;
@@ -84211,7 +85770,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Address */
+            /** @description Successful response for Retrieve Address */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -84224,7 +85783,7 @@ export interface operations {
                      *       "name": "Headquarters",
                      *       "phone": null,
                      *       "email": null,
-                     *       "is_drop_ship": false,
+                     *       "type": "standard",
                      *       "geolocation": {
                      *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "object": "geolocation",
@@ -84321,7 +85880,7 @@ export interface operations {
                      *       "name": "Headquarters",
                      *       "phone": null,
                      *       "email": null,
-                     *       "is_drop_ship": false,
+                     *       "type": "standard",
                      *       "geolocation": {
                      *         "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *         "object": "geolocation",
@@ -84465,10 +86024,10 @@ export interface operations {
                  */
                 "service_level_ids[]"?: string[];
                 /**
-                 * @description Filter by whether the customer is a parent account.
-                 * @example true
+                 * @description Filter by whether the customer has child accounts.
+                 * @example parent
                  */
-                is_parent_account?: boolean;
+                parent_account_status?: "parent" | "non_parent";
                 /**
                  * @description Filter by city.
                  * @example example
@@ -84556,7 +86115,6 @@ export interface operations {
                  *       "customer_type_group_id": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
                  *       "bill_to_address": {
                  *         "name": "Acme Inc.",
-                 *         "is_drop_ship": false,
                  *         "street_line_1": "123 Main St",
                  *         "locality": "New York",
                  *         "state": "NY",
@@ -84565,7 +86123,6 @@ export interface operations {
                  *       },
                  *       "ship_to_address": {
                  *         "name": "Acme Inc.",
-                 *         "is_drop_ship": false,
                  *         "street_line_1": "123 Main St",
                  *         "locality": "New York",
                  *         "state": "NY",
@@ -84591,8 +86148,8 @@ export interface operations {
                      *       "name": "Acme Inc.",
                      *       "number": "100042",
                      *       "status": "normal",
-                     *       "is_edi_enabled": false,
-                     *       "is_parent_account": false,
+                     *       "edi_status": "disabled",
+                     *       "relationship_type": "standalone",
                      *       "commission_policy": "commission_applied",
                      *       "note": "Preferred customer since 2020.",
                      *       "credit_limit": {
@@ -84734,13 +86291,44 @@ export interface operations {
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
                      *         "sales_rep": {
-                     *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *           "object": "user",
-                     *           "email": "jdoe@augno.com",
+                     *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+                     *           "object": "account_user",
                      *           "name": "John Doe",
-                     *           "username": "jdoe",
-                     *           "email_verified_at": "2026-06-10T00:00:00Z",
-                     *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+                     *           "email": "john@augno.com",
+                     *           "username": null,
+                     *           "image_url": null,
+                     *           "status": "active",
+                     *           "role": {
+                     *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *             "object": "role",
+                     *             "name": "Admin",
+                     *             "type": "admin",
+                     *             "owner": {
+                     *               "object": "owner",
+                     *               "type": "account",
+                     *               "account": {
+                     *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                 "object": "account",
+                     *                 "name": "Acme Inc.",
+                     *                 "default_billing_address": null,
+                     *                 "default_shipping_address": null,
+                     *                 "branding": null,
+                     *                 "portal": null,
+                     *                 "created_at": "2026-05-10T00:00:00Z",
+                     *                 "updated_at": "2026-05-10T00:23:00Z"
+                     *               }
+                     *             },
+                     *             "permissions": [
+                     *               "customers:create",
+                     *               "customers:read",
+                     *               "customers:update",
+                     *               "customers:delete"
+                     *             ],
+                     *             "created_at": "2026-05-10T00:00:00Z",
+                     *             "updated_at": "2026-05-10T00:23:00Z"
+                     *           },
+                     *           "department": null,
+                     *           "last_used_at": null,
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         }
@@ -84755,7 +86343,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -84775,7 +86363,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -84903,7 +86491,6 @@ export interface operations {
                  *       "phone": "+15551234567",
                  *       "address": {
                  *         "name": "Headquarters",
-                 *         "is_drop_ship": false,
                  *         "street_line_1": "123 Main St",
                  *         "locality": "Springfield",
                  *         "state": "IL",
@@ -84939,7 +86526,7 @@ export interface operations {
             };
         };
     };
-    "get-customer": {
+    "retrieve-customer": {
         parameters: {
             query?: {
                 /**
@@ -84959,7 +86546,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Customer */
+            /** @description Successful response for Retrieve Customer */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -84972,8 +86559,8 @@ export interface operations {
                      *       "name": "Acme Inc.",
                      *       "number": "100042",
                      *       "status": "normal",
-                     *       "is_edi_enabled": false,
-                     *       "is_parent_account": false,
+                     *       "edi_status": "disabled",
+                     *       "relationship_type": "standalone",
                      *       "commission_policy": "commission_applied",
                      *       "note": "Preferred customer since 2020.",
                      *       "credit_limit": {
@@ -85115,13 +86702,44 @@ export interface operations {
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
                      *         "sales_rep": {
-                     *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *           "object": "user",
-                     *           "email": "jdoe@augno.com",
+                     *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+                     *           "object": "account_user",
                      *           "name": "John Doe",
-                     *           "username": "jdoe",
-                     *           "email_verified_at": "2026-06-10T00:00:00Z",
-                     *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+                     *           "email": "john@augno.com",
+                     *           "username": null,
+                     *           "image_url": null,
+                     *           "status": "active",
+                     *           "role": {
+                     *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *             "object": "role",
+                     *             "name": "Admin",
+                     *             "type": "admin",
+                     *             "owner": {
+                     *               "object": "owner",
+                     *               "type": "account",
+                     *               "account": {
+                     *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                 "object": "account",
+                     *                 "name": "Acme Inc.",
+                     *                 "default_billing_address": null,
+                     *                 "default_shipping_address": null,
+                     *                 "branding": null,
+                     *                 "portal": null,
+                     *                 "created_at": "2026-05-10T00:00:00Z",
+                     *                 "updated_at": "2026-05-10T00:23:00Z"
+                     *               }
+                     *             },
+                     *             "permissions": [
+                     *               "customers:create",
+                     *               "customers:read",
+                     *               "customers:update",
+                     *               "customers:delete"
+                     *             ],
+                     *             "created_at": "2026-05-10T00:00:00Z",
+                     *             "updated_at": "2026-05-10T00:23:00Z"
+                     *           },
+                     *           "department": null,
+                     *           "last_used_at": null,
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         }
@@ -85136,7 +86754,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -85156,7 +86774,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -85303,8 +86921,8 @@ export interface operations {
                      *       "name": "Acme Inc.",
                      *       "number": "100042",
                      *       "status": "normal",
-                     *       "is_edi_enabled": false,
-                     *       "is_parent_account": false,
+                     *       "edi_status": "disabled",
+                     *       "relationship_type": "standalone",
                      *       "commission_policy": "commission_applied",
                      *       "note": "Preferred customer since 2020.",
                      *       "credit_limit": {
@@ -85446,13 +87064,44 @@ export interface operations {
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
                      *         "sales_rep": {
-                     *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *           "object": "user",
-                     *           "email": "jdoe@augno.com",
+                     *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+                     *           "object": "account_user",
                      *           "name": "John Doe",
-                     *           "username": "jdoe",
-                     *           "email_verified_at": "2026-06-10T00:00:00Z",
-                     *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+                     *           "email": "john@augno.com",
+                     *           "username": null,
+                     *           "image_url": null,
+                     *           "status": "active",
+                     *           "role": {
+                     *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *             "object": "role",
+                     *             "name": "Admin",
+                     *             "type": "admin",
+                     *             "owner": {
+                     *               "object": "owner",
+                     *               "type": "account",
+                     *               "account": {
+                     *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                 "object": "account",
+                     *                 "name": "Acme Inc.",
+                     *                 "default_billing_address": null,
+                     *                 "default_shipping_address": null,
+                     *                 "branding": null,
+                     *                 "portal": null,
+                     *                 "created_at": "2026-05-10T00:00:00Z",
+                     *                 "updated_at": "2026-05-10T00:23:00Z"
+                     *               }
+                     *             },
+                     *             "permissions": [
+                     *               "customers:create",
+                     *               "customers:read",
+                     *               "customers:update",
+                     *               "customers:delete"
+                     *             ],
+                     *             "created_at": "2026-05-10T00:00:00Z",
+                     *             "updated_at": "2026-05-10T00:23:00Z"
+                     *           },
+                     *           "department": null,
+                     *           "last_used_at": null,
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         }
@@ -85467,7 +87116,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -85487,7 +87136,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -85599,8 +87248,8 @@ export interface operations {
                      *       "name": "Acme Inc.",
                      *       "number": "100042",
                      *       "status": "normal",
-                     *       "is_edi_enabled": false,
-                     *       "is_parent_account": false,
+                     *       "edi_status": "disabled",
+                     *       "relationship_type": "standalone",
                      *       "commission_policy": "commission_applied",
                      *       "note": "Preferred customer since 2020.",
                      *       "credit_limit": {
@@ -85742,13 +87391,44 @@ export interface operations {
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         },
                      *         "sales_rep": {
-                     *           "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *           "object": "user",
-                     *           "email": "jdoe@augno.com",
+                     *           "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+                     *           "object": "account_user",
                      *           "name": "John Doe",
-                     *           "username": "jdoe",
-                     *           "email_verified_at": "2026-06-10T00:00:00Z",
-                     *           "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+                     *           "email": "john@augno.com",
+                     *           "username": null,
+                     *           "image_url": null,
+                     *           "status": "active",
+                     *           "role": {
+                     *             "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *             "object": "role",
+                     *             "name": "Admin",
+                     *             "type": "admin",
+                     *             "owner": {
+                     *               "object": "owner",
+                     *               "type": "account",
+                     *               "account": {
+                     *                 "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                 "object": "account",
+                     *                 "name": "Acme Inc.",
+                     *                 "default_billing_address": null,
+                     *                 "default_shipping_address": null,
+                     *                 "branding": null,
+                     *                 "portal": null,
+                     *                 "created_at": "2026-05-10T00:00:00Z",
+                     *                 "updated_at": "2026-05-10T00:23:00Z"
+                     *               }
+                     *             },
+                     *             "permissions": [
+                     *               "customers:create",
+                     *               "customers:read",
+                     *               "customers:update",
+                     *               "customers:delete"
+                     *             ],
+                     *             "created_at": "2026-05-10T00:00:00Z",
+                     *             "updated_at": "2026-05-10T00:23:00Z"
+                     *           },
+                     *           "department": null,
+                     *           "last_used_at": null,
                      *           "created_at": "2026-05-10T00:00:00Z",
                      *           "updated_at": "2026-05-10T00:23:00Z"
                      *         }
@@ -85763,7 +87443,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -85783,7 +87463,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -86108,7 +87788,7 @@ export interface operations {
             };
         };
     };
-    "get-order-discount": {
+    "retrieve-order-discount": {
         parameters: {
             query?: never;
             header?: never;
@@ -86120,7 +87800,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Order Discount */
+            /** @description Successful response for Retrieve Order Discount */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -86335,7 +88015,7 @@ export interface operations {
             };
         };
     };
-    "get-priority": {
+    "retrieve-priority": {
         parameters: {
             query?: {
                 /**
@@ -86355,7 +88035,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Priority */
+            /** @description Successful response for Retrieve Priority */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -86572,7 +88252,7 @@ export interface operations {
             };
         };
     };
-    "get-account-group-product-line-access": {
+    "retrieve-account-group-product-line-access": {
         parameters: {
             query?: never;
             header?: never;
@@ -86584,7 +88264,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Account Group Product Line Access */
+            /** @description Successful response for Retrieve Account Group Product Line Access */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -86813,8 +88493,8 @@ export interface operations {
                      *             "name": "Acme Inc.",
                      *             "number": "100042",
                      *             "status": "normal",
-                     *             "is_edi_enabled": false,
-                     *             "is_parent_account": false,
+                     *             "edi_status": "disabled",
+                     *             "relationship_type": "standalone",
                      *             "commission_policy": "commission_applied",
                      *             "note": "Preferred customer since 2020.",
                      *             "credit_limit": {
@@ -86956,13 +88636,44 @@ export interface operations {
                      *                 "updated_at": "2026-05-10T00:23:00Z"
                      *               },
                      *               "sales_rep": {
-                     *                 "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *                 "object": "user",
-                     *                 "email": "jdoe@augno.com",
+                     *                 "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+                     *                 "object": "account_user",
                      *                 "name": "John Doe",
-                     *                 "username": "jdoe",
-                     *                 "email_verified_at": "2026-06-10T00:00:00Z",
-                     *                 "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+                     *                 "email": "john@augno.com",
+                     *                 "username": null,
+                     *                 "image_url": null,
+                     *                 "status": "active",
+                     *                 "role": {
+                     *                   "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *                   "object": "role",
+                     *                   "name": "Admin",
+                     *                   "type": "admin",
+                     *                   "owner": {
+                     *                     "object": "owner",
+                     *                     "type": "account",
+                     *                     "account": {
+                     *                       "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                       "object": "account",
+                     *                       "name": "Acme Inc.",
+                     *                       "default_billing_address": null,
+                     *                       "default_shipping_address": null,
+                     *                       "branding": null,
+                     *                       "portal": null,
+                     *                       "created_at": "2026-05-10T00:00:00Z",
+                     *                       "updated_at": "2026-05-10T00:23:00Z"
+                     *                     }
+                     *                   },
+                     *                   "permissions": [
+                     *                     "customers:create",
+                     *                     "customers:read",
+                     *                     "customers:update",
+                     *                     "customers:delete"
+                     *                   ],
+                     *                   "created_at": "2026-05-10T00:00:00Z",
+                     *                   "updated_at": "2026-05-10T00:23:00Z"
+                     *                 },
+                     *                 "department": null,
+                     *                 "last_used_at": null,
                      *                 "created_at": "2026-05-10T00:00:00Z",
                      *                 "updated_at": "2026-05-10T00:23:00Z"
                      *               }
@@ -86977,7 +88688,7 @@ export interface operations {
                      *               "name": "Headquarters",
                      *               "phone": null,
                      *               "email": null,
-                     *               "is_drop_ship": false,
+                     *               "type": "standard",
                      *               "geolocation": {
                      *                 "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                 "object": "geolocation",
@@ -86997,7 +88708,7 @@ export interface operations {
                      *               "name": "Headquarters",
                      *               "phone": null,
                      *               "email": null,
-                     *               "is_drop_ship": false,
+                     *               "type": "standard",
                      *               "geolocation": {
                      *                 "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *                 "object": "geolocation",
@@ -87130,8 +88841,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "normal",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "disabled",
+                     *         "relationship_type": "standalone",
                      *         "commission_policy": "commission_applied",
                      *         "note": "Preferred customer since 2020.",
                      *         "credit_limit": {
@@ -87273,13 +88984,44 @@ export interface operations {
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
                      *           "sales_rep": {
-                     *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *             "object": "user",
-                     *             "email": "jdoe@augno.com",
+                     *             "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+                     *             "object": "account_user",
                      *             "name": "John Doe",
-                     *             "username": "jdoe",
-                     *             "email_verified_at": "2026-06-10T00:00:00Z",
-                     *             "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+                     *             "email": "john@augno.com",
+                     *             "username": null,
+                     *             "image_url": null,
+                     *             "status": "active",
+                     *             "role": {
+                     *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *               "object": "role",
+                     *               "name": "Admin",
+                     *               "type": "admin",
+                     *               "owner": {
+                     *                 "object": "owner",
+                     *                 "type": "account",
+                     *                 "account": {
+                     *                   "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                   "object": "account",
+                     *                   "name": "Acme Inc.",
+                     *                   "default_billing_address": null,
+                     *                   "default_shipping_address": null,
+                     *                   "branding": null,
+                     *                   "portal": null,
+                     *                   "created_at": "2026-05-10T00:00:00Z",
+                     *                   "updated_at": "2026-05-10T00:23:00Z"
+                     *                 }
+                     *               },
+                     *               "permissions": [
+                     *                 "customers:create",
+                     *                 "customers:read",
+                     *                 "customers:update",
+                     *                 "customers:delete"
+                     *               ],
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "department": null,
+                     *             "last_used_at": null,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           }
@@ -87294,7 +89036,7 @@ export interface operations {
                      *           "name": "Headquarters",
                      *           "phone": null,
                      *           "email": null,
-                     *           "is_drop_ship": false,
+                     *           "type": "standard",
                      *           "geolocation": {
                      *             "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "geolocation",
@@ -87314,7 +89056,7 @@ export interface operations {
                      *           "name": "Headquarters",
                      *           "phone": null,
                      *           "email": null,
-                     *           "is_drop_ship": false,
+                     *           "type": "standard",
                      *           "geolocation": {
                      *             "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "geolocation",
@@ -87409,7 +89151,7 @@ export interface operations {
             };
         };
     };
-    "get-customer-product-line-access": {
+    "retrieve-customer-product-line-access": {
         parameters: {
             query?: never;
             header?: never;
@@ -87421,7 +89163,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Customer Product Line Access */
+            /** @description Successful response for Retrieve Customer Product Line Access */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -87435,8 +89177,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "normal",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "disabled",
+                     *         "relationship_type": "standalone",
                      *         "commission_policy": "commission_applied",
                      *         "note": "Preferred customer since 2020.",
                      *         "credit_limit": {
@@ -87578,13 +89320,44 @@ export interface operations {
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
                      *           "sales_rep": {
-                     *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *             "object": "user",
-                     *             "email": "jdoe@augno.com",
+                     *             "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+                     *             "object": "account_user",
                      *             "name": "John Doe",
-                     *             "username": "jdoe",
-                     *             "email_verified_at": "2026-06-10T00:00:00Z",
-                     *             "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+                     *             "email": "john@augno.com",
+                     *             "username": null,
+                     *             "image_url": null,
+                     *             "status": "active",
+                     *             "role": {
+                     *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *               "object": "role",
+                     *               "name": "Admin",
+                     *               "type": "admin",
+                     *               "owner": {
+                     *                 "object": "owner",
+                     *                 "type": "account",
+                     *                 "account": {
+                     *                   "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                   "object": "account",
+                     *                   "name": "Acme Inc.",
+                     *                   "default_billing_address": null,
+                     *                   "default_shipping_address": null,
+                     *                   "branding": null,
+                     *                   "portal": null,
+                     *                   "created_at": "2026-05-10T00:00:00Z",
+                     *                   "updated_at": "2026-05-10T00:23:00Z"
+                     *                 }
+                     *               },
+                     *               "permissions": [
+                     *                 "customers:create",
+                     *                 "customers:read",
+                     *                 "customers:update",
+                     *                 "customers:delete"
+                     *               ],
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "department": null,
+                     *             "last_used_at": null,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           }
@@ -87599,7 +89372,7 @@ export interface operations {
                      *           "name": "Headquarters",
                      *           "phone": null,
                      *           "email": null,
-                     *           "is_drop_ship": false,
+                     *           "type": "standard",
                      *           "geolocation": {
                      *             "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "geolocation",
@@ -87619,7 +89392,7 @@ export interface operations {
                      *           "name": "Headquarters",
                      *           "phone": null,
                      *           "email": null,
-                     *           "is_drop_ship": false,
+                     *           "type": "standard",
                      *           "geolocation": {
                      *             "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "geolocation",
@@ -87785,8 +89558,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "normal",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "disabled",
+                     *         "relationship_type": "standalone",
                      *         "commission_policy": "commission_applied",
                      *         "note": "Preferred customer since 2020.",
                      *         "credit_limit": {
@@ -87928,13 +89701,44 @@ export interface operations {
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           },
                      *           "sales_rep": {
-                     *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
-                     *             "object": "user",
-                     *             "email": "jdoe@augno.com",
+                     *             "id": "acus_01gf7a8200er3ar3pkfrb6kk29",
+                     *             "object": "account_user",
                      *             "name": "John Doe",
-                     *             "username": "jdoe",
-                     *             "email_verified_at": "2026-06-10T00:00:00Z",
-                     *             "image_url": "https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg",
+                     *             "email": "john@augno.com",
+                     *             "username": null,
+                     *             "image_url": null,
+                     *             "status": "active",
+                     *             "role": {
+                     *               "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *               "object": "role",
+                     *               "name": "Admin",
+                     *               "type": "admin",
+                     *               "owner": {
+                     *                 "object": "owner",
+                     *                 "type": "account",
+                     *                 "account": {
+                     *                   "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+                     *                   "object": "account",
+                     *                   "name": "Acme Inc.",
+                     *                   "default_billing_address": null,
+                     *                   "default_shipping_address": null,
+                     *                   "branding": null,
+                     *                   "portal": null,
+                     *                   "created_at": "2026-05-10T00:00:00Z",
+                     *                   "updated_at": "2026-05-10T00:23:00Z"
+                     *                 }
+                     *               },
+                     *               "permissions": [
+                     *                 "customers:create",
+                     *                 "customers:read",
+                     *                 "customers:update",
+                     *                 "customers:delete"
+                     *               ],
+                     *               "created_at": "2026-05-10T00:00:00Z",
+                     *               "updated_at": "2026-05-10T00:23:00Z"
+                     *             },
+                     *             "department": null,
+                     *             "last_used_at": null,
                      *             "created_at": "2026-05-10T00:00:00Z",
                      *             "updated_at": "2026-05-10T00:23:00Z"
                      *           }
@@ -87949,7 +89753,7 @@ export interface operations {
                      *           "name": "Headquarters",
                      *           "phone": null,
                      *           "email": null,
-                     *           "is_drop_ship": false,
+                     *           "type": "standard",
                      *           "geolocation": {
                      *             "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "geolocation",
@@ -87969,7 +89773,7 @@ export interface operations {
                      *           "name": "Headquarters",
                      *           "phone": null,
                      *           "email": null,
-                     *           "is_drop_ship": false,
+                     *           "type": "standard",
                      *           "geolocation": {
                      *             "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *             "object": "geolocation",
@@ -88228,7 +90032,7 @@ export interface operations {
             };
         };
     };
-    "get-registration-flow-by-slug": {
+    "retrieve-registration-flow-by-slug": {
         parameters: {
             query?: never;
             header?: never;
@@ -88240,7 +90044,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Registration Flow by Slug */
+            /** @description Successful response for Retrieve Registration Flow by Slug */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -88290,7 +90094,7 @@ export interface operations {
             };
         };
     };
-    "get-registration-flow": {
+    "retrieve-registration-flow": {
         parameters: {
             query?: never;
             header?: never;
@@ -88302,7 +90106,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Registration Flow */
+            /** @description Successful response for Retrieve Registration Flow */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -88554,8 +90358,8 @@ export interface operations {
                      *             "name": "Acme Inc.",
                      *             "number": "100042",
                      *             "status": "",
-                     *             "is_edi_enabled": false,
-                     *             "is_parent_account": false,
+                     *             "edi_status": "",
+                     *             "relationship_type": "",
                      *             "commission_policy": "",
                      *             "note": null,
                      *             "credit_limit": null,
@@ -88688,8 +90492,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -88712,7 +90516,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -88732,7 +90536,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -89008,7 +90812,7 @@ export interface operations {
             };
         };
     };
-    "get-sales-order": {
+    "retrieve-sales-order": {
         parameters: {
             query?: {
                 /**
@@ -89028,7 +90832,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Sales Order */
+            /** @description Successful response for Retrieve Sales Order */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -89048,8 +90852,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -89072,7 +90876,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -89092,7 +90896,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -89335,8 +91139,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -89359,7 +91163,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -89379,7 +91183,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -89586,8 +91390,8 @@ export interface operations {
                      *         "name": "Acme Inc.",
                      *         "number": "100042",
                      *         "status": "",
-                     *         "is_edi_enabled": false,
-                     *         "is_parent_account": false,
+                     *         "edi_status": "",
+                     *         "relationship_type": "",
                      *         "commission_policy": "",
                      *         "note": null,
                      *         "credit_limit": null,
@@ -89610,7 +91414,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -89630,7 +91434,7 @@ export interface operations {
                      *         "name": "Headquarters",
                      *         "phone": null,
                      *         "email": null,
-                     *         "is_drop_ship": false,
+                     *         "type": "standard",
                      *         "geolocation": {
                      *           "id": "gl_01jm4r6700f8nwq3v5hx2d9ktp",
                      *           "object": "geolocation",
@@ -89990,7 +91794,7 @@ export interface operations {
                 /** @description Sales order ID. */
                 id: string;
                 /** @description Sales order line ID. */
-                lineId: string;
+                line_id: string;
             };
             cookie?: never;
         };
@@ -90025,7 +91829,7 @@ export interface operations {
                 /** @description Sales order ID. */
                 id: string;
                 /** @description Sales order line ID. */
-                lineId: string;
+                line_id: string;
             };
             cookie?: never;
         };
@@ -90311,7 +92115,7 @@ export interface operations {
             };
         };
     };
-    "get-volume-discount": {
+    "retrieve-volume-discount": {
         parameters: {
             query?: {
                 /**
@@ -90331,7 +92135,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response for Get Volume Discount */
+            /** @description Successful response for Retrieve Volume Discount */
             200: {
                 headers: {
                     [name: string]: unknown;
