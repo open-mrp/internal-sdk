@@ -421,13 +421,15 @@ export interface paths {
         };
         /**
          * List API Keys
-         * @description Returns a paginated list of API keys.
+         * @description Returns a paginated list of [API keys](https://docs.augno.com/api/api-keys).
          */
         get: operations["list-api-keys"];
         put?: never;
         /**
          * Create API Key
-         * @description Creates an API key. The secret key is returned once and cannot be retrieved later.
+         * @description Creates an [API key](https://docs.augno.com/api/api-keys) to authenticate API requests.
+         *
+         *     The secret key is returned once and cannot be retrieved later, so you should store it securely. We provide some [recommendations](https://docs.augno.com/api/managing-api-keys) on how you can manage your API keys.
          */
         post: operations["create-api-key"];
         delete?: never;
@@ -465,14 +467,16 @@ export interface paths {
         };
         /**
          * Retrieve API Key
-         * @description Returns API key metadata by ID.
+         * @description Returns [API key](https://docs.augno.com/api/api-keys) metadata by ID.
          */
         get: operations["retrieve-api-key"];
         put?: never;
         post?: never;
         /**
          * Revoke API Key
-         * @description Revokes an API key, preventing it from being used to authenticate requests.
+         * @description Revokes an [API key](https://docs.augno.com/api/api-keys).
+         *
+         *     Revoked API keys will be unable to be used to authenticate requests.
          */
         delete: operations["revoke-api-key"];
         options?: never;
@@ -491,7 +495,9 @@ export interface paths {
         put?: never;
         /**
          * Rotate API Key
-         * @description Rotates an API key by revoking the existing key and issuing a replacement with the same name, role, and expiration. The new secret is returned once.
+         * @description Rotates an [API key](https://docs.augno.com/api/api-keys) by revoking the existing key and issuing a replacement with the same name, role, and expiration (unless overridden).
+         *
+         *     The secret key is returned once and cannot be retrieved later, so you should store it securely. We provide some [recommendations](https://docs.augno.com/api/managing-api-keys) on how you can manage your API keys.
          */
         post: operations["rotate-api-key"];
         delete?: never;
@@ -7092,8 +7098,8 @@ export interface components {
          *       "product_lines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -7329,8 +7335,8 @@ export interface components {
          *       "categories": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -7352,8 +7358,8 @@ export interface components {
          *       "attributes": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -7509,8 +7515,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -7633,8 +7639,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -8010,8 +8016,8 @@ export interface components {
              *         "children": {
              *           "object": "list",
              *           "page_info": {
-             *             "next_cursor": null,
-             *             "prev_cursor": null,
+             *             "next_page_url": null,
+             *             "previous_page_url": null,
              *             "has_next_page": false,
              *             "has_prev_page": false
              *           },
@@ -8034,8 +8040,8 @@ export interface components {
              *       "scanning_stations": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -8059,8 +8065,8 @@ export interface components {
              *       "machines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -8297,7 +8303,7 @@ export interface components {
             address_line_1: string;
             /** @description Second line of the street address. */
             address_line_2: string | null;
-            /** @description City. */
+            /** @description City or locality. */
             city: string;
             /** @description State or administrative area. */
             state: string;
@@ -8384,14 +8390,14 @@ export interface components {
          *     }
          */
         AddressSuggestion: {
-            /** @description Google Places ID. */
+            /** @description Address suggestion ID. */
             id: string;
             /**
              * @description Resource type identifier.
              * @enum {string}
              */
             object: "address_suggestion";
-            /** @description Full description. */
+            /** @description Full description of the address. */
             description: string;
             /** @description Main text (typically the street address). */
             main_text: string;
@@ -8744,8 +8750,8 @@ export interface components {
              *       "actions": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -8794,8 +8800,8 @@ export interface components {
              *       "steps": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -8898,8 +8904,8 @@ export interface components {
          *       "tools": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -9252,8 +9258,8 @@ export interface components {
          *       "actions": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -9302,8 +9308,8 @@ export interface components {
          *       "steps": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -9454,8 +9460,8 @@ export interface components {
              *       "tools": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -10337,8 +10343,8 @@ export interface components {
          *       "changes": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -10353,7 +10359,30 @@ export interface components {
          *       "metadata": {
          *         "reason": "operator override"
          *       },
-         *       "request_id": "req_01gq7s3f2m0y9h2t7z1w7q3v9k",
+         *       "request": {
+         *         "id": "rq_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "object": "request_log",
+         *         "method": "",
+         *         "host": "",
+         *         "path": "",
+         *         "normalized_route": "",
+         *         "query_params": null,
+         *         "status_code": 0,
+         *         "latency_us": 0,
+         *         "api_version": null,
+         *         "client_ip": null,
+         *         "user_agent": null,
+         *         "referrer": null,
+         *         "error_code": null,
+         *         "error_message": null,
+         *         "occurred_at": "0001-01-01T00:00:00Z",
+         *         "created_at": "0001-01-01T00:00:00Z",
+         *         "account": null,
+         *         "actor": null,
+         *         "idempotency_key": null,
+         *         "request_body": null,
+         *         "response_body": null
+         *       },
          *       "idempotency_key": null,
          *       "source_ip": "198.51.100.8",
          *       "occurred_at": "2026-05-10T00:00:00Z",
@@ -10424,8 +10453,90 @@ export interface components {
             changes: components["schemas"]["List_AuditFieldChange"] | null;
             /** @description Arbitrary JSON metadata for the mutation (e.g. reason, source, tags). Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
             metadata: Record<string, never> | null;
-            /** @description Originating HTTP request ID. */
-            request_id: string | null;
+            /**
+             * @description Originating HTTP request. Expandable.
+             * @example {
+             *       "id": "rq_01jm4r6700f8nwq3v5hx2d9ktp",
+             *       "object": "request_log",
+             *       "method": "GET",
+             *       "host": "https://api.augno.com",
+             *       "path": "/v1/core/sandboxes",
+             *       "normalized_route": "/v1/core/sandboxes",
+             *       "query_params": {
+             *         "limit": 10
+             *       },
+             *       "status_code": 200,
+             *       "latency_us": 12345,
+             *       "api_version": "2026-01-01",
+             *       "client_ip": "198.51.100.7",
+             *       "user_agent": "Mozilla/5.0",
+             *       "referrer": null,
+             *       "error_code": null,
+             *       "error_message": null,
+             *       "occurred_at": "2026-05-10T00:00:00Z",
+             *       "created_at": "2026-05-10T00:00:00Z",
+             *       "account": {
+             *         "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *         "object": "account",
+             *         "name": "Acme Inc.",
+             *         "default_billing_address": null,
+             *         "default_shipping_address": null,
+             *         "branding": null,
+             *         "portal": null,
+             *         "created_at": "2026-05-10T00:00:00Z",
+             *         "updated_at": "2026-05-10T00:23:00Z"
+             *       },
+             *       "actor": {
+             *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
+             *         "object": "actor",
+             *         "type": "user",
+             *         "name": "John Doe",
+             *         "handle": "jdoe@augno.com",
+             *         "role": {
+             *           "id": "rl_01gf7a8200er3ar3pkfrb6kk29",
+             *           "object": "role",
+             *           "name": "Admin",
+             *           "type": "admin",
+             *           "owner": {
+             *             "object": "owner",
+             *             "type": "account",
+             *             "account": {
+             *               "id": "ac_01gf7a8200eaj8fke1xvw4h50x",
+             *               "object": "account",
+             *               "name": "Acme Inc.",
+             *               "default_billing_address": null,
+             *               "default_shipping_address": null,
+             *               "branding": null,
+             *               "portal": null,
+             *               "created_at": "2026-05-10T00:00:00Z",
+             *               "updated_at": "2026-05-10T00:23:00Z"
+             *             }
+             *           },
+             *           "permissions": [
+             *             "customers:create",
+             *             "customers:read",
+             *             "customers:update",
+             *             "customers:delete"
+             *           ],
+             *           "created_at": "2026-05-10T00:00:00Z",
+             *           "updated_at": "2026-05-10T00:23:00Z"
+             *         }
+             *       },
+             *       "idempotency_key": null,
+             *       "request_body": null,
+             *       "response_body": {
+             *         "data": [],
+             *         "object": "list",
+             *         "page_info": {
+             *           "has_next_page": false,
+             *           "has_prev_page": false,
+             *           "next_page_url": null,
+             *           "previous_page_url": null
+             *         }
+             *       }
+             *     }
+             */
+            request: components["schemas"]["RequestLog"] | null;
             /** @description Idempotency key of the originating request. */
             idempotency_key: string | null;
             /** @description Originating client IP address. */
@@ -10645,8 +10756,8 @@ export interface components {
          *         "attributes": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -10757,8 +10868,8 @@ export interface components {
          *           "children": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -10781,8 +10892,8 @@ export interface components {
          *         "scanning_stations": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -10806,8 +10917,8 @@ export interface components {
          *         "machines": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -10836,8 +10947,8 @@ export interface components {
          *       "machines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -10857,8 +10968,8 @@ export interface components {
          *       "lots": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -11022,8 +11133,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -11154,8 +11265,8 @@ export interface components {
              *         "children": {
              *           "object": "list",
              *           "page_info": {
-             *             "next_cursor": null,
-             *             "prev_cursor": null,
+             *             "next_page_url": null,
+             *             "previous_page_url": null,
              *             "has_next_page": false,
              *             "has_prev_page": false
              *           },
@@ -11178,8 +11289,8 @@ export interface components {
              *       "scanning_stations": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -11203,8 +11314,8 @@ export interface components {
              *       "machines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -11492,8 +11603,8 @@ export interface components {
              *           "attributes": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -11540,8 +11651,8 @@ export interface components {
              *       "consumptions": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -11731,8 +11842,8 @@ export interface components {
              *               "attributes": {
              *                 "object": "list",
              *                 "page_info": {
-             *                   "next_cursor": null,
-             *                   "prev_cursor": null,
+             *                   "next_page_url": null,
+             *                   "previous_page_url": null,
              *                   "has_next_page": false,
              *                   "has_prev_page": false
              *                 },
@@ -11761,8 +11872,8 @@ export interface components {
              *       "machines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -11796,8 +11907,8 @@ export interface components {
              *       "in_steps": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -11806,8 +11917,8 @@ export interface components {
              *       "out_steps": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -11827,8 +11938,8 @@ export interface components {
              *           "children": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -11851,8 +11962,8 @@ export interface components {
              *         "scanning_stations": {
              *           "object": "list",
              *           "page_info": {
-             *             "next_cursor": null,
-             *             "prev_cursor": null,
+             *             "next_page_url": null,
+             *             "previous_page_url": null,
              *             "has_next_page": false,
              *             "has_prev_page": false
              *           },
@@ -11876,8 +11987,8 @@ export interface components {
              *         "machines": {
              *           "object": "list",
              *           "page_info": {
-             *             "next_cursor": null,
-             *             "prev_cursor": null,
+             *             "next_page_url": null,
+             *             "previous_page_url": null,
              *             "has_next_page": false,
              *             "has_prev_page": false
              *           },
@@ -12087,8 +12198,8 @@ export interface components {
          *           "attributes": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -12199,8 +12310,8 @@ export interface components {
          *             "children": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -12223,8 +12334,8 @@ export interface components {
          *           "scanning_stations": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -12248,8 +12359,8 @@ export interface components {
          *           "machines": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -12278,8 +12389,8 @@ export interface components {
          *         "machines": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -12299,8 +12410,8 @@ export interface components {
          *         "lots": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -12468,8 +12579,8 @@ export interface components {
              *         "attributes": {
              *           "object": "list",
              *           "page_info": {
-             *             "next_cursor": null,
-             *             "prev_cursor": null,
+             *             "next_page_url": null,
+             *             "previous_page_url": null,
              *             "has_next_page": false,
              *             "has_prev_page": false
              *           },
@@ -12580,8 +12691,8 @@ export interface components {
              *           "children": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -12604,8 +12715,8 @@ export interface components {
              *         "scanning_stations": {
              *           "object": "list",
              *           "page_info": {
-             *             "next_cursor": null,
-             *             "prev_cursor": null,
+             *             "next_page_url": null,
+             *             "previous_page_url": null,
              *             "has_next_page": false,
              *             "has_prev_page": false
              *           },
@@ -12629,8 +12740,8 @@ export interface components {
              *         "machines": {
              *           "object": "list",
              *           "page_info": {
-             *             "next_cursor": null,
-             *             "prev_cursor": null,
+             *             "next_page_url": null,
+             *             "previous_page_url": null,
              *             "has_next_page": false,
              *             "has_prev_page": false
              *           },
@@ -12659,8 +12770,8 @@ export interface components {
              *       "machines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -12680,8 +12791,8 @@ export interface components {
              *       "lots": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -13082,8 +13193,8 @@ export interface components {
          *       "properties": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -13098,8 +13209,8 @@ export interface components {
          *       "products": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -13125,8 +13236,8 @@ export interface components {
          *             "attributes": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -13186,8 +13297,8 @@ export interface components {
          *       "attributes": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -13354,8 +13465,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -13881,8 +13992,8 @@ export interface components {
          *         "attributes": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -14107,8 +14218,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -15355,7 +15466,7 @@ export interface components {
          *       "carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "service_level_id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
          *       "priority_code": "normal",
-         *       "sales_order_type_code": "standard",
+         *       "sales_order_type_code": "sales_order",
          *       "ship_to_name": "Acme Inc.",
          *       "ship_to_street_line_1": "123 Main Street",
          *       "ship_to_locality": "San Francisco",
@@ -15996,7 +16107,7 @@ export interface components {
              * @enum {string}
              */
             object: "created_api_key";
-            /** @description Full secret value. Returned once and cannot be retrieved later. */
+            /** @description Full secret value. Returned once and cannot be retrieved later. Learn more about [managing your API keys](https://docs.augno.com/api/managing-api-keys). */
             api_key_secret: string;
             /**
              * @description API key metadata.
@@ -16170,8 +16281,8 @@ export interface components {
          *           "free_shipping_service_levels": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -16294,8 +16405,8 @@ export interface components {
          *       "price_groups": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -16454,8 +16565,8 @@ export interface components {
              * @example {
              *       "object": "list",
              *       "page_info": {
-             *         "next_cursor": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
-             *         "prev_cursor": null,
+             *         "next_page_url": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "previous_page_url": null,
              *         "has_next_page": true,
              *         "has_prev_page": false
              *       },
@@ -16557,8 +16668,8 @@ export interface components {
              *       "free_shipping_service_levels": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -16851,8 +16962,8 @@ export interface components {
          *             "free_shipping_service_levels": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -16975,8 +17086,8 @@ export interface components {
          *         "price_groups": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -17003,8 +17114,8 @@ export interface components {
          *       "product_lines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -17156,8 +17267,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -17280,8 +17391,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -17439,8 +17550,8 @@ export interface components {
          *       "lines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -17656,8 +17767,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -18024,8 +18135,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -18125,8 +18236,8 @@ export interface components {
              *       "children": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -18360,8 +18471,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -18555,8 +18666,8 @@ export interface components {
          *         "children": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -18579,8 +18690,8 @@ export interface components {
          *       "scanning_stations": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -18604,8 +18715,8 @@ export interface components {
          *       "machines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -18649,8 +18760,8 @@ export interface components {
              *       "children": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -18811,7 +18922,6 @@ export interface components {
          *       ],
          *       "subject": "Order Confirmation #1001",
          *       "filename": "invoice_1001.pdf",
-         *       "ses_message_id": null,
          *       "sent_by": {
          *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
          *         "object": "actor",
@@ -18871,8 +18981,6 @@ export interface components {
             subject: string | null;
             /** @description Filename of any attachment. */
             filename: string | null;
-            /** @description SES message ID returned by AWS. */
-            ses_message_id: string | null;
             /**
              * @description Actor who sent the email. Null when the email was sent by the system.
              * @example {
@@ -19304,8 +19412,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -19631,8 +19739,8 @@ export interface components {
          *         "attributes": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -19861,8 +19969,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -20077,8 +20185,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -20297,8 +20405,8 @@ export interface components {
          *       "lines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -20448,8 +20556,8 @@ export interface components {
          *       "allocations": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -20670,8 +20778,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -21065,8 +21173,8 @@ export interface components {
          *       "allocations": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -21305,8 +21413,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -21429,8 +21537,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -22071,8 +22179,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -22195,8 +22303,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -22330,8 +22438,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -22675,8 +22783,8 @@ export interface components {
          *       "attributes": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -23261,8 +23369,8 @@ export interface components {
          *       "points": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -23305,8 +23413,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23370,8 +23478,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23406,8 +23514,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": null,
-         *         "prev_cursor": null,
+         *         "next_page_url": null,
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23428,8 +23536,8 @@ export interface components {
          *           "product_lines": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -23471,8 +23579,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "ai_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "ai_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23505,8 +23613,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "acpr_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "acpr_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23596,8 +23704,8 @@ export interface components {
          *           "categories": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -23619,8 +23727,8 @@ export interface components {
          *           "attributes": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -23659,8 +23767,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "acss_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "acss_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23697,8 +23805,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "acus_01gf7a8200er3ar3pkfrb6kk29",
-         *         "prev_cursor": null,
+         *         "next_page_url": "acus_01gf7a8200er3ar3pkfrb6kk29",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23764,8 +23872,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23809,8 +23917,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "ChIJd8BlQ2BZwokRAFUEcm_qrcA",
-         *         "prev_cursor": null,
+         *         "next_page_url": "ChIJd8BlQ2BZwokRAFUEcm_qrcA",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23841,8 +23949,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "adjt_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "adjt_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23891,8 +23999,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "agnf_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "agnf_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23931,8 +24039,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "agdf_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "agdf_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -23966,8 +24074,8 @@ export interface components {
          *           "tools": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -24027,8 +24135,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "agmm_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "agmm_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -24070,8 +24178,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "agrn_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "agrn_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -24134,8 +24242,8 @@ export interface components {
          *           "actions": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -24184,8 +24292,8 @@ export interface components {
          *           "steps": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -24243,8 +24351,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "agtk_01gf7a8200er3ar3pkfrb6kk29",
-         *         "prev_cursor": null,
+         *         "next_page_url": "agtk_01gf7a8200er3ar3pkfrb6kk29",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -24279,8 +24387,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "txal_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "txal_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -24340,8 +24448,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "ae_01gq7s3f2m0y9h2t7z1w7q3v9k",
-         *         "prev_cursor": null,
+         *         "next_page_url": "ae_01gq7s3f2m0y9h2t7z1w7q3v9k",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -24391,8 +24499,8 @@ export interface components {
          *           "changes": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -24407,7 +24515,30 @@ export interface components {
          *           "metadata": {
          *             "reason": "operator override"
          *           },
-         *           "request_id": "req_01gq7s3f2m0y9h2t7z1w7q3v9k",
+         *           "request": {
+         *             "id": "rq_01jm4r6700f8nwq3v5hx2d9ktp",
+         *             "object": "request_log",
+         *             "method": "",
+         *             "host": "",
+         *             "path": "",
+         *             "normalized_route": "",
+         *             "query_params": null,
+         *             "status_code": 0,
+         *             "latency_us": 0,
+         *             "api_version": null,
+         *             "client_ip": null,
+         *             "user_agent": null,
+         *             "referrer": null,
+         *             "error_code": null,
+         *             "error_message": null,
+         *             "occurred_at": "0001-01-01T00:00:00Z",
+         *             "created_at": "0001-01-01T00:00:00Z",
+         *             "account": null,
+         *             "actor": null,
+         *             "idempotency_key": null,
+         *             "request_body": null,
+         *             "response_body": null
+         *           },
          *           "idempotency_key": null,
          *           "source_ip": "198.51.100.8",
          *           "occurred_at": "2026-05-10T00:00:00Z",
@@ -24444,8 +24575,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "tdef_01k0b1seed0searchproduct0",
-         *         "prev_cursor": null,
+         *         "next_page_url": "tdef_01k0b1seed0searchproduct0",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -24480,8 +24611,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "bt_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "bt_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -24629,8 +24760,8 @@ export interface components {
          *             "attributes": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -24741,8 +24872,8 @@ export interface components {
          *               "children": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -24765,8 +24896,8 @@ export interface components {
          *             "scanning_stations": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -24790,8 +24921,8 @@ export interface components {
          *             "machines": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -24820,8 +24951,8 @@ export interface components {
          *           "machines": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -24841,8 +24972,8 @@ export interface components {
          *           "lots": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -24874,8 +25005,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": null,
-         *         "prev_cursor": null,
+         *         "next_page_url": null,
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -25025,8 +25156,8 @@ export interface components {
          *               "attributes": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -25137,8 +25268,8 @@ export interface components {
          *                 "children": {
          *                   "object": "list",
          *                   "page_info": {
-         *                     "next_cursor": null,
-         *                     "prev_cursor": null,
+         *                     "next_page_url": null,
+         *                     "previous_page_url": null,
          *                     "has_next_page": false,
          *                     "has_prev_page": false
          *                   },
@@ -25161,8 +25292,8 @@ export interface components {
          *               "scanning_stations": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -25186,8 +25317,8 @@ export interface components {
          *               "machines": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -25216,8 +25347,8 @@ export interface components {
          *             "machines": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -25237,8 +25368,8 @@ export interface components {
          *             "lots": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -25285,8 +25416,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -25349,8 +25480,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "ic_01jm4r6700e3kxb9w2nqh7g5fp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "ic_01jm4r6700e3kxb9w2nqh7g5fp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -25362,8 +25493,8 @@ export interface components {
          *           "properties": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -25378,8 +25509,8 @@ export interface components {
          *           "products": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -25405,8 +25536,8 @@ export interface components {
          *                 "attributes": {
          *                   "object": "list",
          *                   "page_info": {
-         *                     "next_cursor": null,
-         *                     "prev_cursor": null,
+         *                     "next_page_url": null,
+         *                     "previous_page_url": null,
          *                     "has_next_page": false,
          *                     "has_prev_page": false
          *                   },
@@ -25458,8 +25589,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "pl_01jm4r6700e3kxb9w2nqh7g5fp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "pl_01jm4r6700e3kxb9w2nqh7g5fp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -25500,8 +25631,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "acre_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "acre_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -25568,8 +25699,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": null,
-         *         "prev_cursor": null,
+         *         "next_page_url": null,
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -25592,8 +25723,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": null,
-         *         "prev_cursor": null,
+         *         "next_page_url": null,
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -25724,8 +25855,8 @@ export interface components {
          *                 "free_shipping_service_levels": {
          *                   "object": "list",
          *                   "page_info": {
-         *                     "next_cursor": null,
-         *                     "prev_cursor": null,
+         *                     "next_page_url": null,
+         *                     "previous_page_url": null,
          *                     "has_next_page": false,
          *                     "has_prev_page": false
          *                   },
@@ -25848,8 +25979,8 @@ export interface components {
          *             "price_groups": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -25876,8 +26007,8 @@ export interface components {
          *           "product_lines": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -25919,8 +26050,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "dclo_01gf7a8200er3ar3pkfrb6kk30",
-         *         "prev_cursor": null,
+         *         "next_page_url": "dclo_01gf7a8200er3ar3pkfrb6kk30",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -25968,8 +26099,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "dlv_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "dlv_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -26037,8 +26168,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "dp_01gf7a8200er3ar3pkfrb6kk30",
-         *         "prev_cursor": null,
+         *         "next_page_url": "dp_01gf7a8200er3ar3pkfrb6kk30",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -26057,8 +26188,8 @@ export interface components {
          *             "children": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -26081,8 +26212,8 @@ export interface components {
          *           "scanning_stations": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -26106,8 +26237,8 @@ export interface components {
          *           "machines": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -26146,8 +26277,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "edru_01gf7a8200er3ar3pkfrb6kk30",
-         *         "prev_cursor": null,
+         *         "next_page_url": "edru_01gf7a8200er3ar3pkfrb6kk30",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -26191,8 +26322,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "eml_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "eml_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -26206,7 +26337,6 @@ export interface components {
          *           ],
          *           "subject": "Order Confirmation #1001",
          *           "filename": "invoice_1001.pdf",
-         *           "ses_message_id": null,
          *           "sent_by": {
          *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
          *             "object": "actor",
@@ -26265,8 +26395,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": null,
-         *         "prev_cursor": null,
+         *         "next_page_url": null,
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -26324,8 +26454,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "icl_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "icl_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -26495,8 +26625,8 @@ export interface components {
          *             "attributes": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -26575,8 +26705,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -26619,8 +26749,8 @@ export interface components {
          *           "allocations": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -26750,8 +26880,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -26878,8 +27008,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -27024,8 +27154,8 @@ export interface components {
          *           "attributes": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -27100,8 +27230,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "lc_01gf7a8200er3ar3pkfrb6kk31",
-         *         "prev_cursor": null,
+         *         "next_page_url": "lc_01gf7a8200er3ar3pkfrb6kk31",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -27145,8 +27275,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -27294,8 +27424,8 @@ export interface components {
          *             "attributes": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -27379,8 +27509,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": null,
-         *         "prev_cursor": null,
+         *         "next_page_url": null,
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -27403,8 +27533,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": null,
-         *         "prev_cursor": null,
+         *         "next_page_url": null,
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -27463,8 +27593,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "txn_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "txn_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -27513,8 +27643,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "ords_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "ords_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -27550,8 +27680,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "pt_02kn5s7811g9qwce7cizr4e0mq",
-         *         "prev_cursor": null,
+         *         "next_page_url": "pt_02kn5s7811g9qwce7cizr4e0mq",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -27699,8 +27829,8 @@ export interface components {
          *             "attributes": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -27742,8 +27872,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -27792,8 +27922,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "pg_01jm4r6700f8nwq3v5hx2d9ktq",
-         *         "prev_cursor": null,
+         *         "next_page_url": "pg_01jm4r6700f8nwq3v5hx2d9ktq",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -27807,8 +27937,8 @@ export interface components {
          *           "permissions": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -27864,8 +27994,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "pk_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "pk_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -27991,8 +28121,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "pl_01gf7a8200er3ar3pkfrb6kk29",
-         *         "prev_cursor": null,
+         *         "next_page_url": "pl_01gf7a8200er3ar3pkfrb6kk29",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -28008,8 +28138,8 @@ export interface components {
          *           "limits": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -28066,8 +28196,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -28104,8 +28234,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -28272,8 +28402,8 @@ export interface components {
          *             "attributes": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -28327,8 +28457,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -28384,8 +28514,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "prru_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "prru_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -28456,8 +28586,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "po_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "po_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -28533,8 +28663,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": null,
-         *         "prev_cursor": null,
+         *         "next_page_url": null,
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -28619,8 +28749,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "rcor_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "rcor_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -28712,8 +28842,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "rgfw_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "rgfw_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -28725,8 +28855,8 @@ export interface components {
          *           "customer_group_options": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -28741,8 +28871,8 @@ export interface components {
          *           "payment_term_options": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -28757,8 +28887,8 @@ export interface components {
          *           "shipping_term_options": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -28804,8 +28934,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "rgfw_01gf7a8200eaj8fke1xvw4h50x",
-         *         "prev_cursor": null,
+         *         "next_page_url": "rgfw_01gf7a8200eaj8fke1xvw4h50x",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -28863,8 +28993,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "rq_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "rq_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -28944,8 +29074,8 @@ export interface components {
          *             "page_info": {
          *               "has_next_page": false,
          *               "has_prev_page": false,
-         *               "next_cursor": null,
-         *               "prev_cursor": null
+         *               "next_page_url": null,
+         *               "previous_page_url": null
          *             }
          *           }
          *         }
@@ -28968,8 +29098,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "rl_01gf7a8200er3ar3pkfrb6kk29",
-         *         "prev_cursor": null,
+         *         "next_page_url": "rl_01gf7a8200er3ar3pkfrb6kk29",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29022,8 +29152,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "or_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "or_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29135,8 +29265,8 @@ export interface components {
          *           "lines": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -29258,8 +29388,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "orss_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "orss_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29296,8 +29426,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "ta_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "ta_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29361,8 +29491,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29404,8 +29534,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": null,
-         *         "prev_cursor": null,
+         *         "next_page_url": null,
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29438,8 +29568,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "prst_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "prst_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29493,8 +29623,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "sl_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "sl_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29549,8 +29679,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "sh_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "sh_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29605,8 +29735,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29626,8 +29756,8 @@ export interface components {
          *           "free_shipping_service_levels": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -29667,8 +29797,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "suml_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "suml_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29819,8 +29949,8 @@ export interface components {
          *               "attributes": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -29910,8 +30040,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "ac_02kn5s7811g9qwce7cizr4e0mq",
-         *         "prev_cursor": null,
+         *         "next_page_url": "ac_02kn5s7811g9qwce7cizr4e0mq",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -29943,8 +30073,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "sypp_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "sypp_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -30005,8 +30135,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "te_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "te_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -30041,8 +30171,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "tgrp_01k0b1seed0product000000",
-         *         "prev_cursor": null,
+         *         "next_page_url": "tgrp_01k0b1seed0product000000",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -30088,8 +30218,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "tx_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "tx_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -30174,8 +30304,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "txmd_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "txmd_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -30205,8 +30335,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "tx_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "tx_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -30274,8 +30404,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "txtp_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "txtp_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -30305,8 +30435,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -30349,8 +30479,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "ug_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "ug_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -30420,8 +30550,8 @@ export interface components {
          * @example {
          *       "object": "list",
          *       "page_info": {
-         *         "next_cursor": "quds_01jm4r6700f8nwq3v5hx2d9ktp",
-         *         "prev_cursor": null,
+         *         "next_page_url": "quds_01jm4r6700f8nwq3v5hx2d9ktp",
+         *         "previous_page_url": null,
          *         "has_next_page": true,
          *         "has_prev_page": false
          *       },
@@ -30433,8 +30563,8 @@ export interface components {
          *           "tiers": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -30495,8 +30625,8 @@ export interface components {
          *       "children": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -30817,8 +30947,8 @@ export interface components {
          *         "attributes": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -31034,8 +31164,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -31551,8 +31681,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -31978,8 +32108,8 @@ export interface components {
          *         "lines": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -32113,8 +32243,8 @@ export interface components {
          *         "departments": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -32133,8 +32263,8 @@ export interface components {
          *                 "children": {
          *                   "object": "list",
          *                   "page_info": {
-         *                     "next_cursor": null,
-         *                     "prev_cursor": null,
+         *                     "next_page_url": null,
+         *                     "previous_page_url": null,
          *                     "has_next_page": false,
          *                     "has_prev_page": false
          *                   },
@@ -32157,8 +32287,8 @@ export interface components {
          *               "scanning_stations": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -32182,8 +32312,8 @@ export interface components {
          *               "machines": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -32292,8 +32422,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -32427,8 +32557,8 @@ export interface components {
              *       "departments": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -32447,8 +32577,8 @@ export interface components {
              *               "children": {
              *                 "object": "list",
              *                 "page_info": {
-             *                   "next_cursor": null,
-             *                   "prev_cursor": null,
+             *                   "next_page_url": null,
+             *                   "previous_page_url": null,
              *                   "has_next_page": false,
              *                   "has_prev_page": false
              *                 },
@@ -32471,8 +32601,8 @@ export interface components {
              *             "scanning_stations": {
              *               "object": "list",
              *               "page_info": {
-             *                 "next_cursor": null,
-             *                 "prev_cursor": null,
+             *                 "next_page_url": null,
+             *                 "previous_page_url": null,
              *                 "has_next_page": false,
              *                 "has_prev_page": false
              *               },
@@ -32496,8 +32626,8 @@ export interface components {
              *             "machines": {
              *               "object": "list",
              *               "page_info": {
-             *                 "next_cursor": null,
-             *                 "prev_cursor": null,
+             *                 "next_page_url": null,
+             *                 "previous_page_url": null,
              *                 "has_next_page": false,
              *                 "has_prev_page": false
              *               },
@@ -32528,12 +32658,12 @@ export interface components {
             /** @description Created shipment number. */
             shipment_number: string;
         };
-        /** @description PageInfo contains cursor-based pagination metadata. */
+        /** @description PageInfo contains URL-based pagination metadata. */
         PageInfo: {
-            /** @description Cursor to fetch the next page, `null` if no more pages. */
-            next_cursor: string | null;
-            /** @description Cursor to fetch the previous page, `null` if on the first page. */
-            prev_cursor: string | null;
+            /** @description URL to fetch the next page, `null` if no more pages. */
+            next_page_url: string | null;
+            /** @description URL to fetch the previous page, `null` if on the first page. */
+            previous_page_url: string | null;
             /** @description Whether more results exist after this page. */
             has_next_page: boolean;
             /** @description Whether results exist before this page. */
@@ -32695,8 +32825,8 @@ export interface components {
          *         "attributes": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -32870,8 +33000,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -32999,8 +33129,8 @@ export interface components {
          *       "permissions": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -33144,8 +33274,8 @@ export interface components {
          *       "lines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -33279,8 +33409,8 @@ export interface components {
          *       "departments": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -33299,8 +33429,8 @@ export interface components {
          *               "children": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -33323,8 +33453,8 @@ export interface components {
          *             "scanning_stations": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -33348,8 +33478,8 @@ export interface components {
          *             "machines": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -33495,8 +33625,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -33716,8 +33846,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -33840,8 +33970,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -33890,8 +34020,8 @@ export interface components {
              * @example {
              *       "object": "list",
              *       "page_info": {
-             *         "next_cursor": "dp_01gf7a8200er3ar3pkfrb6kk30",
-             *         "prev_cursor": null,
+             *         "next_page_url": "dp_01gf7a8200er3ar3pkfrb6kk30",
+             *         "previous_page_url": null,
              *         "has_next_page": true,
              *         "has_prev_page": false
              *       },
@@ -33910,8 +34040,8 @@ export interface components {
              *             "children": {
              *               "object": "list",
              *               "page_info": {
-             *                 "next_cursor": null,
-             *                 "prev_cursor": null,
+             *                 "next_page_url": null,
+             *                 "previous_page_url": null,
              *                 "has_next_page": false,
              *                 "has_prev_page": false
              *               },
@@ -33934,8 +34064,8 @@ export interface components {
              *           "scanning_stations": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -33959,8 +34089,8 @@ export interface components {
              *           "machines": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -34496,8 +34626,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -34717,8 +34847,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -34841,8 +34971,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -34923,8 +35053,8 @@ export interface components {
          *       "line_items": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -34990,8 +35120,8 @@ export interface components {
          *       "limits": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -35272,8 +35402,8 @@ export interface components {
          *         "attributes": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -35478,8 +35608,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -35684,8 +35814,8 @@ export interface components {
          *       "steps": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -35837,8 +35967,8 @@ export interface components {
          *                 "attributes": {
          *                   "object": "list",
          *                   "page_info": {
-         *                     "next_cursor": null,
-         *                     "prev_cursor": null,
+         *                     "next_page_url": null,
+         *                     "previous_page_url": null,
          *                     "has_next_page": false,
          *                     "has_prev_page": false
          *                   },
@@ -35883,8 +36013,8 @@ export interface components {
          *             "consumptions": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -36032,8 +36162,8 @@ export interface components {
          *                     "attributes": {
          *                       "object": "list",
          *                       "page_info": {
-         *                         "next_cursor": null,
-         *                         "prev_cursor": null,
+         *                         "next_page_url": null,
+         *                         "previous_page_url": null,
          *                         "has_next_page": false,
          *                         "has_prev_page": false
          *                       },
@@ -36102,8 +36232,8 @@ export interface components {
          *             "in_steps": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -36112,8 +36242,8 @@ export interface components {
          *             "out_steps": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -36122,8 +36252,8 @@ export interface components {
          *             "machines": {
          *               "object": "list",
          *               "page_info": {
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null,
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null,
          *                 "has_next_page": false,
          *                 "has_prev_page": false
          *               },
@@ -36154,8 +36284,8 @@ export interface components {
          *                 "children": {
          *                   "object": "list",
          *                   "page_info": {
-         *                     "next_cursor": null,
-         *                     "prev_cursor": null,
+         *                     "next_page_url": null,
+         *                     "previous_page_url": null,
          *                     "has_next_page": false,
          *                     "has_prev_page": false
          *                   },
@@ -36178,8 +36308,8 @@ export interface components {
          *               "scanning_stations": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -36203,8 +36333,8 @@ export interface components {
          *               "machines": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -36500,8 +36630,8 @@ export interface components {
          *         "attributes": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -36716,8 +36846,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -36937,8 +37067,8 @@ export interface components {
          *         "attributes": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -37131,8 +37261,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -37329,8 +37459,8 @@ export interface components {
          *           "attributes": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -37375,8 +37505,8 @@ export interface components {
          *       "consumptions": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -37524,8 +37654,8 @@ export interface components {
          *               "attributes": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -37594,8 +37724,8 @@ export interface components {
          *       "in_steps": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -37604,8 +37734,8 @@ export interface components {
          *       "out_steps": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -37614,8 +37744,8 @@ export interface components {
          *       "machines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -37646,8 +37776,8 @@ export interface components {
          *           "children": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -37670,8 +37800,8 @@ export interface components {
          *         "scanning_stations": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -37695,8 +37825,8 @@ export interface components {
          *         "machines": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -37990,8 +38120,8 @@ export interface components {
              *         "attributes": {
              *           "object": "list",
              *           "page_info": {
-             *             "next_cursor": null,
-             *             "prev_cursor": null,
+             *             "next_page_url": null,
+             *             "previous_page_url": null,
              *             "has_next_page": false,
              *             "has_prev_page": false
              *           },
@@ -38059,8 +38189,8 @@ export interface components {
              *         "children": {
              *           "object": "list",
              *           "page_info": {
-             *             "next_cursor": null,
-             *             "prev_cursor": null,
+             *             "next_page_url": null,
+             *             "previous_page_url": null,
              *             "has_next_page": false,
              *             "has_prev_page": false
              *           },
@@ -38083,8 +38213,8 @@ export interface components {
              *       "scanning_stations": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -38108,8 +38238,8 @@ export interface components {
              *       "machines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -38431,8 +38561,8 @@ export interface components {
          *         "attributes": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -38627,8 +38757,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -39157,8 +39287,8 @@ export interface components {
          *           "attributes": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -39205,8 +39335,8 @@ export interface components {
          *       "consumptions": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -39396,8 +39526,8 @@ export interface components {
          *               "attributes": {
          *                 "object": "list",
          *                 "page_info": {
-         *                   "next_cursor": null,
-         *                   "prev_cursor": null,
+         *                   "next_page_url": null,
+         *                   "previous_page_url": null,
          *                   "has_next_page": false,
          *                   "has_prev_page": false
          *                 },
@@ -39426,8 +39556,8 @@ export interface components {
          *       "machines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -39461,8 +39591,8 @@ export interface components {
          *       "in_steps": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -39471,8 +39601,8 @@ export interface components {
          *       "out_steps": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -39492,8 +39622,8 @@ export interface components {
          *           "children": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -39516,8 +39646,8 @@ export interface components {
          *         "scanning_stations": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -39541,8 +39671,8 @@ export interface components {
          *         "machines": {
          *           "object": "list",
          *           "page_info": {
-         *             "next_cursor": null,
-         *             "prev_cursor": null,
+         *             "next_page_url": null,
+         *             "previous_page_url": null,
          *             "has_next_page": false,
          *             "has_prev_page": false
          *           },
@@ -39859,8 +39989,8 @@ export interface components {
              *         "attributes": {
              *           "object": "list",
              *           "page_info": {
-             *             "next_cursor": null,
-             *             "prev_cursor": null,
+             *             "next_page_url": null,
+             *             "previous_page_url": null,
              *             "has_next_page": false,
              *             "has_prev_page": false
              *           },
@@ -40103,8 +40233,8 @@ export interface components {
          *       "lines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -40381,8 +40511,8 @@ export interface components {
              *       "free_shipping_service_levels": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -40437,8 +40567,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -40815,8 +40945,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -41588,8 +41718,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -41739,8 +41869,8 @@ export interface components {
              *       "allocations": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -41968,8 +42098,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -42092,8 +42222,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -42174,8 +42304,8 @@ export interface components {
          *       "lines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -42410,8 +42540,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -42965,8 +43095,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -43189,8 +43319,8 @@ export interface components {
          *       "customer_group_options": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -43205,8 +43335,8 @@ export interface components {
          *       "payment_term_options": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -43221,8 +43351,8 @@ export interface components {
          *       "shipping_term_options": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -43592,8 +43722,8 @@ export interface components {
          *         "page_info": {
          *           "has_next_page": false,
          *           "has_prev_page": false,
-         *           "next_cursor": null,
-         *           "prev_cursor": null
+         *           "next_page_url": null,
+         *           "previous_page_url": null
          *         }
          *       }
          *     }
@@ -43835,6 +43965,10 @@ export interface components {
             name: string;
             /**
              * @description Role type code.
+             *
+             *     The role's type is sometimes used to gate special behaviors in the frontend
+             *     and to restrict some actions to only certain types of roles. For example,
+             *     only roles with the type `admin` can create and manage API keys.
              * @enum {string}
              */
             type: "admin" | "user" | "scanner" | "sales_rep" | "agent";
@@ -44076,8 +44210,8 @@ export interface components {
          *       "lines": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -44312,8 +44446,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -44436,8 +44570,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -44669,8 +44803,8 @@ export interface components {
              *       "free_shipping_service_levels": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -44987,8 +45121,8 @@ export interface components {
              *       "attributes": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -46005,8 +46139,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -46226,8 +46360,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -46350,8 +46484,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -46575,8 +46709,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -46726,8 +46860,8 @@ export interface components {
              *       "allocations": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -46907,8 +47041,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -47042,8 +47176,8 @@ export interface components {
              *       "departments": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -47062,8 +47196,8 @@ export interface components {
              *               "children": {
              *                 "object": "list",
              *                 "page_info": {
-             *                   "next_cursor": null,
-             *                   "prev_cursor": null,
+             *                   "next_page_url": null,
+             *                   "previous_page_url": null,
              *                   "has_next_page": false,
              *                   "has_prev_page": false
              *                 },
@@ -47086,8 +47220,8 @@ export interface components {
              *             "scanning_stations": {
              *               "object": "list",
              *               "page_info": {
-             *                 "next_cursor": null,
-             *                 "prev_cursor": null,
+             *                 "next_page_url": null,
+             *                 "previous_page_url": null,
              *                 "has_next_page": false,
              *                 "has_prev_page": false
              *               },
@@ -47111,8 +47245,8 @@ export interface components {
              *             "machines": {
              *               "object": "list",
              *               "page_info": {
-             *                 "next_cursor": null,
-             *                 "prev_cursor": null,
+             *                 "next_page_url": null,
+             *                 "previous_page_url": null,
              *                 "has_next_page": false,
              *                 "has_prev_page": false
              *               },
@@ -47458,8 +47592,8 @@ export interface components {
              *       "lines": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -47679,8 +47813,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -47803,8 +47937,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -48252,8 +48386,8 @@ export interface components {
          *       "free_shipping_service_levels": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -48805,8 +48939,8 @@ export interface components {
          *           "attributes": {
          *             "object": "list",
          *             "page_info": {
-         *               "next_cursor": null,
-         *               "prev_cursor": null,
+         *               "next_page_url": null,
+         *               "previous_page_url": null,
          *               "has_next_page": false,
          *               "has_prev_page": false
          *             },
@@ -49031,8 +49165,8 @@ export interface components {
              *         "attributes": {
              *           "object": "list",
              *           "page_info": {
-             *             "next_cursor": null,
-             *             "prev_cursor": null,
+             *             "next_page_url": null,
+             *             "previous_page_url": null,
              *             "has_next_page": false,
              *             "has_prev_page": false
              *           },
@@ -49559,8 +49693,8 @@ export interface components {
              * @example {
              *       "object": "list",
              *       "page_info": {
-             *         "next_cursor": "tdef_01k0b1seed0searchproduct0",
-             *         "prev_cursor": null,
+             *         "next_page_url": "tdef_01k0b1seed0searchproduct0",
+             *         "previous_page_url": null,
              *         "has_next_page": true,
              *         "has_prev_page": false
              *       },
@@ -49968,8 +50102,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -50092,8 +50226,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -50456,8 +50590,8 @@ export interface components {
              *           "free_shipping_service_levels": {
              *             "object": "list",
              *             "page_info": {
-             *               "next_cursor": null,
-             *               "prev_cursor": null,
+             *               "next_page_url": null,
+             *               "previous_page_url": null,
              *               "has_next_page": false,
              *               "has_prev_page": false
              *             },
@@ -50580,8 +50714,8 @@ export interface components {
              *       "price_groups": {
              *         "object": "list",
              *         "page_info": {
-             *           "next_cursor": null,
-             *           "prev_cursor": null,
+             *           "next_page_url": null,
+             *           "previous_page_url": null,
              *           "has_next_page": false,
              *           "has_prev_page": false
              *         },
@@ -51297,7 +51431,7 @@ export interface components {
             /** @description Carrier billing account number. */
             carrier_billing_account?: string | null;
             /** @description Credit limit. Send null to clear. */
-            credit_limit?: components["schemas"]["QuantityInput"] | null;
+            credit_limit: components["schemas"]["QuantityInput"] | null;
         };
         /**
          * @description Request to partially update a DC location.
@@ -51403,7 +51537,7 @@ export interface components {
             /** @description Parent location ID. Send null to clear. */
             parent_id?: string | null;
             /** @description Child location IDs. Replaces all current children when provided. Send null to clear. */
-            child_ids?: string[] | null;
+            child_ids: string[] | null;
         };
         /**
          * @description Request to partially update a machine.
@@ -52133,11 +52267,11 @@ export interface components {
              */
             type?: "free_freight" | "flat_rate_freight" | "carrier_rate_freight";
             /** @description Flat rate. Send null to clear. */
-            flat_rate?: components["schemas"]["QuantityInput"] | null;
+            flat_rate: components["schemas"]["QuantityInput"] | null;
             /** @description Minimum order value for free shipping. Send null to clear. */
-            minimum_order_value?: components["schemas"]["QuantityInput"] | null;
+            minimum_order_value: components["schemas"]["QuantityInput"] | null;
             /** @description Service level IDs that qualify for free shipping. Send null to clear. */
-            free_shipping_service_level_ids?: string[] | null;
+            free_shipping_service_level_ids: string[] | null;
         };
         /**
          * @description Request to update a supplier material.
@@ -52534,7 +52668,7 @@ export interface components {
             address_line_1: string;
             /** @description Second line of the street address. */
             address_line_2?: string;
-            /** @description City. */
+            /** @description City or locality. */
             city: string;
             /** @description State or administrative area. */
             state: string;
@@ -52583,8 +52717,8 @@ export interface components {
          *               "page_info": {
          *                 "has_next_page": false,
          *                 "has_prev_page": false,
-         *                 "next_cursor": null,
-         *                 "prev_cursor": null
+         *                 "next_page_url": null,
+         *                 "previous_page_url": null
          *               }
          *             },
          *             "burn_rate": {
@@ -52787,8 +52921,8 @@ export interface components {
                      *         "page_info": {
                      *           "has_next_page": false,
                      *           "has_prev_page": false,
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null
                      *         }
                      *       },
                      *       "burn_rate": {
@@ -53125,8 +53259,8 @@ export interface components {
          *       "tiers": {
          *         "object": "list",
          *         "page_info": {
-         *           "next_cursor": null,
-         *           "prev_cursor": null,
+         *           "next_page_url": null,
+         *           "previous_page_url": null,
          *           "has_next_page": false,
          *           "has_prev_page": false
          *         },
@@ -53168,8 +53302,8 @@ export interface components {
              * @example {
              *       "object": "list",
              *       "page_info": {
-             *         "next_cursor": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
-             *         "prev_cursor": null,
+             *         "next_page_url": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "previous_page_url": null,
              *         "has_next_page": true,
              *         "has_prev_page": false
              *       },
@@ -53200,8 +53334,8 @@ export interface components {
              * @example {
              *       "object": "list",
              *       "page_info": {
-             *         "next_cursor": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-             *         "prev_cursor": null,
+             *         "next_page_url": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+             *         "previous_page_url": null,
              *         "has_next_page": true,
              *         "has_prev_page": false
              *       },
@@ -53413,7 +53547,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -53472,8 +53606,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "agdf_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "agdf_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -53507,8 +53641,8 @@ export interface operations {
                      *           "tools": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -53642,8 +53776,8 @@ export interface operations {
                      *       "tools": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -53743,8 +53877,8 @@ export interface operations {
                      *       "tools": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -53887,8 +54021,8 @@ export interface operations {
                      *       "tools": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -53998,8 +54132,8 @@ export interface operations {
                      *       "tools": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -54047,7 +54181,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -54095,8 +54229,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "agnf_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "agnf_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -54251,7 +54385,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -54292,8 +54426,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "agmm_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "agmm_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -54549,7 +54683,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -54597,8 +54731,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "agrn_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "agrn_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -54661,8 +54795,8 @@ export interface operations {
                      *           "actions": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -54711,8 +54845,8 @@ export interface operations {
                      *           "steps": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -54849,8 +54983,8 @@ export interface operations {
                      *       "actions": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -54899,8 +55033,8 @@ export interface operations {
                      *       "steps": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -55027,8 +55161,8 @@ export interface operations {
                      *       "actions": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -55077,8 +55211,8 @@ export interface operations {
                      *       "steps": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -55205,8 +55339,8 @@ export interface operations {
                      *       "actions": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -55255,8 +55389,8 @@ export interface operations {
                      *       "steps": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -55395,8 +55529,8 @@ export interface operations {
                      *       "actions": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -55445,8 +55579,8 @@ export interface operations {
                      *       "steps": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -55492,7 +55626,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -55530,8 +55664,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "tgrp_01k0b1seed0product000000",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "tgrp_01k0b1seed0product000000",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -55567,7 +55701,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -55598,8 +55732,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "tdef_01k0b1seed0searchproduct0",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "tdef_01k0b1seed0searchproduct0",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -55667,8 +55801,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "agtk_01gf7a8200er3ar3pkfrb6kk29",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "agtk_01gf7a8200er3ar3pkfrb6kk29",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -55843,7 +55977,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -55888,8 +56022,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "apke_01jm4r6700e3kxb9w2nqh7g5fp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -56498,7 +56632,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -56529,8 +56663,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "rgfw_01gf7a8200eaj8fke1xvw4h50x",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "rgfw_01gf7a8200eaj8fke1xvw4h50x",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -57304,7 +57438,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -57335,8 +57469,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "pl_01gf7a8200er3ar3pkfrb6kk29",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "pl_01gf7a8200er3ar3pkfrb6kk29",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -57352,8 +57486,8 @@ export interface operations {
                      *           "limits": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -57436,8 +57570,8 @@ export interface operations {
                      *       "line_items": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -57624,7 +57758,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -57655,8 +57789,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "pl_01jm4r6700e3kxb9w2nqh7g5fp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "pl_01jm4r6700e3kxb9w2nqh7g5fp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -57687,7 +57821,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -57721,8 +57855,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "ic_01jm4r6700e3kxb9w2nqh7g5fp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "ic_01jm4r6700e3kxb9w2nqh7g5fp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -57734,8 +57868,8 @@ export interface operations {
                      *           "properties": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -57750,8 +57884,8 @@ export interface operations {
                      *           "products": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -57777,8 +57911,8 @@ export interface operations {
                      *                 "attributes": {
                      *                   "object": "list",
                      *                   "page_info": {
-                     *                     "next_cursor": null,
-                     *                     "prev_cursor": null,
+                     *                     "next_page_url": null,
+                     *                     "previous_page_url": null,
                      *                     "has_next_page": false,
                      *                     "has_prev_page": false
                      *                   },
@@ -57820,7 +57954,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -58208,7 +58342,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -58296,8 +58430,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "it_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "it_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -58442,8 +58576,8 @@ export interface operations {
                      *           "attributes": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -58774,8 +58908,8 @@ export interface operations {
                      *       "attributes": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -58979,8 +59113,8 @@ export interface operations {
                      *       "attributes": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -59184,8 +59318,8 @@ export interface operations {
                      *       "attributes": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -59389,8 +59523,8 @@ export interface operations {
                      *       "attributes": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -59692,8 +59826,8 @@ export interface operations {
                      *       "points": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -59724,7 +59858,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -59782,8 +59916,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "ml_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -59931,8 +60065,8 @@ export interface operations {
                      *             "attributes": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -60192,8 +60326,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -60498,8 +60632,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -60741,8 +60875,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -61002,8 +61136,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -61087,7 +61221,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -61145,8 +61279,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "pt_02kn5s7811g9qwce7cizr4e0mq",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "pt_02kn5s7811g9qwce7cizr4e0mq",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -61294,8 +61428,8 @@ export interface operations {
                      *             "attributes": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -61514,8 +61648,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -61778,8 +61912,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -61979,8 +62113,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -62200,8 +62334,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -62243,7 +62377,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -62525,7 +62659,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -62556,8 +62690,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "prty_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -62769,7 +62903,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -62842,8 +62976,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "pd_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -63010,8 +63144,8 @@ export interface operations {
                      *             "attributes": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -63252,8 +63386,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -63416,8 +63550,8 @@ export interface operations {
                      *               "page_info": {
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false,
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null
                      *               }
                      *             },
                      *             "burn_rate": {
@@ -63787,8 +63921,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -64015,8 +64149,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -64253,8 +64387,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -64483,8 +64617,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -64526,7 +64660,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -64778,7 +64912,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -65019,7 +65153,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -65062,8 +65196,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "ug_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "ug_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -65635,7 +65769,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -65683,8 +65817,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "un_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "un_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -66361,8 +66495,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "ChIJd8BlQ2BZwokRAFUEcm_qrcA",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "ChIJd8BlQ2BZwokRAFUEcm_qrcA",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -66882,7 +67016,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -66919,7 +67053,9 @@ export interface operations {
                  */
                 "resource_ids[]"?: string[];
                 /**
-                 * @description Filter by the actor identifier. `account_user.id` when `identity_type`=`user`, or an `api_key.id` when `identity_type`=`api_key`.
+                 * @description Filter by the actor identifier.
+                 *
+                 *     Will be `account_user.id` when `identity_type`=`user` or an `api_key.id` when `identity_type`=`api_key`.
                  * @example []
                  */
                 "actor_ids[]"?: string[];
@@ -66936,7 +67072,7 @@ export interface operations {
                  *       "actor"
                  *     ]
                  */
-                "include[]"?: ("actor" | "changes" | "metadata")[];
+                "include[]"?: ("actor" | "changes" | "metadata" | "request")[];
             };
             header?: never;
             path?: never;
@@ -66954,8 +67090,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "ae_01gq7s3f2m0y9h2t7z1w7q3v9k",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "ae_01gq7s3f2m0y9h2t7z1w7q3v9k",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -67005,8 +67141,8 @@ export interface operations {
                      *           "changes": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -67021,7 +67157,30 @@ export interface operations {
                      *           "metadata": {
                      *             "reason": "operator override"
                      *           },
-                     *           "request_id": "req_01gq7s3f2m0y9h2t7z1w7q3v9k",
+                     *           "request": {
+                     *             "id": "rq_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *             "object": "request_log",
+                     *             "method": "",
+                     *             "host": "",
+                     *             "path": "",
+                     *             "normalized_route": "",
+                     *             "query_params": null,
+                     *             "status_code": 0,
+                     *             "latency_us": 0,
+                     *             "api_version": null,
+                     *             "client_ip": null,
+                     *             "user_agent": null,
+                     *             "referrer": null,
+                     *             "error_code": null,
+                     *             "error_message": null,
+                     *             "occurred_at": "0001-01-01T00:00:00Z",
+                     *             "created_at": "0001-01-01T00:00:00Z",
+                     *             "account": null,
+                     *             "actor": null,
+                     *             "idempotency_key": null,
+                     *             "request_body": null,
+                     *             "response_body": null
+                     *           },
                      *           "idempotency_key": null,
                      *           "source_ip": "198.51.100.8",
                      *           "occurred_at": "2026-05-10T00:00:00Z",
@@ -67063,8 +67222,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": null,
-                     *         "prev_cursor": null,
+                     *         "next_page_url": null,
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -67094,7 +67253,7 @@ export interface operations {
                  *       "actor"
                  *     ]
                  */
-                "include[]"?: ("actor" | "changes" | "metadata")[];
+                "include[]"?: ("actor" | "changes" | "metadata" | "request")[];
             };
             header?: never;
             path: {
@@ -67157,8 +67316,8 @@ export interface operations {
                      *       "changes": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -67173,7 +67332,30 @@ export interface operations {
                      *       "metadata": {
                      *         "reason": "operator override"
                      *       },
-                     *       "request_id": "req_01gq7s3f2m0y9h2t7z1w7q3v9k",
+                     *       "request": {
+                     *         "id": "rq_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "object": "request_log",
+                     *         "method": "",
+                     *         "host": "",
+                     *         "path": "",
+                     *         "normalized_route": "",
+                     *         "query_params": null,
+                     *         "status_code": 0,
+                     *         "latency_us": 0,
+                     *         "api_version": null,
+                     *         "client_ip": null,
+                     *         "user_agent": null,
+                     *         "referrer": null,
+                     *         "error_code": null,
+                     *         "error_message": null,
+                     *         "occurred_at": "0001-01-01T00:00:00Z",
+                     *         "created_at": "0001-01-01T00:00:00Z",
+                     *         "account": null,
+                     *         "actor": null,
+                     *         "idempotency_key": null,
+                     *         "request_body": null,
+                     *         "response_body": null
+                     *       },
                      *       "idempotency_key": null,
                      *       "source_ip": "198.51.100.8",
                      *       "occurred_at": "2026-05-10T00:00:00Z",
@@ -67198,7 +67380,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -67236,8 +67418,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "eml_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "eml_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -67251,7 +67433,6 @@ export interface operations {
                      *           ],
                      *           "subject": "Order Confirmation #1001",
                      *           "filename": "invoice_1001.pdf",
-                     *           "ses_message_id": null,
                      *           "sent_by": {
                      *             "id": "us_01gf7a8200e9pvbd6bgyq395ae",
                      *             "object": "actor",
@@ -67344,7 +67525,6 @@ export interface operations {
                      *       ],
                      *       "subject": "Order Confirmation #1001",
                      *       "filename": "invoice_1001.pdf",
-                     *       "ses_message_id": null,
                      *       "sent_by": {
                      *         "id": "us_01gf7a8200e9pvbd6bgyq395ae",
                      *         "object": "actor",
@@ -67403,7 +67583,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -67507,8 +67687,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "rq_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "rq_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -67588,8 +67768,8 @@ export interface operations {
                      *             "page_info": {
                      *               "has_next_page": false,
                      *               "has_prev_page": false,
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null
                      *             }
                      *           }
                      *         }
@@ -67712,8 +67892,8 @@ export interface operations {
                      *         "page_info": {
                      *           "has_next_page": false,
                      *           "has_prev_page": false,
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null
                      *         }
                      *       }
                      *     }
@@ -67736,7 +67916,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -67774,8 +67954,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "sbac_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -67980,7 +68160,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -68011,8 +68191,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "sypp_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "sypp_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -68238,7 +68418,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -68277,8 +68457,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -68321,8 +68501,8 @@ export interface operations {
                      *           "allocations": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -68442,7 +68622,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -68491,8 +68671,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "tx_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "tx_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -68579,7 +68759,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -68617,8 +68797,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "adjt_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "adjt_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -68657,7 +68837,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -68728,8 +68908,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "iv_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -68948,8 +69128,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -69099,8 +69279,8 @@ export interface operations {
                      *       "allocations": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -69366,7 +69546,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -69412,8 +69592,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "txn_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "txn_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -69464,7 +69644,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -69502,8 +69682,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "pytm_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -69757,7 +69937,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -69793,8 +69973,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": null,
-                     *         "prev_cursor": null,
+                     *         "next_page_url": null,
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -69869,7 +70049,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -69908,8 +70088,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": null,
-                     *         "prev_cursor": null,
+                     *         "next_page_url": null,
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -70022,7 +70202,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -70073,8 +70253,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "sl_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "sl_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -70382,7 +70562,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -70428,8 +70608,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "txal_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "txal_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -70646,7 +70826,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -70677,8 +70857,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "txmd_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "txmd_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -70710,7 +70890,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -70741,8 +70921,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "txtp_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "txtp_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -70774,7 +70954,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -70845,8 +71025,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "tx_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "tx_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -71336,7 +71516,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -71384,8 +71564,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "acus_01gf7a8200er3ar3pkfrb6kk29",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "acus_01gf7a8200er3ar3pkfrb6kk29",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -72026,7 +72206,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -72057,8 +72237,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "acre_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "acre_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -72189,7 +72369,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -72220,8 +72400,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "ai_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "ai_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -72602,7 +72782,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -72636,8 +72816,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": null,
-                     *         "prev_cursor": null,
+                     *         "next_page_url": null,
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -72662,7 +72842,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -72700,8 +72880,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "pg_01jm4r6700f8nwq3v5hx2d9ktq",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "pg_01jm4r6700f8nwq3v5hx2d9ktq",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -72715,8 +72895,8 @@ export interface operations {
                      *           "permissions": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -72805,7 +72985,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -72850,8 +73030,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "rl_01gf7a8200er3ar3pkfrb6kk29",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "rl_01gf7a8200er3ar3pkfrb6kk29",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -73388,8 +73568,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": null,
-                     *         "prev_cursor": null,
+                     *         "next_page_url": null,
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -73657,8 +73837,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -73769,8 +73949,8 @@ export interface operations {
                      *           "children": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -73793,8 +73973,8 @@ export interface operations {
                      *         "scanning_stations": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -73818,8 +73998,8 @@ export interface operations {
                      *         "machines": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -73848,8 +74028,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -73869,8 +74049,8 @@ export interface operations {
                      *       "lots": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -74068,8 +74248,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -74180,8 +74360,8 @@ export interface operations {
                      *           "children": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -74204,8 +74384,8 @@ export interface operations {
                      *         "scanning_stations": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -74229,8 +74409,8 @@ export interface operations {
                      *         "machines": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -74259,8 +74439,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -74280,8 +74460,8 @@ export interface operations {
                      *       "lots": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -74482,8 +74662,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -74594,8 +74774,8 @@ export interface operations {
                      *           "children": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -74618,8 +74798,8 @@ export interface operations {
                      *         "scanning_stations": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -74643,8 +74823,8 @@ export interface operations {
                      *         "machines": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -74673,8 +74853,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -74694,8 +74874,8 @@ export interface operations {
                      *       "lots": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -74896,8 +75076,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -75008,8 +75188,8 @@ export interface operations {
                      *           "children": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -75032,8 +75212,8 @@ export interface operations {
                      *         "scanning_stations": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -75057,8 +75237,8 @@ export interface operations {
                      *         "machines": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -75087,8 +75267,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -75108,8 +75288,8 @@ export interface operations {
                      *       "lots": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -75318,8 +75498,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -75430,8 +75610,8 @@ export interface operations {
                      *           "children": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -75454,8 +75634,8 @@ export interface operations {
                      *         "scanning_stations": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -75479,8 +75659,8 @@ export interface operations {
                      *         "machines": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -75509,8 +75689,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -75530,8 +75710,8 @@ export interface operations {
                      *       "lots": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -75786,8 +75966,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -75898,8 +76078,8 @@ export interface operations {
                      *           "children": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -75922,8 +76102,8 @@ export interface operations {
                      *         "scanning_stations": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -75947,8 +76127,8 @@ export interface operations {
                      *         "machines": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -75977,8 +76157,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -75998,8 +76178,8 @@ export interface operations {
                      *       "lots": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -76049,8 +76229,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": null,
-                     *         "prev_cursor": null,
+                     *         "next_page_url": null,
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -76200,8 +76380,8 @@ export interface operations {
                      *               "attributes": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -76312,8 +76492,8 @@ export interface operations {
                      *                 "children": {
                      *                   "object": "list",
                      *                   "page_info": {
-                     *                     "next_cursor": null,
-                     *                     "prev_cursor": null,
+                     *                     "next_page_url": null,
+                     *                     "previous_page_url": null,
                      *                     "has_next_page": false,
                      *                     "has_prev_page": false
                      *                   },
@@ -76336,8 +76516,8 @@ export interface operations {
                      *               "scanning_stations": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -76361,8 +76541,8 @@ export interface operations {
                      *               "machines": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -76391,8 +76571,8 @@ export interface operations {
                      *             "machines": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -76412,8 +76592,8 @@ export interface operations {
                      *             "lots": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -76478,8 +76658,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "prst_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "prst_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -76511,7 +76691,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -76549,8 +76729,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -76682,7 +76862,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -77328,7 +77508,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -77359,8 +77539,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "dclo_01gf7a8200er3ar3pkfrb6kk30",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "dclo_01gf7a8200er3ar3pkfrb6kk30",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -77595,7 +77775,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -77651,8 +77831,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "dlv_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "dlv_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -77778,8 +77958,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -77894,7 +78074,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -77925,8 +78105,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "dp_01gf7a8200er3ar3pkfrb6kk30",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "dp_01gf7a8200er3ar3pkfrb6kk30",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -77945,8 +78125,8 @@ export interface operations {
                      *             "children": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -77969,8 +78149,8 @@ export interface operations {
                      *           "scanning_stations": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -77994,8 +78174,8 @@ export interface operations {
                      *           "machines": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -78078,8 +78258,8 @@ export interface operations {
                      *         "children": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -78102,8 +78282,8 @@ export interface operations {
                      *       "scanning_stations": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -78127,8 +78307,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -78204,8 +78384,8 @@ export interface operations {
                      *         "children": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -78228,8 +78408,8 @@ export interface operations {
                      *       "scanning_stations": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -78253,8 +78433,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -78365,8 +78545,8 @@ export interface operations {
                      *         "children": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -78389,8 +78569,8 @@ export interface operations {
                      *       "scanning_stations": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -78414,8 +78594,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -78454,7 +78634,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -78490,8 +78670,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "edru_01gf7a8200er3ar3pkfrb6kk30",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "edru_01gf7a8200er3ar3pkfrb6kk30",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -78647,7 +78827,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -78699,7 +78879,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -78762,8 +78942,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "icl_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "icl_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -78933,8 +79113,8 @@ export interface operations {
                      *             "attributes": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -79246,8 +79426,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -79314,7 +79494,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -79345,8 +79525,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "lc_01gf7a8200er3ar3pkfrb6kk31",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "lc_01gf7a8200er3ar3pkfrb6kk31",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -79422,7 +79602,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -79514,8 +79694,8 @@ export interface operations {
                      *       "children": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -79586,8 +79766,8 @@ export interface operations {
                      *       "children": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -79702,8 +79882,8 @@ export interface operations {
                      *       "children": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -79742,7 +79922,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -79979,7 +80159,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -80052,8 +80232,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "pk_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "pk_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -80257,8 +80437,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -80392,8 +80572,8 @@ export interface operations {
                      *       "departments": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -80412,8 +80592,8 @@ export interface operations {
                      *               "children": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -80436,8 +80616,8 @@ export interface operations {
                      *             "scanning_stations": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -80461,8 +80641,8 @@ export interface operations {
                      *             "machines": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -80617,8 +80797,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -80752,8 +80932,8 @@ export interface operations {
                      *       "departments": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -80772,8 +80952,8 @@ export interface operations {
                      *               "children": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -80796,8 +80976,8 @@ export interface operations {
                      *             "scanning_stations": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -80821,8 +81001,8 @@ export interface operations {
                      *             "machines": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -80970,8 +81150,8 @@ export interface operations {
                      *         "lines": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -81105,8 +81285,8 @@ export interface operations {
                      *         "departments": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -81125,8 +81305,8 @@ export interface operations {
                      *                 "children": {
                      *                   "object": "list",
                      *                   "page_info": {
-                     *                     "next_cursor": null,
-                     *                     "prev_cursor": null,
+                     *                     "next_page_url": null,
+                     *                     "previous_page_url": null,
                      *                     "has_next_page": false,
                      *                     "has_prev_page": false
                      *                   },
@@ -81149,8 +81329,8 @@ export interface operations {
                      *               "scanning_stations": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -81174,8 +81354,8 @@ export interface operations {
                      *               "machines": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -81314,8 +81494,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -81449,8 +81629,8 @@ export interface operations {
                      *       "departments": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -81469,8 +81649,8 @@ export interface operations {
                      *               "children": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -81493,8 +81673,8 @@ export interface operations {
                      *             "scanning_stations": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -81518,8 +81698,8 @@ export interface operations {
                      *             "machines": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -81656,8 +81836,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -81791,8 +81971,8 @@ export interface operations {
                      *       "departments": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -81811,8 +81991,8 @@ export interface operations {
                      *               "children": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -81835,8 +82015,8 @@ export interface operations {
                      *             "scanning_stations": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -81860,8 +82040,8 @@ export interface operations {
                      *             "machines": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -82522,8 +82702,8 @@ export interface operations {
                      *       "steps": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -82675,8 +82855,8 @@ export interface operations {
                      *                 "attributes": {
                      *                   "object": "list",
                      *                   "page_info": {
-                     *                     "next_cursor": null,
-                     *                     "prev_cursor": null,
+                     *                     "next_page_url": null,
+                     *                     "previous_page_url": null,
                      *                     "has_next_page": false,
                      *                     "has_prev_page": false
                      *                   },
@@ -82721,8 +82901,8 @@ export interface operations {
                      *             "consumptions": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -82870,8 +83050,8 @@ export interface operations {
                      *                     "attributes": {
                      *                       "object": "list",
                      *                       "page_info": {
-                     *                         "next_cursor": null,
-                     *                         "prev_cursor": null,
+                     *                         "next_page_url": null,
+                     *                         "previous_page_url": null,
                      *                         "has_next_page": false,
                      *                         "has_prev_page": false
                      *                       },
@@ -82940,8 +83120,8 @@ export interface operations {
                      *             "in_steps": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -82950,8 +83130,8 @@ export interface operations {
                      *             "out_steps": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -82960,8 +83140,8 @@ export interface operations {
                      *             "machines": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -82992,8 +83172,8 @@ export interface operations {
                      *                 "children": {
                      *                   "object": "list",
                      *                   "page_info": {
-                     *                     "next_cursor": null,
-                     *                     "prev_cursor": null,
+                     *                     "next_page_url": null,
+                     *                     "previous_page_url": null,
                      *                     "has_next_page": false,
                      *                     "has_prev_page": false
                      *                   },
@@ -83016,8 +83196,8 @@ export interface operations {
                      *               "scanning_stations": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -83041,8 +83221,8 @@ export interface operations {
                      *               "machines": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -83202,7 +83382,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -83258,8 +83438,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "prru_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "prru_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -83506,7 +83686,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -83540,8 +83720,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "bt_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "bt_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -83689,8 +83869,8 @@ export interface operations {
                      *             "attributes": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -83801,8 +83981,8 @@ export interface operations {
                      *               "children": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -83825,8 +84005,8 @@ export interface operations {
                      *             "scanning_stations": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -83850,8 +84030,8 @@ export interface operations {
                      *             "machines": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -83880,8 +84060,8 @@ export interface operations {
                      *           "machines": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -83901,8 +84081,8 @@ export interface operations {
                      *           "lots": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -83976,8 +84156,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "bt_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "bt_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -84125,8 +84305,8 @@ export interface operations {
                      *             "attributes": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -84237,8 +84417,8 @@ export interface operations {
                      *               "children": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -84261,8 +84441,8 @@ export interface operations {
                      *             "scanning_stations": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -84286,8 +84466,8 @@ export interface operations {
                      *             "machines": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -84316,8 +84496,8 @@ export interface operations {
                      *           "machines": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -84337,8 +84517,8 @@ export interface operations {
                      *           "lots": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -84372,7 +84552,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -84777,8 +84957,8 @@ export interface operations {
                      *           "attributes": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -84825,8 +85005,8 @@ export interface operations {
                      *       "consumptions": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -85016,8 +85196,8 @@ export interface operations {
                      *               "attributes": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -85046,8 +85226,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -85081,8 +85261,8 @@ export interface operations {
                      *       "in_steps": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -85091,8 +85271,8 @@ export interface operations {
                      *       "out_steps": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -85112,8 +85292,8 @@ export interface operations {
                      *           "children": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -85136,8 +85316,8 @@ export interface operations {
                      *         "scanning_stations": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -85161,8 +85341,8 @@ export interface operations {
                      *         "machines": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -85555,8 +85735,8 @@ export interface operations {
                      *           "attributes": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -85603,8 +85783,8 @@ export interface operations {
                      *       "consumptions": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -85794,8 +85974,8 @@ export interface operations {
                      *               "attributes": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -85824,8 +86004,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -85859,8 +86039,8 @@ export interface operations {
                      *       "in_steps": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -85869,8 +86049,8 @@ export interface operations {
                      *       "out_steps": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -85890,8 +86070,8 @@ export interface operations {
                      *           "children": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -85914,8 +86094,8 @@ export interface operations {
                      *         "scanning_stations": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -85939,8 +86119,8 @@ export interface operations {
                      *         "machines": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -86306,8 +86486,8 @@ export interface operations {
                      *           "attributes": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -86354,8 +86534,8 @@ export interface operations {
                      *       "consumptions": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -86545,8 +86725,8 @@ export interface operations {
                      *               "attributes": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -86575,8 +86755,8 @@ export interface operations {
                      *       "machines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -86610,8 +86790,8 @@ export interface operations {
                      *       "in_steps": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -86620,8 +86800,8 @@ export interface operations {
                      *       "out_steps": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -86641,8 +86821,8 @@ export interface operations {
                      *           "children": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -86665,8 +86845,8 @@ export interface operations {
                      *         "scanning_stations": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -86690,8 +86870,8 @@ export interface operations {
                      *         "machines": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -86956,8 +87136,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -87210,8 +87390,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -87464,8 +87644,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -87729,8 +87909,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -87941,8 +88121,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -88177,8 +88357,8 @@ export interface operations {
                      *         "attributes": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -88241,7 +88421,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -88297,8 +88477,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "po_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "po_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -88500,8 +88680,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -88647,7 +88827,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -88678,8 +88858,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "orss_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "orss_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -88826,8 +89006,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -89085,8 +89265,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -89309,8 +89489,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -89844,7 +90024,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -89900,8 +90080,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "rcor_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "rcor_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -90028,8 +90208,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -90220,8 +90400,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -90432,8 +90612,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -90624,8 +90804,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -91189,7 +91369,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -91464,7 +91644,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -91498,8 +91678,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "bt_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "bt_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -91647,8 +91827,8 @@ export interface operations {
                      *             "attributes": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -91759,8 +91939,8 @@ export interface operations {
                      *               "children": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -91783,8 +91963,8 @@ export interface operations {
                      *             "scanning_stations": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -91808,8 +91988,8 @@ export interface operations {
                      *             "machines": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -91838,8 +92018,8 @@ export interface operations {
                      *           "machines": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -91859,8 +92039,8 @@ export interface operations {
                      *           "lots": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -91930,8 +92110,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": null,
-                     *         "prev_cursor": null,
+                     *         "next_page_url": null,
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -92009,7 +92189,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -92080,8 +92260,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "sh_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "sh_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -92589,7 +92769,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -93120,7 +93300,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -93158,8 +93338,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "shtm_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -93179,8 +93359,8 @@ export interface operations {
                      *           "free_shipping_service_levels": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -93256,8 +93436,8 @@ export interface operations {
                      *       "free_shipping_service_levels": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -93323,8 +93503,8 @@ export interface operations {
                      *       "free_shipping_service_levels": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -93436,8 +93616,8 @@ export interface operations {
                      *       "free_shipping_service_levels": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -93465,7 +93645,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -93511,8 +93691,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "ac_02kn5s7811g9qwce7cizr4e0mq",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "ac_02kn5s7811g9qwce7cizr4e0mq",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -93965,7 +94145,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -94006,8 +94186,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "suml_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "suml_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -94158,8 +94338,8 @@ export interface operations {
                      *               "attributes": {
                      *                 "object": "list",
                      *                 "page_info": {
-                     *                   "next_cursor": null,
-                     *                   "prev_cursor": null,
+                     *                   "next_page_url": null,
+                     *                   "previous_page_url": null,
                      *                   "has_next_page": false,
                      *                   "has_prev_page": false
                      *                 },
@@ -94424,8 +94604,8 @@ export interface operations {
                      *           "attributes": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -94686,8 +94866,8 @@ export interface operations {
                      *           "attributes": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -94940,8 +95120,8 @@ export interface operations {
                      *           "attributes": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -95204,8 +95384,8 @@ export interface operations {
                      *           "attributes": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -95295,7 +95475,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -95331,8 +95511,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "acgp_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -95555,7 +95735,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -95591,8 +95771,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "acpr_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "acpr_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -95682,8 +95862,8 @@ export interface operations {
                      *           "categories": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -95705,8 +95885,8 @@ export interface operations {
                      *           "attributes": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -95872,8 +96052,8 @@ export interface operations {
                      *       "categories": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -95895,8 +96075,8 @@ export interface operations {
                      *       "attributes": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -96043,8 +96223,8 @@ export interface operations {
                      *       "categories": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -96066,8 +96246,8 @@ export interface operations {
                      *       "attributes": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -96257,8 +96437,8 @@ export interface operations {
                      *       "categories": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -96280,8 +96460,8 @@ export interface operations {
                      *       "attributes": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -96320,7 +96500,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -96358,8 +96538,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "acss_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "acss_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -96453,7 +96633,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -96487,8 +96667,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "ta_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "ta_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -96730,7 +96910,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -96771,8 +96951,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "te_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "te_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -97030,7 +97210,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -97066,8 +97246,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "ad_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -97370,7 +97550,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -97684,8 +97864,8 @@ export interface operations {
                      *           "free_shipping_service_levels": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -97808,8 +97988,8 @@ export interface operations {
                      *       "price_groups": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -98095,8 +98275,8 @@ export interface operations {
                      *           "free_shipping_service_levels": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -98219,8 +98399,8 @@ export interface operations {
                      *       "price_groups": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -98457,8 +98637,8 @@ export interface operations {
                      *           "free_shipping_service_levels": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -98581,8 +98761,8 @@ export interface operations {
                      *       "price_groups": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -98784,8 +98964,8 @@ export interface operations {
                      *           "free_shipping_service_levels": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -98908,8 +99088,8 @@ export interface operations {
                      *       "price_groups": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -98969,8 +99149,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": null,
-                     *         "prev_cursor": null,
+                     *         "next_page_url": null,
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -99030,7 +99210,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -99061,8 +99241,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "ords_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "ords_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -99358,7 +99538,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -99396,8 +99576,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "pi_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -99491,7 +99671,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -99522,8 +99702,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": null,
-                     *         "prev_cursor": null,
+                     *         "next_page_url": null,
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -99544,8 +99724,8 @@ export interface operations {
                      *           "product_lines": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -99630,8 +99810,8 @@ export interface operations {
                      *       "product_lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -99704,8 +99884,8 @@ export interface operations {
                      *       "product_lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -99823,8 +100003,8 @@ export interface operations {
                      *       "product_lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -99866,7 +100046,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -99897,8 +100077,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": null,
-                     *         "prev_cursor": null,
+                     *         "next_page_url": null,
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -100029,8 +100209,8 @@ export interface operations {
                      *                 "free_shipping_service_levels": {
                      *                   "object": "list",
                      *                   "page_info": {
-                     *                     "next_cursor": null,
-                     *                     "prev_cursor": null,
+                     *                     "next_page_url": null,
+                     *                     "previous_page_url": null,
                      *                     "has_next_page": false,
                      *                     "has_prev_page": false
                      *                   },
@@ -100153,8 +100333,8 @@ export interface operations {
                      *             "price_groups": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -100181,8 +100361,8 @@ export interface operations {
                      *           "product_lines": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -100377,8 +100557,8 @@ export interface operations {
                      *             "free_shipping_service_levels": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -100501,8 +100681,8 @@ export interface operations {
                      *         "price_groups": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -100529,8 +100709,8 @@ export interface operations {
                      *       "product_lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -100713,8 +100893,8 @@ export interface operations {
                      *             "free_shipping_service_levels": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -100837,8 +101017,8 @@ export interface operations {
                      *         "price_groups": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -100865,8 +101045,8 @@ export interface operations {
                      *       "product_lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101094,8 +101274,8 @@ export interface operations {
                      *             "free_shipping_service_levels": {
                      *               "object": "list",
                      *               "page_info": {
-                     *                 "next_cursor": null,
-                     *                 "prev_cursor": null,
+                     *                 "next_page_url": null,
+                     *                 "previous_page_url": null,
                      *                 "has_next_page": false,
                      *                 "has_prev_page": false
                      *               },
@@ -101218,8 +101398,8 @@ export interface operations {
                      *         "price_groups": {
                      *           "object": "list",
                      *           "page_info": {
-                     *             "next_cursor": null,
-                     *             "prev_cursor": null,
+                     *             "next_page_url": null,
+                     *             "previous_page_url": null,
                      *             "has_next_page": false,
                      *             "has_prev_page": false
                      *           },
@@ -101246,8 +101426,8 @@ export interface operations {
                      *       "product_lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101289,7 +101469,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -101320,8 +101500,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "rgfw_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "rgfw_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -101333,8 +101513,8 @@ export interface operations {
                      *           "customer_group_options": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -101349,8 +101529,8 @@ export interface operations {
                      *           "payment_term_options": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -101365,8 +101545,8 @@ export interface operations {
                      *           "shipping_term_options": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -101440,8 +101620,8 @@ export interface operations {
                      *       "customer_group_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101456,8 +101636,8 @@ export interface operations {
                      *       "payment_term_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101472,8 +101652,8 @@ export interface operations {
                      *       "shipping_term_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101529,8 +101709,8 @@ export interface operations {
                      *       "customer_group_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101545,8 +101725,8 @@ export interface operations {
                      *       "payment_term_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101561,8 +101741,8 @@ export interface operations {
                      *       "shipping_term_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101618,8 +101798,8 @@ export interface operations {
                      *       "customer_group_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101634,8 +101814,8 @@ export interface operations {
                      *       "payment_term_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101650,8 +101830,8 @@ export interface operations {
                      *       "shipping_term_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101750,8 +101930,8 @@ export interface operations {
                      *       "customer_group_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101766,8 +101946,8 @@ export interface operations {
                      *       "payment_term_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101782,8 +101962,8 @@ export interface operations {
                      *       "shipping_term_options": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -101817,7 +101997,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -101900,8 +102080,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "or_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "or_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -102013,8 +102193,8 @@ export interface operations {
                      *           "lines": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -102147,7 +102327,7 @@ export interface operations {
                  *       "carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
                  *       "service_level_id": "crop_01jm4r6700f8nwq3v5hx2d9ktp",
                  *       "priority_code": "normal",
-                 *       "sales_order_type_code": "standard",
+                 *       "sales_order_type_code": "sales_order",
                  *       "ship_to_name": "Acme Inc.",
                  *       "ship_to_street_line_1": "123 Main Street",
                  *       "ship_to_locality": "San Francisco",
@@ -102285,8 +102465,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -102438,7 +102618,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -102476,8 +102656,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "orss_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "orss_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -102646,8 +102826,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -102934,8 +103114,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -103186,8 +103366,8 @@ export interface operations {
                      *       "lines": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -103653,7 +103833,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description Cursor from a previous response's `next_cursor` field, used to fetch the next page.
+                 * @description Cursor token used to retrieve the next or previous page of results.
                  * @example example
                  */
                 cursor?: string;
@@ -103684,8 +103864,8 @@ export interface operations {
                      * @example {
                      *       "object": "list",
                      *       "page_info": {
-                     *         "next_cursor": "quds_01jm4r6700f8nwq3v5hx2d9ktp",
-                     *         "prev_cursor": null,
+                     *         "next_page_url": "quds_01jm4r6700f8nwq3v5hx2d9ktp",
+                     *         "previous_page_url": null,
                      *         "has_next_page": true,
                      *         "has_prev_page": false
                      *       },
@@ -103697,8 +103877,8 @@ export interface operations {
                      *           "tiers": {
                      *             "object": "list",
                      *             "page_info": {
-                     *               "next_cursor": null,
-                     *               "prev_cursor": null,
+                     *               "next_page_url": null,
+                     *               "previous_page_url": null,
                      *               "has_next_page": false,
                      *               "has_prev_page": false
                      *             },
@@ -103779,8 +103959,8 @@ export interface operations {
                      *       "tiers": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -103853,8 +104033,8 @@ export interface operations {
                      *       "tiers": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
@@ -103970,8 +104150,8 @@ export interface operations {
                      *       "tiers": {
                      *         "object": "list",
                      *         "page_info": {
-                     *           "next_cursor": null,
-                     *           "prev_cursor": null,
+                     *           "next_page_url": null,
+                     *           "previous_page_url": null,
                      *           "has_next_page": false,
                      *           "has_prev_page": false
                      *         },
