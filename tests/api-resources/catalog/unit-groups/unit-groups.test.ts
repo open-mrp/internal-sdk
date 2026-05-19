@@ -58,7 +58,7 @@ describe('resource unitGroups', () => {
           ],
           base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
           name: 'Weight Units (Updated)',
-          notes: null,
+          notes: 'notes',
         },
         { path: '/_stainless_unknown_path' },
       ),

@@ -161,37 +161,34 @@ export class SalesOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const salesOrderDetail = await client.sales.salesOrders.salesOrders({
-   *   buyer_account_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
-   *   lines: [
-   *     {
-   *       edi_line_item_id: null,
-   *       item_id: null,
-   *       product_description: null,
-   *       product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
-   *       product_sku: 'WIDGET-001',
-   *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *       quantity_value: '10',
-   *       unit_cost_denominator_unit_id: null,
-   *       unit_cost_numerator_unit_id: null,
-   *       unit_cost_value: null,
-   *       unit_price_denominator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *       unit_price_numerator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *       unit_price_value: '25.00',
-   *     },
-   *   ],
-   *   priority_code: 'normal',
-   *   sales_order_type_code: 'sales_order',
-   *   carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
-   *   note: 'Rush order for trade show',
-   *   service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
-   *   ship_to_country: 'US',
-   *   ship_to_locality: 'San Francisco',
-   *   ship_to_name: 'Acme Inc.',
-   *   ship_to_postal_code: '94105',
-   *   ship_to_state: 'CA',
-   *   ship_to_street_line_1: '123 Main Street',
-   * });
+   * const salesOrderDetail =
+   *   await client.sales.salesOrders.salesOrders({
+   *     buyer_account_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
+   *     lines: [
+   *       {
+   *         product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         product_sku: 'WIDGET-001',
+   *         quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         quantity_value: '10',
+   *         unit_price_denominator_unit_id:
+   *           'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         unit_price_numerator_unit_id:
+   *           'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         unit_price_value: '25.00',
+   *       },
+   *     ],
+   *     priority_code: 'normal',
+   *     sales_order_type_code: 'sales_order',
+   *     carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     note: 'Rush order for trade show',
+   *     service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     ship_to_country: 'US',
+   *     ship_to_locality: 'San Francisco',
+   *     ship_to_name: 'Acme Inc.',
+   *     ship_to_postal_code: '94105',
+   *     ship_to_state: 'CA',
+   *     ship_to_street_line_1: '123 Main Street',
+   *   });
    * ```
    */
   salesOrders(params: SalesOrderSalesOrdersParams, options?: RequestOptions): APIPromise<SalesOrderDetail> {

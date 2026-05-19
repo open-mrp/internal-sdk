@@ -36,7 +36,6 @@ export class Suppliers extends APIResource {
    *   await client.operations.suppliers.create({
    *     bill_to_address: {
    *       name: 'Acme Supplies Inc.',
-   *       type: null,
    *       country: 'US',
    *     },
    *     name: 'Acme Supplies Inc.',
@@ -82,11 +81,11 @@ export class Suppliers extends APIResource {
    *   await client.operations.suppliers.update(
    *     'ac_02kn5s7811g9qwce7cizr4e0mq',
    *     {
-   *       bill_to_address_id: null,
+   *       bill_to_address_id: 'bill_to_address_id',
    *       name: 'Acme Supplies LLC',
    *       note: 'Updated contact info',
-   *       number: null,
-   *       ship_to_address_id: null,
+   *       number: 'number',
+   *       ship_to_address_id: 'ship_to_address_id',
    *       update_note: true,
    *     },
    *   );

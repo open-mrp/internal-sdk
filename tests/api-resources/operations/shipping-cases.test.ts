@@ -32,10 +32,10 @@ describe('resource shippingCases', () => {
 
   test('update: only required params', async () => {
     const responsePromise = client.operations.shippingCases.update('shcs_01jm4r6700f8nwq3v5hx2d9ktp', {
-      freight_amount_unit_id: null,
-      freight_amount_value: null,
-      freight_weight_unit_id: null,
-      freight_weight_value: null,
+      freight_amount_unit_id: 'freight_amount_unit_id',
+      freight_amount_value: 'freight_amount_value',
+      freight_weight_unit_id: 'freight_weight_unit_id',
+      freight_weight_value: 'freight_weight_value',
       tracking_number: '1Z999AA10123456784',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -49,10 +49,10 @@ describe('resource shippingCases', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.operations.shippingCases.update('shcs_01jm4r6700f8nwq3v5hx2d9ktp', {
-      freight_amount_unit_id: null,
-      freight_amount_value: null,
-      freight_weight_unit_id: null,
-      freight_weight_value: null,
+      freight_amount_unit_id: 'freight_amount_unit_id',
+      freight_amount_value: 'freight_amount_value',
+      freight_weight_unit_id: 'freight_weight_unit_id',
+      freight_weight_value: 'freight_weight_value',
       tracking_number: '1Z999AA10123456784',
       include: ['carrier'],
     });

@@ -51,7 +51,7 @@ describe('resource serviceLevels', () => {
         include: ['owner'],
         code: 'code',
         customer_portal_visibility: 'visible',
-        is_default: null,
+        is_default: true,
         name: 'Express Shipping',
       },
     );

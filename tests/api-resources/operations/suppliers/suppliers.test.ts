@@ -81,11 +81,11 @@ describe('resource suppliers', () => {
 
   test('update: only required params', async () => {
     const responsePromise = client.operations.suppliers.update('ac_02kn5s7811g9qwce7cizr4e0mq', {
-      bill_to_address_id: null,
+      bill_to_address_id: 'bill_to_address_id',
       name: 'Acme Supplies LLC',
       note: 'Updated contact info',
-      number: null,
-      ship_to_address_id: null,
+      number: 'number',
+      ship_to_address_id: 'ship_to_address_id',
       update_note: true,
     });
     const rawResponse = await responsePromise.asResponse();
@@ -99,11 +99,11 @@ describe('resource suppliers', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.operations.suppliers.update('ac_02kn5s7811g9qwce7cizr4e0mq', {
-      bill_to_address_id: null,
+      bill_to_address_id: 'bill_to_address_id',
       name: 'Acme Supplies LLC',
       note: 'Updated contact info',
-      number: null,
-      ship_to_address_id: null,
+      number: 'number',
+      ship_to_address_id: 'ship_to_address_id',
       update_note: true,
     });
   });

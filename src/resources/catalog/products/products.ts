@@ -30,7 +30,7 @@ export class Products extends APIResource {
    * ```ts
    * const product = await client.catalog.products.create({
    *   category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
-   *   product_line_id: null,
+   *   product_line_id: 'product_line_id',
    *   sku: 'ALM-2024-1001',
    *   type: 'sale',
    * });

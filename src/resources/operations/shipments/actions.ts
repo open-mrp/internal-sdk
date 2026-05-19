@@ -25,7 +25,6 @@ export class Actions extends APIResource {
    *     carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *     from_address: {
    *       name: 'Origin Warehouse',
-   *       type: null,
    *       country: 'US',
    *     },
    *     parcels: [
@@ -37,11 +36,7 @@ export class Actions extends APIResource {
    *       },
    *     ],
    *     service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     to_address: {
-   *       name: 'Destination',
-   *       type: null,
-   *       country: 'US',
-   *     },
+   *     to_address: { name: 'Destination', country: 'US' },
    *   });
    * ```
    */
@@ -62,7 +57,6 @@ export class Actions extends APIResource {
    *   await client.operations.shipments.actions.rateShop({
    *     from_address: {
    *       name: 'Origin Warehouse',
-   *       type: null,
    *       country: 'US',
    *     },
    *     parcels: [
@@ -73,11 +67,7 @@ export class Actions extends APIResource {
    *         height: 6,
    *       },
    *     ],
-   *     to_address: {
-   *       name: 'Destination',
-   *       type: null,
-   *       country: 'US',
-   *     },
+   *     to_address: { name: 'Destination', country: 'US' },
    *   });
    * ```
    */
