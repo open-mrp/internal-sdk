@@ -69,7 +69,7 @@ export class Transactions extends APIResource {
    *       clear_adjustment_type: false,
    *       clear_responsible_user: false,
    *       clear_transaction_method: false,
-   *       is_fully_allocated: true,
+   *       is_fully_allocated: null,
    *       method: 'ach',
    *       note: 'Updated payment note',
    *       number: 'number',
