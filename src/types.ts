@@ -9753,7 +9753,7 @@ export interface components {
         /** @description Storage allocation. */
         AllocationRequest: {
             /** @description Location ID to allocate to. */
-            location_id?: string | null;
+            location_id?: string;
             /** @description Quantity to allocate. */
             quantity: string;
         };
@@ -9895,9 +9895,9 @@ export interface components {
             /** @description Optional sales rep IDs to filter by. */
             sales_rep_ids: string[];
             /** @description Optional target delivery time in days. */
-            target_delivery_time_days?: number | null;
+            target_delivery_time_days?: number;
             /** @description Whether to override promised dates with the target delivery time. */
-            override_promised_dates?: boolean | null;
+            override_promised_dates?: boolean;
         };
         /** @description AnalyzeDeliveriesResponse represents the response from the analyze deliveries endpoint. */
         AnalyzeDeliveriesResponse: {
@@ -9918,9 +9918,9 @@ export interface components {
             /** @description Optional item IDs to filter by. */
             item_ids: string[];
             /** @description Optional number of months of historical data to use. */
-            history_months?: number | null;
+            history_months?: number;
             /** @description Optional number of months to forecast. */
-            forecast_months?: number | null;
+            forecast_months?: number;
         };
         /** @description AnalyzeDemandForecastResponse represents the response from the demand forecast endpoint. */
         AnalyzeDemandForecastResponse: {
@@ -10147,12 +10147,12 @@ export interface components {
              * Format: date-time
              * @description Optional start date for the analysis period.
              */
-            start_date?: string | null;
+            start_date?: string;
             /**
              * Format: date-time
              * @description Optional end date for the analysis period.
              */
-            end_date?: string | null;
+            end_date?: string;
             /** @description Optional item IDs to filter by. */
             item_ids: string[];
             /** @description Optional product line IDs to filter by. */
@@ -10229,7 +10229,7 @@ export interface components {
             /** @description Optional customer group IDs to filter by. */
             customer_group_ids: string[];
             /** @description Optional search query. */
-            query?: string | null;
+            query?: string;
         };
         /** @description AnalyzeSalesResponse represents the response from the analyze sales endpoint. */
         AnalyzeSalesResponse: {
@@ -12842,18 +12842,18 @@ export interface components {
             /** @description Consumption quantity measure. */
             measure: number;
             /** @description Instructions for this consumption. */
-            instructions?: string | null;
+            instructions?: string;
         };
         /** @description BulkCreateItemInput is the input for a single item in a bulk create operation. */
         BulkCreateItemInput: {
             /** @description Item SKU. */
             sku: string;
             /** @description Item description. */
-            description?: string | null;
+            description?: string;
             /** @description Item category ID. */
             item_category_id: string;
             /** @description Product line ID. */
-            product_line_id?: string | null;
+            product_line_id?: string;
         };
         /** @description BulkCreateItemResult represents the result of creating a single item in a bulk operation. */
         BulkCreateItemResult: {
@@ -12921,15 +12921,15 @@ export interface components {
             /** @description Labor time value. */
             labor_time: number;
             /** @description Labor time unit abbreviation (default: "hr"). One of: hr, minute, second, day. */
-            labor_time_unit?: string | null;
+            labor_time_unit?: string;
             /** @description Overhead rate in dollars per hour. */
             overhead_rate: number;
             /** @description Allowances factor (default: 0). */
-            allowances?: number | null;
+            allowances?: number;
             /** @description Leveling factor (default: 0). */
-            leveling_factor?: number | null;
+            leveling_factor?: number;
             /** @description Scanning station name, resolved by name. */
-            station?: string | null;
+            station?: string;
         };
         /** @description BulkCreateProductionStepResult represents the result of creating a single production step. */
         BulkCreateProductionStepResult: {
@@ -13600,9 +13600,9 @@ export interface components {
             /** @description Email for the checkout session. */
             email: string;
             /** @description Redirect URL on success. */
-            success_url?: string | null;
+            success_url?: string;
             /** @description Redirect URL on cancel. */
-            cancel_url?: string | null;
+            cancel_url?: string;
         };
         /**
          * @description Checkout session result.
@@ -14700,7 +14700,7 @@ export interface components {
             /** @description Order total in cents. */
             order_total_cents: number;
             /** @description Customer PO number. */
-            customer_po?: string | null;
+            customer_po?: string;
         };
         /** @description Consumption input for a production step. */
         CreateConsumptionInput: {
@@ -14715,7 +14715,7 @@ export interface components {
             /** @description Waste quantity unit ID. */
             waste_quantity_unit_id: string;
             /** @description Instructions for how this material is consumed. */
-            instructions?: string | null;
+            instructions?: string;
         };
         /**
          * @description Request to create a consumption.
@@ -14740,7 +14740,7 @@ export interface components {
             /** @description Waste quantity unit ID. */
             waste_quantity_unit_id: string;
             /** @description Instructions for how this material is consumed. */
-            instructions?: string | null;
+            instructions?: string;
         };
         /**
          * @description Request to create product line access for a customer.
@@ -14905,9 +14905,9 @@ export interface components {
             /** @description Display name. */
             name: string;
             /** @description Notes about the department. */
-            notes?: string | null;
+            notes?: string;
             /** @description Storage location ID. */
-            location_id?: string | null;
+            location_id?: string;
             /** @description Scanning station IDs to connect. */
             scanning_station_ids: string[];
             /** @description Machine IDs to connect. */
@@ -14966,7 +14966,7 @@ export interface components {
             /** @description Serial number. */
             serial_number: string;
             /** @description Notes. */
-            notes?: string | null;
+            notes?: string;
             /** @description Department ID. */
             department_id: string;
         };
@@ -15021,13 +15021,13 @@ export interface components {
             /** @description JSON metadata. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
             metadata: Record<string, never> | null;
             /** @description Entity type this memory is scoped to (e.g. "customer", "product"). */
-            entity_type?: string | null;
+            entity_type?: string;
             /** @description Entity ID. */
-            entity_id?: string | null;
+            entity_id?: string;
             /** @description Importance score between 0 and 1. */
             importance: number;
             /** @description ISO 8601 expiration timestamp. */
-            expires_at?: string | null;
+            expires_at?: string;
         };
         /**
          * @description Request to create an order discount.
@@ -15047,12 +15047,12 @@ export interface components {
              * Format: decimal
              * @description Percentage value as a decimal string. Required when discount_type is "percentage".
              */
-            percentage?: string | null;
+            percentage?: string;
             /**
              * Format: decimal
              * @description Fixed amount as a decimal string. Required when discount_type is "amount".
              */
-            amount?: string | null;
+            amount?: string;
             /** @description Discount type: "percentage" or "amount". */
             discount_type: string;
         };
@@ -15068,7 +15068,7 @@ export interface components {
             /** @description SKU. */
             sku: string;
             /** @description Description. */
-            description: string | null;
+            description?: string | null;
             /** @description Notes. */
             notes?: string | null;
             /** @description Category ID. */
@@ -15124,8 +15124,6 @@ export interface components {
          * @description CreateProductRequest is the request to create a product.
          * @example {
          *       "sku": "ALM-2024-1001",
-         *       "description": null,
-         *       "notes": null,
          *       "type": "sale",
          *       "product_line_id": null,
          *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -15135,9 +15133,9 @@ export interface components {
             /** @description SKU. */
             sku: string;
             /** @description Description. */
-            description: string | null;
+            description?: string | null;
             /** @description Notes. */
-            notes: string | null;
+            notes?: string | null;
             /**
              * @description Product type code (e.g. sale, sample).
              * @enum {string}
@@ -15262,15 +15260,15 @@ export interface components {
             /** @description Display name. */
             name: string;
             /** @description Notes. */
-            notes?: string | null;
+            notes?: string;
             /** @description Leveling factor as a decimal string. */
             leveling_factor: string;
             /** @description Allowances as a decimal string. */
             allowances: string;
             /** @description Scanning station ID. */
-            scanning_station_id?: string | null;
+            scanning_station_id?: string;
             /** @description Department ID. */
-            department_id?: string | null;
+            department_id?: string;
             /** @description Labor rate configuration. */
             labor_rate: components["schemas"]["CreateRateInput"];
             /** @description Labor time configuration. */
@@ -15327,55 +15325,55 @@ export interface components {
             /** @description Supplier account ID. */
             supplier_account_id: string;
             /** @description Order note. */
-            note?: string | null;
+            note?: string;
             /** @description Carrier ID. */
-            carrier_id?: string | null;
+            carrier_id?: string;
             /** @description Service level ID. */
-            service_level_id?: string | null;
+            service_level_id?: string;
             /** @description Carrier billing type. */
-            carrier_billing_type?: string | null;
+            carrier_billing_type?: string;
             /** @description Carrier billing account number. */
-            carrier_billing_account?: string | null;
+            carrier_billing_account?: string;
             /** @description Priority code. */
             priority_code: string;
             /** @description Shipping term ID. */
-            shipping_term_id?: string | null;
+            shipping_term_id?: string;
             /** @description Payment term ID. */
-            payment_term_id?: string | null;
+            payment_term_id?: string;
             /** @description Bill-to address name. */
-            bill_to_name?: string | null;
+            bill_to_name?: string;
             /** @description Bill-to street line 1. */
-            bill_to_street_line_1?: string | null;
+            bill_to_street_line_1?: string;
             /** @description Bill-to street line 2. */
-            bill_to_street_line_2?: string | null;
+            bill_to_street_line_2?: string;
             /** @description Bill-to locality/city. */
-            bill_to_locality?: string | null;
+            bill_to_locality?: string;
             /** @description Bill-to state/province. */
-            bill_to_state?: string | null;
+            bill_to_state?: string;
             /** @description Bill-to postal code. */
-            bill_to_postal_code?: string | null;
+            bill_to_postal_code?: string;
             /** @description Bill-to country. */
-            bill_to_country?: string | null;
+            bill_to_country?: string;
             /** @description Ship-to address name. */
-            ship_to_name?: string | null;
+            ship_to_name?: string;
             /** @description Ship-to street line 1. */
-            ship_to_street_line_1?: string | null;
+            ship_to_street_line_1?: string;
             /** @description Ship-to street line 2. */
-            ship_to_street_line_2?: string | null;
+            ship_to_street_line_2?: string;
             /** @description Ship-to locality/city. */
-            ship_to_locality?: string | null;
+            ship_to_locality?: string;
             /** @description Ship-to state/province. */
-            ship_to_state?: string | null;
+            ship_to_state?: string;
             /** @description Ship-to postal code. */
-            ship_to_postal_code?: string | null;
+            ship_to_postal_code?: string;
             /** @description Ship-to country. */
-            ship_to_country?: string | null;
+            ship_to_country?: string;
             /** @description Order lines to create. */
             lines: components["schemas"]["CreatePurchaseOrderLineInput"][];
             /** @description Account user IDs for email contacts. */
             contact_account_user_ids: string[];
             /** @description Promised delivery date. */
-            promised_at?: string | null;
+            promised_at?: string;
         };
         /** @description Rate configuration input. */
         CreateRateInput: {
@@ -15448,7 +15446,7 @@ export interface components {
         /** @description Line item input for a create sales order request. */
         CreateSalesOrderLineInput: {
             /** @description EDI line item ID. */
-            edi_line_item_id?: string | null;
+            edi_line_item_id?: string;
         } & components["schemas"]["OrderLineInput"];
         /**
          * @description Request to create a line on a sales order.
@@ -15456,7 +15454,7 @@ export interface components {
          */
         CreateSalesOrderLineRequest: {
             /** @description EDI line item ID. */
-            edi_line_item_id?: string | null;
+            edi_line_item_id?: string;
         } & components["schemas"]["OrderLineInput"];
         /**
          * @description Request to create a sales order.
@@ -15490,57 +15488,57 @@ export interface components {
             /** @description Buyer account ID. */
             buyer_account_id: string;
             /** @description Customer purchase order number. */
-            customer_po_number?: string | null;
+            customer_po_number?: string;
             /** @description Order note. */
-            note?: string | null;
+            note?: string;
             /** @description Carrier ID. */
-            carrier_id?: string | null;
+            carrier_id?: string;
             /** @description Service level ID. */
-            service_level_id?: string | null;
+            service_level_id?: string;
             /** @description Carrier billing type. */
-            carrier_billing_type?: string | null;
+            carrier_billing_type?: string;
             /** @description Carrier billing account number. */
-            carrier_billing_account?: string | null;
+            carrier_billing_account?: string;
             /** @description Priority code. */
             priority_code: string;
             /** @description Sales rep ID. */
-            sales_rep_id?: string | null;
+            sales_rep_id?: string;
             /** @description Shipping term ID. */
-            shipping_term_id?: string | null;
+            shipping_term_id?: string;
             /** @description Sales order type code. */
             sales_order_type_code: string;
             /** @description Payment term ID. */
-            payment_term_id?: string | null;
+            payment_term_id?: string;
             /** @description Order discount ID. */
-            order_discount_id?: string | null;
+            order_discount_id?: string;
             /** @description Bill-to address name. */
-            bill_to_name?: string | null;
+            bill_to_name?: string;
             /** @description Bill-to street line 1. */
-            bill_to_street_line_1?: string | null;
+            bill_to_street_line_1?: string;
             /** @description Bill-to street line 2. */
-            bill_to_street_line_2?: string | null;
+            bill_to_street_line_2?: string;
             /** @description Bill-to locality/city. */
-            bill_to_locality?: string | null;
+            bill_to_locality?: string;
             /** @description Bill-to state/province. */
-            bill_to_state?: string | null;
+            bill_to_state?: string;
             /** @description Bill-to postal code. */
-            bill_to_postal_code?: string | null;
+            bill_to_postal_code?: string;
             /** @description Bill-to country. */
-            bill_to_country?: string | null;
+            bill_to_country?: string;
             /** @description Ship-to address name. */
-            ship_to_name?: string | null;
+            ship_to_name?: string;
             /** @description Ship-to street line 1. */
-            ship_to_street_line_1?: string | null;
+            ship_to_street_line_1?: string;
             /** @description Ship-to street line 2. */
-            ship_to_street_line_2?: string | null;
+            ship_to_street_line_2?: string;
             /** @description Ship-to locality/city. */
-            ship_to_locality?: string | null;
+            ship_to_locality?: string;
             /** @description Ship-to state/province. */
-            ship_to_state?: string | null;
+            ship_to_state?: string;
             /** @description Ship-to postal code. */
-            ship_to_postal_code?: string | null;
+            ship_to_postal_code?: string;
             /** @description Ship-to country. */
-            ship_to_country?: string | null;
+            ship_to_country?: string;
             /** @description Order lines to create. */
             lines: components["schemas"]["CreateSalesOrderLineInput"][];
             /** @description Account users who should receive order acknowledgement emails. */
@@ -15750,7 +15748,7 @@ export interface components {
             /** @description Supplier part number for this material. */
             supplier_part_number: string;
             /** @description Supplier description for this material. */
-            supplier_description?: string | null;
+            supplier_description?: string;
             /** @description Active status. */
             is_active: boolean | null;
         };
@@ -15816,13 +15814,13 @@ export interface components {
             /** @description State this territory covers. */
             state: string;
             /** @description Start of ZIP code range (501-99999). */
-            start_zipcode?: number | null;
+            start_zipcode?: number;
             /** @description End of ZIP code range (501-99999). */
-            end_zipcode?: number | null;
+            end_zipcode?: number;
             /** @description Sales rep (account user) ID. */
             sales_rep_id: string;
             /** @description Product line ID. */
-            product_line_id?: string | null;
+            product_line_id?: string;
         };
         /**
          * @description Request to create a transaction.
@@ -16052,7 +16050,7 @@ export interface components {
              */
             threshold: string;
             /** @description Parent tier ID for tier chaining. */
-            parent_tier_id?: string | null;
+            parent_tier_id?: string;
         };
         /**
          * @description Result of creating an API key, with the full secret value.
@@ -19168,7 +19166,7 @@ export interface components {
             /** @description Product line IDs. */
             product_line_ids: string[];
             /** @description Customer ID. */
-            customer_id?: string | null;
+            customer_id?: string;
             /**
              * @description Origin address.
              * @example {
@@ -19196,7 +19194,7 @@ export interface components {
             /** @description Parcels to estimate rates for. */
             parcels: components["schemas"]["ParcelInput"][];
             /** @description Total order value. */
-            order_total?: number | null;
+            order_total?: number;
         };
         /** @description Result of estimating a shipping rate. */
         EstimateRateResult: {
@@ -19223,9 +19221,9 @@ export interface components {
             /** @description Discount code. */
             code: string;
             /** @description Buyer account ID to scope the lookup. */
-            buyer_account_id?: string | null;
+            buyer_account_id?: string;
             /** @description Sales order ID to scope the lookup. */
-            sales_order_id?: string | null;
+            sales_order_id?: string;
         };
         /**
          * @description Product frequently ordered by a customer.
@@ -31959,11 +31957,11 @@ export interface components {
             /** @description The product ID. */
             product_id: string;
             /** @description The item ID. */
-            item_id?: string | null;
+            item_id?: string;
             /** @description The product SKU. */
             product_sku: string;
             /** @description The product description. */
-            product_description?: string | null;
+            product_description?: string;
             /**
              * Format: decimal
              * @description The quantity value.
@@ -31984,11 +31982,11 @@ export interface components {
              * Format: decimal
              * @description The unit cost value.
              */
-            unit_cost_value?: string | null;
+            unit_cost_value?: string;
             /** @description The unit cost numerator unit ID. */
-            unit_cost_numerator_unit_id?: string | null;
+            unit_cost_numerator_unit_id?: string;
             /** @description The unit cost denominator unit ID. */
-            unit_cost_denominator_unit_id?: string | null;
+            unit_cost_denominator_unit_id?: string;
         };
         /** @description Owner describes the provenance of a resource. */
         Owner: {
@@ -41547,7 +41545,7 @@ export interface components {
             /** @description Product line IDs. */
             product_line_ids: string[];
             /** @description Customer ID. */
-            customer_id?: string | null;
+            customer_id?: string;
             /**
              * @description Origin address.
              * @example {
@@ -41575,7 +41573,7 @@ export interface components {
             /** @description Parcels to rate shop. */
             parcels: components["schemas"]["ParcelInput"][];
             /** @description Total order value. */
-            order_total?: number | null;
+            order_total?: number;
         };
         /** @description Result of rate shopping. */
         RateShopResult: {
@@ -43268,13 +43266,13 @@ export interface components {
             /** @description Whether the registrant is an existing customer. */
             is_existing_customer: boolean;
             /** @description Customer number, if registering as an existing customer. */
-            customer_number?: string | null;
+            customer_number?: string;
             /** @description Customer name. */
-            customer_name?: string | null;
+            customer_name?: string;
             /** @description Customer group ID. */
-            customer_group_id?: string | null;
+            customer_group_id?: string;
             /** @description Phone number. */
-            phone?: string | null;
+            phone?: string;
             /**
              * @description Customer address.
              * @example {
@@ -43286,11 +43284,11 @@ export interface components {
              *       "country": "US"
              *     }
              */
-            address?: components["schemas"]["AddressInput"] | null;
+            address?: components["schemas"]["AddressInput"];
             /** @description Shipping term ID. */
-            shipping_term_id?: string | null;
+            shipping_term_id?: string;
             /** @description Payment term ID. */
-            payment_term_id?: string | null;
+            payment_term_id?: string;
         };
         /**
          * @description Request to register a user.
@@ -43308,7 +43306,7 @@ export interface components {
             /** @description Full name. */
             name: string;
             /** @description When registering from a customer portal, scopes the magic-login link in the "already registered" email. */
-            account_slug?: string | null;
+            account_slug?: string;
         };
         /**
          * @description Registration flow for customer onboarding.
@@ -43844,7 +43842,7 @@ export interface components {
             /** @description Username or email of the account to reset. */
             identifier: string;
             /** @description Account slug for redirecting to the original login portal after password reset. */
-            account_slug?: string | null;
+            account_slug?: string;
         };
         /**
          * @description Request to reset a user's password.
@@ -48548,9 +48546,9 @@ export interface components {
             /** @description Receiving order line ID. */
             receiving_order_line_id: string;
             /** @description Lot number to assign. */
-            lot_number?: string | null;
+            lot_number?: string;
             /** @description Rejected quantity value. */
-            rejected_quantity?: string | null;
+            rejected_quantity?: string;
             /** @description Storage allocations for this line item. */
             allocations: components["schemas"]["AllocationRequest"][];
         };
@@ -51108,7 +51106,8 @@ export interface components {
         /**
          * @description Request to partially update an account group.
          * @example {
-         *       "name": "Updated Wholesale Customers"
+         *       "name": "Updated Wholesale Customers",
+         *       "description": null
          *     }
          */
         UpdateAccountGroupRequest: {
@@ -51252,7 +51251,7 @@ export interface components {
             /** @description URL-friendly identifier. */
             slug?: string;
             /** @description Description of what the agent does. */
-            description?: string | null;
+            description?: string;
             /** @description Category code (e.g. "order_processing"). */
             category_code?: string;
             /**
@@ -51280,7 +51279,7 @@ export interface components {
             /** @description Tools to attach. Replaces the existing tool set when provided. */
             tools?: components["schemas"]["ToolInput"][];
             /** @description Role ID defining agent permissions. */
-            role_id?: string | null;
+            role_id?: string;
         };
         /**
          * @description Request to update the per-account status of an agent.
@@ -51343,7 +51342,7 @@ export interface components {
             /** @description Waste quantity unit ID. */
             waste_quantity_unit_id?: string;
             /** @description Instructions for how this material is consumed. */
-            instructions?: string | null;
+            instructions?: string;
         };
         /**
          * @description Request to update product line access for a customer.
@@ -51363,8 +51362,7 @@ export interface components {
          *       "name": "Acme Corp Updated",
          *       "note": "Updated account notes",
          *       "freight_policy": "billed_freight",
-         *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
-         *       "credit_limit": {}
+         *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp"
          *     }
          */
         UpdateCustomerRequest: {
@@ -51431,7 +51429,7 @@ export interface components {
             /** @description Carrier billing account number. */
             carrier_billing_account?: string | null;
             /** @description Credit limit. Send null to clear. */
-            credit_limit: components["schemas"]["QuantityInput"] | null;
+            credit_limit?: components["schemas"]["QuantityInput"] | null;
         };
         /**
          * @description Request to partially update a DC location.
@@ -51455,7 +51453,7 @@ export interface components {
             /** @description Display name. */
             name?: string;
             /** @description Notes about the department. */
-            notes?: string | null;
+            notes?: string;
             /** @description Storage location ID. */
             location_id?: string;
             /** @description Scanning station IDs to connect (additive). */
@@ -51522,8 +51520,7 @@ export interface components {
         /**
          * @description Request to partially update a location.
          * @example {
-         *       "name": "Warehouse B",
-         *       "child_ids": {}
+         *       "name": "Warehouse B"
          *     }
          */
         UpdateLocationRequest: {
@@ -51537,7 +51534,7 @@ export interface components {
             /** @description Parent location ID. Send null to clear. */
             parent_id?: string | null;
             /** @description Child location IDs. Replaces all current children when provided. Send null to clear. */
-            child_ids: string[] | null;
+            child_ids?: string[] | null;
         };
         /**
          * @description Request to partially update a machine.
@@ -51588,13 +51585,13 @@ export interface components {
             /** @description JSON metadata. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
             metadata: Record<string, never> | null;
             /** @description Entity type this memory is scoped to (e.g. "customer", "product"). */
-            entity_type?: string | null;
+            entity_type?: string;
             /** @description Entity ID. */
-            entity_id?: string | null;
+            entity_id?: string;
             /** @description Importance score between 0 and 1. */
             importance: number;
             /** @description ISO 8601 expiration timestamp. */
-            expires_at?: string | null;
+            expires_at?: string;
         };
         /**
          * @description Request to partially update an order discount.
@@ -51625,17 +51622,16 @@ export interface components {
          * @description Request to partially update a part.
          * @example {
          *       "sku": "BRG-6204-2RS",
-         *       "description": "Deep groove ball bearing, 20x47x14mm",
-         *       "notes": null
+         *       "description": "Deep groove ball bearing, 20x47x14mm"
          *     }
          */
         UpdatePartRequest: {
             /** @description SKU. */
             sku?: string;
             /** @description Description. */
-            description: string | null;
+            description?: string | null;
             /** @description Notes. */
-            notes: string | null;
+            notes?: string | null;
         };
         /**
          * @description Request to update a user's password.
@@ -51680,7 +51676,7 @@ export interface components {
             /** @description Pick number. */
             number?: string;
             /** @description Timestamp when the pick was finished. Pass an empty string to clear. */
-            finished_at?: string | null;
+            finished_at?: string;
         };
         /**
          * @description Request to partially update a product line.
@@ -51707,7 +51703,9 @@ export interface components {
         /**
          * @description UpdateProductRequest is the request to partially update a product.
          * @example {
-         *       "sku": "SKU-002"
+         *       "sku": "SKU-002",
+         *       "description": null,
+         *       "notes": null
          *     }
          */
         UpdateProductRequest: {
@@ -51763,9 +51761,9 @@ export interface components {
          */
         UpdateProductionRunRequest: {
             /** @description Production run number. */
-            number: string;
+            number: string | null;
             /** @description Responsible user ID. */
-            responsible_user_id: string;
+            responsible_user_id: string | null;
         };
         /**
          * @description Request to update a production step.
@@ -51806,9 +51804,9 @@ export interface components {
          */
         UpdatePurchaseOrderLineRequest: {
             /** @description Product ID. */
-            product_id?: string | null;
+            product_id?: string;
             /** @description Item ID. */
-            item_id?: string | null;
+            item_id?: string;
             /** @description Product SKU. */
             product_sku?: string;
             /** @description Product description. */
@@ -51856,9 +51854,9 @@ export interface components {
             /** @description Priority code. */
             priority_code?: string;
             /** @description Billing address ID. */
-            billing_address_id?: string | null;
+            billing_address_id?: string;
             /** @description Shipping address ID. */
-            shipping_address_id?: string | null;
+            shipping_address_id?: string;
             /** @description Promised delivery date. */
             promised_at?: string;
             /** @description Account user IDs for email contacts. Replaces existing contacts. */
@@ -51944,9 +51942,9 @@ export interface components {
          */
         UpdateRoleRequest: {
             /** @description Display name. */
-            name: string;
+            name?: string;
             /** @description Permissions in `<domain>:<action>` format. Replaces all existing permissions; omit to leave unchanged. */
-            permissions: string[];
+            permissions?: string[];
         };
         /**
          * @description Request to update a sales order line.
@@ -52010,9 +52008,9 @@ export interface components {
             /** @description Order note. */
             note?: string;
             /** @description Carrier ID. */
-            carrier_id?: string | null;
+            carrier_id?: string;
             /** @description Service level ID. */
-            service_level_id?: string | null;
+            service_level_id?: string;
             /** @description Carrier billing type. */
             carrier_billing_type?: string;
             /** @description Carrier billing account number. */
@@ -52020,19 +52018,19 @@ export interface components {
             /** @description Priority code. */
             priority_code?: string;
             /** @description Sales rep ID. */
-            sales_rep_id?: string | null;
+            sales_rep_id?: string;
             /** @description Shipping term ID. */
-            shipping_term_id?: string | null;
+            shipping_term_id?: string;
             /** @description Payment term ID. */
-            payment_term_id?: string | null;
+            payment_term_id?: string;
             /** @description Order discount ID. */
-            order_discount_id?: string | null;
+            order_discount_id?: string;
             /** @description Bill-to address name. */
             bill_to_name?: string;
             /** @description Bill-to street line 1. */
             bill_to_street_line_1?: string;
             /** @description Bill-to street line 2. */
-            bill_to_street_line_2?: string | null;
+            bill_to_street_line_2?: string;
             /** @description Bill-to locality/city. */
             bill_to_locality?: string;
             /** @description Bill-to state/province. */
@@ -52046,7 +52044,7 @@ export interface components {
             /** @description Ship-to street line 1. */
             ship_to_street_line_1?: string;
             /** @description Ship-to street line 2. */
-            ship_to_street_line_2?: string | null;
+            ship_to_street_line_2?: string;
             /** @description Ship-to locality/city. */
             ship_to_locality?: string;
             /** @description Ship-to state/province. */
@@ -52065,7 +52063,7 @@ export interface components {
              */
             promised_at?: string;
             /** @description Customer ID. */
-            customer_id?: string | null;
+            customer_id?: string;
             /**
              * @description When set, replaces acknowledgement email contacts on the order.
              *     An empty list clears all contacts; omitted leaves existing contacts untouched.
@@ -52189,9 +52187,9 @@ export interface components {
             /** @description Settlement number. */
             number: string | null;
             /** @description Note for this settlement. */
-            note: string;
+            note: string | null;
             /** @description Responsible user ID. */
-            responsible_user_id: string;
+            responsible_user_id: string | null;
         };
         /**
          * @description Request to partially update a shipment line.
@@ -52222,7 +52220,7 @@ export interface components {
             /** @description Carrier ID. */
             carrier_id?: string;
             /** @description Service level ID. */
-            service_level_id?: string | null;
+            service_level_id?: string;
         };
         /**
          * @description Request to update a shipping case.
@@ -52236,7 +52234,7 @@ export interface components {
          */
         UpdateShippingCaseRequest: {
             /** @description Tracking number. */
-            tracking_number: string;
+            tracking_number: string | null;
             /** @description Freight amount value. */
             freight_amount_value: string | null;
             /** @description Freight amount unit ID. */
@@ -52252,10 +52250,7 @@ export interface components {
          *     JSON null for flat_rate, minimum_order_value, or free_shipping_service_level_ids
          *     to clear the existing value.
          * @example {
-         *       "name": "Collect",
-         *       "flat_rate": {},
-         *       "minimum_order_value": {},
-         *       "free_shipping_service_level_ids": {}
+         *       "name": "Collect"
          *     }
          */
         UpdateShippingTermRequest: {
@@ -52267,11 +52262,11 @@ export interface components {
              */
             type?: "free_freight" | "flat_rate_freight" | "carrier_rate_freight";
             /** @description Flat rate. Send null to clear. */
-            flat_rate: components["schemas"]["QuantityInput"] | null;
+            flat_rate?: components["schemas"]["QuantityInput"] | null;
             /** @description Minimum order value for free shipping. Send null to clear. */
-            minimum_order_value: components["schemas"]["QuantityInput"] | null;
+            minimum_order_value?: components["schemas"]["QuantityInput"] | null;
             /** @description Service level IDs that qualify for free shipping. Send null to clear. */
-            free_shipping_service_level_ids: string[] | null;
+            free_shipping_service_level_ids?: string[] | null;
         };
         /**
          * @description Request to update a supplier material.
@@ -52283,7 +52278,7 @@ export interface components {
             /** @description Supplier part number for this material. */
             supplier_part_number?: string;
             /** @description Supplier description for this material. */
-            supplier_description?: string | null;
+            supplier_description?: string;
             /** @description Active status. */
             is_active?: boolean;
         };
@@ -52300,7 +52295,7 @@ export interface components {
          */
         UpdateSupplierRequest: {
             /** @description Display name. */
-            name: string;
+            name: string | null;
             /** @description Supplier number. */
             number: string | null;
             /** @description Note value. Set update_note to true to apply. */
@@ -52354,7 +52349,7 @@ export interface components {
          */
         UpdateTransactionAllocationRequest: {
             /** @description Allocation amount as a decimal string. */
-            amount: string;
+            amount: string | null;
         };
         /**
          * @description Request to update a transaction.
@@ -52375,11 +52370,11 @@ export interface components {
             /** @description Transaction number. */
             number: string | null;
             /** @description Note. */
-            note: string;
+            note: string | null;
             /** @description Amount as a decimal string. */
-            amount: string;
+            amount: string | null;
             /** @description Transaction method code. */
-            method: string;
+            method: string | null;
             /** @description Adjustment type code. */
             adjustment_type: string | null;
             /** @description Responsible user ID. */
@@ -52473,9 +52468,9 @@ export interface components {
          */
         UpdateUserRequest: {
             /** @description Display name. */
-            name: string;
+            name: string | null;
             /** @description Profile image URL. */
-            image_url: string;
+            image_url: string | null;
             /**
              * Format: date-time
              * @description Email verification timestamp. Set to null to mark as unverified.
@@ -52541,7 +52536,7 @@ export interface components {
              */
             threshold?: string;
             /** @description Parent tier ID for tier chaining. */
-            parent_tier_id?: string | null;
+            parent_tier_id?: string;
         };
         /**
          * @description Request to create or update a sales target.
@@ -62176,8 +62171,7 @@ export interface operations {
                 /**
                  * @example {
                  *       "sku": "BRG-6204-2RS",
-                 *       "description": "Deep groove ball bearing, 20x47x14mm",
-                 *       "notes": null
+                 *       "description": "Deep groove ball bearing, 20x47x14mm"
                  *     }
                  */
                 "application/json": components["schemas"]["UpdatePartRequest"];
@@ -63206,8 +63200,6 @@ export interface operations {
                 /**
                  * @example {
                  *       "sku": "ALM-2024-1001",
-                 *       "description": null,
-                 *       "notes": null,
                  *       "type": "sale",
                  *       "product_line_id": null,
                  *       "category_id": "ic_01jm4r6700f8nwq3v5hx2d9ktp"
@@ -64211,7 +64203,9 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "sku": "SKU-002"
+                 *       "sku": "SKU-002",
+                 *       "description": null,
+                 *       "notes": null
                  *     }
                  */
                 "application/json": components["schemas"]["UpdateProductRequest"];
@@ -79858,8 +79852,7 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "name": "Warehouse B",
-                 *       "child_ids": {}
+                 *       "name": "Warehouse B"
                  *     }
                  */
                 "application/json": components["schemas"]["UpdateLocationRequest"];
@@ -93584,10 +93577,7 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "name": "Collect",
-                 *       "flat_rate": {},
-                 *       "minimum_order_value": {},
-                 *       "free_shipping_service_level_ids": {}
+                 *       "name": "Collect"
                  *     }
                  */
                 "application/json": components["schemas"]["UpdateShippingTermRequest"];
@@ -95691,7 +95681,8 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "name": "Updated Wholesale Customers"
+                 *       "name": "Updated Wholesale Customers",
+                 *       "description": null
                  *     }
                  */
                 "application/json": components["schemas"]["UpdateAccountGroupRequest"];
@@ -98497,8 +98488,7 @@ export interface operations {
                  *       "name": "Acme Corp Updated",
                  *       "note": "Updated account notes",
                  *       "freight_policy": "billed_freight",
-                 *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp",
-                 *       "credit_limit": {}
+                 *       "default_carrier_id": "cr_01jm4r6700f8nwq3v5hx2d9ktp"
                  *     }
                  */
                 "application/json": components["schemas"]["UpdateCustomerRequest"];
