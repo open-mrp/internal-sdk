@@ -62,7 +62,7 @@ describe('resource salesOrders', () => {
           customer_id: 'customer_id',
           customer_po_number: 'customer_po_number',
           invoice_email_contacts: [{ account_user_id: 'account_user_id' }],
-          is_acknowledgment_sent: true,
+          is_acknowledgment_sent: null,
           note: 'Updated shipping instructions',
           number: 'number',
           order_discount_id: 'order_discount_id',

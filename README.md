@@ -9,11 +9,8 @@ The full API of this library can be found in [api.md](api.md).
 ## Installation
 
 ```sh
-npm install git+ssh://git@github.com:augno/internal-sdk.git
+npm install @augno/internal-sdk
 ```
-
-> [!NOTE]
-> Once this package is [published to npm](https://www.stainless.com/docs/guides/publish), this will become: `npm install @augno/internal-sdk`
 
 ## Usage
 

@@ -179,11 +179,6 @@ export interface ClientOptions {
    * Defaults to globalThis.console.
    */
   logger?: Logger | undefined;
-
-  /**
-   * Invoked after the client fails to refresh a bearer session (`credentials: include`).
-   */
-  onAuthFailure?: (error: unknown) => void | Promise<void>;
 }
 
 /**
@@ -205,7 +200,6 @@ export class Augno {
   #encoder: Opts.RequestEncoder;
   protected idempotencyHeader?: string;
   private _options: ClientOptions;
-  #augnoOnAuthFailure: ((error: unknown) => void | Promise<void>) | undefined;
 
   /**
    * API Client for interfacing with the Augno API.
@@ -273,8 +267,6 @@ export class Augno {
 
     this._options = options;
 
-    this.#augnoOnAuthFailure = options.onAuthFailure;
-
     this.bearerToken = bearerToken;
     this.augnoAPIKey = augnoAPIKey;
     this.augnoAccountID = augnoAccountID;
@@ -297,7 +289,6 @@ export class Augno {
       bearerToken: this.bearerToken,
       augnoAPIKey: this.augnoAPIKey,
       augnoAccountID: this.augnoAccountID,
-      ...(this.#augnoOnAuthFailure !== undefined ? { onAuthFailure: this.#augnoOnAuthFailure } : {}),
       ...options,
     });
     return client;
@@ -413,54 +404,6 @@ export class Augno {
     { url, options }: { url: string; options: FinalRequestOptions },
   ): Promise<void> {}
 
-  #augnoRefreshingBearer = false;
-  #augnoBearerRefreshPromise: Promise<void> | null = null;
-
-  #augnoEligibleBearer401Refresh(
-    url: string,
-    options: FinalRequestOptions,
-    retryHeader: string,
-    skipPaths: string[],
-  ): boolean {
-    const prior = options.headers;
-    const h = prior instanceof Headers ? prior : new Headers(prior as any);
-    if (h?.has?.(retryHeader)) return false;
-    if (!skipPaths.length) return true;
-    for (const p of skipPaths) {
-      if (!p) continue;
-      if (url.includes(p)) return false;
-    }
-    return true;
-  }
-
-  async #augnoAwaitBearerRefresh(authorizationHeader: string | null): Promise<void> {
-    if (!this.#augnoRefreshingBearer) {
-      this.#augnoRefreshingBearer = true;
-      this.#augnoBearerRefreshPromise = this.#augnoRunBearerRefresh(authorizationHeader).finally(() => {
-        this.#augnoRefreshingBearer = false;
-        this.#augnoBearerRefreshPromise = null;
-      });
-    }
-    await this.#augnoBearerRefreshPromise;
-  }
-
-  async #augnoRunBearerRefresh(authorizationHeader: string | null): Promise<void> {
-    const refreshURL = new URL('/v1/auth/access-tokens', this.baseURL).toString();
-    const hdrs = new Headers();
-    hdrs.set('Content-Type', 'application/json');
-    if (authorizationHeader) hdrs.set('Authorization', authorizationHeader);
-
-    const init: RequestInit = {
-      method: 'PUT',
-      headers: hdrs,
-      credentials: 'include',
-    };
-
-    const res = await this.fetch(refreshURL, init);
-    if (!res.ok) {
-      throw new Error('Failed to refresh access token');
-    }
-  }
   get<Rsp>(path: string, opts?: PromiseOrValue<RequestOptions>): APIPromise<Rsp> {
     return this.methodRequest('get', path, opts);
   }
@@ -543,50 +486,6 @@ export class Augno {
     const response = await this.fetchWithTimeout(url, req, timeout, controller).catch(castToError);
     const headersTime = Date.now();
 
-    if (!(response instanceof globalThis.Error) && response.status === 401) {
-      if (
-        this.#augnoEligibleBearer401Refresh(url, options, 'X-Retry', [
-          '/v1/auth/access-tokens',
-          '/v1/auth/actions/login',
-        ])
-      ) {
-        await Shims.CancelReadableStream(response.body);
-        try {
-          const authorizationHeader = req.headers.get('Authorization');
-          await this.#augnoAwaitBearerRefresh(authorizationHeader);
-
-          const next: typeof options = { ...options };
-          const merged = new Headers();
-          const prior = options.headers;
-          if (prior instanceof Headers) {
-            prior.forEach((value, key) => merged.append(key, value));
-          } else if (prior && typeof prior === 'object') {
-            for (const [k, v] of Object.entries(prior)) {
-              if (v !== undefined && v !== null) merged.append(k, String(v));
-            }
-          }
-          merged.set('X-Retry', '1');
-          next.headers = merged;
-
-          return this.makeRequest(
-            Promise.resolve(next),
-            retriesRemaining,
-            retryOfRequestLogID ?? requestLogID,
-          );
-        } catch (error) {
-          if (this.#augnoOnAuthFailure) {
-            await this.#augnoOnAuthFailure(error);
-          }
-          throw this.makeStatusError(
-            401,
-            {},
-            'Authentication failed after token refresh',
-            new Headers(response.headers),
-          );
-        }
-      }
-    }
-
     if (response instanceof globalThis.Error) {
       const retryMessage = `retrying, ${retriesRemaining} attempts remaining`;
       if (options.signal?.aborted) {
@@ -632,9 +531,7 @@ export class Augno {
       throw new Errors.APIConnectionError({ cause: response });
     }
 
-    const responseInfo = `[${requestLogID}${retryLogStr}] ${req.method} ${url} ${
-      response.ok ? 'succeeded' : 'failed'
-    } with status ${response.status} in ${headersTime - startTime}ms`;
+    const responseInfo = `[${requestLogID}${retryLogStr}] ${req.method} ${url} ${response.ok ? 'succeeded' : 'failed'} with status ${response.status} in ${headersTime - startTime}ms`;
 
     if (!response.ok) {
       const shouldRetry = await this.shouldRetry(response);
@@ -860,12 +757,7 @@ export class Augno {
 
     const headers = buildHeaders([
       idempotencyHeaders,
-      {
-        Accept: 'application/json',
-        'User-Agent': this.getUserAgent(),
-        'Augno-Version': '1.0.forge-preview.1',
-        'Augno-Account': this.augnoAccountID,
-      },
+      { Accept: 'application/json', 'User-Agent': this.getUserAgent(), 'Augno-Account': this.augnoAccountID },
       await this.authHeaders(options),
       this._options.defaultHeaders,
       bodyHeaders,

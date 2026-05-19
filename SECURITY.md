@@ -20,7 +20,7 @@ or products provided by Augno, please follow the respective company's security r
 
 ### Augno Terms and Policies
 
-Please contact hello@augno.com for any questions or concerns regarding the security of our services.
+Please contact support@augno.com for any questions or concerns regarding the security of our services.
 
 ---
 
