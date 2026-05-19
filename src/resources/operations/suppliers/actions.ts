@@ -1,0 +1,42 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+import { APIResource } from '../../../core/resource';
+import { APIPromise } from '../../../core/api-promise';
+import { RequestOptions } from '../../../internal/request-options';
+
+/**
+ * List and manage suppliers.
+ */
+export class Actions extends APIResource {
+  /**
+   * Deletes multiple suppliers and their associated account relations, addresses,
+   * and account users.
+   *
+   * @example
+   * ```ts
+   * const response =
+   *   await client.operations.suppliers.actions.bulkDelete({
+   *     supplier_ids: ['ac_02kn5s7811g9qwce7cizr4e0mq'],
+   *   });
+   * ```
+   */
+  bulkDelete(body: ActionBulkDeleteParams, options?: RequestOptions): APIPromise<ActionBulkDeleteResponse> {
+    return this._client.post('/v1/operations/suppliers/actions/bulk-delete', { body, ...options });
+  }
+}
+
+export interface ActionBulkDeleteResponse {}
+
+export interface ActionBulkDeleteParams {
+  /**
+   * Supplier IDs to delete.
+   */
+  supplier_ids: Array<string>;
+}
+
+export declare namespace Actions {
+  export {
+    type ActionBulkDeleteResponse as ActionBulkDeleteResponse,
+    type ActionBulkDeleteParams as ActionBulkDeleteParams,
+  };
+}

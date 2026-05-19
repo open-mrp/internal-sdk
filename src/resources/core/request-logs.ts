@@ -1,0 +1,332 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+import { APIResource } from '../../core/resource';
+import * as AgentsAPI from '../ai/agents';
+import * as AccountsAPI from '../identity/accounts';
+import * as AlertsAPI from '../ai/alerts/alerts';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
+
+/**
+ * List and retrieve request logs.
+ */
+export class RequestLogs extends APIResource {
+  /**
+   * Returns a request log by ID.
+   *
+   * @example
+   * ```ts
+   * const requestLog = await client.core.requestLogs.retrieve(
+   *   'id',
+   * );
+   * ```
+   */
+  retrieve(
+    id: string,
+    query: RequestLogRetrieveParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<RequestLog> {
+    return this._client.get(path`/v1/core/request-logs/${id}`, { query, ...options });
+  }
+
+  /**
+   * Returns a paginated list of request logs.
+   *
+   * @example
+   * ```ts
+   * const response =
+   *   await client.core.requestLogs.retrieveRequestLogs();
+   * ```
+   */
+  retrieveRequestLogs(
+    query: RequestLogRetrieveRequestLogsParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<RequestLogRetrieveRequestLogsResponse> {
+    return this._client.get('/v1/core/request-logs', { query, ...options });
+  }
+}
+
+/**
+ * RequestLog is an API request log entry.
+ */
+export interface RequestLog {
+  /**
+   * Request log ID.
+   */
+  id: string;
+
+  /**
+   * Account with optional branding and portal sub-resources.
+   */
+  account: AccountsAPI.Account | null;
+
+  /**
+   * Reference to an actor (user, API key, or agent).
+   */
+  actor: AlertsAPI.Actor | null;
+
+  /**
+   * API version used.
+   */
+  api_version: string | null;
+
+  /**
+   * Client IP address.
+   */
+  client_ip: string | null;
+
+  /**
+   * When the log entry was created.
+   */
+  created_at: string;
+
+  /**
+   * API error code.
+   */
+  error_code: string | null;
+
+  /**
+   * Error message.
+   */
+  error_message: string | null;
+
+  /**
+   * Request host. Usually `api.augno.com`.
+   */
+  host: string;
+
+  /**
+   * User-provided idempotency key.
+   */
+  idempotency_key: string | null;
+
+  /**
+   * Request latency in microseconds.
+   */
+  latency_us: number;
+
+  /**
+   * HTTP method.
+   */
+  method: string;
+
+  /**
+   * _Normalized_ route template. For example `PATCH /v1/sales/customers/{id}` is the
+   * normalized route for a request route `PUT /v1/sales/customers/ac_...`.
+   */
+  normalized_route: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'request_log';
+
+  /**
+   * When the request occurred.
+   */
+  occurred_at: string;
+
+  /**
+   * Non-normalized request path.
+   */
+  path: string;
+
+  /**
+   * Query parameters. Encoded as a JSON value (object, array, string, number,
+   * boolean, or null), not a JSON-encoded string.
+   */
+  query_params: unknown | null;
+
+  /**
+   * Referrer header.
+   */
+  referrer: string | null;
+
+  /**
+   * Request body. Encoded as a JSON value (object, array, string, number, boolean,
+   * or null), not a JSON-encoded string.
+   */
+  request_body: unknown | null;
+
+  /**
+   * Response body. Encoded as a JSON value (object, array, string, number, boolean,
+   * or null), not a JSON-encoded string.
+   */
+  response_body: unknown | null;
+
+  /**
+   * HTTP status code.
+   */
+  status_code: number;
+
+  /**
+   * User agent.
+   */
+  user_agent: string | null;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface RequestLogRetrieveRequestLogsResponse {
+  /**
+   * Resources in this page.
+   */
+  data: Array<RequestLog>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: AgentsAPI.PageInfo;
+}
+
+export interface RequestLogRetrieveParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<
+    | 'account'
+    | 'actor'
+    | 'actor.role'
+    | 'actor.role.permissions'
+    | 'query_params'
+    | 'request_body'
+    | 'response_body'
+  >;
+}
+
+export interface RequestLogRetrieveRequestLogsParams {
+  /**
+   * Filter by the account ID _targeted_ by the request. The actor may be operating
+   * on behalf of a separate account.
+   */
+  account_ids?: Array<string>;
+
+  /**
+   * Filter by the actor identifier. `account_user.id` when `identity_type`=`user`,
+   * or an `api_key.id` when `identity_type`=`api_key`.
+   */
+  actor_ids?: Array<string>;
+
+  /**
+   * Filter by the actor type.
+   */
+  actor_types?: Array<'user' | 'api_key' | 'agent'>;
+
+  /**
+   * Cursor token used to retrieve the next or previous page of results.
+   */
+  cursor?: string;
+
+  /**
+   * Restricts results to request logs on or before this timestamp.
+   */
+  end_date?: string;
+
+  /**
+   * Filter by API error code.
+   */
+  error_codes?: Array<
+    | 'expired_token'
+    | 'api_key_expired'
+    | 'api_key_revoked'
+    | 'invalid_credentials'
+    | 'insufficient_permissions'
+    | 'payment_required'
+    | 'validation_failed'
+    | 'missing_field'
+    | 'invalid_format'
+    | 'method_not_allowed'
+    | 'resource_not_found'
+    | 'resource_exists'
+    | 'resource_conflict'
+    | 'resource_gone'
+    | 'idempotency_in_progress'
+    | 'limit_exceeded'
+    | 'registration_closed'
+    | 'rate_limit_exceeded'
+    | 'parameter_missing'
+    | 'parameter_invalid'
+    | 'parameter_unknown'
+    | 'parameters_exclusive'
+    | 'internal_error'
+    | 'service_unavailable'
+    | 'external_service_error'
+    | 'timeout'
+    | 'connection_error'
+    | 'request_timeout'
+    | 'client_closed_request'
+    | 'api_version_required'
+    | 'api_version_invalid'
+    | 'api_version_too_old'
+  >;
+
+  /**
+   * Filter by the request host. Typically, `api.augno.com`.
+   */
+  hosts?: Array<string>;
+
+  /**
+   * Filter by the user-provided idempotency key.
+   */
+  idempotency_key?: string;
+
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'account' | 'actor' | 'actor.role'>;
+
+  /**
+   * Maximum number of results per page (default: 100, max: 1000).
+   */
+  limit?: number;
+
+  /**
+   * Filter by the HTTP method.
+   */
+  methods?: Array<'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS'>;
+
+  /**
+   * Filter by the minimum latency in microseconds.
+   */
+  min_latency_us?: number;
+
+  /**
+   * Filter by the _normalized_ route template. For example
+   * `PATCH /v1/sales/customers/{id}` is the normalized route for a request route
+   * `PUT /v1/sales/customers/ac_...`.
+   */
+  normalized_routes?: Array<string>;
+
+  /**
+   * Search query used to filter results.
+   */
+  q?: string;
+
+  /**
+   * Restricts results to request logs on or after this timestamp.
+   */
+  start_date?: string;
+
+  /**
+   * Filter by the HTTP status code.
+   */
+  status_codes?: Array<number>;
+}
+
+export declare namespace RequestLogs {
+  export {
+    type RequestLog as RequestLog,
+    type RequestLogRetrieveRequestLogsResponse as RequestLogRetrieveRequestLogsResponse,
+    type RequestLogRetrieveParams as RequestLogRetrieveParams,
+    type RequestLogRetrieveRequestLogsParams as RequestLogRetrieveRequestLogsParams,
+  };
+}

@@ -1,0 +1,115 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+import Augno from '@augno/internal-sdk';
+
+const client = new Augno({
+  bearerToken: 'My Bearer Token',
+  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
+});
+
+describe('resource memories', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.ai.memories.create({
+      category: 'preference',
+      content: 'Customer prefers express shipping on all orders.',
+      importance: 0.8,
+      metadata: { source: 'support_ticket' },
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.ai.memories.create({
+      category: 'preference',
+      content: 'Customer prefers express shipping on all orders.',
+      importance: 0.8,
+      metadata: { source: 'support_ticket' },
+      entity_id: 'entity_id',
+      entity_type: 'entity_type',
+      expires_at: 'expires_at',
+    });
+  });
+
+  test('retrieve', async () => {
+    const responsePromise = client.ai.memories.retrieve('id');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update: only required params', async () => {
+    const responsePromise = client.ai.memories.update('id', {
+      category: 'category',
+      content: 'Customer prefers next-day shipping on all orders.',
+      importance: 0.9,
+      metadata: {},
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update: required and optional params', async () => {
+    const response = await client.ai.memories.update('id', {
+      category: 'category',
+      content: 'Customer prefers next-day shipping on all orders.',
+      importance: 0.9,
+      metadata: {},
+      entity_id: 'entity_id',
+      entity_type: 'entity_type',
+      expires_at: 'expires_at',
+    });
+  });
+
+  test('list', async () => {
+    const responsePromise = client.ai.memories.list();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.ai.memories.list(
+        {
+          category: 'category',
+          cursor: 'cursor',
+          entity_type: 'entity_type',
+          limit: 0,
+          q: 'q',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.ai.memories.delete('id');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+});

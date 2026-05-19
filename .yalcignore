@@ -1,6 +1,0 @@
-# Override .gitignore for yalc - don't ignore dist
-node_modules/
-*.tsbuildinfo
-.env
-.env.*
-

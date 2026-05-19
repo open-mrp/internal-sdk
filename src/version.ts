@@ -1,2 +1,1 @@
-// Auto-generated from OpenAPI spec. Do not edit manually.
-export const API_VERSION = "1.0.forge-preview.1" as const;
+export const VERSION = '3.4.12'; // x-release-please-version

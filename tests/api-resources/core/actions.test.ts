@@ -1,0 +1,98 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+import Augno from '@augno/internal-sdk';
+
+const client = new Augno({
+  bearerToken: 'My Bearer Token',
+  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
+});
+
+describe('resource actions', () => {
+  test('emailRecord: only required params', async () => {
+    const responsePromise = client.core.actions.emailRecord({ id: 'inv_abc123', type: 'invoice' });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('emailRecord: required and optional params', async () => {
+    const response = await client.core.actions.emailRecord({ id: 'inv_abc123', type: 'invoice' });
+  });
+
+  test('requestDemo: only required params', async () => {
+    const responsePromise = client.core.actions.requestDemo({
+      company: 'Acme Corp',
+      email: 'jane@example.com',
+      message: null,
+      name: 'Jane Smith',
+      phone_number: null,
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('requestDemo: required and optional params', async () => {
+    const response = await client.core.actions.requestDemo({
+      company: 'Acme Corp',
+      email: 'jane@example.com',
+      message: null,
+      name: 'Jane Smith',
+      phone_number: null,
+    });
+  });
+
+  test('submitFeedback: only required params', async () => {
+    const responsePromise = client.core.actions.submitFeedback({
+      answer: 'Very useful, but could use better documentation.',
+      page_url: null,
+      question: 'How would you rate this feature?',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('submitFeedback: required and optional params', async () => {
+    const response = await client.core.actions.submitFeedback({
+      answer: 'Very useful, but could use better documentation.',
+      page_url: null,
+      question: 'How would you rate this feature?',
+    });
+  });
+
+  test('updateCheckDuplicates: only required params', async () => {
+    const responsePromise = client.core.actions.updateCheckDuplicates({
+      customer_id: null,
+      record_number: 'INV-001',
+      type: 'invoice_number',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('updateCheckDuplicates: required and optional params', async () => {
+    const response = await client.core.actions.updateCheckDuplicates({
+      customer_id: null,
+      record_number: 'INV-001',
+      type: 'invoice_number',
+    });
+  });
+});

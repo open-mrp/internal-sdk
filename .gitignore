@@ -1,29 +1,12 @@
-# Dependencies
-node_modules/
-
-# Build output
-dist/
-
-# IDE
+.prism.log
+.stdy.log
+node_modules
+yarn-error.log
+codegen.log
+Brewfile.lock.json
+dist
+dist-deno
+/*.tgz
 .idea/
-.vscode/
-*.swp
-*.swo
+.eslintcache
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-npm-debug.log*
-
-# Environment
-.env
-.env.*
-
-# TypeScript
-*.tsbuildinfo
-
-# OpenAPI Specs
-specs/

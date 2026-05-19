@@ -1,0 +1,110 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+import Augno from '@augno/internal-sdk';
+
+const client = new Augno({
+  bearerToken: 'My Bearer Token',
+  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
+});
+
+describe('resource orderDiscounts', () => {
+  test('retrieve', async () => {
+    const responsePromise = client.sales.orderDiscounts.retrieve('id');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update', async () => {
+    const responsePromise = client.sales.orderDiscounts.update('id');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.sales.orderDiscounts.update(
+        'id',
+        {
+          amount: 'amount',
+          code: 'SAVE15',
+          discount_type: 'discount_type',
+          name: '15% Off',
+          percentage: 'percentage',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.sales.orderDiscounts.delete('id');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('orderDiscounts: only required params', async () => {
+    const responsePromise = client.sales.orderDiscounts.orderDiscounts({
+      code: 'SAVE10',
+      discount_type: 'percentage',
+      name: '10% Off',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('orderDiscounts: required and optional params', async () => {
+    const response = await client.sales.orderDiscounts.orderDiscounts({
+      code: 'SAVE10',
+      discount_type: 'percentage',
+      name: '10% Off',
+      amount: 'amount',
+      percentage: '10.000000000000000000000000000000',
+    });
+  });
+
+  test('retrieveOrderDiscounts', async () => {
+    const responsePromise = client.sales.orderDiscounts.retrieveOrderDiscounts();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('retrieveOrderDiscounts: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.sales.orderDiscounts.retrieveOrderDiscounts(
+        {
+          cursor: 'cursor',
+          limit: 0,
+          q: 'q',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
+  });
+});
