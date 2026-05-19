@@ -21,7 +21,9 @@ export class AccountPrices extends APIResource {
    * @example
    * ```ts
    * const accountPrice =
-   *   await client.sales.accountPrices.retrieve('id');
+   *   await client.sales.accountPrices.retrieve(
+   *     'acpr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -39,7 +41,7 @@ export class AccountPrices extends APIResource {
    * @example
    * ```ts
    * const accountPrice =
-   *   await client.sales.accountPrices.update('id', {
+   *   await client.sales.accountPrices.update('', {
    *     rate_value: '30.000000000000000000000000000000',
    *   });
    * ```
@@ -60,7 +62,9 @@ export class AccountPrices extends APIResource {
    * @example
    * ```ts
    * const accountPrice =
-   *   await client.sales.accountPrices.delete('id');
+   *   await client.sales.accountPrices.delete(
+   *     'acpr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<AccountPriceDeleteResponse> {

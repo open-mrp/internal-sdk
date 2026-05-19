@@ -32,7 +32,9 @@ export class Sandboxes extends APIResource {
    *
    * @example
    * ```ts
-   * const sandbox = await client.core.sandboxes.retrieve('id');
+   * const sandbox = await client.core.sandboxes.retrieve(
+   *   'sbac_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   retrieve(
@@ -64,7 +66,9 @@ export class Sandboxes extends APIResource {
    *
    * @example
    * ```ts
-   * const sandbox = await client.core.sandboxes.delete('id');
+   * const sandbox = await client.core.sandboxes.delete(
+   *   'sbac_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<SandboxDeleteResponse> {

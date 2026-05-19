@@ -16,7 +16,9 @@ export class SysProperties extends APIResource {
    * @example
    * ```ts
    * const sysProperty =
-   *   await client.core.sysProperties.retrieve('id');
+   *   await client.core.sysProperties.retrieve(
+   *     'sypp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<SysProperty> {
@@ -29,7 +31,7 @@ export class SysProperties extends APIResource {
    * @example
    * ```ts
    * const sysProperty = await client.core.sysProperties.update(
-   *   'id',
+   *   '',
    *   { value: 30 },
    * );
    * ```
@@ -50,7 +52,7 @@ export class SysProperties extends APIResource {
    * ```ts
    * const response =
    *   await client.core.sysProperties.retrieveLatestValue(
-   *     'type_code',
+   *     'example',
    *   );
    * ```
    */

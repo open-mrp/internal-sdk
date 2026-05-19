@@ -21,7 +21,9 @@ export class ProductionRuns extends APIResource {
    * @example
    * ```ts
    * const productionRunDetail =
-   *   await client.operations.productionRuns.retrieve('id');
+   *   await client.operations.productionRuns.retrieve(
+   *     'prru_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -38,7 +40,7 @@ export class ProductionRuns extends APIResource {
    * @example
    * ```ts
    * const productionRunDetail =
-   *   await client.operations.productionRuns.update('id', {
+   *   await client.operations.productionRuns.update('', {
    *     number: 'PR-00042',
    *     responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
    *   });
@@ -63,7 +65,9 @@ export class ProductionRuns extends APIResource {
    * @example
    * ```ts
    * const productionRun =
-   *   await client.operations.productionRuns.delete('id');
+   *   await client.operations.productionRuns.delete(
+   *     'prru_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<ProductionRunDeleteResponse> {

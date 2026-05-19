@@ -18,7 +18,7 @@ export class ChildAccounts extends APIResource {
    * ```ts
    * const childAccount =
    *   await client.identity.childAccounts.update(
-   *     'child_account_id',
+   *     'ac_01gf7a8200er3ar3pkfrb6kk29',
    *   );
    * ```
    */
@@ -33,7 +33,7 @@ export class ChildAccounts extends APIResource {
    * ```ts
    * const childAccount =
    *   await client.identity.childAccounts.delete(
-   *     'child_account_id',
+   *     'ac_01gf7a8200er3ar3pkfrb6kk29',
    *   );
    * ```
    */

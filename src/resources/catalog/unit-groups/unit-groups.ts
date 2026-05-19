@@ -32,7 +32,7 @@ export class UnitGroups extends APIResource {
    * @example
    * ```ts
    * const unitGroup = await client.catalog.unitGroups.retrieve(
-   *   'id',
+   *   'ug_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -50,7 +50,7 @@ export class UnitGroups extends APIResource {
    * @example
    * ```ts
    * const unitGroup = await client.catalog.unitGroups.update(
-   *   'id',
+   *   '',
    *   {
    *     base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *     name: 'Weight Units (Updated)',
@@ -74,7 +74,7 @@ export class UnitGroups extends APIResource {
    * @example
    * ```ts
    * const unitGroup = await client.catalog.unitGroups.delete(
-   *   'id',
+   *   'ug_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */

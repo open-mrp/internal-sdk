@@ -68,7 +68,7 @@ export class Customers extends APIResource {
    * @example
    * ```ts
    * const customer = await client.sales.customers.retrieve(
-   *   'id',
+   *   'ac_01gf7a8200er3ar3pkfrb6kk29',
    * );
    * ```
    */
@@ -86,7 +86,7 @@ export class Customers extends APIResource {
    *
    * @example
    * ```ts
-   * const customer = await client.sales.customers.update('id', {
+   * const customer = await client.sales.customers.update('', {
    *   default_carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *   freight_policy: 'billed_freight',
    *   name: 'Acme Corp Updated',
@@ -124,7 +124,9 @@ export class Customers extends APIResource {
    *
    * @example
    * ```ts
-   * const customer = await client.sales.customers.delete('id');
+   * const customer = await client.sales.customers.delete(
+   *   'ac_01gf7a8200er3ar3pkfrb6kk29',
+   * );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<CustomerDeleteResponse> {
@@ -170,7 +172,7 @@ export class Customers extends APIResource {
    * ```ts
    * const response =
    *   await client.sales.customers.retrieveFrequentlyOrderedProducts(
-   *     'id',
+   *     'ac_01gf7a8200er3ar3pkfrb6kk29',
    *   );
    * ```
    */

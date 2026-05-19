@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource materials', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.suppliers.materials.create('supplier_id', {
+    const responsePromise = client.operations.suppliers.materials.create('', {
       is_active: true,
       material_id: 'ml_01jm4r6700f8nwq3v5hx2d9ktp',
       supplier_part_number: 'SUP-PART-001',
@@ -24,7 +24,7 @@ describe('resource materials', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.operations.suppliers.materials.create('supplier_id', {
+    const response = await client.operations.suppliers.materials.create('', {
       is_active: true,
       material_id: 'ml_01jm4r6700f8nwq3v5hx2d9ktp',
       supplier_part_number: 'SUP-PART-001',
@@ -33,8 +33,8 @@ describe('resource materials', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.operations.suppliers.materials.retrieve('id', {
-      supplier_id: 'supplier_id',
+    const responsePromise = client.operations.suppliers.materials.retrieve('ml_01jm4r6700f8nwq3v5hx2d9ktp', {
+      supplier_id: 'example',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -46,16 +46,14 @@ describe('resource materials', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.operations.suppliers.materials.retrieve('id', {
-      supplier_id: 'supplier_id',
+    const response = await client.operations.suppliers.materials.retrieve('ml_01jm4r6700f8nwq3v5hx2d9ktp', {
+      supplier_id: 'example',
       include: ['material'],
     });
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.suppliers.materials.update('id', {
-      supplier_id: 'supplier_id',
-    });
+    const responsePromise = client.operations.suppliers.materials.update('', { supplier_id: '' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -66,8 +64,8 @@ describe('resource materials', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.suppliers.materials.update('id', {
-      supplier_id: 'supplier_id',
+    const response = await client.operations.suppliers.materials.update('', {
+      supplier_id: '',
       is_active: true,
       supplier_description: 'supplier_description',
       supplier_part_number: 'SUP-PART-002',
@@ -75,7 +73,7 @@ describe('resource materials', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.operations.suppliers.materials.list('supplier_id');
+    const responsePromise = client.operations.suppliers.materials.list('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -89,7 +87,7 @@ describe('resource materials', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.suppliers.materials.list(
-        'supplier_id',
+        'example',
         {
           cursor: 'cursor',
           include: ['material'],
@@ -102,8 +100,8 @@ describe('resource materials', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.operations.suppliers.materials.delete('id', {
-      supplier_id: 'supplier_id',
+    const responsePromise = client.operations.suppliers.materials.delete('ml_01jm4r6700f8nwq3v5hx2d9ktp', {
+      supplier_id: 'example',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -115,6 +113,8 @@ describe('resource materials', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.operations.suppliers.materials.delete('id', { supplier_id: 'supplier_id' });
+    const response = await client.operations.suppliers.materials.delete('ml_01jm4r6700f8nwq3v5hx2d9ktp', {
+      supplier_id: 'example',
+    });
   });
 });

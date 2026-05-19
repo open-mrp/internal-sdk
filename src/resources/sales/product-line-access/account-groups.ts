@@ -19,7 +19,7 @@ export class AccountGroups extends APIResource {
    * ```ts
    * const accountGroupProductLineAccess =
    *   await client.sales.productLineAccess.accountGroups.retrieve(
-   *     'account_group_id',
+   *     'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */
@@ -34,7 +34,7 @@ export class AccountGroups extends APIResource {
    * ```ts
    * const accountGroupProductLineAccess =
    *   await client.sales.productLineAccess.accountGroups.update(
-   *     'account_group_id',
+   *     '',
    *     { product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'] },
    *   );
    * ```
@@ -57,7 +57,7 @@ export class AccountGroups extends APIResource {
    * ```ts
    * const accountGroup =
    *   await client.sales.productLineAccess.accountGroups.delete(
-   *     'account_group_id',
+   *     'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */

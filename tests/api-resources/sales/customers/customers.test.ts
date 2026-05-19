@@ -80,7 +80,7 @@ describe('resource customers', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.customers.retrieve('id');
+    const responsePromise = client.sales.customers.retrieve('ac_01gf7a8200er3ar3pkfrb6kk29');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -94,7 +94,7 @@ describe('resource customers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.customers.retrieve(
-        'id',
+        'ac_01gf7a8200er3ar3pkfrb6kk29',
         { include: ['bill_to_address'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -102,7 +102,7 @@ describe('resource customers', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.customers.update('id');
+    const responsePromise = client.sales.customers.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -116,7 +116,7 @@ describe('resource customers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.customers.update(
-        'id',
+        '',
         {
           include: ['bill_to_address'],
           bill_to_address_id: 'bill_to_address_id',
@@ -191,7 +191,7 @@ describe('resource customers', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.customers.delete('id');
+    const responsePromise = client.sales.customers.delete('ac_01gf7a8200er3ar3pkfrb6kk29');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -241,7 +241,9 @@ describe('resource customers', () => {
   });
 
   test('retrieveFrequentlyOrderedProducts', async () => {
-    const responsePromise = client.sales.customers.retrieveFrequentlyOrderedProducts('id');
+    const responsePromise = client.sales.customers.retrieveFrequentlyOrderedProducts(
+      'ac_01gf7a8200er3ar3pkfrb6kk29',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

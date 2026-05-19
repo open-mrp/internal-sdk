@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource salesOrders', () => {
   test('retrieve', async () => {
-    const responsePromise = client.sales.salesOrders.retrieve('id');
+    const responsePromise = client.sales.salesOrders.retrieve('or_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource salesOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.salesOrders.retrieve(
-        'id',
+        'or_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['customer'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource salesOrders', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.salesOrders.update('id');
+    const responsePromise = client.sales.salesOrders.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource salesOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.salesOrders.update(
-        'id',
+        '',
         {
           include: ['customer'],
           acknowledgement_email_contacts: [{ account_user_id: 'account_user_id' }],
@@ -86,7 +86,7 @@ describe('resource salesOrders', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.salesOrders.delete('id');
+    const responsePromise = client.sales.salesOrders.delete('or_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -97,7 +97,9 @@ describe('resource salesOrders', () => {
   });
 
   test('checkout: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.checkout('id', { email: 'email' });
+    const responsePromise = client.sales.salesOrders.checkout('or_01jm4r6700f8nwq3v5hx2d9ktp', {
+      email: 'email',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -108,7 +110,7 @@ describe('resource salesOrders', () => {
   });
 
   test('checkout: required and optional params', async () => {
-    const response = await client.sales.salesOrders.checkout('id', {
+    const response = await client.sales.salesOrders.checkout('or_01jm4r6700f8nwq3v5hx2d9ktp', {
       email: 'email',
       cancel_url: 'cancel_url',
       success_url: 'success_url',

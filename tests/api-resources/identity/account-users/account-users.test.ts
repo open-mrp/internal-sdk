@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource accountUsers', () => {
   test('retrieve', async () => {
-    const responsePromise = client.identity.accountUsers.retrieve('id');
+    const responsePromise = client.identity.accountUsers.retrieve('acus_01gf7a8200er3ar3pkfrb6kk29');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource accountUsers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.identity.accountUsers.retrieve(
-        'id',
+        'acus_01gf7a8200er3ar3pkfrb6kk29',
         { include: ['role'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource accountUsers', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.identity.accountUsers.update('id', {
+    const responsePromise = client.identity.accountUsers.update('', {
       preferences: [{ enabled: true, notification_type: 'invoice' }],
     });
     const rawResponse = await responsePromise.asResponse();
@@ -44,7 +44,7 @@ describe('resource accountUsers', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.identity.accountUsers.update('id', {
+    const response = await client.identity.accountUsers.update('', {
       preferences: [{ enabled: true, notification_type: 'invoice' }],
       include: ['role'],
       department_id: 'dp_01gf7a8200er3ar3pkfrb6kk30',

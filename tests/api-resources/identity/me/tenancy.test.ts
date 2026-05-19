@@ -26,7 +26,7 @@ describe('resource tenancy', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.identity.me.tenancy.retrieve('vendor_account_id');
+    const responsePromise = client.identity.me.tenancy.retrieve('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -40,7 +40,7 @@ describe('resource tenancy', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.identity.me.tenancy.retrieve(
-        'vendor_account_id',
+        'example',
         {
           cursor: 'cursor',
           limit: 0,

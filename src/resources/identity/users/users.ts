@@ -19,7 +19,9 @@ export class Users extends APIResource {
    *
    * @example
    * ```ts
-   * const user = await client.identity.users.retrieve('id');
+   * const user = await client.identity.users.retrieve(
+   *   'us_01gf7a8200e9pvbd6bgyq395ae',
+   * );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<ActionsAPI.User> {
@@ -31,7 +33,7 @@ export class Users extends APIResource {
    *
    * @example
    * ```ts
-   * const user = await client.identity.users.update('id', {
+   * const user = await client.identity.users.update('', {
    *   email_verified: null,
    *   image_url:
    *     'https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg',

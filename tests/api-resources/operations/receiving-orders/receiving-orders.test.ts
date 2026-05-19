@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource receivingOrders', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.receivingOrders.retrieve('id');
+    const responsePromise = client.operations.receivingOrders.retrieve('rcor_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

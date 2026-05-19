@@ -28,7 +28,9 @@ describe('resource actions', () => {
   });
 
   test('createProductionRun', async () => {
-    const responsePromise = client.sales.salesOrders.actions.createProductionRun('id');
+    const responsePromise = client.sales.salesOrders.actions.createProductionRun(
+      'or_01jm4r6700f8nwq3v5hx2d9ktp',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -39,7 +41,7 @@ describe('resource actions', () => {
   });
 
   test('updateChangeStatus: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.actions.updateChangeStatus('id', {
+    const responsePromise = client.sales.salesOrders.actions.updateChangeStatus('', {
       send_email: true,
       status_change: 'issue',
     });
@@ -53,7 +55,7 @@ describe('resource actions', () => {
   });
 
   test('updateChangeStatus: required and optional params', async () => {
-    const response = await client.sales.salesOrders.actions.updateChangeStatus('id', {
+    const response = await client.sales.salesOrders.actions.updateChangeStatus('', {
       send_email: true,
       status_change: 'issue',
       include: ['customer'],

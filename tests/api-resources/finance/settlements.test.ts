@@ -44,7 +44,7 @@ describe('resource settlements', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.finance.settlements.retrieve('id');
+    const responsePromise = client.finance.settlements.retrieve('sl_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -58,7 +58,7 @@ describe('resource settlements', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.settlements.retrieve(
-        'id',
+        'sl_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['allocations'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -66,7 +66,7 @@ describe('resource settlements', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.finance.settlements.update('id', {
+    const responsePromise = client.finance.settlements.update('', {
       note: 'Partial payment applied',
       number: null,
       responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
@@ -81,7 +81,7 @@ describe('resource settlements', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.finance.settlements.update('id', {
+    const response = await client.finance.settlements.update('', {
       note: 'Partial payment applied',
       number: null,
       responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
@@ -118,7 +118,7 @@ describe('resource settlements', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.finance.settlements.delete('id');
+    const responsePromise = client.finance.settlements.delete('sl_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

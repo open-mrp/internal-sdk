@@ -19,7 +19,7 @@ export class Lines extends APIResource {
    * ```ts
    * const purchaseOrderLineDetail =
    *   await client.operations.purchaseOrders.lines.create(
-   *     'id',
+   *     'po_01jm4r6700f8nwq3v5hx2d9ktp',
    *     {
    *       product_id: 'product_id',
    *       product_sku: 'product_sku',
@@ -44,16 +44,13 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const purchaseOrderLineDetail =
-   *   await client.operations.purchaseOrders.lines.update(
-   *     'line_id',
-   *     {
-   *       id: 'id',
-   *       product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
-   *       product_sku: 'RAW-100',
-   *       quantity_value: '250',
-   *       unit_price_value: '15.00',
-   *     },
-   *   );
+   *   await client.operations.purchaseOrders.lines.update('', {
+   *     id: '',
+   *     product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     product_sku: 'RAW-100',
+   *     quantity_value: '250',
+   *     unit_price_value: '15.00',
+   *   });
    * ```
    */
   update(
@@ -75,8 +72,8 @@ export class Lines extends APIResource {
    * ```ts
    * const line =
    *   await client.operations.purchaseOrders.lines.delete(
-   *     'line_id',
-   *     { id: 'id' },
+   *     'example',
+   *     { id: 'po_01jm4r6700f8nwq3v5hx2d9ktp' },
    *   );
    * ```
    */

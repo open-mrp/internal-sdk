@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource volumeDiscounts', () => {
   test('retrieve', async () => {
-    const responsePromise = client.sales.volumeDiscounts.retrieve('id');
+    const responsePromise = client.sales.volumeDiscounts.retrieve('quds_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource volumeDiscounts', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.volumeDiscounts.retrieve(
-        'id',
+        'quds_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['customer_groups'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource volumeDiscounts', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.volumeDiscounts.update('id', {
+    const responsePromise = client.sales.volumeDiscounts.update('', {
       attribute_ids: ['string'],
       category_ids: ['string'],
       customer_group_ids: ['string'],
@@ -55,7 +55,7 @@ describe('resource volumeDiscounts', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.volumeDiscounts.update('id', {
+    const response = await client.sales.volumeDiscounts.update('', {
       attribute_ids: ['string'],
       category_ids: ['string'],
       customer_group_ids: ['string'],
@@ -81,7 +81,7 @@ describe('resource volumeDiscounts', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.volumeDiscounts.delete('id');
+    const responsePromise = client.sales.volumeDiscounts.delete('quds_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

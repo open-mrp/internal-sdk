@@ -74,7 +74,7 @@ export class Identity extends APIResource {
    *
    * @example
    * ```ts
-   * const identity = await client.identity.retrieve('slug');
+   * const identity = await client.identity.retrieve('example');
    * ```
    */
   retrieve(slug: string, options?: RequestOptions): APIPromise<IdentityRetrieveResponse> {

@@ -15,7 +15,7 @@ export class Photo extends APIResource {
    * @example
    * ```ts
    * const photo = await client.identity.users.photo.create(
-   *   'id',
+   *   'us_01gf7a8200e9pvbd6bgyq395ae',
    * );
    * ```
    */
@@ -28,7 +28,9 @@ export class Photo extends APIResource {
    *
    * @example
    * ```ts
-   * const photos = await client.identity.users.photo.list('id');
+   * const photos = await client.identity.users.photo.list(
+   *   'us_01gf7a8200e9pvbd6bgyq395ae',
+   * );
    * ```
    */
   list(id: string, options?: RequestOptions): APIPromise<PhotoListResponse> {

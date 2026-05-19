@@ -39,7 +39,7 @@ export class Materials extends APIResource {
    * @example
    * ```ts
    * const material = await client.catalog.materials.retrieve(
-   *   'id',
+   *   'it_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -56,10 +56,9 @@ export class Materials extends APIResource {
    *
    * @example
    * ```ts
-   * const material = await client.catalog.materials.update(
-   *   'id',
-   *   { sku: 'MAT-001-UPDATED' },
-   * );
+   * const material = await client.catalog.materials.update('', {
+   *   sku: 'MAT-001-UPDATED',
+   * });
    * ```
    */
   update(
@@ -92,7 +91,7 @@ export class Materials extends APIResource {
    * @example
    * ```ts
    * const material = await client.catalog.materials.delete(
-   *   'id',
+   *   'it_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */

@@ -50,7 +50,7 @@ describe('resource parts', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.parts.retrieve('id');
+    const responsePromise = client.catalog.parts.retrieve('it_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -63,12 +63,16 @@ describe('resource parts', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.catalog.parts.retrieve('id', { include: ['item'] }, { path: '/_stainless_unknown_path' }),
+      client.catalog.parts.retrieve(
+        'it_01jm4r6700f8nwq3v5hx2d9ktp',
+        { include: ['item'] },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.parts.update('id');
+    const responsePromise = client.catalog.parts.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -82,7 +86,7 @@ describe('resource parts', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.parts.update(
-        'id',
+        '',
         {
           include: ['item'],
           description: 'Deep groove ball bearing, 20x47x14mm',
@@ -125,7 +129,7 @@ describe('resource parts', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.parts.delete('id');
+    const responsePromise = client.catalog.parts.delete('it_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -17,7 +17,9 @@ export class Inventory extends APIResource {
    * @example
    * ```ts
    * const inventories =
-   *   await client.catalog.items.inventory.list('id');
+   *   await client.catalog.items.inventory.list(
+   *     'it_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   list(
@@ -36,7 +38,7 @@ export class Inventory extends APIResource {
    * @example
    * ```ts
    * const response =
-   *   await client.catalog.items.inventory.patchAll('id', {
+   *   await client.catalog.items.inventory.patchAll('', {
    *     customer_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
    *     location_id: 'lc_01gf7a8200er3ar3pkfrb6kk30',
    *     operation: 'adjust',

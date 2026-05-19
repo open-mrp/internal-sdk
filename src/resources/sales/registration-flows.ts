@@ -16,7 +16,7 @@ export class RegistrationFlows extends APIResource {
    * @example
    * ```ts
    * const registrationFlow =
-   *   await client.sales.registrationFlows.retrieve('slug');
+   *   await client.sales.registrationFlows.retrieve('example');
    * ```
    */
   retrieve(slug: string, options?: RequestOptions): APIPromise<RegistrationFlow> {
@@ -29,7 +29,7 @@ export class RegistrationFlows extends APIResource {
    * @example
    * ```ts
    * const registrationFlow =
-   *   await client.sales.registrationFlows.update('id', {
+   *   await client.sales.registrationFlows.update('', {
    *     customer_group_ids: ['string'],
    *     has_customer_group_ids: true,
    *     has_payment_term_ids: true,
@@ -54,7 +54,9 @@ export class RegistrationFlows extends APIResource {
    * @example
    * ```ts
    * const registrationFlow =
-   *   await client.sales.registrationFlows.delete('id');
+   *   await client.sales.registrationFlows.delete(
+   *     'rgfw_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<RegistrationFlowDeleteResponse> {

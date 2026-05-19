@@ -27,7 +27,9 @@ export class AccountUsers extends APIResource {
    * @example
    * ```ts
    * const accountUser =
-   *   await client.identity.accountUsers.retrieve('id');
+   *   await client.identity.accountUsers.retrieve(
+   *     'acus_01gf7a8200er3ar3pkfrb6kk29',
+   *   );
    * ```
    */
   retrieve(
@@ -44,7 +46,7 @@ export class AccountUsers extends APIResource {
    * @example
    * ```ts
    * const accountUser =
-   *   await client.identity.accountUsers.update('id', {
+   *   await client.identity.accountUsers.update('', {
    *     preferences: [
    *       { enabled: true, notification_type: 'invoice' },
    *     ],

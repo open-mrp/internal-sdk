@@ -17,8 +17,8 @@ export class Actions extends APIResource {
    * ```ts
    * const pickLineDetail =
    *   await client.operations.picks.lines.actions.updatePick(
-   *     'id',
-   *     { pick_id: 'pick_id' },
+   *     'example',
+   *     { pick_id: 'pk_01jm4r6700f8nwq3v5hx2d9ktp' },
    *   );
    * ```
    */
@@ -38,8 +38,8 @@ export class Actions extends APIResource {
    * ```ts
    * const pickLineDetail =
    *   await client.operations.picks.lines.actions.updateVoid(
-   *     'id',
-   *     { pick_id: 'pick_id' },
+   *     'example',
+   *     { pick_id: 'pk_01jm4r6700f8nwq3v5hx2d9ktp' },
    *   );
    * ```
    */

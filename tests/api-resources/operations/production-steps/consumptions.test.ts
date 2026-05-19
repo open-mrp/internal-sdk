@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource consumptions', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.productionSteps.consumptions.create('production_step_id', {
+    const responsePromise = client.operations.productionSteps.consumptions.create('', {
       item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_value: '10.000000000000000000000000000000',
@@ -26,7 +26,7 @@ describe('resource consumptions', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.operations.productionSteps.consumptions.create('production_step_id', {
+    const response = await client.operations.productionSteps.consumptions.create('', {
       item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_value: '10.000000000000000000000000000000',
@@ -38,9 +38,10 @@ describe('resource consumptions', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.operations.productionSteps.consumptions.retrieve('id', {
-      production_step_id: 'production_step_id',
-    });
+    const responsePromise = client.operations.productionSteps.consumptions.retrieve(
+      'cp_01jm4r6700f8nwq3v5hx2d9ktp',
+      { production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp' },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -51,15 +52,15 @@ describe('resource consumptions', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.operations.productionSteps.consumptions.retrieve('id', {
-      production_step_id: 'production_step_id',
-      include: ['consumed_item'],
-    });
+    const response = await client.operations.productionSteps.consumptions.retrieve(
+      'cp_01jm4r6700f8nwq3v5hx2d9ktp',
+      { production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp', include: ['consumed_item'] },
+    );
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.productionSteps.consumptions.update('id', {
-      production_step_id: 'production_step_id',
+    const responsePromise = client.operations.productionSteps.consumptions.update('', {
+      production_step_id: '',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -71,8 +72,8 @@ describe('resource consumptions', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.productionSteps.consumptions.update('id', {
-      production_step_id: 'production_step_id',
+    const response = await client.operations.productionSteps.consumptions.update('', {
+      production_step_id: '',
       include: ['consumed_item'],
       instructions: 'instructions',
       item_id: 'item_id',
@@ -84,9 +85,10 @@ describe('resource consumptions', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.operations.productionSteps.consumptions.delete('id', {
-      production_step_id: 'production_step_id',
-    });
+    const responsePromise = client.operations.productionSteps.consumptions.delete(
+      'cp_01jm4r6700f8nwq3v5hx2d9ktp',
+      { production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp' },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -97,9 +99,9 @@ describe('resource consumptions', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.operations.productionSteps.consumptions.delete('id', {
-      production_step_id: 'production_step_id',
-      include: ['consumed_item'],
-    });
+    const response = await client.operations.productionSteps.consumptions.delete(
+      'cp_01jm4r6700f8nwq3v5hx2d9ktp',
+      { production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp', include: ['consumed_item'] },
+    );
   });
 });

@@ -41,7 +41,9 @@ export class Units extends APIResource {
    *
    * @example
    * ```ts
-   * const unit = await client.catalog.units.retrieve('id');
+   * const unit = await client.catalog.units.retrieve(
+   *   'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   retrieve(
@@ -57,7 +59,7 @@ export class Units extends APIResource {
    *
    * @example
    * ```ts
-   * const unit = await client.catalog.units.update('id', {
+   * const unit = await client.catalog.units.update('', {
    *   abbreviation: 'kg',
    *   name: 'Kilogram',
    * });
@@ -91,7 +93,9 @@ export class Units extends APIResource {
    *
    * @example
    * ```ts
-   * const unit = await client.catalog.units.delete('id');
+   * const unit = await client.catalog.units.delete(
+   *   'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<UnitDeleteResponse> {

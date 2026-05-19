@@ -23,9 +23,7 @@ export class Accounts extends APIResource {
    * @example
    * ```ts
    * const response =
-   *   await client.finance.accounts.retrieveInvoices(
-   *     'account_id',
-   *   );
+   *   await client.finance.accounts.retrieveInvoices('example');
    * ```
    */
   retrieveInvoices(
@@ -44,7 +42,7 @@ export class Accounts extends APIResource {
    * ```ts
    * const response =
    *   await client.finance.accounts.retrieveTransactions(
-   *     'account_id',
+   *     'example',
    *   );
    * ```
    */

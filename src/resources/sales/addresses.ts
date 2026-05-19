@@ -34,7 +34,9 @@ export class Addresses extends APIResource {
    *
    * @example
    * ```ts
-   * const address = await client.sales.addresses.retrieve('id');
+   * const address = await client.sales.addresses.retrieve(
+   *   'ad_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<Address> {
@@ -46,7 +48,7 @@ export class Addresses extends APIResource {
    *
    * @example
    * ```ts
-   * const address = await client.sales.addresses.update('id', {
+   * const address = await client.sales.addresses.update('', {
    *   name: 'Warehouse',
    * });
    * ```
@@ -80,7 +82,9 @@ export class Addresses extends APIResource {
    *
    * @example
    * ```ts
-   * const address = await client.sales.addresses.delete('id');
+   * const address = await client.sales.addresses.delete(
+   *   'ad_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<AddressDeleteResponse> {

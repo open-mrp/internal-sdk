@@ -106,7 +106,7 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const shipmentDetail =
-   *   await client.operations.shipments.actions.ship('id', {
+   *   await client.operations.shipments.actions.ship('', {
    *     email_customer: true,
    *   });
    * ```
@@ -130,7 +130,9 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const shipmentDetail =
-   *   await client.operations.shipments.actions.void('id');
+   *   await client.operations.shipments.actions.void(
+   *     'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   void(id: string, options?: RequestOptions): APIPromise<ShipmentsAPI.ShipmentDetail> {

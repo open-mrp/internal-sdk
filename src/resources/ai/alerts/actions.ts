@@ -16,7 +16,9 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const agentAlert =
-   *   await client.ai.alerts.actions.acknowledge('id');
+   *   await client.ai.alerts.actions.acknowledge(
+   *     'agnf_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   acknowledge(

@@ -18,7 +18,7 @@ export class Batches extends APIResource {
    * ```ts
    * const listBatch =
    *   await client.operations.productionRuns.batches.create(
-   *     'id',
+   *     '',
    *     {
    *       batches: [
    *         {
@@ -48,7 +48,9 @@ export class Batches extends APIResource {
    * @example
    * ```ts
    * const listBatch =
-   *   await client.operations.productionRuns.batches.list('id');
+   *   await client.operations.productionRuns.batches.list(
+   *     'prru_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   list(

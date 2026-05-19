@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource locationTypes', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.locationTypes.retrieve('id');
+    const responsePromise = client.operations.locationTypes.retrieve('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

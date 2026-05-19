@@ -33,7 +33,7 @@ export class TenancyResource extends APIResource {
    * @example
    * ```ts
    * const tenancy = await client.identity.me.tenancy.retrieve(
-   *   'vendor_account_id',
+   *   'example',
    * );
    * ```
    */

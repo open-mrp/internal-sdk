@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource unitGroups', () => {
   test('retrieve', async () => {
-    const responsePromise = client.catalog.unitGroups.retrieve('id');
+    const responsePromise = client.catalog.unitGroups.retrieve('ug_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,12 +22,16 @@ describe('resource unitGroups', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.catalog.unitGroups.retrieve('id', { include: ['owner'] }, { path: '/_stainless_unknown_path' }),
+      client.catalog.unitGroups.retrieve(
+        'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+        { include: ['owner'] },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.unitGroups.update('id');
+    const responsePromise = client.catalog.unitGroups.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -41,7 +45,7 @@ describe('resource unitGroups', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.unitGroups.update(
-        'id',
+        '',
         {
           include: ['owner'],
           associated_units: [
@@ -62,7 +66,7 @@ describe('resource unitGroups', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.unitGroups.delete('id');
+    const responsePromise = client.catalog.unitGroups.delete('ug_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

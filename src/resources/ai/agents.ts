@@ -58,7 +58,7 @@ export class Agents extends APIResource {
    * @example
    * ```ts
    * const agentDefinition = await client.ai.agents.retrieve(
-   *   'id',
+   *   'agdf_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -75,10 +75,9 @@ export class Agents extends APIResource {
    *
    * @example
    * ```ts
-   * const agentDefinition = await client.ai.agents.update(
-   *   'id',
-   *   { name: 'Inventory Monitor' },
-   * );
+   * const agentDefinition = await client.ai.agents.update('', {
+   *   name: 'Inventory Monitor',
+   * });
    * ```
    */
   update(
@@ -110,7 +109,9 @@ export class Agents extends APIResource {
    *
    * @example
    * ```ts
-   * const agent = await client.ai.agents.delete('id');
+   * const agent = await client.ai.agents.delete(
+   *   'agdf_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<AgentDeleteResponse> {
@@ -123,7 +124,7 @@ export class Agents extends APIResource {
    * @example
    * ```ts
    * const agentDefinition = await client.ai.agents.updateStatus(
-   *   'id',
+   *   '',
    *   { status_code: 'active' },
    * );
    * ```

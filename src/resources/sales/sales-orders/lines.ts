@@ -18,7 +18,7 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const salesOrderLineDetail =
-   *   await client.sales.salesOrders.lines.create('id', {
+   *   await client.sales.salesOrders.lines.create('', {
    *     product_id: 'product_id',
    *     product_sku: 'product_sku',
    *     quantity_unit_id: 'quantity_unit_id',
@@ -41,8 +41,8 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const salesOrderLineDetail =
-   *   await client.sales.salesOrders.lines.update('line_id', {
-   *     id: 'id',
+   *   await client.sales.salesOrders.lines.update('', {
+   *     id: '',
    *     product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
    *     product_sku: 'WIDGET-001',
    *     quantity_value: '20',
@@ -65,8 +65,8 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const line = await client.sales.salesOrders.lines.delete(
-   *   'line_id',
-   *   { id: 'id' },
+   *   'example',
+   *   { id: 'or_01jm4r6700f8nwq3v5hx2d9ktp' },
    * );
    * ```
    */

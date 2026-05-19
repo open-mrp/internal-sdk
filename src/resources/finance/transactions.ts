@@ -42,7 +42,7 @@ export class Transactions extends APIResource {
    * @example
    * ```ts
    * const transactionDetail =
-   *   await client.finance.transactions.retrieve('id');
+   *   await client.finance.transactions.retrieve('example');
    * ```
    */
   retrieve(
@@ -59,7 +59,7 @@ export class Transactions extends APIResource {
    * @example
    * ```ts
    * const transactionDetail =
-   *   await client.finance.transactions.update('id', {
+   *   await client.finance.transactions.update('', {
    *     adjustment_type: null,
    *     amount: '750.00',
    *     clear_adjustment_type: false,
@@ -99,7 +99,7 @@ export class Transactions extends APIResource {
    * @example
    * ```ts
    * const transactionDetail =
-   *   await client.finance.transactions.delete('id');
+   *   await client.finance.transactions.delete('example');
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<TransactionDetail> {

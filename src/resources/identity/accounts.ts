@@ -16,7 +16,7 @@ export class Accounts extends APIResource {
    * @example
    * ```ts
    * const account = await client.identity.accounts.retrieve(
-   *   'id',
+   *   'ac_01gf7a8200eaj8fke1xvw4h50x',
    * );
    * ```
    */
@@ -33,10 +33,9 @@ export class Accounts extends APIResource {
    *
    * @example
    * ```ts
-   * const account = await client.identity.accounts.update(
-   *   'id',
-   *   { name: 'Acme Inc.' },
-   * );
+   * const account = await client.identity.accounts.update('', {
+   *   name: 'Acme Inc.',
+   * });
    * ```
    */
   update(
@@ -54,7 +53,9 @@ export class Accounts extends APIResource {
    * @example
    * ```ts
    * const response =
-   *   await client.identity.accounts.retrieveLogo('id');
+   *   await client.identity.accounts.retrieveLogo(
+   *     'ac_01gf7a8200eaj8fke1xvw4h50x',
+   *   );
    * ```
    */
   retrieveLogo(id: string, options?: RequestOptions): APIPromise<AccountRetrieveLogoResponse> {
@@ -67,7 +68,7 @@ export class Accounts extends APIResource {
    * @example
    * ```ts
    * const response = await client.identity.accounts.updatePhoto(
-   *   'id',
+   *   'ac_01gf7a8200eaj8fke1xvw4h50x',
    * );
    * ```
    */

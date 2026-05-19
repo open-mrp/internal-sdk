@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource lines', () => {
   test('update: only required params', async () => {
-    const responsePromise = client.operations.picks.lines.update('id', { pick_id: 'pick_id' });
+    const responsePromise = client.operations.picks.lines.update('', { pick_id: '' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,8 +20,8 @@ describe('resource lines', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.picks.lines.update('id', {
-      pick_id: 'pick_id',
+    const response = await client.operations.picks.lines.update('', {
+      pick_id: '',
       quantity_value: '10.000000000000000000000000000000',
     });
   });

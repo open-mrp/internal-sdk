@@ -37,7 +37,7 @@ describe('resource memories', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.ai.memories.retrieve('id');
+    const responsePromise = client.ai.memories.retrieve('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,7 +48,7 @@ describe('resource memories', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.ai.memories.update('id', {
+    const responsePromise = client.ai.memories.update('', {
       category: 'category',
       content: 'Customer prefers next-day shipping on all orders.',
       importance: 0.9,
@@ -64,7 +64,7 @@ describe('resource memories', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.ai.memories.update('id', {
+    const response = await client.ai.memories.update('', {
       category: 'category',
       content: 'Customer prefers next-day shipping on all orders.',
       importance: 0.9,
@@ -103,7 +103,7 @@ describe('resource memories', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.ai.memories.delete('id');
+    const responsePromise = client.ai.memories.delete('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -17,14 +17,11 @@ export class Materials extends APIResource {
    * @example
    * ```ts
    * const supplierMaterial =
-   *   await client.operations.suppliers.materials.create(
-   *     'supplier_id',
-   *     {
-   *       is_active: true,
-   *       material_id: 'ml_01jm4r6700f8nwq3v5hx2d9ktp',
-   *       supplier_part_number: 'SUP-PART-001',
-   *     },
-   *   );
+   *   await client.operations.suppliers.materials.create('', {
+   *     is_active: true,
+   *     material_id: 'ml_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     supplier_part_number: 'SUP-PART-001',
+   *   });
    * ```
    */
   create(
@@ -42,8 +39,8 @@ export class Materials extends APIResource {
    * ```ts
    * const supplierMaterial =
    *   await client.operations.suppliers.materials.retrieve(
-   *     'id',
-   *     { supplier_id: 'supplier_id' },
+   *     'ml_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { supplier_id: 'example' },
    *   );
    * ```
    */
@@ -65,8 +62,8 @@ export class Materials extends APIResource {
    * @example
    * ```ts
    * const supplierMaterial =
-   *   await client.operations.suppliers.materials.update('id', {
-   *     supplier_id: 'supplier_id',
+   *   await client.operations.suppliers.materials.update('', {
+   *     supplier_id: '',
    *     supplier_part_number: 'SUP-PART-002',
    *   });
    * ```
@@ -86,7 +83,7 @@ export class Materials extends APIResource {
    * ```ts
    * const materials =
    *   await client.operations.suppliers.materials.list(
-   *     'supplier_id',
+   *     'example',
    *   );
    * ```
    */
@@ -104,9 +101,10 @@ export class Materials extends APIResource {
    * @example
    * ```ts
    * const supplierMaterial =
-   *   await client.operations.suppliers.materials.delete('id', {
-   *     supplier_id: 'supplier_id',
-   *   });
+   *   await client.operations.suppliers.materials.delete(
+   *     'ml_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { supplier_id: 'example' },
+   *   );
    * ```
    */
   delete(id: string, params: MaterialDeleteParams, options?: RequestOptions): APIPromise<SupplierMaterial> {

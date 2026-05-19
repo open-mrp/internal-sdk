@@ -21,13 +21,10 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const receivingOrderLine =
-   *   await client.operations.receivingOrders.lines.update(
-   *     'id',
-   *     {
-   *       receiving_order_id: 'receiving_order_id',
-   *       quantity_value: '50',
-   *     },
-   *   );
+   *   await client.operations.receivingOrders.lines.update('', {
+   *     receiving_order_id: '',
+   *     quantity_value: '50',
+   *   });
    * ```
    */
   update(id: string, params: LineUpdateParams, options?: RequestOptions): APIPromise<ReceivingOrderLine> {

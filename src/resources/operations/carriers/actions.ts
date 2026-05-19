@@ -18,7 +18,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.carriers.actions.initiateOAuth(
-   *     'id',
+   *     '',
    *     {
    *       redirect_uri:
    *         'https://app.example.com/carriers/oauth/callback',
@@ -46,7 +46,7 @@ export class Actions extends APIResource {
    * ```ts
    * const carrier =
    *   await client.operations.carriers.actions.syncOptions(
-   *     'id',
+   *     'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */

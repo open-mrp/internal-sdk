@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('stock: only required params', async () => {
-    const responsePromise = client.operations.receivingOrders.actions.stock('id', {
+    const responsePromise = client.operations.receivingOrders.actions.stock('', {
       line_items: [
         { allocations: [{ quantity: '100' }], receiving_order_line_id: 'rcorln_01jm4r6700f8nwq3v5hx2d9ktp' },
       ],
@@ -24,7 +24,7 @@ describe('resource actions', () => {
   });
 
   test('stock: required and optional params', async () => {
-    const response = await client.operations.receivingOrders.actions.stock('id', {
+    const response = await client.operations.receivingOrders.actions.stock('', {
       line_items: [
         {
           allocations: [{ quantity: '100', location_id: 'lc_01gf7a8200er3ar3pkfrb6kk30' }],
@@ -37,7 +37,9 @@ describe('resource actions', () => {
   });
 
   test('updateReceive', async () => {
-    const responsePromise = client.operations.receivingOrders.actions.updateReceive('id');
+    const responsePromise = client.operations.receivingOrders.actions.updateReceive(
+      'rcor_01jm4r6700f8nwq3v5hx2d9ktp',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,7 +50,9 @@ describe('resource actions', () => {
   });
 
   test('updateVoid', async () => {
-    const responsePromise = client.operations.receivingOrders.actions.updateVoid('id');
+    const responsePromise = client.operations.receivingOrders.actions.updateVoid(
+      'rcor_01jm4r6700f8nwq3v5hx2d9ktp',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

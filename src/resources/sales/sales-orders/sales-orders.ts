@@ -45,7 +45,9 @@ export class SalesOrders extends APIResource {
    * @example
    * ```ts
    * const salesOrderDetail =
-   *   await client.sales.salesOrders.retrieve('id');
+   *   await client.sales.salesOrders.retrieve(
+   *     'or_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -62,7 +64,7 @@ export class SalesOrders extends APIResource {
    * @example
    * ```ts
    * const salesOrderDetail =
-   *   await client.sales.salesOrders.update('id', {
+   *   await client.sales.salesOrders.update('', {
    *     carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *     note: 'Updated shipping instructions',
    *     priority_code: 'normal',
@@ -86,7 +88,7 @@ export class SalesOrders extends APIResource {
    * @example
    * ```ts
    * const salesOrder = await client.sales.salesOrders.delete(
-   *   'id',
+   *   'or_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -100,7 +102,7 @@ export class SalesOrders extends APIResource {
    * @example
    * ```ts
    * const response = await client.sales.salesOrders.checkout(
-   *   'id',
+   *   'or_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { email: 'email' },
    * );
    * ```

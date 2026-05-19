@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource lines', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.lines.create('id', {
+    const responsePromise = client.sales.salesOrders.lines.create('', {
       product_id: 'product_id',
       product_sku: 'product_sku',
       quantity_unit_id: 'quantity_unit_id',
@@ -28,7 +28,7 @@ describe('resource lines', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.sales.salesOrders.lines.create('id', {
+    const response = await client.sales.salesOrders.lines.create('', {
       product_id: 'product_id',
       product_sku: 'product_sku',
       quantity_unit_id: 'quantity_unit_id',
@@ -46,7 +46,7 @@ describe('resource lines', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.lines.update('line_id', { id: 'id' });
+    const responsePromise = client.sales.salesOrders.lines.update('', { id: '' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -57,8 +57,8 @@ describe('resource lines', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.salesOrders.lines.update('line_id', {
-      id: 'id',
+    const response = await client.sales.salesOrders.lines.update('', {
+      id: '',
       edi_line_item_id: 'edi_line_item_id',
       item_id: 'item_id',
       product_description: 'product_description',
@@ -76,7 +76,9 @@ describe('resource lines', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.lines.delete('line_id', { id: 'id' });
+    const responsePromise = client.sales.salesOrders.lines.delete('example', {
+      id: 'or_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -87,6 +89,8 @@ describe('resource lines', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.sales.salesOrders.lines.delete('line_id', { id: 'id' });
+    const response = await client.sales.salesOrders.lines.delete('example', {
+      id: 'or_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
   });
 });

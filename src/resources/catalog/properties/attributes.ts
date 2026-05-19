@@ -17,14 +17,11 @@ export class Attributes extends APIResource {
    * @example
    * ```ts
    * const attribute =
-   *   await client.catalog.properties.attributes.create(
-   *     'property_id',
-   *     {
-   *       sort_order: 1,
-   *       value: 'Red',
-   *       color: 'red',
-   *     },
-   *   );
+   *   await client.catalog.properties.attributes.create('', {
+   *     sort_order: 1,
+   *     value: 'Red',
+   *     color: 'red',
+   *   });
    * ```
    */
   create(propertyID: string, body: AttributeCreateParams, options?: RequestOptions): APIPromise<Attribute> {
@@ -38,8 +35,8 @@ export class Attributes extends APIResource {
    * ```ts
    * const attribute =
    *   await client.catalog.properties.attributes.retrieve(
-   *     'id',
-   *     { property_id: 'property_id' },
+   *     'at_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { property_id: 'pp_01jm4r6700f8nwq3v5hx2d9ktp' },
    *   );
    * ```
    */
@@ -54,8 +51,8 @@ export class Attributes extends APIResource {
    * @example
    * ```ts
    * const attribute =
-   *   await client.catalog.properties.attributes.update('id', {
-   *     property_id: 'property_id',
+   *   await client.catalog.properties.attributes.update('', {
+   *     property_id: '',
    *     value: 'Blue',
    *   });
    * ```
@@ -75,7 +72,7 @@ export class Attributes extends APIResource {
    * ```ts
    * const listAttribute =
    *   await client.catalog.properties.attributes.list(
-   *     'property_id',
+   *     'pp_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */
@@ -93,9 +90,10 @@ export class Attributes extends APIResource {
    * @example
    * ```ts
    * const attribute =
-   *   await client.catalog.properties.attributes.delete('id', {
-   *     property_id: 'property_id',
-   *   });
+   *   await client.catalog.properties.attributes.delete(
+   *     'at_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { property_id: 'pp_01jm4r6700f8nwq3v5hx2d9ktp' },
+   *   );
    * ```
    */
   delete(

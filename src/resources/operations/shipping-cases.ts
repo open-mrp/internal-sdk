@@ -18,7 +18,9 @@ export class ShippingCases extends APIResource {
    * @example
    * ```ts
    * const shippingCase =
-   *   await client.operations.shippingCases.retrieve('id');
+   *   await client.operations.shippingCases.retrieve(
+   *     'shcs_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -35,7 +37,7 @@ export class ShippingCases extends APIResource {
    * @example
    * ```ts
    * const shippingCase =
-   *   await client.operations.shippingCases.update('id', {
+   *   await client.operations.shippingCases.update('', {
    *     freight_amount_unit_id: null,
    *     freight_amount_value: null,
    *     freight_weight_unit_id: null,
@@ -59,7 +61,9 @@ export class ShippingCases extends APIResource {
    * @example
    * ```ts
    * const shippingCase =
-   *   await client.operations.shippingCases.delete('id');
+   *   await client.operations.shippingCases.delete(
+   *     'shcs_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<ShippingCaseDeleteResponse> {
@@ -72,7 +76,9 @@ export class ShippingCases extends APIResource {
    * @example
    * ```ts
    * const response =
-   *   await client.operations.shippingCases.retrieveLabel('id');
+   *   await client.operations.shippingCases.retrieveLabel(
+   *     'shcs_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieveLabel(id: string, options?: RequestOptions): APIPromise<ShippingCaseRetrieveLabelResponse> {

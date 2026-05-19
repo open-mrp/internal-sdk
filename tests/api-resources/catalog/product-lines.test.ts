@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource productLines', () => {
   test('retrieve', async () => {
-    const responsePromise = client.catalog.productLines.retrieve('id');
+    const responsePromise = client.catalog.productLines.retrieve('pl_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource productLines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productLines.retrieve(
-        'id',
+        'pl_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource productLines', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.productLines.update('id');
+    const responsePromise = client.catalog.productLines.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource productLines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productLines.update(
-        'id',
+        '',
         {
           include: ['owner'],
           commission_policy: 'commission_applied',
@@ -59,7 +59,7 @@ describe('resource productLines', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.productLines.delete('id');
+    const responsePromise = client.catalog.productLines.delete('pl_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

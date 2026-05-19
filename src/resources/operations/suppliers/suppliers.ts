@@ -62,7 +62,9 @@ export class Suppliers extends APIResource {
    * @example
    * ```ts
    * const supplierDetail =
-   *   await client.operations.suppliers.retrieve('id');
+   *   await client.operations.suppliers.retrieve(
+   *     'ac_02kn5s7811g9qwce7cizr4e0mq',
+   *   );
    * ```
    */
   retrieve(
@@ -80,7 +82,7 @@ export class Suppliers extends APIResource {
    * @example
    * ```ts
    * const supplierDetail =
-   *   await client.operations.suppliers.update('id', {
+   *   await client.operations.suppliers.update('', {
    *     bill_to_address_id: null,
    *     name: 'Acme Supplies LLC',
    *     note: 'Updated contact info',
@@ -116,7 +118,9 @@ export class Suppliers extends APIResource {
    * @example
    * ```ts
    * const supplierDetail =
-   *   await client.operations.suppliers.delete('id');
+   *   await client.operations.suppliers.delete(
+   *     'ac_02kn5s7811g9qwce7cizr4e0mq',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<SupplierDetail> {

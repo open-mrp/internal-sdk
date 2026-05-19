@@ -17,7 +17,7 @@ export class Actions extends APIResource {
    * ```ts
    * const receivingOrder =
    *   await client.operations.receivingOrders.actions.stock(
-   *     'id',
+   *     '',
    *     {
    *       line_items: [
    *         {
@@ -50,7 +50,7 @@ export class Actions extends APIResource {
    * ```ts
    * const receivingOrder =
    *   await client.operations.receivingOrders.actions.updateReceive(
-   *     'id',
+   *     'rcor_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */
@@ -65,7 +65,7 @@ export class Actions extends APIResource {
    * ```ts
    * const receivingOrder =
    *   await client.operations.receivingOrders.actions.updateVoid(
-   *     'id',
+   *     'rcor_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */

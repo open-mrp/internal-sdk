@@ -55,7 +55,7 @@ describe('resource products', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.products.retrieve('id');
+    const responsePromise = client.catalog.products.retrieve('pd_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,7 +69,7 @@ describe('resource products', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.products.retrieve(
-        'id',
+        'pd_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['product_line'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -77,7 +77,7 @@ describe('resource products', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.products.update('id');
+    const responsePromise = client.catalog.products.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -91,7 +91,7 @@ describe('resource products', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.products.update(
-        'id',
+        '',
         {
           include: ['product_line'],
           description: null,
@@ -143,7 +143,7 @@ describe('resource products', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.products.delete('id');
+    const responsePromise = client.catalog.products.delete('pd_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -157,7 +157,7 @@ describe('resource products', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.products.delete(
-        'id',
+        'pd_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['product_line'] },
         { path: '/_stainless_unknown_path' },
       ),

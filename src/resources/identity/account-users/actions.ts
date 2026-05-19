@@ -16,7 +16,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.identity.accountUsers.actions.updateActivate(
-   *     'id',
+   *     'acus_01gf7a8200er3ar3pkfrb6kk29',
    *   );
    * ```
    */
@@ -32,7 +32,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.identity.accountUsers.actions.updateDisable(
-   *     'id',
+   *     'acus_01gf7a8200er3ar3pkfrb6kk29',
    *   );
    * ```
    */
@@ -47,7 +47,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.identity.accountUsers.actions.updateRemove(
-   *     'id',
+   *     'acus_01gf7a8200er3ar3pkfrb6kk29',
    *   );
    * ```
    */

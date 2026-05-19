@@ -17,7 +17,9 @@ export class AccountStatuses extends APIResource {
    * @example
    * ```ts
    * const accountStatus =
-   *   await client.sales.accountStatuses.retrieve('id');
+   *   await client.sales.accountStatuses.retrieve(
+   *     'acss_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(

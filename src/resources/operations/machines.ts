@@ -33,7 +33,7 @@ export class Machines extends APIResource {
    * @example
    * ```ts
    * const machine = await client.operations.machines.retrieve(
-   *   'id',
+   *   'mc_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -51,7 +51,7 @@ export class Machines extends APIResource {
    * @example
    * ```ts
    * const machine = await client.operations.machines.update(
-   *   'id',
+   *   '',
    *   { name: 'Updated CNC Router' },
    * );
    * ```
@@ -82,7 +82,7 @@ export class Machines extends APIResource {
    * @example
    * ```ts
    * const machine = await client.operations.machines.delete(
-   *   'id',
+   *   'mc_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */

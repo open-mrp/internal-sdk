@@ -17,7 +17,7 @@ export class Priorities extends APIResource {
    * @example
    * ```ts
    * const priority = await client.sales.priorities.retrieve(
-   *   'id',
+   *   'pi_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */

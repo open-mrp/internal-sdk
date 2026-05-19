@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource registrationFlows', () => {
   test('retrieve', async () => {
-    const responsePromise = client.sales.registrationFlows.retrieve('slug');
+    const responsePromise = client.sales.registrationFlows.retrieve('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource registrationFlows', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.registrationFlows.update('id', {
+    const responsePromise = client.sales.registrationFlows.update('', {
       customer_group_ids: ['string'],
       has_customer_group_ids: true,
       has_payment_term_ids: true,
@@ -38,7 +38,7 @@ describe('resource registrationFlows', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.registrationFlows.update('id', {
+    const response = await client.sales.registrationFlows.update('', {
       customer_group_ids: ['string'],
       has_customer_group_ids: true,
       has_payment_term_ids: true,
@@ -50,7 +50,7 @@ describe('resource registrationFlows', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.registrationFlows.delete('id');
+    const responsePromise = client.sales.registrationFlows.delete('rgfw_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

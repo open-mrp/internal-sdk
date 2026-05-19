@@ -16,7 +16,9 @@ export class ProductTypes extends APIResource {
    * @example
    * ```ts
    * const productType =
-   *   await client.catalog.productTypes.retrieve('id');
+   *   await client.catalog.productTypes.retrieve(
+   *     'prty_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<ProductType> {
@@ -29,7 +31,7 @@ export class ProductTypes extends APIResource {
    * @example
    * ```ts
    * const productType =
-   *   await client.catalog.productTypes.update('id', {
+   *   await client.catalog.productTypes.update('', {
    *     code: 'service',
    *     name: 'Service',
    *   });
@@ -49,7 +51,9 @@ export class ProductTypes extends APIResource {
    * @example
    * ```ts
    * const productType =
-   *   await client.catalog.productTypes.delete('id');
+   *   await client.catalog.productTypes.delete(
+   *     'prty_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<ProductTypeDeleteResponse> {

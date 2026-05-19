@@ -16,7 +16,7 @@ export class EdiRuns extends APIResource {
    * @example
    * ```ts
    * const ediRun = await client.operations.ediRuns.retrieve(
-   *   'id',
+   *   'example',
    * );
    * ```
    */

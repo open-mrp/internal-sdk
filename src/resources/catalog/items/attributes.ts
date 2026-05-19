@@ -17,8 +17,8 @@ export class Attributes extends APIResource {
    * @example
    * ```ts
    * const item = await client.catalog.items.attributes.update(
-   *   'attribute_id',
-   *   { id: 'id' },
+   *   'at_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   { id: 'it_01jm4r6700f8nwq3v5hx2d9ktp' },
    * );
    * ```
    */
@@ -40,8 +40,8 @@ export class Attributes extends APIResource {
    * @example
    * ```ts
    * const item = await client.catalog.items.attributes.delete(
-   *   'attribute_id',
-   *   { id: 'id' },
+   *   'at_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   { id: 'it_01jm4r6700f8nwq3v5hx2d9ktp' },
    * );
    * ```
    */

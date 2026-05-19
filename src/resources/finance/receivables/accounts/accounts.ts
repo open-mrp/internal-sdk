@@ -21,7 +21,7 @@ export class Accounts extends APIResource {
    * ```ts
    * const listReceivableEntry =
    *   await client.finance.receivables.accounts.retrieve(
-   *     'account_id',
+   *     'ac_01gf7a8200eaj8fke1xvw4h50x',
    *   );
    * ```
    */

@@ -38,7 +38,9 @@ export class Departments extends APIResource {
    * @example
    * ```ts
    * const department =
-   *   await client.operations.departments.retrieve('id');
+   *   await client.operations.departments.retrieve(
+   *     'dp_01gf7a8200er3ar3pkfrb6kk30',
+   *   );
    * ```
    */
   retrieve(
@@ -56,7 +58,7 @@ export class Departments extends APIResource {
    * @example
    * ```ts
    * const department =
-   *   await client.operations.departments.update('id', {
+   *   await client.operations.departments.update('', {
    *     machine_ids: ['string'],
    *     scanning_station_ids: ['string'],
    *     name: 'Production',
@@ -90,7 +92,9 @@ export class Departments extends APIResource {
    * @example
    * ```ts
    * const department =
-   *   await client.operations.departments.delete('id');
+   *   await client.operations.departments.delete(
+   *     'dp_01gf7a8200er3ar3pkfrb6kk30',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<DepartmentDeleteResponse> {

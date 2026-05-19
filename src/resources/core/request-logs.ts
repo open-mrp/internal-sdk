@@ -18,7 +18,7 @@ export class RequestLogs extends APIResource {
    * @example
    * ```ts
    * const requestLog = await client.core.requestLogs.retrieve(
-   *   'id',
+   *   'rq_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */

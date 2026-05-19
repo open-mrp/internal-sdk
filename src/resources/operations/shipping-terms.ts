@@ -19,7 +19,9 @@ export class ShippingTerms extends APIResource {
    * @example
    * ```ts
    * const shippingTerm =
-   *   await client.operations.shippingTerms.retrieve('id');
+   *   await client.operations.shippingTerms.retrieve(
+   *     'shtm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -37,7 +39,7 @@ export class ShippingTerms extends APIResource {
    * @example
    * ```ts
    * const shippingTerm =
-   *   await client.operations.shippingTerms.update('id', {
+   *   await client.operations.shippingTerms.update('', {
    *     name: 'Collect',
    *   });
    * ```
@@ -62,7 +64,9 @@ export class ShippingTerms extends APIResource {
    * @example
    * ```ts
    * const shippingTerm =
-   *   await client.operations.shippingTerms.delete('id');
+   *   await client.operations.shippingTerms.delete(
+   *     'shtm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<ShippingTermDeleteResponse> {

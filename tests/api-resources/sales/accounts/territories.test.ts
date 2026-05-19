@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource territories', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.sales.accounts.territories.create('account_id', {
+    const responsePromise = client.sales.accounts.territories.create('', {
       sales_rep_id: 'au_01jm4r6700f8nwq3v5hx2d9ktp',
       state: 'NY',
     });
@@ -23,7 +23,7 @@ describe('resource territories', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.sales.accounts.territories.create('account_id', {
+    const response = await client.sales.accounts.territories.create('', {
       sales_rep_id: 'au_01jm4r6700f8nwq3v5hx2d9ktp',
       state: 'NY',
       include: ['sales_rep'],
@@ -34,7 +34,9 @@ describe('resource territories', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.sales.accounts.territories.retrieve('id', { account_id: 'account_id' });
+    const responsePromise = client.sales.accounts.territories.retrieve('te_01jm4r6700f8nwq3v5hx2d9ktp', {
+      account_id: 'ac_01gf7a8200eaj8fke1xvw4h50x',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,14 +47,14 @@ describe('resource territories', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.sales.accounts.territories.retrieve('id', {
-      account_id: 'account_id',
+    const response = await client.sales.accounts.territories.retrieve('te_01jm4r6700f8nwq3v5hx2d9ktp', {
+      account_id: 'ac_01gf7a8200eaj8fke1xvw4h50x',
       include: ['sales_rep'],
     });
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.accounts.territories.update('id', { account_id: 'account_id' });
+    const responsePromise = client.sales.accounts.territories.update('', { account_id: '' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -63,8 +65,8 @@ describe('resource territories', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.accounts.territories.update('id', {
-      account_id: 'account_id',
+    const response = await client.sales.accounts.territories.update('', {
+      account_id: '',
       include: ['sales_rep'],
       clear_end_zipcode: true,
       clear_product_line: true,
@@ -78,7 +80,7 @@ describe('resource territories', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.sales.accounts.territories.list('account_id');
+    const responsePromise = client.sales.accounts.territories.list('ac_01gf7a8200eaj8fke1xvw4h50x');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -92,7 +94,7 @@ describe('resource territories', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.accounts.territories.list(
-        'account_id',
+        'ac_01gf7a8200eaj8fke1xvw4h50x',
         {
           cursor: 'cursor',
           include: ['sales_rep'],
@@ -105,7 +107,9 @@ describe('resource territories', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.sales.accounts.territories.delete('id', { account_id: 'account_id' });
+    const responsePromise = client.sales.accounts.territories.delete('te_01jm4r6700f8nwq3v5hx2d9ktp', {
+      account_id: 'ac_01gf7a8200eaj8fke1xvw4h50x',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -116,6 +120,8 @@ describe('resource territories', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.sales.accounts.territories.delete('id', { account_id: 'account_id' });
+    const response = await client.sales.accounts.territories.delete('te_01jm4r6700f8nwq3v5hx2d9ktp', {
+      account_id: 'ac_01gf7a8200eaj8fke1xvw4h50x',
+    });
   });
 });

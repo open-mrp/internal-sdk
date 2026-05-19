@@ -39,7 +39,9 @@ export class Parts extends APIResource {
    *
    * @example
    * ```ts
-   * const part = await client.catalog.parts.retrieve('id');
+   * const part = await client.catalog.parts.retrieve(
+   *   'it_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   retrieve(
@@ -55,7 +57,7 @@ export class Parts extends APIResource {
    *
    * @example
    * ```ts
-   * const part = await client.catalog.parts.update('id', {
+   * const part = await client.catalog.parts.update('', {
    *   description: 'Deep groove ball bearing, 20x47x14mm',
    *   sku: 'BRG-6204-2RS',
    * });
@@ -90,7 +92,9 @@ export class Parts extends APIResource {
    *
    * @example
    * ```ts
-   * const part = await client.catalog.parts.delete('id');
+   * const part = await client.catalog.parts.delete(
+   *   'it_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<Part> {

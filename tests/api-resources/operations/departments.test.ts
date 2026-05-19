@@ -34,7 +34,7 @@ describe('resource departments', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.departments.retrieve('id');
+    const responsePromise = client.operations.departments.retrieve('dp_01gf7a8200er3ar3pkfrb6kk30');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,7 +48,7 @@ describe('resource departments', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.departments.retrieve(
-        'id',
+        'dp_01gf7a8200er3ar3pkfrb6kk30',
         { include: ['location'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -56,7 +56,7 @@ describe('resource departments', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.departments.update('id', {
+    const responsePromise = client.operations.departments.update('', {
       machine_ids: ['string'],
       scanning_station_ids: ['string'],
     });
@@ -70,7 +70,7 @@ describe('resource departments', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.departments.update('id', {
+    const response = await client.operations.departments.update('', {
       machine_ids: ['string'],
       scanning_station_ids: ['string'],
       location_id: 'location_id',
@@ -105,7 +105,7 @@ describe('resource departments', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.departments.delete('id');
+    const responsePromise = client.operations.departments.delete('dp_01gf7a8200er3ar3pkfrb6kk30');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

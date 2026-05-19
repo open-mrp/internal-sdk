@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource transactionAllocations', () => {
   test('update: only required params', async () => {
-    const responsePromise = client.finance.transactionAllocations.update('id', { amount: '150.00' });
+    const responsePromise = client.finance.transactionAllocations.update('', { amount: '150.00' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,11 +20,11 @@ describe('resource transactionAllocations', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.finance.transactionAllocations.update('id', { amount: '150.00' });
+    const response = await client.finance.transactionAllocations.update('', { amount: '150.00' });
   });
 
   test('delete', async () => {
-    const responsePromise = client.finance.transactionAllocations.delete('id');
+    const responsePromise = client.finance.transactionAllocations.delete('txal_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

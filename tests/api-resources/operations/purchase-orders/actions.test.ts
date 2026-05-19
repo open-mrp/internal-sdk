@@ -28,7 +28,7 @@ describe('resource actions', () => {
   });
 
   test('updateChangeStatus: only required params', async () => {
-    const responsePromise = client.operations.purchaseOrders.actions.updateChangeStatus('id', {
+    const responsePromise = client.operations.purchaseOrders.actions.updateChangeStatus('', {
       send_email: true,
       status_change: 'issue',
     });
@@ -42,7 +42,7 @@ describe('resource actions', () => {
   });
 
   test('updateChangeStatus: required and optional params', async () => {
-    const response = await client.operations.purchaseOrders.actions.updateChangeStatus('id', {
+    const response = await client.operations.purchaseOrders.actions.updateChangeStatus('', {
       send_email: true,
       status_change: 'issue',
       include: ['supplier'],

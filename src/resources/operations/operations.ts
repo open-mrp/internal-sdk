@@ -249,7 +249,7 @@ export class Operations extends APIResource {
    *
    * @example
    * ```ts
-   * const quantity = await client.operations.update('id', {
+   * const quantity = await client.operations.update('', {
    *   unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *   value: '50.000000000000000000000000000000',
    * });

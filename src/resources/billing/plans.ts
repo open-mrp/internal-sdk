@@ -33,7 +33,7 @@ export class Plans extends APIResource {
    * @example
    * ```ts
    * const response =
-   *   await client.billing.plans.retrieveProration('id');
+   *   await client.billing.plans.retrieveProration('example');
    * ```
    */
   retrieveProration(id: string, options?: RequestOptions): APIPromise<PlanRetrieveProrationResponse> {
@@ -46,7 +46,9 @@ export class Plans extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.billing.plans.switch('id');
+   * const response = await client.billing.plans.switch(
+   *   'example',
+   * );
    * ```
    */
   switch(id: string, options?: RequestOptions): APIPromise<PlanSwitchResponse> {

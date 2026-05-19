@@ -36,7 +36,7 @@ export class Actions extends APIResource {
    * ```ts
    * const purchaseOrderDetail =
    *   await client.operations.purchaseOrders.actions.updateChangeStatus(
-   *     'id',
+   *     '',
    *     { send_email: true, status_change: 'issue' },
    *   );
    * ```

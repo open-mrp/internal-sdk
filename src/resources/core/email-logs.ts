@@ -16,7 +16,9 @@ export class EmailLogs extends APIResource {
    *
    * @example
    * ```ts
-   * const emailLog = await client.core.emailLogs.retrieve('id');
+   * const emailLog = await client.core.emailLogs.retrieve(
+   *   'eml_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   retrieve(

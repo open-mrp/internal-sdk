@@ -17,7 +17,9 @@ export class PaymentTerms extends APIResource {
    * @example
    * ```ts
    * const paymentTerm =
-   *   await client.finance.paymentTerms.retrieve('id');
+   *   await client.finance.paymentTerms.retrieve(
+   *     'pytm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -34,7 +36,7 @@ export class PaymentTerms extends APIResource {
    * @example
    * ```ts
    * const paymentTerm =
-   *   await client.finance.paymentTerms.update('id', {
+   *   await client.finance.paymentTerms.update('', {
    *     name: 'Net 60',
    *   });
    * ```
@@ -58,7 +60,9 @@ export class PaymentTerms extends APIResource {
    * @example
    * ```ts
    * const paymentTerm =
-   *   await client.finance.paymentTerms.delete('id');
+   *   await client.finance.paymentTerms.delete(
+   *     'pytm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<PaymentTermDeleteResponse> {

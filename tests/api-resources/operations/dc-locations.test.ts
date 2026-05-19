@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource dcLocations', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.dcLocations.retrieve('id');
+    const responsePromise = client.operations.dcLocations.retrieve('dclo_01gf7a8200er3ar3pkfrb6kk30');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource dcLocations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.dcLocations.retrieve(
-        'id',
+        'dclo_01gf7a8200er3ar3pkfrb6kk30',
         { include: ['customer'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource dcLocations', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.dcLocations.update('id');
+    const responsePromise = client.operations.dcLocations.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource dcLocations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.dcLocations.update(
-        'id',
+        '',
         { customer_id: 'customer_id', location: 'Warehouse B - Bay 1' },
         { path: '/_stainless_unknown_path' },
       ),
@@ -53,7 +53,7 @@ describe('resource dcLocations', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.dcLocations.delete('id');
+    const responsePromise = client.operations.dcLocations.delete('dclo_01gf7a8200er3ar3pkfrb6kk30');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

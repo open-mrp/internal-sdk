@@ -21,7 +21,9 @@ export class VolumeDiscounts extends APIResource {
    * @example
    * ```ts
    * const volumeDiscount =
-   *   await client.sales.volumeDiscounts.retrieve('id');
+   *   await client.sales.volumeDiscounts.retrieve(
+   *     'quds_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -39,7 +41,7 @@ export class VolumeDiscounts extends APIResource {
    * @example
    * ```ts
    * const volumeDiscount =
-   *   await client.sales.volumeDiscounts.update('id', {
+   *   await client.sales.volumeDiscounts.update('', {
    *     attribute_ids: ['string'],
    *     category_ids: ['string'],
    *     customer_group_ids: ['string'],
@@ -73,7 +75,9 @@ export class VolumeDiscounts extends APIResource {
    * @example
    * ```ts
    * const volumeDiscount =
-   *   await client.sales.volumeDiscounts.delete('id');
+   *   await client.sales.volumeDiscounts.delete(
+   *     'quds_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<VolumeDiscountDeleteResponse> {

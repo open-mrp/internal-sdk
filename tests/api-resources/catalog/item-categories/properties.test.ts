@@ -9,7 +9,9 @@ const client = new Augno({
 
 describe('resource properties', () => {
   test('update: only required params', async () => {
-    const responsePromise = client.catalog.itemCategories.properties.update('property_id', { id: 'id' });
+    const responsePromise = client.catalog.itemCategories.properties.update('pp_01jm4r6700f8nwq3v5hx2d9ktp', {
+      id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,11 +22,15 @@ describe('resource properties', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.catalog.itemCategories.properties.update('property_id', { id: 'id' });
+    const response = await client.catalog.itemCategories.properties.update('pp_01jm4r6700f8nwq3v5hx2d9ktp', {
+      id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.catalog.itemCategories.properties.delete('property_id', { id: 'id' });
+    const responsePromise = client.catalog.itemCategories.properties.delete('pp_01jm4r6700f8nwq3v5hx2d9ktp', {
+      id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -35,6 +41,8 @@ describe('resource properties', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.catalog.itemCategories.properties.delete('property_id', { id: 'id' });
+    const response = await client.catalog.itemCategories.properties.delete('pp_01jm4r6700f8nwq3v5hx2d9ktp', {
+      id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
   });
 });

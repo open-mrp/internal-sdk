@@ -139,7 +139,7 @@ describe('resource actions', () => {
   });
 
   test('ship: only required params', async () => {
-    const responsePromise = client.operations.shipments.actions.ship('id', { email_customer: true });
+    const responsePromise = client.operations.shipments.actions.ship('', { email_customer: true });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -150,14 +150,14 @@ describe('resource actions', () => {
   });
 
   test('ship: required and optional params', async () => {
-    const response = await client.operations.shipments.actions.ship('id', {
+    const response = await client.operations.shipments.actions.ship('', {
       email_customer: true,
       include: ['lines'],
     });
   });
 
   test('void', async () => {
-    const responsePromise = client.operations.shipments.actions.void('id');
+    const responsePromise = client.operations.shipments.actions.void('sh_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

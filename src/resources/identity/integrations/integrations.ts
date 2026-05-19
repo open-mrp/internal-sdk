@@ -40,7 +40,7 @@ export class Integrations extends APIResource {
    * @example
    * ```ts
    * const accountIntegration =
-   *   await client.identity.integrations.update('id', {
+   *   await client.identity.integrations.update('', {
    *     name: 'Updated Stripe Integration',
    *   });
    * ```
@@ -75,7 +75,9 @@ export class Integrations extends APIResource {
    * @example
    * ```ts
    * const accountIntegration =
-   *   await client.identity.integrations.delete('id');
+   *   await client.identity.integrations.delete(
+   *     'ai_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<AccountIntegration> {

@@ -15,7 +15,9 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const agentRun = await client.ai.runs.actions.cancel('id');
+   * const agentRun = await client.ai.runs.actions.cancel(
+   *   'agrn_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   cancel(
@@ -32,14 +34,11 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const agentRun = await client.ai.runs.actions.continue(
-   *   'id',
-   *   {
-   *     allowed_tool_slugs: ['string'],
-   *     approved_tool_slugs: ['string'],
-   *     message: 'Yes, proceed with creating the order.',
-   *   },
-   * );
+   * const agentRun = await client.ai.runs.actions.continue('', {
+   *   allowed_tool_slugs: ['string'],
+   *   approved_tool_slugs: ['string'],
+   *   message: 'Yes, proceed with creating the order.',
+   * });
    * ```
    */
   continue(id: string, params: ActionContinueParams, options?: RequestOptions): APIPromise<RunsAPI.AgentRun> {

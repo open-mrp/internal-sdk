@@ -30,7 +30,7 @@ describe('resource locations', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.locations.retrieve('id');
+    const responsePromise = client.operations.locations.retrieve('lc_01gf7a8200er3ar3pkfrb6kk30');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -44,7 +44,7 @@ describe('resource locations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.locations.retrieve(
-        'id',
+        'lc_01gf7a8200er3ar3pkfrb6kk30',
         { include: ['parent'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -52,7 +52,7 @@ describe('resource locations', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.locations.update('id');
+    const responsePromise = client.operations.locations.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -66,7 +66,7 @@ describe('resource locations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.locations.update(
-        'id',
+        '',
         {
           include: ['parent'],
           child_ids: ['string'],
@@ -106,7 +106,7 @@ describe('resource locations', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.locations.delete('id');
+    const responsePromise = client.operations.locations.delete('lc_01gf7a8200er3ar3pkfrb6kk30');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -20,5 +20,3 @@ export {
   PermissionDeniedError,
   UnprocessableEntityError,
 } from './core/error';
-
-export type { paths, components, operations, webhooks } from './lib/openapi-typescript-exports';

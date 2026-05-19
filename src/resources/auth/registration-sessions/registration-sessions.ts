@@ -28,7 +28,7 @@ export class RegistrationSessions extends APIResource {
    * ```ts
    * const registrationSession =
    *   await client.auth.registrationSessions.retrieve(
-   *     'session_id',
+   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
    *   );
    * ```
    */
@@ -44,7 +44,7 @@ export class RegistrationSessions extends APIResource {
    * ```ts
    * const registrationSession =
    *   await client.auth.registrationSessions.update(
-   *     'session_id',
+   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
    *     {
    *       session_data: {
    *         user_name: 'Jane Smith',
@@ -71,7 +71,7 @@ export class RegistrationSessions extends APIResource {
    * ```ts
    * const response =
    *   await client.auth.registrationSessions.accounts(
-   *     'session_id',
+   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
    *   );
    * ```
    */
@@ -124,7 +124,7 @@ export class RegistrationSessions extends APIResource {
    * ```ts
    * const response =
    *   await client.auth.registrationSessions.users(
-   *     'session_id',
+   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
    *     { name: 'Jane Smith', password: 'P@ssw0rd123!' },
    *   );
    * ```

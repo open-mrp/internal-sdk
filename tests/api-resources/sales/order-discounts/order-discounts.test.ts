@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource orderDiscounts', () => {
   test('retrieve', async () => {
-    const responsePromise = client.sales.orderDiscounts.retrieve('id');
+    const responsePromise = client.sales.orderDiscounts.retrieve('ords_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource orderDiscounts', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.orderDiscounts.update('id');
+    const responsePromise = client.sales.orderDiscounts.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,7 +34,7 @@ describe('resource orderDiscounts', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.orderDiscounts.update(
-        'id',
+        '',
         {
           amount: 'amount',
           code: 'SAVE15',
@@ -48,7 +48,7 @@ describe('resource orderDiscounts', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.orderDiscounts.delete('id');
+    const responsePromise = client.sales.orderDiscounts.delete('ords_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

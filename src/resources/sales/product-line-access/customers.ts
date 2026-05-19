@@ -35,7 +35,7 @@ export class Customers extends APIResource {
    * ```ts
    * const customerProductLineAccess =
    *   await client.sales.productLineAccess.customers.retrieve(
-   *     'customer_id',
+   *     'ac_01gf7a8200er3ar3pkfrb6kk29',
    *   );
    * ```
    */
@@ -50,7 +50,7 @@ export class Customers extends APIResource {
    * ```ts
    * const customerProductLineAccess =
    *   await client.sales.productLineAccess.customers.update(
-   *     'customer_id',
+   *     '',
    *     { product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'] },
    *   );
    * ```
@@ -89,7 +89,7 @@ export class Customers extends APIResource {
    * ```ts
    * const customer =
    *   await client.sales.productLineAccess.customers.delete(
-   *     'customer_id',
+   *     'ac_01gf7a8200er3ar3pkfrb6kk29',
    *   );
    * ```
    */

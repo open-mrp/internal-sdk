@@ -20,7 +20,9 @@ export class OrderDiscounts extends APIResource {
    * @example
    * ```ts
    * const orderDiscount =
-   *   await client.sales.orderDiscounts.retrieve('id');
+   *   await client.sales.orderDiscounts.retrieve(
+   *     'ords_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<OrderDiscount> {
@@ -33,7 +35,7 @@ export class OrderDiscounts extends APIResource {
    * @example
    * ```ts
    * const orderDiscount =
-   *   await client.sales.orderDiscounts.update('id', {
+   *   await client.sales.orderDiscounts.update('', {
    *     code: 'SAVE15',
    *     name: '15% Off',
    *   });
@@ -53,7 +55,9 @@ export class OrderDiscounts extends APIResource {
    * @example
    * ```ts
    * const orderDiscount =
-   *   await client.sales.orderDiscounts.delete('id');
+   *   await client.sales.orderDiscounts.delete(
+   *     'ords_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<OrderDiscount> {

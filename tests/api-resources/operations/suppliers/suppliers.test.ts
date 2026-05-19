@@ -58,7 +58,7 @@ describe('resource suppliers', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.suppliers.retrieve('id');
+    const responsePromise = client.operations.suppliers.retrieve('ac_02kn5s7811g9qwce7cizr4e0mq');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -72,7 +72,7 @@ describe('resource suppliers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.suppliers.retrieve(
-        'id',
+        'ac_02kn5s7811g9qwce7cizr4e0mq',
         { include: ['bill_to_address'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -80,7 +80,7 @@ describe('resource suppliers', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.suppliers.update('id', {
+    const responsePromise = client.operations.suppliers.update('', {
       bill_to_address_id: null,
       name: 'Acme Supplies LLC',
       note: 'Updated contact info',
@@ -98,7 +98,7 @@ describe('resource suppliers', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.suppliers.update('id', {
+    const response = await client.operations.suppliers.update('', {
       bill_to_address_id: null,
       name: 'Acme Supplies LLC',
       note: 'Updated contact info',
@@ -137,7 +137,7 @@ describe('resource suppliers', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.suppliers.delete('id');
+    const responsePromise = client.operations.suppliers.delete('ac_02kn5s7811g9qwce7cizr4e0mq');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

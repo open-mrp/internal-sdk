@@ -54,7 +54,7 @@ export class Carriers extends APIResource {
    * @example
    * ```ts
    * const carrier = await client.operations.carriers.retrieve(
-   *   'id',
+   *   'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -72,7 +72,7 @@ export class Carriers extends APIResource {
    * @example
    * ```ts
    * const carrier = await client.operations.carriers.update(
-   *   'id',
+   *   '',
    *   { name: 'FedEx Express' },
    * );
    * ```
@@ -108,7 +108,7 @@ export class Carriers extends APIResource {
    * @example
    * ```ts
    * const carrier = await client.operations.carriers.delete(
-   *   'id',
+   *   'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -124,7 +124,7 @@ export class Carriers extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.carriers.retrieveOAuthStatus(
-   *     'id',
+   *     'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */

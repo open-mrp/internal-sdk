@@ -32,7 +32,9 @@ export class Batches extends APIResource {
    *
    * @example
    * ```ts
-   * const batch = await client.operations.batches.delete('id');
+   * const batch = await client.operations.batches.delete(
+   *   'bt_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<ActionsAPI.Batch> {
@@ -45,7 +47,7 @@ export class Batches extends APIResource {
    * @example
    * ```ts
    * const response = await client.operations.batches.nextSteps(
-   *   'id',
+   *   '',
    *   {
    *     scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
    *   },
@@ -84,7 +86,9 @@ export class Batches extends APIResource {
    * @example
    * ```ts
    * const response =
-   *   await client.operations.batches.retrieveFlow('id');
+   *   await client.operations.batches.retrieveFlow(
+   *     'bt_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieveFlow(id: string, options?: RequestOptions): APIPromise<BatchRetrieveFlowResponse> {

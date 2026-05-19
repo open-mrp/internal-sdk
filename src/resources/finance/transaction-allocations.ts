@@ -20,7 +20,7 @@ export class TransactionAllocations extends APIResource {
    * @example
    * ```ts
    * const transactionAllocation =
-   *   await client.finance.transactionAllocations.update('id', {
+   *   await client.finance.transactionAllocations.update('', {
    *     amount: '150.00',
    *   });
    * ```
@@ -39,7 +39,9 @@ export class TransactionAllocations extends APIResource {
    * @example
    * ```ts
    * const transactionAllocation =
-   *   await client.finance.transactionAllocations.delete('id');
+   *   await client.finance.transactionAllocations.delete(
+   *     'txal_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<TransactionAllocationDeleteResponse> {

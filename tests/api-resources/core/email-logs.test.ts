@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource emailLogs', () => {
   test('retrieve', async () => {
-    const responsePromise = client.core.emailLogs.retrieve('id');
+    const responsePromise = client.core.emailLogs.retrieve('eml_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,7 +22,11 @@ describe('resource emailLogs', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.core.emailLogs.retrieve('id', { include: ['sent_by'] }, { path: '/_stainless_unknown_path' }),
+      client.core.emailLogs.retrieve(
+        'eml_01jm4r6700f8nwq3v5hx2d9ktp',
+        { include: ['sent_by'] },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 

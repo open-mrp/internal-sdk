@@ -29,7 +29,7 @@ export class ProductionFlows extends APIResource {
    * ```ts
    * const productionFlow =
    *   await client.operations.productionFlows.retrieve(
-   *     'item_id',
+   *     'it_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */

@@ -46,7 +46,9 @@ export class PurchaseOrders extends APIResource {
    * @example
    * ```ts
    * const purchaseOrderDetail =
-   *   await client.operations.purchaseOrders.retrieve('id');
+   *   await client.operations.purchaseOrders.retrieve(
+   *     'po_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -63,7 +65,7 @@ export class PurchaseOrders extends APIResource {
    * @example
    * ```ts
    * const purchaseOrderDetail =
-   *   await client.operations.purchaseOrders.update('id', {
+   *   await client.operations.purchaseOrders.update('', {
    *     contact_account_user_ids: ['string'],
    *     note: 'Updated delivery notes',
    *     number: 'PO-001',
@@ -91,7 +93,9 @@ export class PurchaseOrders extends APIResource {
    * @example
    * ```ts
    * const purchaseOrder =
-   *   await client.operations.purchaseOrders.delete('id');
+   *   await client.operations.purchaseOrders.delete(
+   *     'po_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<PurchaseOrderDeleteResponse> {

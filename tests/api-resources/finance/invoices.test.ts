@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource invoices', () => {
   test('retrieve', async () => {
-    const responsePromise = client.finance.invoices.retrieve('id');
+    const responsePromise = client.finance.invoices.retrieve('iv_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,12 +22,16 @@ describe('resource invoices', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.finance.invoices.retrieve('id', { include: ['lines'] }, { path: '/_stainless_unknown_path' }),
+      client.finance.invoices.retrieve(
+        'iv_01jm4r6700f8nwq3v5hx2d9ktp',
+        { include: ['lines'] },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('update', async () => {
-    const responsePromise = client.finance.invoices.update('id');
+    const responsePromise = client.finance.invoices.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -41,7 +45,7 @@ describe('resource invoices', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.invoices.update(
-        'id',
+        '',
         {
           has_been_sent: true,
           is_edi_sent: true,

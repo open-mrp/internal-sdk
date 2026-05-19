@@ -18,7 +18,7 @@ export class Consumptions extends APIResource {
    * ```ts
    * const consumption =
    *   await client.operations.productionSteps.consumptions.create(
-   *     'production_step_id',
+   *     '',
    *     {
    *       item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
    *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -52,8 +52,10 @@ export class Consumptions extends APIResource {
    * ```ts
    * const consumption =
    *   await client.operations.productionSteps.consumptions.retrieve(
-   *     'id',
-   *     { production_step_id: 'production_step_id' },
+   *     'cp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     },
    *   );
    * ```
    */
@@ -72,9 +74,9 @@ export class Consumptions extends APIResource {
    * ```ts
    * const consumption =
    *   await client.operations.productionSteps.consumptions.update(
-   *     'id',
+   *     '',
    *     {
-   *       production_step_id: 'production_step_id',
+   *       production_step_id: '',
    *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *       quantity_value: '20.000000000000000000000000000000',
    *     },
@@ -96,8 +98,10 @@ export class Consumptions extends APIResource {
    * ```ts
    * const consumption =
    *   await client.operations.productionSteps.consumptions.delete(
-   *     'id',
-   *     { production_step_id: 'production_step_id' },
+   *     'cp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     },
    *   );
    * ```
    */

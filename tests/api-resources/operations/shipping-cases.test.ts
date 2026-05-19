@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource shippingCases', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.shippingCases.retrieve('id');
+    const responsePromise = client.operations.shippingCases.retrieve('shcs_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource shippingCases', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.shippingCases.retrieve(
-        'id',
+        'shcs_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['carrier'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource shippingCases', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.shippingCases.update('id', {
+    const responsePromise = client.operations.shippingCases.update('', {
       freight_amount_unit_id: null,
       freight_amount_value: null,
       freight_weight_unit_id: null,
@@ -48,7 +48,7 @@ describe('resource shippingCases', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.shippingCases.update('id', {
+    const response = await client.operations.shippingCases.update('', {
       freight_amount_unit_id: null,
       freight_amount_value: null,
       freight_weight_unit_id: null,
@@ -59,7 +59,7 @@ describe('resource shippingCases', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.shippingCases.delete('id');
+    const responsePromise = client.operations.shippingCases.delete('shcs_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -70,7 +70,7 @@ describe('resource shippingCases', () => {
   });
 
   test('retrieveLabel', async () => {
-    const responsePromise = client.operations.shippingCases.retrieveLabel('id');
+    const responsePromise = client.operations.shippingCases.retrieveLabel('shcs_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

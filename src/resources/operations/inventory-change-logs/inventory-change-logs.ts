@@ -25,7 +25,7 @@ export class InventoryChangeLogs extends APIResource {
    * ```ts
    * const inventoryChangeLog =
    *   await client.operations.inventoryChangeLogs.retrieve(
-   *     'id',
+   *     'icl_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */

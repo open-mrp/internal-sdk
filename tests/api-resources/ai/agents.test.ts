@@ -77,7 +77,7 @@ describe('resource agents', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.ai.agents.retrieve('id');
+    const responsePromise = client.ai.agents.retrieve('agdf_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -90,12 +90,16 @@ describe('resource agents', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.ai.agents.retrieve('id', { include: ['config'] }, { path: '/_stainless_unknown_path' }),
+      client.ai.agents.retrieve(
+        'agdf_01jm4r6700f8nwq3v5hx2d9ktp',
+        { include: ['config'] },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('update', async () => {
-    const responsePromise = client.ai.agents.update('id');
+    const responsePromise = client.ai.agents.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -109,7 +113,7 @@ describe('resource agents', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.ai.agents.update(
-        'id',
+        '',
         {
           include: ['config'],
           category_code: 'category_code',
@@ -174,7 +178,7 @@ describe('resource agents', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.ai.agents.delete('id');
+    const responsePromise = client.ai.agents.delete('agdf_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -185,7 +189,7 @@ describe('resource agents', () => {
   });
 
   test('updateStatus: only required params', async () => {
-    const responsePromise = client.ai.agents.updateStatus('id', { status_code: 'active' });
+    const responsePromise = client.ai.agents.updateStatus('', { status_code: 'active' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -196,9 +200,6 @@ describe('resource agents', () => {
   });
 
   test('updateStatus: required and optional params', async () => {
-    const response = await client.ai.agents.updateStatus('id', {
-      status_code: 'active',
-      include: ['config'],
-    });
+    const response = await client.ai.agents.updateStatus('', { status_code: 'active', include: ['config'] });
   });
 });

@@ -21,8 +21,8 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const pickLineDetail =
-   *   await client.operations.picks.lines.update('id', {
-   *     pick_id: 'pick_id',
+   *   await client.operations.picks.lines.update('', {
+   *     pick_id: '',
    *     quantity_value: '10.000000000000000000000000000000',
    *   });
    * ```

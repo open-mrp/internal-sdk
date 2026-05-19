@@ -9,9 +9,10 @@ const client = new Augno({
 
 describe('resource serviceLevels', () => {
   test('retrieve: only required params', async () => {
-    const responsePromise = client.operations.carriers.serviceLevels.retrieve('id', {
-      carrier_id: 'carrier_id',
-    });
+    const responsePromise = client.operations.carriers.serviceLevels.retrieve(
+      'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+      { carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp' },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,16 +23,14 @@ describe('resource serviceLevels', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.operations.carriers.serviceLevels.retrieve('id', {
-      carrier_id: 'carrier_id',
-      include: ['owner'],
-    });
+    const response = await client.operations.carriers.serviceLevels.retrieve(
+      'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+      { carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp', include: ['owner'] },
+    );
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.carriers.serviceLevels.update('id', {
-      carrier_id: 'carrier_id',
-    });
+    const responsePromise = client.operations.carriers.serviceLevels.update('', { carrier_id: '' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -42,8 +41,8 @@ describe('resource serviceLevels', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.carriers.serviceLevels.update('id', {
-      carrier_id: 'carrier_id',
+    const response = await client.operations.carriers.serviceLevels.update('', {
+      carrier_id: '',
       include: ['owner'],
       code: 'code',
       customer_portal_visibility: 'visible',
@@ -53,9 +52,10 @@ describe('resource serviceLevels', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.operations.carriers.serviceLevels.delete('id', {
-      carrier_id: 'carrier_id',
-    });
+    const responsePromise = client.operations.carriers.serviceLevels.delete(
+      'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+      { carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp' },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -66,13 +66,16 @@ describe('resource serviceLevels', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.operations.carriers.serviceLevels.delete('id', {
-      carrier_id: 'carrier_id',
-    });
+    const response = await client.operations.carriers.serviceLevels.delete(
+      'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+      { carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp' },
+    );
   });
 
   test('retrieveServiceLevels', async () => {
-    const responsePromise = client.operations.carriers.serviceLevels.retrieveServiceLevels('carrier_id');
+    const responsePromise = client.operations.carriers.serviceLevels.retrieveServiceLevels(
+      'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -86,7 +89,7 @@ describe('resource serviceLevels', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.carriers.serviceLevels.retrieveServiceLevels(
-        'carrier_id',
+        'cr_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           cursor: 'cursor',
           include: ['owner'],
@@ -99,7 +102,7 @@ describe('resource serviceLevels', () => {
   });
 
   test('serviceLevels: only required params', async () => {
-    const responsePromise = client.operations.carriers.serviceLevels.serviceLevels('carrier_id', {
+    const responsePromise = client.operations.carriers.serviceLevels.serviceLevels('', {
       code: 'ground',
       is_default: false,
       name: 'Ground Shipping',
@@ -114,7 +117,7 @@ describe('resource serviceLevels', () => {
   });
 
   test('serviceLevels: required and optional params', async () => {
-    const response = await client.operations.carriers.serviceLevels.serviceLevels('carrier_id', {
+    const response = await client.operations.carriers.serviceLevels.serviceLevels('', {
       code: 'ground',
       is_default: false,
       name: 'Ground Shipping',

@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource items', () => {
   test('retrieve', async () => {
-    const responsePromise = client.catalog.items.retrieve('id');
+    const responsePromise = client.catalog.items.retrieve('it_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,12 +22,18 @@ describe('resource items', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.catalog.items.retrieve('id', { include: ['category'] }, { path: '/_stainless_unknown_path' }),
+      client.catalog.items.retrieve(
+        'it_01jm4r6700f8nwq3v5hx2d9ktp',
+        { include: ['category'] },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.catalog.items.update('category_id', { id: 'id' });
+    const responsePromise = client.catalog.items.update('ic_01jm4r6700f8nwq3v5hx2d9ktp', {
+      id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,7 +44,10 @@ describe('resource items', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.catalog.items.update('category_id', { id: 'id', include: ['category'] });
+    const response = await client.catalog.items.update('ic_01jm4r6700f8nwq3v5hx2d9ktp', {
+      id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
+      include: ['category'],
+    });
   });
 
   test('list', async () => {
@@ -77,7 +86,7 @@ describe('resource items', () => {
   });
 
   test('retrieveCosts', async () => {
-    const responsePromise = client.catalog.items.retrieveCosts('id');
+    const responsePromise = client.catalog.items.retrieveCosts('it_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -88,7 +97,9 @@ describe('resource items', () => {
   });
 
   test('retrieveTrends: only required params', async () => {
-    const responsePromise = client.catalog.items.retrieveTrends('id', { trend_type: 'trend_type' });
+    const responsePromise = client.catalog.items.retrieveTrends('it_01jm4r6700f8nwq3v5hx2d9ktp', {
+      trend_type: 'trend_type',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -99,6 +110,8 @@ describe('resource items', () => {
   });
 
   test('retrieveTrends: required and optional params', async () => {
-    const response = await client.catalog.items.retrieveTrends('id', { trend_type: 'trend_type' });
+    const response = await client.catalog.items.retrieveTrends('it_01jm4r6700f8nwq3v5hx2d9ktp', {
+      trend_type: 'trend_type',
+    });
   });
 });

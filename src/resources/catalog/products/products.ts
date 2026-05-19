@@ -48,7 +48,7 @@ export class Products extends APIResource {
    * @example
    * ```ts
    * const product = await client.catalog.products.retrieve(
-   *   'id',
+   *   'pd_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -65,7 +65,7 @@ export class Products extends APIResource {
    *
    * @example
    * ```ts
-   * const product = await client.catalog.products.update('id', {
+   * const product = await client.catalog.products.update('', {
    *   sku: 'SKU-002',
    * });
    * ```
@@ -99,7 +99,9 @@ export class Products extends APIResource {
    *
    * @example
    * ```ts
-   * const product = await client.catalog.products.delete('id');
+   * const product = await client.catalog.products.delete(
+   *   'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   delete(

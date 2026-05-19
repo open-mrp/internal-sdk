@@ -33,7 +33,9 @@ export class Memories extends APIResource {
    *
    * @example
    * ```ts
-   * const agentMemory = await client.ai.memories.retrieve('id');
+   * const agentMemory = await client.ai.memories.retrieve(
+   *   'example',
+   * );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<AgentMemory> {
@@ -45,7 +47,7 @@ export class Memories extends APIResource {
    *
    * @example
    * ```ts
-   * const agentMemory = await client.ai.memories.update('id', {
+   * const agentMemory = await client.ai.memories.update('', {
    *   category: 'category',
    *   content:
    *     'Customer prefers next-day shipping on all orders.',
@@ -78,7 +80,7 @@ export class Memories extends APIResource {
    *
    * @example
    * ```ts
-   * const memory = await client.ai.memories.delete('id');
+   * const memory = await client.ai.memories.delete('example');
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<MemoryDeleteResponse> {

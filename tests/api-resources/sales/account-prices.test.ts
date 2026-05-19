@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource accountPrices', () => {
   test('retrieve', async () => {
-    const responsePromise = client.sales.accountPrices.retrieve('id');
+    const responsePromise = client.sales.accountPrices.retrieve('acpr_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource accountPrices', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.accountPrices.retrieve(
-        'id',
+        'acpr_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['recipient_account'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource accountPrices', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.accountPrices.update('id');
+    const responsePromise = client.sales.accountPrices.update('');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource accountPrices', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.accountPrices.update(
-        'id',
+        '',
         {
           include: ['recipient_account'],
           attribute_ids: ['string'],
@@ -62,7 +62,7 @@ describe('resource accountPrices', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.accountPrices.delete('id');
+    const responsePromise = client.sales.accountPrices.delete('acpr_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
