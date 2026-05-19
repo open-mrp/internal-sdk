@@ -42,6 +42,17 @@ if [ ! -f "$WS_JSON" ]; then
 	exit 1
 fi
 
+OPENAPI_SPEC="$ROOT/specs/internal_openapi_spec.json"
+if [ ! -f "$OPENAPI_SPEC" ]; then
+	api_spec="$(dirname "$ROOT")/api/specs/internal_openapi_spec.json"
+	echo "scripts/codegen: missing OpenAPI spec: $OPENAPI_SPEC" >&2
+	if [ -f "$api_spec" ]; then
+		echo "  Sibling api checkout found — run:" >&2
+		echo "  mkdir -p \"$(dirname "$OPENAPI_SPEC")\" && cp \"$api_spec\" \"$OPENAPI_SPEC\"" >&2
+	fi
+	exit 1
+fi
+
 DIRTY=""
 if [ -d "$ROOT/.git" ]; then
 	DIRTY="$(git -C "$ROOT" status --porcelain 2>/dev/null || true)"

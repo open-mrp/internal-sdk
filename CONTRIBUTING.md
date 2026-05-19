@@ -18,6 +18,17 @@ Most of the SDK is generated code. Modifications to code will be persisted betwe
 result in merge conflicts between manual patches and changes from the generator. The generator will never
 modify the contents of the `src/lib/` and `examples/` directories.
 
+## Regenerating the SDK (`pnpm codegen`)
+
+STLC expects [`specs/internal_openapi_spec.json`](specs/internal_openapi_spec.json). If it is missing, copy the latest dump from **`api`** inside the augno monorepo:
+
+```sh
+mkdir -p specs
+cp ../api/specs/internal_openapi_spec.json specs/
+```
+
+The STLC CLI is resolved automatically from `vendor/stlc`, a sibling **`stlc-main`** checkout (see **`scripts/codegen`**). Use **`INTERNAL_SDK_STLC_CLI`** to point at **`dist/index.cjs`** explicitly.
+
 ## Adding and running examples
 
 All files in the `examples/` directory are not modified by the generator and can be freely edited or added to.
