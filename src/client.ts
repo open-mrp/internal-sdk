@@ -183,7 +183,7 @@ export interface ClientOptions {
   /**
    * Invoked after the client fails to refresh a bearer session (`credentials: include`).
    */
-  onAuthFailure?: (error: unknown) => void | Promise<void> | undefined;
+  onAuthFailure?: (error: unknown) => void | Promise<void>;
 }
 
 /**
@@ -205,7 +205,7 @@ export class Augno {
   #encoder: Opts.RequestEncoder;
   protected idempotencyHeader?: string;
   private _options: ClientOptions;
-  private #augnoOnAuthFailure?: (error: unknown) => void | Promise<void>;
+  #augnoOnAuthFailure: ((error: unknown) => void | Promise<void>) | undefined;
 
   /**
    * API Client for interfacing with the Augno API.
@@ -297,7 +297,7 @@ export class Augno {
       bearerToken: this.bearerToken,
       augnoAPIKey: this.augnoAPIKey,
       augnoAccountID: this.augnoAccountID,
-      onAuthFailure: this.#augnoOnAuthFailure,
+      ...(this.#augnoOnAuthFailure !== undefined ? { onAuthFailure: this.#augnoOnAuthFailure } : {}),
       ...options,
     });
     return client;
