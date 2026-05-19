@@ -1,5 +1,11 @@
 # @augno/internal-sdk
 
+## 4.0.2
+
+### Patch Changes
+
+- df0495c: fix: bug in release process
+
 ## 4.0.1
 
 ### Patch Changes
