@@ -9887,13 +9887,13 @@ export interface components {
              */
             end_date: string;
             /** @description Optional product line IDs to filter by. */
-            product_line_ids: string[];
+            product_line_ids?: string[];
             /** @description Optional customer IDs to filter by. */
-            customer_ids: string[];
+            customer_ids?: string[];
             /** @description Optional customer group IDs to filter by. */
-            customer_group_ids: string[];
+            customer_group_ids?: string[];
             /** @description Optional sales rep IDs to filter by. */
-            sales_rep_ids: string[];
+            sales_rep_ids?: string[];
             /** @description Optional target delivery time in days. */
             target_delivery_time_days?: number;
             /** @description Whether to override promised dates with the target delivery time. */
@@ -9914,9 +9914,9 @@ export interface components {
         /** @description AnalyzeDemandForecastRequest is the request to generate a demand forecast. */
         AnalyzeDemandForecastRequest: {
             /** @description Optional product line IDs to filter by. */
-            product_line_ids: string[];
+            product_line_ids?: string[];
             /** @description Optional item IDs to filter by. */
-            item_ids: string[];
+            item_ids?: string[];
             /** @description Optional number of months of historical data to use. */
             history_months?: number;
             /** @description Optional number of months to forecast. */
@@ -9937,11 +9937,11 @@ export interface components {
         /** @description AnalyzeInventoryReceiptsRequest is the request to analyze inventory receipts. */
         AnalyzeInventoryReceiptsRequest: {
             /** @description Optional item IDs to filter by. */
-            item_ids: string[];
+            item_ids?: string[];
             /** @description Optional location IDs to filter by. */
-            location_ids: string[];
+            location_ids?: string[];
             /** @description Optional lot IDs to filter by. */
-            lot_ids: string[];
+            lot_ids?: string[];
         };
         /** @description AnalyzeInventoryReceiptsResponse represents the response from the analyze inventory receipts endpoint. */
         AnalyzeInventoryReceiptsResponse: {
@@ -9976,13 +9976,13 @@ export interface components {
              */
             comparison_end_date: string;
             /** @description Optional customer IDs to filter by. */
-            customer_ids: string[];
+            customer_ids?: string[];
             /** @description Optional product line IDs to filter by. */
-            product_line_ids: string[];
+            product_line_ids?: string[];
             /** @description Optional customer group IDs to filter by. */
-            customer_group_ids: string[];
+            customer_group_ids?: string[];
             /** @description Optional item IDs to filter by. */
-            item_ids: string[];
+            item_ids?: string[];
         };
         /** @description AnalyzeManufacturingBatchResponse represents the response from the analyze manufacturing batch endpoint. */
         AnalyzeManufacturingBatchResponse: {
@@ -10024,9 +10024,9 @@ export interface components {
         /** @description AnalyzeMaterialsRequest is the request to analyze material inventory and demand. */
         AnalyzeMaterialsRequest: {
             /** @description Optional sales order IDs to filter by. */
-            sales_order_ids: string[];
+            sales_order_ids?: string[];
             /** @description Optional supplier IDs to filter by. */
-            supplier_ids: string[];
+            supplier_ids?: string[];
         };
         /** @description AnalyzeMaterialsResponse represents the response from the analyze materials endpoint. */
         AnalyzeMaterialsResponse: {
@@ -10051,9 +10051,9 @@ export interface components {
              */
             end_date: string;
             /** @description Optional customer group IDs to filter by. */
-            customer_group_ids: string[];
+            customer_group_ids?: string[];
             /** @description Optional sales rep IDs to filter by. */
-            sales_rep_ids: string[];
+            sales_rep_ids?: string[];
         };
         /** @description AnalyzeNewCustomersResponse represents the response from the analyze new customers endpoint. */
         AnalyzeNewCustomersResponse: {
@@ -10078,7 +10078,7 @@ export interface components {
              */
             end_date: string;
             /** @description Optional department IDs to filter by. */
-            department_ids: string[];
+            department_ids?: string[];
         };
         /** @description AnalyzeOeeResponse represents the response from the analyze OEE endpoint. */
         AnalyzeOeeResponse: {
@@ -10123,13 +10123,13 @@ export interface components {
         /** @description AnalyzeOrdersRequest is the request to analyze order data. */
         AnalyzeOrdersRequest: {
             /** @description Optional product line IDs to filter by. */
-            product_line_ids: string[];
+            product_line_ids?: string[];
             /** @description Optional customer IDs to filter by. */
-            customer_ids: string[];
+            customer_ids?: string[];
             /** @description Optional sales rep IDs to filter by. */
-            sales_rep_ids: string[];
+            sales_rep_ids?: string[];
             /** @description Optional customer group IDs to filter by. */
-            customer_group_ids: string[];
+            customer_group_ids?: string[];
         };
         /** @description AnalyzeOrdersResponse represents the response from the analyze orders endpoint. */
         AnalyzeOrdersResponse: {
@@ -10154,13 +10154,13 @@ export interface components {
              */
             end_date?: string;
             /** @description Optional item IDs to filter by. */
-            item_ids: string[];
+            item_ids?: string[];
             /** @description Optional product line IDs to filter by. */
-            product_line_ids: string[];
+            product_line_ids?: string[];
             /** @description Optional department IDs to filter by. */
-            department_ids: string[];
+            department_ids?: string[];
             /** @description Optional category IDs to filter by. */
-            category_ids: string[];
+            category_ids?: string[];
         };
         /** @description AnalyzeProductionCostsResponse represents the response from the analyze production costs endpoint. */
         AnalyzeProductionCostsResponse: {
@@ -10175,15 +10175,15 @@ export interface components {
         /** @description AnalyzeQuarterlyOrdersRequest is the request to analyze quarterly order data. */
         AnalyzeQuarterlyOrdersRequest: {
             /** @description Optional sales rep IDs to filter by. */
-            sales_rep_ids: string[];
+            sales_rep_ids?: string[];
             /** @description Optional item IDs to filter by. */
-            item_ids: string[];
+            item_ids?: string[];
             /** @description Optional product line IDs to filter by. */
-            product_line_ids: string[];
+            product_line_ids?: string[];
             /** @description Optional customer IDs to filter by. */
-            customer_ids: string[];
+            customer_ids?: string[];
             /** @description Optional customer group IDs to filter by. */
-            customer_group_ids: string[];
+            customer_group_ids?: string[];
         };
         /** @description AnalyzeQuarterlyOrdersResponse represents the response from the analyze quarterly orders endpoint. */
         AnalyzeQuarterlyOrdersResponse: {
@@ -10221,13 +10221,13 @@ export interface components {
              */
             end_date: string;
             /** @description Optional product line IDs to filter by. */
-            product_line_ids: string[];
+            product_line_ids?: string[];
             /** @description Optional customer IDs to filter by. */
-            customer_ids: string[];
+            customer_ids?: string[];
             /** @description Optional sales rep IDs to filter by. */
-            sales_rep_ids: string[];
+            sales_rep_ids?: string[];
             /** @description Optional customer group IDs to filter by. */
-            customer_group_ids: string[];
+            customer_group_ids?: string[];
             /** @description Optional search query. */
             query?: string;
         };
@@ -14577,7 +14577,7 @@ export interface components {
             /** @description Department assigned to the user. */
             department_id?: string | null;
             /** @description Notification preferences for the user (external targets only). */
-            preferences: components["schemas"]["NotificationPreferenceItem"][];
+            preferences?: components["schemas"]["NotificationPreferenceItem"][];
         };
         /**
          * @description Request to create an agent definition.
@@ -14642,7 +14642,7 @@ export interface components {
              */
             config: components["schemas"]["ConfigInput"];
             /** @description Tools to attach. */
-            tools: components["schemas"]["ToolInput"][];
+            tools?: components["schemas"]["ToolInput"][];
             /** @description Role ID defining agent permissions. */
             role_id: string;
         };
@@ -14838,7 +14838,7 @@ export interface components {
             /** @description The ID of the account user to assign as the default sales rep. */
             default_sales_rep_id?: string;
             /** @description Price group IDs. */
-            customer_price_group_ids: string[];
+            customer_price_group_ids?: string[];
             /** @description Customer type group ID. */
             customer_type_group_id: string;
             /**
@@ -14909,9 +14909,9 @@ export interface components {
             /** @description Storage location ID. */
             location_id?: string;
             /** @description Scanning station IDs to connect. */
-            scanning_station_ids: string[];
+            scanning_station_ids?: string[];
             /** @description Machine IDs to connect. */
-            machine_ids: string[];
+            machine_ids?: string[];
         };
         /**
          * @description Request to create an item category.
@@ -15000,7 +15000,7 @@ export interface components {
             /** @description Initial burn rate (waste / scrap). No currency requirement. */
             burn_rate?: components["schemas"]["RateInput"] | null;
             /** @description Attribute IDs to connect to the material at creation time. */
-            attribute_ids: string[];
+            attribute_ids?: string[];
         };
         /**
          * @description Request to create an agent memory.
@@ -15019,7 +15019,7 @@ export interface components {
             /** @description Text content. */
             content: string;
             /** @description JSON metadata. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
-            metadata: Record<string, never> | null;
+            metadata?: Record<string, never> | null;
             /** @description Entity type this memory is scoped to (e.g. "customer", "product"). */
             entity_type?: string;
             /** @description Entity ID. */
@@ -15083,7 +15083,7 @@ export interface components {
             /** @description Initial burn rate (waste / scrap). No currency requirement. */
             burn_rate?: components["schemas"]["RateInput"] | null;
             /** @description Attribute IDs to connect to the part at creation time. */
-            attribute_ids: string[];
+            attribute_ids?: string[];
         };
         /**
          * @description Request to create a payment term.
@@ -15161,7 +15161,7 @@ export interface components {
             /** @description Initial burn rate (waste / scrap). No currency requirement. */
             burn_rate?: components["schemas"]["RateInput"] | null;
             /** @description Attribute IDs to connect to the product at creation time. */
-            attribute_ids: string[];
+            attribute_ids?: string[];
         };
         /**
          * @description Request to create a product type.
@@ -15371,7 +15371,7 @@ export interface components {
             /** @description Order lines to create. */
             lines: components["schemas"]["CreatePurchaseOrderLineInput"][];
             /** @description Account user IDs for email contacts. */
-            contact_account_user_ids: string[];
+            contact_account_user_ids?: string[];
             /** @description Promised delivery date. */
             promised_at?: string;
         };
@@ -15542,9 +15542,9 @@ export interface components {
             /** @description Order lines to create. */
             lines: components["schemas"]["CreateSalesOrderLineInput"][];
             /** @description Account users who should receive order acknowledgement emails. */
-            acknowledgement_email_contacts: components["schemas"]["SalesOrderEmailContactInput"][];
+            acknowledgement_email_contacts?: components["schemas"]["SalesOrderEmailContactInput"][];
             /** @description Account users who should receive invoice emails. */
-            invoice_email_contacts: components["schemas"]["SalesOrderEmailContactInput"][];
+            invoice_email_contacts?: components["schemas"]["SalesOrderEmailContactInput"][];
         };
         /**
          * @description Request to create a sales target.
@@ -15732,7 +15732,7 @@ export interface components {
             /** @description Minimum order value for free shipping. */
             minimum_order_value?: components["schemas"]["QuantityInput"] | null;
             /** @description Service level IDs that qualify for free shipping. */
-            free_shipping_service_level_ids: string[];
+            free_shipping_service_level_ids?: string[];
         };
         /**
          * @description Request to create a supplier material.
@@ -15882,7 +15882,7 @@ export interface components {
             /** @description Base unit ID. */
             base_unit_id: string;
             /** @description Associated units to create with the group. */
-            associated_units: components["schemas"]["CreateUnitGroupUnitParam"][];
+            associated_units?: components["schemas"]["CreateUnitGroupUnitParam"][];
         };
         /** @description CreateUnitGroupUnitParam contains parameters for an associated unit. */
         CreateUnitGroupUnitParam: {
@@ -16025,15 +16025,15 @@ export interface components {
             /** @description Tiers for this volume discount. */
             tiers: components["schemas"]["CreateVolumeDiscountTierInput"][];
             /** @description Account group IDs to associate as customer groups. */
-            customer_group_ids: string[];
+            customer_group_ids?: string[];
             /** @description Product line IDs to associate. */
-            product_line_ids: string[];
+            product_line_ids?: string[];
             /** @description Item category IDs to associate. */
-            category_ids: string[];
+            category_ids?: string[];
             /** @description Attribute IDs to associate. */
-            attribute_ids: string[];
+            attribute_ids?: string[];
             /** @description Unit IDs to associate as acceptable units. */
-            unit_ids: string[];
+            unit_ids?: string[];
         };
         /** @description Volume discount tier to create. */
         CreateVolumeDiscountTierInput: {
@@ -19164,7 +19164,7 @@ export interface components {
             /** @description Service level ID. */
             service_level_id: string;
             /** @description Product line IDs. */
-            product_line_ids: string[];
+            product_line_ids?: string[];
             /** @description Customer ID. */
             customer_id?: string;
             /**
@@ -41543,7 +41543,7 @@ export interface components {
          */
         RateShopRequest: {
             /** @description Product line IDs. */
-            product_line_ids: string[];
+            product_line_ids?: string[];
             /** @description Customer ID. */
             customer_id?: string;
             /**
@@ -51206,7 +51206,7 @@ export interface components {
             /** @description Department assigned to the user. */
             department_id?: string | null;
             /** @description Notification preferences to update (external targets only). */
-            preferences: components["schemas"]["NotificationPreferenceItem"][];
+            preferences?: components["schemas"]["NotificationPreferenceItem"][];
         };
         /**
          * @description Request to partially update an address.
@@ -51457,9 +51457,9 @@ export interface components {
             /** @description Storage location ID. */
             location_id?: string;
             /** @description Scanning station IDs to connect (additive). */
-            scanning_station_ids: string[];
+            scanning_station_ids?: string[];
             /** @description Machine IDs to connect (additive). */
-            machine_ids: string[];
+            machine_ids?: string[];
         };
         /**
          * @description Request to partially update an invoice.
@@ -51583,7 +51583,7 @@ export interface components {
             /** @description Text content. */
             content: string;
             /** @description JSON metadata. Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string. */
-            metadata: Record<string, never> | null;
+            metadata?: Record<string, never> | null;
             /** @description Entity type this memory is scoped to (e.g. "customer", "product"). */
             entity_type?: string;
             /** @description Entity ID. */
@@ -51860,7 +51860,7 @@ export interface components {
             /** @description Promised delivery date. */
             promised_at?: string;
             /** @description Account user IDs for email contacts. Replaces existing contacts. */
-            contact_account_user_ids: string[];
+            contact_account_user_ids?: string[];
         };
         /**
          * @description Request to partially update a quantity.
@@ -51918,11 +51918,11 @@ export interface components {
             /** @description Display name. */
             name?: string;
             /** @description Customer group IDs. */
-            customer_group_ids: string[];
+            customer_group_ids?: string[];
             /** @description Payment term IDs. */
-            payment_term_ids: string[];
+            payment_term_ids?: string[];
             /** @description Shipping term IDs. */
-            shipping_term_ids: string[];
+            shipping_term_ids?: string[];
             /** @description Whether to replace customer groups. */
             has_customer_group_ids: boolean;
             /** @description Whether to replace payment terms. */
@@ -52495,17 +52495,17 @@ export interface components {
             /** @description Display name. */
             name?: string;
             /** @description Tiers (upsert semantics). */
-            tiers: components["schemas"]["UpdateVolumeDiscountTierInput"][];
+            tiers?: components["schemas"]["UpdateVolumeDiscountTierInput"][];
             /** @description Account group IDs to set as customer groups. */
-            customer_group_ids: string[];
+            customer_group_ids?: string[];
             /** @description Product line IDs to set. */
-            product_line_ids: string[];
+            product_line_ids?: string[];
             /** @description Item category IDs to set. */
-            category_ids: string[];
+            category_ids?: string[];
             /** @description Attribute IDs to set. */
-            attribute_ids: string[];
+            attribute_ids?: string[];
             /** @description Unit IDs to set as acceptable units. */
-            unit_ids: string[];
+            unit_ids?: string[];
             /** @description Whether to replace tiers. */
             has_tiers: boolean;
             /** @description Whether to replace customer groups. */
@@ -58381,11 +58381,6 @@ export interface operations {
                  * @example example
                  */
                 end_date?: string;
-                /**
-                 * @description How the search query is matched against items (default: partial).
-                 * @example exact
-                 */
-                match_mode?: "exact" | "partial";
                 /**
                  * @description Which subassemblies to include when listing (default: all).
                  * @example all
