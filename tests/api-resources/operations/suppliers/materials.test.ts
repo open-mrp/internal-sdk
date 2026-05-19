@@ -68,7 +68,7 @@ describe('resource materials', () => {
   test('update: required and optional params', async () => {
     const response = await client.operations.suppliers.materials.update('ml_01jm4r6700f8nwq3v5hx2d9ktp', {
       supplier_id: 'example',
-      is_active: true,
+      is_active: false,
       supplier_description: 'supplier_description',
       supplier_part_number: 'SUP-PART-002',
     });

@@ -48,8 +48,8 @@ describe('resource invoices', () => {
         'iv_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           has_been_sent: true,
-          is_edi_sent: true,
-          is_paid_in_full: true,
+          is_edi_sent: false,
+          is_paid_in_full: false,
           note: 'Payment received via wire transfer',
         },
         { path: '/_stainless_unknown_path' },
