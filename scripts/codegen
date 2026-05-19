@@ -35,7 +35,6 @@ if [ ! -f "$WS_JSON" ]; then
   exit 1
 fi
 
-EXTRA=()
 COMMIT_MSG="${STLC_CODEGEN_COMMIT_MESSAGE:-chore(codegen): regenerate SDK via stlc}"
 
 DIRTY=""
@@ -48,10 +47,6 @@ if [ -n "$DIRTY" ] && [ "${STLC_CODEGEN_COMMIT:-}" != "1" ]; then
   exit 1
 fi
 
-if [ -n "$DIRTY" ] && [ "${STLC_CODEGEN_COMMIT:-}" = "1" ]; then
-  EXTRA+=(--commit "$COMMIT_MSG")
-fi
-
 BRANCH="${STLC_BRANCH:-}"
 if [ -z "$BRANCH" ] && [ -d "$ROOT/.git" ]; then
   BRANCH="$(git -C "$ROOT" rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
@@ -62,9 +57,18 @@ fi
 
 TARGETS="${STLC_TARGETS:-typescript}"
 
+# macOS Bash 3.2 + `set -u`: expanding "${EXTRA[@]}" on an empty array is an error (“unbound variable”).
+if [ -n "$DIRTY" ] && [ "${STLC_CODEGEN_COMMIT:-}" = "1" ]; then
+  exec node "$STLC_CLI" build \
+    --workspace "$WS_JSON" \
+    --output "$PARENT" \
+    --targets "$TARGETS" \
+    --branch "$BRANCH" \
+    --commit "$COMMIT_MSG"
+fi
+
 exec node "$STLC_CLI" build \
   --workspace "$WS_JSON" \
   --output "$PARENT" \
   --targets "$TARGETS" \
-  --branch "$BRANCH" \
-  "${EXTRA[@]}"
+  --branch "$BRANCH"
