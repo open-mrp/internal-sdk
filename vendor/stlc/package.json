@@ -1,0 +1,9 @@
+{
+  "name": "@vendor/stlc-bundled",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Vendored prebuilt bundle from Stainless @pkg/stlc (dist/). Do not upgrade ad hoc—copy from upstream when bumping tooling.",
+  "bin": {
+    "stlc": "./dist/index.cjs"
+  }
+}

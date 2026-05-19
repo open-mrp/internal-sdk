@@ -10,3 +10,7 @@ dist-deno
 .idea/
 .eslintcache
 
+# STLC manifests under the in-repo workspace
+stainless/builds/
+specs/
+
