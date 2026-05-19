@@ -37,7 +37,7 @@ describe('resource accountGroups', () => {
         'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           commission_policy: 'commission_applied',
-          description: null,
+          description: 'description',
           freight_policy: 'free_freight',
           name: 'Updated Wholesale Customers',
         },

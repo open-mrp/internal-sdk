@@ -10,12 +10,12 @@ const client = new Augno({
 describe('resource transactions', () => {
   test('create: only required params', async () => {
     const responsePromise = client.finance.transactions.create({
-      adjustment_type: null,
+      adjustment_type: 'adjustment_type',
       amount: '500.00',
       customer_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
       method: 'check',
       note: 'Q1 invoice payment',
-      responsible_user_id: null,
+      responsible_user_id: 'responsible_user_id',
       type: 'payment',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -29,12 +29,12 @@ describe('resource transactions', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.finance.transactions.create({
-      adjustment_type: null,
+      adjustment_type: 'adjustment_type',
       amount: '500.00',
       customer_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
       method: 'check',
       note: 'Q1 invoice payment',
-      responsible_user_id: null,
+      responsible_user_id: 'responsible_user_id',
       type: 'payment',
     });
   });
@@ -63,16 +63,16 @@ describe('resource transactions', () => {
 
   test('update: only required params', async () => {
     const responsePromise = client.finance.transactions.update('tx_01jm4r6700f8nwq3v5hx2d9ktp', {
-      adjustment_type: null,
+      adjustment_type: 'adjustment_type',
       amount: '750.00',
       clear_adjustment_type: false,
       clear_responsible_user: false,
       clear_transaction_method: false,
-      is_fully_allocated: null,
+      is_fully_allocated: true,
       method: 'ach',
       note: 'Updated payment note',
-      number: null,
-      responsible_user_id: null,
+      number: 'number',
+      responsible_user_id: 'responsible_user_id',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -85,16 +85,16 @@ describe('resource transactions', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.finance.transactions.update('tx_01jm4r6700f8nwq3v5hx2d9ktp', {
-      adjustment_type: null,
+      adjustment_type: 'adjustment_type',
       amount: '750.00',
       clear_adjustment_type: false,
       clear_responsible_user: false,
       clear_transaction_method: false,
-      is_fully_allocated: null,
+      is_fully_allocated: true,
       method: 'ach',
       note: 'Updated payment note',
-      number: null,
-      responsible_user_id: null,
+      number: 'number',
+      responsible_user_id: 'responsible_user_id',
     });
   });
 

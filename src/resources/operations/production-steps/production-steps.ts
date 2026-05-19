@@ -109,7 +109,6 @@ export class ProductionSteps extends APIResource {
    *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *       waste_quantity_value: '2',
    *       waste_quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *       instructions: null,
    *     },
    *   ],
    *   labor_rate: {

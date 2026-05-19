@@ -51,7 +51,7 @@ describe('resource scanningStations', () => {
           label_size: '1x1',
           label_type: 'tag',
           name: 'Station B',
-          notes: null,
+          notes: 'notes',
           operator_requirement: 'none',
         },
         { path: '/_stainless_unknown_path' },

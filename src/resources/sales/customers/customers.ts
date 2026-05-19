@@ -29,11 +29,7 @@ export class Customers extends APIResource {
    * @example
    * ```ts
    * const customer = await client.sales.customers.create({
-   *   bill_to_address: {
-   *     name: 'Acme Inc.',
-   *     type: null,
-   *     country: 'US',
-   *   },
+   *   bill_to_address: { name: 'Acme Inc.', country: 'US' },
    *   customer_type_group_id: 'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
    *   default_carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *   default_payment_term_id:
@@ -41,11 +37,7 @@ export class Customers extends APIResource {
    *   default_shipping_term_id:
    *     'shtm_01jm4r6700f8nwq3v5hx2d9ktp',
    *   name: 'Acme Inc.',
-   *   ship_to_address: {
-   *     name: 'Acme Inc.',
-   *     type: null,
-   *     country: 'US',
-   *   },
+   *   ship_to_address: { name: 'Acme Inc.', country: 'US' },
    *   note: 'Key enterprise account',
    * });
    * ```
@@ -136,11 +128,7 @@ export class Customers extends APIResource {
    * const response = await client.sales.customers.registration({
    *   account_slug: 'my-company',
    *   is_existing_customer: false,
-   *   address: {
-   *     name: 'Headquarters',
-   *     type: null,
-   *     country: 'US',
-   *   },
+   *   address: { name: 'Headquarters', country: 'US' },
    *   customer_group_id: 'cgrp_01abc',
    *   customer_name: 'Acme Corp',
    *   payment_term_id: 'pt_01abc',

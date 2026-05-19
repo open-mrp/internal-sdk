@@ -22,12 +22,12 @@ export class Transactions extends APIResource {
    * ```ts
    * const transactionDetail =
    *   await client.finance.transactions.create({
-   *     adjustment_type: null,
+   *     adjustment_type: 'adjustment_type',
    *     amount: '500.00',
    *     customer_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
    *     method: 'check',
    *     note: 'Q1 invoice payment',
-   *     responsible_user_id: null,
+   *     responsible_user_id: 'responsible_user_id',
    *     type: 'payment',
    *   });
    * ```
@@ -64,16 +64,16 @@ export class Transactions extends APIResource {
    *   await client.finance.transactions.update(
    *     'tx_01jm4r6700f8nwq3v5hx2d9ktp',
    *     {
-   *       adjustment_type: null,
+   *       adjustment_type: 'adjustment_type',
    *       amount: '750.00',
    *       clear_adjustment_type: false,
    *       clear_responsible_user: false,
    *       clear_transaction_method: false,
-   *       is_fully_allocated: null,
+   *       is_fully_allocated: true,
    *       method: 'ach',
    *       note: 'Updated payment note',
-   *       number: null,
-   *       responsible_user_id: null,
+   *       number: 'number',
+   *       responsible_user_id: 'responsible_user_id',
    *     },
    *   );
    * ```

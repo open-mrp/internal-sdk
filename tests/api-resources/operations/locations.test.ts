@@ -71,7 +71,7 @@ describe('resource locations', () => {
           include: ['parent'],
           child_ids: ['string'],
           name: 'Warehouse B',
-          parent_id: null,
+          parent_id: 'parent_id',
           type: 'building',
         },
         { path: '/_stainless_unknown_path' },

@@ -25,11 +25,7 @@ export class Agents extends APIResource {
    *     model: 'claude-sonnet-4',
    *     provider: 'anthropic',
    *     temperature: 0.2,
-   *     trigger_config: {
-   *       cron_schedule: null,
-   *       timezone: null,
-   *       event_filters: ['email.received'],
-   *     },
+   *     trigger_config: { event_filters: ['email.received'] },
    *   },
    *   description:
    *     'Monitors inventory levels and creates restock alerts.',

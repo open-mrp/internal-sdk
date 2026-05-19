@@ -14,7 +14,7 @@ describe('resource settlements', () => {
         {
           amount: '150.00',
           invoice_id: 'iv_01jm4r6700f8nwq3v5hx2d9ktp',
-          note: null,
+          note: 'note',
           transaction_id: 'tx_01jm4r6700f8nwq3v5hx2d9ktp',
         },
       ],
@@ -35,7 +35,7 @@ describe('resource settlements', () => {
         {
           amount: '150.00',
           invoice_id: 'iv_01jm4r6700f8nwq3v5hx2d9ktp',
-          note: null,
+          note: 'note',
           transaction_id: 'tx_01jm4r6700f8nwq3v5hx2d9ktp',
         },
       ],
@@ -68,7 +68,7 @@ describe('resource settlements', () => {
   test('update: only required params', async () => {
     const responsePromise = client.finance.settlements.update('sl_01jm4r6700f8nwq3v5hx2d9ktp', {
       note: 'Partial payment applied',
-      number: null,
+      number: 'number',
       responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -83,7 +83,7 @@ describe('resource settlements', () => {
   test('update: required and optional params', async () => {
     const response = await client.finance.settlements.update('sl_01jm4r6700f8nwq3v5hx2d9ktp', {
       note: 'Partial payment applied',
-      number: null,
+      number: 'number',
       responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
     });
   });

@@ -36,7 +36,7 @@ export class Users extends APIResource {
    * const user = await client.identity.users.update(
    *   'us_01gf7a8200e9pvbd6bgyq395ae',
    *   {
-   *     email_verified: null,
+   *     email_verified: '2019-12-27T18:11:19.117Z',
    *     image_url:
    *       'https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg',
    *     name: 'John Doe',
