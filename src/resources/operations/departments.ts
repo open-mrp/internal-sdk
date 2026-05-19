@@ -20,8 +20,8 @@ export class Departments extends APIResource {
    * ```ts
    * const department =
    *   await client.operations.departments.create({
-   *     machine_ids: ['mc_01jm4r6700f8nwq3v5hx2d9ktp'],
    *     name: 'Fabrication',
+   *     machine_ids: ['mc_01jm4r6700f8nwq3v5hx2d9ktp'],
    *     scanning_station_ids: [
    *       'scst_01jm4r6700f8nwq3v5hx2d9ktp',
    *     ],
@@ -38,7 +38,9 @@ export class Departments extends APIResource {
    * @example
    * ```ts
    * const department =
-   *   await client.operations.departments.retrieve('id');
+   *   await client.operations.departments.retrieve(
+   *     'dp_01gf7a8200er3ar3pkfrb6kk30',
+   *   );
    * ```
    */
   retrieve(
@@ -56,14 +58,17 @@ export class Departments extends APIResource {
    * @example
    * ```ts
    * const department =
-   *   await client.operations.departments.update('id', {
-   *     machine_ids: ['string'],
-   *     scanning_station_ids: ['string'],
-   *     name: 'Production',
-   *   });
+   *   await client.operations.departments.update(
+   *     'dp_01gf7a8200er3ar3pkfrb6kk30',
+   *     { name: 'Production' },
+   *   );
    * ```
    */
-  update(id: string, body: DepartmentUpdateParams, options?: RequestOptions): APIPromise<Department> {
+  update(
+    id: string,
+    body: DepartmentUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Department> {
     return this._client.patch(path`/v1/operations/departments/${id}`, { body, ...options });
   }
 
@@ -90,7 +95,9 @@ export class Departments extends APIResource {
    * @example
    * ```ts
    * const department =
-   *   await client.operations.departments.delete('id');
+   *   await client.operations.departments.delete(
+   *     'dp_01gf7a8200er3ar3pkfrb6kk30',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<DepartmentDeleteResponse> {
@@ -172,19 +179,9 @@ export interface DepartmentDeleteResponse {}
 
 export interface DepartmentCreateParams {
   /**
-   * Machine IDs to connect.
-   */
-  machine_ids: Array<string>;
-
-  /**
    * Display name.
    */
   name: string;
-
-  /**
-   * Scanning station IDs to connect.
-   */
-  scanning_station_ids: Array<string>;
 
   /**
    * Storage location ID.
@@ -192,9 +189,19 @@ export interface DepartmentCreateParams {
   location_id?: string;
 
   /**
+   * Machine IDs to connect.
+   */
+  machine_ids?: Array<string>;
+
+  /**
    * Notes about the department.
    */
   notes?: string;
+
+  /**
+   * Scanning station IDs to connect.
+   */
+  scanning_station_ids?: Array<string>;
 }
 
 export interface DepartmentRetrieveParams {
@@ -207,19 +214,14 @@ export interface DepartmentRetrieveParams {
 
 export interface DepartmentUpdateParams {
   /**
-   * Machine IDs to connect (additive).
-   */
-  machine_ids: Array<string>;
-
-  /**
-   * Scanning station IDs to connect (additive).
-   */
-  scanning_station_ids: Array<string>;
-
-  /**
    * Storage location ID.
    */
   location_id?: string;
+
+  /**
+   * Machine IDs to connect (additive).
+   */
+  machine_ids?: Array<string>;
 
   /**
    * Display name.
@@ -230,6 +232,11 @@ export interface DepartmentUpdateParams {
    * Notes about the department.
    */
   notes?: string;
+
+  /**
+   * Scanning station IDs to connect (additive).
+   */
+  scanning_station_ids?: Array<string>;
 }
 
 export interface DepartmentListParams {

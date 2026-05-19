@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource childAccounts', () => {
   test('update', async () => {
-    const responsePromise = client.identity.childAccounts.update('child_account_id');
+    const responsePromise = client.identity.childAccounts.update('ac_01gf7a8200er3ar3pkfrb6kk29');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource childAccounts', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.identity.childAccounts.delete('child_account_id');
+    const responsePromise = client.identity.childAccounts.delete('ac_01gf7a8200er3ar3pkfrb6kk29');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

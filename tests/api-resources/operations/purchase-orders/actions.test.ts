@@ -28,10 +28,10 @@ describe('resource actions', () => {
   });
 
   test('updateChangeStatus: only required params', async () => {
-    const responsePromise = client.operations.purchaseOrders.actions.updateChangeStatus('id', {
-      send_email: true,
-      status_change: 'issue',
-    });
+    const responsePromise = client.operations.purchaseOrders.actions.updateChangeStatus(
+      'po_01jm4r6700f8nwq3v5hx2d9ktp',
+      { send_email: true, status_change: 'issue' },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -42,10 +42,13 @@ describe('resource actions', () => {
   });
 
   test('updateChangeStatus: required and optional params', async () => {
-    const response = await client.operations.purchaseOrders.actions.updateChangeStatus('id', {
-      send_email: true,
-      status_change: 'issue',
-      include: ['supplier'],
-    });
+    const response = await client.operations.purchaseOrders.actions.updateChangeStatus(
+      'po_01jm4r6700f8nwq3v5hx2d9ktp',
+      {
+        send_email: true,
+        status_change: 'issue',
+        include: ['supplier'],
+      },
+    );
   });
 });

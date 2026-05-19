@@ -24,18 +24,18 @@ describe('resource addresses', () => {
       country: 'US',
       name: 'Headquarters',
       email: 'email',
-      locality: 'Springfield',
+      locality: 'locality',
       phone: 'phone',
-      postal_code: '62701',
-      state: 'IL',
-      street_line_1: '123 Main St',
+      postal_code: 'postal_code',
+      state: 'state',
+      street_line_1: 'street_line_1',
       street_line_2: 'street_line_2',
       type: 'standard',
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.addresses.retrieve('id');
+    const responsePromise = client.sales.addresses.retrieve('ad_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -46,7 +46,7 @@ describe('resource addresses', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.addresses.update('id');
+    const responsePromise = client.sales.addresses.update('ad_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -60,17 +60,17 @@ describe('resource addresses', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.addresses.update(
-        'id',
+        'ad_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           country: 'country',
-          email: 'email',
+          email: null,
           locality: 'locality',
           name: 'Warehouse',
-          phone: 'phone',
+          phone: null,
           postal_code: 'postal_code',
           state: 'state',
           street_line_1: 'street_line_1',
-          street_line_2: 'street_line_2',
+          street_line_2: null,
           type: 'standard',
         },
         { path: '/_stainless_unknown_path' },
@@ -105,7 +105,7 @@ describe('resource addresses', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.addresses.delete('id');
+    const responsePromise = client.sales.addresses.delete('ad_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

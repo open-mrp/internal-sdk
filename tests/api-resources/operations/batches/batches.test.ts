@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource batches', () => {
   test('delete', async () => {
-    const responsePromise = client.operations.batches.delete('id');
+    const responsePromise = client.operations.batches.delete('bt_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource batches', () => {
   });
 
   test('nextSteps: only required params', async () => {
-    const responsePromise = client.operations.batches.nextSteps('id', {
+    const responsePromise = client.operations.batches.nextSteps('bt_01jm4r6700f8nwq3v5hx2d9ktp', {
       scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -33,7 +33,7 @@ describe('resource batches', () => {
   });
 
   test('nextSteps: required and optional params', async () => {
-    const response = await client.operations.batches.nextSteps('id', {
+    const response = await client.operations.batches.nextSteps('bt_01jm4r6700f8nwq3v5hx2d9ktp', {
       scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
     });
   });
@@ -60,7 +60,7 @@ describe('resource batches', () => {
   });
 
   test('retrieveFlow', async () => {
-    const responsePromise = client.operations.batches.retrieveFlow('id');
+    const responsePromise = client.operations.batches.retrieveFlow('bt_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

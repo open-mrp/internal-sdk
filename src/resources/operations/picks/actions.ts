@@ -16,7 +16,7 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const response = await client.operations.picks.actions.pack(
-   *   'id',
+   *   'pk_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { shipment_case_count: 3 },
    * );
    * ```
@@ -31,7 +31,9 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const pickDetail =
-   *   await client.operations.picks.actions.updatePick('id');
+   *   await client.operations.picks.actions.updatePick(
+   *     'pk_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   updatePick(id: string, options?: RequestOptions): APIPromise<PicksAPI.PickDetail> {
@@ -44,7 +46,9 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const pickDetail =
-   *   await client.operations.picks.actions.updateVoid('id');
+   *   await client.operations.picks.actions.updateVoid(
+   *     'pk_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   updateVoid(id: string, options?: RequestOptions): APIPromise<PicksAPI.PickDetail> {

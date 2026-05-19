@@ -16,7 +16,9 @@ export class LocationTypes extends APIResource {
    * @example
    * ```ts
    * const locationType =
-   *   await client.operations.locationTypes.retrieve('id');
+   *   await client.operations.locationTypes.retrieve(
+   *     'lc_01gf7a8200er3ar3pkfrb6kk31',
+   *   );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<LocationType> {

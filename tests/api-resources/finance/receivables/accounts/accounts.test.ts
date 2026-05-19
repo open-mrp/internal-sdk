@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource accounts', () => {
   test('retrieve', async () => {
-    const responsePromise = client.finance.receivables.accounts.retrieve('account_id');
+    const responsePromise = client.finance.receivables.accounts.retrieve('ac_01gf7a8200eaj8fke1xvw4h50x');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource accounts', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.receivables.accounts.retrieve(
-        'account_id',
+        'ac_01gf7a8200eaj8fke1xvw4h50x',
         {
           cursor: 'cursor',
           cutoff_date: '2019-12-27T18:11:19.117Z',

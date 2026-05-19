@@ -45,7 +45,9 @@ export class SalesOrders extends APIResource {
    * @example
    * ```ts
    * const salesOrderDetail =
-   *   await client.sales.salesOrders.retrieve('id');
+   *   await client.sales.salesOrders.retrieve(
+   *     'or_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -62,13 +64,16 @@ export class SalesOrders extends APIResource {
    * @example
    * ```ts
    * const salesOrderDetail =
-   *   await client.sales.salesOrders.update('id', {
-   *     carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     note: 'Updated shipping instructions',
-   *     priority_code: 'normal',
-   *     ship_to_name: 'Acme Inc.',
-   *     ship_to_street_line_1: '123 Main Street',
-   *   });
+   *   await client.sales.salesOrders.update(
+   *     'or_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       note: 'Updated shipping instructions',
+   *       priority_code: 'normal',
+   *       ship_to_name: 'Acme Inc.',
+   *       ship_to_street_line_1: '123 Main Street',
+   *     },
+   *   );
    * ```
    */
   update(
@@ -86,7 +91,7 @@ export class SalesOrders extends APIResource {
    * @example
    * ```ts
    * const salesOrder = await client.sales.salesOrders.delete(
-   *   'id',
+   *   'or_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -100,8 +105,14 @@ export class SalesOrders extends APIResource {
    * @example
    * ```ts
    * const response = await client.sales.salesOrders.checkout(
-   *   'id',
-   *   { email: 'email' },
+   *   'or_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   {
+   *     email: 'operations@acme.example.com',
+   *     cancel_url:
+   *       'https://dashboard.example.com/checkout/cancel',
+   *     success_url:
+   *       'https://dashboard.example.com/checkout/success',
+   *   },
    * );
    * ```
    */
@@ -151,15 +162,19 @@ export class SalesOrders extends APIResource {
    * @example
    * ```ts
    * const salesOrderDetail = await client.sales.salesOrders.salesOrders({
-   *   acknowledgement_email_contacts: [{ account_user_id: 'account_user_id' }],
    *   buyer_account_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
-   *   invoice_email_contacts: [{ account_user_id: 'account_user_id' }],
    *   lines: [
    *     {
+   *       edi_line_item_id: null,
+   *       item_id: null,
+   *       product_description: null,
    *       product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
    *       product_sku: 'WIDGET-001',
    *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *       quantity_value: '10',
+   *       unit_cost_denominator_unit_id: null,
+   *       unit_cost_numerator_unit_id: null,
+   *       unit_cost_value: null,
    *       unit_price_denominator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *       unit_price_numerator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *       unit_price_value: '25.00',
@@ -730,19 +745,9 @@ export interface SalesOrderRetrieveStatusesParams {
 
 export interface SalesOrderSalesOrdersParams {
   /**
-   * Body param: Account users who should receive order acknowledgement emails.
-   */
-  acknowledgement_email_contacts: Array<SalesOrderEmailContactInput>;
-
-  /**
    * Body param: Buyer account ID.
    */
   buyer_account_id: string;
-
-  /**
-   * Body param: Account users who should receive invoice emails.
-   */
-  invoice_email_contacts: Array<SalesOrderEmailContactInput>;
 
   /**
    * Body param: Order lines to create.
@@ -775,6 +780,11 @@ export interface SalesOrderSalesOrdersParams {
     | 'lines'
     | 'lines.item'
   >;
+
+  /**
+   * Body param: Account users who should receive order acknowledgement emails.
+   */
+  acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
    * Body param: Bill-to country.
@@ -830,6 +840,11 @@ export interface SalesOrderSalesOrdersParams {
    * Body param: Customer purchase order number.
    */
   customer_po_number?: string;
+
+  /**
+   * Body param: Account users who should receive invoice emails.
+   */
+  invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
    * Body param: Order note.

@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource salesOrders', () => {
   test('retrieve', async () => {
-    const responsePromise = client.sales.salesOrders.retrieve('id');
+    const responsePromise = client.sales.salesOrders.retrieve('or_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource salesOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.salesOrders.retrieve(
-        'id',
+        'or_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['customer'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource salesOrders', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.salesOrders.update('id');
+    const responsePromise = client.sales.salesOrders.update('or_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource salesOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.salesOrders.update(
-        'id',
+        'or_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           include: ['customer'],
           acknowledgement_email_contacts: [{ account_user_id: 'account_user_id' }],
@@ -86,7 +86,7 @@ describe('resource salesOrders', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.salesOrders.delete('id');
+    const responsePromise = client.sales.salesOrders.delete('or_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -97,7 +97,9 @@ describe('resource salesOrders', () => {
   });
 
   test('checkout: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.checkout('id', { email: 'email' });
+    const responsePromise = client.sales.salesOrders.checkout('or_01jm4r6700f8nwq3v5hx2d9ktp', {
+      email: 'operations@acme.example.com',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -108,10 +110,10 @@ describe('resource salesOrders', () => {
   });
 
   test('checkout: required and optional params', async () => {
-    const response = await client.sales.salesOrders.checkout('id', {
-      email: 'email',
-      cancel_url: 'cancel_url',
-      success_url: 'success_url',
+    const response = await client.sales.salesOrders.checkout('or_01jm4r6700f8nwq3v5hx2d9ktp', {
+      email: 'operations@acme.example.com',
+      cancel_url: 'https://dashboard.example.com/checkout/cancel',
+      success_url: 'https://dashboard.example.com/checkout/success',
     });
   });
 
@@ -178,9 +180,7 @@ describe('resource salesOrders', () => {
 
   test('salesOrders: only required params', async () => {
     const responsePromise = client.sales.salesOrders.salesOrders({
-      acknowledgement_email_contacts: [{ account_user_id: 'account_user_id' }],
       buyer_account_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
-      invoice_email_contacts: [{ account_user_id: 'account_user_id' }],
       lines: [
         {
           product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -206,9 +206,7 @@ describe('resource salesOrders', () => {
 
   test('salesOrders: required and optional params', async () => {
     const response = await client.sales.salesOrders.salesOrders({
-      acknowledgement_email_contacts: [{ account_user_id: 'account_user_id' }],
       buyer_account_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
-      invoice_email_contacts: [{ account_user_id: 'account_user_id' }],
       lines: [
         {
           product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -229,6 +227,7 @@ describe('resource salesOrders', () => {
       priority_code: 'normal',
       sales_order_type_code: 'sales_order',
       include: ['customer'],
+      acknowledgement_email_contacts: [{ account_user_id: 'account_user_id' }],
       bill_to_country: 'bill_to_country',
       bill_to_locality: 'bill_to_locality',
       bill_to_name: 'bill_to_name',
@@ -240,6 +239,7 @@ describe('resource salesOrders', () => {
       carrier_billing_type: 'carrier_billing_type',
       carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
       customer_po_number: 'customer_po_number',
+      invoice_email_contacts: [{ account_user_id: 'account_user_id' }],
       note: 'Rush order for trade show',
       order_discount_id: 'order_discount_id',
       payment_term_id: 'payment_term_id',

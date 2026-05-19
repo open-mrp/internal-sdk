@@ -30,7 +30,9 @@ export class ItemCategories extends APIResource {
    * @example
    * ```ts
    * const itemCategory =
-   *   await client.catalog.itemCategories.retrieve('id');
+   *   await client.catalog.itemCategories.retrieve(
+   *     'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -48,9 +50,10 @@ export class ItemCategories extends APIResource {
    * @example
    * ```ts
    * const itemCategory =
-   *   await client.catalog.itemCategories.update('id', {
-   *     name: 'Electronic Components',
-   *   });
+   *   await client.catalog.itemCategories.update(
+   *     'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { name: 'Electronic Components' },
+   *   );
    * ```
    */
   update(
@@ -73,7 +76,9 @@ export class ItemCategories extends APIResource {
    * @example
    * ```ts
    * const itemCategory =
-   *   await client.catalog.itemCategories.delete('id');
+   *   await client.catalog.itemCategories.delete(
+   *     'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<ItemCategoryDeleteResponse> {

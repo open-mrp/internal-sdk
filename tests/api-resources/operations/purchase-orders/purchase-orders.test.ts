@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource purchaseOrders', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.purchaseOrders.retrieve('id');
+    const responsePromise = client.operations.purchaseOrders.retrieve('po_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,17 +23,15 @@ describe('resource purchaseOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.purchaseOrders.retrieve(
-        'id',
+        'po_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['supplier'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('update: only required params', async () => {
-    const responsePromise = client.operations.purchaseOrders.update('id', {
-      contact_account_user_ids: ['string'],
-    });
+  test('update', async () => {
+    const responsePromise = client.operations.purchaseOrders.update('po_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -43,21 +41,28 @@ describe('resource purchaseOrders', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: required and optional params', async () => {
-    const response = await client.operations.purchaseOrders.update('id', {
-      contact_account_user_ids: ['string'],
-      include: ['supplier'],
-      billing_address_id: 'billing_address_id',
-      note: 'Updated delivery notes',
-      number: 'PO-001',
-      priority_code: 'normal',
-      promised_at: '2026-05-15T00:00:00Z',
-      shipping_address_id: 'shipping_address_id',
-    });
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.purchaseOrders.update(
+        'po_01jm4r6700f8nwq3v5hx2d9ktp',
+        {
+          include: ['supplier'],
+          billing_address_id: 'billing_address_id',
+          contact_account_user_ids: ['string'],
+          note: 'Updated delivery notes',
+          number: 'PO-001',
+          priority_code: 'normal',
+          promised_at: '2026-05-15T00:00:00Z',
+          shipping_address_id: 'shipping_address_id',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.purchaseOrders.delete('id');
+    const responsePromise = client.operations.purchaseOrders.delete('po_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,7 +74,6 @@ describe('resource purchaseOrders', () => {
 
   test('purchaseOrders: only required params', async () => {
     const responsePromise = client.operations.purchaseOrders.purchaseOrders({
-      contact_account_user_ids: ['string'],
       lines: [
         {
           product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -95,7 +99,6 @@ describe('resource purchaseOrders', () => {
 
   test('purchaseOrders: required and optional params', async () => {
     const response = await client.operations.purchaseOrders.purchaseOrders({
-      contact_account_user_ids: ['string'],
       lines: [
         {
           product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -125,6 +128,7 @@ describe('resource purchaseOrders', () => {
       carrier_billing_account: 'carrier_billing_account',
       carrier_billing_type: 'carrier_billing_type',
       carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+      contact_account_user_ids: ['string'],
       note: 'Urgent restock order',
       payment_term_id: 'payment_term_id',
       promised_at: 'promised_at',

@@ -10,9 +10,9 @@ const client = new Augno({
 describe('resource sales', () => {
   test('checkoutSessions: only required params', async () => {
     const responsePromise = client.sales.checkoutSessions({
-      order_id: 'order_id',
-      order_number: 'order_number',
-      order_total_cents: 0,
+      order_id: 'or_01jm4r6700f8nwq3v5hx2d9ktp',
+      order_number: 'SO-001',
+      order_total_cents: 125050,
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -25,10 +25,10 @@ describe('resource sales', () => {
 
   test('checkoutSessions: required and optional params', async () => {
     const response = await client.sales.checkoutSessions({
-      order_id: 'order_id',
-      order_number: 'order_number',
-      order_total_cents: 0,
-      customer_po: 'customer_po',
+      order_id: 'or_01jm4r6700f8nwq3v5hx2d9ktp',
+      order_number: 'SO-001',
+      order_total_cents: 125050,
+      customer_po: 'PO-4242',
     });
   });
 });

@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource auditEvents', () => {
   test('retrieve', async () => {
-    const responsePromise = client.core.auditEvents.retrieve('id');
+    const responsePromise = client.core.auditEvents.retrieve('ae_01gq7s3f2m0y9h2t7z1w7q3v9k');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,7 +22,11 @@ describe('resource auditEvents', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.core.auditEvents.retrieve('id', { include: ['actor'] }, { path: '/_stainless_unknown_path' }),
+      client.core.auditEvents.retrieve(
+        'ae_01gq7s3f2m0y9h2t7z1w7q3v9k',
+        { include: ['actor'] },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 

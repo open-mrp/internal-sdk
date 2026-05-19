@@ -13,7 +13,6 @@ describe('resource memories', () => {
       category: 'preference',
       content: 'Customer prefers express shipping on all orders.',
       importance: 0.8,
-      metadata: { source: 'support_ticket' },
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -29,15 +28,18 @@ describe('resource memories', () => {
       category: 'preference',
       content: 'Customer prefers express shipping on all orders.',
       importance: 0.8,
-      metadata: { source: 'support_ticket' },
       entity_id: 'entity_id',
       entity_type: 'entity_type',
       expires_at: 'expires_at',
+      metadata: [
+        123, 34, 115, 111, 117, 114, 99, 101, 34, 58, 32, 34, 115, 117, 112, 112, 111, 114, 116, 95, 116, 105,
+        99, 107, 101, 116, 34, 125,
+      ],
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.ai.memories.retrieve('id');
+    const responsePromise = client.ai.memories.retrieve('agmm_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,11 +50,10 @@ describe('resource memories', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.ai.memories.update('id', {
+    const responsePromise = client.ai.memories.update('agmm_01jm4r6700f8nwq3v5hx2d9ktp', {
       category: 'category',
       content: 'Customer prefers next-day shipping on all orders.',
       importance: 0.9,
-      metadata: {},
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -64,14 +65,14 @@ describe('resource memories', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.ai.memories.update('id', {
+    const response = await client.ai.memories.update('agmm_01jm4r6700f8nwq3v5hx2d9ktp', {
       category: 'category',
       content: 'Customer prefers next-day shipping on all orders.',
       importance: 0.9,
-      metadata: {},
       entity_id: 'entity_id',
       entity_type: 'entity_type',
       expires_at: 'expires_at',
+      metadata: {},
     });
   });
 
@@ -103,7 +104,7 @@ describe('resource memories', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.ai.memories.delete('id');
+    const responsePromise = client.ai.memories.delete('agmm_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

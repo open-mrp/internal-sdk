@@ -27,7 +27,7 @@ export class Picks extends APIResource {
    * @example
    * ```ts
    * const pickDetail = await client.operations.picks.retrieve(
-   *   'id',
+   *   'pk_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -45,7 +45,7 @@ export class Picks extends APIResource {
    * @example
    * ```ts
    * const pickDetail = await client.operations.picks.update(
-   *   'id',
+   *   'pk_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { number: 'PCK-2025-0042' },
    * );
    * ```
@@ -80,7 +80,9 @@ export class Picks extends APIResource {
    * @example
    * ```ts
    * const response =
-   *   await client.operations.picks.retrieveShipments('id');
+   *   await client.operations.picks.retrieveShipments(
+   *     'pk_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieveShipments(

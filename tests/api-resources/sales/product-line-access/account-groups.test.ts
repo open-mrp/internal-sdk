@@ -9,7 +9,9 @@ const client = new Augno({
 
 describe('resource accountGroups', () => {
   test('retrieve', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.retrieve('account_group_id');
+    const responsePromise = client.sales.productLineAccess.accountGroups.retrieve(
+      'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +22,9 @@ describe('resource accountGroups', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.update('account_group_id');
+    const responsePromise = client.sales.productLineAccess.accountGroups.update(
+      'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,7 +38,7 @@ describe('resource accountGroups', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.productLineAccess.accountGroups.update(
-        'account_group_id',
+        'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
         { product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -42,7 +46,9 @@ describe('resource accountGroups', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.delete('account_group_id');
+    const responsePromise = client.sales.productLineAccess.accountGroups.delete(
+      'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

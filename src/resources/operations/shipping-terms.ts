@@ -19,7 +19,9 @@ export class ShippingTerms extends APIResource {
    * @example
    * ```ts
    * const shippingTerm =
-   *   await client.operations.shippingTerms.retrieve('id');
+   *   await client.operations.shippingTerms.retrieve(
+   *     'shtm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -37,9 +39,10 @@ export class ShippingTerms extends APIResource {
    * @example
    * ```ts
    * const shippingTerm =
-   *   await client.operations.shippingTerms.update('id', {
-   *     name: 'Collect',
-   *   });
+   *   await client.operations.shippingTerms.update(
+   *     'shtm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { name: 'Collect' },
+   *   );
    * ```
    */
   update(
@@ -62,7 +65,9 @@ export class ShippingTerms extends APIResource {
    * @example
    * ```ts
    * const shippingTerm =
-   *   await client.operations.shippingTerms.delete('id');
+   *   await client.operations.shippingTerms.delete(
+   *     'shtm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<ShippingTermDeleteResponse> {
@@ -93,9 +98,9 @@ export class ShippingTerms extends APIResource {
    * ```ts
    * const shippingTerm =
    *   await client.operations.shippingTerms.shippingTerms({
-   *     free_shipping_service_level_ids: ['string'],
    *     name: 'Prepaid',
    *     type: 'carrier_rate_freight',
+   *     free_shipping_service_level_ids: [],
    *   });
    * ```
    */
@@ -273,11 +278,6 @@ export interface ShippingTermRetrieveShippingTermsParams {
 
 export interface ShippingTermShippingTermsParams {
   /**
-   * Body param: Service level IDs that qualify for free shipping.
-   */
-  free_shipping_service_level_ids: Array<string>;
-
-  /**
    * Body param: Display name.
    */
   name: string;
@@ -300,6 +300,11 @@ export interface ShippingTermShippingTermsParams {
    * create/update requests.
    */
   flat_rate?: QuantityInput | null;
+
+  /**
+   * Body param: Service level IDs that qualify for free shipping.
+   */
+  free_shipping_service_level_ids?: Array<string>;
 
   /**
    * Body param: QuantityInput represents a value with an associated unit for

@@ -45,7 +45,7 @@ export class Properties extends APIResource {
    * @example
    * ```ts
    * const property = await client.catalog.properties.retrieve(
-   *   'id',
+   *   'pp_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -63,7 +63,7 @@ export class Properties extends APIResource {
    * @example
    * ```ts
    * const property = await client.catalog.properties.update(
-   *   'id',
+   *   'pp_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { name: 'Size' },
    * );
    * ```
@@ -98,7 +98,7 @@ export class Properties extends APIResource {
    * @example
    * ```ts
    * const property = await client.catalog.properties.delete(
-   *   'id',
+   *   'pp_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */

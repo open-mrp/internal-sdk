@@ -37,7 +37,9 @@ export class Roles extends APIResource {
    *
    * @example
    * ```ts
-   * const role = await client.identity.roles.retrieve('id');
+   * const role = await client.identity.roles.retrieve(
+   *   'rl_01gf7a8200er3ar3pkfrb6kk29',
+   * );
    * ```
    */
   retrieve(
@@ -54,10 +56,13 @@ export class Roles extends APIResource {
    *
    * @example
    * ```ts
-   * const role = await client.identity.roles.update('id', {
-   *   name: 'Updated Manager',
-   *   permissions: ['customers:read', 'customers:update'],
-   * });
+   * const role = await client.identity.roles.update(
+   *   'rl_01gf7a8200er3ar3pkfrb6kk29',
+   *   {
+   *     name: 'Updated Manager',
+   *     permissions: ['customers:read', 'customers:update'],
+   *   },
+   * );
    * ```
    */
   update(
@@ -90,7 +95,9 @@ export class Roles extends APIResource {
    *
    * @example
    * ```ts
-   * const role = await client.identity.roles.delete('id');
+   * const role = await client.identity.roles.delete(
+   *   'rl_01gf7a8200er3ar3pkfrb6kk29',
+   * );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<RoleDeleteResponse> {

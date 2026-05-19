@@ -17,7 +17,9 @@ export class ScanningStations extends APIResource {
    * @example
    * ```ts
    * const scanningStation =
-   *   await client.operations.scanningStations.retrieve('id');
+   *   await client.operations.scanningStations.retrieve(
+   *     'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -34,9 +36,10 @@ export class ScanningStations extends APIResource {
    * @example
    * ```ts
    * const scanningStation =
-   *   await client.operations.scanningStations.update('id', {
-   *     name: 'Station B',
-   *   });
+   *   await client.operations.scanningStations.update(
+   *     'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { name: 'Station B' },
+   *   );
    * ```
    */
   update(
@@ -58,7 +61,9 @@ export class ScanningStations extends APIResource {
    * @example
    * ```ts
    * const scanningStation =
-   *   await client.operations.scanningStations.delete('id');
+   *   await client.operations.scanningStations.delete(
+   *     'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<ScanningStationDeleteResponse> {
@@ -73,7 +78,7 @@ export class ScanningStations extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.scanningStations.consumptions(
-   *     'id',
+   *     'scst_01jm4r6700f8nwq3v5hx2d9ktp',
    *     {
    *       batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
    *       production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -101,7 +106,7 @@ export class ScanningStations extends APIResource {
    * ```ts
    * const listBatch =
    *   await client.operations.scanningStations.retrieveBatches(
-   *     'id',
+   *     'scst_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */
@@ -162,7 +167,7 @@ export class ScanningStations extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.scanningStations.updateProductionSteps(
-   *     'id',
+   *     'scst_01jm4r6700f8nwq3v5hx2d9ktp',
    *     { name: 'Mixing' },
    *   );
    * ```

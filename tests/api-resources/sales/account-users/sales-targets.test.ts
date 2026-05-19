@@ -9,8 +9,8 @@ const client = new Augno({
 
 describe('resource salesTargets', () => {
   test('update: only required params', async () => {
-    const responsePromise = client.sales.accountUsers.salesTargets.update('target_id', {
-      id: 'id',
+    const responsePromise = client.sales.accountUsers.salesTargets.update('example', {
+      id: 'acus_01gf7a8200er3ar3pkfrb6kk29',
       amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       amount_value: '75000.00',
       end_date: '2026-06-30T00:00:00Z',
@@ -26,8 +26,8 @@ describe('resource salesTargets', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.accountUsers.salesTargets.update('target_id', {
-      id: 'id',
+    const response = await client.sales.accountUsers.salesTargets.update('example', {
+      id: 'acus_01gf7a8200er3ar3pkfrb6kk29',
       amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       amount_value: '75000.00',
       end_date: '2026-06-30T00:00:00Z',
@@ -36,7 +36,9 @@ describe('resource salesTargets', () => {
   });
 
   test('retrieveSalesTargets', async () => {
-    const responsePromise = client.sales.accountUsers.salesTargets.retrieveSalesTargets('id');
+    const responsePromise = client.sales.accountUsers.salesTargets.retrieveSalesTargets(
+      'acus_01gf7a8200er3ar3pkfrb6kk29',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,7 +52,7 @@ describe('resource salesTargets', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.accountUsers.salesTargets.retrieveSalesTargets(
-        'id',
+        'acus_01gf7a8200er3ar3pkfrb6kk29',
         {
           cursor: 'cursor',
           limit: 0,
@@ -62,12 +64,15 @@ describe('resource salesTargets', () => {
   });
 
   test('salesTargets: only required params', async () => {
-    const responsePromise = client.sales.accountUsers.salesTargets.salesTargets('id', {
-      amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-      amount_value: '50000.00',
-      end_date: '2026-03-31T00:00:00Z',
-      start_date: '2026-01-01T00:00:00Z',
-    });
+    const responsePromise = client.sales.accountUsers.salesTargets.salesTargets(
+      'acus_01gf7a8200er3ar3pkfrb6kk29',
+      {
+        amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+        amount_value: '50000.00',
+        end_date: '2026-03-31T00:00:00Z',
+        start_date: '2026-01-01T00:00:00Z',
+      },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -78,11 +83,14 @@ describe('resource salesTargets', () => {
   });
 
   test('salesTargets: required and optional params', async () => {
-    const response = await client.sales.accountUsers.salesTargets.salesTargets('id', {
-      amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-      amount_value: '50000.00',
-      end_date: '2026-03-31T00:00:00Z',
-      start_date: '2026-01-01T00:00:00Z',
-    });
+    const response = await client.sales.accountUsers.salesTargets.salesTargets(
+      'acus_01gf7a8200er3ar3pkfrb6kk29',
+      {
+        amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+        amount_value: '50000.00',
+        end_date: '2026-03-31T00:00:00Z',
+        start_date: '2026-01-01T00:00:00Z',
+      },
+    );
   });
 });

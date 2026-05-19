@@ -41,7 +41,9 @@ export class Settlements extends APIResource {
    * @example
    * ```ts
    * const settlement =
-   *   await client.finance.settlements.retrieve('id');
+   *   await client.finance.settlements.retrieve(
+   *     'sl_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -58,7 +60,7 @@ export class Settlements extends APIResource {
    * @example
    * ```ts
    * const settlement = await client.finance.settlements.update(
-   *   'id',
+   *   'sl_01jm4r6700f8nwq3v5hx2d9ktp',
    *   {
    *     note: 'Partial payment applied',
    *     number: null,
@@ -93,7 +95,7 @@ export class Settlements extends APIResource {
    * @example
    * ```ts
    * const settlement = await client.finance.settlements.delete(
-   *   'id',
+   *   'sl_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */

@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource units', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.catalog.unitGroups.units.create('unit_group_id', {
+    const responsePromise = client.catalog.unitGroups.units.create('ug_01jm4r6700f8nwq3v5hx2d9ktp', {
       unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -22,7 +22,7 @@ describe('resource units', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.units.create('unit_group_id', {
+    const response = await client.catalog.unitGroups.units.create('ug_01jm4r6700f8nwq3v5hx2d9ktp', {
       unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       include: ['unit'],
       customer_portal_visibility: 'visible',
@@ -32,8 +32,8 @@ describe('resource units', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.catalog.unitGroups.units.retrieve('id', {
-      unit_group_id: 'unit_group_id',
+    const responsePromise = client.catalog.unitGroups.units.retrieve('un_01jm4r6700f8nwq3v5hx2d9ktp', {
+      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -45,14 +45,16 @@ describe('resource units', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.units.retrieve('id', {
-      unit_group_id: 'unit_group_id',
+    const response = await client.catalog.unitGroups.units.retrieve('un_01jm4r6700f8nwq3v5hx2d9ktp', {
+      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
       include: ['unit'],
     });
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.catalog.unitGroups.units.update('id', { unit_group_id: 'unit_group_id' });
+    const responsePromise = client.catalog.unitGroups.units.update('un_01jm4r6700f8nwq3v5hx2d9ktp', {
+      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -63,8 +65,8 @@ describe('resource units', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.units.update('id', {
-      unit_group_id: 'unit_group_id',
+    const response = await client.catalog.unitGroups.units.update('un_01jm4r6700f8nwq3v5hx2d9ktp', {
+      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
       include: ['unit'],
       customer_portal_visibility: 'visible',
       discount_fixed: 0,
@@ -74,7 +76,7 @@ describe('resource units', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.catalog.unitGroups.units.list('unit_group_id');
+    const responsePromise = client.catalog.unitGroups.units.list('ug_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -88,7 +90,7 @@ describe('resource units', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.unitGroups.units.list(
-        'unit_group_id',
+        'ug_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['unit'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -96,7 +98,9 @@ describe('resource units', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.catalog.unitGroups.units.delete('id', { unit_group_id: 'unit_group_id' });
+    const responsePromise = client.catalog.unitGroups.units.delete('un_01jm4r6700f8nwq3v5hx2d9ktp', {
+      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -107,6 +111,8 @@ describe('resource units', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.units.delete('id', { unit_group_id: 'unit_group_id' });
+    const response = await client.catalog.unitGroups.units.delete('un_01jm4r6700f8nwq3v5hx2d9ktp', {
+      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
   });
 });

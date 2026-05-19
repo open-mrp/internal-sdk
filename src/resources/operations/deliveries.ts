@@ -21,7 +21,9 @@ export class Deliveries extends APIResource {
    * @example
    * ```ts
    * const delivery =
-   *   await client.operations.deliveries.retrieve('id');
+   *   await client.operations.deliveries.retrieve(
+   *     'dlv_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<DeliveryRetrieveResponse> {

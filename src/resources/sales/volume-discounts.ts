@@ -21,7 +21,9 @@ export class VolumeDiscounts extends APIResource {
    * @example
    * ```ts
    * const volumeDiscount =
-   *   await client.sales.volumeDiscounts.retrieve('id');
+   *   await client.sales.volumeDiscounts.retrieve(
+   *     'quds_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -39,28 +41,28 @@ export class VolumeDiscounts extends APIResource {
    * @example
    * ```ts
    * const volumeDiscount =
-   *   await client.sales.volumeDiscounts.update('id', {
-   *     attribute_ids: ['string'],
-   *     category_ids: ['string'],
-   *     customer_group_ids: ['string'],
-   *     has_attributes: true,
-   *     has_categories: true,
-   *     has_customer_groups: true,
-   *     has_product_lines: true,
-   *     has_tiers: true,
-   *     has_units: true,
-   *     product_line_ids: ['string'],
-   *     tiers: [
-   *       {
-   *         name: '50+ Units',
-   *         discount_percentage:
-   *           '10.000000000000000000000000000000',
-   *         threshold: '50.000000000000000000000000000000',
-   *       },
-   *     ],
-   *     unit_ids: ['string'],
-   *     name: 'Updated Bulk Discount',
-   *   });
+   *   await client.sales.volumeDiscounts.update(
+   *     'quds_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       has_attributes: false,
+   *       has_categories: false,
+   *       has_customer_groups: false,
+   *       has_product_lines: false,
+   *       has_tiers: true,
+   *       has_units: false,
+   *       name: 'Updated Bulk Discount',
+   *       tiers: [
+   *         {
+   *           id: null,
+   *           name: '50+ Units',
+   *           discount_percentage:
+   *             '10.000000000000000000000000000000',
+   *           threshold: '50.000000000000000000000000000000',
+   *           parent_tier_id: null,
+   *         },
+   *       ],
+   *     },
+   *   );
    * ```
    */
   update(id: string, body: VolumeDiscountUpdateParams, options?: RequestOptions): APIPromise<VolumeDiscount> {
@@ -73,7 +75,9 @@ export class VolumeDiscounts extends APIResource {
    * @example
    * ```ts
    * const volumeDiscount =
-   *   await client.sales.volumeDiscounts.delete('id');
+   *   await client.sales.volumeDiscounts.delete(
+   *     'quds_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<VolumeDiscountDeleteResponse> {
@@ -103,20 +107,16 @@ export class VolumeDiscounts extends APIResource {
    * ```ts
    * const volumeDiscount =
    *   await client.sales.volumeDiscounts.volumeDiscounts({
-   *     attribute_ids: ['string'],
-   *     category_ids: ['string'],
-   *     customer_group_ids: ['string'],
    *     name: 'Bulk Order Discount',
-   *     product_line_ids: ['string'],
    *     tiers: [
    *       {
    *         name: '100+ Units',
    *         discount_percentage:
    *           '5.000000000000000000000000000000',
    *         threshold: '100.000000000000000000000000000000',
+   *         parent_tier_id: null,
    *       },
    *     ],
-   *     unit_ids: ['string'],
    *   });
    * ```
    */
@@ -284,21 +284,6 @@ export interface VolumeDiscountRetrieveParams {
 
 export interface VolumeDiscountUpdateParams {
   /**
-   * Attribute IDs to set.
-   */
-  attribute_ids: Array<string>;
-
-  /**
-   * Item category IDs to set.
-   */
-  category_ids: Array<string>;
-
-  /**
-   * Account group IDs to set as customer groups.
-   */
-  customer_group_ids: Array<string>;
-
-  /**
    * Whether to replace attributes.
    */
   has_attributes: boolean;
@@ -329,24 +314,39 @@ export interface VolumeDiscountUpdateParams {
   has_units: boolean;
 
   /**
-   * Product line IDs to set.
+   * Attribute IDs to set.
    */
-  product_line_ids: Array<string>;
+  attribute_ids?: Array<string>;
 
   /**
-   * Tiers (upsert semantics).
+   * Item category IDs to set.
    */
-  tiers: Array<VolumeDiscountUpdateParams.Tier>;
+  category_ids?: Array<string>;
 
   /**
-   * Unit IDs to set as acceptable units.
+   * Account group IDs to set as customer groups.
    */
-  unit_ids: Array<string>;
+  customer_group_ids?: Array<string>;
 
   /**
    * Display name.
    */
   name?: string;
+
+  /**
+   * Product line IDs to set.
+   */
+  product_line_ids?: Array<string>;
+
+  /**
+   * Tiers (upsert semantics).
+   */
+  tiers?: Array<VolumeDiscountUpdateParams.Tier>;
+
+  /**
+   * Unit IDs to set as acceptable units.
+   */
+  unit_ids?: Array<string>;
 }
 
 export namespace VolumeDiscountUpdateParams {
@@ -400,29 +400,9 @@ export interface VolumeDiscountRetrieveVolumeDiscountsParams {
 
 export interface VolumeDiscountVolumeDiscountsParams {
   /**
-   * Attribute IDs to associate.
-   */
-  attribute_ids: Array<string>;
-
-  /**
-   * Item category IDs to associate.
-   */
-  category_ids: Array<string>;
-
-  /**
-   * Account group IDs to associate as customer groups.
-   */
-  customer_group_ids: Array<string>;
-
-  /**
    * Display name.
    */
   name: string;
-
-  /**
-   * Product line IDs to associate.
-   */
-  product_line_ids: Array<string>;
 
   /**
    * Tiers for this volume discount.
@@ -430,9 +410,29 @@ export interface VolumeDiscountVolumeDiscountsParams {
   tiers: Array<VolumeDiscountVolumeDiscountsParams.Tier>;
 
   /**
+   * Attribute IDs to associate.
+   */
+  attribute_ids?: Array<string>;
+
+  /**
+   * Item category IDs to associate.
+   */
+  category_ids?: Array<string>;
+
+  /**
+   * Account group IDs to associate as customer groups.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Product line IDs to associate.
+   */
+  product_line_ids?: Array<string>;
+
+  /**
    * Unit IDs to associate as acceptable units.
    */
-  unit_ids: Array<string>;
+  unit_ids?: Array<string>;
 }
 
 export namespace VolumeDiscountVolumeDiscountsParams {

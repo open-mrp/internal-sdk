@@ -17,8 +17,8 @@ export class Properties extends APIResource {
    * ```ts
    * const property =
    *   await client.catalog.itemCategories.properties.update(
-   *     'property_id',
-   *     { id: 'id' },
+   *     'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp' },
    *   );
    * ```
    */
@@ -39,8 +39,8 @@ export class Properties extends APIResource {
    * ```ts
    * const property =
    *   await client.catalog.itemCategories.properties.delete(
-   *     'property_id',
-   *     { id: 'id' },
+   *     'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp' },
    *   );
    * ```
    */

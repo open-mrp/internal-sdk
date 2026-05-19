@@ -19,9 +19,9 @@ export class Territories extends APIResource {
    * ```ts
    * const territory =
    *   await client.sales.accounts.territories.create(
-   *     'account_id',
+   *     'ac_01gf7a8200eaj8fke1xvw4h50x',
    *     {
-   *       sales_rep_id: 'au_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       sales_rep_id: 'acus_01gf7a8200er3ar3pkfrb6kk29',
    *       state: 'NY',
    *       end_zipcode: 10999,
    *       start_zipcode: 10001,
@@ -44,9 +44,10 @@ export class Territories extends APIResource {
    * @example
    * ```ts
    * const territory =
-   *   await client.sales.accounts.territories.retrieve('id', {
-   *     account_id: 'account_id',
-   *   });
+   *   await client.sales.accounts.territories.retrieve(
+   *     'te_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { account_id: 'ac_01gf7a8200eaj8fke1xvw4h50x' },
+   *   );
    * ```
    */
   retrieve(id: string, params: TerritoryRetrieveParams, options?: RequestOptions): APIPromise<Territory> {
@@ -60,10 +61,13 @@ export class Territories extends APIResource {
    * @example
    * ```ts
    * const territory =
-   *   await client.sales.accounts.territories.update('id', {
-   *     account_id: 'account_id',
-   *     state: 'CA',
-   *   });
+   *   await client.sales.accounts.territories.update(
+   *     'te_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       account_id: 'ac_01gf7a8200eaj8fke1xvw4h50x',
+   *       state: 'CA',
+   *     },
+   *   );
    * ```
    */
   update(id: string, params: TerritoryUpdateParams, options?: RequestOptions): APIPromise<Territory> {
@@ -82,7 +86,7 @@ export class Territories extends APIResource {
    * ```ts
    * const territories =
    *   await client.sales.accounts.territories.list(
-   *     'account_id',
+   *     'ac_01gf7a8200eaj8fke1xvw4h50x',
    *   );
    * ```
    */
@@ -100,9 +104,10 @@ export class Territories extends APIResource {
    * @example
    * ```ts
    * const territory =
-   *   await client.sales.accounts.territories.delete('id', {
-   *     account_id: 'account_id',
-   *   });
+   *   await client.sales.accounts.territories.delete(
+   *     'te_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { account_id: 'ac_01gf7a8200eaj8fke1xvw4h50x' },
+   *   );
    * ```
    */
   delete(

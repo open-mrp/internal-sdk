@@ -9,11 +9,7 @@ const client = new Augno({
 
 describe('resource departments', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.departments.create({
-      machine_ids: ['mc_01jm4r6700f8nwq3v5hx2d9ktp'],
-      name: 'Fabrication',
-      scanning_station_ids: ['scst_01jm4r6700f8nwq3v5hx2d9ktp'],
-    });
+    const responsePromise = client.operations.departments.create({ name: 'Fabrication' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -25,16 +21,16 @@ describe('resource departments', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.operations.departments.create({
-      machine_ids: ['mc_01jm4r6700f8nwq3v5hx2d9ktp'],
       name: 'Fabrication',
-      scanning_station_ids: ['scst_01jm4r6700f8nwq3v5hx2d9ktp'],
       location_id: 'location_id',
+      machine_ids: ['mc_01jm4r6700f8nwq3v5hx2d9ktp'],
       notes: 'notes',
+      scanning_station_ids: ['scst_01jm4r6700f8nwq3v5hx2d9ktp'],
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.departments.retrieve('id');
+    const responsePromise = client.operations.departments.retrieve('dp_01gf7a8200er3ar3pkfrb6kk30');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,18 +44,15 @@ describe('resource departments', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.departments.retrieve(
-        'id',
+        'dp_01gf7a8200er3ar3pkfrb6kk30',
         { include: ['location'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('update: only required params', async () => {
-    const responsePromise = client.operations.departments.update('id', {
-      machine_ids: ['string'],
-      scanning_station_ids: ['string'],
-    });
+  test('update', async () => {
+    const responsePromise = client.operations.departments.update('dp_01gf7a8200er3ar3pkfrb6kk30');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,14 +62,21 @@ describe('resource departments', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: required and optional params', async () => {
-    const response = await client.operations.departments.update('id', {
-      machine_ids: ['string'],
-      scanning_station_ids: ['string'],
-      location_id: 'location_id',
-      name: 'Production',
-      notes: 'notes',
-    });
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.departments.update(
+        'dp_01gf7a8200er3ar3pkfrb6kk30',
+        {
+          location_id: 'location_id',
+          machine_ids: ['string'],
+          name: 'Production',
+          notes: 'notes',
+          scanning_station_ids: ['string'],
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('list', async () => {
@@ -105,7 +105,7 @@ describe('resource departments', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.departments.delete('id');
+    const responsePromise = client.operations.departments.delete('dp_01gf7a8200er3ar3pkfrb6kk30');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

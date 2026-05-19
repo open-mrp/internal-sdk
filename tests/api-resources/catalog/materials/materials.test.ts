@@ -10,7 +10,6 @@ const client = new Augno({
 describe('resource materials', () => {
   test('create: only required params', async () => {
     const responsePromise = client.catalog.materials.create({
-      attribute_ids: ['string'],
       category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
       sku: 'MAT-001',
     });
@@ -25,10 +24,10 @@ describe('resource materials', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.catalog.materials.create({
-      attribute_ids: ['string'],
       category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
       sku: 'MAT-001',
       include: ['item'],
+      attribute_ids: ['string'],
       burn_rate: {
         denominator_unit_id: 'denominator_unit_id',
         numerator_unit_id: 'numerator_unit_id',
@@ -52,7 +51,7 @@ describe('resource materials', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.materials.retrieve('id');
+    const responsePromise = client.catalog.materials.retrieve('ml_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -65,12 +64,16 @@ describe('resource materials', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.catalog.materials.retrieve('id', { include: ['item'] }, { path: '/_stainless_unknown_path' }),
+      client.catalog.materials.retrieve(
+        'ml_01jm4r6700f8nwq3v5hx2d9ktp',
+        { include: ['item'] },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.materials.update('id');
+    const responsePromise = client.catalog.materials.update('ml_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -84,7 +87,7 @@ describe('resource materials', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.materials.update(
-        'id',
+        'ml_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           include: ['item'],
           description: 'description',
@@ -134,7 +137,7 @@ describe('resource materials', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.materials.delete('id');
+    const responsePromise = client.catalog.materials.delete('ml_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

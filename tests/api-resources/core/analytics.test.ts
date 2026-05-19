@@ -31,12 +31,8 @@ describe('resource analytics', () => {
 
   test('updateDeliveries: only required params', async () => {
     const responsePromise = client.core.analytics.updateDeliveries({
-      customer_group_ids: ['string'],
-      customer_ids: ['string'],
-      end_date: '2019-12-27T18:11:19.117Z',
-      product_line_ids: ['string'],
-      sales_rep_ids: ['string'],
-      start_date: '2019-12-27T18:11:19.117Z',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -49,22 +45,19 @@ describe('resource analytics', () => {
 
   test('updateDeliveries: required and optional params', async () => {
     const response = await client.core.analytics.updateDeliveries({
-      customer_group_ids: ['string'],
-      customer_ids: ['string'],
-      end_date: '2019-12-27T18:11:19.117Z',
-      product_line_ids: ['string'],
-      sales_rep_ids: ['string'],
-      start_date: '2019-12-27T18:11:19.117Z',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
+      customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+      customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
       override_promised_dates: true,
-      target_delivery_time_days: 0,
+      product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
+      sales_rep_ids: ['acus_01gf7a8200er3ar3pkfrb6kk29'],
+      target_delivery_time_days: 7,
     });
   });
 
-  test('updateDemandForecast: only required params', async () => {
-    const responsePromise = client.core.analytics.updateDemandForecast({
-      item_ids: ['string'],
-      product_line_ids: ['string'],
-    });
+  test('updateDemandForecast', async () => {
+    const responsePromise = client.core.analytics.updateDemandForecast();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -74,21 +67,23 @@ describe('resource analytics', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateDemandForecast: required and optional params', async () => {
-    const response = await client.core.analytics.updateDemandForecast({
-      item_ids: ['string'],
-      product_line_ids: ['string'],
-      forecast_months: 0,
-      history_months: 0,
-    });
+  test('updateDemandForecast: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.core.analytics.updateDemandForecast(
+        {
+          forecast_months: 3,
+          history_months: 6,
+          item_ids: ['it_01jm4r6700f8nwq3v5hx2d9ktp'],
+          product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('updateInventoryReceipts: only required params', async () => {
-    const responsePromise = client.core.analytics.updateInventoryReceipts({
-      item_ids: ['string'],
-      location_ids: ['string'],
-      lot_ids: ['string'],
-    });
+  test('updateInventoryReceipts', async () => {
+    const responsePromise = client.core.analytics.updateInventoryReceipts();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -98,19 +93,25 @@ describe('resource analytics', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateInventoryReceipts: required and optional params', async () => {
-    const response = await client.core.analytics.updateInventoryReceipts({
-      item_ids: ['string'],
-      location_ids: ['string'],
-      lot_ids: ['string'],
-    });
+  test('updateInventoryReceipts: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.core.analytics.updateInventoryReceipts(
+        {
+          item_ids: ['it_01jm4r6700f8nwq3v5hx2d9ktp'],
+          location_ids: ['lc_01gf7a8200er3ar3pkfrb6kk30'],
+          lot_ids: ['lot_01jm4r6700f8nwq3v5hx2d9ktp'],
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('updateManufacturing: only required params', async () => {
     const responsePromise = client.core.analytics.updateManufacturing({
-      end_date: '2019-12-27T18:11:19.117Z',
-      start_date: '2019-12-27T18:11:19.117Z',
-      type: 'type',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
+      type: 'production',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -123,22 +124,18 @@ describe('resource analytics', () => {
 
   test('updateManufacturing: required and optional params', async () => {
     const response = await client.core.analytics.updateManufacturing({
-      end_date: '2019-12-27T18:11:19.117Z',
-      start_date: '2019-12-27T18:11:19.117Z',
-      type: 'type',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
+      type: 'production',
     });
   });
 
   test('updateManufacturingBatch: only required params', async () => {
     const responsePromise = client.core.analytics.updateManufacturingBatch({
-      comparison_end_date: '2019-12-27T18:11:19.117Z',
-      comparison_start_date: '2019-12-27T18:11:19.117Z',
-      customer_group_ids: ['string'],
-      customer_ids: ['string'],
-      end_date: '2019-12-27T18:11:19.117Z',
-      item_ids: ['string'],
-      product_line_ids: ['string'],
-      start_date: '2019-12-27T18:11:19.117Z',
+      comparison_end_date: '2026-04-10T00:23:00Z',
+      comparison_start_date: '2026-04-10T00:00:00Z',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -151,22 +148,19 @@ describe('resource analytics', () => {
 
   test('updateManufacturingBatch: required and optional params', async () => {
     const response = await client.core.analytics.updateManufacturingBatch({
-      comparison_end_date: '2019-12-27T18:11:19.117Z',
-      comparison_start_date: '2019-12-27T18:11:19.117Z',
-      customer_group_ids: ['string'],
-      customer_ids: ['string'],
-      end_date: '2019-12-27T18:11:19.117Z',
-      item_ids: ['string'],
-      product_line_ids: ['string'],
-      start_date: '2019-12-27T18:11:19.117Z',
+      comparison_end_date: '2026-04-10T00:23:00Z',
+      comparison_start_date: '2026-04-10T00:00:00Z',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
+      customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+      customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
+      item_ids: ['it_01jm4r6700f8nwq3v5hx2d9ktp'],
+      product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
     });
   });
 
-  test('updateMaterials: only required params', async () => {
-    const responsePromise = client.core.analytics.updateMaterials({
-      sales_order_ids: ['string'],
-      supplier_ids: ['string'],
-    });
+  test('updateMaterials', async () => {
+    const responsePromise = client.core.analytics.updateMaterials();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -176,19 +170,23 @@ describe('resource analytics', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateMaterials: required and optional params', async () => {
-    const response = await client.core.analytics.updateMaterials({
-      sales_order_ids: ['string'],
-      supplier_ids: ['string'],
-    });
+  test('updateMaterials: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.core.analytics.updateMaterials(
+        {
+          sales_order_ids: ['or_01jm4r6700f8nwq3v5hx2d9ktp'],
+          supplier_ids: ['ac_02kn5s7811g9qwce7cizr4e0mq'],
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('updateNewCustomers: only required params', async () => {
     const responsePromise = client.core.analytics.updateNewCustomers({
-      customer_group_ids: ['string'],
-      end_date: '2019-12-27T18:11:19.117Z',
-      sales_rep_ids: ['string'],
-      start_date: '2019-12-27T18:11:19.117Z',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -201,18 +199,17 @@ describe('resource analytics', () => {
 
   test('updateNewCustomers: required and optional params', async () => {
     const response = await client.core.analytics.updateNewCustomers({
-      customer_group_ids: ['string'],
-      end_date: '2019-12-27T18:11:19.117Z',
-      sales_rep_ids: ['string'],
-      start_date: '2019-12-27T18:11:19.117Z',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
+      customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+      sales_rep_ids: ['acus_01gf7a8200er3ar3pkfrb6kk29'],
     });
   });
 
   test('updateOee: only required params', async () => {
     const responsePromise = client.core.analytics.updateOee({
-      department_ids: ['string'],
-      end_date: '2019-12-27T18:11:19.117Z',
-      start_date: '2019-12-27T18:11:19.117Z',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -225,9 +222,9 @@ describe('resource analytics', () => {
 
   test('updateOee: required and optional params', async () => {
     const response = await client.core.analytics.updateOee({
-      department_ids: ['string'],
-      end_date: '2019-12-27T18:11:19.117Z',
-      start_date: '2019-12-27T18:11:19.117Z',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
+      department_ids: ['dp_01gf7a8200er3ar3pkfrb6kk30'],
     });
   });
 
@@ -252,13 +249,8 @@ describe('resource analytics', () => {
     });
   });
 
-  test('updateOrders: only required params', async () => {
-    const responsePromise = client.core.analytics.updateOrders({
-      customer_group_ids: ['string'],
-      customer_ids: ['string'],
-      product_line_ids: ['string'],
-      sales_rep_ids: ['string'],
-    });
+  test('updateOrders', async () => {
+    const responsePromise = client.core.analytics.updateOrders();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -268,22 +260,23 @@ describe('resource analytics', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateOrders: required and optional params', async () => {
-    const response = await client.core.analytics.updateOrders({
-      customer_group_ids: ['string'],
-      customer_ids: ['string'],
-      product_line_ids: ['string'],
-      sales_rep_ids: ['string'],
-    });
+  test('updateOrders: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.core.analytics.updateOrders(
+        {
+          customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+          customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
+          product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
+          sales_rep_ids: ['acus_01gf7a8200er3ar3pkfrb6kk29'],
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('updateProductionCosts: only required params', async () => {
-    const responsePromise = client.core.analytics.updateProductionCosts({
-      category_ids: ['string'],
-      department_ids: ['string'],
-      item_ids: ['string'],
-      product_line_ids: ['string'],
-    });
+  test('updateProductionCosts', async () => {
+    const responsePromise = client.core.analytics.updateProductionCosts();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -293,25 +286,25 @@ describe('resource analytics', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateProductionCosts: required and optional params', async () => {
-    const response = await client.core.analytics.updateProductionCosts({
-      category_ids: ['string'],
-      department_ids: ['string'],
-      item_ids: ['string'],
-      product_line_ids: ['string'],
-      end_date: '2019-12-27T18:11:19.117Z',
-      start_date: '2019-12-27T18:11:19.117Z',
-    });
+  test('updateProductionCosts: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.core.analytics.updateProductionCosts(
+        {
+          category_ids: ['ic_01jm4r6700f8nwq3v5hx2d9ktp'],
+          department_ids: ['dp_01gf7a8200er3ar3pkfrb6kk30'],
+          end_date: '2026-05-10T00:23:00Z',
+          item_ids: ['it_01jm4r6700f8nwq3v5hx2d9ktp'],
+          product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
+          start_date: '2026-05-10T00:00:00Z',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('updateQuarterlyOrders: only required params', async () => {
-    const responsePromise = client.core.analytics.updateQuarterlyOrders({
-      customer_group_ids: ['string'],
-      customer_ids: ['string'],
-      item_ids: ['string'],
-      product_line_ids: ['string'],
-      sales_rep_ids: ['string'],
-    });
+  test('updateQuarterlyOrders', async () => {
+    const responsePromise = client.core.analytics.updateQuarterlyOrders();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -321,24 +314,26 @@ describe('resource analytics', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateQuarterlyOrders: required and optional params', async () => {
-    const response = await client.core.analytics.updateQuarterlyOrders({
-      customer_group_ids: ['string'],
-      customer_ids: ['string'],
-      item_ids: ['string'],
-      product_line_ids: ['string'],
-      sales_rep_ids: ['string'],
-    });
+  test('updateQuarterlyOrders: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.core.analytics.updateQuarterlyOrders(
+        {
+          customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+          customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
+          item_ids: ['it_01jm4r6700f8nwq3v5hx2d9ktp'],
+          product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
+          sales_rep_ids: ['acus_01gf7a8200er3ar3pkfrb6kk29'],
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('updateSales: only required params', async () => {
     const responsePromise = client.core.analytics.updateSales({
-      customer_group_ids: ['string'],
-      customer_ids: ['string'],
-      end_date: '2019-12-27T18:11:19.117Z',
-      product_line_ids: ['string'],
-      sales_rep_ids: ['string'],
-      start_date: '2019-12-27T18:11:19.117Z',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -351,13 +346,13 @@ describe('resource analytics', () => {
 
   test('updateSales: required and optional params', async () => {
     const response = await client.core.analytics.updateSales({
-      customer_group_ids: ['string'],
-      customer_ids: ['string'],
-      end_date: '2019-12-27T18:11:19.117Z',
-      product_line_ids: ['string'],
-      sales_rep_ids: ['string'],
-      start_date: '2019-12-27T18:11:19.117Z',
-      query: 'query',
+      end_date: '2026-05-10T00:23:00Z',
+      start_date: '2026-05-10T00:00:00Z',
+      customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+      customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
+      product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
+      query: '6061',
+      sales_rep_ids: ['acus_01gf7a8200er3ar3pkfrb6kk29'],
     });
   });
 });

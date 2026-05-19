@@ -37,7 +37,7 @@ export class ProductLines extends APIResource {
    * ```ts
    * const response =
    *   await client.catalog.catalog.productLines.retrieveProducts(
-   *     'id',
+   *     'pl_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */

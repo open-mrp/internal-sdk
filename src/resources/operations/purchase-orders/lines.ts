@@ -19,17 +19,19 @@ export class Lines extends APIResource {
    * ```ts
    * const purchaseOrderLineDetail =
    *   await client.operations.purchaseOrders.lines.create(
-   *     'id',
+   *     'po_01jm4r6700f8nwq3v5hx2d9ktp',
    *     {
-   *       product_id: 'product_id',
-   *       product_sku: 'product_sku',
-   *       quantity_unit_id: 'quantity_unit_id',
-   *       quantity_value: 'quantity_value',
+   *       product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       product_sku: 'ALM-2024-1001',
+   *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       quantity_value: '10',
    *       unit_price_denominator_unit_id:
-   *         'unit_price_denominator_unit_id',
+   *         'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *       unit_price_numerator_unit_id:
-   *         'unit_price_numerator_unit_id',
-   *       unit_price_value: 'unit_price_value',
+   *         'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       unit_price_value: '25.500000000000000000000000000000',
+   *       item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       product_description: '6061-T6 Aluminum Sheet 4x8',
    *     },
    *   );
    * ```
@@ -45,9 +47,9 @@ export class Lines extends APIResource {
    * ```ts
    * const purchaseOrderLineDetail =
    *   await client.operations.purchaseOrders.lines.update(
-   *     'line_id',
+   *     'example',
    *     {
-   *       id: 'id',
+   *       id: 'po_01jm4r6700f8nwq3v5hx2d9ktp',
    *       product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
    *       product_sku: 'RAW-100',
    *       quantity_value: '250',
@@ -75,8 +77,8 @@ export class Lines extends APIResource {
    * ```ts
    * const line =
    *   await client.operations.purchaseOrders.lines.delete(
-   *     'line_id',
-   *     { id: 'id' },
+   *     'example',
+   *     { id: 'po_01jm4r6700f8nwq3v5hx2d9ktp' },
    *   );
    * ```
    */

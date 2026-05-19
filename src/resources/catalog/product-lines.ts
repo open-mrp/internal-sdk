@@ -19,7 +19,9 @@ export class ProductLines extends APIResource {
    * @example
    * ```ts
    * const productLine =
-   *   await client.catalog.productLines.retrieve('id');
+   *   await client.catalog.productLines.retrieve(
+   *     'pl_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -37,9 +39,10 @@ export class ProductLines extends APIResource {
    * @example
    * ```ts
    * const productLine =
-   *   await client.catalog.productLines.update('id', {
-   *     name: 'Updated Product Line',
-   *   });
+   *   await client.catalog.productLines.update(
+   *     'pl_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { name: 'Updated Product Line' },
+   *   );
    * ```
    */
   update(
@@ -62,7 +65,9 @@ export class ProductLines extends APIResource {
    * @example
    * ```ts
    * const productLine =
-   *   await client.catalog.productLines.delete('id');
+   *   await client.catalog.productLines.delete(
+   *     'pl_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<ProductLineDeleteResponse> {

@@ -32,7 +32,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.sales.salesOrders.actions.createProductionRun(
-   *     'id',
+   *     'or_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */
@@ -48,7 +48,7 @@ export class Actions extends APIResource {
    * ```ts
    * const salesOrderDetail =
    *   await client.sales.salesOrders.actions.updateChangeStatus(
-   *     'id',
+   *     'or_01jm4r6700f8nwq3v5hx2d9ktp',
    *     { send_email: true, status_change: 'issue' },
    *   );
    * ```

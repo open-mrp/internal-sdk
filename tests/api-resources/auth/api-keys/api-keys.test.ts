@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource apiKeys', () => {
   test('retrieve', async () => {
-    const responsePromise = client.auth.apiKeys.retrieve('id');
+    const responsePromise = client.auth.apiKeys.retrieve('apke_01jm4r6700e3kxb9w2nqh7g5fp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,12 +22,16 @@ describe('resource apiKeys', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.auth.apiKeys.retrieve('id', { include: ['role'] }, { path: '/_stainless_unknown_path' }),
+      client.auth.apiKeys.retrieve(
+        'apke_01jm4r6700e3kxb9w2nqh7g5fp',
+        { include: ['role'] },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('delete', async () => {
-    const responsePromise = client.auth.apiKeys.delete('id');
+    const responsePromise = client.auth.apiKeys.delete('apke_01jm4r6700e3kxb9w2nqh7g5fp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

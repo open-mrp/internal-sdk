@@ -29,7 +29,6 @@ export class Products extends APIResource {
    * @example
    * ```ts
    * const product = await client.catalog.products.create({
-   *   attribute_ids: ['string'],
    *   category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
    *   product_line_id: null,
    *   sku: 'ALM-2024-1001',
@@ -48,7 +47,7 @@ export class Products extends APIResource {
    * @example
    * ```ts
    * const product = await client.catalog.products.retrieve(
-   *   'id',
+   *   'pd_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -65,9 +64,10 @@ export class Products extends APIResource {
    *
    * @example
    * ```ts
-   * const product = await client.catalog.products.update('id', {
-   *   sku: 'SKU-002',
-   * });
+   * const product = await client.catalog.products.update(
+   *   'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   { sku: 'SKU-002' },
+   * );
    * ```
    */
   update(
@@ -99,7 +99,9 @@ export class Products extends APIResource {
    *
    * @example
    * ```ts
-   * const product = await client.catalog.products.delete('id');
+   * const product = await client.catalog.products.delete(
+   *   'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   delete(
@@ -179,11 +181,6 @@ export interface ProductListResponse {
 
 export interface ProductCreateParams {
   /**
-   * Body param: Attribute IDs to connect to the product at creation time.
-   */
-  attribute_ids: Array<string>;
-
-  /**
    * Body param: Category ID.
    */
   category_id: string;
@@ -225,6 +222,11 @@ export interface ProductCreateParams {
     | 'item.burn_rate'
     | 'item.attributes'
   >;
+
+  /**
+   * Body param: Attribute IDs to connect to the product at creation time.
+   */
+  attribute_ids?: Array<string>;
 
   /**
    * Body param: Initial burn rate (waste / scrap). No currency requirement.

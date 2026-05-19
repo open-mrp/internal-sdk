@@ -42,7 +42,9 @@ export class Items extends APIResource {
    *
    * @example
    * ```ts
-   * const item = await client.catalog.items.retrieve('id');
+   * const item = await client.catalog.items.retrieve(
+   *   'it_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   retrieve(
@@ -60,8 +62,8 @@ export class Items extends APIResource {
    * @example
    * ```ts
    * const item = await client.catalog.items.update(
-   *   'category_id',
-   *   { id: 'id' },
+   *   'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   { id: 'it_01jm4r6700f8nwq3v5hx2d9ktp' },
    * );
    * ```
    */
@@ -95,7 +97,7 @@ export class Items extends APIResource {
    * @example
    * ```ts
    * const response = await client.catalog.items.retrieveCosts(
-   *   'id',
+   *   'it_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -109,7 +111,7 @@ export class Items extends APIResource {
    * @example
    * ```ts
    * const response = await client.catalog.items.retrieveTrends(
-   *   'id',
+   *   'it_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { trend_type: 'trend_type' },
    * );
    * ```

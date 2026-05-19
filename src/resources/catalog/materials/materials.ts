@@ -22,7 +22,6 @@ export class Materials extends APIResource {
    * @example
    * ```ts
    * const material = await client.catalog.materials.create({
-   *   attribute_ids: ['string'],
    *   category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
    *   sku: 'MAT-001',
    * });
@@ -39,7 +38,7 @@ export class Materials extends APIResource {
    * @example
    * ```ts
    * const material = await client.catalog.materials.retrieve(
-   *   'id',
+   *   'ml_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -57,7 +56,7 @@ export class Materials extends APIResource {
    * @example
    * ```ts
    * const material = await client.catalog.materials.update(
-   *   'id',
+   *   'ml_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { sku: 'MAT-001-UPDATED' },
    * );
    * ```
@@ -92,7 +91,7 @@ export class Materials extends APIResource {
    * @example
    * ```ts
    * const material = await client.catalog.materials.delete(
-   *   'id',
+   *   'ml_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -195,11 +194,6 @@ export interface MaterialListResponse {
 
 export interface MaterialCreateParams {
   /**
-   * Body param: Attribute IDs to connect to the material at creation time.
-   */
-  attribute_ids: Array<string>;
-
-  /**
    * Body param: Category ID.
    */
   category_id: string;
@@ -223,6 +217,11 @@ export interface MaterialCreateParams {
     | 'item.burn_rate'
     | 'item.attributes'
   >;
+
+  /**
+   * Body param: Attribute IDs to connect to the material at creation time.
+   */
+  attribute_ids?: Array<string>;
 
   /**
    * Body param: Initial burn rate (waste / scrap). No currency requirement.

@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource lines', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.shipments.lines.create('shipment_id', {
+    const responsePromise = client.operations.shipments.lines.create('sh_01jm4r6700f8nwq3v5hx2d9ktp', {
       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_value: '10.000000000000000000000000000000',
       sales_order_line_id: 'orln_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -24,7 +24,7 @@ describe('resource lines', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.operations.shipments.lines.create('shipment_id', {
+    const response = await client.operations.shipments.lines.create('sh_01jm4r6700f8nwq3v5hx2d9ktp', {
       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_value: '10.000000000000000000000000000000',
       sales_order_line_id: 'orln_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -32,7 +32,9 @@ describe('resource lines', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.operations.shipments.lines.retrieve('id', { shipment_id: 'shipment_id' });
+    const responsePromise = client.operations.shipments.lines.retrieve('example', {
+      shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -43,11 +45,15 @@ describe('resource lines', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.operations.shipments.lines.retrieve('id', { shipment_id: 'shipment_id' });
+    const response = await client.operations.shipments.lines.retrieve('example', {
+      shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.shipments.lines.update('id', { shipment_id: 'shipment_id' });
+    const responsePromise = client.operations.shipments.lines.update('example', {
+      shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -58,15 +64,15 @@ describe('resource lines', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.shipments.lines.update('id', {
-      shipment_id: 'shipment_id',
+    const response = await client.operations.shipments.lines.update('example', {
+      shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_value: '5.000000000000000000000000000000',
     });
   });
 
   test('list', async () => {
-    const responsePromise = client.operations.shipments.lines.list('shipment_id');
+    const responsePromise = client.operations.shipments.lines.list('sh_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -80,7 +86,7 @@ describe('resource lines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.shipments.lines.list(
-        'shipment_id',
+        'sh_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           cursor: 'cursor',
           limit: 0,
@@ -92,7 +98,9 @@ describe('resource lines', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.operations.shipments.lines.delete('id', { shipment_id: 'shipment_id' });
+    const responsePromise = client.operations.shipments.lines.delete('example', {
+      shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -103,6 +111,8 @@ describe('resource lines', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.operations.shipments.lines.delete('id', { shipment_id: 'shipment_id' });
+    const response = await client.operations.shipments.lines.delete('example', {
+      shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
   });
 });

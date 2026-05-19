@@ -15,7 +15,9 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const agentRun = await client.ai.runs.actions.cancel('id');
+   * const agentRun = await client.ai.runs.actions.cancel(
+   *   'agrn_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   cancel(
@@ -33,7 +35,7 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const agentRun = await client.ai.runs.actions.continue(
-   *   'id',
+   *   'agrn_01jm4r6700f8nwq3v5hx2d9ktp',
    *   {
    *     allowed_tool_slugs: ['string'],
    *     approved_tool_slugs: ['string'],
@@ -65,13 +67,13 @@ export interface ActionContinueParams {
    * Body param: Tool slugs to allow for the rest of the run without further
    * approval.
    */
-  allowed_tool_slugs: Array<string> | null;
+  allowed_tool_slugs: Array<string>;
 
   /**
    * Body param: Tool slugs to approve individually. If empty, all pending tools are
    * approved.
    */
-  approved_tool_slugs: Array<string> | null;
+  approved_tool_slugs: Array<string>;
 
   /**
    * Body param: User message to send to the agent.

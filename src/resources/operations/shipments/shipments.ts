@@ -50,7 +50,9 @@ export class Shipments extends APIResource {
    * @example
    * ```ts
    * const shipmentDetail =
-   *   await client.operations.shipments.retrieve('id');
+   *   await client.operations.shipments.retrieve(
+   *     'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -67,9 +69,10 @@ export class Shipments extends APIResource {
    * @example
    * ```ts
    * const shipmentDetail =
-   *   await client.operations.shipments.update('id', {
-   *     note: 'Updated shipping note',
-   *   });
+   *   await client.operations.shipments.update(
+   *     'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { note: 'Updated shipping note' },
+   *   );
    * ```
    */
   update(
@@ -102,7 +105,7 @@ export class Shipments extends APIResource {
    * @example
    * ```ts
    * const shipment = await client.operations.shipments.delete(
-   *   'id',
+   *   'sh_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */

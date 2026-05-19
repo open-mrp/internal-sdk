@@ -32,7 +32,7 @@ describe('resource integrations', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.identity.integrations.update('id');
+    const responsePromise = client.identity.integrations.update('ai_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -46,7 +46,7 @@ describe('resource integrations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.identity.integrations.update(
-        'id',
+        'ai_01jm4r6700f8nwq3v5hx2d9ktp',
         { is_active: true, name: 'Updated Stripe Integration' },
         { path: '/_stainless_unknown_path' },
       ),
@@ -79,7 +79,7 @@ describe('resource integrations', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.identity.integrations.delete('id');
+    const responsePromise = client.identity.integrations.delete('ai_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

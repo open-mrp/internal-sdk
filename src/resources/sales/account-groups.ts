@@ -16,7 +16,9 @@ export class AccountGroups extends APIResource {
    * @example
    * ```ts
    * const accountGroup =
-   *   await client.sales.accountGroups.retrieve('id');
+   *   await client.sales.accountGroups.retrieve(
+   *     'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<AccountGroup> {
@@ -29,9 +31,10 @@ export class AccountGroups extends APIResource {
    * @example
    * ```ts
    * const accountGroup =
-   *   await client.sales.accountGroups.update('id', {
-   *     name: 'Updated Wholesale Customers',
-   *   });
+   *   await client.sales.accountGroups.update(
+   *     'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { name: 'Updated Wholesale Customers' },
+   *   );
    * ```
    */
   update(
@@ -49,7 +52,9 @@ export class AccountGroups extends APIResource {
    * @example
    * ```ts
    * const accountGroup =
-   *   await client.sales.accountGroups.delete('id');
+   *   await client.sales.accountGroups.delete(
+   *     'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<AccountGroupDeleteResponse> {

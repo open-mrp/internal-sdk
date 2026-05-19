@@ -16,7 +16,7 @@ export class RegistrationFlows extends APIResource {
    * @example
    * ```ts
    * const registrationFlow =
-   *   await client.sales.registrationFlows.retrieve('slug');
+   *   await client.sales.registrationFlows.retrieve('acme');
    * ```
    */
   retrieve(slug: string, options?: RequestOptions): APIPromise<RegistrationFlow> {
@@ -29,15 +29,15 @@ export class RegistrationFlows extends APIResource {
    * @example
    * ```ts
    * const registrationFlow =
-   *   await client.sales.registrationFlows.update('id', {
-   *     customer_group_ids: ['string'],
-   *     has_customer_group_ids: true,
-   *     has_payment_term_ids: true,
-   *     has_shipping_term_ids: true,
-   *     payment_term_ids: ['string'],
-   *     shipping_term_ids: ['string'],
-   *     name: 'Wholesale Registration Updated',
-   *   });
+   *   await client.sales.registrationFlows.update(
+   *     'rgfw_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       has_customer_group_ids: false,
+   *       has_payment_term_ids: false,
+   *       has_shipping_term_ids: false,
+   *       name: 'Wholesale Registration Updated',
+   *     },
+   *   );
    * ```
    */
   update(
@@ -54,7 +54,9 @@ export class RegistrationFlows extends APIResource {
    * @example
    * ```ts
    * const registrationFlow =
-   *   await client.sales.registrationFlows.delete('id');
+   *   await client.sales.registrationFlows.delete(
+   *     'rgfw_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<RegistrationFlowDeleteResponse> {
@@ -210,11 +212,6 @@ export interface RegistrationFlowRetrieveRegistrationFlowsResponse {
 
 export interface RegistrationFlowUpdateParams {
   /**
-   * Customer group IDs.
-   */
-  customer_group_ids: Array<string>;
-
-  /**
    * Whether to replace customer groups.
    */
   has_customer_group_ids: boolean;
@@ -230,19 +227,24 @@ export interface RegistrationFlowUpdateParams {
   has_shipping_term_ids: boolean;
 
   /**
-   * Payment term IDs.
+   * Customer group IDs.
    */
-  payment_term_ids: Array<string>;
-
-  /**
-   * Shipping term IDs.
-   */
-  shipping_term_ids: Array<string>;
+  customer_group_ids?: Array<string>;
 
   /**
    * Display name.
    */
   name?: string;
+
+  /**
+   * Payment term IDs.
+   */
+  payment_term_ids?: Array<string>;
+
+  /**
+   * Shipping term IDs.
+   */
+  shipping_term_ids?: Array<string>;
 }
 
 export interface RegistrationFlowRegistrationFlowsParams {

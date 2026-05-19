@@ -18,7 +18,7 @@ export class Units extends APIResource {
    * ```ts
    * const unitGroupUnit =
    *   await client.catalog.unitGroups.units.create(
-   *     'unit_group_id',
+   *     'ug_01jm4r6700f8nwq3v5hx2d9ktp',
    *     {
    *       unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *       customer_portal_visibility: 'visible',
@@ -42,9 +42,10 @@ export class Units extends APIResource {
    * @example
    * ```ts
    * const unitGroupUnit =
-   *   await client.catalog.unitGroups.units.retrieve('id', {
-   *     unit_group_id: 'unit_group_id',
-   *   });
+   *   await client.catalog.unitGroups.units.retrieve(
+   *     'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp' },
+   *   );
    * ```
    */
   retrieve(id: string, params: UnitRetrieveParams, options?: RequestOptions): APIPromise<UnitGroupUnit> {
@@ -61,11 +62,14 @@ export class Units extends APIResource {
    * @example
    * ```ts
    * const unitGroupUnit =
-   *   await client.catalog.unitGroups.units.update('id', {
-   *     unit_group_id: 'unit_group_id',
-   *     discount_percentage: 0.9,
-   *     unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *   });
+   *   await client.catalog.unitGroups.units.update(
+   *     'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       discount_percentage: 0.9,
+   *       unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     },
+   *   );
    * ```
    */
   update(id: string, params: UnitUpdateParams, options?: RequestOptions): APIPromise<UnitGroupUnit> {
@@ -84,7 +88,7 @@ export class Units extends APIResource {
    * ```ts
    * const listUnitGroupUnit =
    *   await client.catalog.unitGroups.units.list(
-   *     'unit_group_id',
+   *     'ug_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */
@@ -102,8 +106,8 @@ export class Units extends APIResource {
    * @example
    * ```ts
    * const unit = await client.catalog.unitGroups.units.delete(
-   *   'id',
-   *   { unit_group_id: 'unit_group_id' },
+   *   'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   { unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp' },
    * );
    * ```
    */

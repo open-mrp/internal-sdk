@@ -34,7 +34,7 @@ describe('resource plans', () => {
   });
 
   test('retrieveProration', async () => {
-    const responsePromise = client.billing.plans.retrieveProration('id');
+    const responsePromise = client.billing.plans.retrieveProration('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource plans', () => {
   });
 
   test('switch', async () => {
-    const responsePromise = client.billing.plans.switch('id');
+    const responsePromise = client.billing.plans.switch('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

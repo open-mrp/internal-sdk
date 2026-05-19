@@ -40,7 +40,7 @@ describe('resource transactions', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.finance.transactions.retrieve('id');
+    const responsePromise = client.finance.transactions.retrieve('tx_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -54,7 +54,7 @@ describe('resource transactions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.transactions.retrieve(
-        'id',
+        'tx_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['allocations'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -62,13 +62,13 @@ describe('resource transactions', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.finance.transactions.update('id', {
+    const responsePromise = client.finance.transactions.update('tx_01jm4r6700f8nwq3v5hx2d9ktp', {
       adjustment_type: null,
       amount: '750.00',
       clear_adjustment_type: false,
       clear_responsible_user: false,
       clear_transaction_method: false,
-      is_fully_allocated: null,
+      is_fully_allocated: true,
       method: 'ach',
       note: 'Updated payment note',
       number: null,
@@ -84,13 +84,13 @@ describe('resource transactions', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.finance.transactions.update('id', {
+    const response = await client.finance.transactions.update('tx_01jm4r6700f8nwq3v5hx2d9ktp', {
       adjustment_type: null,
       amount: '750.00',
       clear_adjustment_type: false,
       clear_responsible_user: false,
       clear_transaction_method: false,
-      is_fully_allocated: null,
+      is_fully_allocated: true,
       method: 'ach',
       note: 'Updated payment note',
       number: null,
@@ -132,7 +132,7 @@ describe('resource transactions', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.finance.transactions.delete('id');
+    const responsePromise = client.finance.transactions.delete('tx_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

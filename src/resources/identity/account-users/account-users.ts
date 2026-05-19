@@ -27,7 +27,9 @@ export class AccountUsers extends APIResource {
    * @example
    * ```ts
    * const accountUser =
-   *   await client.identity.accountUsers.retrieve('id');
+   *   await client.identity.accountUsers.retrieve(
+   *     'acus_01gf7a8200er3ar3pkfrb6kk29',
+   *   );
    * ```
    */
   retrieve(
@@ -44,18 +46,18 @@ export class AccountUsers extends APIResource {
    * @example
    * ```ts
    * const accountUser =
-   *   await client.identity.accountUsers.update('id', {
-   *     preferences: [
-   *       { enabled: true, notification_type: 'invoice' },
-   *     ],
-   *     department_id: 'dp_01gf7a8200er3ar3pkfrb6kk30',
-   *     name: 'John Doe',
-   *     role_id: 'rl_01gf7a8200er3ar3pkfrb6kk29',
-   *   });
+   *   await client.identity.accountUsers.update(
+   *     'acus_01gf7a8200er3ar3pkfrb6kk29',
+   *     { name: 'John Doe' },
+   *   );
    * ```
    */
-  update(id: string, params: AccountUserUpdateParams, options?: RequestOptions): APIPromise<AccountUser> {
-    const { include, ...body } = params;
+  update(
+    id: string,
+    params: AccountUserUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<AccountUser> {
+    const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/identity/account-users/${id}`, {
       query: { include },
       body,
@@ -73,14 +75,13 @@ export class AccountUsers extends APIResource {
    *     email: 'jdoe@augno.com',
    *     name: 'John Doe',
    *     password: 'QgS7Z8Hhj3&1',
+   *     username: 'jdoe',
    *     preferences: [
    *       {
    *         notification_type: 'order_acknowledgement',
    *         enabled: true,
    *       },
    *     ],
-   *     username: 'jdoe',
-   *     role_id: 'rl_01gf7a8200er3ar3pkfrb6kk29',
    *   });
    * ```
    */
@@ -216,11 +217,6 @@ export interface AccountUserRetrieveParams {
 
 export interface AccountUserUpdateParams {
   /**
-   * Body param: Notification preferences to update (external targets only).
-   */
-  preferences: Array<NotificationPreferenceItem>;
-
-  /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
@@ -240,6 +236,11 @@ export interface AccountUserUpdateParams {
    * Body param: User display name.
    */
   name?: string;
+
+  /**
+   * Body param: Notification preferences to update (external targets only).
+   */
+  preferences?: Array<NotificationPreferenceItem>;
 
   /**
    * Body param: Role assigned to the user.
@@ -271,11 +272,6 @@ export interface AccountUserAccountUsersParams {
   password: string | null;
 
   /**
-   * Body param: Notification preferences for the user (external targets only).
-   */
-  preferences: Array<NotificationPreferenceItem>;
-
-  /**
    * Body param: Unique username (3–255 chars; letters, numbers, underscores,
    * hyphens).
    */
@@ -291,6 +287,11 @@ export interface AccountUserAccountUsersParams {
    * Body param: Department assigned to the user.
    */
   department_id?: string | null;
+
+  /**
+   * Body param: Notification preferences for the user (external targets only).
+   */
+  preferences?: Array<NotificationPreferenceItem>;
 
   /**
    * Body param: Role assigned to the user.

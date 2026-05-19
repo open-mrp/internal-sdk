@@ -22,7 +22,9 @@ export class Alerts extends APIResource {
    *
    * @example
    * ```ts
-   * const agentAlert = await client.ai.alerts.retrieve('id');
+   * const agentAlert = await client.ai.alerts.retrieve(
+   *   'agnf_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   retrieve(

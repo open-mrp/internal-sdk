@@ -28,7 +28,7 @@ describe('resource actions', () => {
   });
 
   test('merge: only required params', async () => {
-    const responsePromise = client.sales.customers.actions.merge('id', {
+    const responsePromise = client.sales.customers.actions.merge('ac_01gf7a8200er3ar3pkfrb6kk29', {
       source_customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
     });
     const rawResponse = await responsePromise.asResponse();
@@ -41,7 +41,7 @@ describe('resource actions', () => {
   });
 
   test('merge: required and optional params', async () => {
-    const response = await client.sales.customers.actions.merge('id', {
+    const response = await client.sales.customers.actions.merge('ac_01gf7a8200er3ar3pkfrb6kk29', {
       source_customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
       include: ['bill_to_address'],
     });

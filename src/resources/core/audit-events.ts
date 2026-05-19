@@ -18,7 +18,7 @@ export class AuditEvents extends APIResource {
    * @example
    * ```ts
    * const auditEvent = await client.core.auditEvents.retrieve(
-   *   'id',
+   *   'ae_01gq7s3f2m0y9h2t7z1w7q3v9k',
    * );
    * ```
    */

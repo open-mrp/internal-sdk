@@ -32,7 +32,7 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const customer = await client.sales.customers.actions.merge(
-   *   'id',
+   *   'ac_01gf7a8200er3ar3pkfrb6kk29',
    *   {
    *     source_customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
    *   },

@@ -18,7 +18,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.auth.registrationSessions.actions.confirmPayment(
-   *     'session_id',
+   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
    *     { setup_intent_id: 'seti_1N4kLm2eZvKYlo2C0wFVpSbx' },
    *   );
    * ```
@@ -42,7 +42,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.auth.registrationSessions.actions.resendVerificationEmail(
-   *     'session_id',
+   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
    *   );
    * ```
    */
@@ -63,7 +63,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.auth.registrationSessions.actions.setupBilling(
-   *     'session_id',
+   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
    *   );
    * ```
    */
@@ -82,7 +82,7 @@ export class Actions extends APIResource {
    * ```ts
    * const registrationSession =
    *   await client.auth.registrationSessions.actions.updateVerifyToken(
-   *     'token',
+   *     'example',
    *   );
    * ```
    */

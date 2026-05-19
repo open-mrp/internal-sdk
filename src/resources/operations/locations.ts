@@ -32,7 +32,7 @@ export class Locations extends APIResource {
    * @example
    * ```ts
    * const location = await client.operations.locations.retrieve(
-   *   'id',
+   *   'lc_01gf7a8200er3ar3pkfrb6kk30',
    * );
    * ```
    */
@@ -50,7 +50,7 @@ export class Locations extends APIResource {
    * @example
    * ```ts
    * const location = await client.operations.locations.update(
-   *   'id',
+   *   'lc_01gf7a8200er3ar3pkfrb6kk30',
    *   { name: 'Warehouse B' },
    * );
    * ```
@@ -86,7 +86,7 @@ export class Locations extends APIResource {
    * @example
    * ```ts
    * const location = await client.operations.locations.delete(
-   *   'id',
+   *   'lc_01gf7a8200er3ar3pkfrb6kk30',
    * );
    * ```
    */

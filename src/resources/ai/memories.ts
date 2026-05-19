@@ -20,7 +20,11 @@ export class Memories extends APIResource {
    *   content:
    *     'Customer prefers express shipping on all orders.',
    *   importance: 0.8,
-   *   metadata: { source: 'support_ticket' },
+   *   metadata: [
+   *     123, 34, 115, 111, 117, 114, 99, 101, 34, 58, 32, 34,
+   *     115, 117, 112, 112, 111, 114, 116, 95, 116, 105, 99,
+   *     107, 101, 116, 34, 125,
+   *   ],
    * });
    * ```
    */
@@ -33,7 +37,9 @@ export class Memories extends APIResource {
    *
    * @example
    * ```ts
-   * const agentMemory = await client.ai.memories.retrieve('id');
+   * const agentMemory = await client.ai.memories.retrieve(
+   *   'agmm_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<AgentMemory> {
@@ -45,13 +51,15 @@ export class Memories extends APIResource {
    *
    * @example
    * ```ts
-   * const agentMemory = await client.ai.memories.update('id', {
-   *   category: 'category',
-   *   content:
-   *     'Customer prefers next-day shipping on all orders.',
-   *   importance: 0.9,
-   *   metadata: {},
-   * });
+   * const agentMemory = await client.ai.memories.update(
+   *   'agmm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   {
+   *     category: 'category',
+   *     content:
+   *       'Customer prefers next-day shipping on all orders.',
+   *     importance: 0.9,
+   *   },
+   * );
    * ```
    */
   update(id: string, body: MemoryUpdateParams, options?: RequestOptions): APIPromise<AgentMemory> {
@@ -78,7 +86,9 @@ export class Memories extends APIResource {
    *
    * @example
    * ```ts
-   * const memory = await client.ai.memories.delete('id');
+   * const memory = await client.ai.memories.delete(
+   *   'agmm_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<MemoryDeleteResponse> {
@@ -401,12 +411,6 @@ export interface MemoryCreateParams {
   importance: number;
 
   /**
-   * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
-   * or null), not a JSON-encoded string.
-   */
-  metadata: unknown | null;
-
-  /**
    * Entity ID.
    */
   entity_id?: string;
@@ -420,6 +424,12 @@ export interface MemoryCreateParams {
    * ISO 8601 expiration timestamp.
    */
   expires_at?: string;
+
+  /**
+   * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
+   * or null), not a JSON-encoded string.
+   */
+  metadata?: unknown | null;
 }
 
 export interface MemoryUpdateParams {
@@ -439,12 +449,6 @@ export interface MemoryUpdateParams {
   importance: number;
 
   /**
-   * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
-   * or null), not a JSON-encoded string.
-   */
-  metadata: unknown | null;
-
-  /**
    * Entity ID.
    */
   entity_id?: string;
@@ -458,6 +462,12 @@ export interface MemoryUpdateParams {
    * ISO 8601 expiration timestamp.
    */
   expires_at?: string;
+
+  /**
+   * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
+   * or null), not a JSON-encoded string.
+   */
+  metadata?: unknown | null;
 }
 
 export interface MemoryListParams {

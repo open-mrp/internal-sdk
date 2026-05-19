@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource productionRuns', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.productionRuns.retrieve('id');
+    const responsePromise = client.operations.productionRuns.retrieve('prru_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource productionRuns', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionRuns.retrieve(
-        'id',
+        'prru_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['responsible_user'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource productionRuns', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.productionRuns.update('id', {
+    const responsePromise = client.operations.productionRuns.update('prru_01jm4r6700f8nwq3v5hx2d9ktp', {
       number: 'PR-00042',
       responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
     });
@@ -45,7 +45,7 @@ describe('resource productionRuns', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.productionRuns.update('id', {
+    const response = await client.operations.productionRuns.update('prru_01jm4r6700f8nwq3v5hx2d9ktp', {
       number: 'PR-00042',
       responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
       include: ['responsible_user'],
@@ -53,7 +53,7 @@ describe('resource productionRuns', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.productionRuns.delete('id');
+    const responsePromise = client.operations.productionRuns.delete('prru_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

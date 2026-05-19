@@ -36,7 +36,9 @@ export class Runs extends APIResource {
    *
    * @example
    * ```ts
-   * const agentRun = await client.ai.runs.retrieve('id');
+   * const agentRun = await client.ai.runs.retrieve(
+   *   'agrn_01jm4r6700f8nwq3v5hx2d9ktp',
+   * );
    * ```
    */
   retrieve(

@@ -44,9 +44,10 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const createdAPIKey =
-   *   await client.auth.apiKeys.actions.rotate('id', {
-   *     expires_at: '2026-12-31T23:59:59Z',
-   *   });
+   *   await client.auth.apiKeys.actions.rotate(
+   *     'apke_01jm4r6700e3kxb9w2nqh7g5fp',
+   *     { expires_at: '2026-12-31T23:59:59Z' },
+   *   );
    * ```
    */
   rotate(

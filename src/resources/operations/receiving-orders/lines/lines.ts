@@ -22,9 +22,9 @@ export class Lines extends APIResource {
    * ```ts
    * const receivingOrderLine =
    *   await client.operations.receivingOrders.lines.update(
-   *     'id',
+   *     'orln_01jm4r6700f8nwq3v5hx2d9ktp',
    *     {
-   *       receiving_order_id: 'receiving_order_id',
+   *       receiving_order_id: 'rcor_01jm4r6700f8nwq3v5hx2d9ktp',
    *       quantity_value: '50',
    *     },
    *   );

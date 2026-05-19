@@ -18,8 +18,8 @@ export class ServiceLevels extends APIResource {
    * ```ts
    * const serviceLevel =
    *   await client.operations.carriers.serviceLevels.retrieve(
-   *     'id',
-   *     { carrier_id: 'carrier_id' },
+   *     'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp' },
    *   );
    * ```
    */
@@ -42,8 +42,11 @@ export class ServiceLevels extends APIResource {
    * ```ts
    * const serviceLevel =
    *   await client.operations.carriers.serviceLevels.update(
-   *     'id',
-   *     { carrier_id: 'carrier_id', name: 'Express Shipping' },
+   *     'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       name: 'Express Shipping',
+   *     },
    *   );
    * ```
    */
@@ -64,8 +67,8 @@ export class ServiceLevels extends APIResource {
    * ```ts
    * const serviceLevel =
    *   await client.operations.carriers.serviceLevels.delete(
-   *     'id',
-   *     { carrier_id: 'carrier_id' },
+   *     'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp' },
    *   );
    * ```
    */
@@ -85,7 +88,7 @@ export class ServiceLevels extends APIResource {
    * ```ts
    * const listServiceLevel =
    *   await client.operations.carriers.serviceLevels.retrieveServiceLevels(
-   *     'carrier_id',
+   *     'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *   );
    * ```
    */
@@ -104,7 +107,7 @@ export class ServiceLevels extends APIResource {
    * ```ts
    * const serviceLevel =
    *   await client.operations.carriers.serviceLevels.serviceLevels(
-   *     'carrier_id',
+   *     'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *     {
    *       code: 'ground',
    *       is_default: false,

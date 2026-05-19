@@ -17,7 +17,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.finance.accounts.actions.emailReceivables(
-   *     'account_id',
+   *     'ac_01gf7a8200eaj8fke1xvw4h50x',
    *     { recipient_emails: ['jdoe@augno.com'] },
    *   );
    * ```

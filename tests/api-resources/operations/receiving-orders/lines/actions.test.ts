@@ -9,9 +9,10 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('updateReceive: only required params', async () => {
-    const responsePromise = client.operations.receivingOrders.lines.actions.updateReceive('id', {
-      receiving_order_id: 'receiving_order_id',
-    });
+    const responsePromise = client.operations.receivingOrders.lines.actions.updateReceive(
+      'orln_01jm4r6700f8nwq3v5hx2d9ktp',
+      { receiving_order_id: 'rcor_01jm4r6700f8nwq3v5hx2d9ktp' },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,15 +23,17 @@ describe('resource actions', () => {
   });
 
   test('updateReceive: required and optional params', async () => {
-    const response = await client.operations.receivingOrders.lines.actions.updateReceive('id', {
-      receiving_order_id: 'receiving_order_id',
-    });
+    const response = await client.operations.receivingOrders.lines.actions.updateReceive(
+      'orln_01jm4r6700f8nwq3v5hx2d9ktp',
+      { receiving_order_id: 'rcor_01jm4r6700f8nwq3v5hx2d9ktp' },
+    );
   });
 
   test('updateVoid: only required params', async () => {
-    const responsePromise = client.operations.receivingOrders.lines.actions.updateVoid('id', {
-      receiving_order_id: 'receiving_order_id',
-    });
+    const responsePromise = client.operations.receivingOrders.lines.actions.updateVoid(
+      'orln_01jm4r6700f8nwq3v5hx2d9ktp',
+      { receiving_order_id: 'rcor_01jm4r6700f8nwq3v5hx2d9ktp' },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -41,8 +44,9 @@ describe('resource actions', () => {
   });
 
   test('updateVoid: required and optional params', async () => {
-    const response = await client.operations.receivingOrders.lines.actions.updateVoid('id', {
-      receiving_order_id: 'receiving_order_id',
-    });
+    const response = await client.operations.receivingOrders.lines.actions.updateVoid(
+      'orln_01jm4r6700f8nwq3v5hx2d9ktp',
+      { receiving_order_id: 'rcor_01jm4r6700f8nwq3v5hx2d9ktp' },
+    );
   });
 });

@@ -18,17 +18,20 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const salesOrderLineDetail =
-   *   await client.sales.salesOrders.lines.create('id', {
-   *     product_id: 'product_id',
-   *     product_sku: 'product_sku',
-   *     quantity_unit_id: 'quantity_unit_id',
-   *     quantity_value: 'quantity_value',
-   *     unit_price_denominator_unit_id:
-   *       'unit_price_denominator_unit_id',
-   *     unit_price_numerator_unit_id:
-   *       'unit_price_numerator_unit_id',
-   *     unit_price_value: 'unit_price_value',
-   *   });
+   *   await client.sales.salesOrders.lines.create(
+   *     'or_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       product_id: 'product_id',
+   *       product_sku: 'product_sku',
+   *       quantity_unit_id: 'quantity_unit_id',
+   *       quantity_value: 'quantity_value',
+   *       unit_price_denominator_unit_id:
+   *         'unit_price_denominator_unit_id',
+   *       unit_price_numerator_unit_id:
+   *         'unit_price_numerator_unit_id',
+   *       unit_price_value: 'unit_price_value',
+   *     },
+   *   );
    * ```
    */
   create(id: string, body: LineCreateParams, options?: RequestOptions): APIPromise<SalesOrderLineDetail> {
@@ -41,8 +44,8 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const salesOrderLineDetail =
-   *   await client.sales.salesOrders.lines.update('line_id', {
-   *     id: 'id',
+   *   await client.sales.salesOrders.lines.update('example', {
+   *     id: 'or_01jm4r6700f8nwq3v5hx2d9ktp',
    *     product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
    *     product_sku: 'WIDGET-001',
    *     quantity_value: '20',
@@ -65,8 +68,8 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const line = await client.sales.salesOrders.lines.delete(
-   *   'line_id',
-   *   { id: 'id' },
+   *   'example',
+   *   { id: 'or_01jm4r6700f8nwq3v5hx2d9ktp' },
    * );
    * ```
    */

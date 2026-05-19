@@ -25,7 +25,9 @@ export class ReceivingOrders extends APIResource {
    * @example
    * ```ts
    * const receivingOrder =
-   *   await client.operations.receivingOrders.retrieve('id');
+   *   await client.operations.receivingOrders.retrieve(
+   *     'rcor_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<ReceivingOrder> {

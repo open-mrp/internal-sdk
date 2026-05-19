@@ -9,7 +9,9 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('updateActivate', async () => {
-    const responsePromise = client.identity.accountUsers.actions.updateActivate('id');
+    const responsePromise = client.identity.accountUsers.actions.updateActivate(
+      'acus_01gf7a8200er3ar3pkfrb6kk29',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +22,9 @@ describe('resource actions', () => {
   });
 
   test('updateDisable', async () => {
-    const responsePromise = client.identity.accountUsers.actions.updateDisable('id');
+    const responsePromise = client.identity.accountUsers.actions.updateDisable(
+      'acus_01gf7a8200er3ar3pkfrb6kk29',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -31,7 +35,9 @@ describe('resource actions', () => {
   });
 
   test('updateRemove', async () => {
-    const responsePromise = client.identity.accountUsers.actions.updateRemove('id');
+    const responsePromise = client.identity.accountUsers.actions.updateRemove(
+      'acus_01gf7a8200er3ar3pkfrb6kk29',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

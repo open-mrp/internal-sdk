@@ -9,9 +9,10 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('confirmPayment: only required params', async () => {
-    const responsePromise = client.auth.registrationSessions.actions.confirmPayment('session_id', {
-      setup_intent_id: 'seti_1N4kLm2eZvKYlo2C0wFVpSbx',
-    });
+    const responsePromise = client.auth.registrationSessions.actions.confirmPayment(
+      'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+      { setup_intent_id: 'seti_1N4kLm2eZvKYlo2C0wFVpSbx' },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,13 +23,16 @@ describe('resource actions', () => {
   });
 
   test('confirmPayment: required and optional params', async () => {
-    const response = await client.auth.registrationSessions.actions.confirmPayment('session_id', {
-      setup_intent_id: 'seti_1N4kLm2eZvKYlo2C0wFVpSbx',
-    });
+    const response = await client.auth.registrationSessions.actions.confirmPayment(
+      'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+      { setup_intent_id: 'seti_1N4kLm2eZvKYlo2C0wFVpSbx' },
+    );
   });
 
   test('resendVerificationEmail', async () => {
-    const responsePromise = client.auth.registrationSessions.actions.resendVerificationEmail('session_id');
+    const responsePromise = client.auth.registrationSessions.actions.resendVerificationEmail(
+      'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -39,7 +43,9 @@ describe('resource actions', () => {
   });
 
   test('setupBilling', async () => {
-    const responsePromise = client.auth.registrationSessions.actions.setupBilling('session_id');
+    const responsePromise = client.auth.registrationSessions.actions.setupBilling(
+      'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,7 +56,7 @@ describe('resource actions', () => {
   });
 
   test('updateVerifyToken', async () => {
-    const responsePromise = client.auth.registrationSessions.actions.updateVerifyToken('token');
+    const responsePromise = client.auth.registrationSessions.actions.updateVerifyToken('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

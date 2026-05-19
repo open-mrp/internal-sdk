@@ -38,12 +38,14 @@ export class Analytics extends APIResource {
    * ```ts
    * const response =
    *   await client.core.analytics.updateDeliveries({
-   *     customer_group_ids: ['string'],
-   *     customer_ids: ['string'],
-   *     end_date: '2019-12-27T18:11:19.117Z',
-   *     product_line_ids: ['string'],
-   *     sales_rep_ids: ['string'],
-   *     start_date: '2019-12-27T18:11:19.117Z',
+   *     end_date: '2026-05-10T00:23:00Z',
+   *     start_date: '2026-05-10T00:00:00Z',
+   *     customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
+   *     override_promised_dates: true,
+   *     product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     sales_rep_ids: ['acus_01gf7a8200er3ar3pkfrb6kk29'],
+   *     target_delivery_time_days: 7,
    *   });
    * ```
    */
@@ -62,13 +64,15 @@ export class Analytics extends APIResource {
    * ```ts
    * const response =
    *   await client.core.analytics.updateDemandForecast({
-   *     item_ids: ['string'],
-   *     product_line_ids: ['string'],
+   *     forecast_months: 3,
+   *     history_months: 6,
+   *     item_ids: ['it_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
    *   });
    * ```
    */
   updateDemandForecast(
-    body: AnalyticsUpdateDemandForecastParams,
+    body: AnalyticsUpdateDemandForecastParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<AnalyticsUpdateDemandForecastResponse> {
     return this._client.put('/v1/core/analytics/demand-forecast', { body, ...options });
@@ -82,14 +86,14 @@ export class Analytics extends APIResource {
    * ```ts
    * const response =
    *   await client.core.analytics.updateInventoryReceipts({
-   *     item_ids: ['string'],
-   *     location_ids: ['string'],
-   *     lot_ids: ['string'],
+   *     item_ids: ['it_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     location_ids: ['lc_01gf7a8200er3ar3pkfrb6kk30'],
+   *     lot_ids: ['lot_01jm4r6700f8nwq3v5hx2d9ktp'],
    *   });
    * ```
    */
   updateInventoryReceipts(
-    body: AnalyticsUpdateInventoryReceiptsParams,
+    body: AnalyticsUpdateInventoryReceiptsParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<AnalyticsUpdateInventoryReceiptsResponse> {
     return this._client.put('/v1/core/analytics/inventory-receipts', { body, ...options });
@@ -103,9 +107,9 @@ export class Analytics extends APIResource {
    * ```ts
    * const response =
    *   await client.core.analytics.updateManufacturing({
-   *     end_date: '2019-12-27T18:11:19.117Z',
-   *     start_date: '2019-12-27T18:11:19.117Z',
-   *     type: 'type',
+   *     end_date: '2026-05-10T00:23:00Z',
+   *     start_date: '2026-05-10T00:00:00Z',
+   *     type: 'production',
    *   });
    * ```
    */
@@ -125,14 +129,14 @@ export class Analytics extends APIResource {
    * ```ts
    * const response =
    *   await client.core.analytics.updateManufacturingBatch({
-   *     comparison_end_date: '2019-12-27T18:11:19.117Z',
-   *     comparison_start_date: '2019-12-27T18:11:19.117Z',
-   *     customer_group_ids: ['string'],
-   *     customer_ids: ['string'],
-   *     end_date: '2019-12-27T18:11:19.117Z',
-   *     item_ids: ['string'],
-   *     product_line_ids: ['string'],
-   *     start_date: '2019-12-27T18:11:19.117Z',
+   *     comparison_end_date: '2026-04-10T00:23:00Z',
+   *     comparison_start_date: '2026-04-10T00:00:00Z',
+   *     end_date: '2026-05-10T00:23:00Z',
+   *     start_date: '2026-05-10T00:00:00Z',
+   *     customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
+   *     item_ids: ['it_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
    *   });
    * ```
    */
@@ -151,13 +155,13 @@ export class Analytics extends APIResource {
    * ```ts
    * const response =
    *   await client.core.analytics.updateMaterials({
-   *     sales_order_ids: ['string'],
-   *     supplier_ids: ['string'],
+   *     sales_order_ids: ['or_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     supplier_ids: ['ac_02kn5s7811g9qwce7cizr4e0mq'],
    *   });
    * ```
    */
   updateMaterials(
-    body: AnalyticsUpdateMaterialsParams,
+    body: AnalyticsUpdateMaterialsParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<AnalyticsUpdateMaterialsResponse> {
     return this._client.put('/v1/core/analytics/materials', { body, ...options });
@@ -171,10 +175,10 @@ export class Analytics extends APIResource {
    * ```ts
    * const response =
    *   await client.core.analytics.updateNewCustomers({
-   *     customer_group_ids: ['string'],
-   *     end_date: '2019-12-27T18:11:19.117Z',
-   *     sales_rep_ids: ['string'],
-   *     start_date: '2019-12-27T18:11:19.117Z',
+   *     end_date: '2026-05-10T00:23:00Z',
+   *     start_date: '2026-05-10T00:00:00Z',
+   *     customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     sales_rep_ids: ['acus_01gf7a8200er3ar3pkfrb6kk29'],
    *   });
    * ```
    */
@@ -192,9 +196,9 @@ export class Analytics extends APIResource {
    * @example
    * ```ts
    * const response = await client.core.analytics.updateOee({
-   *   department_ids: ['string'],
-   *   end_date: '2019-12-27T18:11:19.117Z',
-   *   start_date: '2019-12-27T18:11:19.117Z',
+   *   end_date: '2026-05-10T00:23:00Z',
+   *   start_date: '2026-05-10T00:00:00Z',
+   *   department_ids: ['dp_01gf7a8200er3ar3pkfrb6kk30'],
    * });
    * ```
    */
@@ -230,15 +234,15 @@ export class Analytics extends APIResource {
    * @example
    * ```ts
    * const response = await client.core.analytics.updateOrders({
-   *   customer_group_ids: ['string'],
-   *   customer_ids: ['string'],
-   *   product_line_ids: ['string'],
-   *   sales_rep_ids: ['string'],
+   *   customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *   customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
+   *   product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *   sales_rep_ids: ['acus_01gf7a8200er3ar3pkfrb6kk29'],
    * });
    * ```
    */
   updateOrders(
-    body: AnalyticsUpdateOrdersParams,
+    body: AnalyticsUpdateOrdersParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<AnalyticsUpdateOrdersResponse> {
     return this._client.put('/v1/core/analytics/orders', { body, ...options });
@@ -251,15 +255,17 @@ export class Analytics extends APIResource {
    * ```ts
    * const response =
    *   await client.core.analytics.updateProductionCosts({
-   *     category_ids: ['string'],
-   *     department_ids: ['string'],
-   *     item_ids: ['string'],
-   *     product_line_ids: ['string'],
+   *     category_ids: ['ic_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     department_ids: ['dp_01gf7a8200er3ar3pkfrb6kk30'],
+   *     end_date: '2026-05-10T00:23:00Z',
+   *     item_ids: ['it_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     start_date: '2026-05-10T00:00:00Z',
    *   });
    * ```
    */
   updateProductionCosts(
-    body: AnalyticsUpdateProductionCostsParams,
+    body: AnalyticsUpdateProductionCostsParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<AnalyticsUpdateProductionCostsResponse> {
     return this._client.put('/v1/core/analytics/production-costs', { body, ...options });
@@ -272,16 +278,16 @@ export class Analytics extends APIResource {
    * ```ts
    * const response =
    *   await client.core.analytics.updateQuarterlyOrders({
-   *     customer_group_ids: ['string'],
-   *     customer_ids: ['string'],
-   *     item_ids: ['string'],
-   *     product_line_ids: ['string'],
-   *     sales_rep_ids: ['string'],
+   *     customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
+   *     item_ids: ['it_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     sales_rep_ids: ['acus_01gf7a8200er3ar3pkfrb6kk29'],
    *   });
    * ```
    */
   updateQuarterlyOrders(
-    body: AnalyticsUpdateQuarterlyOrdersParams,
+    body: AnalyticsUpdateQuarterlyOrdersParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<AnalyticsUpdateQuarterlyOrdersResponse> {
     return this._client.put('/v1/core/analytics/quarterly-orders', { body, ...options });
@@ -293,12 +299,13 @@ export class Analytics extends APIResource {
    * @example
    * ```ts
    * const response = await client.core.analytics.updateSales({
-   *   customer_group_ids: ['string'],
-   *   customer_ids: ['string'],
-   *   end_date: '2019-12-27T18:11:19.117Z',
-   *   product_line_ids: ['string'],
-   *   sales_rep_ids: ['string'],
-   *   start_date: '2019-12-27T18:11:19.117Z',
+   *   end_date: '2026-05-10T00:23:00Z',
+   *   start_date: '2026-05-10T00:00:00Z',
+   *   customer_group_ids: ['acgp_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *   customer_ids: ['ac_01gf7a8200er3ar3pkfrb6kk29'],
+   *   product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *   query: '6061',
+   *   sales_rep_ids: ['acus_01gf7a8200er3ar3pkfrb6kk29'],
    * });
    * ```
    */
@@ -1750,29 +1757,9 @@ export interface AnalyticsRetrieveWeeksOfSalesParams {
 
 export interface AnalyticsUpdateDeliveriesParams {
   /**
-   * Optional customer group IDs to filter by.
-   */
-  customer_group_ids: Array<string>;
-
-  /**
-   * Optional customer IDs to filter by.
-   */
-  customer_ids: Array<string>;
-
-  /**
    * The end date for the analysis period.
    */
   end_date: string;
-
-  /**
-   * Optional product line IDs to filter by.
-   */
-  product_line_ids: Array<string>;
-
-  /**
-   * Optional sales rep IDs to filter by.
-   */
-  sales_rep_ids: Array<string>;
 
   /**
    * The start date for the analysis period.
@@ -1780,9 +1767,29 @@ export interface AnalyticsUpdateDeliveriesParams {
   start_date: string;
 
   /**
+   * Optional customer group IDs to filter by.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Optional customer IDs to filter by.
+   */
+  customer_ids?: Array<string>;
+
+  /**
    * Whether to override promised dates with the target delivery time.
    */
   override_promised_dates?: boolean;
+
+  /**
+   * Optional product line IDs to filter by.
+   */
+  product_line_ids?: Array<string>;
+
+  /**
+   * Optional sales rep IDs to filter by.
+   */
+  sales_rep_ids?: Array<string>;
 
   /**
    * Optional target delivery time in days.
@@ -1792,16 +1799,6 @@ export interface AnalyticsUpdateDeliveriesParams {
 
 export interface AnalyticsUpdateDemandForecastParams {
   /**
-   * Optional item IDs to filter by.
-   */
-  item_ids: Array<string>;
-
-  /**
-   * Optional product line IDs to filter by.
-   */
-  product_line_ids: Array<string>;
-
-  /**
    * Optional number of months to forecast.
    */
   forecast_months?: number;
@@ -1810,23 +1807,33 @@ export interface AnalyticsUpdateDemandForecastParams {
    * Optional number of months of historical data to use.
    */
   history_months?: number;
+
+  /**
+   * Optional item IDs to filter by.
+   */
+  item_ids?: Array<string>;
+
+  /**
+   * Optional product line IDs to filter by.
+   */
+  product_line_ids?: Array<string>;
 }
 
 export interface AnalyticsUpdateInventoryReceiptsParams {
   /**
    * Optional item IDs to filter by.
    */
-  item_ids: Array<string>;
+  item_ids?: Array<string>;
 
   /**
    * Optional location IDs to filter by.
    */
-  location_ids: Array<string>;
+  location_ids?: Array<string>;
 
   /**
    * Optional lot IDs to filter by.
    */
-  lot_ids: Array<string>;
+  lot_ids?: Array<string>;
 }
 
 export interface AnalyticsUpdateManufacturingParams {
@@ -1858,76 +1865,71 @@ export interface AnalyticsUpdateManufacturingBatchParams {
   comparison_start_date: string;
 
   /**
-   * Optional customer group IDs to filter by.
-   */
-  customer_group_ids: Array<string>;
-
-  /**
-   * Optional customer IDs to filter by.
-   */
-  customer_ids: Array<string>;
-
-  /**
    * The end date for the current analysis period.
    */
   end_date: string;
 
   /**
+   * The start date for the current analysis period.
+   */
+  start_date: string;
+
+  /**
+   * Optional customer group IDs to filter by.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Optional customer IDs to filter by.
+   */
+  customer_ids?: Array<string>;
+
+  /**
    * Optional item IDs to filter by.
    */
-  item_ids: Array<string>;
+  item_ids?: Array<string>;
 
   /**
    * Optional product line IDs to filter by.
    */
-  product_line_ids: Array<string>;
-
-  /**
-   * The start date for the current analysis period.
-   */
-  start_date: string;
+  product_line_ids?: Array<string>;
 }
 
 export interface AnalyticsUpdateMaterialsParams {
   /**
    * Optional sales order IDs to filter by.
    */
-  sales_order_ids: Array<string>;
+  sales_order_ids?: Array<string>;
 
   /**
    * Optional supplier IDs to filter by.
    */
-  supplier_ids: Array<string>;
+  supplier_ids?: Array<string>;
 }
 
 export interface AnalyticsUpdateNewCustomersParams {
   /**
-   * Optional customer group IDs to filter by.
-   */
-  customer_group_ids: Array<string>;
-
-  /**
    * The end date for the analysis period.
    */
   end_date: string;
+
+  /**
+   * The start date for the analysis period.
+   */
+  start_date: string;
+
+  /**
+   * Optional customer group IDs to filter by.
+   */
+  customer_group_ids?: Array<string>;
 
   /**
    * Optional sales rep IDs to filter by.
    */
-  sales_rep_ids: Array<string>;
-
-  /**
-   * The start date for the analysis period.
-   */
-  start_date: string;
+  sales_rep_ids?: Array<string>;
 }
 
 export interface AnalyticsUpdateOeeParams {
-  /**
-   * Optional department IDs to filter by.
-   */
-  department_ids: Array<string>;
-
   /**
    * The end date for the analysis period.
    */
@@ -1937,6 +1939,11 @@ export interface AnalyticsUpdateOeeParams {
    * The start date for the analysis period.
    */
   start_date: string;
+
+  /**
+   * Optional department IDs to filter by.
+   */
+  department_ids?: Array<string>;
 }
 
 export interface AnalyticsUpdateOpenBatchesParams {
@@ -1955,49 +1962,49 @@ export interface AnalyticsUpdateOrdersParams {
   /**
    * Optional customer group IDs to filter by.
    */
-  customer_group_ids: Array<string>;
+  customer_group_ids?: Array<string>;
 
   /**
    * Optional customer IDs to filter by.
    */
-  customer_ids: Array<string>;
+  customer_ids?: Array<string>;
 
   /**
    * Optional product line IDs to filter by.
    */
-  product_line_ids: Array<string>;
+  product_line_ids?: Array<string>;
 
   /**
    * Optional sales rep IDs to filter by.
    */
-  sales_rep_ids: Array<string>;
+  sales_rep_ids?: Array<string>;
 }
 
 export interface AnalyticsUpdateProductionCostsParams {
   /**
    * Optional category IDs to filter by.
    */
-  category_ids: Array<string>;
+  category_ids?: Array<string>;
 
   /**
    * Optional department IDs to filter by.
    */
-  department_ids: Array<string>;
-
-  /**
-   * Optional item IDs to filter by.
-   */
-  item_ids: Array<string>;
-
-  /**
-   * Optional product line IDs to filter by.
-   */
-  product_line_ids: Array<string>;
+  department_ids?: Array<string>;
 
   /**
    * Optional end date for the analysis period.
    */
   end_date?: string;
+
+  /**
+   * Optional item IDs to filter by.
+   */
+  item_ids?: Array<string>;
+
+  /**
+   * Optional product line IDs to filter by.
+   */
+  product_line_ids?: Array<string>;
 
   /**
    * Optional start date for the analysis period.
@@ -2009,54 +2016,34 @@ export interface AnalyticsUpdateQuarterlyOrdersParams {
   /**
    * Optional customer group IDs to filter by.
    */
-  customer_group_ids: Array<string>;
+  customer_group_ids?: Array<string>;
 
   /**
    * Optional customer IDs to filter by.
    */
-  customer_ids: Array<string>;
+  customer_ids?: Array<string>;
 
   /**
    * Optional item IDs to filter by.
    */
-  item_ids: Array<string>;
+  item_ids?: Array<string>;
 
   /**
    * Optional product line IDs to filter by.
    */
-  product_line_ids: Array<string>;
+  product_line_ids?: Array<string>;
 
   /**
    * Optional sales rep IDs to filter by.
    */
-  sales_rep_ids: Array<string>;
+  sales_rep_ids?: Array<string>;
 }
 
 export interface AnalyticsUpdateSalesParams {
   /**
-   * Optional customer group IDs to filter by.
-   */
-  customer_group_ids: Array<string>;
-
-  /**
-   * Optional customer IDs to filter by.
-   */
-  customer_ids: Array<string>;
-
-  /**
    * The end date for the analysis period.
    */
   end_date: string;
-
-  /**
-   * Optional product line IDs to filter by.
-   */
-  product_line_ids: Array<string>;
-
-  /**
-   * Optional sales rep IDs to filter by.
-   */
-  sales_rep_ids: Array<string>;
 
   /**
    * The start date for the analysis period.
@@ -2064,9 +2051,29 @@ export interface AnalyticsUpdateSalesParams {
   start_date: string;
 
   /**
+   * Optional customer group IDs to filter by.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Optional customer IDs to filter by.
+   */
+  customer_ids?: Array<string>;
+
+  /**
+   * Optional product line IDs to filter by.
+   */
+  product_line_ids?: Array<string>;
+
+  /**
    * Optional search query.
    */
   query?: string;
+
+  /**
+   * Optional sales rep IDs to filter by.
+   */
+  sales_rep_ids?: Array<string>;
 }
 
 export declare namespace Analytics {

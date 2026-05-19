@@ -18,8 +18,10 @@ export class Productions extends APIResource {
    * ```ts
    * const productionOutput =
    *   await client.operations.productionSteps.productions.retrieve(
-   *     'id',
-   *     { production_step_id: 'production_step_id' },
+   *     'example',
+   *     {
+   *       production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     },
    *   );
    * ```
    */
@@ -42,9 +44,9 @@ export class Productions extends APIResource {
    * ```ts
    * const productionOutput =
    *   await client.operations.productionSteps.productions.update(
-   *     'id',
+   *     'example',
    *     {
-   *       production_step_id: 'production_step_id',
+   *       production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
    *       item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
    *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *       quantity_value: '500',

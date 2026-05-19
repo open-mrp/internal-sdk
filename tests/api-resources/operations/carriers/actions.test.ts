@@ -9,10 +9,10 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('initiateOAuth: only required params', async () => {
-    const responsePromise = client.operations.carriers.actions.initiateOAuth('id', {
-      redirect_uri: 'https://app.example.com/carriers/oauth/callback',
-      state: null,
-    });
+    const responsePromise = client.operations.carriers.actions.initiateOAuth(
+      'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+      { redirect_uri: 'https://app.example.com/carriers/oauth/callback', state: null },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,14 +23,14 @@ describe('resource actions', () => {
   });
 
   test('initiateOAuth: required and optional params', async () => {
-    const response = await client.operations.carriers.actions.initiateOAuth('id', {
+    const response = await client.operations.carriers.actions.initiateOAuth('cr_01jm4r6700f8nwq3v5hx2d9ktp', {
       redirect_uri: 'https://app.example.com/carriers/oauth/callback',
       state: null,
     });
   });
 
   test('syncOptions', async () => {
-    const responsePromise = client.operations.carriers.actions.syncOptions('id');
+    const responsePromise = client.operations.carriers.actions.syncOptions('cr_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

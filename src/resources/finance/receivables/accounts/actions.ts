@@ -16,7 +16,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.finance.receivables.accounts.actions.retrieveExport(
-   *     'account_id',
+   *     'ac_01gf7a8200eaj8fke1xvw4h50x',
    *   );
    * ```
    */

@@ -20,7 +20,9 @@ export class APIKeys extends APIResource {
    *
    * @example
    * ```ts
-   * const apiKey = await client.auth.apiKeys.retrieve('id');
+   * const apiKey = await client.auth.apiKeys.retrieve(
+   *   'apke_01jm4r6700e3kxb9w2nqh7g5fp',
+   * );
    * ```
    */
   retrieve(
@@ -38,7 +40,9 @@ export class APIKeys extends APIResource {
    *
    * @example
    * ```ts
-   * const apiKey = await client.auth.apiKeys.delete('id');
+   * const apiKey = await client.auth.apiKeys.delete(
+   *   'apke_01jm4r6700e3kxb9w2nqh7g5fp',
+   * );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<APIKeyDeleteResponse> {

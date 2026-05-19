@@ -19,7 +19,7 @@ export class Lines extends APIResource {
    * ```ts
    * const shipmentLine =
    *   await client.operations.shipments.lines.create(
-   *     'shipment_id',
+   *     'sh_01jm4r6700f8nwq3v5hx2d9ktp',
    *     {
    *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *       quantity_value: '10.000000000000000000000000000000',
@@ -39,9 +39,10 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const shipmentLine =
-   *   await client.operations.shipments.lines.retrieve('id', {
-   *     shipment_id: 'shipment_id',
-   *   });
+   *   await client.operations.shipments.lines.retrieve(
+   *     'example',
+   *     { shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp' },
+   *   );
    * ```
    */
   retrieve(id: string, params: LineRetrieveParams, options?: RequestOptions): APIPromise<ShipmentLine> {
@@ -55,11 +56,14 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const shipmentLine =
-   *   await client.operations.shipments.lines.update('id', {
-   *     shipment_id: 'shipment_id',
-   *     quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     quantity_value: '5.000000000000000000000000000000',
-   *   });
+   *   await client.operations.shipments.lines.update(
+   *     'example',
+   *     {
+   *       shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       quantity_value: '5.000000000000000000000000000000',
+   *     },
+   *   );
    * ```
    */
   update(id: string, params: LineUpdateParams, options?: RequestOptions): APIPromise<ShipmentLine> {
@@ -76,7 +80,7 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const lines = await client.operations.shipments.lines.list(
-   *   'shipment_id',
+   *   'sh_01jm4r6700f8nwq3v5hx2d9ktp',
    * );
    * ```
    */
@@ -94,8 +98,8 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const line = await client.operations.shipments.lines.delete(
-   *   'id',
-   *   { shipment_id: 'shipment_id' },
+   *   'example',
+   *   { shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp' },
    * );
    * ```
    */

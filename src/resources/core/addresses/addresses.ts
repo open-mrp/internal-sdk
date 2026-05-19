@@ -24,7 +24,9 @@ export class Addresses extends APIResource {
    *
    * @example
    * ```ts
-   * const address = await client.core.addresses.retrieve('id');
+   * const address = await client.core.addresses.retrieve(
+   *   'ChIJN1gggt_t2Z44AR4PVM_67p73Y',
+   * );
    * ```
    */
   retrieve(

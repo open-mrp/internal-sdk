@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource registrationSessions', () => {
   test('retrieve', async () => {
-    const responsePromise = client.auth.registrationSessions.retrieve('session_id');
+    const responsePromise = client.auth.registrationSessions.retrieve('rgfw_01gf7a8200eaj8fke1xvw4h50x');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource registrationSessions', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.auth.registrationSessions.update('session_id');
+    const responsePromise = client.auth.registrationSessions.update('rgfw_01gf7a8200eaj8fke1xvw4h50x');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,7 +34,7 @@ describe('resource registrationSessions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.auth.registrationSessions.update(
-        'session_id',
+        'rgfw_01gf7a8200eaj8fke1xvw4h50x',
         {
           session_data: {
             account_name: 'Acme Corp',
@@ -54,7 +54,7 @@ describe('resource registrationSessions', () => {
   });
 
   test('accounts', async () => {
-    const responsePromise = client.auth.registrationSessions.accounts('session_id');
+    const responsePromise = client.auth.registrationSessions.accounts('rgfw_01gf7a8200eaj8fke1xvw4h50x');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -111,7 +111,7 @@ describe('resource registrationSessions', () => {
   });
 
   test('users: only required params', async () => {
-    const responsePromise = client.auth.registrationSessions.users('session_id', {
+    const responsePromise = client.auth.registrationSessions.users('rgfw_01gf7a8200eaj8fke1xvw4h50x', {
       name: 'Jane Smith',
       password: 'P@ssw0rd123!',
     });
@@ -125,7 +125,7 @@ describe('resource registrationSessions', () => {
   });
 
   test('users: required and optional params', async () => {
-    const response = await client.auth.registrationSessions.users('session_id', {
+    const response = await client.auth.registrationSessions.users('rgfw_01gf7a8200eaj8fke1xvw4h50x', {
       name: 'Jane Smith',
       password: 'P@ssw0rd123!',
     });

@@ -17,8 +17,10 @@ export class Actions extends APIResource {
    * ```ts
    * const receivingOrderLine =
    *   await client.operations.receivingOrders.lines.actions.updateReceive(
-   *     'id',
-   *     { receiving_order_id: 'receiving_order_id' },
+   *     'orln_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       receiving_order_id: 'rcor_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     },
    *   );
    * ```
    */
@@ -41,8 +43,10 @@ export class Actions extends APIResource {
    * ```ts
    * const receivingOrderLine =
    *   await client.operations.receivingOrders.lines.actions.updateVoid(
-   *     'id',
-   *     { receiving_order_id: 'receiving_order_id' },
+   *     'orln_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       receiving_order_id: 'rcor_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     },
    *   );
    * ```
    */

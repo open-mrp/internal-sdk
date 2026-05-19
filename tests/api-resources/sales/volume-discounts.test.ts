@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource volumeDiscounts', () => {
   test('retrieve', async () => {
-    const responsePromise = client.sales.volumeDiscounts.retrieve('id');
+    const responsePromise = client.sales.volumeDiscounts.retrieve('quds_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource volumeDiscounts', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.volumeDiscounts.retrieve(
-        'id',
+        'quds_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['customer_groups'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,19 +31,13 @@ describe('resource volumeDiscounts', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.volumeDiscounts.update('id', {
-      attribute_ids: ['string'],
-      category_ids: ['string'],
-      customer_group_ids: ['string'],
-      has_attributes: true,
-      has_categories: true,
-      has_customer_groups: true,
-      has_product_lines: true,
+    const responsePromise = client.sales.volumeDiscounts.update('quds_01jm4r6700f8nwq3v5hx2d9ktp', {
+      has_attributes: false,
+      has_categories: false,
+      has_customer_groups: false,
+      has_product_lines: false,
       has_tiers: true,
-      has_units: true,
-      product_line_ids: ['string'],
-      tiers: [{}],
-      unit_ids: ['string'],
+      has_units: false,
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -55,16 +49,17 @@ describe('resource volumeDiscounts', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.volumeDiscounts.update('id', {
+    const response = await client.sales.volumeDiscounts.update('quds_01jm4r6700f8nwq3v5hx2d9ktp', {
+      has_attributes: false,
+      has_categories: false,
+      has_customer_groups: false,
+      has_product_lines: false,
+      has_tiers: true,
+      has_units: false,
       attribute_ids: ['string'],
       category_ids: ['string'],
       customer_group_ids: ['string'],
-      has_attributes: true,
-      has_categories: true,
-      has_customer_groups: true,
-      has_product_lines: true,
-      has_tiers: true,
-      has_units: true,
+      name: 'Updated Bulk Discount',
       product_line_ids: ['string'],
       tiers: [
         {
@@ -76,12 +71,11 @@ describe('resource volumeDiscounts', () => {
         },
       ],
       unit_ids: ['string'],
-      name: 'Updated Bulk Discount',
     });
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.volumeDiscounts.delete('id');
+    const responsePromise = client.sales.volumeDiscounts.delete('quds_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -118,11 +112,7 @@ describe('resource volumeDiscounts', () => {
 
   test('volumeDiscounts: only required params', async () => {
     const responsePromise = client.sales.volumeDiscounts.volumeDiscounts({
-      attribute_ids: ['string'],
-      category_ids: ['string'],
-      customer_group_ids: ['string'],
       name: 'Bulk Order Discount',
-      product_line_ids: ['string'],
       tiers: [
         {
           discount_percentage: '5.000000000000000000000000000000',
@@ -130,7 +120,6 @@ describe('resource volumeDiscounts', () => {
           threshold: '100.000000000000000000000000000000',
         },
       ],
-      unit_ids: ['string'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -143,11 +132,7 @@ describe('resource volumeDiscounts', () => {
 
   test('volumeDiscounts: required and optional params', async () => {
     const response = await client.sales.volumeDiscounts.volumeDiscounts({
-      attribute_ids: ['string'],
-      category_ids: ['string'],
-      customer_group_ids: ['string'],
       name: 'Bulk Order Discount',
-      product_line_ids: ['string'],
       tiers: [
         {
           discount_percentage: '5.000000000000000000000000000000',
@@ -156,6 +141,10 @@ describe('resource volumeDiscounts', () => {
           parent_tier_id: 'parent_tier_id',
         },
       ],
+      attribute_ids: ['string'],
+      category_ids: ['string'],
+      customer_group_ids: ['string'],
+      product_line_ids: ['string'],
       unit_ids: ['string'],
     });
   });
