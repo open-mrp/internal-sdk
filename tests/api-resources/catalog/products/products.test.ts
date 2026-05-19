@@ -11,7 +11,7 @@ describe('resource products', () => {
   test('create: only required params', async () => {
     const responsePromise = client.catalog.products.create({
       category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
-      product_line_id: null,
+      product_line_id: 'product_line_id',
       sku: 'ALM-2024-1001',
       type: 'sale',
     });
@@ -27,7 +27,7 @@ describe('resource products', () => {
   test('create: required and optional params', async () => {
     const response = await client.catalog.products.create({
       category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
-      product_line_id: null,
+      product_line_id: 'product_line_id',
       sku: 'ALM-2024-1001',
       type: 'sale',
       include: ['product_line'],
@@ -93,8 +93,8 @@ describe('resource products', () => {
         'pd_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           include: ['product_line'],
-          description: null,
-          notes: null,
+          description: 'description',
+          notes: 'notes',
           portal_visibility: 'visible',
           sku: 'SKU-002',
           unit_price: {

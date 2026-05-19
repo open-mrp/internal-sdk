@@ -53,12 +53,10 @@ export class VolumeDiscounts extends APIResource {
    *       name: 'Updated Bulk Discount',
    *       tiers: [
    *         {
-   *           id: null,
    *           name: '50+ Units',
    *           discount_percentage:
    *             '10.000000000000000000000000000000',
    *           threshold: '50.000000000000000000000000000000',
-   *           parent_tier_id: null,
    *         },
    *       ],
    *     },
@@ -114,7 +112,6 @@ export class VolumeDiscounts extends APIResource {
    *         discount_percentage:
    *           '5.000000000000000000000000000000',
    *         threshold: '100.000000000000000000000000000000',
-   *         parent_tier_id: null,
    *       },
    *     ],
    *   });

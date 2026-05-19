@@ -24,7 +24,6 @@ export class Settlements extends APIResource {
    *       transaction_id: 'tx_01jm4r6700f8nwq3v5hx2d9ktp',
    *       invoice_id: 'iv_01jm4r6700f8nwq3v5hx2d9ktp',
    *       amount: '150.00',
-   *       note: null,
    *     },
    *   ],
    *   responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
@@ -63,7 +62,7 @@ export class Settlements extends APIResource {
    *   'sl_01jm4r6700f8nwq3v5hx2d9ktp',
    *   {
    *     note: 'Partial payment applied',
-   *     number: null,
+   *     number: 'number',
    *     responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
    *   },
    * );

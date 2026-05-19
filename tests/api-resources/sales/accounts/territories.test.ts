@@ -70,9 +70,9 @@ describe('resource territories', () => {
     const response = await client.sales.accounts.territories.update('te_01jm4r6700f8nwq3v5hx2d9ktp', {
       account_id: 'ac_01gf7a8200eaj8fke1xvw4h50x',
       include: ['sales_rep'],
-      clear_end_zipcode: null,
-      clear_product_line: null,
-      clear_start_zipcode: null,
+      clear_end_zipcode: false,
+      clear_product_line: false,
+      clear_start_zipcode: false,
       end_zipcode: 0,
       product_line_id: 'product_line_id',
       sales_rep_id: 'sales_rep_id',

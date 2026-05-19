@@ -109,35 +109,33 @@ export class PurchaseOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const purchaseOrderDetail = await client.operations.purchaseOrders.purchaseOrders({
-   *   lines: [
-   *     {
-   *       item_id: null,
-   *       product_description: null,
-   *       product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
-   *       product_sku: 'RAW-100',
-   *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *       quantity_value: '500',
-   *       unit_cost_denominator_unit_id: null,
-   *       unit_cost_numerator_unit_id: null,
-   *       unit_cost_value: null,
-   *       unit_price_denominator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *       unit_price_numerator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *       unit_price_value: '12.50',
-   *     },
-   *   ],
-   *   priority_code: 'normal',
-   *   supplier_account_id: 'ac_02kn5s7811g9qwce7cizr4e0mq',
-   *   carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
-   *   note: 'Urgent restock order',
-   *   service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
-   *   ship_to_country: 'US',
-   *   ship_to_locality: 'San Francisco',
-   *   ship_to_name: 'Acme Inc.',
-   *   ship_to_postal_code: '94105',
-   *   ship_to_state: 'CA',
-   *   ship_to_street_line_1: '123 Main Street',
-   * });
+   * const purchaseOrderDetail =
+   *   await client.operations.purchaseOrders.purchaseOrders({
+   *     lines: [
+   *       {
+   *         product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         product_sku: 'RAW-100',
+   *         quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         quantity_value: '500',
+   *         unit_price_denominator_unit_id:
+   *           'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         unit_price_numerator_unit_id:
+   *           'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         unit_price_value: '12.50',
+   *       },
+   *     ],
+   *     priority_code: 'normal',
+   *     supplier_account_id: 'ac_02kn5s7811g9qwce7cizr4e0mq',
+   *     carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     note: 'Urgent restock order',
+   *     service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     ship_to_country: 'US',
+   *     ship_to_locality: 'San Francisco',
+   *     ship_to_name: 'Acme Inc.',
+   *     ship_to_postal_code: '94105',
+   *     ship_to_state: 'CA',
+   *     ship_to_street_line_1: '123 Main Street',
+   *   });
    * ```
    */
   purchaseOrders(

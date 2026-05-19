@@ -47,7 +47,7 @@ describe('resource integrations', () => {
     await expect(
       client.identity.integrations.update(
         'ai_01jm4r6700f8nwq3v5hx2d9ktp',
-        { is_active: null, name: 'Updated Stripe Integration' },
+        { is_active: false, name: 'Updated Stripe Integration' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
