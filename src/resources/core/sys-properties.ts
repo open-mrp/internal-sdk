@@ -31,7 +31,7 @@ export class SysProperties extends APIResource {
    * @example
    * ```ts
    * const sysProperty = await client.core.sysProperties.update(
-   *   '',
+   *   'sypp_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { value: 30 },
    * );
    * ```

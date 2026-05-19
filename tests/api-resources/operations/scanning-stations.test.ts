@@ -31,7 +31,7 @@ describe('resource scanningStations', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.scanningStations.update('');
+    const responsePromise = client.operations.scanningStations.update('scst_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,13 +45,13 @@ describe('resource scanningStations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.scanningStations.update(
-        '',
+        'scst_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           include: ['department'],
           label_size: '1x1',
           label_type: 'tag',
           name: 'Station B',
-          notes: 'notes',
+          notes: null,
           operator_requirement: 'none',
         },
         { path: '/_stainless_unknown_path' },
@@ -71,15 +71,18 @@ describe('resource scanningStations', () => {
   });
 
   test('consumptions: only required params', async () => {
-    const responsePromise = client.operations.scanningStations.consumptions('', {
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-      split_quantity: {
-        id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
-        measure: '10.5',
-        unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+    const responsePromise = client.operations.scanningStations.consumptions(
+      'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      {
+        batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
+        production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+        split_quantity: {
+          id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
+          measure: '10.5',
+          unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+        },
       },
-    });
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -90,15 +93,18 @@ describe('resource scanningStations', () => {
   });
 
   test('consumptions: required and optional params', async () => {
-    const response = await client.operations.scanningStations.consumptions('', {
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-      split_quantity: {
-        id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
-        measure: '10.5',
-        unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+    const response = await client.operations.scanningStations.consumptions(
+      'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      {
+        batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
+        production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+        split_quantity: {
+          id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
+          measure: '10.5',
+          unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+        },
       },
-    });
+    );
   });
 
   test('retrieveBatches', async () => {
@@ -185,7 +191,10 @@ describe('resource scanningStations', () => {
   });
 
   test('updateProductionSteps: only required params', async () => {
-    const responsePromise = client.operations.scanningStations.updateProductionSteps('', { name: 'Mixing' });
+    const responsePromise = client.operations.scanningStations.updateProductionSteps(
+      'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      { name: 'Mixing' },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -196,6 +205,9 @@ describe('resource scanningStations', () => {
   });
 
   test('updateProductionSteps: required and optional params', async () => {
-    const response = await client.operations.scanningStations.updateProductionSteps('', { name: 'Mixing' });
+    const response = await client.operations.scanningStations.updateProductionSteps(
+      'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      { name: 'Mixing' },
+    );
   });
 });

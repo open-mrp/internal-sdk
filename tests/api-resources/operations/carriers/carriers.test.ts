@@ -56,7 +56,7 @@ describe('resource carriers', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.carriers.update('');
+    const responsePromise = client.operations.carriers.update('cr_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -70,7 +70,7 @@ describe('resource carriers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.carriers.update(
-        '',
+        'cr_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           include: ['owner'],
           customer_portal_visibility: 'visible',

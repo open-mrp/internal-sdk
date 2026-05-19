@@ -20,14 +20,22 @@ export class Actions extends APIResource {
    *         {
    *           name: 'Mixing',
    *           consumptions: [
-   *             { sku: 'RAW-FLOUR-001', measure: 50 },
+   *             {
+   *               sku: 'RAW-FLOUR-001',
+   *               measure: 50,
+   *               instructions: null,
+   *             },
    *           ],
    *           productions: [
    *             { sku: 'ALM-2024-1001', measure: 100 },
    *           ],
    *           labor_rate: 25,
    *           labor_time: 1.5,
+   *           labor_time_unit: null,
    *           overhead_rate: 15,
+   *           allowances: null,
+   *           leveling_factor: null,
+   *           station: null,
    *         },
    *       ],
    *     },

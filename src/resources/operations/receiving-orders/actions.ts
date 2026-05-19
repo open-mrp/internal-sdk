@@ -17,12 +17,14 @@ export class Actions extends APIResource {
    * ```ts
    * const receivingOrder =
    *   await client.operations.receivingOrders.actions.stock(
-   *     '',
+   *     'rcor_01jm4r6700f8nwq3v5hx2d9ktp',
    *     {
    *       line_items: [
    *         {
    *           receiving_order_line_id:
    *             'rcorln_01jm4r6700f8nwq3v5hx2d9ktp',
+   *           lot_number: null,
+   *           rejected_quantity: null,
    *           allocations: [
    *             {
    *               location_id: 'lc_01gf7a8200er3ar3pkfrb6kk30',

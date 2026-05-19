@@ -34,7 +34,7 @@ export class AccountGroups extends APIResource {
    * ```ts
    * const accountGroupProductLineAccess =
    *   await client.sales.productLineAccess.accountGroups.update(
-   *     '',
+   *     'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
    *     { product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'] },
    *   );
    * ```

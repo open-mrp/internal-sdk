@@ -31,7 +31,7 @@ describe('resource paymentTerms', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.finance.paymentTerms.update('');
+    const responsePromise = client.finance.paymentTerms.update('pytm_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource paymentTerms', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.paymentTerms.update(
-        '',
+        'pytm_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['owner'], name: 'Net 60' },
         { path: '/_stainless_unknown_path' },
       ),

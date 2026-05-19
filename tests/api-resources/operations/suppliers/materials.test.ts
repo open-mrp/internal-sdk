@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource materials', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.suppliers.materials.create('', {
+    const responsePromise = client.operations.suppliers.materials.create('example', {
       is_active: true,
       material_id: 'ml_01jm4r6700f8nwq3v5hx2d9ktp',
       supplier_part_number: 'SUP-PART-001',
@@ -24,7 +24,7 @@ describe('resource materials', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.operations.suppliers.materials.create('', {
+    const response = await client.operations.suppliers.materials.create('example', {
       is_active: true,
       material_id: 'ml_01jm4r6700f8nwq3v5hx2d9ktp',
       supplier_part_number: 'SUP-PART-001',
@@ -53,7 +53,9 @@ describe('resource materials', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.suppliers.materials.update('', { supplier_id: '' });
+    const responsePromise = client.operations.suppliers.materials.update('ml_01jm4r6700f8nwq3v5hx2d9ktp', {
+      supplier_id: 'example',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -64,9 +66,9 @@ describe('resource materials', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.suppliers.materials.update('', {
-      supplier_id: '',
-      is_active: true,
+    const response = await client.operations.suppliers.materials.update('ml_01jm4r6700f8nwq3v5hx2d9ktp', {
+      supplier_id: 'example',
+      is_active: null,
       supplier_description: 'supplier_description',
       supplier_part_number: 'SUP-PART-002',
     });

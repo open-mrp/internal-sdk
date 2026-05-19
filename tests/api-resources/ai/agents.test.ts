@@ -26,14 +26,6 @@ describe('resource agents', () => {
       name: 'Inventory Monitor',
       role_id: 'rl_01gf7a8200er3ar3pkfrb6kk29',
       slug: 'inventory_monitor',
-      tools: [
-        {
-          config_json: 'config_json',
-          require_review: true,
-          sort_order: 1,
-          tool_id: 'tdef_01k0b1seed0searchproduct0',
-        },
-      ],
       trigger_type: 'event',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -63,6 +55,8 @@ describe('resource agents', () => {
       name: 'Inventory Monitor',
       role_id: 'rl_01gf7a8200er3ar3pkfrb6kk29',
       slug: 'inventory_monitor',
+      trigger_type: 'event',
+      include: ['config'],
       tools: [
         {
           config_json: 'config_json',
@@ -71,8 +65,6 @@ describe('resource agents', () => {
           tool_id: 'tdef_01k0b1seed0searchproduct0',
         },
       ],
-      trigger_type: 'event',
-      include: ['config'],
     });
   });
 
@@ -99,7 +91,7 @@ describe('resource agents', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.ai.agents.update('');
+    const responsePromise = client.ai.agents.update('agdf_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -113,7 +105,7 @@ describe('resource agents', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.ai.agents.update(
-        '',
+        'agdf_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           include: ['config'],
           category_code: 'category_code',
@@ -189,7 +181,9 @@ describe('resource agents', () => {
   });
 
   test('updateStatus: only required params', async () => {
-    const responsePromise = client.ai.agents.updateStatus('', { status_code: 'active' });
+    const responsePromise = client.ai.agents.updateStatus('agdf_01jm4r6700f8nwq3v5hx2d9ktp', {
+      status_code: 'active',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -200,6 +194,9 @@ describe('resource agents', () => {
   });
 
   test('updateStatus: required and optional params', async () => {
-    const response = await client.ai.agents.updateStatus('', { status_code: 'active', include: ['config'] });
+    const response = await client.ai.agents.updateStatus('agdf_01jm4r6700f8nwq3v5hx2d9ktp', {
+      status_code: 'active',
+      include: ['config'],
+    });
   });
 });

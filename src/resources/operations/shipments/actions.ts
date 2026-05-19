@@ -25,10 +25,7 @@ export class Actions extends APIResource {
    *     carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *     from_address: {
    *       name: 'Origin Warehouse',
-   *       street_line_1: '123 Main Street',
-   *       locality: 'San Francisco',
-   *       state: 'CA',
-   *       postal_code: '94105',
+   *       type: null,
    *       country: 'US',
    *     },
    *     parcels: [
@@ -39,14 +36,10 @@ export class Actions extends APIResource {
    *         height: 6,
    *       },
    *     ],
-   *     product_line_ids: ['string'],
    *     service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
    *     to_address: {
    *       name: 'Destination',
-   *       street_line_1: '456 Oak Avenue',
-   *       locality: 'Los Angeles',
-   *       state: 'CA',
-   *       postal_code: '90001',
+   *       type: null,
    *       country: 'US',
    *     },
    *   });
@@ -69,10 +62,7 @@ export class Actions extends APIResource {
    *   await client.operations.shipments.actions.rateShop({
    *     from_address: {
    *       name: 'Origin Warehouse',
-   *       street_line_1: '123 Main Street',
-   *       locality: 'San Francisco',
-   *       state: 'CA',
-   *       postal_code: '94105',
+   *       type: null,
    *       country: 'US',
    *     },
    *     parcels: [
@@ -83,13 +73,9 @@ export class Actions extends APIResource {
    *         height: 6,
    *       },
    *     ],
-   *     product_line_ids: ['string'],
    *     to_address: {
    *       name: 'Destination',
-   *       street_line_1: '456 Oak Avenue',
-   *       locality: 'Los Angeles',
-   *       state: 'CA',
-   *       postal_code: '90001',
+   *       type: null,
    *       country: 'US',
    *     },
    *   });
@@ -106,9 +92,10 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const shipmentDetail =
-   *   await client.operations.shipments.actions.ship('', {
-   *     email_customer: true,
-   *   });
+   *   await client.operations.shipments.actions.ship(
+   *     'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { email_customer: true },
+   *   );
    * ```
    */
   ship(
@@ -276,11 +263,6 @@ export interface ActionEstimateRateParams {
   parcels: Array<ParcelInput>;
 
   /**
-   * Product line IDs.
-   */
-  product_line_ids: Array<string>;
-
-  /**
    * Service level ID.
    */
   service_level_id: string;
@@ -299,6 +281,11 @@ export interface ActionEstimateRateParams {
    * Total order value.
    */
   order_total?: number;
+
+  /**
+   * Product line IDs.
+   */
+  product_line_ids?: Array<string>;
 }
 
 export interface ActionRateShopParams {
@@ -311,11 +298,6 @@ export interface ActionRateShopParams {
    * Parcels to rate shop.
    */
   parcels: Array<ParcelInput>;
-
-  /**
-   * Product line IDs.
-   */
-  product_line_ids: Array<string>;
 
   /**
    * Request to create an address.
@@ -331,6 +313,11 @@ export interface ActionRateShopParams {
    * Total order value.
    */
   order_total?: number;
+
+  /**
+   * Product line IDs.
+   */
+  product_line_ids?: Array<string>;
 }
 
 export interface ActionShipParams {

@@ -9,11 +9,17 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('stock: only required params', async () => {
-    const responsePromise = client.operations.receivingOrders.actions.stock('', {
-      line_items: [
-        { allocations: [{ quantity: '100' }], receiving_order_line_id: 'rcorln_01jm4r6700f8nwq3v5hx2d9ktp' },
-      ],
-    });
+    const responsePromise = client.operations.receivingOrders.actions.stock(
+      'rcor_01jm4r6700f8nwq3v5hx2d9ktp',
+      {
+        line_items: [
+          {
+            allocations: [{ quantity: '100' }],
+            receiving_order_line_id: 'rcorln_01jm4r6700f8nwq3v5hx2d9ktp',
+          },
+        ],
+      },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -24,16 +30,19 @@ describe('resource actions', () => {
   });
 
   test('stock: required and optional params', async () => {
-    const response = await client.operations.receivingOrders.actions.stock('', {
-      line_items: [
-        {
-          allocations: [{ quantity: '100', location_id: 'lc_01gf7a8200er3ar3pkfrb6kk30' }],
-          receiving_order_line_id: 'rcorln_01jm4r6700f8nwq3v5hx2d9ktp',
-          lot_number: 'lot_number',
-          rejected_quantity: 'rejected_quantity',
-        },
-      ],
-    });
+    const response = await client.operations.receivingOrders.actions.stock(
+      'rcor_01jm4r6700f8nwq3v5hx2d9ktp',
+      {
+        line_items: [
+          {
+            allocations: [{ quantity: '100', location_id: 'lc_01gf7a8200er3ar3pkfrb6kk30' }],
+            receiving_order_line_id: 'rcorln_01jm4r6700f8nwq3v5hx2d9ktp',
+            lot_number: 'lot_number',
+            rejected_quantity: 'rejected_quantity',
+          },
+        ],
+      },
+    );
   });
 
   test('updateReceive', async () => {

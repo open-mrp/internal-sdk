@@ -10,13 +10,13 @@ const client = new Augno({
 describe('resource lines', () => {
   test('create: only required params', async () => {
     const responsePromise = client.operations.purchaseOrders.lines.create('po_01jm4r6700f8nwq3v5hx2d9ktp', {
-      product_id: 'product_id',
-      product_sku: 'product_sku',
-      quantity_unit_id: 'quantity_unit_id',
-      quantity_value: 'quantity_value',
-      unit_price_denominator_unit_id: 'unit_price_denominator_unit_id',
-      unit_price_numerator_unit_id: 'unit_price_numerator_unit_id',
-      unit_price_value: 'unit_price_value',
+      product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+      product_sku: 'ALM-2024-1001',
+      quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+      quantity_value: '10',
+      unit_price_denominator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+      unit_price_numerator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+      unit_price_value: '25.500000000000000000000000000000',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -29,15 +29,15 @@ describe('resource lines', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.operations.purchaseOrders.lines.create('po_01jm4r6700f8nwq3v5hx2d9ktp', {
-      product_id: 'product_id',
-      product_sku: 'product_sku',
-      quantity_unit_id: 'quantity_unit_id',
-      quantity_value: 'quantity_value',
-      unit_price_denominator_unit_id: 'unit_price_denominator_unit_id',
-      unit_price_numerator_unit_id: 'unit_price_numerator_unit_id',
-      unit_price_value: 'unit_price_value',
-      item_id: 'item_id',
-      product_description: 'product_description',
+      product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+      product_sku: 'ALM-2024-1001',
+      quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+      quantity_value: '10',
+      unit_price_denominator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+      unit_price_numerator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+      unit_price_value: '25.500000000000000000000000000000',
+      item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
+      product_description: '6061-T6 Aluminum Sheet 4x8',
       unit_cost_denominator_unit_id: 'unit_cost_denominator_unit_id',
       unit_cost_numerator_unit_id: 'unit_cost_numerator_unit_id',
       unit_cost_value: 'unit_cost_value',
@@ -45,7 +45,9 @@ describe('resource lines', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.purchaseOrders.lines.update('', { id: '' });
+    const responsePromise = client.operations.purchaseOrders.lines.update('example', {
+      id: 'po_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -56,8 +58,8 @@ describe('resource lines', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.purchaseOrders.lines.update('', {
-      id: '',
+    const response = await client.operations.purchaseOrders.lines.update('example', {
+      id: 'po_01jm4r6700f8nwq3v5hx2d9ktp',
       item_id: 'item_id',
       product_description: 'product_description',
       product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',

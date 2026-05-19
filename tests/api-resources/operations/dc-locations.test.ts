@@ -31,7 +31,7 @@ describe('resource dcLocations', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.dcLocations.update('');
+    const responsePromise = client.operations.dcLocations.update('dclo_01gf7a8200er3ar3pkfrb6kk30');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource dcLocations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.dcLocations.update(
-        '',
+        'dclo_01gf7a8200er3ar3pkfrb6kk30',
         { customer_id: 'customer_id', location: 'Warehouse B - Bay 1' },
         { path: '/_stainless_unknown_path' },
       ),

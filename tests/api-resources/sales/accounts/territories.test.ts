@@ -9,8 +9,8 @@ const client = new Augno({
 
 describe('resource territories', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.sales.accounts.territories.create('', {
-      sales_rep_id: 'au_01jm4r6700f8nwq3v5hx2d9ktp',
+    const responsePromise = client.sales.accounts.territories.create('ac_01gf7a8200eaj8fke1xvw4h50x', {
+      sales_rep_id: 'acus_01gf7a8200er3ar3pkfrb6kk29',
       state: 'NY',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -23,8 +23,8 @@ describe('resource territories', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.sales.accounts.territories.create('', {
-      sales_rep_id: 'au_01jm4r6700f8nwq3v5hx2d9ktp',
+    const response = await client.sales.accounts.territories.create('ac_01gf7a8200eaj8fke1xvw4h50x', {
+      sales_rep_id: 'acus_01gf7a8200er3ar3pkfrb6kk29',
       state: 'NY',
       include: ['sales_rep'],
       end_zipcode: 10999,
@@ -54,7 +54,9 @@ describe('resource territories', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.accounts.territories.update('', { account_id: '' });
+    const responsePromise = client.sales.accounts.territories.update('te_01jm4r6700f8nwq3v5hx2d9ktp', {
+      account_id: 'ac_01gf7a8200eaj8fke1xvw4h50x',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -65,12 +67,12 @@ describe('resource territories', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.accounts.territories.update('', {
-      account_id: '',
+    const response = await client.sales.accounts.territories.update('te_01jm4r6700f8nwq3v5hx2d9ktp', {
+      account_id: 'ac_01gf7a8200eaj8fke1xvw4h50x',
       include: ['sales_rep'],
-      clear_end_zipcode: true,
-      clear_product_line: true,
-      clear_start_zipcode: true,
+      clear_end_zipcode: null,
+      clear_product_line: null,
+      clear_start_zipcode: null,
       end_zipcode: 0,
       product_line_id: 'product_line_id',
       sales_rep_id: 'sales_rep_id',

@@ -66,7 +66,7 @@ describe('resource settlements', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.finance.settlements.update('', {
+    const responsePromise = client.finance.settlements.update('sl_01jm4r6700f8nwq3v5hx2d9ktp', {
       note: 'Partial payment applied',
       number: null,
       responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
@@ -81,7 +81,7 @@ describe('resource settlements', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.finance.settlements.update('', {
+    const response = await client.finance.settlements.update('sl_01jm4r6700f8nwq3v5hx2d9ktp', {
       note: 'Partial payment applied',
       number: null,
       responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',

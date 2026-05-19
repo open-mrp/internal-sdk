@@ -59,10 +59,10 @@ export class Units extends APIResource {
    *
    * @example
    * ```ts
-   * const unit = await client.catalog.units.update('', {
-   *   abbreviation: 'kg',
-   *   name: 'Kilogram',
-   * });
+   * const unit = await client.catalog.units.update(
+   *   'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   { abbreviation: 'kg', name: 'Kilogram' },
+   * );
    * ```
    */
   update(

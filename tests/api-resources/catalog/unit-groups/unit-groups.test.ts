@@ -31,7 +31,7 @@ describe('resource unitGroups', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.unitGroups.update('');
+    const responsePromise = client.catalog.unitGroups.update('ug_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource unitGroups', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.unitGroups.update(
-        '',
+        'ug_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           include: ['owner'],
           associated_units: [
@@ -58,7 +58,7 @@ describe('resource unitGroups', () => {
           ],
           base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
           name: 'Weight Units (Updated)',
-          notes: 'notes',
+          notes: null,
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -105,7 +105,6 @@ describe('resource unitGroups', () => {
 
   test('unitGroups: only required params', async () => {
     const responsePromise = client.catalog.unitGroups.unitGroups({
-      associated_units: [{ unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp' }],
       base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       name: 'Weight Units',
       type: 'mass',
@@ -121,6 +120,10 @@ describe('resource unitGroups', () => {
 
   test('unitGroups: required and optional params', async () => {
     const response = await client.catalog.unitGroups.unitGroups({
+      base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+      name: 'Weight Units',
+      type: 'mass',
+      include: ['owner'],
       associated_units: [
         {
           unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -129,10 +132,6 @@ describe('resource unitGroups', () => {
           discount_percentage: 1,
         },
       ],
-      base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-      name: 'Weight Units',
-      type: 'mass',
-      include: ['owner'],
       notes: 'notes',
     });
   });

@@ -42,8 +42,11 @@ export class ServiceLevels extends APIResource {
    * ```ts
    * const serviceLevel =
    *   await client.operations.carriers.serviceLevels.update(
-   *     '',
-   *     { carrier_id: '', name: 'Express Shipping' },
+   *     'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       name: 'Express Shipping',
+   *     },
    *   );
    * ```
    */
@@ -104,7 +107,7 @@ export class ServiceLevels extends APIResource {
    * ```ts
    * const serviceLevel =
    *   await client.operations.carriers.serviceLevels.serviceLevels(
-   *     '',
+   *     'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *     {
    *       code: 'ground',
    *       is_default: false,

@@ -18,13 +18,16 @@ export class SalesTargets extends APIResource {
    * @example
    * ```ts
    * const salesTarget =
-   *   await client.sales.accountUsers.salesTargets.update('', {
-   *     id: '',
-   *     amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     amount_value: '75000.00',
-   *     end_date: '2026-06-30T00:00:00Z',
-   *     start_date: '2026-04-01T00:00:00Z',
-   *   });
+   *   await client.sales.accountUsers.salesTargets.update(
+   *     'example',
+   *     {
+   *       id: 'acus_01gf7a8200er3ar3pkfrb6kk29',
+   *       amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       amount_value: '75000.00',
+   *       end_date: '2026-06-30T00:00:00Z',
+   *       start_date: '2026-04-01T00:00:00Z',
+   *     },
+   *   );
    * ```
    */
   update(
@@ -65,7 +68,7 @@ export class SalesTargets extends APIResource {
    * ```ts
    * const salesTarget =
    *   await client.sales.accountUsers.salesTargets.salesTargets(
-   *     '',
+   *     'acus_01gf7a8200er3ar3pkfrb6kk29',
    *     {
    *       amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *       amount_value: '50000.00',

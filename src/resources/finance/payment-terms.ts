@@ -36,9 +36,10 @@ export class PaymentTerms extends APIResource {
    * @example
    * ```ts
    * const paymentTerm =
-   *   await client.finance.paymentTerms.update('', {
-   *     name: 'Net 60',
-   *   });
+   *   await client.finance.paymentTerms.update(
+   *     'pytm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { name: 'Net 60' },
+   *   );
    * ```
    */
   update(

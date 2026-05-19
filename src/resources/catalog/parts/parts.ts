@@ -22,10 +22,8 @@ export class Parts extends APIResource {
    * @example
    * ```ts
    * const part = await client.catalog.parts.create({
-   *   attribute_ids: ['string'],
    *   category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
    *   sku: 'BRG-6204-2RS',
-   *   description: 'Deep groove ball bearing, 20x47x14mm',
    * });
    * ```
    */
@@ -40,7 +38,7 @@ export class Parts extends APIResource {
    * @example
    * ```ts
    * const part = await client.catalog.parts.retrieve(
-   *   'it_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'pt_02kn5s7811g9qwce7cizr4e0mq',
    * );
    * ```
    */
@@ -57,10 +55,10 @@ export class Parts extends APIResource {
    *
    * @example
    * ```ts
-   * const part = await client.catalog.parts.update('', {
-   *   description: 'Deep groove ball bearing, 20x47x14mm',
-   *   sku: 'BRG-6204-2RS',
-   * });
+   * const part = await client.catalog.parts.update(
+   *   'pt_02kn5s7811g9qwce7cizr4e0mq',
+   *   { sku: 'BRG-6204-2RS' },
+   * );
    * ```
    */
   update(
@@ -93,7 +91,7 @@ export class Parts extends APIResource {
    * @example
    * ```ts
    * const part = await client.catalog.parts.delete(
-   *   'it_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'pt_02kn5s7811g9qwce7cizr4e0mq',
    * );
    * ```
    */
@@ -154,11 +152,6 @@ export interface PartListResponse {
 
 export interface PartCreateParams {
   /**
-   * Body param: Attribute IDs to connect to the part at creation time.
-   */
-  attribute_ids: Array<string>;
-
-  /**
    * Body param: Category ID.
    */
   category_id: string;
@@ -175,6 +168,11 @@ export interface PartCreateParams {
   include?: Array<
     'item' | 'item.category' | 'item.unit_value' | 'item.unit_cost' | 'item.burn_rate' | 'item.attributes'
   >;
+
+  /**
+   * Body param: Attribute IDs to connect to the part at creation time.
+   */
+  attribute_ids?: Array<string>;
 
   /**
    * Body param: Initial burn rate (waste / scrap). No currency requirement.

@@ -20,9 +20,10 @@ export class TransactionAllocations extends APIResource {
    * @example
    * ```ts
    * const transactionAllocation =
-   *   await client.finance.transactionAllocations.update('', {
-   *     amount: '150.00',
-   *   });
+   *   await client.finance.transactionAllocations.update(
+   *     'txal_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { amount: '150.00' },
+   *   );
    * ```
    */
   update(

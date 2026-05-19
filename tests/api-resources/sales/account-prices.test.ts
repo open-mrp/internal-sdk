@@ -31,7 +31,7 @@ describe('resource accountPrices', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.accountPrices.update('');
+    const responsePromise = client.sales.accountPrices.update('acpr_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource accountPrices', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.accountPrices.update(
-        '',
+        'acpr_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           include: ['recipient_account'],
           attribute_ids: ['string'],

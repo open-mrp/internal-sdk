@@ -60,7 +60,7 @@ export class Settlements extends APIResource {
    * @example
    * ```ts
    * const settlement = await client.finance.settlements.update(
-   *   '',
+   *   'sl_01jm4r6700f8nwq3v5hx2d9ktp',
    *   {
    *     note: 'Partial payment applied',
    *     number: null,

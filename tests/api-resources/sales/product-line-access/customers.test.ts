@@ -43,7 +43,7 @@ describe('resource customers', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.productLineAccess.customers.update('');
+    const responsePromise = client.sales.productLineAccess.customers.update('ac_01gf7a8200er3ar3pkfrb6kk29');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -57,7 +57,7 @@ describe('resource customers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.productLineAccess.customers.update(
-        '',
+        'ac_01gf7a8200er3ar3pkfrb6kk29',
         { product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'] },
         { path: '/_stainless_unknown_path' },
       ),

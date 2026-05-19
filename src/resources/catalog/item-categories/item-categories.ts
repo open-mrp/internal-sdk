@@ -50,9 +50,10 @@ export class ItemCategories extends APIResource {
    * @example
    * ```ts
    * const itemCategory =
-   *   await client.catalog.itemCategories.update('', {
-   *     name: 'Electronic Components',
-   *   });
+   *   await client.catalog.itemCategories.update(
+   *     'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { name: 'Electronic Components' },
+   *   );
    * ```
    */
   update(

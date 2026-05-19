@@ -31,9 +31,10 @@ export class AccountGroups extends APIResource {
    * @example
    * ```ts
    * const accountGroup =
-   *   await client.sales.accountGroups.update('', {
-   *     name: 'Updated Wholesale Customers',
-   *   });
+   *   await client.sales.accountGroups.update(
+   *     'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { name: 'Updated Wholesale Customers' },
+   *   );
    * ```
    */
   update(

@@ -31,7 +31,7 @@ describe('resource actions', () => {
   });
 
   test('continue: only required params', async () => {
-    const responsePromise = client.ai.runs.actions.continue('', {
+    const responsePromise = client.ai.runs.actions.continue('agrn_01jm4r6700f8nwq3v5hx2d9ktp', {
       allowed_tool_slugs: ['string'],
       approved_tool_slugs: ['string'],
       message: 'Yes, proceed with creating the order.',
@@ -46,7 +46,7 @@ describe('resource actions', () => {
   });
 
   test('continue: required and optional params', async () => {
-    const response = await client.ai.runs.actions.continue('', {
+    const response = await client.ai.runs.actions.continue('agrn_01jm4r6700f8nwq3v5hx2d9ktp', {
       allowed_tool_slugs: ['string'],
       approved_tool_slugs: ['string'],
       message: 'Yes, proceed with creating the order.',

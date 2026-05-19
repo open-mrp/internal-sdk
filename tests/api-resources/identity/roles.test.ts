@@ -53,7 +53,7 @@ describe('resource roles', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.identity.roles.update('');
+    const responsePromise = client.identity.roles.update('rl_01gf7a8200er3ar3pkfrb6kk29');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -67,7 +67,7 @@ describe('resource roles', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.identity.roles.update(
-        '',
+        'rl_01gf7a8200er3ar3pkfrb6kk29',
         {
           include: ['owner'],
           name: 'Updated Manager',

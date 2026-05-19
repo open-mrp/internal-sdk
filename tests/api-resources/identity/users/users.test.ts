@@ -20,7 +20,7 @@ describe('resource users', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.identity.users.update('', {
+    const responsePromise = client.identity.users.update('us_01gf7a8200e9pvbd6bgyq395ae', {
       email_verified: null,
       image_url: 'https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg',
       name: 'John Doe',
@@ -35,7 +35,7 @@ describe('resource users', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.identity.users.update('', {
+    const response = await client.identity.users.update('us_01gf7a8200e9pvbd6bgyq395ae', {
       email_verified: null,
       image_url: 'https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg',
       name: 'John Doe',

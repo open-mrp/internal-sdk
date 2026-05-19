@@ -63,7 +63,7 @@ export class Properties extends APIResource {
    * @example
    * ```ts
    * const property = await client.catalog.properties.update(
-   *   '',
+   *   'pp_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { name: 'Size' },
    * );
    * ```

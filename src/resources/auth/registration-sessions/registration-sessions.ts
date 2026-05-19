@@ -49,6 +49,12 @@ export class RegistrationSessions extends APIResource {
    *       session_data: {
    *         user_name: 'Jane Smith',
    *         account_name: 'Acme Corp',
+   *         billing_address_line1: null,
+   *         billing_address_line2: null,
+   *         billing_address_city: null,
+   *         billing_address_state: null,
+   *         billing_address_postal_code: null,
+   *         billing_address_country: null,
    *       },
    *       step: 'user_details',
    *     },

@@ -31,7 +31,7 @@ describe('resource accounts', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.identity.accounts.update('');
+    const responsePromise = client.identity.accounts.update('ac_01gf7a8200eaj8fke1xvw4h50x');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource accounts', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.identity.accounts.update(
-        '',
+        'ac_01gf7a8200eaj8fke1xvw4h50x',
         {
           include: ['branding'],
           facebook_handle: 'facebook_handle',

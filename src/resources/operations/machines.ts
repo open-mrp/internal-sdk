@@ -51,7 +51,7 @@ export class Machines extends APIResource {
    * @example
    * ```ts
    * const machine = await client.operations.machines.update(
-   *   '',
+   *   'mc_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { name: 'Updated CNC Router' },
    * );
    * ```

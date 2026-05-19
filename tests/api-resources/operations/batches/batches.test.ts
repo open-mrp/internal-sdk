@@ -20,7 +20,7 @@ describe('resource batches', () => {
   });
 
   test('nextSteps: only required params', async () => {
-    const responsePromise = client.operations.batches.nextSteps('', {
+    const responsePromise = client.operations.batches.nextSteps('bt_01jm4r6700f8nwq3v5hx2d9ktp', {
       scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -33,7 +33,7 @@ describe('resource batches', () => {
   });
 
   test('nextSteps: required and optional params', async () => {
-    const response = await client.operations.batches.nextSteps('', {
+    const response = await client.operations.batches.nextSteps('bt_01jm4r6700f8nwq3v5hx2d9ktp', {
       scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
     });
   });

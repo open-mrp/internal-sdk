@@ -31,7 +31,7 @@ describe('resource inventory', () => {
   });
 
   test('patchAll', async () => {
-    const responsePromise = client.catalog.items.inventory.patchAll('');
+    const responsePromise = client.catalog.items.inventory.patchAll('it_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource inventory', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.items.inventory.patchAll(
-        '',
+        'it_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           customer_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
           location_id: 'lc_01gf7a8200er3ar3pkfrb6kk30',

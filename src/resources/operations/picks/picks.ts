@@ -45,7 +45,7 @@ export class Picks extends APIResource {
    * @example
    * ```ts
    * const pickDetail = await client.operations.picks.update(
-   *   '',
+   *   'pk_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { number: 'PCK-2025-0042' },
    * );
    * ```

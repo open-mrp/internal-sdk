@@ -9,21 +9,24 @@ const client = new Augno({
 
 describe('resource batches', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.productionRuns.batches.create('', {
-      batches: [
-        {
-          item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
-          production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-          quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          quantity_value: '100',
-          scanning_station_id: null,
-          seconds_unit_id: null,
-          seconds_value: null,
-          waste_unit_id: null,
-          waste_value: null,
-        },
-      ],
-    });
+    const responsePromise = client.operations.productionRuns.batches.create(
+      'prru_01jm4r6700f8nwq3v5hx2d9ktp',
+      {
+        batches: [
+          {
+            item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
+            production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+            quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+            quantity_value: '100',
+            scanning_station_id: null,
+            seconds_unit_id: null,
+            seconds_value: null,
+            waste_unit_id: null,
+            waste_value: null,
+          },
+        ],
+      },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,21 +37,24 @@ describe('resource batches', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.operations.productionRuns.batches.create('', {
-      batches: [
-        {
-          item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
-          production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-          quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          quantity_value: '100',
-          scanning_station_id: null,
-          seconds_unit_id: null,
-          seconds_value: null,
-          waste_unit_id: null,
-          waste_value: null,
-        },
-      ],
-    });
+    const response = await client.operations.productionRuns.batches.create(
+      'prru_01jm4r6700f8nwq3v5hx2d9ktp',
+      {
+        batches: [
+          {
+            item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
+            production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+            quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+            quantity_value: '100',
+            scanning_station_id: null,
+            seconds_unit_id: null,
+            seconds_value: null,
+            waste_unit_id: null,
+            waste_value: null,
+          },
+        ],
+      },
+    );
   });
 
   test('list', async () => {

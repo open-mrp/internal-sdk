@@ -31,7 +31,7 @@ describe('resource productLines', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.productLines.update('');
+    const responsePromise = client.catalog.productLines.update('pl_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource productLines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productLines.update(
-        '',
+        'pl_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           include: ['owner'],
           commission_policy: 'commission_applied',

@@ -42,7 +42,9 @@ export class Transactions extends APIResource {
    * @example
    * ```ts
    * const transactionDetail =
-   *   await client.finance.transactions.retrieve('example');
+   *   await client.finance.transactions.retrieve(
+   *     'tx_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   retrieve(
@@ -59,18 +61,21 @@ export class Transactions extends APIResource {
    * @example
    * ```ts
    * const transactionDetail =
-   *   await client.finance.transactions.update('', {
-   *     adjustment_type: null,
-   *     amount: '750.00',
-   *     clear_adjustment_type: false,
-   *     clear_responsible_user: false,
-   *     clear_transaction_method: false,
-   *     is_fully_allocated: null,
-   *     method: 'ach',
-   *     note: 'Updated payment note',
-   *     number: null,
-   *     responsible_user_id: null,
-   *   });
+   *   await client.finance.transactions.update(
+   *     'tx_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       adjustment_type: null,
+   *       amount: '750.00',
+   *       clear_adjustment_type: false,
+   *       clear_responsible_user: false,
+   *       clear_transaction_method: false,
+   *       is_fully_allocated: null,
+   *       method: 'ach',
+   *       note: 'Updated payment note',
+   *       number: null,
+   *       responsible_user_id: null,
+   *     },
+   *   );
    * ```
    */
   update(id: string, body: TransactionUpdateParams, options?: RequestOptions): APIPromise<TransactionDetail> {
@@ -99,7 +104,9 @@ export class Transactions extends APIResource {
    * @example
    * ```ts
    * const transactionDetail =
-   *   await client.finance.transactions.delete('example');
+   *   await client.finance.transactions.delete(
+   *     'tx_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<TransactionDetail> {

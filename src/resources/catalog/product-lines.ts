@@ -39,9 +39,10 @@ export class ProductLines extends APIResource {
    * @example
    * ```ts
    * const productLine =
-   *   await client.catalog.productLines.update('', {
-   *     name: 'Updated Product Line',
-   *   });
+   *   await client.catalog.productLines.update(
+   *     'pl_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { name: 'Updated Product Line' },
+   *   );
    * ```
    */
   update(

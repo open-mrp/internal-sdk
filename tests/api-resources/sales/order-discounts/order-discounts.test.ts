@@ -20,7 +20,7 @@ describe('resource orderDiscounts', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.orderDiscounts.update('');
+    const responsePromise = client.sales.orderDiscounts.update('ords_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,7 +34,7 @@ describe('resource orderDiscounts', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.orderDiscounts.update(
-        '',
+        'ords_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           amount: 'amount',
           code: 'SAVE15',

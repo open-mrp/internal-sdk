@@ -31,7 +31,7 @@ describe('resource shippingCases', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.shippingCases.update('', {
+    const responsePromise = client.operations.shippingCases.update('shcs_01jm4r6700f8nwq3v5hx2d9ktp', {
       freight_amount_unit_id: null,
       freight_amount_value: null,
       freight_weight_unit_id: null,
@@ -48,7 +48,7 @@ describe('resource shippingCases', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.shippingCases.update('', {
+    const response = await client.operations.shippingCases.update('shcs_01jm4r6700f8nwq3v5hx2d9ktp', {
       freight_amount_unit_id: null,
       freight_amount_value: null,
       freight_weight_unit_id: null,

@@ -18,11 +18,15 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const shipmentLine =
-   *   await client.operations.shipments.lines.create('', {
-   *     quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     quantity_value: '10.000000000000000000000000000000',
-   *     sales_order_line_id: 'orln_01jm4r6700f8nwq3v5hx2d9ktp',
-   *   });
+   *   await client.operations.shipments.lines.create(
+   *     'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       quantity_value: '10.000000000000000000000000000000',
+   *       sales_order_line_id:
+   *         'orln_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     },
+   *   );
    * ```
    */
   create(shipmentID: string, body: LineCreateParams, options?: RequestOptions): APIPromise<ShipmentLine> {
@@ -52,11 +56,14 @@ export class Lines extends APIResource {
    * @example
    * ```ts
    * const shipmentLine =
-   *   await client.operations.shipments.lines.update('', {
-   *     shipment_id: '',
-   *     quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     quantity_value: '5.000000000000000000000000000000',
-   *   });
+   *   await client.operations.shipments.lines.update(
+   *     'example',
+   *     {
+   *       shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       quantity_value: '5.000000000000000000000000000000',
+   *     },
+   *   );
    * ```
    */
   update(id: string, params: LineUpdateParams, options?: RequestOptions): APIPromise<ShipmentLine> {

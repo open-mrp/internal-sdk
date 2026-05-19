@@ -47,7 +47,7 @@ export class Batches extends APIResource {
    * @example
    * ```ts
    * const response = await client.operations.batches.nextSteps(
-   *   '',
+   *   'bt_01jm4r6700f8nwq3v5hx2d9ktp',
    *   {
    *     scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
    *   },

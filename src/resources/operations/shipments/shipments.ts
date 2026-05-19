@@ -69,9 +69,10 @@ export class Shipments extends APIResource {
    * @example
    * ```ts
    * const shipmentDetail =
-   *   await client.operations.shipments.update('', {
-   *     note: 'Updated shipping note',
-   *   });
+   *   await client.operations.shipments.update(
+   *     'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { note: 'Updated shipping note' },
+   *   );
    * ```
    */
   update(

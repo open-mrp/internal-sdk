@@ -20,7 +20,7 @@ describe('resource productTypes', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.productTypes.update('');
+    const responsePromise = client.catalog.productTypes.update('prty_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,7 +34,7 @@ describe('resource productTypes', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productTypes.update(
-        '',
+        'prty_01jm4r6700f8nwq3v5hx2d9ktp',
         { code: 'service', name: 'Service' },
         { path: '/_stainless_unknown_path' },
       ),

@@ -31,7 +31,7 @@ describe('resource productionRuns', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.productionRuns.update('', {
+    const responsePromise = client.operations.productionRuns.update('prru_01jm4r6700f8nwq3v5hx2d9ktp', {
       number: 'PR-00042',
       responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
     });
@@ -45,7 +45,7 @@ describe('resource productionRuns', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.productionRuns.update('', {
+    const response = await client.operations.productionRuns.update('prru_01jm4r6700f8nwq3v5hx2d9ktp', {
       number: 'PR-00042',
       responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
       include: ['responsible_user'],

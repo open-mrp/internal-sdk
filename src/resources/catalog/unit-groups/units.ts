@@ -17,11 +17,14 @@ export class Units extends APIResource {
    * @example
    * ```ts
    * const unitGroupUnit =
-   *   await client.catalog.unitGroups.units.create('', {
-   *     unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     customer_portal_visibility: 'visible',
-   *     discount_percentage: 1,
-   *   });
+   *   await client.catalog.unitGroups.units.create(
+   *     'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       customer_portal_visibility: 'visible',
+   *       discount_percentage: 1,
+   *     },
+   *   );
    * ```
    */
   create(unitGroupID: string, params: UnitCreateParams, options?: RequestOptions): APIPromise<UnitGroupUnit> {
@@ -59,11 +62,14 @@ export class Units extends APIResource {
    * @example
    * ```ts
    * const unitGroupUnit =
-   *   await client.catalog.unitGroups.units.update('', {
-   *     unit_group_id: '',
-   *     discount_percentage: 0.9,
-   *     unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *   });
+   *   await client.catalog.unitGroups.units.update(
+   *     'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       discount_percentage: 0.9,
+   *       unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     },
+   *   );
    * ```
    */
   update(id: string, params: UnitUpdateParams, options?: RequestOptions): APIPromise<UnitGroupUnit> {

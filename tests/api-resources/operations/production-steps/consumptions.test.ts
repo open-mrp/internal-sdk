@@ -9,13 +9,16 @@ const client = new Augno({
 
 describe('resource consumptions', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.productionSteps.consumptions.create('', {
-      item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
-      quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-      quantity_value: '10.000000000000000000000000000000',
-      waste_quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-      waste_quantity_value: '0.500000000000000000000000000000',
-    });
+    const responsePromise = client.operations.productionSteps.consumptions.create(
+      'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+      {
+        item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
+        quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+        quantity_value: '10.000000000000000000000000000000',
+        waste_quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+        waste_quantity_value: '0.500000000000000000000000000000',
+      },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -26,15 +29,18 @@ describe('resource consumptions', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.operations.productionSteps.consumptions.create('', {
-      item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
-      quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-      quantity_value: '10.000000000000000000000000000000',
-      waste_quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-      waste_quantity_value: '0.500000000000000000000000000000',
-      include: ['consumed_item'],
-      instructions: 'Mix with water before adding',
-    });
+    const response = await client.operations.productionSteps.consumptions.create(
+      'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+      {
+        item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
+        quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+        quantity_value: '10.000000000000000000000000000000',
+        waste_quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+        waste_quantity_value: '0.500000000000000000000000000000',
+        include: ['consumed_item'],
+        instructions: 'Mix with water before adding',
+      },
+    );
   });
 
   test('retrieve: only required params', async () => {
@@ -59,9 +65,10 @@ describe('resource consumptions', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.productionSteps.consumptions.update('', {
-      production_step_id: '',
-    });
+    const responsePromise = client.operations.productionSteps.consumptions.update(
+      'cp_01jm4r6700f8nwq3v5hx2d9ktp',
+      { production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp' },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -72,16 +79,19 @@ describe('resource consumptions', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.productionSteps.consumptions.update('', {
-      production_step_id: '',
-      include: ['consumed_item'],
-      instructions: 'instructions',
-      item_id: 'item_id',
-      quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-      quantity_value: '20.000000000000000000000000000000',
-      waste_quantity_unit_id: 'waste_quantity_unit_id',
-      waste_quantity_value: 'waste_quantity_value',
-    });
+    const response = await client.operations.productionSteps.consumptions.update(
+      'cp_01jm4r6700f8nwq3v5hx2d9ktp',
+      {
+        production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+        include: ['consumed_item'],
+        instructions: 'instructions',
+        item_id: 'item_id',
+        quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+        quantity_value: '20.000000000000000000000000000000',
+        waste_quantity_unit_id: 'waste_quantity_unit_id',
+        waste_quantity_value: 'waste_quantity_value',
+      },
+    );
   });
 
   test('delete: only required params', async () => {

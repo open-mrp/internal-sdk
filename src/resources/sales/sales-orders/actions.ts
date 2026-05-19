@@ -48,7 +48,7 @@ export class Actions extends APIResource {
    * ```ts
    * const salesOrderDetail =
    *   await client.sales.salesOrders.actions.updateChangeStatus(
-   *     '',
+   *     'or_01jm4r6700f8nwq3v5hx2d9ktp',
    *     { send_email: true, status_change: 'issue' },
    *   );
    * ```

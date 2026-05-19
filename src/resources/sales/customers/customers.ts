@@ -31,13 +31,9 @@ export class Customers extends APIResource {
    * const customer = await client.sales.customers.create({
    *   bill_to_address: {
    *     name: 'Acme Inc.',
-   *     street_line_1: '123 Main St',
-   *     locality: 'New York',
-   *     state: 'NY',
-   *     postal_code: '10001',
+   *     type: null,
    *     country: 'US',
    *   },
-   *   customer_price_group_ids: ['string'],
    *   customer_type_group_id: 'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
    *   default_carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *   default_payment_term_id:
@@ -47,10 +43,7 @@ export class Customers extends APIResource {
    *   name: 'Acme Inc.',
    *   ship_to_address: {
    *     name: 'Acme Inc.',
-   *     street_line_1: '123 Main St',
-   *     locality: 'New York',
-   *     state: 'NY',
-   *     postal_code: '10001',
+   *     type: null,
    *     country: 'US',
    *   },
    *   note: 'Key enterprise account',
@@ -86,12 +79,14 @@ export class Customers extends APIResource {
    *
    * @example
    * ```ts
-   * const customer = await client.sales.customers.update('', {
-   *   default_carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
-   *   freight_policy: 'billed_freight',
-   *   name: 'Acme Corp Updated',
-   *   note: 'Updated account notes',
-   * });
+   * const customer = await client.sales.customers.update(
+   *   'ac_01gf7a8200er3ar3pkfrb6kk29',
+   *   {
+   *     default_carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     freight_policy: 'billed_freight',
+   *     name: 'Acme Corp Updated',
+   *   },
+   * );
    * ```
    */
   update(
@@ -143,10 +138,7 @@ export class Customers extends APIResource {
    *   is_existing_customer: false,
    *   address: {
    *     name: 'Headquarters',
-   *     street_line_1: '123 Main St',
-   *     locality: 'Springfield',
-   *     state: 'IL',
-   *     postal_code: '62701',
+   *     type: null,
    *     country: 'US',
    *   },
    *   customer_group_id: 'cgrp_01abc',
@@ -484,11 +476,6 @@ export interface CustomerCreateParams {
   bill_to_address: AddressesAPI.AddressInput;
 
   /**
-   * Body param: Price group IDs.
-   */
-  customer_price_group_ids: Array<string>;
-
-  /**
    * Body param: Customer type group ID.
    */
   customer_type_group_id: string;
@@ -562,6 +549,11 @@ export interface CustomerCreateParams {
    * create/update requests.
    */
   credit_limit?: ShippingTermsAPI.QuantityInput;
+
+  /**
+   * Body param: Price group IDs.
+   */
+  customer_price_group_ids?: Array<string>;
 
   /**
    * Body param: Default priority code.

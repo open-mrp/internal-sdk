@@ -36,6 +36,7 @@ export class Agents extends APIResource {
    *   name: 'Inventory Monitor',
    *   role_id: 'rl_01gf7a8200er3ar3pkfrb6kk29',
    *   slug: 'inventory_monitor',
+   *   trigger_type: 'event',
    *   tools: [
    *     {
    *       tool_id: 'tdef_01k0b1seed0searchproduct0',
@@ -43,7 +44,6 @@ export class Agents extends APIResource {
    *       require_review: true,
    *     },
    *   ],
-   *   trigger_type: 'event',
    * });
    * ```
    */
@@ -75,9 +75,10 @@ export class Agents extends APIResource {
    *
    * @example
    * ```ts
-   * const agentDefinition = await client.ai.agents.update('', {
-   *   name: 'Inventory Monitor',
-   * });
+   * const agentDefinition = await client.ai.agents.update(
+   *   'agdf_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   { name: 'Inventory Monitor' },
+   * );
    * ```
    */
   update(
@@ -124,7 +125,7 @@ export class Agents extends APIResource {
    * @example
    * ```ts
    * const agentDefinition = await client.ai.agents.updateStatus(
-   *   '',
+   *   'agdf_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { status_code: 'active' },
    * );
    * ```
@@ -503,11 +504,6 @@ export interface AgentCreateParams {
   slug: string;
 
   /**
-   * Body param: Tools to attach.
-   */
-  tools: Array<ToolInput>;
-
-  /**
    * Body param: Trigger type: "manual", "scheduled", or "event".
    */
   trigger_type: 'scheduled' | 'manual' | 'event';
@@ -517,6 +513,11 @@ export interface AgentCreateParams {
    * are returned as `null`.
    */
   include?: Array<'config' | 'tools' | 'role' | 'role.permissions'>;
+
+  /**
+   * Body param: Tools to attach.
+   */
+  tools?: Array<ToolInput>;
 }
 
 export interface AgentRetrieveParams {

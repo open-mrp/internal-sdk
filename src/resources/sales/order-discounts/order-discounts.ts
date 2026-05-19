@@ -35,10 +35,10 @@ export class OrderDiscounts extends APIResource {
    * @example
    * ```ts
    * const orderDiscount =
-   *   await client.sales.orderDiscounts.update('', {
-   *     code: 'SAVE15',
-   *     name: '15% Off',
-   *   });
+   *   await client.sales.orderDiscounts.update(
+   *     'ords_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { code: 'SAVE15', name: '15% Off' },
+   *   );
    * ```
    */
   update(

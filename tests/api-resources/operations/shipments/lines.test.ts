@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource lines', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.shipments.lines.create('', {
+    const responsePromise = client.operations.shipments.lines.create('sh_01jm4r6700f8nwq3v5hx2d9ktp', {
       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_value: '10.000000000000000000000000000000',
       sales_order_line_id: 'orln_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -24,7 +24,7 @@ describe('resource lines', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.operations.shipments.lines.create('', {
+    const response = await client.operations.shipments.lines.create('sh_01jm4r6700f8nwq3v5hx2d9ktp', {
       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_value: '10.000000000000000000000000000000',
       sales_order_line_id: 'orln_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -51,7 +51,9 @@ describe('resource lines', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.shipments.lines.update('', { shipment_id: '' });
+    const responsePromise = client.operations.shipments.lines.update('example', {
+      shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -62,8 +64,8 @@ describe('resource lines', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.shipments.lines.update('', {
-      shipment_id: '',
+    const response = await client.operations.shipments.lines.update('example', {
+      shipment_id: 'sh_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       quantity_value: '5.000000000000000000000000000000',
     });

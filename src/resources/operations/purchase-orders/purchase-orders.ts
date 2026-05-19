@@ -65,21 +65,23 @@ export class PurchaseOrders extends APIResource {
    * @example
    * ```ts
    * const purchaseOrderDetail =
-   *   await client.operations.purchaseOrders.update('', {
-   *     contact_account_user_ids: ['string'],
-   *     note: 'Updated delivery notes',
-   *     number: 'PO-001',
-   *     priority_code: 'normal',
-   *     promised_at: '2026-05-15T00:00:00Z',
-   *   });
+   *   await client.operations.purchaseOrders.update(
+   *     'po_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       note: 'Updated delivery notes',
+   *       number: 'PO-001',
+   *       priority_code: 'normal',
+   *       promised_at: '2026-05-15T00:00:00Z',
+   *     },
+   *   );
    * ```
    */
   update(
     id: string,
-    params: PurchaseOrderUpdateParams,
+    params: PurchaseOrderUpdateParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<PurchaseOrderDetail> {
-    const { include, ...body } = params;
+    const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/purchase-orders/${id}`, {
       query: { include },
       body,
@@ -107,34 +109,35 @@ export class PurchaseOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const purchaseOrderDetail =
-   *   await client.operations.purchaseOrders.purchaseOrders({
-   *     contact_account_user_ids: ['string'],
-   *     lines: [
-   *       {
-   *         product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
-   *         product_sku: 'RAW-100',
-   *         quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *         quantity_value: '500',
-   *         unit_price_denominator_unit_id:
-   *           'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *         unit_price_numerator_unit_id:
-   *           'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *         unit_price_value: '12.50',
-   *       },
-   *     ],
-   *     priority_code: 'normal',
-   *     supplier_account_id: 'ac_02kn5s7811g9qwce7cizr4e0mq',
-   *     carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     note: 'Urgent restock order',
-   *     service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     ship_to_country: 'US',
-   *     ship_to_locality: 'San Francisco',
-   *     ship_to_name: 'Acme Inc.',
-   *     ship_to_postal_code: '94105',
-   *     ship_to_state: 'CA',
-   *     ship_to_street_line_1: '123 Main Street',
-   *   });
+   * const purchaseOrderDetail = await client.operations.purchaseOrders.purchaseOrders({
+   *   lines: [
+   *     {
+   *       item_id: null,
+   *       product_description: null,
+   *       product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       product_sku: 'RAW-100',
+   *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       quantity_value: '500',
+   *       unit_cost_denominator_unit_id: null,
+   *       unit_cost_numerator_unit_id: null,
+   *       unit_cost_value: null,
+   *       unit_price_denominator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       unit_price_numerator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       unit_price_value: '12.50',
+   *     },
+   *   ],
+   *   priority_code: 'normal',
+   *   supplier_account_id: 'ac_02kn5s7811g9qwce7cizr4e0mq',
+   *   carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   note: 'Urgent restock order',
+   *   service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   ship_to_country: 'US',
+   *   ship_to_locality: 'San Francisco',
+   *   ship_to_name: 'Acme Inc.',
+   *   ship_to_postal_code: '94105',
+   *   ship_to_state: 'CA',
+   *   ship_to_street_line_1: '123 Main Street',
+   * });
    * ```
    */
   purchaseOrders(
@@ -614,11 +617,6 @@ export interface PurchaseOrderRetrieveParams {
 
 export interface PurchaseOrderUpdateParams {
   /**
-   * Body param: Account user IDs for email contacts. Replaces existing contacts.
-   */
-  contact_account_user_ids: Array<string>;
-
-  /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
@@ -639,6 +637,11 @@ export interface PurchaseOrderUpdateParams {
    * Body param: Billing address ID.
    */
   billing_address_id?: string;
+
+  /**
+   * Body param: Account user IDs for email contacts. Replaces existing contacts.
+   */
+  contact_account_user_ids?: Array<string>;
 
   /**
    * Body param: Order note.
@@ -667,11 +670,6 @@ export interface PurchaseOrderUpdateParams {
 }
 
 export interface PurchaseOrderPurchaseOrdersParams {
-  /**
-   * Body param: Account user IDs for email contacts.
-   */
-  contact_account_user_ids: Array<string>;
-
   /**
    * Body param: Order lines to create.
    */
@@ -753,6 +751,11 @@ export interface PurchaseOrderPurchaseOrdersParams {
    * Body param: Carrier ID.
    */
   carrier_id?: string;
+
+  /**
+   * Body param: Account user IDs for email contacts.
+   */
+  contact_account_user_ids?: Array<string>;
 
   /**
    * Body param: Order note.

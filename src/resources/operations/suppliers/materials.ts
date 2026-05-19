@@ -17,11 +17,14 @@ export class Materials extends APIResource {
    * @example
    * ```ts
    * const supplierMaterial =
-   *   await client.operations.suppliers.materials.create('', {
-   *     is_active: true,
-   *     material_id: 'ml_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     supplier_part_number: 'SUP-PART-001',
-   *   });
+   *   await client.operations.suppliers.materials.create(
+   *     'example',
+   *     {
+   *       is_active: true,
+   *       material_id: 'ml_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       supplier_part_number: 'SUP-PART-001',
+   *     },
+   *   );
    * ```
    */
   create(
@@ -62,10 +65,13 @@ export class Materials extends APIResource {
    * @example
    * ```ts
    * const supplierMaterial =
-   *   await client.operations.suppliers.materials.update('', {
-   *     supplier_id: '',
-   *     supplier_part_number: 'SUP-PART-002',
-   *   });
+   *   await client.operations.suppliers.materials.update(
+   *     'ml_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       supplier_id: 'example',
+   *       supplier_part_number: 'SUP-PART-002',
+   *     },
+   *   );
    * ```
    */
   update(id: string, params: MaterialUpdateParams, options?: RequestOptions): APIPromise<SupplierMaterial> {

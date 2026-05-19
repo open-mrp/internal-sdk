@@ -52,7 +52,7 @@ describe('resource locations', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.locations.update('');
+    const responsePromise = client.operations.locations.update('lc_01gf7a8200er3ar3pkfrb6kk30');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -66,12 +66,12 @@ describe('resource locations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.locations.update(
-        '',
+        'lc_01gf7a8200er3ar3pkfrb6kk30',
         {
           include: ['parent'],
           child_ids: ['string'],
           name: 'Warehouse B',
-          parent_id: 'parent_id',
+          parent_id: null,
           type: 'building',
         },
         { path: '/_stainless_unknown_path' },

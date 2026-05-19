@@ -37,13 +37,16 @@ export class ShippingCases extends APIResource {
    * @example
    * ```ts
    * const shippingCase =
-   *   await client.operations.shippingCases.update('', {
-   *     freight_amount_unit_id: null,
-   *     freight_amount_value: null,
-   *     freight_weight_unit_id: null,
-   *     freight_weight_value: null,
-   *     tracking_number: '1Z999AA10123456784',
-   *   });
+   *   await client.operations.shippingCases.update(
+   *     'shcs_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       freight_amount_unit_id: null,
+   *       freight_amount_value: null,
+   *       freight_weight_unit_id: null,
+   *       freight_weight_value: null,
+   *       tracking_number: '1Z999AA10123456784',
+   *     },
+   *   );
    * ```
    */
   update(id: string, params: ShippingCaseUpdateParams, options?: RequestOptions): APIPromise<ShippingCase> {

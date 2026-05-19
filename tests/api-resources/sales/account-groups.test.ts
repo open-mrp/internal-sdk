@@ -20,7 +20,7 @@ describe('resource accountGroups', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.accountGroups.update('');
+    const responsePromise = client.sales.accountGroups.update('acgp_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,7 +34,7 @@ describe('resource accountGroups', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.accountGroups.update(
-        '',
+        'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           commission_policy: 'commission_applied',
           description: null,

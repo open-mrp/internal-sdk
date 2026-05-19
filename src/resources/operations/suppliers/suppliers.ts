@@ -36,10 +36,7 @@ export class Suppliers extends APIResource {
    *   await client.operations.suppliers.create({
    *     bill_to_address: {
    *       name: 'Acme Supplies Inc.',
-   *       street_line_1: '456 Industrial Pkwy',
-   *       locality: 'Chicago',
-   *       state: 'IL',
-   *       postal_code: '60601',
+   *       type: null,
    *       country: 'US',
    *     },
    *     name: 'Acme Supplies Inc.',
@@ -82,14 +79,17 @@ export class Suppliers extends APIResource {
    * @example
    * ```ts
    * const supplierDetail =
-   *   await client.operations.suppliers.update('', {
-   *     bill_to_address_id: null,
-   *     name: 'Acme Supplies LLC',
-   *     note: 'Updated contact info',
-   *     number: null,
-   *     ship_to_address_id: null,
-   *     update_note: true,
-   *   });
+   *   await client.operations.suppliers.update(
+   *     'ac_02kn5s7811g9qwce7cizr4e0mq',
+   *     {
+   *       bill_to_address_id: null,
+   *       name: 'Acme Supplies LLC',
+   *       note: 'Updated contact info',
+   *       number: null,
+   *       ship_to_address_id: null,
+   *       update_note: true,
+   *     },
+   *   );
    * ```
    */
   update(id: string, body: SupplierUpdateParams, options?: RequestOptions): APIPromise<SupplierDetail> {

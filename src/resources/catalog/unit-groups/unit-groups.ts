@@ -50,7 +50,7 @@ export class UnitGroups extends APIResource {
    * @example
    * ```ts
    * const unitGroup = await client.catalog.unitGroups.update(
-   *   '',
+   *   'ug_01jm4r6700f8nwq3v5hx2d9ktp',
    *   {
    *     base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *     name: 'Weight Units (Updated)',
@@ -105,6 +105,9 @@ export class UnitGroups extends APIResource {
    * ```ts
    * const unitGroup =
    *   await client.catalog.unitGroups.unitGroups({
+   *     base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     name: 'Weight Units',
+   *     type: 'mass',
    *     associated_units: [
    *       {
    *         unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -113,9 +116,6 @@ export class UnitGroups extends APIResource {
    *         customer_portal_visibility: 'visible',
    *       },
    *     ],
-   *     base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     name: 'Weight Units',
-   *     type: 'mass',
    *   });
    * ```
    */
@@ -294,11 +294,6 @@ export interface UnitGroupRetrieveUnitGroupsParams {
 
 export interface UnitGroupUnitGroupsParams {
   /**
-   * Body param: Associated units to create with the group.
-   */
-  associated_units: Array<CreateUnitGroupUnitParam>;
-
-  /**
    * Body param: Base unit ID.
    */
   base_unit_id: string;
@@ -318,6 +313,11 @@ export interface UnitGroupUnitGroupsParams {
    * are returned as `null`.
    */
   include?: Array<'owner' | 'owner.account' | 'base_unit' | 'associated_units'>;
+
+  /**
+   * Body param: Associated units to create with the group.
+   */
+  associated_units?: Array<CreateUnitGroupUnitParam>;
 
   /**
    * Body param: Notes.

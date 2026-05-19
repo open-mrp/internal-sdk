@@ -31,7 +31,7 @@ describe('resource invoices', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.finance.invoices.update('');
+    const responsePromise = client.finance.invoices.update('iv_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,11 +45,11 @@ describe('resource invoices', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.invoices.update(
-        '',
+        'iv_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           has_been_sent: true,
-          is_edi_sent: true,
-          is_paid_in_full: true,
+          is_edi_sent: null,
+          is_paid_in_full: null,
           note: 'Payment received via wire transfer',
         },
         { path: '/_stainless_unknown_path' },

@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource units', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.catalog.unitGroups.units.create('', {
+    const responsePromise = client.catalog.unitGroups.units.create('ug_01jm4r6700f8nwq3v5hx2d9ktp', {
       unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -22,7 +22,7 @@ describe('resource units', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.units.create('', {
+    const response = await client.catalog.unitGroups.units.create('ug_01jm4r6700f8nwq3v5hx2d9ktp', {
       unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
       include: ['unit'],
       customer_portal_visibility: 'visible',
@@ -52,7 +52,9 @@ describe('resource units', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.catalog.unitGroups.units.update('', { unit_group_id: '' });
+    const responsePromise = client.catalog.unitGroups.units.update('un_01jm4r6700f8nwq3v5hx2d9ktp', {
+      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -63,8 +65,8 @@ describe('resource units', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.units.update('', {
-      unit_group_id: '',
+    const response = await client.catalog.unitGroups.units.update('un_01jm4r6700f8nwq3v5hx2d9ktp', {
+      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
       include: ['unit'],
       customer_portal_visibility: 'visible',
       discount_fixed: 0,

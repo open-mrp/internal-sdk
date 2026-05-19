@@ -61,11 +61,15 @@ export class ProductionSteps extends APIResource {
    * @example
    * ```ts
    * const productionStep =
-   *   await client.operations.productionSteps.update('', {
-   *     leveling_factor: '1.15',
-   *     name: 'Assembly Step A',
-   *     scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
-   *   });
+   *   await client.operations.productionSteps.update(
+   *     'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       leveling_factor: '1.15',
+   *       name: 'Assembly Step A',
+   *       scanning_station_id:
+   *         'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     },
+   *   );
    * ```
    */
   update(
@@ -105,6 +109,7 @@ export class ProductionSteps extends APIResource {
    *       quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
    *       waste_quantity_value: '2',
    *       waste_quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       instructions: null,
    *     },
    *   ],
    *   labor_rate: {

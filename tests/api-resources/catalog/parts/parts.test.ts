@@ -10,7 +10,6 @@ const client = new Augno({
 describe('resource parts', () => {
   test('create: only required params', async () => {
     const responsePromise = client.catalog.parts.create({
-      attribute_ids: ['string'],
       category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
       sku: 'BRG-6204-2RS',
     });
@@ -25,16 +24,16 @@ describe('resource parts', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.catalog.parts.create({
-      attribute_ids: ['string'],
       category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
       sku: 'BRG-6204-2RS',
       include: ['item'],
+      attribute_ids: ['string'],
       burn_rate: {
         denominator_unit_id: 'denominator_unit_id',
         numerator_unit_id: 'numerator_unit_id',
         value: 'value',
       },
-      description: 'Deep groove ball bearing, 20x47x14mm',
+      description: 'description',
       notes: 'notes',
       unit_cost: {
         denominator_unit_id: 'denominator_unit_id',
@@ -50,7 +49,7 @@ describe('resource parts', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.parts.retrieve('it_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.parts.retrieve('pt_02kn5s7811g9qwce7cizr4e0mq');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -64,7 +63,7 @@ describe('resource parts', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.parts.retrieve(
-        'it_01jm4r6700f8nwq3v5hx2d9ktp',
+        'pt_02kn5s7811g9qwce7cizr4e0mq',
         { include: ['item'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -72,7 +71,7 @@ describe('resource parts', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.parts.update('');
+    const responsePromise = client.catalog.parts.update('pt_02kn5s7811g9qwce7cizr4e0mq');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -86,11 +85,11 @@ describe('resource parts', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.parts.update(
-        '',
+        'pt_02kn5s7811g9qwce7cizr4e0mq',
         {
           include: ['item'],
-          description: 'Deep groove ball bearing, 20x47x14mm',
-          notes: 'notes',
+          description: 'description',
+          notes: null,
           sku: 'BRG-6204-2RS',
         },
         { path: '/_stainless_unknown_path' },
@@ -129,7 +128,7 @@ describe('resource parts', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.parts.delete('it_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.parts.delete('pt_02kn5s7811g9qwce7cizr4e0mq');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

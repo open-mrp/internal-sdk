@@ -46,7 +46,7 @@ describe('resource properties', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.properties.update('');
+    const responsePromise = client.catalog.properties.update('pp_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -60,7 +60,7 @@ describe('resource properties', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.properties.update(
-        '',
+        'pp_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['attributes'], name: 'Size' },
         { path: '/_stainless_unknown_path' },
       ),

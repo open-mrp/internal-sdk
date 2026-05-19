@@ -31,7 +31,7 @@ describe('resource productionSteps', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.productionSteps.update('');
+    const responsePromise = client.operations.productionSteps.update('prst_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource productionSteps', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionSteps.update(
-        '',
+        'prst_01jm4r6700f8nwq3v5hx2d9ktp',
         {
           allowances: 'allowances',
           leveling_factor: '1.15',

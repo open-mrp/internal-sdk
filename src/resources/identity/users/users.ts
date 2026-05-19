@@ -33,12 +33,15 @@ export class Users extends APIResource {
    *
    * @example
    * ```ts
-   * const user = await client.identity.users.update('', {
-   *   email_verified: null,
-   *   image_url:
-   *     'https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg',
-   *   name: 'John Doe',
-   * });
+   * const user = await client.identity.users.update(
+   *   'us_01gf7a8200e9pvbd6bgyq395ae',
+   *   {
+   *     email_verified: null,
+   *     image_url:
+   *       'https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg',
+   *     name: 'John Doe',
+   *   },
+   * );
    * ```
    */
   update(id: string, body: UserUpdateParams, options?: RequestOptions): APIPromise<ActionsAPI.User> {

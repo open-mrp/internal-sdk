@@ -50,7 +50,7 @@ export class Customers extends APIResource {
    * ```ts
    * const customerProductLineAccess =
    *   await client.sales.productLineAccess.customers.update(
-   *     '',
+   *     'ac_01gf7a8200er3ar3pkfrb6kk29',
    *     { product_line_ids: ['pl_01jm4r6700f8nwq3v5hx2d9ktp'] },
    *   );
    * ```

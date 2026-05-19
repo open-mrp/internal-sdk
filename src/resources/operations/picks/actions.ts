@@ -16,7 +16,7 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const response = await client.operations.picks.actions.pack(
-   *   '',
+   *   'pk_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { shipment_case_count: 3 },
    * );
    * ```

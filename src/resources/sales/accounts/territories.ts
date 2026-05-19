@@ -18,12 +18,15 @@ export class Territories extends APIResource {
    * @example
    * ```ts
    * const territory =
-   *   await client.sales.accounts.territories.create('', {
-   *     sales_rep_id: 'au_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     state: 'NY',
-   *     end_zipcode: 10999,
-   *     start_zipcode: 10001,
-   *   });
+   *   await client.sales.accounts.territories.create(
+   *     'ac_01gf7a8200eaj8fke1xvw4h50x',
+   *     {
+   *       sales_rep_id: 'acus_01gf7a8200er3ar3pkfrb6kk29',
+   *       state: 'NY',
+   *       end_zipcode: 10999,
+   *       start_zipcode: 10001,
+   *     },
+   *   );
    * ```
    */
   create(accountID: string, params: TerritoryCreateParams, options?: RequestOptions): APIPromise<Territory> {
@@ -58,10 +61,13 @@ export class Territories extends APIResource {
    * @example
    * ```ts
    * const territory =
-   *   await client.sales.accounts.territories.update('', {
-   *     account_id: '',
-   *     state: 'CA',
-   *   });
+   *   await client.sales.accounts.territories.update(
+   *     'te_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       account_id: 'ac_01gf7a8200eaj8fke1xvw4h50x',
+   *       state: 'CA',
+   *     },
+   *   );
    * ```
    */
   update(id: string, params: TerritoryUpdateParams, options?: RequestOptions): APIPromise<Territory> {

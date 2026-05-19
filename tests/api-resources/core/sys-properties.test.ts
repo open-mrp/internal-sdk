@@ -20,7 +20,7 @@ describe('resource sysProperties', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.core.sysProperties.update('');
+    const responsePromise = client.core.sysProperties.update('sypp_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -33,7 +33,11 @@ describe('resource sysProperties', () => {
   test('update: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.core.sysProperties.update('', { value: 30 }, { path: '/_stainless_unknown_path' }),
+      client.core.sysProperties.update(
+        'sypp_01jm4r6700f8nwq3v5hx2d9ktp',
+        { value: 30 },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 

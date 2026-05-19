@@ -147,9 +147,10 @@ export class Sales extends APIResource {
    * @example
    * ```ts
    * const response = await client.sales.checkoutSessions({
-   *   order_id: 'order_id',
-   *   order_number: 'order_number',
-   *   order_total_cents: 0,
+   *   order_id: 'or_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   order_number: 'SO-001',
+   *   order_total_cents: 125050,
+   *   customer_po: 'PO-4242',
    * });
    * ```
    */

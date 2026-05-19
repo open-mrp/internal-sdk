@@ -43,7 +43,7 @@ export class Invoices extends APIResource {
    * @example
    * ```ts
    * const invoiceSummary = await client.finance.invoices.update(
-   *   '',
+   *   'iv_01jm4r6700f8nwq3v5hx2d9ktp',
    *   {
    *     has_been_sent: true,
    *     note: 'Payment received via wire transfer',

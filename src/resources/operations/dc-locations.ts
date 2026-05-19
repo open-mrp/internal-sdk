@@ -35,9 +35,10 @@ export class DcLocations extends APIResource {
    * @example
    * ```ts
    * const dcLocation =
-   *   await client.operations.dcLocations.update('', {
-   *     location: 'Warehouse B - Bay 1',
-   *   });
+   *   await client.operations.dcLocations.update(
+   *     'dclo_01gf7a8200er3ar3pkfrb6kk30',
+   *     { location: 'Warehouse B - Bay 1' },
+   *   );
    * ```
    */
   update(

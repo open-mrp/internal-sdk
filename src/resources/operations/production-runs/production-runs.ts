@@ -40,10 +40,13 @@ export class ProductionRuns extends APIResource {
    * @example
    * ```ts
    * const productionRunDetail =
-   *   await client.operations.productionRuns.update('', {
-   *     number: 'PR-00042',
-   *     responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
-   *   });
+   *   await client.operations.productionRuns.update(
+   *     'prru_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     {
+   *       number: 'PR-00042',
+   *       responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
+   *     },
+   *   );
    * ```
    */
   update(

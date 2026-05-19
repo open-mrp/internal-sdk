@@ -9,7 +9,9 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('pack: only required params', async () => {
-    const responsePromise = client.operations.picks.actions.pack('', { shipment_case_count: 3 });
+    const responsePromise = client.operations.picks.actions.pack('pk_01jm4r6700f8nwq3v5hx2d9ktp', {
+      shipment_case_count: 3,
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +22,9 @@ describe('resource actions', () => {
   });
 
   test('pack: required and optional params', async () => {
-    const response = await client.operations.picks.actions.pack('', { shipment_case_count: 3 });
+    const response = await client.operations.picks.actions.pack('pk_01jm4r6700f8nwq3v5hx2d9ktp', {
+      shipment_case_count: 3,
+    });
   });
 
   test('updatePick', async () => {

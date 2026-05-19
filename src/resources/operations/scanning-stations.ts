@@ -36,9 +36,10 @@ export class ScanningStations extends APIResource {
    * @example
    * ```ts
    * const scanningStation =
-   *   await client.operations.scanningStations.update('', {
-   *     name: 'Station B',
-   *   });
+   *   await client.operations.scanningStations.update(
+   *     'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { name: 'Station B' },
+   *   );
    * ```
    */
   update(
@@ -77,7 +78,7 @@ export class ScanningStations extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.scanningStations.consumptions(
-   *     '',
+   *     'scst_01jm4r6700f8nwq3v5hx2d9ktp',
    *     {
    *       batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
    *       production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
@@ -166,7 +167,7 @@ export class ScanningStations extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.scanningStations.updateProductionSteps(
-   *     '',
+   *     'scst_01jm4r6700f8nwq3v5hx2d9ktp',
    *     { name: 'Mixing' },
    *   );
    * ```

@@ -72,7 +72,7 @@ export class Carriers extends APIResource {
    * @example
    * ```ts
    * const carrier = await client.operations.carriers.update(
-   *   '',
+   *   'cr_01jm4r6700f8nwq3v5hx2d9ktp',
    *   { name: 'FedEx Express' },
    * );
    * ```

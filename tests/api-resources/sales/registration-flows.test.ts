@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource registrationFlows', () => {
   test('retrieve', async () => {
-    const responsePromise = client.sales.registrationFlows.retrieve('example');
+    const responsePromise = client.sales.registrationFlows.retrieve('acme');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,13 +20,10 @@ describe('resource registrationFlows', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.registrationFlows.update('', {
-      customer_group_ids: ['string'],
-      has_customer_group_ids: true,
-      has_payment_term_ids: true,
-      has_shipping_term_ids: true,
-      payment_term_ids: ['string'],
-      shipping_term_ids: ['string'],
+    const responsePromise = client.sales.registrationFlows.update('rgfw_01jm4r6700f8nwq3v5hx2d9ktp', {
+      has_customer_group_ids: false,
+      has_payment_term_ids: false,
+      has_shipping_term_ids: false,
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -38,14 +35,14 @@ describe('resource registrationFlows', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.registrationFlows.update('', {
+    const response = await client.sales.registrationFlows.update('rgfw_01jm4r6700f8nwq3v5hx2d9ktp', {
+      has_customer_group_ids: false,
+      has_payment_term_ids: false,
+      has_shipping_term_ids: false,
       customer_group_ids: ['string'],
-      has_customer_group_ids: true,
-      has_payment_term_ids: true,
-      has_shipping_term_ids: true,
+      name: 'Wholesale Registration Updated',
       payment_term_ids: ['string'],
       shipping_term_ids: ['string'],
-      name: 'Wholesale Registration Updated',
     });
   });
 

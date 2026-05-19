@@ -40,7 +40,7 @@ describe('resource transactions', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.finance.transactions.retrieve('example');
+    const responsePromise = client.finance.transactions.retrieve('tx_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -54,7 +54,7 @@ describe('resource transactions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.transactions.retrieve(
-        'example',
+        'tx_01jm4r6700f8nwq3v5hx2d9ktp',
         { include: ['allocations'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -62,7 +62,7 @@ describe('resource transactions', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.finance.transactions.update('', {
+    const responsePromise = client.finance.transactions.update('tx_01jm4r6700f8nwq3v5hx2d9ktp', {
       adjustment_type: null,
       amount: '750.00',
       clear_adjustment_type: false,
@@ -84,7 +84,7 @@ describe('resource transactions', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.finance.transactions.update('', {
+    const response = await client.finance.transactions.update('tx_01jm4r6700f8nwq3v5hx2d9ktp', {
       adjustment_type: null,
       amount: '750.00',
       clear_adjustment_type: false,
@@ -132,7 +132,7 @@ describe('resource transactions', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.finance.transactions.delete('example');
+    const responsePromise = client.finance.transactions.delete('tx_01jm4r6700f8nwq3v5hx2d9ktp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

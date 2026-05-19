@@ -22,6 +22,7 @@ export class Actions extends APIResource {
    *         sku: 'ALM-FLOUR-25LB',
    *         description: 'Raw almond flour, 25 lb bag',
    *         item_category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         product_line_id: null,
    *       },
    *     ],
    *     type: 'material',

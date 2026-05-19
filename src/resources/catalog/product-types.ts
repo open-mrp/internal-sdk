@@ -31,10 +31,10 @@ export class ProductTypes extends APIResource {
    * @example
    * ```ts
    * const productType =
-   *   await client.catalog.productTypes.update('', {
-   *     code: 'service',
-   *     name: 'Service',
-   *   });
+   *   await client.catalog.productTypes.update(
+   *     'prty_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     { code: 'service', name: 'Service' },
+   *   );
    * ```
    */
   update(
