@@ -1,5 +1,48 @@
 const fs = require('fs');
-const problems = Object.values(JSON.parse(fs.readFileSync('.attw.json', 'utf-8')).problems)
+
+function readAttwReport() {
+  let raw;
+  try {
+    raw = fs.readFileSync('.attw.json', 'utf8').trim();
+  } catch (err) {
+    if (err && err.code === 'ENOENT') {
+      throw new Error('attw output file .attw.json was not created');
+    }
+    throw err;
+  }
+  if (!raw) {
+    let detail = '';
+    try {
+      detail = fs.readFileSync('.attw.stderr', 'utf8').trim();
+    } catch {}
+    throw new Error(detail ? `attw produced no JSON output:\n${detail}` : 'attw produced no JSON output');
+  }
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`attw produced invalid JSON (${err.message})`);
+  }
+}
+
+function cleanupAttwArtifacts() {
+  for (const file of ['.attw.json', '.attw.stderr']) {
+    try {
+      fs.unlinkSync(file);
+    } catch {}
+  }
+}
+
+let report;
+try {
+  report = readAttwReport();
+} catch (err) {
+  cleanupAttwArtifacts();
+  process.stderr.write(`${err.message}\n`);
+  process.stderr.write('Re-run: ./node_modules/.bin/attw --pack dist\n');
+  process.exit(1);
+}
+
+const problems = Object.values(report.problems ?? {})
   .flat()
   .filter(
     (problem) =>
@@ -15,7 +58,7 @@ const problems = Object.values(JSON.parse(fs.readFileSync('.attw.json', 'utf-8')
         )
       ),
   );
-fs.unlinkSync('.attw.json');
+cleanupAttwArtifacts();
 if (problems.length) {
   process.stdout.write('The types are wrong!\n' + JSON.stringify(problems, null, 2) + '\n');
   process.exitCode = 1;

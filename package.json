@@ -28,6 +28,7 @@
     "lint": "./scripts/lint",
     "fix": "./scripts/format"
   },
+  "dependencies": {},
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.17.0",
     "@changesets/cli": "^2.31.0",
@@ -53,11 +54,6 @@
   },
   "overrides": {
     "minimatch": "^9.0.5"
-  },
-  "pnpm": {
-    "overrides": {
-      "minimatch": "^9.0.5"
-    }
   },
   "resolutions": {
     "minimatch": "^9.0.5"
