@@ -89,14 +89,9 @@ type Environment = keyof typeof environments;
 
 export interface ClientOptions {
   /**
-   * Bearer access token from session authentication
+   * API key sent as a Bearer token. Omit for cookie-based user sessions (dashboard).
    */
   bearerToken?: string | null | undefined;
-
-  /**
-   * API key (X-Augno-API-Key)
-   */
-  augnoAPIKey?: string | null | undefined;
 
   /**
    * Current account UUID (Augno-Account). Update when switching accounts.
@@ -186,7 +181,6 @@ export interface ClientOptions {
  */
 export class Augno {
   bearerToken: string | null;
-  augnoAPIKey: string | null;
   augnoAccountID: string | null;
 
   baseURL: string;
@@ -204,8 +198,7 @@ export class Augno {
   /**
    * API Client for interfacing with the Augno API.
    *
-   * @param {string | null | undefined} [opts.bearerToken]
-   * @param {string | null | undefined} [opts.augnoAPIKey=process.env['AUGNO_API_KEY'] ?? null]
+   * @param {string | null | undefined} [opts.bearerToken=process.env['AUGNO_API_KEY'] ?? null]
    * @param {string | null | undefined} [opts.augnoAccountID]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
    * @param {string} [opts.baseURL=process.env['AUGNO_BASE_URL'] ?? https://api.augno.com] - Override the default base URL for the API.
@@ -218,14 +211,12 @@ export class Augno {
    */
   constructor({
     baseURL = readEnv('AUGNO_BASE_URL'),
-    bearerToken = null,
-    augnoAPIKey = readEnv('AUGNO_API_KEY') ?? null,
+    bearerToken = readEnv('AUGNO_API_KEY') ?? null,
     augnoAccountID = null,
     ...opts
   }: ClientOptions = {}) {
     const options: ClientOptions = {
       bearerToken,
-      augnoAPIKey,
       augnoAccountID,
       ...opts,
       baseURL,
@@ -268,7 +259,6 @@ export class Augno {
     this._options = options;
 
     this.bearerToken = bearerToken;
-    this.augnoAPIKey = augnoAPIKey;
     this.augnoAccountID = augnoAccountID;
   }
 
@@ -287,7 +277,6 @@ export class Augno {
       fetch: this.fetch,
       fetchOptions: this.fetchOptions,
       bearerToken: this.bearerToken,
-      augnoAPIKey: this.augnoAPIKey,
       augnoAccountID: this.augnoAccountID,
       ...options,
     });
@@ -306,37 +295,10 @@ export class Augno {
   }
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
-    if (this.augnoAPIKey && values.get('x-augno-api-key')) {
-      return;
-    }
-    if (nulls.has('x-augno-api-key')) {
-      return;
-    }
-
-    if (this.bearerToken && values.get('authorization')) {
-      return;
-    }
-    if (nulls.has('authorization')) {
-      return;
-    }
-
-    throw new Error(
-      'Could not resolve authentication method. Expected either augnoAPIKey or bearerToken to be set. Or for one of the "X-Augno-API-Key" or "Authorization" headers to be explicitly omitted',
-    );
+    return;
   }
 
   protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    return buildHeaders([await this.augnoAPIKeyAuth(opts), await this.bearerAuth(opts)]);
-  }
-
-  protected async augnoAPIKeyAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    if (this.augnoAPIKey == null) {
-      return undefined;
-    }
-    return buildHeaders([{ 'X-Augno-API-Key': this.augnoAPIKey }]);
-  }
-
-  protected async bearerAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
     if (this.bearerToken == null) {
       return undefined;
     }

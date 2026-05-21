@@ -461,6 +461,20 @@ describe('instantiate client', () => {
       expect(newClient.buildURL('/bar', null)).toEqual('http://localhost:6000/bar');
     });
   });
+
+  test('with environment variable arguments', () => {
+    // set options via env var
+    process.env['AUGNO_API_KEY'] = 'My Bearer Token';
+    const client = new Augno();
+    expect(client.bearerToken).toBe('My Bearer Token');
+  });
+
+  test('with overridden environment variable arguments', () => {
+    // set options via env var
+    process.env['AUGNO_API_KEY'] = 'another My Bearer Token';
+    const client = new Augno({ bearerToken: 'My Bearer Token' });
+    expect(client.bearerToken).toBe('My Bearer Token');
+  });
 });
 
 describe('request building', () => {

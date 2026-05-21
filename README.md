@@ -21,7 +21,7 @@ The full API of this library can be found in [api.md](api.md).
 import Augno from '@augno/internal-sdk';
 
 const client = new Augno({
-  bearerToken: 'My Bearer Token',
+  bearerToken: process.env['AUGNO_API_KEY'], // This is the default and can be omitted
   environment: 'local', // defaults to 'production'
 });
 
@@ -39,7 +39,7 @@ This library includes TypeScript definitions for all request params and response
 import Augno from '@augno/internal-sdk';
 
 const client = new Augno({
-  bearerToken: 'My Bearer Token',
+  bearerToken: process.env['AUGNO_API_KEY'], // This is the default and can be omitted
   environment: 'local', // defaults to 'production'
 });
 
