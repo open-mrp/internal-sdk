@@ -1,6 +1,6 @@
 {
   "name": "@augno/internal-sdk",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "description": "The official TypeScript library for the Augno API",
   "author": "Augno <support@augno.com>",
   "types": "dist/index.d.ts",
