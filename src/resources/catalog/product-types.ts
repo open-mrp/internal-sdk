@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AgentsAPI from '../ai/agents';
+import * as EdiRunsAPI from '../operations/edi-runs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -11,13 +11,29 @@ import { path } from '../../internal/utils/path';
  */
 export class ProductTypes extends APIResource {
   /**
+   * Creates a product type.
+   *
+   * @example
+   * ```ts
+   * const productType =
+   *   await client.catalog.productTypes.create({
+   *     code: 'sale',
+   *     name: 'Sale',
+   *   });
+   * ```
+   */
+  create(body: ProductTypeCreateParams, options?: RequestOptions): APIPromise<ProductType> {
+    return this._client.post('/v1/catalog/product-types', { body, ...options });
+  }
+
+  /**
    * Returns a product type by ID or code.
    *
    * @example
    * ```ts
    * const productType =
    *   await client.catalog.productTypes.retrieve(
-   *     'prty_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'prty_01ddca85eedfb6b101a3c2f379',
    *   );
    * ```
    */
@@ -32,7 +48,7 @@ export class ProductTypes extends APIResource {
    * ```ts
    * const productType =
    *   await client.catalog.productTypes.update(
-   *     'prty_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'prty_01ddca85eedfb6b101a3c2f379',
    *     { code: 'service', name: 'Service' },
    *   );
    * ```
@@ -46,52 +62,96 @@ export class ProductTypes extends APIResource {
   }
 
   /**
+   * Returns a paginated list of product types. Product types are global and not
+   * scoped to a specific account.
+   *
+   * @example
+   * ```ts
+   * const listProductType =
+   *   await client.catalog.productTypes.list();
+   * ```
+   */
+  list(
+    query: ProductTypeListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ListProductType> {
+    return this._client.get('/v1/catalog/product-types', { query, ...options });
+  }
+
+  /**
    * Deletes a product type.
    *
    * @example
    * ```ts
    * const productType =
    *   await client.catalog.productTypes.delete(
-   *     'prty_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'prty_01ddca85eedfb6b101a3c2f379',
    *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<ProductTypeDeleteResponse> {
     return this._client.delete(path`/v1/catalog/product-types/${id}`, options);
   }
+}
+
+/**
+ * Request to create a product type.
+ */
+export interface CreateProductTypeRequest {
+  /**
+   * Unique code.
+   */
+  code: string;
 
   /**
-   * Creates a product type.
-   *
-   * @example
-   * ```ts
-   * const productType =
-   *   await client.catalog.productTypes.productTypes({
-   *     code: 'sale',
-   *     name: 'Sale',
-   *   });
-   * ```
+   * Display name.
    */
-  productTypes(body: ProductTypeProductTypesParams, options?: RequestOptions): APIPromise<ProductType> {
-    return this._client.post('/v1/catalog/product-types', { body, ...options });
-  }
+  name: string;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListProductType {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ProductType>;
 
   /**
-   * Returns a paginated list of product types. Product types are global and not
-   * scoped to a specific account.
-   *
-   * @example
-   * ```ts
-   * const response =
-   *   await client.catalog.productTypes.retrieveProductTypes();
-   * ```
+   * Resource type identifier.
    */
-  retrieveProductTypes(
-    query: ProductTypeRetrieveProductTypesParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<ProductTypeRetrieveProductTypesResponse> {
-    return this._client.get('/v1/catalog/product-types', { query, ...options });
-  }
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
 }
 
 /**
@@ -129,26 +189,33 @@ export interface ProductType {
   updated_at: string;
 }
 
+/**
+ * Request to partially update a product type.
+ */
+export interface UpdateProductTypeRequest {
+  /**
+   * Unique code.
+   */
+  code?: string;
+
+  /**
+   * Display name.
+   */
+  name?: string;
+}
+
 export interface ProductTypeDeleteResponse {}
 
-/**
- * List represents a paginated list of resources.
- */
-export interface ProductTypeRetrieveProductTypesResponse {
+export interface ProductTypeCreateParams {
   /**
-   * Resources in this page.
+   * Unique code.
    */
-  data: Array<ProductType>;
+  code: string;
 
   /**
-   * Resource type identifier.
+   * Display name.
    */
-  object: 'list';
-
-  /**
-   * PageInfo contains URL-based pagination metadata.
-   */
-  page_info: AgentsAPI.PageInfo;
+  name: string;
 }
 
 export interface ProductTypeUpdateParams {
@@ -163,19 +230,7 @@ export interface ProductTypeUpdateParams {
   name?: string;
 }
 
-export interface ProductTypeProductTypesParams {
-  /**
-   * Unique code.
-   */
-  code: string;
-
-  /**
-   * Display name.
-   */
-  name: string;
-}
-
-export interface ProductTypeRetrieveProductTypesParams {
+export interface ProductTypeListParams {
   /**
    * Cursor token used to retrieve the next or previous page of results.
    */
@@ -194,11 +249,14 @@ export interface ProductTypeRetrieveProductTypesParams {
 
 export declare namespace ProductTypes {
   export {
+    type CreateProductTypeRequest as CreateProductTypeRequest,
+    type ListProductType as ListProductType,
+    type PageInfo as PageInfo,
     type ProductType as ProductType,
+    type UpdateProductTypeRequest as UpdateProductTypeRequest,
     type ProductTypeDeleteResponse as ProductTypeDeleteResponse,
-    type ProductTypeRetrieveProductTypesResponse as ProductTypeRetrieveProductTypesResponse,
+    type ProductTypeCreateParams as ProductTypeCreateParams,
     type ProductTypeUpdateParams as ProductTypeUpdateParams,
-    type ProductTypeProductTypesParams as ProductTypeProductTypesParams,
-    type ProductTypeRetrieveProductTypesParams as ProductTypeRetrieveProductTypesParams,
+    type ProductTypeListParams as ProductTypeListParams,
   };
 }

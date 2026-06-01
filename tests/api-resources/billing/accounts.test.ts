@@ -8,8 +8,8 @@ const client = new Augno({
 });
 
 describe('resource accounts', () => {
-  test('create', async () => {
-    const responsePromise = client.billing.accounts.create();
+  test('update', async () => {
+    const responsePromise = client.billing.accounts.update();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

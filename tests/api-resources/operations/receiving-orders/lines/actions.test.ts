@@ -8,10 +8,10 @@ const client = new Augno({
 });
 
 describe('resource actions', () => {
-  test('updateReceive: only required params', async () => {
-    const responsePromise = client.operations.receivingOrders.lines.actions.updateReceive(
-      'orln_01jm4r6700f8nwq3v5hx2d9ktp',
-      { receiving_order_id: 'rcor_01jm4r6700f8nwq3v5hx2d9ktp' },
+  test('receive: only required params', async () => {
+    const responsePromise = client.operations.receivingOrders.lines.actions.receive(
+      'orln_0142f9b74268973450b3a76ce3',
+      { receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e' },
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -22,17 +22,17 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateReceive: required and optional params', async () => {
-    const response = await client.operations.receivingOrders.lines.actions.updateReceive(
-      'orln_01jm4r6700f8nwq3v5hx2d9ktp',
-      { receiving_order_id: 'rcor_01jm4r6700f8nwq3v5hx2d9ktp' },
+  test('receive: required and optional params', async () => {
+    const response = await client.operations.receivingOrders.lines.actions.receive(
+      'orln_0142f9b74268973450b3a76ce3',
+      { receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e' },
     );
   });
 
-  test('updateVoid: only required params', async () => {
-    const responsePromise = client.operations.receivingOrders.lines.actions.updateVoid(
-      'orln_01jm4r6700f8nwq3v5hx2d9ktp',
-      { receiving_order_id: 'rcor_01jm4r6700f8nwq3v5hx2d9ktp' },
+  test('void: only required params', async () => {
+    const responsePromise = client.operations.receivingOrders.lines.actions.void(
+      'orln_0142f9b74268973450b3a76ce3',
+      { receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e' },
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -43,10 +43,10 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateVoid: required and optional params', async () => {
-    const response = await client.operations.receivingOrders.lines.actions.updateVoid(
-      'orln_01jm4r6700f8nwq3v5hx2d9ktp',
-      { receiving_order_id: 'rcor_01jm4r6700f8nwq3v5hx2d9ktp' },
+  test('void: required and optional params', async () => {
+    const response = await client.operations.receivingOrders.lines.actions.void(
+      'orln_0142f9b74268973450b3a76ce3',
+      { receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e' },
     );
   });
 });

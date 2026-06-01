@@ -8,8 +8,47 @@ const client = new Augno({
 });
 
 describe('resource volumeDiscounts', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.sales.volumeDiscounts.create({
+      name: 'Bulk Order Discount',
+      tiers: [
+        {
+          discount_percentage: '5.000000000000000000000000000000',
+          name: '100+ Units',
+          threshold: '100.000000000000000000000000000000',
+        },
+      ],
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.sales.volumeDiscounts.create({
+      name: 'Bulk Order Discount',
+      tiers: [
+        {
+          discount_percentage: '5.000000000000000000000000000000',
+          name: '100+ Units',
+          threshold: '100.000000000000000000000000000000',
+          parent_tier_id: 'parent_tier_id',
+        },
+      ],
+      attribute_ids: ['string'],
+      category_ids: ['string'],
+      customer_group_ids: ['string'],
+      product_line_ids: ['string'],
+      unit_ids: ['string'],
+    });
+  });
+
   test('retrieve', async () => {
-    const responsePromise = client.sales.volumeDiscounts.retrieve('quds_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.sales.volumeDiscounts.retrieve('quds_01b64658b647f3c5266b8f6ae1');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +62,7 @@ describe('resource volumeDiscounts', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.volumeDiscounts.retrieve(
-        'quds_01jm4r6700f8nwq3v5hx2d9ktp',
+        'quds_01b64658b647f3c5266b8f6ae1',
         { include: ['customer_groups'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +70,7 @@ describe('resource volumeDiscounts', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.volumeDiscounts.update('quds_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.sales.volumeDiscounts.update('quds_01b64658b647f3c5266b8f6ae1', {
       has_attributes: false,
       has_categories: false,
       has_customer_groups: false,
@@ -49,7 +88,7 @@ describe('resource volumeDiscounts', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.volumeDiscounts.update('quds_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.sales.volumeDiscounts.update('quds_01b64658b647f3c5266b8f6ae1', {
       has_attributes: false,
       has_categories: false,
       has_customer_groups: false,
@@ -74,8 +113,8 @@ describe('resource volumeDiscounts', () => {
     });
   });
 
-  test('delete', async () => {
-    const responsePromise = client.sales.volumeDiscounts.delete('quds_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('list', async () => {
+    const responsePromise = client.sales.volumeDiscounts.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -85,21 +124,10 @@ describe('resource volumeDiscounts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveVolumeDiscounts', async () => {
-    const responsePromise = client.sales.volumeDiscounts.retrieveVolumeDiscounts();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveVolumeDiscounts: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.sales.volumeDiscounts.retrieveVolumeDiscounts(
+      client.sales.volumeDiscounts.list(
         {
           cursor: 'cursor',
           limit: 0,
@@ -110,17 +138,8 @@ describe('resource volumeDiscounts', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('volumeDiscounts: only required params', async () => {
-    const responsePromise = client.sales.volumeDiscounts.volumeDiscounts({
-      name: 'Bulk Order Discount',
-      tiers: [
-        {
-          discount_percentage: '5.000000000000000000000000000000',
-          name: '100+ Units',
-          threshold: '100.000000000000000000000000000000',
-        },
-      ],
-    });
+  test('delete', async () => {
+    const responsePromise = client.sales.volumeDiscounts.delete('quds_01b64658b647f3c5266b8f6ae1');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -128,24 +147,5 @@ describe('resource volumeDiscounts', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('volumeDiscounts: required and optional params', async () => {
-    const response = await client.sales.volumeDiscounts.volumeDiscounts({
-      name: 'Bulk Order Discount',
-      tiers: [
-        {
-          discount_percentage: '5.000000000000000000000000000000',
-          name: '100+ Units',
-          threshold: '100.000000000000000000000000000000',
-          parent_tier_id: 'parent_tier_id',
-        },
-      ],
-      attribute_ids: ['string'],
-      category_ids: ['string'],
-      customer_group_ids: ['string'],
-      product_line_ids: ['string'],
-      unit_ids: ['string'],
-    });
   });
 });

@@ -2,8 +2,8 @@
 
 export {
   Attributes,
-  type Attribute,
-  type ListAttribute,
+  type CreateAttributeRequest,
+  type UpdateAttributeRequest,
   type AttributeDeleteResponse,
   type AttributeCreateParams,
   type AttributeRetrieveParams,
@@ -13,8 +13,13 @@ export {
 } from './attributes';
 export {
   Properties,
+  type Attribute,
+  type CreatePropertyRequest,
+  type ListAttribute,
   type ListProperty,
+  type PageInfo,
   type Property,
+  type UpdatePropertyRequest,
   type PropertyDeleteResponse,
   type PropertyCreateParams,
   type PropertyRetrieveParams,

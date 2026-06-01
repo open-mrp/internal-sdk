@@ -8,8 +8,34 @@ const client = new Augno({
 });
 
 describe('resource productLines', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.catalog.productLines.create({
+      commission_policy: 'commission_exempt',
+      freight_policy: 'billed_freight',
+      name: 'Industrial Fasteners',
+      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.catalog.productLines.create({
+      commission_policy: 'commission_exempt',
+      freight_policy: 'billed_freight',
+      name: 'Industrial Fasteners',
+      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
+      include: ['owner'],
+    });
+  });
+
   test('retrieve', async () => {
-    const responsePromise = client.catalog.productLines.retrieve('pl_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.productLines.retrieve('pl_01996357326a0d3f7b129542ea');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +49,7 @@ describe('resource productLines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productLines.retrieve(
-        'pl_01jm4r6700f8nwq3v5hx2d9ktp',
+        'pl_01996357326a0d3f7b129542ea',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +57,7 @@ describe('resource productLines', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.productLines.update('pl_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.productLines.update('pl_01996357326a0d3f7b129542ea');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +71,7 @@ describe('resource productLines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productLines.update(
-        'pl_01jm4r6700f8nwq3v5hx2d9ktp',
+        'pl_01996357326a0d3f7b129542ea',
         {
           include: ['owner'],
           commission_policy: 'commission_applied',
@@ -58,8 +84,8 @@ describe('resource productLines', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.catalog.productLines.delete('pl_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('list', async () => {
+    const responsePromise = client.catalog.productLines.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,47 +95,10 @@ describe('resource productLines', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('productLines: only required params', async () => {
-    const responsePromise = client.catalog.productLines.productLines({
-      commission_policy: 'commission_exempt',
-      freight_policy: 'billed_freight',
-      name: 'Industrial Fasteners',
-      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('productLines: required and optional params', async () => {
-    const response = await client.catalog.productLines.productLines({
-      commission_policy: 'commission_exempt',
-      freight_policy: 'billed_freight',
-      name: 'Industrial Fasteners',
-      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
-      include: ['owner'],
-    });
-  });
-
-  test('retrieveProductLines', async () => {
-    const responsePromise = client.catalog.productLines.retrieveProductLines();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveProductLines: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.catalog.productLines.retrieveProductLines(
+      client.catalog.productLines.list(
         {
           cursor: 'cursor',
           include: ['owner'],
@@ -119,5 +108,16 @@ describe('resource productLines', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.catalog.productLines.delete('pl_01996357326a0d3f7b129542ea');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

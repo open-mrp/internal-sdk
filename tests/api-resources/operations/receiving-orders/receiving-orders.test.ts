@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource receivingOrders', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.receivingOrders.retrieve('rcor_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.receivingOrders.retrieve('rcor_016911ec6c634a298b3dc1798e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,8 +19,8 @@ describe('resource receivingOrders', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveReceivingOrders', async () => {
-    const responsePromise = client.operations.receivingOrders.retrieveReceivingOrders();
+  test('list', async () => {
+    const responsePromise = client.operations.receivingOrders.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -30,10 +30,10 @@ describe('resource receivingOrders', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveReceivingOrders: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.operations.receivingOrders.retrieveReceivingOrders(
+      client.operations.receivingOrders.list(
         {
           cursor: 'cursor',
           end_date: 'end_date',

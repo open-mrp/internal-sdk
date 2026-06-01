@@ -39,7 +39,7 @@ describe('resource memories', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.ai.memories.retrieve('agmm_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.ai.memories.retrieve('agmm_018731bdaf4ab04bd5bff1b65c');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,7 +50,7 @@ describe('resource memories', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.ai.memories.update('agmm_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.ai.memories.update('agmm_018731bdaf4ab04bd5bff1b65c', {
       category: 'category',
       content: 'Customer prefers next-day shipping on all orders.',
       importance: 0.9,
@@ -65,7 +65,7 @@ describe('resource memories', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.ai.memories.update('agmm_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.ai.memories.update('agmm_018731bdaf4ab04bd5bff1b65c', {
       category: 'category',
       content: 'Customer prefers next-day shipping on all orders.',
       importance: 0.9,
@@ -104,7 +104,7 @@ describe('resource memories', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.ai.memories.delete('agmm_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.ai.memories.delete('agmm_018731bdaf4ab04bd5bff1b65c');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

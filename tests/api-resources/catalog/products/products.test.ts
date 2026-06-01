@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource products', () => {
   test('create: only required params', async () => {
     const responsePromise = client.catalog.products.create({
-      category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+      category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
       product_line_id: 'product_line_id',
       sku: 'ALM-2024-1001',
       type: 'sale',
@@ -26,7 +26,7 @@ describe('resource products', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.catalog.products.create({
-      category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+      category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
       product_line_id: 'product_line_id',
       sku: 'ALM-2024-1001',
       type: 'sale',
@@ -54,7 +54,7 @@ describe('resource products', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.products.retrieve('pd_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.products.retrieve('pd_013c29ab3f1518d0004094c316');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -68,7 +68,7 @@ describe('resource products', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.products.retrieve(
-        'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+        'pd_013c29ab3f1518d0004094c316',
         { include: ['product_line'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -76,7 +76,7 @@ describe('resource products', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.products.update('pd_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.products.update('pd_013c29ab3f1518d0004094c316');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -90,7 +90,7 @@ describe('resource products', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.products.update(
-        'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+        'pd_013c29ab3f1518d0004094c316',
         {
           include: ['product_line'],
           description: 'description',
@@ -142,7 +142,7 @@ describe('resource products', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.products.delete('pd_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.products.delete('pd_013c29ab3f1518d0004094c316');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -156,10 +156,30 @@ describe('resource products', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.products.delete(
-        'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+        'pd_013c29ab3f1518d0004094c316',
         { include: ['product_line'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('changeProductLine: only required params', async () => {
+    const responsePromise = client.catalog.products.changeProductLine('pl_01996357326a0d3f7b129542ea', {
+      id: 'pd_013c29ab3f1518d0004094c316',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('changeProductLine: required and optional params', async () => {
+    const response = await client.catalog.products.changeProductLine('pl_01996357326a0d3f7b129542ea', {
+      id: 'pd_013c29ab3f1518d0004094c316',
+      include: ['product_line'],
+    });
   });
 });

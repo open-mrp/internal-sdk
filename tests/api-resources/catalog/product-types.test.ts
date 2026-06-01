@@ -8,8 +8,23 @@ const client = new Augno({
 });
 
 describe('resource productTypes', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.catalog.productTypes.create({ code: 'sale', name: 'Sale' });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.catalog.productTypes.create({ code: 'sale', name: 'Sale' });
+  });
+
   test('retrieve', async () => {
-    const responsePromise = client.catalog.productTypes.retrieve('prty_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.productTypes.retrieve('prty_01ddca85eedfb6b101a3c2f379');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +35,7 @@ describe('resource productTypes', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.productTypes.update('prty_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.productTypes.update('prty_01ddca85eedfb6b101a3c2f379');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,15 +49,15 @@ describe('resource productTypes', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productTypes.update(
-        'prty_01jm4r6700f8nwq3v5hx2d9ktp',
+        'prty_01ddca85eedfb6b101a3c2f379',
         { code: 'service', name: 'Service' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.catalog.productTypes.delete('prty_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('list', async () => {
+    const responsePromise = client.catalog.productTypes.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -52,36 +67,10 @@ describe('resource productTypes', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('productTypes: only required params', async () => {
-    const responsePromise = client.catalog.productTypes.productTypes({ code: 'sale', name: 'Sale' });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('productTypes: required and optional params', async () => {
-    const response = await client.catalog.productTypes.productTypes({ code: 'sale', name: 'Sale' });
-  });
-
-  test('retrieveProductTypes', async () => {
-    const responsePromise = client.catalog.productTypes.retrieveProductTypes();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveProductTypes: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.catalog.productTypes.retrieveProductTypes(
+      client.catalog.productTypes.list(
         {
           cursor: 'cursor',
           limit: 0,
@@ -90,5 +79,16 @@ describe('resource productTypes', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.catalog.productTypes.delete('prty_01ddca85eedfb6b101a3c2f379');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

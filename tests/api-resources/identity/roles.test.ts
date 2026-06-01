@@ -31,7 +31,7 @@ describe('resource roles', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.identity.roles.retrieve('rl_01gf7a8200er3ar3pkfrb6kk29');
+    const responsePromise = client.identity.roles.retrieve('rl_01c16d2eb637c0d1f3a372937c');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource roles', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.identity.roles.retrieve(
-        'rl_01gf7a8200er3ar3pkfrb6kk29',
+        'rl_01c16d2eb637c0d1f3a372937c',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -53,7 +53,7 @@ describe('resource roles', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.identity.roles.update('rl_01gf7a8200er3ar3pkfrb6kk29');
+    const responsePromise = client.identity.roles.update('rl_01c16d2eb637c0d1f3a372937c');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -67,7 +67,7 @@ describe('resource roles', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.identity.roles.update(
-        'rl_01gf7a8200er3ar3pkfrb6kk29',
+        'rl_01c16d2eb637c0d1f3a372937c',
         {
           include: ['owner'],
           name: 'Updated Manager',
@@ -106,7 +106,7 @@ describe('resource roles', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.identity.roles.delete('rl_01gf7a8200er3ar3pkfrb6kk29');
+    const responsePromise = client.identity.roles.delete('rl_01c16d2eb637c0d1f3a372937c');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

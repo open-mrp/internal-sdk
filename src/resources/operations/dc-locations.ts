@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AgentsAPI from '../ai/agents';
+import * as EdiRunsAPI from './edi-runs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -11,22 +11,34 @@ import { path } from '../../internal/utils/path';
  */
 export class DcLocations extends APIResource {
   /**
+   * Creates a DC location.
+   *
+   * @example
+   * ```ts
+   * const dcLocation =
+   *   await client.operations.dcLocations.create({
+   *     customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+   *     location: 'Warehouse A - Bay 3',
+   *   });
+   * ```
+   */
+  create(body: DcLocationCreateParams, options?: RequestOptions): APIPromise<DcLocation> {
+    return this._client.post('/v1/operations/dc-locations', { body, ...options });
+  }
+
+  /**
    * Returns a DC location by ID.
    *
    * @example
    * ```ts
    * const dcLocation =
    *   await client.operations.dcLocations.retrieve(
-   *     'dclo_01gf7a8200er3ar3pkfrb6kk30',
+   *     'dclo_0191ce9223b21dc31c9ee09b3e',
    *   );
    * ```
    */
-  retrieve(
-    id: string,
-    query: DcLocationRetrieveParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<DcLocation> {
-    return this._client.get(path`/v1/operations/dc-locations/${id}`, { query, ...options });
+  retrieve(id: string, options?: RequestOptions): APIPromise<DcLocation> {
+    return this._client.get(path`/v1/operations/dc-locations/${id}`, options);
   }
 
   /**
@@ -36,7 +48,7 @@ export class DcLocations extends APIResource {
    * ```ts
    * const dcLocation =
    *   await client.operations.dcLocations.update(
-   *     'dclo_01gf7a8200er3ar3pkfrb6kk30',
+   *     'dclo_0191ce9223b21dc31c9ee09b3e',
    *     { location: 'Warehouse B - Bay 1' },
    *   );
    * ```
@@ -50,51 +62,50 @@ export class DcLocations extends APIResource {
   }
 
   /**
+   * Returns a paginated list of DC locations for the current account.
+   *
+   * @example
+   * ```ts
+   * const listDcLocation =
+   *   await client.operations.dcLocations.list();
+   * ```
+   */
+  list(
+    query: DcLocationListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ListDcLocation> {
+    return this._client.get('/v1/operations/dc-locations', { query, ...options });
+  }
+
+  /**
    * Deletes a DC location.
    *
    * @example
    * ```ts
    * const dcLocation =
    *   await client.operations.dcLocations.delete(
-   *     'dclo_01gf7a8200er3ar3pkfrb6kk30',
+   *     'dclo_0191ce9223b21dc31c9ee09b3e',
    *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<DcLocationDeleteResponse> {
     return this._client.delete(path`/v1/operations/dc-locations/${id}`, options);
   }
+}
+
+/**
+ * Request to create a DC location.
+ */
+export interface CreateDcLocationRequest {
+  /**
+   * Customer account ID.
+   */
+  customer_id: string;
 
   /**
-   * Creates a DC location.
-   *
-   * @example
-   * ```ts
-   * const dcLocation =
-   *   await client.operations.dcLocations.dcLocations({
-   *     customer_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
-   *     location: 'Warehouse A - Bay 3',
-   *   });
-   * ```
+   * Location description.
    */
-  dcLocations(body: DcLocationDcLocationsParams, options?: RequestOptions): APIPromise<DcLocation> {
-    return this._client.post('/v1/operations/dc-locations', { body, ...options });
-  }
-
-  /**
-   * Returns a paginated list of DC locations for the current account.
-   *
-   * @example
-   * ```ts
-   * const response =
-   *   await client.operations.dcLocations.retrieveDcLocations();
-   * ```
-   */
-  retrieveDcLocations(
-    query: DcLocationRetrieveDcLocationsParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<DcLocationRetrieveDcLocationsResponse> {
-    return this._client.get('/v1/operations/dc-locations', { query, ...options });
-  }
+  location: string;
 }
 
 /**
@@ -114,7 +125,7 @@ export interface DcLocation {
   /**
    * Customer sub-resource on a DC location.
    */
-  customer: DcLocation.Customer | null;
+  customer: DcLocationCustomer | null;
 
   /**
    * Location description.
@@ -132,34 +143,30 @@ export interface DcLocation {
   updated_at: string;
 }
 
-export namespace DcLocation {
+/**
+ * Customer sub-resource on a DC location.
+ */
+export interface DcLocationCustomer {
   /**
-   * Customer sub-resource on a DC location.
+   * Customer ID.
    */
-  export interface Customer {
-    /**
-     * Customer ID.
-     */
-    id: string;
+  id: string;
 
-    /**
-     * Display name.
-     */
-    name: string;
+  /**
+   * Display name.
+   */
+  name: string;
 
-    /**
-     * Resource type identifier.
-     */
-    object: 'customer';
-  }
+  /**
+   * Resource type identifier.
+   */
+  object: 'customer';
 }
-
-export interface DcLocationDeleteResponse {}
 
 /**
  * List represents a paginated list of resources.
  */
-export interface DcLocationRetrieveDcLocationsResponse {
+export interface ListDcLocation {
   /**
    * Resources in this page.
    */
@@ -173,15 +180,61 @@ export interface DcLocationRetrieveDcLocationsResponse {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: EdiRunsAPI.PageInfo;
 }
 
-export interface DcLocationRetrieveParams {
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
   /**
-   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
-   * `null`.
+   * Whether more results exist after this page.
    */
-  include?: Array<'customer'>;
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+/**
+ * Request to partially update a DC location.
+ */
+export interface UpdateDcLocationRequest {
+  /**
+   * Customer account ID.
+   */
+  customer_id?: string;
+
+  /**
+   * Location description.
+   */
+  location?: string;
+}
+
+export interface DcLocationDeleteResponse {}
+
+export interface DcLocationCreateParams {
+  /**
+   * Customer account ID.
+   */
+  customer_id: string;
+
+  /**
+   * Location description.
+   */
+  location: string;
 }
 
 export interface DcLocationUpdateParams {
@@ -196,19 +249,7 @@ export interface DcLocationUpdateParams {
   location?: string;
 }
 
-export interface DcLocationDcLocationsParams {
-  /**
-   * Customer account ID.
-   */
-  customer_id: string;
-
-  /**
-   * Location description.
-   */
-  location: string;
-}
-
-export interface DcLocationRetrieveDcLocationsParams {
+export interface DcLocationListParams {
   /**
    * Cursor token used to retrieve the next or previous page of results.
    */
@@ -227,12 +268,15 @@ export interface DcLocationRetrieveDcLocationsParams {
 
 export declare namespace DcLocations {
   export {
+    type CreateDcLocationRequest as CreateDcLocationRequest,
     type DcLocation as DcLocation,
+    type DcLocationCustomer as DcLocationCustomer,
+    type ListDcLocation as ListDcLocation,
+    type PageInfo as PageInfo,
+    type UpdateDcLocationRequest as UpdateDcLocationRequest,
     type DcLocationDeleteResponse as DcLocationDeleteResponse,
-    type DcLocationRetrieveDcLocationsResponse as DcLocationRetrieveDcLocationsResponse,
-    type DcLocationRetrieveParams as DcLocationRetrieveParams,
+    type DcLocationCreateParams as DcLocationCreateParams,
     type DcLocationUpdateParams as DcLocationUpdateParams,
-    type DcLocationDcLocationsParams as DcLocationDcLocationsParams,
-    type DcLocationRetrieveDcLocationsParams as DcLocationRetrieveDcLocationsParams,
+    type DcLocationListParams as DcLocationListParams,
   };
 }

@@ -1,13 +1,11 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AgentsAPI from '../../ai/agents';
-import * as DepartmentsAPI from '../departments';
-import * as MachinesAPI from '../machines';
+import * as EdiRunsAPI from '../edi-runs';
 import * as ScanningStationsAPI from '../scanning-stations';
-import * as ItemsAPI from '../../catalog/items/items';
-import * as BatchesAPI from './batches';
-import * as ProductionStepsAPI from '../production-steps/production-steps';
+import * as BatchesAPI from '../production-runs/batches';
+import * as ShipmentsActionsAPI from '../shipments/actions';
+import * as LinesAPI from '../shipments/lines';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 
@@ -22,7 +20,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.batches.actions.bulkDelete({
-   *     batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     batch_ids: ['bt_017313a7df2d7ac8d895809747'],
    *   });
    * ```
    */
@@ -36,11 +34,11 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const batch = await client.operations.batches.actions.close(
-   *   { batch_id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp' },
+   *   { batch_id: 'bt_017313a7df2d7ac8d895809747' },
    * );
    * ```
    */
-  close(body: ActionCloseParams, options?: RequestOptions): APIPromise<Batch> {
+  close(body: ActionCloseParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
     return this._client.post('/v1/operations/batches/actions/close', { body, ...options });
   }
 
@@ -51,12 +49,12 @@ export class Actions extends APIResource {
    * ```ts
    * const batch =
    *   await client.operations.batches.actions.initialize({
-   *     batch_id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     batch_id: 'bt_017313a7df2d7ac8d895809747',
+   *     scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
    *   });
    * ```
    */
-  initialize(body: ActionInitializeParams, options?: RequestOptions): APIPromise<Batch> {
+  initialize(body: ActionInitializeParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
     return this._client.post('/v1/operations/batches/actions/initialize', { body, ...options });
   }
 
@@ -68,14 +66,14 @@ export class Actions extends APIResource {
    * ```ts
    * const batch = await client.operations.batches.actions.merge(
    *   {
-   *     batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
-   *     production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     batch_ids: ['bt_017313a7df2d7ac8d895809747'],
+   *     production_step_id: 'prst_0159474175bb59f4b1990404ee',
+   *     scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
    *   },
    * );
    * ```
    */
-  merge(body: ActionMergeParams, options?: RequestOptions): APIPromise<Batch> {
+  merge(body: ActionMergeParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
     return this._client.post('/v1/operations/batches/actions/merge', { body, ...options });
   }
 
@@ -85,13 +83,13 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const batch = await client.operations.batches.actions.move({
-   *   batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
-   *   production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-   *   scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   batch_ids: ['bt_017313a7df2d7ac8d895809747'],
+   *   production_step_id: 'prst_0159474175bb59f4b1990404ee',
+   *   scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
    * });
    * ```
    */
-  move(body: ActionMoveParams, options?: RequestOptions): APIPromise<Batch> {
+  move(body: ActionMoveParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
     return this._client.post('/v1/operations/batches/actions/move', { body, ...options });
   }
 
@@ -103,15 +101,15 @@ export class Actions extends APIResource {
    * ```ts
    * const batch = await client.operations.batches.actions.split(
    *   {
-   *     batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
+   *     batch_ids: ['bt_017313a7df2d7ac8d895809747'],
    *     close_batch: false,
    *     firsts: {
-   *       id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       id: 'bt_017313a7df2d7ac8d895809747',
    *       measure: '10.5',
-   *       unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       unit_id: 'un_01966263f74a5a0cae356000a1',
    *     },
-   *     production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     production_step_id: 'prst_0159474175bb59f4b1990404ee',
+   *     scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
    *     seconds: {
    *       id: 'id',
    *       measure: 'measure',
@@ -126,9 +124,249 @@ export class Actions extends APIResource {
    * );
    * ```
    */
-  split(body: ActionSplitParams, options?: RequestOptions): APIPromise<Batch> {
+  split(body: ActionSplitParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
     return this._client.post('/v1/operations/batches/actions/split', { body, ...options });
   }
+}
+
+/**
+ * Account with optional branding and portal sub-resources.
+ */
+export interface Account {
+  /**
+   * Account ID.
+   */
+  id: string;
+
+  /**
+   * Branding metadata for an account.
+   */
+  branding: LinesAPI.AccountBranding | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Address with associated geolocation.
+   */
+  default_billing_address: LinesAPI.Address | null;
+
+  /**
+   * Address with associated geolocation.
+   */
+  default_shipping_address: LinesAPI.Address | null;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account';
+
+  /**
+   * Portal metadata for an account.
+   */
+  portal: LinesAPI.AccountPortal | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Branding metadata for an account.
+ */
+export interface AccountBranding {
+  /**
+   * Branding ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Facebook handle.
+   */
+  facebook_handle: string | null;
+
+  /**
+   * Instagram handle.
+   */
+  instagram_handle: string | null;
+
+  /**
+   * LinkedIn handle.
+   */
+  linkedin_handle: string | null;
+
+  /**
+   * Logo URL.
+   */
+  logo_url: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account_branding';
+
+  /**
+   * Support phone number.
+   */
+  phone_number: string | null;
+
+  /**
+   * Support email address.
+   */
+  support_email: string | null;
+
+  /**
+   * Twitter handle.
+   */
+  twitter_handle: string | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+
+  /**
+   * Website URL.
+   */
+  website_url: string | null;
+}
+
+/**
+ * Portal metadata for an account.
+ */
+export interface AccountPortal {
+  /**
+   * Portal ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account_portal';
+
+  /**
+   * Portal slug.
+   */
+  slug: string;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Address with associated geolocation.
+ */
+export interface Address {
+  /**
+   * Address ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Email address associated with the address.
+   */
+  email: string | null;
+
+  /**
+   * Geolocation sub-resource.
+   */
+  geolocation: LinesAPI.Geolocation | null;
+
+  /**
+   * Display name of the address.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'address';
+
+  /**
+   * Phone number associated with the address.
+   */
+  phone: string | null;
+
+  /**
+   * Address type.
+   */
+  type: 'standard' | 'drop_ship';
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Value option within a property.
+ */
+export interface Attribute {
+  /**
+   * Attribute ID.
+   */
+  id: string;
+
+  /**
+   * Color code.
+   */
+  color: 'blue' | 'brown' | 'default' | 'gray' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'yellow';
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'attribute';
+
+  /**
+   * Property that groups attributes.
+   */
+  property: LinesAPI.Property | null;
+
+  /**
+   * Display order.
+   */
+  sort_order: number;
+
+  /**
+   * Last update timestamp.
+   */
+  updated_at: string;
+
+  /**
+   * Attribute value.
+   */
+  value: string;
 }
 
 /**
@@ -153,7 +391,7 @@ export interface Batch {
   /**
    * Department resource.
    */
-  department: DepartmentsAPI.Department | null;
+  department: ShipmentsActionsAPI.Department | null;
 
   /**
    * Input batch IDs.
@@ -163,17 +401,17 @@ export interface Batch {
   /**
    * Item is an inventory item (product, material, or part).
    */
-  item: ItemsAPI.Item | null;
+  item: LinesAPI.Item | null;
 
   /**
    * List represents a paginated list of resources.
    */
-  lots: Batch.Lots | null;
+  lots: BatchesAPI.ListBatchLot | null;
 
   /**
    * List represents a paginated list of resources.
    */
-  machines: MachinesAPI.ListMachine | null;
+  machines: ShipmentsActionsAPI.ListMachine | null;
 
   /**
    * Resource type identifier.
@@ -188,17 +426,17 @@ export interface Batch {
   /**
    * Production run sub-resource.
    */
-  production_run: ProductionRun | null;
+  production_run: ShipmentsActionsAPI.ProductionRun | null;
 
   /**
    * Production step with all nested data.
    */
-  production_step: ProductionStepsAPI.ProductionStep | null;
+  production_step: ShipmentsActionsAPI.ProductionStep | null;
 
   /**
    * Value with an associated unit.
    */
-  quantity: BatchesAPI.Quantity | null;
+  quantity: LinesAPI.Quantity | null;
 
   /**
    * Scanned timestamp.
@@ -208,12 +446,12 @@ export interface Batch {
   /**
    * Scanning station resource.
    */
-  scanning_station: ScanningStationsAPI.ScanningStation | null;
+  scanning_station: ShipmentsActionsAPI.ScanningStation | null;
 
   /**
    * Value with an associated unit.
    */
-  seconds: BatchesAPI.Quantity | null;
+  seconds: LinesAPI.Quantity | null;
 
   /**
    * Last-updated timestamp.
@@ -223,46 +461,713 @@ export interface Batch {
   /**
    * Value with an associated unit.
    */
-  waste: BatchesAPI.Quantity | null;
+  waste: LinesAPI.Quantity | null;
 }
 
-export namespace Batch {
+/**
+ * Lot associated with a batch.
+ */
+export interface BatchLot {
+  /**
+   * Lot number.
+   */
+  lot_number: string;
+
+  /**
+   * Lot type (material or productionRun).
+   */
+  type: string;
+}
+
+/**
+ * Request to close a batch.
+ */
+export interface CloseBatchRequest {
+  /**
+   * Batch ID.
+   */
+  batch_id: string;
+}
+
+/**
+ * Material consumed by a production step.
+ */
+export interface Consumption {
+  /**
+   * Consumption ID.
+   */
+  id: string;
+
+  /**
+   * Item is an inventory item (product, material, or part).
+   */
+  consumed_item: LinesAPI.Item | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Instructions for how this material is consumed.
+   */
+  instructions: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'consumption';
+
+  /**
+   * Value with an associated unit.
+   */
+  quantity: LinesAPI.Quantity | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+
+  /**
+   * Value with an associated unit.
+   */
+  waste_quantity: LinesAPI.Quantity | null;
+}
+
+/**
+ * Request to delete multiple batches.
+ */
+export interface DeleteManyBatchesRequest {
+  /**
+   * Batch IDs to delete.
+   */
+  batch_ids: Array<string>;
+}
+
+/**
+ * Department resource.
+ */
+export interface Department {
+  /**
+   * Department ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Location resource.
+   */
+  location: ShipmentsActionsAPI.Location | null;
+
   /**
    * List represents a paginated list of resources.
    */
-  export interface Lots {
-    /**
-     * Resources in this page.
-     */
-    data: Array<Lots.Data>;
+  machines: ShipmentsActionsAPI.ListMachine | null;
 
-    /**
-     * Resource type identifier.
-     */
-    object: 'list';
+  /**
+   * Display name.
+   */
+  name: string;
 
-    /**
-     * PageInfo contains URL-based pagination metadata.
-     */
-    page_info: AgentsAPI.PageInfo;
-  }
+  /**
+   * Notes about the department.
+   */
+  notes: string | null;
 
-  export namespace Lots {
-    /**
-     * Lot associated with a batch.
-     */
-    export interface Data {
-      /**
-       * Lot number.
-       */
-      lot_number: string;
+  /**
+   * Resource type identifier.
+   */
+  object: 'department';
 
-      /**
-       * Lot type (material or productionRun).
-       */
-      type: string;
-    }
-  }
+  /**
+   * List represents a paginated list of resources.
+   */
+  scanning_stations: ShipmentsActionsAPI.ListScanningStation | null;
+
+  /**
+   * Last update timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Geolocation sub-resource.
+ */
+export interface Geolocation {
+  /**
+   * Geolocation ID.
+   */
+  id: string;
+
+  /**
+   * Two-letter country code.
+   */
+  country: string;
+
+  /**
+   * City or locality.
+   */
+  locality: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'geolocation';
+
+  /**
+   * Postal or ZIP code.
+   */
+  postal_code: string | null;
+
+  /**
+   * State or administrative area.
+   */
+  state: string | null;
+
+  /**
+   * First line of the street address.
+   */
+  street_line_1: string | null;
+
+  /**
+   * Second line of the street address.
+   */
+  street_line_2: string | null;
+}
+
+/**
+ * Request to initialize a batch at a scanning station.
+ */
+export interface InitializeBatchRequest {
+  /**
+   * Batch ID.
+   */
+  batch_id: string;
+
+  /**
+   * Scanning station ID.
+   */
+  scanning_station_id: string;
+}
+
+/**
+ * Item is an inventory item (product, material, or part).
+ */
+export interface Item {
+  /**
+   * Item ID.
+   */
+  id: string;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  attributes: LinesAPI.ListAttribute | null;
+
+  /**
+   * Rate resource.
+   */
+  burn_rate: LinesAPI.Rate | null;
+
+  /**
+   * ItemCategory resource.
+   */
+  category: LinesAPI.ItemCategory | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Item description.
+   */
+  description: string | null;
+
+  /**
+   * Notes.
+   */
+  notes: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'item';
+
+  /**
+   * Stock keeping unit code.
+   */
+  sku: string;
+
+  /**
+   * Item type code.
+   */
+  type: 'product' | 'material' | 'part';
+
+  /**
+   * Rate resource.
+   */
+  unit_cost: LinesAPI.Rate | null;
+
+  /**
+   * Rate resource.
+   */
+  unit_value: LinesAPI.Rate | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * ItemCategory resource.
+ */
+export interface ItemCategory {
+  /**
+   * Item category ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Notes.
+   */
+  notes: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'item_category';
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: LinesAPI.Owner | null;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  properties: LinesAPI.ListProperty | null;
+
+  /**
+   * Item category type.
+   */
+  type: 'material_category' | 'product_category';
+
+  /**
+   * UnitGroup is a unit group resource.
+   */
+  unit_group: LinesAPI.UnitGroup | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListAttribute {
+  /**
+   * Resources in this page.
+   */
+  data: Array<LinesAPI.Attribute>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListBatchLot {
+  /**
+   * Resources in this page.
+   */
+  data: Array<BatchesAPI.BatchLot>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListConsumption {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ShipmentsActionsAPI.Consumption>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListLocation {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ShipmentsActionsAPI.Location>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListMachine {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ShipmentsActionsAPI.Machine>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListProductionStep {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ShipmentsActionsAPI.ProductionStep>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListProperty {
+  /**
+   * Resources in this page.
+   */
+  data: Array<LinesAPI.Property>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListScanningStation {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ShipmentsActionsAPI.ScanningStation>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListUnitGroupUnit {
+  /**
+   * Resources in this page.
+   */
+  data: Array<LinesAPI.UnitGroupUnit>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * Location resource.
+ */
+export interface Location {
+  /**
+   * Location ID.
+   */
+  id: string;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  children: ShipmentsActionsAPI.ListLocation | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'location';
+
+  /**
+   * Location resource.
+   */
+  parent: ShipmentsActionsAPI.Location | null;
+
+  /**
+   * Location type code.
+   */
+  type: 'building' | 'section' | 'aisle' | 'rack' | 'shelf' | 'bin';
+
+  /**
+   * Last-updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Machine within an account.
+ */
+export interface Machine {
+  /**
+   * Machine ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Department resource.
+   */
+  department: ShipmentsActionsAPI.Department | null;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Notes.
+   */
+  notes: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'machine';
+
+  /**
+   * Serial number.
+   */
+  serial_number: string;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Request to merge multiple batches into one.
+ */
+export interface MergeBatchesRequest {
+  /**
+   * Batch IDs to merge.
+   */
+  batch_ids: Array<string>;
+
+  /**
+   * Production step ID for the merged batch.
+   */
+  production_step_id: string;
+
+  /**
+   * Scanning station ID performing the merge.
+   */
+  scanning_station_id: string;
+}
+
+/**
+ * Request to move batches to a production step.
+ */
+export interface MoveBatchesRequest {
+  /**
+   * Batch IDs to move.
+   */
+  batch_ids: Array<string>;
+
+  /**
+   * Target production step ID.
+   */
+  production_step_id: string;
+
+  /**
+   * Scanning station ID performing the move.
+   */
+  scanning_station_id: string;
+}
+
+/**
+ * Owner describes the provenance of a resource.
+ */
+export interface Owner {
+  /**
+   * Account with optional branding and portal sub-resources.
+   */
+  account: LinesAPI.Account | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'owner';
+
+  /**
+   * The owner type: "system" for platform defaults, "account" for account-owned
+   * resources.
+   */
+  type: 'system' | 'account';
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+/**
+ * Production output of a production step.
+ */
+export interface ProductionOutput {
+  /**
+   * Production ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'production';
+
+  /**
+   * Item is an inventory item (product, material, or part).
+   */
+  produced_item: LinesAPI.Item | null;
+
+  /**
+   * Value with an associated unit.
+   */
+  quantity: LinesAPI.Quantity | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
 }
 
 /**
@@ -286,6 +1191,316 @@ export interface ProductionRun {
 }
 
 /**
+ * Production step with all nested data.
+ */
+export interface ProductionStep {
+  /**
+   * Production step ID.
+   */
+  id: string;
+
+  /**
+   * Allowances as a decimal string.
+   */
+  allowances: string;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  consumptions: ShipmentsActionsAPI.ListConsumption | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Department resource.
+   */
+  department: ShipmentsActionsAPI.Department | null;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  in_steps: ShipmentsActionsAPI.ListProductionStep | null;
+
+  /**
+   * Rate resource.
+   */
+  labor_rate: LinesAPI.Rate | null;
+
+  /**
+   * Rate resource.
+   */
+  labor_time: LinesAPI.Rate | null;
+
+  /**
+   * Leveling factor as a decimal string.
+   */
+  leveling_factor: string;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  machines: ShipmentsActionsAPI.ListMachine | null;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Notes.
+   */
+  notes: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'production_step';
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  out_steps: ShipmentsActionsAPI.ListProductionStep | null;
+
+  /**
+   * Rate resource.
+   */
+  overhead_rate: LinesAPI.Rate | null;
+
+  /**
+   * Production output of a production step.
+   */
+  production: ShipmentsActionsAPI.ProductionOutput | null;
+
+  /**
+   * Scanning station resource.
+   */
+  scanning_station: ShipmentsActionsAPI.ScanningStation | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Property that groups attributes.
+ */
+export interface Property {
+  /**
+   * Property ID.
+   */
+  id: string;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  attributes: LinesAPI.ListAttribute | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'property';
+
+  /**
+   * Last update timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Value with an associated unit.
+ */
+export interface Quantity {
+  /**
+   * Quantity ID.
+   */
+  id: string;
+
+  /**
+   * Formatted value with unit abbreviation (e.g. "$1,234.56" or "100 kg").
+   */
+  display_value: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'quantity';
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  unit: LinesAPI.Unit | null;
+
+  /**
+   * Decimal value.
+   */
+  value: string;
+}
+
+/**
+ * Rate resource.
+ */
+export interface Rate {
+  /**
+   * Rate ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  denominator_unit: LinesAPI.Unit | null;
+
+  /**
+   * Human-readable formatted value (e.g. "$25.50 / kg" or "100 kg / hr").
+   */
+  display_value: string;
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  numerator_unit: LinesAPI.Unit | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'rate';
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+
+  /**
+   * Rate value as a decimal string.
+   */
+  value: string;
+}
+
+/**
+ * Scanning station resource.
+ */
+export interface ScanningStation {
+  /**
+   * Scanning station ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Department resource.
+   */
+  department: ShipmentsActionsAPI.Department | null;
+
+  /**
+   * Label size code.
+   */
+  label_size: '1x1' | '1x3' | '1x4' | '2x4' | null;
+
+  /**
+   * Label type code.
+   */
+  label_type: 'tag' | 'traveler' | null;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Notes.
+   */
+  notes: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'scanning_station';
+
+  /**
+   * Operator requirement behavior for this station.
+   */
+  operator_requirement: 'none' | 'material_check';
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  production_steps: ShipmentsActionsAPI.ListProductionStep | null;
+
+  /**
+   * Scanning station type.
+   */
+  type: 'init_batch' | 'merge_batch' | 'move_batch' | 'split_batch';
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Request to split batches into multiple parts.
+ */
+export interface SplitBatchRequest {
+  /**
+   * Batch IDs to split.
+   */
+  batch_ids: Array<string>;
+
+  /**
+   * Whether to close the original batches after splitting.
+   */
+  close_batch: boolean;
+
+  /**
+   * Quantity input for a split operation.
+   */
+  firsts: ScanningStationsAPI.SplitQuantityInput;
+
+  /**
+   * Production step ID for the split.
+   */
+  production_step_id: string;
+
+  /**
+   * Scanning station ID performing the split.
+   */
+  scanning_station_id: string;
+
+  /**
+   * Quantity input for a split operation.
+   */
+  seconds: ScanningStationsAPI.SplitQuantityInput | null;
+
+  /**
+   * Quantity input for a split operation.
+   */
+  waste: ScanningStationsAPI.SplitQuantityInput | null;
+}
+
+/**
  * Quantity input for a split operation.
  */
 export interface SplitQuantityInput {
@@ -303,6 +1518,179 @@ export interface SplitQuantityInput {
    * Unit ID.
    */
   unit_id: string;
+}
+
+/**
+ * Unit of measurement used for conversions and product quantities.
+ */
+export interface Unit {
+  /**
+   * Unit ID.
+   */
+  id: string;
+
+  /**
+   * Short abbreviation for the unit (e.g. "g", "kg").
+   */
+  abbreviation: string;
+
+  /**
+   * When this unit was created.
+   */
+  created_at: string;
+
+  /**
+   * Whether this is the base unit for its dimension. Conversion ratios are relative
+   * to this unit.
+   */
+  is_base_unit: boolean;
+
+  /**
+   * Display name of the unit (e.g. "Gram", "Kilogram").
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'unit';
+
+  /**
+   * Conversion offset denominator. Typically 1. Cannot be zero.
+   */
+  offset_denominator: string;
+
+  /**
+   * Conversion offset numerator, used for temperature-like conversions. Zero for
+   * most unit types.
+   */
+  offset_numerator: string;
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: LinesAPI.Owner | null;
+
+  /**
+   * Conversion ratio denominator relative to the base unit in the same dimension.
+   * Cannot be zero.
+   */
+  ratio_denominator: string;
+
+  /**
+   * Conversion ratio numerator relative to the base unit in the same dimension.
+   */
+  ratio_numerator: string;
+
+  /**
+   * Unit dimension.
+   */
+  type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
+
+  /**
+   * When this unit was last updated.
+   */
+  updated_at: string;
+}
+
+/**
+ * UnitGroup is a unit group resource.
+ */
+export interface UnitGroup {
+  /**
+   * Unit group ID.
+   */
+  id: string;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  associated_units: LinesAPI.ListUnitGroupUnit | null;
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  base_unit: LinesAPI.Unit | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Notes.
+   */
+  notes: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'unit_group';
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: LinesAPI.Owner | null;
+
+  /**
+   * Unit type.
+   */
+  type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * UnitGroupUnit is an associated unit within a unit group.
+ */
+export interface UnitGroupUnit {
+  /**
+   * Unit group unit ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Customer portal visibility.
+   */
+  customer_portal_visibility: 'visible' | 'hidden';
+
+  /**
+   * Fixed discount amount.
+   */
+  discount_fixed: number;
+
+  /**
+   * Discount percentage.
+   */
+  discount_percentage: number;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'unit_group_unit';
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  unit: LinesAPI.Unit | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
 }
 
 export interface ActionBulkDeleteResponse {}
@@ -381,7 +1769,7 @@ export interface ActionSplitParams {
   /**
    * Quantity input for a split operation.
    */
-  firsts: SplitQuantityInput;
+  firsts: ScanningStationsAPI.SplitQuantityInput;
 
   /**
    * Production step ID for the split.
@@ -396,19 +1784,58 @@ export interface ActionSplitParams {
   /**
    * Quantity input for a split operation.
    */
-  seconds: SplitQuantityInput | null;
+  seconds: ScanningStationsAPI.SplitQuantityInput | null;
 
   /**
    * Quantity input for a split operation.
    */
-  waste: SplitQuantityInput | null;
+  waste: ScanningStationsAPI.SplitQuantityInput | null;
 }
 
 export declare namespace Actions {
   export {
+    type Account as Account,
+    type AccountBranding as AccountBranding,
+    type AccountPortal as AccountPortal,
+    type Address as Address,
+    type Attribute as Attribute,
     type Batch as Batch,
+    type BatchLot as BatchLot,
+    type CloseBatchRequest as CloseBatchRequest,
+    type Consumption as Consumption,
+    type DeleteManyBatchesRequest as DeleteManyBatchesRequest,
+    type Department as Department,
+    type Geolocation as Geolocation,
+    type InitializeBatchRequest as InitializeBatchRequest,
+    type Item as Item,
+    type ItemCategory as ItemCategory,
+    type ListAttribute as ListAttribute,
+    type ListBatchLot as ListBatchLot,
+    type ListConsumption as ListConsumption,
+    type ListLocation as ListLocation,
+    type ListMachine as ListMachine,
+    type ListProductionStep as ListProductionStep,
+    type ListProperty as ListProperty,
+    type ListScanningStation as ListScanningStation,
+    type ListUnitGroupUnit as ListUnitGroupUnit,
+    type Location as Location,
+    type Machine as Machine,
+    type MergeBatchesRequest as MergeBatchesRequest,
+    type MoveBatchesRequest as MoveBatchesRequest,
+    type Owner as Owner,
+    type PageInfo as PageInfo,
+    type ProductionOutput as ProductionOutput,
     type ProductionRun as ProductionRun,
+    type ProductionStep as ProductionStep,
+    type Property as Property,
+    type Quantity as Quantity,
+    type Rate as Rate,
+    type ScanningStation as ScanningStation,
+    type SplitBatchRequest as SplitBatchRequest,
     type SplitQuantityInput as SplitQuantityInput,
+    type Unit as Unit,
+    type UnitGroup as UnitGroup,
+    type UnitGroupUnit as UnitGroupUnit,
     type ActionBulkDeleteResponse as ActionBulkDeleteResponse,
     type ActionBulkDeleteParams as ActionBulkDeleteParams,
     type ActionCloseParams as ActionCloseParams,

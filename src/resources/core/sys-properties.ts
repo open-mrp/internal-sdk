@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AgentsAPI from '../ai/agents';
+import * as EdiRunsAPI from '../operations/edi-runs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -17,7 +17,7 @@ export class SysProperties extends APIResource {
    * ```ts
    * const sysProperty =
    *   await client.core.sysProperties.retrieve(
-   *     'sypp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'sypp_01d8fd3a8b1a8e4c41be55ab5a',
    *   );
    * ```
    */
@@ -31,7 +31,7 @@ export class SysProperties extends APIResource {
    * @example
    * ```ts
    * const sysProperty = await client.core.sysProperties.update(
-   *   'sypp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'sypp_01d8fd3a8b1a8e4c41be55ab5a',
    *   { value: 30 },
    * );
    * ```
@@ -45,39 +45,81 @@ export class SysProperties extends APIResource {
   }
 
   /**
+   * Returns a paginated list of system properties for the current account.
+   *
+   * @example
+   * ```ts
+   * const listSysProperty =
+   *   await client.core.sysProperties.list();
+   * ```
+   */
+  list(
+    query: SysPropertyListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ListSysProperty> {
+    return this._client.get('/v1/core/sys-properties', { query, ...options });
+  }
+
+  /**
    * Returns the next available counter value for a system property type,
    * initializing it if it does not exist for the account.
    *
    * @example
    * ```ts
-   * const response =
+   * const sysPropertyValue =
    *   await client.core.sysProperties.retrieveLatestValue(
    *     'example',
    *   );
    * ```
    */
-  retrieveLatestValue(
-    typeCode: string,
-    options?: RequestOptions,
-  ): APIPromise<SysPropertyRetrieveLatestValueResponse> {
+  retrieveLatestValue(typeCode: string, options?: RequestOptions): APIPromise<SysPropertyValue> {
     return this._client.get(path`/v1/core/sys-properties/${typeCode}/latest-value`, options);
   }
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListSysProperty {
+  /**
+   * Resources in this page.
+   */
+  data: Array<SysProperty>;
 
   /**
-   * Returns a paginated list of system properties for the current account.
-   *
-   * @example
-   * ```ts
-   * const response =
-   *   await client.core.sysProperties.retrieveSysProperties();
-   * ```
+   * Resource type identifier.
    */
-  retrieveSysProperties(
-    query: SysPropertyRetrieveSysPropertiesParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<SysPropertyRetrieveSysPropertiesResponse> {
-    return this._client.get('/v1/core/sys-properties', { query, ...options });
-  }
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
 }
 
 /**
@@ -102,7 +144,7 @@ export interface SysProperty {
   /**
    * System property type.
    */
-  type: SysProperty.Type | null;
+  type: SysPropertyType | null;
 
   /**
    * Last updated timestamp.
@@ -115,37 +157,35 @@ export interface SysProperty {
   value: number;
 }
 
-export namespace SysProperty {
+/**
+ * System property type.
+ */
+export interface SysPropertyType {
   /**
-   * System property type.
+   * System property ID.
    */
-  export interface Type {
-    /**
-     * System property ID.
-     */
-    id: string;
+  id: string;
 
-    /**
-     * Type code.
-     */
-    code: string;
+  /**
+   * Type code.
+   */
+  code: string;
 
-    /**
-     * Display name.
-     */
-    name: string;
+  /**
+   * Display name.
+   */
+  name: string;
 
-    /**
-     * Resource type identifier.
-     */
-    object: 'sys_property_type';
-  }
+  /**
+   * Resource type identifier.
+   */
+  object: 'sys_property_type';
 }
 
 /**
  * System property value response.
  */
-export interface SysPropertyRetrieveLatestValueResponse {
+export interface SysPropertyValue {
   /**
    * Resource type identifier.
    */
@@ -158,23 +198,13 @@ export interface SysPropertyRetrieveLatestValueResponse {
 }
 
 /**
- * List represents a paginated list of resources.
+ * Request to update a system property.
  */
-export interface SysPropertyRetrieveSysPropertiesResponse {
+export interface UpdateSysPropertyRequest {
   /**
-   * Resources in this page.
+   * Counter value.
    */
-  data: Array<SysProperty>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo contains URL-based pagination metadata.
-   */
-  page_info: AgentsAPI.PageInfo;
+  value?: number;
 }
 
 export interface SysPropertyUpdateParams {
@@ -184,7 +214,7 @@ export interface SysPropertyUpdateParams {
   value?: number;
 }
 
-export interface SysPropertyRetrieveSysPropertiesParams {
+export interface SysPropertyListParams {
   /**
    * Cursor token used to retrieve the next or previous page of results.
    */
@@ -203,10 +233,13 @@ export interface SysPropertyRetrieveSysPropertiesParams {
 
 export declare namespace SysProperties {
   export {
+    type ListSysProperty as ListSysProperty,
+    type PageInfo as PageInfo,
     type SysProperty as SysProperty,
-    type SysPropertyRetrieveLatestValueResponse as SysPropertyRetrieveLatestValueResponse,
-    type SysPropertyRetrieveSysPropertiesResponse as SysPropertyRetrieveSysPropertiesResponse,
+    type SysPropertyType as SysPropertyType,
+    type SysPropertyValue as SysPropertyValue,
+    type UpdateSysPropertyRequest as UpdateSysPropertyRequest,
     type SysPropertyUpdateParams as SysPropertyUpdateParams,
-    type SysPropertyRetrieveSysPropertiesParams as SysPropertyRetrieveSysPropertiesParams,
+    type SysPropertyListParams as SysPropertyListParams,
   };
 }

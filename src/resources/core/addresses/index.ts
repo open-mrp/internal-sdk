@@ -2,14 +2,17 @@
 
 export {
   Actions,
-  type AddressComponents,
-  type ActionUpdateValidateResponse,
-  type ActionUpdateValidateParams,
+  type ValidateAddressRequest,
+  type ValidatedAddress,
+  type ActionValidateParams,
 } from './actions';
 export {
   Addresses,
-  type AddressRetrieveResponse,
-  type AddressRetrieveSuggestionsResponse,
-  type AddressRetrieveParams,
+  type AddressComponents,
+  type AddressDetailsResult,
+  type AddressSuggestion,
+  type ListAddressSuggestion,
+  type PageInfo,
+  type AddressRetrieveDetailsParams,
   type AddressRetrieveSuggestionsParams,
 } from './addresses';

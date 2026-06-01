@@ -8,8 +8,41 @@ const client = new Augno({
 });
 
 describe('resource unitGroups', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.catalog.unitGroups.create({
+      base_unit_id: 'un_01966263f74a5a0cae356000a1',
+      name: 'Weight Units',
+      type: 'mass',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.catalog.unitGroups.create({
+      base_unit_id: 'un_01966263f74a5a0cae356000a1',
+      name: 'Weight Units',
+      type: 'mass',
+      include: ['owner'],
+      associated_units: [
+        {
+          unit_id: 'un_01966263f74a5a0cae356000a1',
+          customer_portal_visibility: 'visible',
+          discount_fixed: 0,
+          discount_percentage: 1,
+        },
+      ],
+      notes: 'notes',
+    });
+  });
+
   test('retrieve', async () => {
-    const responsePromise = client.catalog.unitGroups.retrieve('ug_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.unitGroups.retrieve('ug_01aad07abb8e41fd392d2d7013');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +56,7 @@ describe('resource unitGroups', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.unitGroups.retrieve(
-        'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+        'ug_01aad07abb8e41fd392d2d7013',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +64,7 @@ describe('resource unitGroups', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.unitGroups.update('ug_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.unitGroups.update('ug_01aad07abb8e41fd392d2d7013');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +78,7 @@ describe('resource unitGroups', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.unitGroups.update(
-        'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+        'ug_01aad07abb8e41fd392d2d7013',
         {
           include: ['owner'],
           associated_units: [
@@ -56,7 +89,7 @@ describe('resource unitGroups', () => {
               discount_percentage: 0,
             },
           ],
-          base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+          base_unit_id: 'un_01966263f74a5a0cae356000a1',
           name: 'Weight Units (Updated)',
           notes: 'notes',
         },
@@ -65,8 +98,8 @@ describe('resource unitGroups', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.catalog.unitGroups.delete('ug_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('list', async () => {
+    const responsePromise = client.catalog.unitGroups.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -76,21 +109,10 @@ describe('resource unitGroups', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveUnitGroups', async () => {
-    const responsePromise = client.catalog.unitGroups.retrieveUnitGroups();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveUnitGroups: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.catalog.unitGroups.retrieveUnitGroups(
+      client.catalog.unitGroups.list(
         {
           cursor: 'cursor',
           include: ['owner'],
@@ -103,12 +125,8 @@ describe('resource unitGroups', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('unitGroups: only required params', async () => {
-    const responsePromise = client.catalog.unitGroups.unitGroups({
-      base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-      name: 'Weight Units',
-      type: 'mass',
-    });
+  test('delete', async () => {
+    const responsePromise = client.catalog.unitGroups.delete('ug_01aad07abb8e41fd392d2d7013');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -116,23 +134,5 @@ describe('resource unitGroups', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('unitGroups: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.unitGroups({
-      base_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-      name: 'Weight Units',
-      type: 'mass',
-      include: ['owner'],
-      associated_units: [
-        {
-          unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          customer_portal_visibility: 'visible',
-          discount_fixed: 0,
-          discount_percentage: 1,
-        },
-      ],
-      notes: 'notes',
-    });
   });
 });

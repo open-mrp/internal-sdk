@@ -8,8 +8,29 @@ const client = new Augno({
 });
 
 describe('resource registrationSessions', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.auth.registrationSessions.create({
+      email: 'jdoe@augno.com',
+      plan_code: 'starter',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.auth.registrationSessions.create({
+      email: 'jdoe@augno.com',
+      plan_code: 'starter',
+    });
+  });
+
   test('retrieve', async () => {
-    const responsePromise = client.auth.registrationSessions.retrieve('rgfw_01gf7a8200eaj8fke1xvw4h50x');
+    const responsePromise = client.auth.registrationSessions.retrieve('rgfw_01011dbade766ab524553afb10');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +41,7 @@ describe('resource registrationSessions', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.auth.registrationSessions.update('rgfw_01gf7a8200eaj8fke1xvw4h50x');
+    const responsePromise = client.auth.registrationSessions.update('rgfw_01011dbade766ab524553afb10');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,7 +55,7 @@ describe('resource registrationSessions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.auth.registrationSessions.update(
-        'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+        'rgfw_01011dbade766ab524553afb10',
         {
           session_data: {
             account_name: 'Acme Corp',
@@ -53,8 +74,8 @@ describe('resource registrationSessions', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('accounts', async () => {
-    const responsePromise = client.auth.registrationSessions.accounts('rgfw_01gf7a8200eaj8fke1xvw4h50x');
+  test('list', async () => {
+    const responsePromise = client.auth.registrationSessions.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -64,42 +85,10 @@ describe('resource registrationSessions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('registrationSessions: only required params', async () => {
-    const responsePromise = client.auth.registrationSessions.registrationSessions({
-      email: 'jdoe@augno.com',
-      plan_code: 'starter',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('registrationSessions: required and optional params', async () => {
-    const response = await client.auth.registrationSessions.registrationSessions({
-      email: 'jdoe@augno.com',
-      plan_code: 'starter',
-    });
-  });
-
-  test('retrieveRegistrationSessions', async () => {
-    const responsePromise = client.auth.registrationSessions.retrieveRegistrationSessions();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveRegistrationSessions: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.auth.registrationSessions.retrieveRegistrationSessions(
+      client.auth.registrationSessions.list(
         {
           cursor: 'cursor',
           limit: 0,
@@ -110,8 +99,19 @@ describe('resource registrationSessions', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
+  test('accounts', async () => {
+    const responsePromise = client.auth.registrationSessions.accounts('rgfw_01011dbade766ab524553afb10');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
   test('users: only required params', async () => {
-    const responsePromise = client.auth.registrationSessions.users('rgfw_01gf7a8200eaj8fke1xvw4h50x', {
+    const responsePromise = client.auth.registrationSessions.users('rgfw_01011dbade766ab524553afb10', {
       name: 'Jane Smith',
       password: 'P@ssw0rd123!',
     });
@@ -125,7 +125,7 @@ describe('resource registrationSessions', () => {
   });
 
   test('users: required and optional params', async () => {
-    const response = await client.auth.registrationSessions.users('rgfw_01gf7a8200eaj8fke1xvw4h50x', {
+    const response = await client.auth.registrationSessions.users('rgfw_01011dbade766ab524553afb10', {
       name: 'Jane Smith',
       password: 'P@ssw0rd123!',
     });

@@ -16,17 +16,20 @@ import * as Errors from './core/error';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
-import { Healthz, HealthzListResponse } from './resources/healthz';
-import { WebhookStripeParams, WebhookStripeResponse, Webhooks } from './resources/webhooks';
+import { Healthcheck, Healthz } from './resources/healthz';
+import { WebhookResponse, WebhookStripeParams, Webhooks } from './resources/webhooks';
 import {
   AI,
   AIRetrieveToolGroupsParams,
-  AIRetrieveToolGroupsResponse,
   AIRetrieveToolsParams,
   AIRetrieveUsageParams,
-  AIRetrieveUsageResponse,
+  AgentTokenUsage,
   AvailableTool,
+  ListAgentTokenUsage,
   ListAvailableTool,
+  ListToolGroup,
+  PageInfo,
+  ToolGroup,
 } from './resources/ai/ai';
 import {
   Auth,
@@ -35,39 +38,88 @@ import {
   AuthScannerPasswordsResponse,
   AuthUpdateAccessTokensResponse,
   AuthUsersParams,
+  RegisterRequest,
+  UpdateScannerPasswordRequest,
+  User,
 } from './resources/auth/auth';
-import { Billing, BillingPortalSessionsResponse } from './resources/billing/billing';
+import { Billing, BillingPortalSessionResponse } from './resources/billing/billing';
 import { Catalog } from './resources/catalog/catalog';
 import { Core } from './resources/core/core';
 import {
+  Account,
+  AccountBranding,
+  AccountPortal,
+  Address,
   AdjustmentType,
   AllocationCustomer,
   Finance,
   FinanceRetrieveAdjustmentTypesParams,
-  FinanceRetrieveAdjustmentTypesResponse,
   FinanceRetrieveOpenCreditsParams,
-  FinanceRetrieveOpenCreditsResponse,
   FinanceRetrieveTransactionMethodsParams,
-  FinanceRetrieveTransactionMethodsResponse,
   FinanceRetrieveTransactionTypesParams,
-  FinanceRetrieveTransactionTypesResponse,
+  Geolocation,
+  InvoiceAllocationEntry,
+  ListAdjustmentType,
+  ListOpenCreditEntry,
+  ListTransactionMethod,
+  ListTransactionType,
+  OpenCreditEntry,
+  Owner,
+  PageInfo as FinanceAPIPageInfo,
   TransactionMethod,
   TransactionType,
 } from './resources/finance/finance';
 import {
+  Account as IdentityAPIAccount,
+  AccountBranding as IdentityAPIAccountBranding,
+  AccountPortal as IdentityAPIAccountPortal,
+  Address as IdentityAPIAddress,
+  Geolocation as IdentityAPIGeolocation,
   Identity,
   IdentityRetrievePermissionGroupsParams,
-  IdentityRetrievePermissionGroupsResponse,
-  IdentityRetrieveResponse,
+  ListPermission,
+  ListPermissionGroup,
+  Owner as IdentityAPIOwner,
+  PageInfo as IdentityAPIPageInfo,
+  Permission,
+  PermissionGroup,
+  PublicAccount,
 } from './resources/identity/identity';
 import {
+  Account as OperationsAPIAccount,
+  AccountBranding as OperationsAPIAccountBranding,
+  AccountPortal as OperationsAPIAccountPortal,
+  Address as OperationsAPIAddress,
+  Attribute,
+  Geolocation as OperationsAPIGeolocation,
+  InventoryItem,
+  Item,
+  ItemCategory,
+  ListAttribute,
+  ListInventoriesResponse,
+  ListProperty,
+  ListUnitGroupUnit,
   OperationRetrieveInventoriesParams,
-  OperationRetrieveInventoriesResponse,
-  OperationUpdateParams,
+  OperationUpdateQuantitiesParams,
+  OperationUpdateRatesParams,
   Operations,
+  Owner as OperationsAPIOwner,
+  PageInfo as OperationsAPIPageInfo,
+  Property,
+  Quantity,
   Rate,
+  Unit,
+  UnitGroup,
+  UnitGroupUnit,
+  UpdateQuantityRequest,
+  UpdateRateRequest,
 } from './resources/operations/operations';
-import { SaleCheckoutSessionsParams, SaleCheckoutSessionsResponse, Sales } from './resources/sales/sales';
+import {
+  CheckoutSessionResponse,
+  CreateCheckoutSessionRequest,
+  SaleCheckoutSessionsParams,
+  Sales,
+} from './resources/sales/sales';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -807,60 +859,52 @@ export class Augno {
    * Health monitoring endpoints for service status and environment information.
    */
   healthz: API.Healthz = new API.Healthz(this);
-  ai: API.AI = new API.AI(this);
   /**
    * User authentication and token lifecycle operations, including login, registration, password management, and token refresh.
    */
   auth: API.Auth = new API.Auth(this);
+  identity: API.Identity = new API.Identity(this);
+  core: API.Core = new API.Core(this);
   /**
    * Billing and pricing plan operations.
    */
   billing: API.Billing = new API.Billing(this);
-  catalog: API.Catalog = new API.Catalog(this);
-  core: API.Core = new API.Core(this);
-  finance: API.Finance = new API.Finance(this);
-  identity: API.Identity = new API.Identity(this);
-  operations: API.Operations = new API.Operations(this);
   /**
    * Create customer checkout sessions.
    */
   sales: API.Sales = new API.Sales(this);
+  catalog: API.Catalog = new API.Catalog(this);
+  ai: API.AI = new API.AI(this);
   /**
    * Incoming webhook events.
    */
   webhooks: API.Webhooks = new API.Webhooks(this);
+  finance: API.Finance = new API.Finance(this);
+  operations: API.Operations = new API.Operations(this);
 }
 
 Augno.Healthz = Healthz;
-Augno.AI = AI;
 Augno.Auth = Auth;
-Augno.Billing = Billing;
-Augno.Catalog = Catalog;
-Augno.Core = Core;
-Augno.Finance = Finance;
 Augno.Identity = Identity;
-Augno.Operations = Operations;
+Augno.Core = Core;
+Augno.Billing = Billing;
 Augno.Sales = Sales;
+Augno.Catalog = Catalog;
+Augno.AI = AI;
 Augno.Webhooks = Webhooks;
+Augno.Finance = Finance;
+Augno.Operations = Operations;
 
 export declare namespace Augno {
   export type RequestOptions = Opts.RequestOptions;
 
-  export { Healthz as Healthz, type HealthzListResponse as HealthzListResponse };
-
-  export {
-    AI as AI,
-    type AvailableTool as AvailableTool,
-    type ListAvailableTool as ListAvailableTool,
-    type AIRetrieveToolGroupsResponse as AIRetrieveToolGroupsResponse,
-    type AIRetrieveUsageResponse as AIRetrieveUsageResponse,
-    type AIRetrieveToolGroupsParams as AIRetrieveToolGroupsParams,
-    type AIRetrieveToolsParams as AIRetrieveToolsParams,
-    type AIRetrieveUsageParams as AIRetrieveUsageParams,
-  };
+  export { Healthz as Healthz, type Healthcheck as Healthcheck };
 
   export {
     Auth as Auth,
+    type RegisterRequest as RegisterRequest,
+    type UpdateScannerPasswordRequest as UpdateScannerPasswordRequest,
+    type User as User,
     type AuthDeleteRefreshTokensResponse as AuthDeleteRefreshTokensResponse,
     type AuthScannerPasswordsResponse as AuthScannerPasswordsResponse,
     type AuthUpdateAccessTokensResponse as AuthUpdateAccessTokensResponse,
@@ -868,22 +912,75 @@ export declare namespace Augno {
     type AuthUsersParams as AuthUsersParams,
   };
 
-  export { Billing as Billing, type BillingPortalSessionsResponse as BillingPortalSessionsResponse };
-
-  export { Catalog as Catalog };
+  export {
+    Identity as Identity,
+    type IdentityAPIAccount as Account,
+    type IdentityAPIAccountBranding as AccountBranding,
+    type IdentityAPIAccountPortal as AccountPortal,
+    type IdentityAPIAddress as Address,
+    type IdentityAPIGeolocation as Geolocation,
+    type ListPermission as ListPermission,
+    type ListPermissionGroup as ListPermissionGroup,
+    type IdentityAPIOwner as Owner,
+    type IdentityAPIPageInfo as PageInfo,
+    type Permission as Permission,
+    type PermissionGroup as PermissionGroup,
+    type PublicAccount as PublicAccount,
+    type IdentityRetrievePermissionGroupsParams as IdentityRetrievePermissionGroupsParams,
+  };
 
   export { Core as Core };
 
+  export { Billing as Billing, type BillingPortalSessionResponse as BillingPortalSessionResponse };
+
+  export {
+    Sales as Sales,
+    type CheckoutSessionResponse as CheckoutSessionResponse,
+    type CreateCheckoutSessionRequest as CreateCheckoutSessionRequest,
+    type SaleCheckoutSessionsParams as SaleCheckoutSessionsParams,
+  };
+
+  export { Catalog as Catalog };
+
+  export {
+    AI as AI,
+    type AgentTokenUsage as AgentTokenUsage,
+    type AvailableTool as AvailableTool,
+    type ListAgentTokenUsage as ListAgentTokenUsage,
+    type ListAvailableTool as ListAvailableTool,
+    type ListToolGroup as ListToolGroup,
+    type PageInfo as PageInfo,
+    type ToolGroup as ToolGroup,
+    type AIRetrieveToolGroupsParams as AIRetrieveToolGroupsParams,
+    type AIRetrieveToolsParams as AIRetrieveToolsParams,
+    type AIRetrieveUsageParams as AIRetrieveUsageParams,
+  };
+
+  export {
+    Webhooks as Webhooks,
+    type WebhookResponse as WebhookResponse,
+    type WebhookStripeParams as WebhookStripeParams,
+  };
+
   export {
     Finance as Finance,
+    type Account as Account,
+    type AccountBranding as AccountBranding,
+    type AccountPortal as AccountPortal,
+    type Address as Address,
     type AdjustmentType as AdjustmentType,
     type AllocationCustomer as AllocationCustomer,
+    type Geolocation as Geolocation,
+    type InvoiceAllocationEntry as InvoiceAllocationEntry,
+    type ListAdjustmentType as ListAdjustmentType,
+    type ListOpenCreditEntry as ListOpenCreditEntry,
+    type ListTransactionMethod as ListTransactionMethod,
+    type ListTransactionType as ListTransactionType,
+    type OpenCreditEntry as OpenCreditEntry,
+    type Owner as Owner,
+    type FinanceAPIPageInfo as PageInfo,
     type TransactionMethod as TransactionMethod,
     type TransactionType as TransactionType,
-    type FinanceRetrieveAdjustmentTypesResponse as FinanceRetrieveAdjustmentTypesResponse,
-    type FinanceRetrieveOpenCreditsResponse as FinanceRetrieveOpenCreditsResponse,
-    type FinanceRetrieveTransactionMethodsResponse as FinanceRetrieveTransactionMethodsResponse,
-    type FinanceRetrieveTransactionTypesResponse as FinanceRetrieveTransactionTypesResponse,
     type FinanceRetrieveAdjustmentTypesParams as FinanceRetrieveAdjustmentTypesParams,
     type FinanceRetrieveOpenCreditsParams as FinanceRetrieveOpenCreditsParams,
     type FinanceRetrieveTransactionMethodsParams as FinanceRetrieveTransactionMethodsParams,
@@ -891,29 +988,32 @@ export declare namespace Augno {
   };
 
   export {
-    Identity as Identity,
-    type IdentityRetrieveResponse as IdentityRetrieveResponse,
-    type IdentityRetrievePermissionGroupsResponse as IdentityRetrievePermissionGroupsResponse,
-    type IdentityRetrievePermissionGroupsParams as IdentityRetrievePermissionGroupsParams,
-  };
-
-  export {
     Operations as Operations,
+    type OperationsAPIAccount as Account,
+    type OperationsAPIAccountBranding as AccountBranding,
+    type OperationsAPIAccountPortal as AccountPortal,
+    type OperationsAPIAddress as Address,
+    type Attribute as Attribute,
+    type OperationsAPIGeolocation as Geolocation,
+    type InventoryItem as InventoryItem,
+    type Item as Item,
+    type ItemCategory as ItemCategory,
+    type ListAttribute as ListAttribute,
+    type ListInventoriesResponse as ListInventoriesResponse,
+    type ListProperty as ListProperty,
+    type ListUnitGroupUnit as ListUnitGroupUnit,
+    type OperationsAPIOwner as Owner,
+    type OperationsAPIPageInfo as PageInfo,
+    type Property as Property,
+    type Quantity as Quantity,
     type Rate as Rate,
-    type OperationRetrieveInventoriesResponse as OperationRetrieveInventoriesResponse,
-    type OperationUpdateParams as OperationUpdateParams,
+    type Unit as Unit,
+    type UnitGroup as UnitGroup,
+    type UnitGroupUnit as UnitGroupUnit,
+    type UpdateQuantityRequest as UpdateQuantityRequest,
+    type UpdateRateRequest as UpdateRateRequest,
     type OperationRetrieveInventoriesParams as OperationRetrieveInventoriesParams,
-  };
-
-  export {
-    Sales as Sales,
-    type SaleCheckoutSessionsResponse as SaleCheckoutSessionsResponse,
-    type SaleCheckoutSessionsParams as SaleCheckoutSessionsParams,
-  };
-
-  export {
-    Webhooks as Webhooks,
-    type WebhookStripeResponse as WebhookStripeResponse,
-    type WebhookStripeParams as WebhookStripeParams,
+    type OperationUpdateQuantitiesParams as OperationUpdateQuantitiesParams,
+    type OperationUpdateRatesParams as OperationUpdateRatesParams,
   };
 }

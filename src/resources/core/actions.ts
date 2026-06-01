@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as EdiActionsAPI from '../operations/edi/actions';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -8,6 +9,27 @@ import { RequestOptions } from '../../internal/request-options';
  * Utility action endpoints for checking duplicates and emailing records.
  */
 export class Actions extends APIResource {
+  /**
+   * Checks whether a record number already exists for the given type (invoice
+   * number, order number, or customer PO number).
+   *
+   * @example
+   * ```ts
+   * const checkDuplicateResult =
+   *   await client.core.actions.checkDuplicates({
+   *     customer_id: null,
+   *     record_number: 'INV-001',
+   *     type: 'invoice_number',
+   *   });
+   * ```
+   */
+  checkDuplicates(
+    body: ActionCheckDuplicatesParams,
+    options?: RequestOptions,
+  ): APIPromise<CheckDuplicateResult> {
+    return this._client.put('/v1/core/actions/check-duplicates', { body, ...options });
+  }
+
   /**
    * Emails a record (invoice, sales order, or purchase order) to the configured
    * recipients as a PDF attachment.
@@ -42,7 +64,10 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  requestDemo(body: ActionRequestDemoParams, options?: RequestOptions): APIPromise<MessageResource> {
+  requestDemo(
+    body: ActionRequestDemoParams,
+    options?: RequestOptions,
+  ): APIPromise<EdiActionsAPI.MessageResource> {
     return this._client.post('/v1/core/actions/request-demo', { body, ...options });
   }
 
@@ -60,30 +85,62 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  submitFeedback(body: ActionSubmitFeedbackParams, options?: RequestOptions): APIPromise<MessageResource> {
+  submitFeedback(
+    body: ActionSubmitFeedbackParams,
+    options?: RequestOptions,
+  ): APIPromise<EdiActionsAPI.MessageResource> {
     return this._client.post('/v1/core/actions/submit-feedback', { body, ...options });
   }
+}
+
+/**
+ * Request to check for a duplicate record number.
+ */
+export interface CheckDuplicateRequest {
+  /**
+   * Customer ID, required for customer_po_number checks.
+   */
+  customer_id: string | null;
 
   /**
-   * Checks whether a record number already exists for the given type (invoice
-   * number, order number, or customer PO number).
-   *
-   * @example
-   * ```ts
-   * const response =
-   *   await client.core.actions.updateCheckDuplicates({
-   *     customer_id: null,
-   *     record_number: 'INV-001',
-   *     type: 'invoice_number',
-   *   });
-   * ```
+   * Record number to check.
    */
-  updateCheckDuplicates(
-    body: ActionUpdateCheckDuplicatesParams,
-    options?: RequestOptions,
-  ): APIPromise<ActionUpdateCheckDuplicatesResponse> {
-    return this._client.put('/v1/core/actions/check-duplicates', { body, ...options });
-  }
+  record_number: string;
+
+  /**
+   * Duplicate check type: invoice_number, order_number, or customer_po_number.
+   */
+  type: string;
+}
+
+/**
+ * Result of a duplicate check.
+ */
+export interface CheckDuplicateResult {
+  /**
+   * Whether the record number is a duplicate.
+   */
+  is_duplicate: boolean;
+
+  /**
+   * Human-readable message if the record is a duplicate.
+   */
+  message: string | null;
+}
+
+/**
+ * Request to email a record to its configured recipients.
+ */
+export interface EmailRecordRequest {
+  /**
+   * Record ID.
+   */
+  id: string;
+
+  /**
+   * Record type: invoice, sales_order, or purchase_order.
+   */
+  type: string;
 }
 
 /**
@@ -101,21 +158,73 @@ export interface MessageResource {
   object: 'message';
 }
 
-export interface ActionEmailRecordResponse {}
-
 /**
- * Result of a duplicate check.
+ * Request to submit a demo request.
  */
-export interface ActionUpdateCheckDuplicatesResponse {
+export interface RequestDemoRequest {
   /**
-   * Whether the record number is a duplicate.
+   * Company name.
    */
-  is_duplicate: boolean;
+  company: string;
 
   /**
-   * Human-readable message if the record is a duplicate.
+   * Email address of the requester.
+   */
+  email: string;
+
+  /**
+   * Message from the requester.
    */
   message: string | null;
+
+  /**
+   * Name of the requester.
+   */
+  name: string;
+
+  /**
+   * Phone number.
+   */
+  phone_number: string | null;
+}
+
+/**
+ * Request to submit user feedback.
+ */
+export interface SubmitFeedbackRequest {
+  /**
+   * Answer to the question.
+   */
+  answer: string;
+
+  /**
+   * URL of the page where feedback was submitted.
+   */
+  page_url: string | null;
+
+  /**
+   * Question presented to the user.
+   */
+  question: string;
+}
+
+export interface ActionEmailRecordResponse {}
+
+export interface ActionCheckDuplicatesParams {
+  /**
+   * Customer ID, required for customer_po_number checks.
+   */
+  customer_id: string | null;
+
+  /**
+   * Record number to check.
+   */
+  record_number: string;
+
+  /**
+   * Duplicate check type: invoice_number, order_number, or customer_po_number.
+   */
+  type: string;
 }
 
 export interface ActionEmailRecordParams {
@@ -174,31 +283,18 @@ export interface ActionSubmitFeedbackParams {
   question: string;
 }
 
-export interface ActionUpdateCheckDuplicatesParams {
-  /**
-   * Customer ID, required for customer_po_number checks.
-   */
-  customer_id: string | null;
-
-  /**
-   * Record number to check.
-   */
-  record_number: string;
-
-  /**
-   * Duplicate check type: invoice_number, order_number, or customer_po_number.
-   */
-  type: string;
-}
-
 export declare namespace Actions {
   export {
+    type CheckDuplicateRequest as CheckDuplicateRequest,
+    type CheckDuplicateResult as CheckDuplicateResult,
+    type EmailRecordRequest as EmailRecordRequest,
     type MessageResource as MessageResource,
+    type RequestDemoRequest as RequestDemoRequest,
+    type SubmitFeedbackRequest as SubmitFeedbackRequest,
     type ActionEmailRecordResponse as ActionEmailRecordResponse,
-    type ActionUpdateCheckDuplicatesResponse as ActionUpdateCheckDuplicatesResponse,
+    type ActionCheckDuplicatesParams as ActionCheckDuplicatesParams,
     type ActionEmailRecordParams as ActionEmailRecordParams,
     type ActionRequestDemoParams as ActionRequestDemoParams,
     type ActionSubmitFeedbackParams as ActionSubmitFeedbackParams,
-    type ActionUpdateCheckDuplicatesParams as ActionUpdateCheckDuplicatesParams,
   };
 }

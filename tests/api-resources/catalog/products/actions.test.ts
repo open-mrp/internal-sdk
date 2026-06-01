@@ -8,8 +8,8 @@ const client = new Augno({
 });
 
 describe('resource actions', () => {
-  test('retrieveExport', async () => {
-    const responsePromise = client.catalog.products.actions.retrieveExport();
+  test('export', async () => {
+    const responsePromise = client.catalog.products.actions.export();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,10 +19,10 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveExport: request options and params are passed correctly', async () => {
+  test('export: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.catalog.products.actions.retrieveExport(
+      client.catalog.products.actions.export(
         {
           attribute_ids: ['string'],
           category_ids: ['string'],
@@ -37,8 +37,8 @@ describe('resource actions', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('updateValidate: only required params', async () => {
-    const responsePromise = client.catalog.products.actions.updateValidate({
+  test('validate: only required params', async () => {
+    const responsePromise = client.catalog.products.actions.validate({
       products_map: { '0': 'ALM-2024-1001' },
     });
     const rawResponse = await responsePromise.asResponse();
@@ -50,8 +50,8 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateValidate: required and optional params', async () => {
-    const response = await client.catalog.products.actions.updateValidate({
+  test('validate: required and optional params', async () => {
+    const response = await client.catalog.products.actions.validate({
       products_map: { '0': 'ALM-2024-1001' },
       include: ['product_line'],
     });

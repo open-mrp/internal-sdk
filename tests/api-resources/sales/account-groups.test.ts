@@ -8,8 +8,32 @@ const client = new Augno({
 });
 
 describe('resource accountGroups', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.sales.accountGroups.create({
+      name: 'Wholesale Customers',
+      type: 'type_group',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.sales.accountGroups.create({
+      name: 'Wholesale Customers',
+      type: 'type_group',
+      commission_policy: 'commission_applied',
+      description: 'description',
+      freight_policy: 'free_freight',
+    });
+  });
+
   test('retrieve', async () => {
-    const responsePromise = client.sales.accountGroups.retrieve('acgp_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.sales.accountGroups.retrieve('acgp_018e88072d1320808dc979cfac');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +44,7 @@ describe('resource accountGroups', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.accountGroups.update('acgp_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.sales.accountGroups.update('acgp_018e88072d1320808dc979cfac');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,7 +58,7 @@ describe('resource accountGroups', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.accountGroups.update(
-        'acgp_01jm4r6700f8nwq3v5hx2d9ktp',
+        'acgp_018e88072d1320808dc979cfac',
         {
           commission_policy: 'commission_applied',
           description: 'description',
@@ -46,8 +70,8 @@ describe('resource accountGroups', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.sales.accountGroups.delete('acgp_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('list', async () => {
+    const responsePromise = client.sales.accountGroups.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -57,45 +81,10 @@ describe('resource accountGroups', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('accountGroups: only required params', async () => {
-    const responsePromise = client.sales.accountGroups.accountGroups({
-      name: 'Wholesale Customers',
-      type: 'type_group',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('accountGroups: required and optional params', async () => {
-    const response = await client.sales.accountGroups.accountGroups({
-      name: 'Wholesale Customers',
-      type: 'type_group',
-      commission_policy: 'commission_applied',
-      description: 'description',
-      freight_policy: 'free_freight',
-    });
-  });
-
-  test('retrieveAccountGroups', async () => {
-    const responsePromise = client.sales.accountGroups.retrieveAccountGroups();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveAccountGroups: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.sales.accountGroups.retrieveAccountGroups(
+      client.sales.accountGroups.list(
         {
           cursor: 'cursor',
           limit: 0,
@@ -105,5 +94,16 @@ describe('resource accountGroups', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.sales.accountGroups.delete('acgp_018e88072d1320808dc979cfac');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

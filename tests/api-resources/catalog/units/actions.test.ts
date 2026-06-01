@@ -8,8 +8,8 @@ const client = new Augno({
 });
 
 describe('resource actions', () => {
-  test('updateValidate: only required params', async () => {
-    const responsePromise = client.catalog.units.actions.updateValidate({ unit_map: { '0': 'kg' } });
+  test('validate: only required params', async () => {
+    const responsePromise = client.catalog.units.actions.validate({ unit_map: { '0': 'kg' } });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,7 +19,7 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateValidate: required and optional params', async () => {
-    const response = await client.catalog.units.actions.updateValidate({ unit_map: { '0': 'kg' } });
+  test('validate: required and optional params', async () => {
+    const response = await client.catalog.units.actions.validate({ unit_map: { '0': 'kg' } });
   });
 });

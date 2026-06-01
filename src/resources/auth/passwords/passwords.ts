@@ -8,6 +8,8 @@ import {
   ActionResetParams,
   ActionResetResponse,
   Actions,
+  RequestPasswordResetRequest,
+  ResetPasswordRequest,
 } from './actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
@@ -35,6 +37,21 @@ export class Passwords extends APIResource {
   }
 }
 
+/**
+ * Request to update a user's password.
+ */
+export interface UpdatePasswordRequest {
+  /**
+   * New password.
+   */
+  new_password: string;
+
+  /**
+   * Current password.
+   */
+  old_password: string;
+}
+
 export interface PasswordCreateResponse {}
 
 export interface PasswordCreateParams {
@@ -53,12 +70,15 @@ Passwords.Actions = Actions;
 
 export declare namespace Passwords {
   export {
+    type UpdatePasswordRequest as UpdatePasswordRequest,
     type PasswordCreateResponse as PasswordCreateResponse,
     type PasswordCreateParams as PasswordCreateParams,
   };
 
   export {
     Actions as Actions,
+    type RequestPasswordResetRequest as RequestPasswordResetRequest,
+    type ResetPasswordRequest as ResetPasswordRequest,
     type ActionRequestResetResponse as ActionRequestResetResponse,
     type ActionResetResponse as ActionResetResponse,
     type ActionRequestResetParams as ActionRequestResetParams,

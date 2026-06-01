@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource childAccounts', () => {
   test('update', async () => {
-    const responsePromise = client.identity.childAccounts.update('ac_01gf7a8200er3ar3pkfrb6kk29');
+    const responsePromise = client.identity.childAccounts.update('ac_0170df1ac58e4d24c66fc89f5f');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,8 +19,8 @@ describe('resource childAccounts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.identity.childAccounts.delete('ac_01gf7a8200er3ar3pkfrb6kk29');
+  test('list', async () => {
+    const responsePromise = client.identity.childAccounts.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -30,21 +30,10 @@ describe('resource childAccounts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveChildAccounts', async () => {
-    const responsePromise = client.identity.childAccounts.retrieveChildAccounts();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveChildAccounts: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.identity.childAccounts.retrieveChildAccounts(
+      client.identity.childAccounts.list(
         {
           cursor: 'cursor',
           limit: 0,
@@ -53,5 +42,16 @@ describe('resource childAccounts', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.identity.childAccounts.delete('ac_0170df1ac58e4d24c66fc89f5f');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

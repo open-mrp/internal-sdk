@@ -8,8 +8,33 @@ const client = new Augno({
 });
 
 describe('resource registrationFlows', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.sales.registrationFlows.create({
+      customer_group_ids: ['cgrp_01abc'],
+      name: 'Wholesale Registration',
+      payment_term_ids: ['pt_01abc'],
+      shipping_term_ids: ['st_01abc'],
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.sales.registrationFlows.create({
+      customer_group_ids: ['cgrp_01abc'],
+      name: 'Wholesale Registration',
+      payment_term_ids: ['pt_01abc'],
+      shipping_term_ids: ['st_01abc'],
+    });
+  });
+
   test('retrieve', async () => {
-    const responsePromise = client.sales.registrationFlows.retrieve('acme');
+    const responsePromise = client.sales.registrationFlows.retrieve('rgfw_015273c2a7354d6c3e5ae4e90e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +45,7 @@ describe('resource registrationFlows', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.registrationFlows.update('rgfw_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.sales.registrationFlows.update('rgfw_015273c2a7354d6c3e5ae4e90e', {
       has_customer_group_ids: false,
       has_payment_term_ids: false,
       has_shipping_term_ids: false,
@@ -35,7 +60,7 @@ describe('resource registrationFlows', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.registrationFlows.update('rgfw_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.sales.registrationFlows.update('rgfw_015273c2a7354d6c3e5ae4e90e', {
       has_customer_group_ids: false,
       has_payment_term_ids: false,
       has_shipping_term_ids: false,
@@ -46,8 +71,8 @@ describe('resource registrationFlows', () => {
     });
   });
 
-  test('delete', async () => {
-    const responsePromise = client.sales.registrationFlows.delete('rgfw_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('list', async () => {
+    const responsePromise = client.sales.registrationFlows.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -57,46 +82,10 @@ describe('resource registrationFlows', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('registrationFlows: only required params', async () => {
-    const responsePromise = client.sales.registrationFlows.registrationFlows({
-      customer_group_ids: ['cgrp_01abc'],
-      name: 'Wholesale Registration',
-      payment_term_ids: ['pt_01abc'],
-      shipping_term_ids: ['st_01abc'],
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('registrationFlows: required and optional params', async () => {
-    const response = await client.sales.registrationFlows.registrationFlows({
-      customer_group_ids: ['cgrp_01abc'],
-      name: 'Wholesale Registration',
-      payment_term_ids: ['pt_01abc'],
-      shipping_term_ids: ['st_01abc'],
-    });
-  });
-
-  test('retrieveRegistrationFlows', async () => {
-    const responsePromise = client.sales.registrationFlows.retrieveRegistrationFlows();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveRegistrationFlows: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.sales.registrationFlows.retrieveRegistrationFlows(
+      client.sales.registrationFlows.list(
         {
           cursor: 'cursor',
           limit: 0,
@@ -105,5 +94,27 @@ describe('resource registrationFlows', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.sales.registrationFlows.delete('rgfw_015273c2a7354d6c3e5ae4e90e');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('retrieveBySlug', async () => {
+    const responsePromise = client.sales.registrationFlows.retrieveBySlug('acme');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

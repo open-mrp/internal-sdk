@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AgentsAPI from './agents';
+import * as EdiRunsAPI from '../operations/edi-runs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -38,7 +38,7 @@ export class Memories extends APIResource {
    * @example
    * ```ts
    * const agentMemory = await client.ai.memories.retrieve(
-   *   'agmm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'agmm_018731bdaf4ab04bd5bff1b65c',
    * );
    * ```
    */
@@ -52,7 +52,7 @@ export class Memories extends APIResource {
    * @example
    * ```ts
    * const agentMemory = await client.ai.memories.update(
-   *   'agmm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'agmm_018731bdaf4ab04bd5bff1b65c',
    *   {
    *     category: 'category',
    *     content:
@@ -71,13 +71,13 @@ export class Memories extends APIResource {
    *
    * @example
    * ```ts
-   * const memories = await client.ai.memories.list();
+   * const listAgentMemory = await client.ai.memories.list();
    * ```
    */
   list(
     query: MemoryListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<MemoryListResponse> {
+  ): APIPromise<ListAgentMemory> {
     return this._client.get('/v1/ai/memories', { query, ...options });
   }
 
@@ -87,7 +87,7 @@ export class Memories extends APIResource {
    * @example
    * ```ts
    * const memory = await client.ai.memories.delete(
-   *   'agmm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'agmm_018731bdaf4ab04bd5bff1b65c',
    * );
    * ```
    */
@@ -153,6 +153,47 @@ export interface AgentMemory {
 }
 
 /**
+ * Request to create an agent memory.
+ */
+export interface CreateMemoryRequest {
+  /**
+   * Memory category (e.g. "preference", "fact", "instruction").
+   */
+  category: string;
+
+  /**
+   * Text content.
+   */
+  content: string;
+
+  /**
+   * Importance score between 0 and 1.
+   */
+  importance: number;
+
+  /**
+   * Entity ID.
+   */
+  entity_id?: string;
+
+  /**
+   * Entity type this memory is scoped to (e.g. "customer", "product").
+   */
+  entity_type?: string;
+
+  /**
+   * ISO 8601 expiration timestamp.
+   */
+  expires_at?: string;
+
+  /**
+   * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
+   * or null), not a JSON-encoded string.
+   */
+  metadata?: unknown | null;
+}
+
+/**
  * Entity is a polymorphic reference to any resource in the system.
  */
 export interface Entity {
@@ -199,6 +240,7 @@ export interface Entity {
     | 'enterprise_inquiry'
     | 'request_log'
     | 'audit_event'
+    | 'audit_field_change'
     | 'role'
     | 'unit'
     | 'account_affiliation'
@@ -375,7 +417,7 @@ export interface Entity {
 /**
  * List represents a paginated list of resources.
  */
-export interface MemoryListResponse {
+export interface ListAgentMemory {
   /**
    * Resources in this page.
    */
@@ -389,7 +431,73 @@ export interface MemoryListResponse {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+/**
+ * Request to update an agent memory.
+ */
+export interface UpdateMemoryRequest {
+  /**
+   * Memory category (e.g. "preference", "fact", "instruction").
+   */
+  category: string;
+
+  /**
+   * Text content.
+   */
+  content: string;
+
+  /**
+   * Importance score between 0 and 1.
+   */
+  importance: number;
+
+  /**
+   * Entity ID.
+   */
+  entity_id?: string;
+
+  /**
+   * Entity type this memory is scoped to (e.g. "customer", "product").
+   */
+  entity_type?: string;
+
+  /**
+   * ISO 8601 expiration timestamp.
+   */
+  expires_at?: string;
+
+  /**
+   * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
+   * or null), not a JSON-encoded string.
+   */
+  metadata?: unknown | null;
 }
 
 export interface MemoryDeleteResponse {}
@@ -500,8 +608,11 @@ export interface MemoryListParams {
 export declare namespace Memories {
   export {
     type AgentMemory as AgentMemory,
+    type CreateMemoryRequest as CreateMemoryRequest,
     type Entity as Entity,
-    type MemoryListResponse as MemoryListResponse,
+    type ListAgentMemory as ListAgentMemory,
+    type PageInfo as PageInfo,
+    type UpdateMemoryRequest as UpdateMemoryRequest,
     type MemoryDeleteResponse as MemoryDeleteResponse,
     type MemoryCreateParams as MemoryCreateParams,
     type MemoryUpdateParams as MemoryUpdateParams,

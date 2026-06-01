@@ -8,8 +8,86 @@ const client = new Augno({
 });
 
 describe('resource salesOrders', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.sales.salesOrders.create({
+      buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      lines: [
+        {
+          product_id: 'pd_013c29ab3f1518d0004094c316',
+          product_sku: 'WIDGET-001',
+          quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+          quantity_value: '10',
+          unit_price_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+          unit_price_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+          unit_price_value: '25.00',
+        },
+      ],
+      priority_code: 'normal',
+      sales_order_type_code: 'sales_order',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.sales.salesOrders.create({
+      buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      lines: [
+        {
+          product_id: 'pd_013c29ab3f1518d0004094c316',
+          product_sku: 'WIDGET-001',
+          quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+          quantity_value: '10',
+          unit_price_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+          unit_price_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+          unit_price_value: '25.00',
+          item_id: 'item_id',
+          product_description: 'product_description',
+          unit_cost_denominator_unit_id: 'unit_cost_denominator_unit_id',
+          unit_cost_numerator_unit_id: 'unit_cost_numerator_unit_id',
+          unit_cost_value: 'unit_cost_value',
+          edi_line_item_id: 'edi_line_item_id',
+        },
+      ],
+      priority_code: 'normal',
+      sales_order_type_code: 'sales_order',
+      include: ['customer'],
+      acknowledgement_email_contacts: [{ account_user_id: 'account_user_id' }],
+      bill_to_country: 'bill_to_country',
+      bill_to_locality: 'bill_to_locality',
+      bill_to_name: 'bill_to_name',
+      bill_to_postal_code: 'bill_to_postal_code',
+      bill_to_state: 'bill_to_state',
+      bill_to_street_line_1: 'bill_to_street_line_1',
+      bill_to_street_line_2: 'bill_to_street_line_2',
+      carrier_billing_account: 'carrier_billing_account',
+      carrier_billing_type: 'carrier_billing_type',
+      carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+      customer_po_number: 'customer_po_number',
+      invoice_email_contacts: [{ account_user_id: 'account_user_id' }],
+      note: 'Rush order for trade show',
+      order_discount_id: 'order_discount_id',
+      payment_term_id: 'payment_term_id',
+      sales_rep_id: 'sales_rep_id',
+      service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
+      ship_to_country: 'US',
+      ship_to_locality: 'San Francisco',
+      ship_to_name: 'Acme Inc.',
+      ship_to_postal_code: '94105',
+      ship_to_state: 'CA',
+      ship_to_street_line_1: '123 Main Street',
+      ship_to_street_line_2: 'ship_to_street_line_2',
+      shipping_term_id: 'shipping_term_id',
+    });
+  });
+
   test('retrieve', async () => {
-    const responsePromise = client.sales.salesOrders.retrieve('or_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.sales.salesOrders.retrieve('or_01d5034136c3ccc048abecc312');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +101,7 @@ describe('resource salesOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.salesOrders.retrieve(
-        'or_01jm4r6700f8nwq3v5hx2d9ktp',
+        'or_01d5034136c3ccc048abecc312',
         { include: ['customer'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +109,7 @@ describe('resource salesOrders', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.salesOrders.update('or_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.sales.salesOrders.update('or_01d5034136c3ccc048abecc312');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +123,7 @@ describe('resource salesOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.salesOrders.update(
-        'or_01jm4r6700f8nwq3v5hx2d9ktp',
+        'or_01d5034136c3ccc048abecc312',
         {
           include: ['customer'],
           acknowledgement_email_contacts: [{ account_user_id: 'account_user_id' }],
@@ -58,7 +136,7 @@ describe('resource salesOrders', () => {
           bill_to_street_line_2: 'bill_to_street_line_2',
           carrier_billing_account: 'carrier_billing_account',
           carrier_billing_type: 'carrier_billing_type',
-          carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+          carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
           customer_id: 'customer_id',
           customer_po_number: 'customer_po_number',
           invoice_email_contacts: [{ account_user_id: 'account_user_id' }],
@@ -85,8 +163,8 @@ describe('resource salesOrders', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.sales.salesOrders.delete('or_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('list', async () => {
+    const responsePromise = client.sales.salesOrders.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -96,42 +174,10 @@ describe('resource salesOrders', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('checkout: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.checkout('or_01jm4r6700f8nwq3v5hx2d9ktp', {
-      email: 'operations@acme.example.com',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('checkout: required and optional params', async () => {
-    const response = await client.sales.salesOrders.checkout('or_01jm4r6700f8nwq3v5hx2d9ktp', {
-      email: 'operations@acme.example.com',
-      cancel_url: 'https://dashboard.example.com/checkout/cancel',
-      success_url: 'https://dashboard.example.com/checkout/success',
-    });
-  });
-
-  test('retrieveSalesOrders', async () => {
-    const responsePromise = client.sales.salesOrders.retrieveSalesOrders();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveSalesOrders: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.sales.salesOrders.retrieveSalesOrders(
+      client.sales.salesOrders.list(
         {
           cursor: 'cursor',
           customer_group_ids: ['string'],
@@ -150,6 +196,38 @@ describe('resource salesOrders', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.sales.salesOrders.delete('or_01d5034136c3ccc048abecc312');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('checkout: only required params', async () => {
+    const responsePromise = client.sales.salesOrders.checkout('or_01d5034136c3ccc048abecc312', {
+      email: 'operations@acme.example.com',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('checkout: required and optional params', async () => {
+    const response = await client.sales.salesOrders.checkout('or_01d5034136c3ccc048abecc312', {
+      email: 'operations@acme.example.com',
+      cancel_url: 'https://dashboard.example.com/checkout/cancel',
+      success_url: 'https://dashboard.example.com/checkout/success',
+    });
   });
 
   test('retrieveStatuses', async () => {
@@ -176,83 +254,5 @@ describe('resource salesOrders', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
-  });
-
-  test('salesOrders: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.salesOrders({
-      buyer_account_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
-      lines: [
-        {
-          product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
-          product_sku: 'WIDGET-001',
-          quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          quantity_value: '10',
-          unit_price_denominator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          unit_price_numerator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          unit_price_value: '25.00',
-        },
-      ],
-      priority_code: 'normal',
-      sales_order_type_code: 'sales_order',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('salesOrders: required and optional params', async () => {
-    const response = await client.sales.salesOrders.salesOrders({
-      buyer_account_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
-      lines: [
-        {
-          product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
-          product_sku: 'WIDGET-001',
-          quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          quantity_value: '10',
-          unit_price_denominator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          unit_price_numerator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          unit_price_value: '25.00',
-          item_id: 'item_id',
-          product_description: 'product_description',
-          unit_cost_denominator_unit_id: 'unit_cost_denominator_unit_id',
-          unit_cost_numerator_unit_id: 'unit_cost_numerator_unit_id',
-          unit_cost_value: 'unit_cost_value',
-          edi_line_item_id: 'edi_line_item_id',
-        },
-      ],
-      priority_code: 'normal',
-      sales_order_type_code: 'sales_order',
-      include: ['customer'],
-      acknowledgement_email_contacts: [{ account_user_id: 'account_user_id' }],
-      bill_to_country: 'bill_to_country',
-      bill_to_locality: 'bill_to_locality',
-      bill_to_name: 'bill_to_name',
-      bill_to_postal_code: 'bill_to_postal_code',
-      bill_to_state: 'bill_to_state',
-      bill_to_street_line_1: 'bill_to_street_line_1',
-      bill_to_street_line_2: 'bill_to_street_line_2',
-      carrier_billing_account: 'carrier_billing_account',
-      carrier_billing_type: 'carrier_billing_type',
-      carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
-      customer_po_number: 'customer_po_number',
-      invoice_email_contacts: [{ account_user_id: 'account_user_id' }],
-      note: 'Rush order for trade show',
-      order_discount_id: 'order_discount_id',
-      payment_term_id: 'payment_term_id',
-      sales_rep_id: 'sales_rep_id',
-      service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
-      ship_to_country: 'US',
-      ship_to_locality: 'San Francisco',
-      ship_to_name: 'Acme Inc.',
-      ship_to_postal_code: '94105',
-      ship_to_state: 'CA',
-      ship_to_street_line_1: '123 Main Street',
-      ship_to_street_line_2: 'ship_to_street_line_2',
-      shipping_term_id: 'shipping_term_id',
-    });
   });
 });

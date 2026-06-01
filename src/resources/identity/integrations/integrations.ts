@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AgentsAPI from '../../ai/agents';
+import * as EdiRunsAPI from '../../operations/edi-runs';
 import * as StripeAPI from './stripe';
-import { Stripe, StripeRetrievePublishableKeyResponse, StripeRetrieveStatusResponse } from './stripe';
+import { Stripe, StripePublishableKey, StripeStatus } from './stripe';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -41,7 +41,7 @@ export class Integrations extends APIResource {
    * ```ts
    * const accountIntegration =
    *   await client.identity.integrations.update(
-   *     'ai_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'ai_0177772eae113431f64d473124',
    *     { name: 'Updated Stripe Integration' },
    *   );
    * ```
@@ -59,14 +59,14 @@ export class Integrations extends APIResource {
    *
    * @example
    * ```ts
-   * const integrations =
+   * const listAccountIntegration =
    *   await client.identity.integrations.list();
    * ```
    */
   list(
     query: IntegrationListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<IntegrationListResponse> {
+  ): APIPromise<ListAccountIntegration> {
     return this._client.get('/v1/identity/integrations', { query, ...options });
   }
 
@@ -77,7 +77,7 @@ export class Integrations extends APIResource {
    * ```ts
    * const accountIntegration =
    *   await client.identity.integrations.delete(
-   *     'ai_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'ai_0177772eae113431f64d473124',
    *   );
    * ```
    */
@@ -127,9 +127,29 @@ export interface AccountIntegration {
 }
 
 /**
+ * Request to create or upsert an account integration.
+ */
+export interface CreateAccountIntegrationRequest {
+  /**
+   * Credentials JSON string containing provider-specific keys.
+   */
+  credentials: string;
+
+  /**
+   * Integration provider code (e.g. "stripe", "shippo").
+   */
+  integration_code: 'stripe' | 'shippo';
+
+  /**
+   * Display name of the integration.
+   */
+  name: string;
+}
+
+/**
  * List represents a paginated list of resources.
  */
-export interface IntegrationListResponse {
+export interface ListAccountIntegration {
   /**
    * Resources in this page.
    */
@@ -143,7 +163,47 @@ export interface IntegrationListResponse {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+/**
+ * Request to update an account integration.
+ */
+export interface UpdateAccountIntegrationRequest {
+  /**
+   * Whether the integration is active.
+   */
+  is_active?: boolean;
+
+  /**
+   * Display name of the integration.
+   */
+  name?: string;
 }
 
 export interface IntegrationCreateParams {
@@ -197,7 +257,10 @@ Integrations.Stripe = Stripe;
 export declare namespace Integrations {
   export {
     type AccountIntegration as AccountIntegration,
-    type IntegrationListResponse as IntegrationListResponse,
+    type CreateAccountIntegrationRequest as CreateAccountIntegrationRequest,
+    type ListAccountIntegration as ListAccountIntegration,
+    type PageInfo as PageInfo,
+    type UpdateAccountIntegrationRequest as UpdateAccountIntegrationRequest,
     type IntegrationCreateParams as IntegrationCreateParams,
     type IntegrationUpdateParams as IntegrationUpdateParams,
     type IntegrationListParams as IntegrationListParams,
@@ -205,7 +268,7 @@ export declare namespace Integrations {
 
   export {
     Stripe as Stripe,
-    type StripeRetrievePublishableKeyResponse as StripeRetrievePublishableKeyResponse,
-    type StripeRetrieveStatusResponse as StripeRetrieveStatusResponse,
+    type StripePublishableKey as StripePublishableKey,
+    type StripeStatus as StripeStatus,
   };
 }

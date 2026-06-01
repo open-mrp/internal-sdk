@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as InventoryChangeLogsActionsAPI from '../../operations/inventory-change-logs/actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 
@@ -13,14 +14,14 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
-   *   await client.catalog.parts.actions.retrieveExport();
+   * const fileDownload =
+   *   await client.catalog.parts.actions.export();
    * ```
    */
-  retrieveExport(
-    query: ActionRetrieveExportParams | null | undefined = {},
+  export(
+    query: ActionExportParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionRetrieveExportResponse> {
+  ): APIPromise<InventoryChangeLogsActionsAPI.FileDownload> {
     return this._client.get('/v1/catalog/parts/actions/export', { query, ...options });
   }
 }
@@ -30,9 +31,9 @@ export class Actions extends APIResource {
  * export). When the service returns \*FileDownload, the handler writes the body
  * with Content-Type and Content-Disposition.
  */
-export interface ActionRetrieveExportResponse {}
+export interface FileDownload {}
 
-export interface ActionRetrieveExportParams {
+export interface ActionExportParams {
   /**
    * Filter by attribute IDs.
    */
@@ -60,8 +61,5 @@ export interface ActionRetrieveExportParams {
 }
 
 export declare namespace Actions {
-  export {
-    type ActionRetrieveExportResponse as ActionRetrieveExportResponse,
-    type ActionRetrieveExportParams as ActionRetrieveExportParams,
-  };
+  export { type FileDownload as FileDownload, type ActionExportParams as ActionExportParams };
 }

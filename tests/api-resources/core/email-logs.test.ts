@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource emailLogs', () => {
   test('retrieve', async () => {
-    const responsePromise = client.core.emailLogs.retrieve('eml_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.core.emailLogs.retrieve('eml_017b80707ada92dddff8a2c3a0');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,15 +23,15 @@ describe('resource emailLogs', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.core.emailLogs.retrieve(
-        'eml_01jm4r6700f8nwq3v5hx2d9ktp',
+        'eml_017b80707ada92dddff8a2c3a0',
         { include: ['sent_by'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('retrieveEmailLogs', async () => {
-    const responsePromise = client.core.emailLogs.retrieveEmailLogs();
+  test('list', async () => {
+    const responsePromise = client.core.emailLogs.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -41,10 +41,10 @@ describe('resource emailLogs', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveEmailLogs: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.core.emailLogs.retrieveEmailLogs(
+      client.core.emailLogs.list(
         {
           cursor: 'cursor',
           include: ['sent_by'],

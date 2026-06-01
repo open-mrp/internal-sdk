@@ -24,7 +24,7 @@ describe('resource properties', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.properties.retrieve('pp_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.properties.retrieve('pp_01e21344878064372f69e67093');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,7 +38,7 @@ describe('resource properties', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.properties.retrieve(
-        'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+        'pp_01e21344878064372f69e67093',
         { include: ['attributes'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -46,7 +46,7 @@ describe('resource properties', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.properties.update('pp_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.properties.update('pp_01e21344878064372f69e67093');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -60,7 +60,7 @@ describe('resource properties', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.properties.update(
-        'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+        'pp_01e21344878064372f69e67093',
         { include: ['attributes'], name: 'Size' },
         { path: '/_stainless_unknown_path' },
       ),
@@ -94,7 +94,7 @@ describe('resource properties', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.properties.delete('pp_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.properties.delete('pp_01e21344878064372f69e67093');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

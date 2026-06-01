@@ -24,7 +24,7 @@ describe('resource agents', () => {
       },
       description: 'Monitors inventory levels and creates restock alerts.',
       name: 'Inventory Monitor',
-      role_id: 'rl_01gf7a8200er3ar3pkfrb6kk29',
+      role_id: 'rl_01c16d2eb637c0d1f3a372937c',
       slug: 'inventory_monitor',
       trigger_type: 'event',
     });
@@ -53,7 +53,7 @@ describe('resource agents', () => {
       },
       description: 'Monitors inventory levels and creates restock alerts.',
       name: 'Inventory Monitor',
-      role_id: 'rl_01gf7a8200er3ar3pkfrb6kk29',
+      role_id: 'rl_01c16d2eb637c0d1f3a372937c',
       slug: 'inventory_monitor',
       trigger_type: 'event',
       include: ['config'],
@@ -62,14 +62,14 @@ describe('resource agents', () => {
           config_json: 'config_json',
           require_review: true,
           sort_order: 1,
-          tool_id: 'tdef_01k0b1seed0searchproduct0',
+          tool_id: 'tdef_01f0c4d04780ace864e6cc3a74',
         },
       ],
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.ai.agents.retrieve('agdf_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.ai.agents.retrieve('agdf_01b9ef28feb99e6954201aca63');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -83,7 +83,7 @@ describe('resource agents', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.ai.agents.retrieve(
-        'agdf_01jm4r6700f8nwq3v5hx2d9ktp',
+        'agdf_01b9ef28feb99e6954201aca63',
         { include: ['config'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -91,7 +91,7 @@ describe('resource agents', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.ai.agents.update('agdf_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.ai.agents.update('agdf_01b9ef28feb99e6954201aca63');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -105,7 +105,7 @@ describe('resource agents', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.ai.agents.update(
-        'agdf_01jm4r6700f8nwq3v5hx2d9ktp',
+        'agdf_01b9ef28feb99e6954201aca63',
         {
           include: ['config'],
           category_code: 'category_code',
@@ -130,7 +130,7 @@ describe('resource agents', () => {
               config_json: 'config_json',
               require_review: true,
               sort_order: 1,
-              tool_id: 'tdef_01k0b1seed0searchproduct0',
+              tool_id: 'tdef_01f0c4d04780ace864e6cc3a74',
             },
           ],
           trigger_type: 'scheduled',
@@ -170,7 +170,7 @@ describe('resource agents', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.ai.agents.delete('agdf_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.ai.agents.delete('agdf_01b9ef28feb99e6954201aca63');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -181,7 +181,7 @@ describe('resource agents', () => {
   });
 
   test('updateStatus: only required params', async () => {
-    const responsePromise = client.ai.agents.updateStatus('agdf_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.ai.agents.updateStatus('agdf_01b9ef28feb99e6954201aca63', {
       status_code: 'active',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -194,7 +194,7 @@ describe('resource agents', () => {
   });
 
   test('updateStatus: required and optional params', async () => {
-    const response = await client.ai.agents.updateStatus('agdf_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.ai.agents.updateStatus('agdf_01b9ef28feb99e6954201aca63', {
       status_code: 'active',
       include: ['config'],
     });

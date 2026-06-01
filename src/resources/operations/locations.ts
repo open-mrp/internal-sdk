@@ -1,7 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AgentsAPI from '../ai/agents';
+import * as EdiRunsAPI from './edi-runs';
+import * as ActionsAPI from './shipments/actions';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -21,7 +22,7 @@ export class Locations extends APIResource {
    * });
    * ```
    */
-  create(params: LocationCreateParams, options?: RequestOptions): APIPromise<Location> {
+  create(params: LocationCreateParams, options?: RequestOptions): APIPromise<ActionsAPI.Location> {
     const { include, ...body } = params;
     return this._client.post('/v1/operations/locations', { query: { include }, body, ...options });
   }
@@ -32,7 +33,7 @@ export class Locations extends APIResource {
    * @example
    * ```ts
    * const location = await client.operations.locations.retrieve(
-   *   'lc_01gf7a8200er3ar3pkfrb6kk30',
+   *   'lc_014d187d99b31926f0c74af9d8',
    * );
    * ```
    */
@@ -40,7 +41,7 @@ export class Locations extends APIResource {
     id: string,
     query: LocationRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<Location> {
+  ): APIPromise<ActionsAPI.Location> {
     return this._client.get(path`/v1/operations/locations/${id}`, { query, ...options });
   }
 
@@ -50,7 +51,7 @@ export class Locations extends APIResource {
    * @example
    * ```ts
    * const location = await client.operations.locations.update(
-   *   'lc_01gf7a8200er3ar3pkfrb6kk30',
+   *   'lc_014d187d99b31926f0c74af9d8',
    *   { name: 'Warehouse B' },
    * );
    * ```
@@ -59,7 +60,7 @@ export class Locations extends APIResource {
     id: string,
     params: LocationUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<Location> {
+  ): APIPromise<ActionsAPI.Location> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/locations/${id}`, { query: { include }, body, ...options });
   }
@@ -76,7 +77,7 @@ export class Locations extends APIResource {
   list(
     query: LocationListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ListLocation> {
+  ): APIPromise<ActionsAPI.ListLocation> {
     return this._client.get('/v1/operations/locations', { query, ...options });
   }
 
@@ -86,7 +87,7 @@ export class Locations extends APIResource {
    * @example
    * ```ts
    * const location = await client.operations.locations.delete(
-   *   'lc_01gf7a8200er3ar3pkfrb6kk30',
+   *   'lc_014d187d99b31926f0c74af9d8',
    * );
    * ```
    */
@@ -96,13 +97,38 @@ export class Locations extends APIResource {
 }
 
 /**
+ * Request to create a location.
+ */
+export interface CreateLocationRequest {
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Location type code.
+   */
+  type: 'building' | 'section' | 'aisle' | 'rack' | 'shelf' | 'bin';
+
+  /**
+   * IDs of child locations to attach.
+   */
+  child_ids?: Array<string> | null;
+
+  /**
+   * Parent location ID. Null for top-level locations.
+   */
+  parent_id?: string | null;
+}
+
+/**
  * List represents a paginated list of resources.
  */
 export interface ListLocation {
   /**
    * Resources in this page.
    */
-  data: Array<Location>;
+  data: Array<ActionsAPI.Location>;
 
   /**
    * Resource type identifier.
@@ -112,7 +138,7 @@ export interface ListLocation {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: EdiRunsAPI.PageInfo;
 }
 
 /**
@@ -127,7 +153,7 @@ export interface Location {
   /**
    * List represents a paginated list of resources.
    */
-  children: ListLocation | null;
+  children: ActionsAPI.ListLocation | null;
 
   /**
    * Creation timestamp.
@@ -147,7 +173,7 @@ export interface Location {
   /**
    * Location resource.
    */
-  parent: Location | null;
+  parent: ActionsAPI.Location | null;
 
   /**
    * Location type code.
@@ -158,6 +184,57 @@ export interface Location {
    * Last-updated timestamp.
    */
   updated_at: string;
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+/**
+ * Request to partially update a location.
+ */
+export interface UpdateLocationRequest {
+  /**
+   * Child location IDs. Replaces all current children when provided. Send null to
+   * clear.
+   */
+  child_ids?: Array<string> | null;
+
+  /**
+   * Display name.
+   */
+  name?: string;
+
+  /**
+   * Parent location ID. Send null to clear.
+   */
+  parent_id?: string | null;
+
+  /**
+   * Location type code.
+   */
+  type?: 'building' | 'section' | 'aisle' | 'rack' | 'shelf' | 'bin';
 }
 
 export interface LocationDeleteResponse {}
@@ -252,8 +329,11 @@ export interface LocationListParams {
 
 export declare namespace Locations {
   export {
+    type CreateLocationRequest as CreateLocationRequest,
     type ListLocation as ListLocation,
     type Location as Location,
+    type PageInfo as PageInfo,
+    type UpdateLocationRequest as UpdateLocationRequest,
     type LocationDeleteResponse as LocationDeleteResponse,
     type LocationCreateParams as LocationCreateParams,
     type LocationRetrieveParams as LocationRetrieveParams,

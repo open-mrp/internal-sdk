@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource productions', () => {
   test('retrieve: only required params', async () => {
     const responsePromise = client.operations.productionSteps.productions.retrieve('example', {
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,14 +23,14 @@ describe('resource productions', () => {
 
   test('retrieve: required and optional params', async () => {
     const response = await client.operations.productionSteps.productions.retrieve('example', {
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
       include: ['produced_item'],
     });
   });
 
   test('update: only required params', async () => {
     const responsePromise = client.operations.productionSteps.productions.update('example', {
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -43,9 +43,9 @@ describe('resource productions', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.operations.productionSteps.productions.update('example', {
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-      item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
-      quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
+      item_id: 'it_0131e386ac683e8c29a71f6f1f',
+      quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
       quantity_value: '500',
     });
   });

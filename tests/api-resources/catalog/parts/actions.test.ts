@@ -8,8 +8,8 @@ const client = new Augno({
 });
 
 describe('resource actions', () => {
-  test('retrieveExport', async () => {
-    const responsePromise = client.catalog.parts.actions.retrieveExport();
+  test('export', async () => {
+    const responsePromise = client.catalog.parts.actions.export();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,10 +19,10 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveExport: request options and params are passed correctly', async () => {
+  test('export: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.catalog.parts.actions.retrieveExport(
+      client.catalog.parts.actions.export(
         {
           attribute_ids: ['string'],
           category_ids: ['string'],

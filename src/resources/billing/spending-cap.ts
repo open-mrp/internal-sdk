@@ -9,36 +9,43 @@ import { RequestOptions } from '../../internal/request-options';
  */
 export class SpendingCap extends APIResource {
   /**
+   * Sets or removes the monthly agent spending cap for the account.
+   *
+   * @example
+   * ```ts
+   * const spendingCapResponse =
+   *   await client.billing.spendingCap.update({
+   *     cap_cents: 50000,
+   *   });
+   * ```
+   */
+  update(body: SpendingCapUpdateParams, options?: RequestOptions): APIPromise<SpendingCapResponse> {
+    return this._client.put('/v1/billing/spending-cap', { body, ...options });
+  }
+
+  /**
    * Returns the monthly agent spending cap for the account. Null cap_cents means no
    * cap.
    *
    * @example
    * ```ts
    * const spendingCapResponse =
-   *   await client.billing.spendingCap.retrieveSpendingCap();
+   *   await client.billing.spendingCap.list();
    * ```
    */
-  retrieveSpendingCap(options?: RequestOptions): APIPromise<SpendingCapResponse> {
+  list(options?: RequestOptions): APIPromise<SpendingCapResponse> {
     return this._client.get('/v1/billing/spending-cap', options);
   }
+}
 
+/**
+ * Request to set or remove the monthly spending cap.
+ */
+export interface SetSpendingCapRequest {
   /**
-   * Sets or removes the monthly agent spending cap for the account.
-   *
-   * @example
-   * ```ts
-   * const spendingCapResponse =
-   *   await client.billing.spendingCap.updateSpendingCap({
-   *     cap_cents: 50000,
-   *   });
-   * ```
+   * Monthly spending cap in cents. Null removes the cap.
    */
-  updateSpendingCap(
-    body: SpendingCapUpdateSpendingCapParams,
-    options?: RequestOptions,
-  ): APIPromise<SpendingCapResponse> {
-    return this._client.put('/v1/billing/spending-cap', { body, ...options });
-  }
+  cap_cents: number | null;
 }
 
 /**
@@ -56,7 +63,7 @@ export interface SpendingCapResponse {
   object: 'spending_cap_response';
 }
 
-export interface SpendingCapUpdateSpendingCapParams {
+export interface SpendingCapUpdateParams {
   /**
    * Monthly spending cap in cents. Null removes the cap.
    */
@@ -65,7 +72,8 @@ export interface SpendingCapUpdateSpendingCapParams {
 
 export declare namespace SpendingCap {
   export {
+    type SetSpendingCapRequest as SetSpendingCapRequest,
     type SpendingCapResponse as SpendingCapResponse,
-    type SpendingCapUpdateSpendingCapParams as SpendingCapUpdateSpendingCapParams,
+    type SpendingCapUpdateParams as SpendingCapUpdateParams,
   };
 }

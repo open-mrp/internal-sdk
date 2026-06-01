@@ -9,8 +9,8 @@ const client = new Augno({
 
 describe('resource units', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.catalog.unitGroups.units.create('ug_01jm4r6700f8nwq3v5hx2d9ktp', {
-      unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+    const responsePromise = client.catalog.unitGroups.units.create('ug_01aad07abb8e41fd392d2d7013', {
+      unit_id: 'un_01966263f74a5a0cae356000a1',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -22,8 +22,8 @@ describe('resource units', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.units.create('ug_01jm4r6700f8nwq3v5hx2d9ktp', {
-      unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+    const response = await client.catalog.unitGroups.units.create('ug_01aad07abb8e41fd392d2d7013', {
+      unit_id: 'un_01966263f74a5a0cae356000a1',
       include: ['unit'],
       customer_portal_visibility: 'visible',
       discount_fixed: 0,
@@ -32,8 +32,8 @@ describe('resource units', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.catalog.unitGroups.units.retrieve('un_01jm4r6700f8nwq3v5hx2d9ktp', {
-      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+    const responsePromise = client.catalog.unitGroups.units.retrieve('un_01966263f74a5a0cae356000a1', {
+      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -45,15 +45,15 @@ describe('resource units', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.units.retrieve('un_01jm4r6700f8nwq3v5hx2d9ktp', {
-      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+    const response = await client.catalog.unitGroups.units.retrieve('un_01966263f74a5a0cae356000a1', {
+      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
       include: ['unit'],
     });
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.catalog.unitGroups.units.update('un_01jm4r6700f8nwq3v5hx2d9ktp', {
-      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+    const responsePromise = client.catalog.unitGroups.units.update('un_01966263f74a5a0cae356000a1', {
+      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -65,18 +65,18 @@ describe('resource units', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.units.update('un_01jm4r6700f8nwq3v5hx2d9ktp', {
-      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+    const response = await client.catalog.unitGroups.units.update('un_01966263f74a5a0cae356000a1', {
+      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
       include: ['unit'],
       customer_portal_visibility: 'visible',
       discount_fixed: 0,
       discount_percentage: 0.9,
-      unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+      unit_id: 'un_01966263f74a5a0cae356000a1',
     });
   });
 
   test('list', async () => {
-    const responsePromise = client.catalog.unitGroups.units.list('ug_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.unitGroups.units.list('ug_01aad07abb8e41fd392d2d7013');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -90,7 +90,7 @@ describe('resource units', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.unitGroups.units.list(
-        'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+        'ug_01aad07abb8e41fd392d2d7013',
         { include: ['unit'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -98,8 +98,8 @@ describe('resource units', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.catalog.unitGroups.units.delete('un_01jm4r6700f8nwq3v5hx2d9ktp', {
-      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+    const responsePromise = client.catalog.unitGroups.units.delete('un_01966263f74a5a0cae356000a1', {
+      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -111,8 +111,8 @@ describe('resource units', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.units.delete('un_01jm4r6700f8nwq3v5hx2d9ktp', {
-      unit_group_id: 'ug_01jm4r6700f8nwq3v5hx2d9ktp',
+    const response = await client.catalog.unitGroups.units.delete('un_01966263f74a5a0cae356000a1', {
+      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
     });
   });
 });

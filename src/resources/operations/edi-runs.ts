@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AgentsAPI from '../ai/agents';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -16,7 +15,7 @@ export class EdiRuns extends APIResource {
    * @example
    * ```ts
    * const ediRun = await client.operations.ediRuns.retrieve(
-   *   'edru_01gf7a8200er3ar3pkfrb6kk30',
+   *   'edru_016aa43a99df34b744f6e2b878',
    * );
    * ```
    */
@@ -29,14 +28,10 @@ export class EdiRuns extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
-   *   await client.operations.ediRuns.retrieveEdiRuns();
+   * const listEdiRun = await client.operations.ediRuns.list();
    * ```
    */
-  retrieveEdiRuns(
-    query: EdiRunRetrieveEdiRunsParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<EdiRunRetrieveEdiRunsResponse> {
+  list(query: EdiRunListParams | null | undefined = {}, options?: RequestOptions): APIPromise<ListEdiRun> {
     return this._client.get('/v1/operations/edi-runs', { query, ...options });
   }
 }
@@ -79,7 +74,7 @@ export interface EdiRun {
 /**
  * List represents a paginated list of resources.
  */
-export interface EdiRunRetrieveEdiRunsResponse {
+export interface ListEdiRun {
   /**
    * Resources in this page.
    */
@@ -93,10 +88,35 @@ export interface EdiRunRetrieveEdiRunsResponse {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: PageInfo;
 }
 
-export interface EdiRunRetrieveEdiRunsParams {
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+export interface EdiRunListParams {
   /**
    * Cursor token used to retrieve the next or previous page of results.
    */
@@ -121,7 +141,8 @@ export interface EdiRunRetrieveEdiRunsParams {
 export declare namespace EdiRuns {
   export {
     type EdiRun as EdiRun,
-    type EdiRunRetrieveEdiRunsResponse as EdiRunRetrieveEdiRunsResponse,
-    type EdiRunRetrieveEdiRunsParams as EdiRunRetrieveEdiRunsParams,
+    type ListEdiRun as ListEdiRun,
+    type PageInfo as PageInfo,
+    type EdiRunListParams as EdiRunListParams,
   };
 }

@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('cancel', async () => {
-    const responsePromise = client.ai.runs.actions.cancel('agrn_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.ai.runs.actions.cancel('agrn_01502aa6da9bbdbaa595915fa4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.ai.runs.actions.cancel(
-        'agrn_01jm4r6700f8nwq3v5hx2d9ktp',
+        'agrn_01502aa6da9bbdbaa595915fa4',
         { include: ['actions'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource actions', () => {
   });
 
   test('continue: only required params', async () => {
-    const responsePromise = client.ai.runs.actions.continue('agrn_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.ai.runs.actions.continue('agrn_01502aa6da9bbdbaa595915fa4', {
       allowed_tool_slugs: ['string'],
       approved_tool_slugs: ['string'],
       message: 'Yes, proceed with creating the order.',
@@ -46,7 +46,7 @@ describe('resource actions', () => {
   });
 
   test('continue: required and optional params', async () => {
-    const response = await client.ai.runs.actions.continue('agrn_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.ai.runs.actions.continue('agrn_01502aa6da9bbdbaa595915fa4', {
       allowed_tool_slugs: ['string'],
       approved_tool_slugs: ['string'],
       message: 'Yes, proceed with creating the order.',

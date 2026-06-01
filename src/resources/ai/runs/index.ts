@@ -1,11 +1,36 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { Actions, type ActionCancelParams, type ActionContinueParams } from './actions';
+export {
+  Actions,
+  type ContinueRunRequest,
+  type ActionCancelParams,
+  type ActionContinueParams,
+} from './actions';
 export {
   Runs,
+  type Account,
+  type AccountBranding,
+  type AccountPortal,
+  type Actor,
+  type Address,
+  type AgentAction,
+  type AgentDefinition,
+  type AgentDefinitionConfig,
+  type AgentDefinitionTool,
   type AgentRun,
+  type AgentRunStep,
+  type AvailableTool,
+  type Entity,
+  type Geolocation,
   type ListAgentAction,
-  type RunListResponse,
+  type ListAgentDefinitionTool,
+  type ListAgentRun,
+  type ListAgentRunStep,
+  type Owner,
+  type PageInfo,
+  type Role,
+  type TriggerConfig,
+  type TriggerRunRequest,
   type RunCreateParams,
   type RunRetrieveParams,
   type RunListParams,

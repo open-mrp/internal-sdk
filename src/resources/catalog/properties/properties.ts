@@ -1,10 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AgentsAPI from '../../ai/agents';
+import * as EdiRunsAPI from '../../operations/edi-runs';
 import * as AttributesAPI from './attributes';
 import {
-  Attribute,
   AttributeCreateParams,
   AttributeDeleteParams,
   AttributeDeleteResponse,
@@ -12,8 +11,10 @@ import {
   AttributeRetrieveParams,
   AttributeUpdateParams,
   Attributes,
-  ListAttribute,
+  CreateAttributeRequest,
+  UpdateAttributeRequest,
 } from './attributes';
+import * as LinesAPI from '../../operations/shipments/lines';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -34,7 +35,7 @@ export class Properties extends APIResource {
    * });
    * ```
    */
-  create(params: PropertyCreateParams, options?: RequestOptions): APIPromise<Property> {
+  create(params: PropertyCreateParams, options?: RequestOptions): APIPromise<LinesAPI.Property> {
     const { include, ...body } = params;
     return this._client.post('/v1/catalog/properties', { query: { include }, body, ...options });
   }
@@ -45,7 +46,7 @@ export class Properties extends APIResource {
    * @example
    * ```ts
    * const property = await client.catalog.properties.retrieve(
-   *   'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'pp_01e21344878064372f69e67093',
    * );
    * ```
    */
@@ -53,7 +54,7 @@ export class Properties extends APIResource {
     id: string,
     query: PropertyRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<Property> {
+  ): APIPromise<LinesAPI.Property> {
     return this._client.get(path`/v1/catalog/properties/${id}`, { query, ...options });
   }
 
@@ -63,7 +64,7 @@ export class Properties extends APIResource {
    * @example
    * ```ts
    * const property = await client.catalog.properties.update(
-   *   'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'pp_01e21344878064372f69e67093',
    *   { name: 'Size' },
    * );
    * ```
@@ -72,7 +73,7 @@ export class Properties extends APIResource {
     id: string,
     params: PropertyUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<Property> {
+  ): APIPromise<LinesAPI.Property> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/catalog/properties/${id}`, { query: { include }, body, ...options });
   }
@@ -88,7 +89,7 @@ export class Properties extends APIResource {
   list(
     query: PropertyListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ListProperty> {
+  ): APIPromise<LinesAPI.ListProperty> {
     return this._client.get('/v1/catalog/properties', { query, ...options });
   }
 
@@ -98,7 +99,7 @@ export class Properties extends APIResource {
    * @example
    * ```ts
    * const property = await client.catalog.properties.delete(
-   *   'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'pp_01e21344878064372f69e67093',
    * );
    * ```
    */
@@ -108,13 +109,68 @@ export class Properties extends APIResource {
 }
 
 /**
+ * Value option within a property.
+ */
+export interface Attribute {
+  /**
+   * Attribute ID.
+   */
+  id: string;
+
+  /**
+   * Color code.
+   */
+  color: 'blue' | 'brown' | 'default' | 'gray' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'yellow';
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'attribute';
+
+  /**
+   * Property that groups attributes.
+   */
+  property: LinesAPI.Property | null;
+
+  /**
+   * Display order.
+   */
+  sort_order: number;
+
+  /**
+   * Last update timestamp.
+   */
+  updated_at: string;
+
+  /**
+   * Attribute value.
+   */
+  value: string;
+}
+
+/**
+ * Request to create a property.
+ */
+export interface CreatePropertyRequest {
+  /**
+   * Name.
+   */
+  name: string;
+}
+
+/**
  * List represents a paginated list of resources.
  */
-export interface ListProperty {
+export interface ListAttribute {
   /**
    * Resources in this page.
    */
-  data: Array<Property>;
+  data: Array<LinesAPI.Attribute>;
 
   /**
    * Resource type identifier.
@@ -124,7 +180,52 @@ export interface ListProperty {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListProperty {
+  /**
+   * Resources in this page.
+   */
+  data: Array<LinesAPI.Property>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
 }
 
 /**
@@ -139,7 +240,7 @@ export interface Property {
   /**
    * List represents a paginated list of resources.
    */
-  attributes: AttributesAPI.ListAttribute | null;
+  attributes: LinesAPI.ListAttribute | null;
 
   /**
    * Creation timestamp.
@@ -160,6 +261,16 @@ export interface Property {
    * Last update timestamp.
    */
   updated_at: string;
+}
+
+/**
+ * Request to update a property.
+ */
+export interface UpdatePropertyRequest {
+  /**
+   * Name.
+   */
+  name?: string;
 }
 
 export interface PropertyDeleteResponse {}
@@ -225,8 +336,13 @@ Properties.Attributes = Attributes;
 
 export declare namespace Properties {
   export {
+    type Attribute as Attribute,
+    type CreatePropertyRequest as CreatePropertyRequest,
+    type ListAttribute as ListAttribute,
     type ListProperty as ListProperty,
+    type PageInfo as PageInfo,
     type Property as Property,
+    type UpdatePropertyRequest as UpdatePropertyRequest,
     type PropertyDeleteResponse as PropertyDeleteResponse,
     type PropertyCreateParams as PropertyCreateParams,
     type PropertyRetrieveParams as PropertyRetrieveParams,
@@ -236,8 +352,8 @@ export declare namespace Properties {
 
   export {
     Attributes as Attributes,
-    type Attribute as Attribute,
-    type ListAttribute as ListAttribute,
+    type CreateAttributeRequest as CreateAttributeRequest,
+    type UpdateAttributeRequest as UpdateAttributeRequest,
     type AttributeDeleteResponse as AttributeDeleteResponse,
     type AttributeCreateParams as AttributeCreateParams,
     type AttributeRetrieveParams as AttributeRetrieveParams,

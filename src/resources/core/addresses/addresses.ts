@@ -1,14 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AgentsAPI from '../../ai/agents';
+import * as EdiRunsAPI from '../../operations/edi-runs';
 import * as ActionsAPI from './actions';
-import {
-  ActionUpdateValidateParams,
-  ActionUpdateValidateResponse,
-  Actions,
-  AddressComponents,
-} from './actions';
+import { ActionValidateParams, Actions, ValidateAddressRequest, ValidatedAddress } from './actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -24,16 +19,17 @@ export class Addresses extends APIResource {
    *
    * @example
    * ```ts
-   * const address = await client.core.addresses.retrieve(
-   *   'ChIJN1gggt_t2Z44AR4PVM_67p73Y',
-   * );
+   * const addressDetailsResult =
+   *   await client.core.addresses.retrieveDetails(
+   *     'ChIJN1gggt_t2Z44AR4PVM_67p73Y',
+   *   );
    * ```
    */
-  retrieve(
+  retrieveDetails(
     id: string,
-    query: AddressRetrieveParams | null | undefined = {},
+    query: AddressRetrieveDetailsParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<AddressRetrieveResponse> {
+  ): APIPromise<AddressDetailsResult> {
     return this._client.get(path`/v1/core/addresses/details/${id}`, { query, ...options });
   }
 
@@ -42,7 +38,7 @@ export class Addresses extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const listAddressSuggestion =
    *   await client.core.addresses.retrieveSuggestions({
    *     input: 'input',
    *   });
@@ -51,15 +47,60 @@ export class Addresses extends APIResource {
   retrieveSuggestions(
     query: AddressRetrieveSuggestionsParams,
     options?: RequestOptions,
-  ): APIPromise<AddressRetrieveSuggestionsResponse> {
+  ): APIPromise<ListAddressSuggestion> {
     return this._client.get('/v1/core/addresses/suggestions', { query, ...options });
   }
 }
 
 /**
+ * Parsed address components.
+ */
+export interface AddressComponents {
+  /**
+   * First line of the street address.
+   */
+  address_line_1: string;
+
+  /**
+   * Second line of the street address.
+   */
+  address_line_2: string | null;
+
+  /**
+   * City or locality.
+   */
+  city: string;
+
+  /**
+   * Country name or code.
+   */
+  country: string;
+
+  /**
+   * Two-letter country code.
+   */
+  country_code: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'address_components';
+
+  /**
+   * Postal or ZIP code.
+   */
+  postal_code: string;
+
+  /**
+   * State or administrative area.
+   */
+  state: string;
+}
+
+/**
  * Result of a place details lookup.
  */
-export interface AddressRetrieveResponse {
+export interface AddressDetailsResult {
   /**
    * Parsed address components.
    */
@@ -77,13 +118,43 @@ export interface AddressRetrieveResponse {
 }
 
 /**
+ * Autocomplete address suggestion.
+ */
+export interface AddressSuggestion {
+  /**
+   * Address suggestion ID.
+   */
+  id: string;
+
+  /**
+   * Full description of the address.
+   */
+  description: string;
+
+  /**
+   * Main text (typically the street address).
+   */
+  main_text: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'address_suggestion';
+
+  /**
+   * Secondary text (typically city, state, country).
+   */
+  secondary_text: string;
+}
+
+/**
  * List represents a paginated list of resources.
  */
-export interface AddressRetrieveSuggestionsResponse {
+export interface ListAddressSuggestion {
   /**
    * Resources in this page.
    */
-  data: Array<AddressRetrieveSuggestionsResponse.Data>;
+  data: Array<AddressSuggestion>;
 
   /**
    * Resource type identifier.
@@ -93,42 +164,35 @@ export interface AddressRetrieveSuggestionsResponse {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: EdiRunsAPI.PageInfo;
 }
 
-export namespace AddressRetrieveSuggestionsResponse {
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
   /**
-   * Autocomplete address suggestion.
+   * Whether more results exist after this page.
    */
-  export interface Data {
-    /**
-     * Address suggestion ID.
-     */
-    id: string;
+  has_next_page: boolean;
 
-    /**
-     * Full description of the address.
-     */
-    description: string;
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
 
-    /**
-     * Main text (typically the street address).
-     */
-    main_text: string;
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
 
-    /**
-     * Resource type identifier.
-     */
-    object: 'address_suggestion';
-
-    /**
-     * Secondary text (typically city, state, country).
-     */
-    secondary_text: string;
-  }
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
 }
 
-export interface AddressRetrieveParams {
+export interface AddressRetrieveDetailsParams {
   /**
    * Session token for grouping with a previous autocomplete request.
    */
@@ -151,16 +215,19 @@ Addresses.Actions = Actions;
 
 export declare namespace Addresses {
   export {
-    type AddressRetrieveResponse as AddressRetrieveResponse,
-    type AddressRetrieveSuggestionsResponse as AddressRetrieveSuggestionsResponse,
-    type AddressRetrieveParams as AddressRetrieveParams,
+    type AddressComponents as AddressComponents,
+    type AddressDetailsResult as AddressDetailsResult,
+    type AddressSuggestion as AddressSuggestion,
+    type ListAddressSuggestion as ListAddressSuggestion,
+    type PageInfo as PageInfo,
+    type AddressRetrieveDetailsParams as AddressRetrieveDetailsParams,
     type AddressRetrieveSuggestionsParams as AddressRetrieveSuggestionsParams,
   };
 
   export {
     Actions as Actions,
-    type AddressComponents as AddressComponents,
-    type ActionUpdateValidateResponse as ActionUpdateValidateResponse,
-    type ActionUpdateValidateParams as ActionUpdateValidateParams,
+    type ValidateAddressRequest as ValidateAddressRequest,
+    type ValidatedAddress as ValidatedAddress,
+    type ActionValidateParams as ActionValidateParams,
   };
 }

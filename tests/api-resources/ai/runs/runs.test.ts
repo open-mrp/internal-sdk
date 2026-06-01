@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource runs', () => {
   test('create: only required params', async () => {
     const responsePromise = client.ai.runs.create({
-      agent_definition_id: 'agdf_01jm4r6700f8nwq3v5hx2d9ktp',
+      agent_definition_id: 'agdf_01b9ef28feb99e6954201aca63',
       input: 'Process the latest incoming orders.',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -24,14 +24,14 @@ describe('resource runs', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.ai.runs.create({
-      agent_definition_id: 'agdf_01jm4r6700f8nwq3v5hx2d9ktp',
+      agent_definition_id: 'agdf_01b9ef28feb99e6954201aca63',
       input: 'Process the latest incoming orders.',
       include: ['actions'],
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.ai.runs.retrieve('agrn_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.ai.runs.retrieve('agrn_01502aa6da9bbdbaa595915fa4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource runs', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.ai.runs.retrieve(
-        'agrn_01jm4r6700f8nwq3v5hx2d9ktp',
+        'agrn_01502aa6da9bbdbaa595915fa4',
         { include: ['actions'] },
         { path: '/_stainless_unknown_path' },
       ),

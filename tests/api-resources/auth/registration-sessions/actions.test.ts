@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource actions', () => {
   test('confirmPayment: only required params', async () => {
     const responsePromise = client.auth.registrationSessions.actions.confirmPayment(
-      'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+      'rgfw_01011dbade766ab524553afb10',
       { setup_intent_id: 'seti_1N4kLm2eZvKYlo2C0wFVpSbx' },
     );
     const rawResponse = await responsePromise.asResponse();
@@ -24,14 +24,14 @@ describe('resource actions', () => {
 
   test('confirmPayment: required and optional params', async () => {
     const response = await client.auth.registrationSessions.actions.confirmPayment(
-      'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+      'rgfw_01011dbade766ab524553afb10',
       { setup_intent_id: 'seti_1N4kLm2eZvKYlo2C0wFVpSbx' },
     );
   });
 
   test('resendVerificationEmail', async () => {
     const responsePromise = client.auth.registrationSessions.actions.resendVerificationEmail(
-      'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+      'rgfw_01011dbade766ab524553afb10',
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -44,7 +44,7 @@ describe('resource actions', () => {
 
   test('setupBilling', async () => {
     const responsePromise = client.auth.registrationSessions.actions.setupBilling(
-      'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+      'rgfw_01011dbade766ab524553afb10',
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -55,8 +55,8 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateVerifyToken', async () => {
-    const responsePromise = client.auth.registrationSessions.actions.updateVerifyToken('example');
+  test('verifyToken', async () => {
+    const responsePromise = client.auth.registrationSessions.actions.verifyToken('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

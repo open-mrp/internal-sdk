@@ -10,13 +10,13 @@ const client = new Augno({
 describe('resource batches', () => {
   test('create: only required params', async () => {
     const responsePromise = client.operations.productionRuns.batches.create(
-      'prru_01jm4r6700f8nwq3v5hx2d9ktp',
+      'prru_0141c28081df4faac0fe726c41',
       {
         batches: [
           {
-            item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
-            production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-            quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+            item_id: 'it_0131e386ac683e8c29a71f6f1f',
+            production_step_id: 'prst_0159474175bb59f4b1990404ee',
+            quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
             quantity_value: '100',
             scanning_station_id: 'scanning_station_id',
             seconds_unit_id: 'seconds_unit_id',
@@ -38,13 +38,13 @@ describe('resource batches', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.operations.productionRuns.batches.create(
-      'prru_01jm4r6700f8nwq3v5hx2d9ktp',
+      'prru_0141c28081df4faac0fe726c41',
       {
         batches: [
           {
-            item_id: 'it_01jm4r6700f8nwq3v5hx2d9ktp',
-            production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-            quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+            item_id: 'it_0131e386ac683e8c29a71f6f1f',
+            production_step_id: 'prst_0159474175bb59f4b1990404ee',
+            quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
             quantity_value: '100',
             scanning_station_id: 'scanning_station_id',
             seconds_unit_id: 'seconds_unit_id',
@@ -58,7 +58,7 @@ describe('resource batches', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.operations.productionRuns.batches.list('prru_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.productionRuns.batches.list('prru_0141c28081df4faac0fe726c41');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -72,7 +72,7 @@ describe('resource batches', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionRuns.batches.list(
-        'prru_01jm4r6700f8nwq3v5hx2d9ktp',
+        'prru_0141c28081df4faac0fe726c41',
         {
           cursor: 'cursor',
           limit: 0,

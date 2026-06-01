@@ -13,14 +13,14 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
-   *   await client.operations.inventoryChangeLogs.actions.retrieveExport();
+   * const fileDownload =
+   *   await client.operations.inventoryChangeLogs.actions.export();
    * ```
    */
-  retrieveExport(
-    query: ActionRetrieveExportParams | null | undefined = {},
+  export(
+    query: ActionExportParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionRetrieveExportResponse> {
+  ): APIPromise<FileDownload> {
     return this._client.get('/v1/operations/inventory-change-logs/actions/export', { query, ...options });
   }
 }
@@ -30,9 +30,9 @@ export class Actions extends APIResource {
  * export). When the service returns \*FileDownload, the handler writes the body
  * with Content-Type and Content-Disposition.
  */
-export interface ActionRetrieveExportResponse {}
+export interface FileDownload {}
 
-export interface ActionRetrieveExportParams {
+export interface ActionExportParams {
   /**
    * Filter by action type codes.
    */
@@ -60,8 +60,5 @@ export interface ActionRetrieveExportParams {
 }
 
 export declare namespace Actions {
-  export {
-    type ActionRetrieveExportResponse as ActionRetrieveExportResponse,
-    type ActionRetrieveExportParams as ActionRetrieveExportParams,
-  };
+  export { type FileDownload as FileDownload, type ActionExportParams as ActionExportParams };
 }

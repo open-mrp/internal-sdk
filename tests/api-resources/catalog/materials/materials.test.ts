@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource materials', () => {
   test('create: only required params', async () => {
     const responsePromise = client.catalog.materials.create({
-      category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+      category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
       sku: 'MAT-001',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -24,7 +24,7 @@ describe('resource materials', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.catalog.materials.create({
-      category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+      category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
       sku: 'MAT-001',
       include: ['item'],
       attribute_ids: ['string'],
@@ -51,7 +51,7 @@ describe('resource materials', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.materials.retrieve('ml_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.materials.retrieve('ml_014613b8f7959a091d8cc0cef4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -65,7 +65,7 @@ describe('resource materials', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.materials.retrieve(
-        'ml_01jm4r6700f8nwq3v5hx2d9ktp',
+        'ml_014613b8f7959a091d8cc0cef4',
         { include: ['item'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -73,7 +73,7 @@ describe('resource materials', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.materials.update('ml_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.materials.update('ml_014613b8f7959a091d8cc0cef4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -87,7 +87,7 @@ describe('resource materials', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.materials.update(
-        'ml_01jm4r6700f8nwq3v5hx2d9ktp',
+        'ml_014613b8f7959a091d8cc0cef4',
         {
           include: ['item'],
           description: 'description',
@@ -137,7 +137,7 @@ describe('resource materials', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.materials.delete('ml_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.materials.delete('ml_014613b8f7959a091d8cc0cef4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

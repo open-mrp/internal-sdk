@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource lines', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.lines.create('or_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.sales.salesOrders.lines.create('or_01d5034136c3ccc048abecc312', {
       product_id: 'product_id',
       product_sku: 'product_sku',
       quantity_unit_id: 'quantity_unit_id',
@@ -28,7 +28,7 @@ describe('resource lines', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.sales.salesOrders.lines.create('or_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.sales.salesOrders.lines.create('or_01d5034136c3ccc048abecc312', {
       product_id: 'product_id',
       product_sku: 'product_sku',
       quantity_unit_id: 'quantity_unit_id',
@@ -47,7 +47,7 @@ describe('resource lines', () => {
 
   test('update: only required params', async () => {
     const responsePromise = client.sales.salesOrders.lines.update('example', {
-      id: 'or_01jm4r6700f8nwq3v5hx2d9ktp',
+      id: 'or_01d5034136c3ccc048abecc312',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -60,11 +60,11 @@ describe('resource lines', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.sales.salesOrders.lines.update('example', {
-      id: 'or_01jm4r6700f8nwq3v5hx2d9ktp',
+      id: 'or_01d5034136c3ccc048abecc312',
       edi_line_item_id: 'edi_line_item_id',
       item_id: 'item_id',
       product_description: 'product_description',
-      product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
+      product_id: 'pd_013c29ab3f1518d0004094c316',
       product_sku: 'WIDGET-001',
       quantity_unit_id: 'quantity_unit_id',
       quantity_value: '20',
@@ -79,7 +79,7 @@ describe('resource lines', () => {
 
   test('delete: only required params', async () => {
     const responsePromise = client.sales.salesOrders.lines.delete('example', {
-      id: 'or_01jm4r6700f8nwq3v5hx2d9ktp',
+      id: 'or_01d5034136c3ccc048abecc312',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -92,7 +92,7 @@ describe('resource lines', () => {
 
   test('delete: required and optional params', async () => {
     const response = await client.sales.salesOrders.lines.delete('example', {
-      id: 'or_01jm4r6700f8nwq3v5hx2d9ktp',
+      id: 'or_01d5034136c3ccc048abecc312',
     });
   });
 });

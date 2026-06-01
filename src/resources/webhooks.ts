@@ -14,13 +14,13 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.webhooks.stripe();
+   * const webhookResponse = await client.webhooks.stripe();
    * ```
    */
   stripe(
     params: WebhookStripeParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<WebhookStripeResponse> {
+  ): APIPromise<WebhookResponse> {
     const { 'Stripe-Signature': stripeSignature } = params ?? {};
     return this._client.post('/v1/webhooks/stripe', {
       ...options,
@@ -35,7 +35,7 @@ export class Webhooks extends APIResource {
 /**
  * Result of processing a webhook.
  */
-export interface WebhookStripeResponse {
+export interface WebhookResponse {
   /**
    * Resource type identifier.
    */
@@ -55,8 +55,5 @@ export interface WebhookStripeParams {
 }
 
 export declare namespace Webhooks {
-  export {
-    type WebhookStripeResponse as WebhookStripeResponse,
-    type WebhookStripeParams as WebhookStripeParams,
-  };
+  export { type WebhookResponse as WebhookResponse, type WebhookStripeParams as WebhookStripeParams };
 }

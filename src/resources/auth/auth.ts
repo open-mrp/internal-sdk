@@ -2,33 +2,62 @@
 
 import { APIResource } from '../../core/resource';
 import * as ActionsAPI from './actions';
-import { ActionLoginParams, ActionMagicLoginParams, Actions, User } from './actions';
+import {
+  ActionLoginParams,
+  ActionMagicLoginParams,
+  Actions,
+  LoginRequest,
+  MagicLoginRequest,
+} from './actions';
 import * as APIKeysAPI from './api-keys/api-keys';
 import {
   APIKey,
-  APIKeyAPIKeysParams,
+  APIKeyCreateParams,
   APIKeyDeleteResponse,
-  APIKeyRetrieveAPIKeysParams,
-  APIKeyRetrieveAPIKeysResponse,
+  APIKeyListParams,
   APIKeyRetrieveParams,
   APIKeys,
+  Account,
+  AccountBranding,
+  AccountPortal,
+  Address,
+  CreateAPIKeyRequest,
   CreatedAPIKey,
+  Geolocation,
+  ListAPIKey,
+  Owner,
+  PageInfo,
+  Role,
 } from './api-keys/api-keys';
 import * as PasswordsAPI from './passwords/passwords';
-import { PasswordCreateParams, PasswordCreateResponse, Passwords } from './passwords/passwords';
+import {
+  PasswordCreateParams,
+  PasswordCreateResponse,
+  Passwords,
+  UpdatePasswordRequest,
+} from './passwords/passwords';
 import * as RegistrationSessionsAPI from './registration-sessions/registration-sessions';
 import {
+  CompleteRegistrationResponse,
+  CreateRegistrationSessionRequest,
+  CreateSessionResponse,
+  CreateUserRequest,
+  CreateUserResponse,
+  ListRegistrationSession,
+  PageInfo as RegistrationSessionsAPIPageInfo,
   RegistrationSession,
-  RegistrationSessionAccountsResponse,
-  RegistrationSessionRegistrationSessionsParams,
-  RegistrationSessionRegistrationSessionsResponse,
-  RegistrationSessionRetrieveRegistrationSessionsParams,
-  RegistrationSessionRetrieveRegistrationSessionsResponse,
+  RegistrationSessionAccount,
+  RegistrationSessionAddress,
+  RegistrationSessionCreateParams,
+  RegistrationSessionListParams,
   RegistrationSessionUpdateParams,
+  RegistrationSessionUser,
   RegistrationSessionUsersParams,
-  RegistrationSessionUsersResponse,
   RegistrationSessions,
+  UpdateSessionDataRequest,
+  UpdateSessionRequest,
 } from './registration-sessions/registration-sessions';
+import * as InventoryChangeLogsAPI from '../operations/inventory-change-logs/inventory-change-logs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -37,8 +66,8 @@ import { RequestOptions } from '../../internal/request-options';
  */
 export class Auth extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
-  apiKeys: APIKeysAPI.APIKeys = new APIKeysAPI.APIKeys(this._client);
   passwords: PasswordsAPI.Passwords = new PasswordsAPI.Passwords(this._client);
+  apiKeys: APIKeysAPI.APIKeys = new APIKeysAPI.APIKeys(this._client);
   registrationSessions: RegistrationSessionsAPI.RegistrationSessions =
     new RegistrationSessionsAPI.RegistrationSessions(this._client);
 
@@ -61,7 +90,7 @@ export class Auth extends APIResource {
    * @example
    * ```ts
    * const response = await client.auth.scannerPasswords({
-   *   account_user_id: 'acus_01gf7a8200er3ar3pkfrb6kk29',
+   *   account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
    *   new_password: '50iR2X0r@bvIH',
    *   requester_password: 'QgS7Z8Hhj3&1',
    * });
@@ -100,9 +129,105 @@ export class Auth extends APIResource {
    * });
    * ```
    */
-  users(body: AuthUsersParams, options?: RequestOptions): APIPromise<ActionsAPI.User> {
+  users(body: AuthUsersParams, options?: RequestOptions): APIPromise<InventoryChangeLogsAPI.User> {
     return this._client.post('/v1/auth/users', { body, ...options });
   }
+}
+
+/**
+ * Request to register a user.
+ */
+export interface RegisterRequest {
+  /**
+   * Email address.
+   */
+  email: string;
+
+  /**
+   * Full name.
+   */
+  name: string;
+
+  /**
+   * User password.
+   */
+  password: string;
+
+  /**
+   * When registering from a customer portal, scopes the magic-login link in the
+   * "already registered" email.
+   */
+  account_slug?: string;
+}
+
+/**
+ * Request to update a scanner-role account user's password.
+ */
+export interface UpdateScannerPasswordRequest {
+  /**
+   * Target scanner account user ID.
+   */
+  account_user_id: string;
+
+  /**
+   * New password to set for the scanner user.
+   */
+  new_password: string;
+
+  /**
+   * Requester's current password (the caller's own password, for verification).
+   */
+  requester_password: string;
+}
+
+/**
+ * User resource.
+ */
+export interface User {
+  /**
+   * User ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Email address.
+   */
+  email: string | null;
+
+  /**
+   * Email verified timestamp, null if unverified.
+   */
+  email_verified_at: string | null;
+
+  /**
+   * Profile image URL.
+   */
+  image_url: string | null;
+
+  /**
+   * Display name.
+   */
+  name: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'user';
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+
+  /**
+   * Username.
+   */
+  username: string | null;
 }
 
 export interface AuthDeleteRefreshTokensResponse {}
@@ -152,12 +277,15 @@ export interface AuthUsersParams {
 }
 
 Auth.Actions = Actions;
-Auth.APIKeys = APIKeys;
 Auth.Passwords = Passwords;
+Auth.APIKeys = APIKeys;
 Auth.RegistrationSessions = RegistrationSessions;
 
 export declare namespace Auth {
   export {
+    type RegisterRequest as RegisterRequest,
+    type UpdateScannerPasswordRequest as UpdateScannerPasswordRequest,
+    type User as User,
     type AuthDeleteRefreshTokensResponse as AuthDeleteRefreshTokensResponse,
     type AuthScannerPasswordsResponse as AuthScannerPasswordsResponse,
     type AuthUpdateAccessTokensResponse as AuthUpdateAccessTokensResponse,
@@ -167,38 +295,57 @@ export declare namespace Auth {
 
   export {
     Actions as Actions,
-    type User as User,
+    type LoginRequest as LoginRequest,
+    type MagicLoginRequest as MagicLoginRequest,
     type ActionLoginParams as ActionLoginParams,
     type ActionMagicLoginParams as ActionMagicLoginParams,
   };
 
   export {
-    APIKeys as APIKeys,
-    type APIKey as APIKey,
-    type CreatedAPIKey as CreatedAPIKey,
-    type APIKeyDeleteResponse as APIKeyDeleteResponse,
-    type APIKeyRetrieveAPIKeysResponse as APIKeyRetrieveAPIKeysResponse,
-    type APIKeyRetrieveParams as APIKeyRetrieveParams,
-    type APIKeyAPIKeysParams as APIKeyAPIKeysParams,
-    type APIKeyRetrieveAPIKeysParams as APIKeyRetrieveAPIKeysParams,
-  };
-
-  export {
     Passwords as Passwords,
+    type UpdatePasswordRequest as UpdatePasswordRequest,
     type PasswordCreateResponse as PasswordCreateResponse,
     type PasswordCreateParams as PasswordCreateParams,
   };
 
   export {
+    APIKeys as APIKeys,
+    type Account as Account,
+    type AccountBranding as AccountBranding,
+    type AccountPortal as AccountPortal,
+    type Address as Address,
+    type APIKey as APIKey,
+    type CreateAPIKeyRequest as CreateAPIKeyRequest,
+    type CreatedAPIKey as CreatedAPIKey,
+    type Geolocation as Geolocation,
+    type ListAPIKey as ListAPIKey,
+    type Owner as Owner,
+    type PageInfo as PageInfo,
+    type Role as Role,
+    type APIKeyDeleteResponse as APIKeyDeleteResponse,
+    type APIKeyCreateParams as APIKeyCreateParams,
+    type APIKeyRetrieveParams as APIKeyRetrieveParams,
+    type APIKeyListParams as APIKeyListParams,
+  };
+
+  export {
     RegistrationSessions as RegistrationSessions,
+    type CompleteRegistrationResponse as CompleteRegistrationResponse,
+    type CreateRegistrationSessionRequest as CreateRegistrationSessionRequest,
+    type CreateSessionResponse as CreateSessionResponse,
+    type CreateUserRequest as CreateUserRequest,
+    type CreateUserResponse as CreateUserResponse,
+    type ListRegistrationSession as ListRegistrationSession,
+    type RegistrationSessionsAPIPageInfo as PageInfo,
     type RegistrationSession as RegistrationSession,
-    type RegistrationSessionAccountsResponse as RegistrationSessionAccountsResponse,
-    type RegistrationSessionRegistrationSessionsResponse as RegistrationSessionRegistrationSessionsResponse,
-    type RegistrationSessionRetrieveRegistrationSessionsResponse as RegistrationSessionRetrieveRegistrationSessionsResponse,
-    type RegistrationSessionUsersResponse as RegistrationSessionUsersResponse,
+    type RegistrationSessionAccount as RegistrationSessionAccount,
+    type RegistrationSessionAddress as RegistrationSessionAddress,
+    type RegistrationSessionUser as RegistrationSessionUser,
+    type UpdateSessionDataRequest as UpdateSessionDataRequest,
+    type UpdateSessionRequest as UpdateSessionRequest,
+    type RegistrationSessionCreateParams as RegistrationSessionCreateParams,
     type RegistrationSessionUpdateParams as RegistrationSessionUpdateParams,
-    type RegistrationSessionRegistrationSessionsParams as RegistrationSessionRegistrationSessionsParams,
-    type RegistrationSessionRetrieveRegistrationSessionsParams as RegistrationSessionRetrieveRegistrationSessionsParams,
+    type RegistrationSessionListParams as RegistrationSessionListParams,
     type RegistrationSessionUsersParams as RegistrationSessionUsersParams,
   };
 }

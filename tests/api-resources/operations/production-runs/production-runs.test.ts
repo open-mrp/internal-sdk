@@ -8,8 +8,28 @@ const client = new Augno({
 });
 
 describe('resource productionRuns', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.operations.productionRuns.create({
+      responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.operations.productionRuns.create({
+      responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+      include: ['responsible_user'],
+    });
+  });
+
   test('retrieve', async () => {
-    const responsePromise = client.operations.productionRuns.retrieve('prru_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.productionRuns.retrieve('prru_0141c28081df4faac0fe726c41');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +43,7 @@ describe('resource productionRuns', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionRuns.retrieve(
-        'prru_01jm4r6700f8nwq3v5hx2d9ktp',
+        'prru_0141c28081df4faac0fe726c41',
         { include: ['responsible_user'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,9 +51,9 @@ describe('resource productionRuns', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.productionRuns.update('prru_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.operations.productionRuns.update('prru_0141c28081df4faac0fe726c41', {
       number: 'PR-00042',
-      responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
+      responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -45,15 +65,15 @@ describe('resource productionRuns', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.productionRuns.update('prru_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.operations.productionRuns.update('prru_0141c28081df4faac0fe726c41', {
       number: 'PR-00042',
-      responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
+      responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
       include: ['responsible_user'],
     });
   });
 
-  test('delete', async () => {
-    const responsePromise = client.operations.productionRuns.delete('prru_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('list', async () => {
+    const responsePromise = client.operations.productionRuns.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -63,41 +83,10 @@ describe('resource productionRuns', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('productionRuns: only required params', async () => {
-    const responsePromise = client.operations.productionRuns.productionRuns({
-      responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('productionRuns: required and optional params', async () => {
-    const response = await client.operations.productionRuns.productionRuns({
-      responsible_user_id: 'us_01gf7a8200e9pvbd6bgyq395ae',
-      include: ['responsible_user'],
-    });
-  });
-
-  test('retrieveProductionRuns', async () => {
-    const responsePromise = client.operations.productionRuns.retrieveProductionRuns();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveProductionRuns: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.operations.productionRuns.retrieveProductionRuns(
+      client.operations.productionRuns.list(
         {
           cursor: 'cursor',
           end_date: 'end_date',
@@ -111,5 +100,16 @@ describe('resource productionRuns', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.operations.productionRuns.delete('prru_0141c28081df4faac0fe726c41');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

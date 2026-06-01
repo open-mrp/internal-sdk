@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as InventoryChangeLogsAPI from '../operations/inventory-change-logs/inventory-change-logs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -20,7 +21,7 @@ export class Actions extends APIResource {
    * });
    * ```
    */
-  login(body: ActionLoginParams, options?: RequestOptions): APIPromise<User> {
+  login(body: ActionLoginParams, options?: RequestOptions): APIPromise<InventoryChangeLogsAPI.User> {
     return this._client.post('/v1/auth/actions/login', { body, ...options });
   }
 
@@ -36,9 +37,37 @@ export class Actions extends APIResource {
    * });
    * ```
    */
-  magicLogin(body: ActionMagicLoginParams, options?: RequestOptions): APIPromise<User> {
+  magicLogin(
+    body: ActionMagicLoginParams,
+    options?: RequestOptions,
+  ): APIPromise<InventoryChangeLogsAPI.User> {
     return this._client.post('/v1/auth/actions/magic-login', { body, ...options });
   }
+}
+
+/**
+ * Request to log in a user.
+ */
+export interface LoginRequest {
+  /**
+   * Username or email for authentication.
+   */
+  identifier: string;
+
+  /**
+   * User password.
+   */
+  password: string;
+}
+
+/**
+ * Request to exchange a magic login token for a session.
+ */
+export interface MagicLoginRequest {
+  /**
+   * Magic login token from the "already registered" email.
+   */
+  token: string;
 }
 
 /**
@@ -112,6 +141,8 @@ export interface ActionMagicLoginParams {
 
 export declare namespace Actions {
   export {
+    type LoginRequest as LoginRequest,
+    type MagicLoginRequest as MagicLoginRequest,
     type User as User,
     type ActionLoginParams as ActionLoginParams,
     type ActionMagicLoginParams as ActionMagicLoginParams,

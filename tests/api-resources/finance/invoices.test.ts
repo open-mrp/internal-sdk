@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource invoices', () => {
   test('retrieve', async () => {
-    const responsePromise = client.finance.invoices.retrieve('iv_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.finance.invoices.retrieve('iv_018b5949ada8abca36358bbea9');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource invoices', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.invoices.retrieve(
-        'iv_01jm4r6700f8nwq3v5hx2d9ktp',
+        'iv_018b5949ada8abca36358bbea9',
         { include: ['lines'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource invoices', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.finance.invoices.update('iv_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.finance.invoices.update('iv_018b5949ada8abca36358bbea9');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource invoices', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.invoices.update(
-        'iv_01jm4r6700f8nwq3v5hx2d9ktp',
+        'iv_018b5949ada8abca36358bbea9',
         {
           has_been_sent: true,
           is_edi_sent: false,

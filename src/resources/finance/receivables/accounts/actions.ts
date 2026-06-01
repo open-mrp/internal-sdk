@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../../core/resource';
+import * as ActionsAPI from '../../../operations/inventory-change-logs/actions';
 import { APIPromise } from '../../../../core/api-promise';
 import { RequestOptions } from '../../../../internal/request-options';
 import { path } from '../../../../internal/utils/path';
@@ -14,17 +15,17 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
-   *   await client.finance.receivables.accounts.actions.retrieveExport(
-   *     'ac_01gf7a8200eaj8fke1xvw4h50x',
+   * const fileDownload =
+   *   await client.finance.receivables.accounts.actions.export(
+   *     'ac_01148680966698341a9c0976db',
    *   );
    * ```
    */
-  retrieveExport(
+  export(
     accountID: string,
-    query: ActionRetrieveExportParams | null | undefined = {},
+    query: ActionExportParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionRetrieveExportResponse> {
+  ): APIPromise<ActionsAPI.FileDownload> {
     return this._client.get(path`/v1/finance/receivables/accounts/${accountID}/actions/export`, {
       query,
       ...options,
@@ -37,9 +38,9 @@ export class Actions extends APIResource {
  * export). When the service returns \*FileDownload, the handler writes the body
  * with Content-Type and Content-Disposition.
  */
-export interface ActionRetrieveExportResponse {}
+export interface FileDownload {}
 
-export interface ActionRetrieveExportParams {
+export interface ActionExportParams {
   /**
    * Cutoff date for the receivables snapshot.
    */
@@ -47,8 +48,5 @@ export interface ActionRetrieveExportParams {
 }
 
 export declare namespace Actions {
-  export {
-    type ActionRetrieveExportResponse as ActionRetrieveExportResponse,
-    type ActionRetrieveExportParams as ActionRetrieveExportParams,
-  };
+  export { type FileDownload as FileDownload, type ActionExportParams as ActionExportParams };
 }

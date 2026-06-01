@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource actions', () => {
   test('bulkDelete: only required params', async () => {
     const responsePromise = client.operations.suppliers.actions.bulkDelete({
-      supplier_ids: ['ac_02kn5s7811g9qwce7cizr4e0mq'],
+      supplier_ids: ['ac_0177902104bccac5fbb173cd96'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,7 +23,7 @@ describe('resource actions', () => {
 
   test('bulkDelete: required and optional params', async () => {
     const response = await client.operations.suppliers.actions.bulkDelete({
-      supplier_ids: ['ac_02kn5s7811g9qwce7cizr4e0mq'],
+      supplier_ids: ['ac_0177902104bccac5fbb173cd96'],
     });
   });
 });

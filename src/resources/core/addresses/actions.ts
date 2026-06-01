@@ -14,8 +14,8 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
-   *   await client.core.addresses.actions.updateValidate({
+   * const validatedAddress =
+   *   await client.core.addresses.actions.validate({
    *     address_line_1: '123 Main St',
    *     city: 'Springfield',
    *     country: 'US',
@@ -24,10 +24,7 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  updateValidate(
-    body: ActionUpdateValidateParams,
-    options?: RequestOptions,
-  ): APIPromise<ActionUpdateValidateResponse> {
+  validate(body: ActionValidateParams, options?: RequestOptions): APIPromise<ValidatedAddress> {
     return this._client.put('/v1/core/addresses/actions/validate', { body, ...options });
   }
 }
@@ -78,9 +75,44 @@ export interface AddressComponents {
 }
 
 /**
+ * Request to validate an address.
+ */
+export interface ValidateAddressRequest {
+  /**
+   * First line of the street address.
+   */
+  address_line_1: string;
+
+  /**
+   * City or locality.
+   */
+  city: string;
+
+  /**
+   * Country name or code.
+   */
+  country: string;
+
+  /**
+   * Postal or ZIP code.
+   */
+  postal_code: string;
+
+  /**
+   * State or administrative area.
+   */
+  state: string;
+
+  /**
+   * Second line of the street address.
+   */
+  address_line_2?: string;
+}
+
+/**
  * Result of address validation.
  */
-export interface ActionUpdateValidateResponse {
+export interface ValidatedAddress {
   /**
    * Parsed address components.
    */
@@ -107,7 +139,7 @@ export interface ActionUpdateValidateResponse {
   validation_messages: Array<string>;
 }
 
-export interface ActionUpdateValidateParams {
+export interface ActionValidateParams {
   /**
    * First line of the street address.
    */
@@ -142,7 +174,8 @@ export interface ActionUpdateValidateParams {
 export declare namespace Actions {
   export {
     type AddressComponents as AddressComponents,
-    type ActionUpdateValidateResponse as ActionUpdateValidateResponse,
-    type ActionUpdateValidateParams as ActionUpdateValidateParams,
+    type ValidateAddressRequest as ValidateAddressRequest,
+    type ValidatedAddress as ValidatedAddress,
+    type ActionValidateParams as ActionValidateParams,
   };
 }

@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource actions', () => {
   test('estimateRate: only required params', async () => {
     const responsePromise = client.operations.shipments.actions.estimateRate({
-      carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+      carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
       from_address: { country: 'US', name: 'Origin Warehouse' },
       parcels: [
         {
@@ -20,7 +20,7 @@ describe('resource actions', () => {
           width: 8,
         },
       ],
-      service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+      service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
       to_address: { country: 'US', name: 'Destination' },
     });
     const rawResponse = await responsePromise.asResponse();
@@ -34,7 +34,7 @@ describe('resource actions', () => {
 
   test('estimateRate: required and optional params', async () => {
     const response = await client.operations.shipments.actions.estimateRate({
-      carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+      carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
       from_address: {
         country: 'US',
         name: 'Origin Warehouse',
@@ -55,7 +55,7 @@ describe('resource actions', () => {
           width: 8,
         },
       ],
-      service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
+      service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
       to_address: {
         country: 'US',
         name: 'Destination',
@@ -137,7 +137,7 @@ describe('resource actions', () => {
   });
 
   test('ship: only required params', async () => {
-    const responsePromise = client.operations.shipments.actions.ship('sh_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.operations.shipments.actions.ship('sh_018b3a946651bfb6572b06b2b2', {
       email_customer: true,
     });
     const rawResponse = await responsePromise.asResponse();
@@ -150,14 +150,14 @@ describe('resource actions', () => {
   });
 
   test('ship: required and optional params', async () => {
-    const response = await client.operations.shipments.actions.ship('sh_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.operations.shipments.actions.ship('sh_018b3a946651bfb6572b06b2b2', {
       email_customer: true,
       include: ['lines'],
     });
   });
 
   test('void', async () => {
-    const responsePromise = client.operations.shipments.actions.void('sh_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.shipments.actions.void('sh_018b3a946651bfb6572b06b2b2');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

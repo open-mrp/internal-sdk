@@ -13,7 +13,7 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const bulkCreateProductionStepsResponse =
    *   await client.operations.productionSteps.actions.bulkCreate(
    *     {
    *       steps: [
@@ -34,20 +34,154 @@ export class Actions extends APIResource {
    *   );
    * ```
    */
-  bulkCreate(body: ActionBulkCreateParams, options?: RequestOptions): APIPromise<ActionBulkCreateResponse> {
+  bulkCreate(
+    body: ActionBulkCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<BulkCreateProductionStepsResponse> {
     return this._client.post('/v1/operations/production-steps/actions/bulk-create', { body, ...options });
   }
+}
+
+/**
+ * Consumption input resolved by SKU.
+ */
+export interface BulkCreateConsumptionInput {
+  /**
+   * Consumption quantity measure.
+   */
+  measure: number;
+
+  /**
+   * SKU of the consumed material.
+   */
+  sku: string;
+
+  /**
+   * Instructions for this consumption.
+   */
+  instructions?: string;
+}
+
+/**
+ * Production output input resolved by SKU.
+ */
+export interface BulkCreateProductionOutputInput {
+  /**
+   * Production quantity measure.
+   */
+  measure: number;
+
+  /**
+   * SKU of the produced item.
+   */
+  sku: string;
+}
+
+/**
+ * Production step input for bulk creation.
+ */
+export interface BulkCreateProductionStepInput {
+  /**
+   * Consumptions.
+   */
+  consumptions: Array<BulkCreateConsumptionInput>;
+
+  /**
+   * Labor rate in dollars per hour.
+   */
+  labor_rate: number;
+
+  /**
+   * Labor time value.
+   */
+  labor_time: number;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Overhead rate in dollars per hour.
+   */
+  overhead_rate: number;
+
+  /**
+   * Production outputs. At least one is required.
+   */
+  productions: Array<BulkCreateProductionOutputInput>;
+
+  /**
+   * Allowances factor (default: 0).
+   */
+  allowances?: number;
+
+  /**
+   * Labor time unit abbreviation (default: "hr"). One of: hr, minute, second, day.
+   */
+  labor_time_unit?: string;
+
+  /**
+   * Leveling factor (default: 0).
+   */
+  leveling_factor?: number;
+
+  /**
+   * Scanning station name, resolved by name.
+   */
+  station?: string;
+}
+
+/**
+ * BulkCreateProductionStepResult represents the result of creating a single
+ * production step.
+ */
+export interface BulkCreateProductionStepResult {
+  /**
+   * The action taken: "created", "updated", or "skipped".
+   */
+  action: string;
+
+  /**
+   * The error message if the step failed.
+   */
+  error: string | null;
+
+  /**
+   * The name of the production step.
+   */
+  name: string;
+
+  /**
+   * The ID of the created or updated production step.
+   */
+  production_step_id: string | null;
+
+  /**
+   * Outcome of the operation for this step: "created" or "failed".
+   */
+  status: string;
+}
+
+/**
+ * Request to bulk create production steps.
+ */
+export interface BulkCreateProductionStepsRequest {
+  /**
+   * Production steps to create.
+   */
+  steps: Array<BulkCreateProductionStepInput>;
 }
 
 /**
  * BulkCreateProductionStepsResponse represents the response from the bulk create
  * production steps endpoint.
  */
-export interface ActionBulkCreateResponse {
+export interface BulkCreateProductionStepsResponse {
   /**
    * The results of each production step creation.
    */
-  data: Array<ActionBulkCreateResponse.Data>;
+  data: Array<BulkCreateProductionStepResult>;
 
   /**
    * Resource type identifier.
@@ -55,143 +189,21 @@ export interface ActionBulkCreateResponse {
   object: 'list';
 }
 
-export namespace ActionBulkCreateResponse {
-  /**
-   * BulkCreateProductionStepResult represents the result of creating a single
-   * production step.
-   */
-  export interface Data {
-    /**
-     * The action taken: "created", "updated", or "skipped".
-     */
-    action: string;
-
-    /**
-     * The error message if the step failed.
-     */
-    error: string | null;
-
-    /**
-     * The name of the production step.
-     */
-    name: string;
-
-    /**
-     * The ID of the created or updated production step.
-     */
-    production_step_id: string | null;
-
-    /**
-     * Outcome of the operation for this step: "created" or "failed".
-     */
-    status: string;
-  }
-}
-
 export interface ActionBulkCreateParams {
   /**
    * Production steps to create.
    */
-  steps: Array<ActionBulkCreateParams.Step>;
-}
-
-export namespace ActionBulkCreateParams {
-  /**
-   * Production step input for bulk creation.
-   */
-  export interface Step {
-    /**
-     * Consumptions.
-     */
-    consumptions: Array<Step.Consumption>;
-
-    /**
-     * Labor rate in dollars per hour.
-     */
-    labor_rate: number;
-
-    /**
-     * Labor time value.
-     */
-    labor_time: number;
-
-    /**
-     * Display name.
-     */
-    name: string;
-
-    /**
-     * Overhead rate in dollars per hour.
-     */
-    overhead_rate: number;
-
-    /**
-     * Production outputs. At least one is required.
-     */
-    productions: Array<Step.Production>;
-
-    /**
-     * Allowances factor (default: 0).
-     */
-    allowances?: number;
-
-    /**
-     * Labor time unit abbreviation (default: "hr"). One of: hr, minute, second, day.
-     */
-    labor_time_unit?: string;
-
-    /**
-     * Leveling factor (default: 0).
-     */
-    leveling_factor?: number;
-
-    /**
-     * Scanning station name, resolved by name.
-     */
-    station?: string;
-  }
-
-  export namespace Step {
-    /**
-     * Consumption input resolved by SKU.
-     */
-    export interface Consumption {
-      /**
-       * Consumption quantity measure.
-       */
-      measure: number;
-
-      /**
-       * SKU of the consumed material.
-       */
-      sku: string;
-
-      /**
-       * Instructions for this consumption.
-       */
-      instructions?: string;
-    }
-
-    /**
-     * Production output input resolved by SKU.
-     */
-    export interface Production {
-      /**
-       * Production quantity measure.
-       */
-      measure: number;
-
-      /**
-       * SKU of the produced item.
-       */
-      sku: string;
-    }
-  }
+  steps: Array<BulkCreateProductionStepInput>;
 }
 
 export declare namespace Actions {
   export {
-    type ActionBulkCreateResponse as ActionBulkCreateResponse,
+    type BulkCreateConsumptionInput as BulkCreateConsumptionInput,
+    type BulkCreateProductionOutputInput as BulkCreateProductionOutputInput,
+    type BulkCreateProductionStepInput as BulkCreateProductionStepInput,
+    type BulkCreateProductionStepResult as BulkCreateProductionStepResult,
+    type BulkCreateProductionStepsRequest as BulkCreateProductionStepsRequest,
+    type BulkCreateProductionStepsResponse as BulkCreateProductionStepsResponse,
     type ActionBulkCreateParams as ActionBulkCreateParams,
   };
 }

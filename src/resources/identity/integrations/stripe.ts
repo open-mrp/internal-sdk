@@ -13,11 +13,11 @@ export class Stripe extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const stripePublishableKey =
    *   await client.identity.integrations.stripe.retrievePublishableKey();
    * ```
    */
-  retrievePublishableKey(options?: RequestOptions): APIPromise<StripeRetrievePublishableKeyResponse> {
+  retrievePublishableKey(options?: RequestOptions): APIPromise<StripePublishableKey> {
     return this._client.get('/v1/identity/integrations/stripe/publishable-key', options);
   }
 
@@ -26,11 +26,11 @@ export class Stripe extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const stripeStatus =
    *   await client.identity.integrations.stripe.retrieveStatus();
    * ```
    */
-  retrieveStatus(options?: RequestOptions): APIPromise<StripeRetrieveStatusResponse> {
+  retrieveStatus(options?: RequestOptions): APIPromise<StripeStatus> {
     return this._client.get('/v1/identity/integrations/stripe/status', options);
   }
 }
@@ -38,7 +38,7 @@ export class Stripe extends APIResource {
 /**
  * Stripe publishable key for an account.
  */
-export interface StripeRetrievePublishableKeyResponse {
+export interface StripePublishableKey {
   /**
    * Resource type identifier.
    */
@@ -53,7 +53,7 @@ export interface StripeRetrievePublishableKeyResponse {
 /**
  * Stripe integration status for an account.
  */
-export interface StripeRetrieveStatusResponse {
+export interface StripeStatus {
   /**
    * Whether a Stripe integration is configured.
    */
@@ -66,8 +66,5 @@ export interface StripeRetrieveStatusResponse {
 }
 
 export declare namespace Stripe {
-  export {
-    type StripeRetrievePublishableKeyResponse as StripeRetrievePublishableKeyResponse,
-    type StripeRetrieveStatusResponse as StripeRetrieveStatusResponse,
-  };
+  export { type StripePublishableKey as StripePublishableKey, type StripeStatus as StripeStatus };
 }

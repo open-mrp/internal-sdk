@@ -1,10 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AgentsAPI from '../ai/agents';
-import * as ItemCategoriesAPI from '../catalog/item-categories/item-categories';
-import * as BatchesAPI from './batches/batches';
-import * as ServiceLevelsAPI from './carriers/service-levels';
+import * as EdiRunsAPI from './edi-runs';
+import * as ActionsAPI from './shipments/actions';
+import * as LinesAPI from './shipments/lines';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -14,13 +13,31 @@ import { path } from '../../internal/utils/path';
  */
 export class ShippingTerms extends APIResource {
   /**
+   * Creates an account-owned shipping term.
+   *
+   * @example
+   * ```ts
+   * const shippingTerm =
+   *   await client.operations.shippingTerms.create({
+   *     name: 'Prepaid',
+   *     type: 'carrier_rate_freight',
+   *     free_shipping_service_level_ids: [],
+   *   });
+   * ```
+   */
+  create(params: ShippingTermCreateParams, options?: RequestOptions): APIPromise<ActionsAPI.ShippingTerm> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/shipping-terms', { query: { include }, body, ...options });
+  }
+
+  /**
    * Returns a shipping term by ID.
    *
    * @example
    * ```ts
    * const shippingTerm =
    *   await client.operations.shippingTerms.retrieve(
-   *     'shtm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'shtm_014341ab4bb5bf94d5b6936f86',
    *   );
    * ```
    */
@@ -28,7 +45,7 @@ export class ShippingTerms extends APIResource {
     id: string,
     query: ShippingTermRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ShippingTerm> {
+  ): APIPromise<ActionsAPI.ShippingTerm> {
     return this._client.get(path`/v1/operations/shipping-terms/${id}`, { query, ...options });
   }
 
@@ -40,7 +57,7 @@ export class ShippingTerms extends APIResource {
    * ```ts
    * const shippingTerm =
    *   await client.operations.shippingTerms.update(
-   *     'shtm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'shtm_014341ab4bb5bf94d5b6936f86',
    *     { name: 'Collect' },
    *   );
    * ```
@@ -49,13 +66,30 @@ export class ShippingTerms extends APIResource {
     id: string,
     params: ShippingTermUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ShippingTerm> {
+  ): APIPromise<ActionsAPI.ShippingTerm> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/shipping-terms/${id}`, {
       query: { include },
       body,
       ...options,
     });
+  }
+
+  /**
+   * Returns a paginated list of shipping terms for the account, including default
+   * system shipping terms.
+   *
+   * @example
+   * ```ts
+   * const listShippingTerm =
+   *   await client.operations.shippingTerms.list();
+   * ```
+   */
+  list(
+    query: ShippingTermListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ListShippingTerm> {
+    return this._client.get('/v1/operations/shipping-terms', { query, ...options });
   }
 
   /**
@@ -66,48 +100,401 @@ export class ShippingTerms extends APIResource {
    * ```ts
    * const shippingTerm =
    *   await client.operations.shippingTerms.delete(
-   *     'shtm_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'shtm_014341ab4bb5bf94d5b6936f86',
    *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<ShippingTermDeleteResponse> {
     return this._client.delete(path`/v1/operations/shipping-terms/${id}`, options);
   }
+}
+
+/**
+ * Account with optional branding and portal sub-resources.
+ */
+export interface Account {
+  /**
+   * Account ID.
+   */
+  id: string;
 
   /**
-   * Returns a paginated list of shipping terms for the account, including default
-   * system shipping terms.
-   *
-   * @example
-   * ```ts
-   * const response =
-   *   await client.operations.shippingTerms.retrieveShippingTerms();
-   * ```
+   * Branding metadata for an account.
    */
-  retrieveShippingTerms(
-    query: ShippingTermRetrieveShippingTermsParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<ShippingTermRetrieveShippingTermsResponse> {
-    return this._client.get('/v1/operations/shipping-terms', { query, ...options });
-  }
+  branding: LinesAPI.AccountBranding | null;
 
   /**
-   * Creates an account-owned shipping term.
-   *
-   * @example
-   * ```ts
-   * const shippingTerm =
-   *   await client.operations.shippingTerms.shippingTerms({
-   *     name: 'Prepaid',
-   *     type: 'carrier_rate_freight',
-   *     free_shipping_service_level_ids: [],
-   *   });
-   * ```
+   * Creation timestamp.
    */
-  shippingTerms(params: ShippingTermShippingTermsParams, options?: RequestOptions): APIPromise<ShippingTerm> {
-    const { include, ...body } = params;
-    return this._client.post('/v1/operations/shipping-terms', { query: { include }, body, ...options });
-  }
+  created_at: string;
+
+  /**
+   * Address with associated geolocation.
+   */
+  default_billing_address: LinesAPI.Address | null;
+
+  /**
+   * Address with associated geolocation.
+   */
+  default_shipping_address: LinesAPI.Address | null;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account';
+
+  /**
+   * Portal metadata for an account.
+   */
+  portal: LinesAPI.AccountPortal | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Branding metadata for an account.
+ */
+export interface AccountBranding {
+  /**
+   * Branding ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Facebook handle.
+   */
+  facebook_handle: string | null;
+
+  /**
+   * Instagram handle.
+   */
+  instagram_handle: string | null;
+
+  /**
+   * LinkedIn handle.
+   */
+  linkedin_handle: string | null;
+
+  /**
+   * Logo URL.
+   */
+  logo_url: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account_branding';
+
+  /**
+   * Support phone number.
+   */
+  phone_number: string | null;
+
+  /**
+   * Support email address.
+   */
+  support_email: string | null;
+
+  /**
+   * Twitter handle.
+   */
+  twitter_handle: string | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+
+  /**
+   * Website URL.
+   */
+  website_url: string | null;
+}
+
+/**
+ * Portal metadata for an account.
+ */
+export interface AccountPortal {
+  /**
+   * Portal ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account_portal';
+
+  /**
+   * Portal slug.
+   */
+  slug: string;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Address with associated geolocation.
+ */
+export interface Address {
+  /**
+   * Address ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Email address associated with the address.
+   */
+  email: string | null;
+
+  /**
+   * Geolocation sub-resource.
+   */
+  geolocation: LinesAPI.Geolocation | null;
+
+  /**
+   * Display name of the address.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'address';
+
+  /**
+   * Phone number associated with the address.
+   */
+  phone: string | null;
+
+  /**
+   * Address type.
+   */
+  type: 'standard' | 'drop_ship';
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Request to create a shipping term.
+ */
+export interface CreateShippingTermRequest {
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Shipping term type.
+   */
+  type: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
+
+  /**
+   * QuantityInput represents a value with an associated unit for create/update
+   * requests.
+   */
+  flat_rate?: QuantityInput | null;
+
+  /**
+   * Service level IDs that qualify for free shipping.
+   */
+  free_shipping_service_level_ids?: Array<string>;
+
+  /**
+   * QuantityInput represents a value with an associated unit for create/update
+   * requests.
+   */
+  minimum_order_value?: QuantityInput | null;
+}
+
+/**
+ * Geolocation sub-resource.
+ */
+export interface Geolocation {
+  /**
+   * Geolocation ID.
+   */
+  id: string;
+
+  /**
+   * Two-letter country code.
+   */
+  country: string;
+
+  /**
+   * City or locality.
+   */
+  locality: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'geolocation';
+
+  /**
+   * Postal or ZIP code.
+   */
+  postal_code: string | null;
+
+  /**
+   * State or administrative area.
+   */
+  state: string | null;
+
+  /**
+   * First line of the street address.
+   */
+  street_line_1: string | null;
+
+  /**
+   * Second line of the street address.
+   */
+  street_line_2: string | null;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListServiceLevel {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ActionsAPI.ServiceLevel>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListShippingTerm {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ActionsAPI.ShippingTerm>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * Owner describes the provenance of a resource.
+ */
+export interface Owner {
+  /**
+   * Account with optional branding and portal sub-resources.
+   */
+  account: LinesAPI.Account | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'owner';
+
+  /**
+   * The owner type: "system" for platform defaults, "account" for account-owned
+   * resources.
+   */
+  type: 'system' | 'account';
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+/**
+ * Value with an associated unit.
+ */
+export interface Quantity {
+  /**
+   * Quantity ID.
+   */
+  id: string;
+
+  /**
+   * Formatted value with unit abbreviation (e.g. "$1,234.56" or "100 kg").
+   */
+  display_value: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'quantity';
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  unit: LinesAPI.Unit | null;
+
+  /**
+   * Decimal value.
+   */
+  value: string;
 }
 
 /**
@@ -127,6 +514,56 @@ export interface QuantityInput {
 }
 
 /**
+ * Shipping service level for a carrier.
+ */
+export interface ServiceLevel {
+  /**
+   * Service level ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Customer portal visibility.
+   */
+  customer_portal_visibility: 'visible' | 'hidden';
+
+  /**
+   * Default service level for the carrier.
+   */
+  is_default: boolean;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'service_level';
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: LinesAPI.Owner | null;
+
+  /**
+   * Service level token.
+   */
+  service_level_token: string;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
  * ShippingTerm resource.
  */
 export interface ShippingTerm {
@@ -143,17 +580,17 @@ export interface ShippingTerm {
   /**
    * Value with an associated unit.
    */
-  flat_rate: BatchesAPI.Quantity | null;
+  flat_rate: LinesAPI.Quantity | null;
 
   /**
    * List represents a paginated list of resources.
    */
-  free_shipping_service_levels: ServiceLevelsAPI.ListServiceLevel | null;
+  free_shipping_service_levels: ActionsAPI.ListServiceLevel | null;
 
   /**
    * Value with an associated unit.
    */
-  minimum_order_value: BatchesAPI.Quantity | null;
+  minimum_order_value: LinesAPI.Quantity | null;
 
   /**
    * Display name.
@@ -168,7 +605,7 @@ export interface ShippingTerm {
   /**
    * Owner describes the provenance of a resource.
    */
-  owner: ItemCategoriesAPI.Owner | null;
+  owner: LinesAPI.Owner | null;
 
   /**
    * Shipping term type.
@@ -181,26 +618,151 @@ export interface ShippingTerm {
   updated_at: string;
 }
 
-export interface ShippingTermDeleteResponse {}
-
 /**
- * List represents a paginated list of resources.
+ * Unit of measurement used for conversions and product quantities.
  */
-export interface ShippingTermRetrieveShippingTermsResponse {
+export interface Unit {
   /**
-   * Resources in this page.
+   * Unit ID.
    */
-  data: Array<ShippingTerm>;
+  id: string;
+
+  /**
+   * Short abbreviation for the unit (e.g. "g", "kg").
+   */
+  abbreviation: string;
+
+  /**
+   * When this unit was created.
+   */
+  created_at: string;
+
+  /**
+   * Whether this is the base unit for its dimension. Conversion ratios are relative
+   * to this unit.
+   */
+  is_base_unit: boolean;
+
+  /**
+   * Display name of the unit (e.g. "Gram", "Kilogram").
+   */
+  name: string;
 
   /**
    * Resource type identifier.
    */
-  object: 'list';
+  object: 'unit';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * Conversion offset denominator. Typically 1. Cannot be zero.
    */
-  page_info: AgentsAPI.PageInfo;
+  offset_denominator: string;
+
+  /**
+   * Conversion offset numerator, used for temperature-like conversions. Zero for
+   * most unit types.
+   */
+  offset_numerator: string;
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: LinesAPI.Owner | null;
+
+  /**
+   * Conversion ratio denominator relative to the base unit in the same dimension.
+   * Cannot be zero.
+   */
+  ratio_denominator: string;
+
+  /**
+   * Conversion ratio numerator relative to the base unit in the same dimension.
+   */
+  ratio_numerator: string;
+
+  /**
+   * Unit dimension.
+   */
+  type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
+
+  /**
+   * When this unit was last updated.
+   */
+  updated_at: string;
+}
+
+/**
+ * Request to partially update a shipping term. All fields are optional. Absent
+ * fields are left unchanged. Send an explicit JSON null for flat_rate,
+ * minimum_order_value, or free_shipping_service_level_ids to clear the existing
+ * value.
+ */
+export interface UpdateShippingTermRequest {
+  /**
+   * QuantityInput represents a value with an associated unit for create/update
+   * requests.
+   */
+  flat_rate?: QuantityInput | null;
+
+  /**
+   * Service level IDs that qualify for free shipping. Send null to clear.
+   */
+  free_shipping_service_level_ids?: Array<string> | null;
+
+  /**
+   * QuantityInput represents a value with an associated unit for create/update
+   * requests.
+   */
+  minimum_order_value?: QuantityInput | null;
+
+  /**
+   * Display name.
+   */
+  name?: string;
+
+  /**
+   * Shipping term type.
+   */
+  type?: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
+}
+
+export interface ShippingTermDeleteResponse {}
+
+export interface ShippingTermCreateParams {
+  /**
+   * Body param: Display name.
+   */
+  name: string;
+
+  /**
+   * Body param: Shipping term type.
+   */
+  type: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    'owner' | 'owner.account' | 'flat_rate.unit' | 'minimum_order_value.unit' | 'free_shipping_service_levels'
+  >;
+
+  /**
+   * Body param: QuantityInput represents a value with an associated unit for
+   * create/update requests.
+   */
+  flat_rate?: QuantityInput | null;
+
+  /**
+   * Body param: Service level IDs that qualify for free shipping.
+   */
+  free_shipping_service_level_ids?: Array<string>;
+
+  /**
+   * Body param: QuantityInput represents a value with an associated unit for
+   * create/update requests.
+   */
+  minimum_order_value?: QuantityInput | null;
 }
 
 export interface ShippingTermRetrieveParams {
@@ -251,7 +813,7 @@ export interface ShippingTermUpdateParams {
   type?: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
 }
 
-export interface ShippingTermRetrieveShippingTermsParams {
+export interface ShippingTermListParams {
   /**
    * Cursor token used to retrieve the next or previous page of results.
    */
@@ -276,52 +838,28 @@ export interface ShippingTermRetrieveShippingTermsParams {
   q?: string;
 }
 
-export interface ShippingTermShippingTermsParams {
-  /**
-   * Body param: Display name.
-   */
-  name: string;
-
-  /**
-   * Body param: Shipping term type.
-   */
-  type: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
-
-  /**
-   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
-   * are returned as `null`.
-   */
-  include?: Array<
-    'owner' | 'owner.account' | 'flat_rate.unit' | 'minimum_order_value.unit' | 'free_shipping_service_levels'
-  >;
-
-  /**
-   * Body param: QuantityInput represents a value with an associated unit for
-   * create/update requests.
-   */
-  flat_rate?: QuantityInput | null;
-
-  /**
-   * Body param: Service level IDs that qualify for free shipping.
-   */
-  free_shipping_service_level_ids?: Array<string>;
-
-  /**
-   * Body param: QuantityInput represents a value with an associated unit for
-   * create/update requests.
-   */
-  minimum_order_value?: QuantityInput | null;
-}
-
 export declare namespace ShippingTerms {
   export {
+    type Account as Account,
+    type AccountBranding as AccountBranding,
+    type AccountPortal as AccountPortal,
+    type Address as Address,
+    type CreateShippingTermRequest as CreateShippingTermRequest,
+    type Geolocation as Geolocation,
+    type ListServiceLevel as ListServiceLevel,
+    type ListShippingTerm as ListShippingTerm,
+    type Owner as Owner,
+    type PageInfo as PageInfo,
+    type Quantity as Quantity,
     type QuantityInput as QuantityInput,
+    type ServiceLevel as ServiceLevel,
     type ShippingTerm as ShippingTerm,
+    type Unit as Unit,
+    type UpdateShippingTermRequest as UpdateShippingTermRequest,
     type ShippingTermDeleteResponse as ShippingTermDeleteResponse,
-    type ShippingTermRetrieveShippingTermsResponse as ShippingTermRetrieveShippingTermsResponse,
+    type ShippingTermCreateParams as ShippingTermCreateParams,
     type ShippingTermRetrieveParams as ShippingTermRetrieveParams,
     type ShippingTermUpdateParams as ShippingTermUpdateParams,
-    type ShippingTermRetrieveShippingTermsParams as ShippingTermRetrieveShippingTermsParams,
-    type ShippingTermShippingTermsParams as ShippingTermShippingTermsParams,
+    type ShippingTermListParams as ShippingTermListParams,
   };
 }

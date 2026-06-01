@@ -2,19 +2,38 @@
 
 import { APIResource } from '../../core/resource';
 import * as AccountsAPI from './accounts';
-import { AccountCreateResponse, AccountRetrieveUsageResponse, Accounts, UsageItem } from './accounts';
+import {
+  AccountUsageResponse,
+  Accounts,
+  AgentSpendInfo,
+  AgentTokenDetail,
+  EnsureBillingCustomerResponse,
+  SubscriptionInfo,
+  UsageItem,
+} from './accounts';
 import * as ActionsAPI from './actions';
-import { ActionRequestEnterpriseResponse, Actions } from './actions';
+import { Actions, EnterpriseInquiry } from './actions';
 import * as PlansAPI from './plans';
 import {
+  ListPlanChangeLineItem,
+  ListPlanLimit,
+  ListPricingPlan,
+  PageInfo,
+  PlanChangeLineItem,
+  PlanChangeProration,
+  PlanLimit,
   PlanListParams,
-  PlanListResponse,
-  PlanRetrieveProrationResponse,
-  PlanSwitchResponse,
   Plans,
+  PricingPlan,
+  SwitchPlanResponse,
 } from './plans';
 import * as SpendingCapAPI from './spending-cap';
-import { SpendingCap, SpendingCapResponse, SpendingCapUpdateSpendingCapParams } from './spending-cap';
+import {
+  SetSpendingCapRequest,
+  SpendingCap,
+  SpendingCapResponse,
+  SpendingCapUpdateParams,
+} from './spending-cap';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -22,9 +41,9 @@ import { RequestOptions } from '../../internal/request-options';
  * Billing and pricing plan operations.
  */
 export class Billing extends APIResource {
+  plans: PlansAPI.Plans = new PlansAPI.Plans(this._client);
   accounts: AccountsAPI.Accounts = new AccountsAPI.Accounts(this._client);
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
-  plans: PlansAPI.Plans = new PlansAPI.Plans(this._client);
   spendingCap: SpendingCapAPI.SpendingCap = new SpendingCapAPI.SpendingCap(this._client);
 
   /**
@@ -33,10 +52,11 @@ export class Billing extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.billing.portalSessions();
+   * const billingPortalSessionResponse =
+   *   await client.billing.portalSessions();
    * ```
    */
-  portalSessions(options?: RequestOptions): APIPromise<BillingPortalSessionsResponse> {
+  portalSessions(options?: RequestOptions): APIPromise<BillingPortalSessionResponse> {
     return this._client.post('/v1/billing/portal-sessions', options);
   }
 }
@@ -44,7 +64,7 @@ export class Billing extends APIResource {
 /**
  * Stripe billing portal session.
  */
-export interface BillingPortalSessionsResponse {
+export interface BillingPortalSessionResponse {
   /**
    * Resource type identifier.
    */
@@ -56,34 +76,44 @@ export interface BillingPortalSessionsResponse {
   url: string;
 }
 
+Billing.Plans = Plans;
 Billing.Accounts = Accounts;
 Billing.Actions = Actions;
-Billing.Plans = Plans;
 Billing.SpendingCap = SpendingCap;
 
 export declare namespace Billing {
-  export { type BillingPortalSessionsResponse as BillingPortalSessionsResponse };
-
-  export {
-    Accounts as Accounts,
-    type UsageItem as UsageItem,
-    type AccountCreateResponse as AccountCreateResponse,
-    type AccountRetrieveUsageResponse as AccountRetrieveUsageResponse,
-  };
-
-  export { Actions as Actions, type ActionRequestEnterpriseResponse as ActionRequestEnterpriseResponse };
+  export { type BillingPortalSessionResponse as BillingPortalSessionResponse };
 
   export {
     Plans as Plans,
-    type PlanListResponse as PlanListResponse,
-    type PlanRetrieveProrationResponse as PlanRetrieveProrationResponse,
-    type PlanSwitchResponse as PlanSwitchResponse,
+    type ListPlanChangeLineItem as ListPlanChangeLineItem,
+    type ListPlanLimit as ListPlanLimit,
+    type ListPricingPlan as ListPricingPlan,
+    type PageInfo as PageInfo,
+    type PlanChangeLineItem as PlanChangeLineItem,
+    type PlanChangeProration as PlanChangeProration,
+    type PlanLimit as PlanLimit,
+    type PricingPlan as PricingPlan,
+    type SwitchPlanResponse as SwitchPlanResponse,
     type PlanListParams as PlanListParams,
   };
 
   export {
+    Accounts as Accounts,
+    type AccountUsageResponse as AccountUsageResponse,
+    type AgentSpendInfo as AgentSpendInfo,
+    type AgentTokenDetail as AgentTokenDetail,
+    type EnsureBillingCustomerResponse as EnsureBillingCustomerResponse,
+    type SubscriptionInfo as SubscriptionInfo,
+    type UsageItem as UsageItem,
+  };
+
+  export { Actions as Actions, type EnterpriseInquiry as EnterpriseInquiry };
+
+  export {
     SpendingCap as SpendingCap,
+    type SetSpendingCapRequest as SetSpendingCapRequest,
     type SpendingCapResponse as SpendingCapResponse,
-    type SpendingCapUpdateSpendingCapParams as SpendingCapUpdateSpendingCapParams,
+    type SpendingCapUpdateParams as SpendingCapUpdateParams,
   };
 }

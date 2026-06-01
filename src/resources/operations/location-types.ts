@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AgentsAPI from '../ai/agents';
+import * as EdiRunsAPI from './edi-runs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -17,7 +17,7 @@ export class LocationTypes extends APIResource {
    * ```ts
    * const locationType =
    *   await client.operations.locationTypes.retrieve(
-   *     'lc_01gf7a8200er3ar3pkfrb6kk31',
+   *     'lc_01e69cd3745a1bc0dd485986c0',
    *   );
    * ```
    */
@@ -30,16 +30,36 @@ export class LocationTypes extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
-   *   await client.operations.locationTypes.retrieveLocationTypes();
+   * const listLocationType =
+   *   await client.operations.locationTypes.list();
    * ```
    */
-  retrieveLocationTypes(
-    query: LocationTypeRetrieveLocationTypesParams | null | undefined = {},
+  list(
+    query: LocationTypeListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<LocationTypeRetrieveLocationTypesResponse> {
+  ): APIPromise<ListLocationType> {
     return this._client.get('/v1/operations/location-types', { query, ...options });
   }
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListLocationType {
+  /**
+   * Resources in this page.
+   */
+  data: Array<LocationType>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
 }
 
 /**
@@ -78,26 +98,31 @@ export interface LocationType {
 }
 
 /**
- * List represents a paginated list of resources.
+ * PageInfo contains URL-based pagination metadata.
  */
-export interface LocationTypeRetrieveLocationTypesResponse {
+export interface PageInfo {
   /**
-   * Resources in this page.
+   * Whether more results exist after this page.
    */
-  data: Array<LocationType>;
+  has_next_page: boolean;
 
   /**
-   * Resource type identifier.
+   * Whether results exist before this page.
    */
-  object: 'list';
+  has_prev_page: boolean;
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * URL to fetch the next page, `null` if no more pages.
    */
-  page_info: AgentsAPI.PageInfo;
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
 }
 
-export interface LocationTypeRetrieveLocationTypesParams {
+export interface LocationTypeListParams {
   /**
    * Cursor token used to retrieve the next or previous page of results.
    */
@@ -116,8 +141,9 @@ export interface LocationTypeRetrieveLocationTypesParams {
 
 export declare namespace LocationTypes {
   export {
+    type ListLocationType as ListLocationType,
     type LocationType as LocationType,
-    type LocationTypeRetrieveLocationTypesResponse as LocationTypeRetrieveLocationTypesResponse,
-    type LocationTypeRetrieveLocationTypesParams as LocationTypeRetrieveLocationTypesParams,
+    type PageInfo as PageInfo,
+    type LocationTypeListParams as LocationTypeListParams,
   };
 }

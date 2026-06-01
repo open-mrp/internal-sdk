@@ -8,17 +8,6 @@ const client = new Augno({
 });
 
 describe('resource identity', () => {
-  test('retrieve', async () => {
-    const responsePromise = client.identity.retrieve('acme');
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
   test('retrievePermissionGroups', async () => {
     const responsePromise = client.identity.retrievePermissionGroups();
     const rawResponse = await responsePromise.asResponse();
@@ -43,5 +32,16 @@ describe('resource identity', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('retrievePortalBranding', async () => {
+    const responsePromise = client.identity.retrievePortalBranding('acme');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

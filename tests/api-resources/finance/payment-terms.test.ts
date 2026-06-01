@@ -8,8 +8,23 @@ const client = new Augno({
 });
 
 describe('resource paymentTerms', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.finance.paymentTerms.create({ name: 'Net 30' });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.finance.paymentTerms.create({ name: 'Net 30', include: ['owner'] });
+  });
+
   test('retrieve', async () => {
-    const responsePromise = client.finance.paymentTerms.retrieve('pytm_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.finance.paymentTerms.retrieve('pytm_018694d6601ea771cd1b52e890');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +38,7 @@ describe('resource paymentTerms', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.paymentTerms.retrieve(
-        'pytm_01jm4r6700f8nwq3v5hx2d9ktp',
+        'pytm_018694d6601ea771cd1b52e890',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +46,7 @@ describe('resource paymentTerms', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.finance.paymentTerms.update('pytm_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.finance.paymentTerms.update('pytm_018694d6601ea771cd1b52e890');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,15 +60,15 @@ describe('resource paymentTerms', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.paymentTerms.update(
-        'pytm_01jm4r6700f8nwq3v5hx2d9ktp',
+        'pytm_018694d6601ea771cd1b52e890',
         { include: ['owner'], name: 'Net 60' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.finance.paymentTerms.delete('pytm_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('list', async () => {
+    const responsePromise = client.finance.paymentTerms.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -63,36 +78,10 @@ describe('resource paymentTerms', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('paymentTerms: only required params', async () => {
-    const responsePromise = client.finance.paymentTerms.paymentTerms({ name: 'Net 30' });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('paymentTerms: required and optional params', async () => {
-    const response = await client.finance.paymentTerms.paymentTerms({ name: 'Net 30', include: ['owner'] });
-  });
-
-  test('retrievePaymentTerms', async () => {
-    const responsePromise = client.finance.paymentTerms.retrievePaymentTerms();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrievePaymentTerms: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.finance.paymentTerms.retrievePaymentTerms(
+      client.finance.paymentTerms.list(
         {
           cursor: 'cursor',
           include: ['owner'],
@@ -102,5 +91,16 @@ describe('resource paymentTerms', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.finance.paymentTerms.delete('pytm_018694d6601ea771cd1b52e890');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

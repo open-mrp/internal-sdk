@@ -1,7 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AgentsAPI from '../../ai/agents';
+import * as EdiRunsAPI from '../../operations/edi-runs';
+import * as InventoryChangeLogsActionsAPI from '../../operations/inventory-change-logs/actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 
@@ -15,20 +16,20 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const bulkCreateItemsResponse =
    *   await client.catalog.items.actions.bulkCreate({
    *     items: [
    *       {
    *         sku: 'ALM-FLOUR-25LB',
    *         description: 'Raw almond flour, 25 lb bag',
-   *         item_category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         item_category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
    *       },
    *     ],
    *     type: 'material',
    *   });
    * ```
    */
-  bulkCreate(body: ActionBulkCreateParams, options?: RequestOptions): APIPromise<ActionBulkCreateResponse> {
+  bulkCreate(body: ActionBulkCreateParams, options?: RequestOptions): APIPromise<BulkCreateItemsResponse> {
     return this._client.post('/v1/catalog/items/actions/bulk-create', { body, ...options });
   }
 
@@ -38,7 +39,7 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const bulkReconcileItemsResponse =
    *   await client.catalog.items.actions.bulkReconcile({
    *     data: [
    *       {
@@ -54,7 +55,7 @@ export class Actions extends APIResource {
   bulkReconcile(
     body: ActionBulkReconcileParams,
     options?: RequestOptions,
-  ): APIPromise<ActionBulkReconcileResponse> {
+  ): APIPromise<BulkReconcileItemsResponse> {
     return this._client.post('/v1/catalog/items/actions/bulk-reconcile', { body, ...options });
   }
 
@@ -63,24 +64,90 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
-   *   await client.catalog.items.actions.retrieveExport();
+   * const fileDownload =
+   *   await client.catalog.items.actions.export();
    * ```
    */
-  retrieveExport(options?: RequestOptions): APIPromise<ActionRetrieveExportResponse> {
+  export(options?: RequestOptions): APIPromise<InventoryChangeLogsActionsAPI.FileDownload> {
     return this._client.get('/v1/catalog/items/actions/export', options);
   }
+}
+
+/**
+ * BulkCreateItemInput is the input for a single item in a bulk create operation.
+ */
+export interface BulkCreateItemInput {
+  /**
+   * Item category ID.
+   */
+  item_category_id: string;
+
+  /**
+   * Item SKU.
+   */
+  sku: string;
+
+  /**
+   * Item description.
+   */
+  description?: string;
+
+  /**
+   * Product line ID.
+   */
+  product_line_id?: string;
+}
+
+/**
+ * BulkCreateItemResult represents the result of creating a single item in a bulk
+ * operation.
+ */
+export interface BulkCreateItemResult {
+  /**
+   * The error message if the item failed to create.
+   */
+  error: string | null;
+
+  /**
+   * The ID of the created item.
+   */
+  item_id: string | null;
+
+  /**
+   * The SKU of the item.
+   */
+  sku: string;
+
+  /**
+   * Outcome of the create attempt: "created" or "failed".
+   */
+  status: string;
+}
+
+/**
+ * BulkCreateItemsRequest is the request to create multiple items.
+ */
+export interface BulkCreateItemsRequest {
+  /**
+   * Items to create.
+   */
+  items: Array<BulkCreateItemInput>;
+
+  /**
+   * Item type (product, material, or part).
+   */
+  type: string;
 }
 
 /**
  * BulkCreateItemsResponse represents the response from the bulk create items
  * endpoint.
  */
-export interface ActionBulkCreateResponse {
+export interface BulkCreateItemsResponse {
   /**
    * The results of each item creation.
    */
-  data: Array<ActionBulkCreateResponse.Data>;
+  data: Array<BulkCreateItemResult>;
 
   /**
    * Resource type identifier.
@@ -88,42 +155,50 @@ export interface ActionBulkCreateResponse {
   object: 'list';
 }
 
-export namespace ActionBulkCreateResponse {
+/**
+ * BulkReconcileItemInput is the input for a single item in a bulk reconcile
+ * operation.
+ */
+export interface BulkReconcileItemInput {
   /**
-   * BulkCreateItemResult represents the result of creating a single item in a bulk
-   * operation.
+   * Quantity.
    */
-  export interface Data {
-    /**
-     * The error message if the item failed to create.
-     */
-    error: string | null;
+  quantity: number;
 
-    /**
-     * The ID of the created item.
-     */
-    item_id: string | null;
+  /**
+   * Item SKU.
+   */
+  sku: string;
 
-    /**
-     * The SKU of the item.
-     */
-    sku: string;
+  /**
+   * Unit abbreviation for the quantity.
+   */
+  unit: string;
+}
 
-    /**
-     * Outcome of the create attempt: "created" or "failed".
-     */
-    status: string;
-  }
+/**
+ * BulkReconcileItemsRequest is the request to bulk reconcile item inventory.
+ */
+export interface BulkReconcileItemsRequest {
+  /**
+   * Items to reconcile.
+   */
+  data: Array<BulkReconcileItemInput>;
+
+  /**
+   * Reconcile type: "addition" or "force".
+   */
+  reconcile_type: string;
 }
 
 /**
  * BulkReconcileItemsResponse is the response from bulk reconciling items.
  */
-export interface ActionBulkReconcileResponse {
+export interface BulkReconcileItemsResponse {
   /**
    * List represents a paginated list of resources.
    */
-  errors: ActionBulkReconcileResponse.Errors | null;
+  errors: ListReconcileErrorResult | null;
 
   /**
    * Resource type identifier.
@@ -133,135 +208,12 @@ export interface ActionBulkReconcileResponse {
   /**
    * List represents a paginated list of resources.
    */
-  reconciled_items: ActionBulkReconcileResponse.ReconciledItems | null;
+  reconciled_items: ListReconciledItemResult | null;
 
   /**
    * List represents a paginated list of resources.
    */
-  skipped_items: ActionBulkReconcileResponse.SkippedItems | null;
-}
-
-export namespace ActionBulkReconcileResponse {
-  /**
-   * List represents a paginated list of resources.
-   */
-  export interface Errors {
-    /**
-     * Resources in this page.
-     */
-    data: Array<Errors.Data>;
-
-    /**
-     * Resource type identifier.
-     */
-    object: 'list';
-
-    /**
-     * PageInfo contains URL-based pagination metadata.
-     */
-    page_info: AgentsAPI.PageInfo;
-  }
-
-  export namespace Errors {
-    /**
-     * ReconcileErrorResult is an error during reconciliation.
-     */
-    export interface Data {
-      /**
-       * Error message.
-       */
-      error: string;
-
-      /**
-       * Item SKU.
-       */
-      sku: string;
-    }
-  }
-
-  /**
-   * List represents a paginated list of resources.
-   */
-  export interface ReconciledItems {
-    /**
-     * Resources in this page.
-     */
-    data: Array<ReconciledItems.Data>;
-
-    /**
-     * Resource type identifier.
-     */
-    object: 'list';
-
-    /**
-     * PageInfo contains URL-based pagination metadata.
-     */
-    page_info: AgentsAPI.PageInfo;
-  }
-
-  export namespace ReconciledItems {
-    /**
-     * ReconciledItemResult is a successfully reconciled item.
-     */
-    export interface Data {
-      /**
-       * Item ID.
-       */
-      item_id: string;
-
-      /**
-       * New quantity.
-       */
-      new_quantity: number;
-
-      /**
-       * Previous quantity.
-       */
-      previous_quantity: number;
-
-      /**
-       * Item SKU.
-       */
-      sku: string;
-    }
-  }
-
-  /**
-   * List represents a paginated list of resources.
-   */
-  export interface SkippedItems {
-    /**
-     * Resources in this page.
-     */
-    data: Array<SkippedItems.Data>;
-
-    /**
-     * Resource type identifier.
-     */
-    object: 'list';
-
-    /**
-     * PageInfo contains URL-based pagination metadata.
-     */
-    page_info: AgentsAPI.PageInfo;
-  }
-
-  export namespace SkippedItems {
-    /**
-     * SkippedItemResult is a skipped item during reconciliation.
-     */
-    export interface Data {
-      /**
-       * Reason for skipping.
-       */
-      reason: string;
-
-      /**
-       * Item SKU.
-       */
-      sku: string;
-    }
-  }
+  skipped_items: ListSkippedItemResult | null;
 }
 
 /**
@@ -269,13 +221,153 @@ export namespace ActionBulkReconcileResponse {
  * export). When the service returns \*FileDownload, the handler writes the body
  * with Content-Type and Content-Disposition.
  */
-export interface ActionRetrieveExportResponse {}
+export interface FileDownload {}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListReconcileErrorResult {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ReconcileErrorResult>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListReconciledItemResult {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ReconciledItemResult>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListSkippedItemResult {
+  /**
+   * Resources in this page.
+   */
+  data: Array<SkippedItemResult>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+/**
+ * ReconcileErrorResult is an error during reconciliation.
+ */
+export interface ReconcileErrorResult {
+  /**
+   * Error message.
+   */
+  error: string;
+
+  /**
+   * Item SKU.
+   */
+  sku: string;
+}
+
+/**
+ * ReconciledItemResult is a successfully reconciled item.
+ */
+export interface ReconciledItemResult {
+  /**
+   * Item ID.
+   */
+  item_id: string;
+
+  /**
+   * New quantity.
+   */
+  new_quantity: number;
+
+  /**
+   * Previous quantity.
+   */
+  previous_quantity: number;
+
+  /**
+   * Item SKU.
+   */
+  sku: string;
+}
+
+/**
+ * SkippedItemResult is a skipped item during reconciliation.
+ */
+export interface SkippedItemResult {
+  /**
+   * Reason for skipping.
+   */
+  reason: string;
+
+  /**
+   * Item SKU.
+   */
+  sku: string;
+}
 
 export interface ActionBulkCreateParams {
   /**
    * Items to create.
    */
-  items: Array<ActionBulkCreateParams.Item>;
+  items: Array<BulkCreateItemInput>;
 
   /**
    * Item type (product, material, or part).
@@ -283,38 +375,11 @@ export interface ActionBulkCreateParams {
   type: string;
 }
 
-export namespace ActionBulkCreateParams {
-  /**
-   * BulkCreateItemInput is the input for a single item in a bulk create operation.
-   */
-  export interface Item {
-    /**
-     * Item category ID.
-     */
-    item_category_id: string;
-
-    /**
-     * Item SKU.
-     */
-    sku: string;
-
-    /**
-     * Item description.
-     */
-    description?: string;
-
-    /**
-     * Product line ID.
-     */
-    product_line_id?: string;
-  }
-}
-
 export interface ActionBulkReconcileParams {
   /**
    * Items to reconcile.
    */
-  data: Array<ActionBulkReconcileParams.Data>;
+  data: Array<BulkReconcileItemInput>;
 
   /**
    * Reconcile type: "addition" or "force".
@@ -322,34 +387,23 @@ export interface ActionBulkReconcileParams {
   reconcile_type: string;
 }
 
-export namespace ActionBulkReconcileParams {
-  /**
-   * BulkReconcileItemInput is the input for a single item in a bulk reconcile
-   * operation.
-   */
-  export interface Data {
-    /**
-     * Quantity.
-     */
-    quantity: number;
-
-    /**
-     * Item SKU.
-     */
-    sku: string;
-
-    /**
-     * Unit abbreviation for the quantity.
-     */
-    unit: string;
-  }
-}
-
 export declare namespace Actions {
   export {
-    type ActionBulkCreateResponse as ActionBulkCreateResponse,
-    type ActionBulkReconcileResponse as ActionBulkReconcileResponse,
-    type ActionRetrieveExportResponse as ActionRetrieveExportResponse,
+    type BulkCreateItemInput as BulkCreateItemInput,
+    type BulkCreateItemResult as BulkCreateItemResult,
+    type BulkCreateItemsRequest as BulkCreateItemsRequest,
+    type BulkCreateItemsResponse as BulkCreateItemsResponse,
+    type BulkReconcileItemInput as BulkReconcileItemInput,
+    type BulkReconcileItemsRequest as BulkReconcileItemsRequest,
+    type BulkReconcileItemsResponse as BulkReconcileItemsResponse,
+    type FileDownload as FileDownload,
+    type ListReconcileErrorResult as ListReconcileErrorResult,
+    type ListReconciledItemResult as ListReconciledItemResult,
+    type ListSkippedItemResult as ListSkippedItemResult,
+    type PageInfo as PageInfo,
+    type ReconcileErrorResult as ReconcileErrorResult,
+    type ReconciledItemResult as ReconciledItemResult,
+    type SkippedItemResult as SkippedItemResult,
     type ActionBulkCreateParams as ActionBulkCreateParams,
     type ActionBulkReconcileParams as ActionBulkReconcileParams,
   };

@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource attributes', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.catalog.properties.attributes.create('pp_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.catalog.properties.attributes.create('pp_01e21344878064372f69e67093', {
       sort_order: 1,
       value: 'Red',
     });
@@ -23,7 +23,7 @@ describe('resource attributes', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.catalog.properties.attributes.create('pp_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.catalog.properties.attributes.create('pp_01e21344878064372f69e67093', {
       sort_order: 1,
       value: 'Red',
       color: 'blue',
@@ -31,8 +31,8 @@ describe('resource attributes', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.catalog.properties.attributes.retrieve('at_01jm4r6700f8nwq3v5hx2d9ktp', {
-      property_id: 'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+    const responsePromise = client.catalog.properties.attributes.retrieve('at_01c9493ec0c46bb0ed12708ae4', {
+      property_id: 'pp_01e21344878064372f69e67093',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -44,14 +44,14 @@ describe('resource attributes', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.catalog.properties.attributes.retrieve('at_01jm4r6700f8nwq3v5hx2d9ktp', {
-      property_id: 'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+    const response = await client.catalog.properties.attributes.retrieve('at_01c9493ec0c46bb0ed12708ae4', {
+      property_id: 'pp_01e21344878064372f69e67093',
     });
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.catalog.properties.attributes.update('at_01jm4r6700f8nwq3v5hx2d9ktp', {
-      property_id: 'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+    const responsePromise = client.catalog.properties.attributes.update('at_01c9493ec0c46bb0ed12708ae4', {
+      property_id: 'pp_01e21344878064372f69e67093',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -63,8 +63,8 @@ describe('resource attributes', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.catalog.properties.attributes.update('at_01jm4r6700f8nwq3v5hx2d9ktp', {
-      property_id: 'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+    const response = await client.catalog.properties.attributes.update('at_01c9493ec0c46bb0ed12708ae4', {
+      property_id: 'pp_01e21344878064372f69e67093',
       color: 'blue',
       sort_order: 0,
       value: 'Blue',
@@ -72,7 +72,7 @@ describe('resource attributes', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.catalog.properties.attributes.list('pp_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.catalog.properties.attributes.list('pp_01e21344878064372f69e67093');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -86,7 +86,7 @@ describe('resource attributes', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.properties.attributes.list(
-        'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+        'pp_01e21344878064372f69e67093',
         {
           cursor: 'cursor',
           limit: 0,
@@ -98,8 +98,8 @@ describe('resource attributes', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.catalog.properties.attributes.delete('at_01jm4r6700f8nwq3v5hx2d9ktp', {
-      property_id: 'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+    const responsePromise = client.catalog.properties.attributes.delete('at_01c9493ec0c46bb0ed12708ae4', {
+      property_id: 'pp_01e21344878064372f69e67093',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -111,8 +111,8 @@ describe('resource attributes', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.catalog.properties.attributes.delete('at_01jm4r6700f8nwq3v5hx2d9ktp', {
-      property_id: 'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+    const response = await client.catalog.properties.attributes.delete('at_01c9493ec0c46bb0ed12708ae4', {
+      property_id: 'pp_01e21344878064372f69e67093',
     });
   });
 });

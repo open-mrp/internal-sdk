@@ -12,7 +12,7 @@ describe('resource transactions', () => {
     const responsePromise = client.finance.transactions.create({
       adjustment_type: 'adjustment_type',
       amount: '500.00',
-      customer_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
+      customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
       method: 'check',
       note: 'Q1 invoice payment',
       responsible_user_id: 'responsible_user_id',
@@ -31,7 +31,7 @@ describe('resource transactions', () => {
     const response = await client.finance.transactions.create({
       adjustment_type: 'adjustment_type',
       amount: '500.00',
-      customer_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
+      customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
       method: 'check',
       note: 'Q1 invoice payment',
       responsible_user_id: 'responsible_user_id',
@@ -40,7 +40,7 @@ describe('resource transactions', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.finance.transactions.retrieve('tx_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.finance.transactions.retrieve('tx_01fc4d4f2b2ee1fa6b6d87257a');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -54,7 +54,7 @@ describe('resource transactions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.transactions.retrieve(
-        'tx_01jm4r6700f8nwq3v5hx2d9ktp',
+        'tx_01fc4d4f2b2ee1fa6b6d87257a',
         { include: ['allocations'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -62,7 +62,7 @@ describe('resource transactions', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.finance.transactions.update('tx_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.finance.transactions.update('tx_01fc4d4f2b2ee1fa6b6d87257a', {
       adjustment_type: 'adjustment_type',
       amount: '750.00',
       clear_adjustment_type: false,
@@ -84,7 +84,7 @@ describe('resource transactions', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.finance.transactions.update('tx_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.finance.transactions.update('tx_01fc4d4f2b2ee1fa6b6d87257a', {
       adjustment_type: 'adjustment_type',
       amount: '750.00',
       clear_adjustment_type: false,
@@ -132,7 +132,7 @@ describe('resource transactions', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.finance.transactions.delete('tx_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.finance.transactions.delete('tx_01fc4d4f2b2ee1fa6b6d87257a');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

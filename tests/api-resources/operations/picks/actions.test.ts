@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('pack: only required params', async () => {
-    const responsePromise = client.operations.picks.actions.pack('pk_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.operations.picks.actions.pack('pk_016452192feb7952d8393f0105', {
       shipment_case_count: 3,
     });
     const rawResponse = await responsePromise.asResponse();
@@ -22,13 +22,13 @@ describe('resource actions', () => {
   });
 
   test('pack: required and optional params', async () => {
-    const response = await client.operations.picks.actions.pack('pk_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.operations.picks.actions.pack('pk_016452192feb7952d8393f0105', {
       shipment_case_count: 3,
     });
   });
 
-  test('updatePick', async () => {
-    const responsePromise = client.operations.picks.actions.updatePick('pk_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('pick', async () => {
+    const responsePromise = client.operations.picks.actions.pick('pk_016452192feb7952d8393f0105');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,8 +38,8 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateVoid', async () => {
-    const responsePromise = client.operations.picks.actions.updateVoid('pk_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('void', async () => {
+    const responsePromise = client.operations.picks.actions.void('pk_016452192feb7952d8393f0105');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

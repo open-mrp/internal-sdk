@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AgentsAPI from '../ai/agents';
+import * as EdiRunsAPI from '../operations/edi-runs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -16,13 +16,10 @@ export class Plans extends APIResource {
    *
    * @example
    * ```ts
-   * const plans = await client.billing.plans.list();
+   * const listPricingPlan = await client.billing.plans.list();
    * ```
    */
-  list(
-    query: PlanListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<PlanListResponse> {
+  list(query: PlanListParams | null | undefined = {}, options?: RequestOptions): APIPromise<ListPricingPlan> {
     return this._client.get('/v1/billing/plans', { query, ...options });
   }
 
@@ -32,11 +29,11 @@ export class Plans extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const planChangeProration =
    *   await client.billing.plans.retrieveProration('example');
    * ```
    */
-  retrieveProration(id: string, options?: RequestOptions): APIPromise<PlanRetrieveProrationResponse> {
+  retrieveProration(id: string, options?: RequestOptions): APIPromise<PlanChangeProration> {
     return this._client.get(path`/v1/billing/plans/${id}/proration`, options);
   }
 
@@ -46,12 +43,11 @@ export class Plans extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.billing.plans.switch(
-   *   'example',
-   * );
+   * const switchPlanResponse =
+   *   await client.billing.plans.switch('example');
    * ```
    */
-  switch(id: string, options?: RequestOptions): APIPromise<PlanSwitchResponse> {
+  switch(id: string, options?: RequestOptions): APIPromise<SwitchPlanResponse> {
     return this._client.post(path`/v1/billing/plans/${id}/switch`, options);
   }
 }
@@ -59,11 +55,11 @@ export class Plans extends APIResource {
 /**
  * List represents a paginated list of resources.
  */
-export interface PlanListResponse {
+export interface ListPlanChangeLineItem {
   /**
    * Resources in this page.
    */
-  data: Array<PlanListResponse.Data>;
+  data: Array<PlanChangeLineItem>;
 
   /**
    * Resource type identifier.
@@ -73,129 +69,98 @@ export interface PlanListResponse {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: EdiRunsAPI.PageInfo;
 }
 
-export namespace PlanListResponse {
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListPlanLimit {
   /**
-   * Pricing plan available for purchase.
+   * Resources in this page.
    */
-  export interface Data {
-    /**
-     * Plan ID.
-     */
-    id: string;
+  data: Array<PlanLimit>;
 
-    /**
-     * Call-to-action button text.
-     */
-    button_text: string;
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
 
-    /**
-     * Features to display on the pricing page.
-     */
-    display_features: Array<string>;
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
 
-    /**
-     * Display order for sorting on the pricing page.
-     */
-    display_order: number;
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListPricingPlan {
+  /**
+   * Resources in this page.
+   */
+  data: Array<PricingPlan>;
 
-    /**
-     * Name of the previous plan tier this plan includes.
-     */
-    includes_previous_plan: string | null;
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
 
-    /**
-     * Whether this plan should be visually highlighted.
-     */
-    is_highlighted: boolean;
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
 
-    /**
-     * List represents a paginated list of resources.
-     */
-    limits: Data.Limits | null;
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
 
-    /**
-     * Display name of the plan.
-     */
-    name: string;
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
 
-    /**
-     * Resource type identifier.
-     */
-    object: 'pricing_plan';
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
 
-    /**
-     * Plan type code.
-     */
-    plan_type: 'free' | 'starter' | 'pro';
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
 
-    /**
-     * Flat monthly price in dollars, if applicable.
-     */
-    price_per_month: number | null;
+/**
+ * Line item in a plan change cost preview.
+ */
+export interface PlanChangeLineItem {
+  /**
+   * Amount in cents (negative for credits).
+   */
+  amount: number;
 
-    /**
-     * Price per seat per month in dollars.
-     */
-    price_per_seat: number;
+  /**
+   * Description of the line item.
+   */
+  description: string;
 
-    /**
-     * Minimum seats required for this plan.
-     */
-    seat_minimum: number | null;
-  }
-
-  export namespace Data {
-    /**
-     * List represents a paginated list of resources.
-     */
-    export interface Limits {
-      /**
-       * Resources in this page.
-       */
-      data: Array<Limits.Data>;
-
-      /**
-       * Resource type identifier.
-       */
-      object: 'list';
-
-      /**
-       * PageInfo contains URL-based pagination metadata.
-       */
-      page_info: AgentsAPI.PageInfo;
-    }
-
-    export namespace Limits {
-      /**
-       * Resource limit for a pricing plan.
-       */
-      export interface Data {
-        /**
-         * Resource key this limit applies to (e.g., "sandboxes", "seats", "invoices").
-         */
-        key: string;
-
-        /**
-         * Resource type identifier.
-         */
-        object: 'plan_limit';
-
-        /**
-         * Maximum allowed value. Null means unlimited.
-         */
-        value: number | null;
-      }
-    }
-  }
+  /**
+   * Resource type identifier.
+   */
+  object: 'plan_change_line_item';
 }
 
 /**
  * Cost preview for a plan change.
  */
-export interface PlanRetrieveProrationResponse {
+export interface PlanChangeProration {
   /**
    * Formatted monthly bill amount for display.
    */
@@ -214,7 +179,7 @@ export interface PlanRetrieveProrationResponse {
   /**
    * List represents a paginated list of resources.
    */
-  line_items: PlanRetrieveProrationResponse.LineItems | null;
+  line_items: ListPlanChangeLineItem | null;
 
   /**
    * Estimated monthly bill amount in cents after the change.
@@ -232,54 +197,100 @@ export interface PlanRetrieveProrationResponse {
   object: 'plan_change_proration';
 }
 
-export namespace PlanRetrieveProrationResponse {
+/**
+ * Resource limit for a pricing plan.
+ */
+export interface PlanLimit {
+  /**
+   * Resource key this limit applies to (e.g., "sandboxes", "seats", "invoices").
+   */
+  key: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'plan_limit';
+
+  /**
+   * Maximum allowed value. Null means unlimited.
+   */
+  value: number | null;
+}
+
+/**
+ * Pricing plan available for purchase.
+ */
+export interface PricingPlan {
+  /**
+   * Plan ID.
+   */
+  id: string;
+
+  /**
+   * Call-to-action button text.
+   */
+  button_text: string;
+
+  /**
+   * Features to display on the pricing page.
+   */
+  display_features: Array<string>;
+
+  /**
+   * Display order for sorting on the pricing page.
+   */
+  display_order: number;
+
+  /**
+   * Name of the previous plan tier this plan includes.
+   */
+  includes_previous_plan: string | null;
+
+  /**
+   * Whether this plan should be visually highlighted.
+   */
+  is_highlighted: boolean;
+
   /**
    * List represents a paginated list of resources.
    */
-  export interface LineItems {
-    /**
-     * Resources in this page.
-     */
-    data: Array<LineItems.Data>;
+  limits: ListPlanLimit | null;
 
-    /**
-     * Resource type identifier.
-     */
-    object: 'list';
+  /**
+   * Display name of the plan.
+   */
+  name: string;
 
-    /**
-     * PageInfo contains URL-based pagination metadata.
-     */
-    page_info: AgentsAPI.PageInfo;
-  }
+  /**
+   * Resource type identifier.
+   */
+  object: 'pricing_plan';
 
-  export namespace LineItems {
-    /**
-     * Line item in a plan change cost preview.
-     */
-    export interface Data {
-      /**
-       * Amount in cents (negative for credits).
-       */
-      amount: number;
+  /**
+   * Plan type code.
+   */
+  plan_type: 'free' | 'starter' | 'pro';
 
-      /**
-       * Description of the line item.
-       */
-      description: string;
+  /**
+   * Flat monthly price in dollars, if applicable.
+   */
+  price_per_month: number | null;
 
-      /**
-       * Resource type identifier.
-       */
-      object: 'plan_change_line_item';
-    }
-  }
+  /**
+   * Price per seat per month in dollars.
+   */
+  price_per_seat: number;
+
+  /**
+   * Minimum seats required for this plan.
+   */
+  seat_minimum: number | null;
 }
 
 /**
  * Result of initiating a plan switch.
  */
-export interface PlanSwitchResponse {
+export interface SwitchPlanResponse {
   /**
    * Billing intent ID, if a billing intent was created.
    */
@@ -315,9 +326,15 @@ export interface PlanListParams {
 
 export declare namespace Plans {
   export {
-    type PlanListResponse as PlanListResponse,
-    type PlanRetrieveProrationResponse as PlanRetrieveProrationResponse,
-    type PlanSwitchResponse as PlanSwitchResponse,
+    type ListPlanChangeLineItem as ListPlanChangeLineItem,
+    type ListPlanLimit as ListPlanLimit,
+    type ListPricingPlan as ListPricingPlan,
+    type PageInfo as PageInfo,
+    type PlanChangeLineItem as PlanChangeLineItem,
+    type PlanChangeProration as PlanChangeProration,
+    type PlanLimit as PlanLimit,
+    type PricingPlan as PricingPlan,
+    type SwitchPlanResponse as SwitchPlanResponse,
     type PlanListParams as PlanListParams,
   };
 }

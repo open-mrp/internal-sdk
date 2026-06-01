@@ -8,8 +8,11 @@ const client = new Augno({
 });
 
 describe('resource dcLocations', () => {
-  test('retrieve', async () => {
-    const responsePromise = client.operations.dcLocations.retrieve('dclo_01gf7a8200er3ar3pkfrb6kk30');
+  test('create: only required params', async () => {
+    const responsePromise = client.operations.dcLocations.create({
+      customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      location: 'Warehouse A - Bay 3',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,19 +22,26 @@ describe('resource dcLocations', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieve: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.operations.dcLocations.retrieve(
-        'dclo_01gf7a8200er3ar3pkfrb6kk30',
-        { include: ['customer'] },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Augno.NotFoundError);
+  test('create: required and optional params', async () => {
+    const response = await client.operations.dcLocations.create({
+      customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      location: 'Warehouse A - Bay 3',
+    });
+  });
+
+  test('retrieve', async () => {
+    const responsePromise = client.operations.dcLocations.retrieve('dclo_0191ce9223b21dc31c9ee09b3e');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.dcLocations.update('dclo_01gf7a8200er3ar3pkfrb6kk30');
+    const responsePromise = client.operations.dcLocations.update('dclo_0191ce9223b21dc31c9ee09b3e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,15 +55,15 @@ describe('resource dcLocations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.dcLocations.update(
-        'dclo_01gf7a8200er3ar3pkfrb6kk30',
+        'dclo_0191ce9223b21dc31c9ee09b3e',
         { customer_id: 'customer_id', location: 'Warehouse B - Bay 1' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.operations.dcLocations.delete('dclo_01gf7a8200er3ar3pkfrb6kk30');
+  test('list', async () => {
+    const responsePromise = client.operations.dcLocations.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -63,42 +73,10 @@ describe('resource dcLocations', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('dcLocations: only required params', async () => {
-    const responsePromise = client.operations.dcLocations.dcLocations({
-      customer_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
-      location: 'Warehouse A - Bay 3',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('dcLocations: required and optional params', async () => {
-    const response = await client.operations.dcLocations.dcLocations({
-      customer_id: 'ac_01gf7a8200er3ar3pkfrb6kk29',
-      location: 'Warehouse A - Bay 3',
-    });
-  });
-
-  test('retrieveDcLocations', async () => {
-    const responsePromise = client.operations.dcLocations.retrieveDcLocations();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveDcLocations: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.operations.dcLocations.retrieveDcLocations(
+      client.operations.dcLocations.list(
         {
           cursor: 'cursor',
           limit: 0,
@@ -107,5 +85,16 @@ describe('resource dcLocations', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.operations.dcLocations.delete('dclo_0191ce9223b21dc31c9ee09b3e');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

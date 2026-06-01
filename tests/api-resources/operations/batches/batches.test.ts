@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource batches', () => {
   test('delete', async () => {
-    const responsePromise = client.operations.batches.delete('bt_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.batches.delete('bt_017313a7df2d7ac8d895809747');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,8 +20,8 @@ describe('resource batches', () => {
   });
 
   test('nextSteps: only required params', async () => {
-    const responsePromise = client.operations.batches.nextSteps('bt_01jm4r6700f8nwq3v5hx2d9ktp', {
-      scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+    const responsePromise = client.operations.batches.nextSteps('bt_017313a7df2d7ac8d895809747', {
+      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -33,15 +33,15 @@ describe('resource batches', () => {
   });
 
   test('nextSteps: required and optional params', async () => {
-    const response = await client.operations.batches.nextSteps('bt_01jm4r6700f8nwq3v5hx2d9ktp', {
-      scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+    const response = await client.operations.batches.nextSteps('bt_017313a7df2d7ac8d895809747', {
+      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
     });
   });
 
   test('remainingQuantities: only required params', async () => {
     const responsePromise = client.operations.batches.remainingQuantities({
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+      batch_ids: ['bt_017313a7df2d7ac8d895809747'],
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -54,13 +54,13 @@ describe('resource batches', () => {
 
   test('remainingQuantities: required and optional params', async () => {
     const response = await client.operations.batches.remainingQuantities({
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+      batch_ids: ['bt_017313a7df2d7ac8d895809747'],
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
     });
   });
 
   test('retrieveFlow', async () => {
-    const responsePromise = client.operations.batches.retrieveFlow('bt_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.batches.retrieveFlow('bt_017313a7df2d7ac8d895809747');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

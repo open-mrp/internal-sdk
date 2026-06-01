@@ -2,21 +2,31 @@
 
 export {
   Accounts,
+  type AccountUsageResponse,
+  type AgentSpendInfo,
+  type AgentTokenDetail,
+  type EnsureBillingCustomerResponse,
+  type SubscriptionInfo,
   type UsageItem,
-  type AccountCreateResponse,
-  type AccountRetrieveUsageResponse,
 } from './accounts';
-export { Actions, type ActionRequestEnterpriseResponse } from './actions';
-export { Billing, type BillingPortalSessionsResponse } from './billing';
+export { Actions, type EnterpriseInquiry } from './actions';
+export { Billing, type BillingPortalSessionResponse } from './billing';
 export {
   Plans,
-  type PlanListResponse,
-  type PlanRetrieveProrationResponse,
-  type PlanSwitchResponse,
+  type ListPlanChangeLineItem,
+  type ListPlanLimit,
+  type ListPricingPlan,
+  type PageInfo,
+  type PlanChangeLineItem,
+  type PlanChangeProration,
+  type PlanLimit,
+  type PricingPlan,
+  type SwitchPlanResponse,
   type PlanListParams,
 } from './plans';
 export {
   SpendingCap,
+  type SetSpendingCapRequest,
   type SpendingCapResponse,
-  type SpendingCapUpdateSpendingCapParams,
+  type SpendingCapUpdateParams,
 } from './spending-cap';

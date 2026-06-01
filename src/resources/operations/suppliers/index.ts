@@ -1,10 +1,34 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { Actions, type ActionBulkDeleteResponse, type ActionBulkDeleteParams } from './actions';
+export {
+  Actions,
+  type BulkDeleteSuppliersRequest,
+  type ActionBulkDeleteResponse,
+  type ActionBulkDeleteParams,
+} from './actions';
 export {
   Materials,
+  type Account,
+  type AccountBranding,
+  type AccountPortal,
+  type Attribute,
+  type CreateSupplierMaterialRequest,
+  type Item,
+  type ItemCategory,
+  type ListAttribute,
+  type ListProperty,
+  type ListSupplierMaterial,
+  type ListUnitGroupUnit,
+  type Material,
+  type Owner,
+  type Property,
+  type Quantity,
+  type Rate,
   type SupplierMaterial,
-  type MaterialListResponse,
+  type Unit,
+  type UnitGroup,
+  type UnitGroupUnit,
+  type UpdateSupplierMaterialRequest,
   type MaterialCreateParams,
   type MaterialRetrieveParams,
   type MaterialUpdateParams,
@@ -13,8 +37,15 @@ export {
 } from './materials';
 export {
   Suppliers,
+  type Address,
+  type AddressInput,
+  type CreateSupplierRequest,
+  type Geolocation,
+  type ListSupplierSummary,
+  type PageInfo,
   type SupplierDetail,
-  type SupplierListResponse,
+  type SupplierSummary,
+  type UpdateSupplierRequest,
   type SupplierCreateParams,
   type SupplierRetrieveParams,
   type SupplierUpdateParams,

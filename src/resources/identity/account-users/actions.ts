@@ -15,12 +15,12 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const response =
-   *   await client.identity.accountUsers.actions.updateActivate(
-   *     'acus_01gf7a8200er3ar3pkfrb6kk29',
+   *   await client.identity.accountUsers.actions.activate(
+   *     'acus_01ea9983ddb41dacc44ecf997c',
    *   );
    * ```
    */
-  updateActivate(id: string, options?: RequestOptions): APIPromise<ActionUpdateActivateResponse> {
+  activate(id: string, options?: RequestOptions): APIPromise<ActionActivateResponse> {
     return this._client.put(path`/v1/identity/account-users/${id}/actions/activate`, options);
   }
 
@@ -31,12 +31,12 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const response =
-   *   await client.identity.accountUsers.actions.updateDisable(
-   *     'acus_01gf7a8200er3ar3pkfrb6kk29',
+   *   await client.identity.accountUsers.actions.disable(
+   *     'acus_01ea9983ddb41dacc44ecf997c',
    *   );
    * ```
    */
-  updateDisable(id: string, options?: RequestOptions): APIPromise<ActionUpdateDisableResponse> {
+  disable(id: string, options?: RequestOptions): APIPromise<ActionDisableResponse> {
     return this._client.put(path`/v1/identity/account-users/${id}/actions/disable`, options);
   }
 
@@ -45,27 +45,27 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
-   *   await client.identity.accountUsers.actions.updateRemove(
-   *     'acus_01gf7a8200er3ar3pkfrb6kk29',
+   * const action =
+   *   await client.identity.accountUsers.actions.remove(
+   *     'acus_01ea9983ddb41dacc44ecf997c',
    *   );
    * ```
    */
-  updateRemove(id: string, options?: RequestOptions): APIPromise<ActionUpdateRemoveResponse> {
+  remove(id: string, options?: RequestOptions): APIPromise<ActionRemoveResponse> {
     return this._client.put(path`/v1/identity/account-users/${id}/actions/remove`, options);
   }
 }
 
-export interface ActionUpdateActivateResponse {}
+export interface ActionActivateResponse {}
 
-export interface ActionUpdateDisableResponse {}
+export interface ActionDisableResponse {}
 
-export interface ActionUpdateRemoveResponse {}
+export interface ActionRemoveResponse {}
 
 export declare namespace Actions {
   export {
-    type ActionUpdateActivateResponse as ActionUpdateActivateResponse,
-    type ActionUpdateDisableResponse as ActionUpdateDisableResponse,
-    type ActionUpdateRemoveResponse as ActionUpdateRemoveResponse,
+    type ActionActivateResponse as ActionActivateResponse,
+    type ActionDisableResponse as ActionDisableResponse,
+    type ActionRemoveResponse as ActionRemoveResponse,
   };
 }

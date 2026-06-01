@@ -13,10 +13,10 @@ export class Healthz extends APIResource {
    *
    * @example
    * ```ts
-   * const healthzs = await client.healthz.list();
+   * const healthcheck = await client.healthz.list();
    * ```
    */
-  list(options?: RequestOptions): APIPromise<HealthzListResponse> {
+  list(options?: RequestOptions): APIPromise<Healthcheck> {
     return this._client.get('/healthz', options);
   }
 }
@@ -24,7 +24,7 @@ export class Healthz extends APIResource {
 /**
  * Healthcheck contains information on the health of the application.
  */
-export interface HealthzListResponse {
+export interface Healthcheck {
   /**
    * Resource type identifier.
    */
@@ -37,5 +37,5 @@ export interface HealthzListResponse {
 }
 
 export declare namespace Healthz {
-  export { type HealthzListResponse as HealthzListResponse };
+  export { type Healthcheck as Healthcheck };
 }

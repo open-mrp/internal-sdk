@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AgentsAPI from '../ai/agents';
+import * as EdiRunsAPI from '../operations/edi-runs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -11,16 +11,36 @@ import { path } from '../../internal/utils/path';
  */
 export class RegistrationFlows extends APIResource {
   /**
-   * Returns a registration flow by slug.
+   * Creates a registration flow.
    *
    * @example
    * ```ts
    * const registrationFlow =
-   *   await client.sales.registrationFlows.retrieve('acme');
+   *   await client.sales.registrationFlows.create({
+   *     customer_group_ids: ['cgrp_01abc'],
+   *     name: 'Wholesale Registration',
+   *     payment_term_ids: ['pt_01abc'],
+   *     shipping_term_ids: ['st_01abc'],
+   *   });
    * ```
    */
-  retrieve(slug: string, options?: RequestOptions): APIPromise<RegistrationFlow> {
-    return this._client.get(path`/v1/sales/registration-flows/by-slug/${slug}`, options);
+  create(body: RegistrationFlowCreateParams, options?: RequestOptions): APIPromise<RegistrationFlow> {
+    return this._client.post('/v1/sales/registration-flows', { body, ...options });
+  }
+
+  /**
+   * Returns a registration flow by ID.
+   *
+   * @example
+   * ```ts
+   * const registrationFlow =
+   *   await client.sales.registrationFlows.retrieve(
+   *     'rgfw_015273c2a7354d6c3e5ae4e90e',
+   *   );
+   * ```
+   */
+  retrieve(id: string, options?: RequestOptions): APIPromise<RegistrationFlow> {
+    return this._client.get(path`/v1/sales/registration-flows/${id}`, options);
   }
 
   /**
@@ -30,7 +50,7 @@ export class RegistrationFlows extends APIResource {
    * ```ts
    * const registrationFlow =
    *   await client.sales.registrationFlows.update(
-   *     'rgfw_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'rgfw_015273c2a7354d6c3e5ae4e90e',
    *     {
    *       has_customer_group_ids: false,
    *       has_payment_term_ids: false,
@@ -49,13 +69,29 @@ export class RegistrationFlows extends APIResource {
   }
 
   /**
+   * Returns a paginated list of registration flows for the current account.
+   *
+   * @example
+   * ```ts
+   * const listRegistrationFlow =
+   *   await client.sales.registrationFlows.list();
+   * ```
+   */
+  list(
+    query: RegistrationFlowListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ListRegistrationFlow> {
+    return this._client.get('/v1/sales/registration-flows', { query, ...options });
+  }
+
+  /**
    * Deletes a registration flow.
    *
    * @example
    * ```ts
    * const registrationFlow =
    *   await client.sales.registrationFlows.delete(
-   *     'rgfw_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'rgfw_015273c2a7354d6c3e5ae4e90e',
    *   );
    * ```
    */
@@ -64,51 +100,54 @@ export class RegistrationFlows extends APIResource {
   }
 
   /**
-   * Creates a registration flow.
+   * Returns a registration flow by slug.
    *
    * @example
    * ```ts
    * const registrationFlow =
-   *   await client.sales.registrationFlows.registrationFlows({
-   *     customer_group_ids: ['cgrp_01abc'],
-   *     name: 'Wholesale Registration',
-   *     payment_term_ids: ['pt_01abc'],
-   *     shipping_term_ids: ['st_01abc'],
-   *   });
+   *   await client.sales.registrationFlows.retrieveBySlug(
+   *     'acme',
+   *   );
    * ```
    */
-  registrationFlows(
-    body: RegistrationFlowRegistrationFlowsParams,
-    options?: RequestOptions,
-  ): APIPromise<RegistrationFlow> {
-    return this._client.post('/v1/sales/registration-flows', { body, ...options });
+  retrieveBySlug(slug: string, options?: RequestOptions): APIPromise<RegistrationFlow> {
+    return this._client.get(path`/v1/sales/registration-flows/by-slug/${slug}`, options);
   }
+}
+
+/**
+ * Request to create a registration flow.
+ */
+export interface CreateRegistrationFlowRequest {
+  /**
+   * Customer group IDs.
+   */
+  customer_group_ids: Array<string>;
 
   /**
-   * Returns a paginated list of registration flows for the current account.
-   *
-   * @example
-   * ```ts
-   * const response =
-   *   await client.sales.registrationFlows.retrieveRegistrationFlows();
-   * ```
+   * Display name.
    */
-  retrieveRegistrationFlows(
-    query: RegistrationFlowRetrieveRegistrationFlowsParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<RegistrationFlowRetrieveRegistrationFlowsResponse> {
-    return this._client.get('/v1/sales/registration-flows', { query, ...options });
-  }
+  name: string;
+
+  /**
+   * Payment term IDs.
+   */
+  payment_term_ids: Array<string>;
+
+  /**
+   * Shipping term IDs.
+   */
+  shipping_term_ids: Array<string>;
 }
 
 /**
  * List represents a paginated list of resources.
  */
-export interface ListRegistrationFlowOption {
+export interface ListRegistrationFlow {
   /**
    * Resources in this page.
    */
-  data: Array<ListRegistrationFlowOption.Data>;
+  data: Array<RegistrationFlow>;
 
   /**
    * Resource type identifier.
@@ -118,29 +157,52 @@ export interface ListRegistrationFlowOption {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: EdiRunsAPI.PageInfo;
 }
 
-export namespace ListRegistrationFlowOption {
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListRegistrationFlowOption {
   /**
-   * Selectable option within a registration flow.
+   * Resources in this page.
    */
-  export interface Data {
-    /**
-     * Registration flow option ID.
-     */
-    id: string;
+  data: Array<RegistrationFlowOption>;
 
-    /**
-     * Display name.
-     */
-    name: string;
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
 
-    /**
-     * Resource type identifier.
-     */
-    object: 'registration_flow_option';
-  }
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
 }
 
 /**
@@ -188,26 +250,88 @@ export interface RegistrationFlow {
   updated_at: string;
 }
 
-export interface RegistrationFlowDeleteResponse {}
-
 /**
- * List represents a paginated list of resources.
+ * Selectable option within a registration flow.
  */
-export interface RegistrationFlowRetrieveRegistrationFlowsResponse {
+export interface RegistrationFlowOption {
   /**
-   * Resources in this page.
+   * Registration flow option ID.
    */
-  data: Array<RegistrationFlow>;
+  id: string;
+
+  /**
+   * Display name.
+   */
+  name: string;
 
   /**
    * Resource type identifier.
    */
-  object: 'list';
+  object: 'registration_flow_option';
+}
+
+/**
+ * Request to partially update a registration flow.
+ */
+export interface UpdateRegistrationFlowRequest {
+  /**
+   * Whether to replace customer groups.
+   */
+  has_customer_group_ids: boolean;
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * Whether to replace payment terms.
    */
-  page_info: AgentsAPI.PageInfo;
+  has_payment_term_ids: boolean;
+
+  /**
+   * Whether to replace shipping terms.
+   */
+  has_shipping_term_ids: boolean;
+
+  /**
+   * Customer group IDs.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Display name.
+   */
+  name?: string;
+
+  /**
+   * Payment term IDs.
+   */
+  payment_term_ids?: Array<string>;
+
+  /**
+   * Shipping term IDs.
+   */
+  shipping_term_ids?: Array<string>;
+}
+
+export interface RegistrationFlowDeleteResponse {}
+
+export interface RegistrationFlowCreateParams {
+  /**
+   * Customer group IDs.
+   */
+  customer_group_ids: Array<string>;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Payment term IDs.
+   */
+  payment_term_ids: Array<string>;
+
+  /**
+   * Shipping term IDs.
+   */
+  shipping_term_ids: Array<string>;
 }
 
 export interface RegistrationFlowUpdateParams {
@@ -247,29 +371,7 @@ export interface RegistrationFlowUpdateParams {
   shipping_term_ids?: Array<string>;
 }
 
-export interface RegistrationFlowRegistrationFlowsParams {
-  /**
-   * Customer group IDs.
-   */
-  customer_group_ids: Array<string>;
-
-  /**
-   * Display name.
-   */
-  name: string;
-
-  /**
-   * Payment term IDs.
-   */
-  payment_term_ids: Array<string>;
-
-  /**
-   * Shipping term IDs.
-   */
-  shipping_term_ids: Array<string>;
-}
-
-export interface RegistrationFlowRetrieveRegistrationFlowsParams {
+export interface RegistrationFlowListParams {
   /**
    * Cursor token used to retrieve the next or previous page of results.
    */
@@ -288,12 +390,16 @@ export interface RegistrationFlowRetrieveRegistrationFlowsParams {
 
 export declare namespace RegistrationFlows {
   export {
+    type CreateRegistrationFlowRequest as CreateRegistrationFlowRequest,
+    type ListRegistrationFlow as ListRegistrationFlow,
     type ListRegistrationFlowOption as ListRegistrationFlowOption,
+    type PageInfo as PageInfo,
     type RegistrationFlow as RegistrationFlow,
+    type RegistrationFlowOption as RegistrationFlowOption,
+    type UpdateRegistrationFlowRequest as UpdateRegistrationFlowRequest,
     type RegistrationFlowDeleteResponse as RegistrationFlowDeleteResponse,
-    type RegistrationFlowRetrieveRegistrationFlowsResponse as RegistrationFlowRetrieveRegistrationFlowsResponse,
+    type RegistrationFlowCreateParams as RegistrationFlowCreateParams,
     type RegistrationFlowUpdateParams as RegistrationFlowUpdateParams,
-    type RegistrationFlowRegistrationFlowsParams as RegistrationFlowRegistrationFlowsParams,
-    type RegistrationFlowRetrieveRegistrationFlowsParams as RegistrationFlowRetrieveRegistrationFlowsParams,
+    type RegistrationFlowListParams as RegistrationFlowListParams,
   };
 }

@@ -1,22 +1,29 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AgentsAPI from '../../ai/agents';
-import * as ItemCategoriesAPI from '../../catalog/item-categories/item-categories';
+import * as EdiRunsAPI from '../edi-runs';
 import * as ActionsAPI from './actions';
-import { ActionInitiateOAuthParams, ActionInitiateOAuthResponse, Actions } from './actions';
+import {
+  ActionInitiateOAuthParams,
+  ActionSyncOptionsParams,
+  Actions,
+  InitiateOAuthRequest,
+  OAuthResponse,
+} from './actions';
 import * as ServiceLevelsAPI from './service-levels';
 import {
-  ListServiceLevel,
-  ServiceLevel,
+  CreateServiceLevelRequest,
+  ServiceLevelCreateParams,
   ServiceLevelDeleteParams,
   ServiceLevelDeleteResponse,
+  ServiceLevelListParams,
   ServiceLevelRetrieveParams,
-  ServiceLevelRetrieveServiceLevelsParams,
-  ServiceLevelServiceLevelsParams,
   ServiceLevelUpdateParams,
   ServiceLevels,
+  UpdateServiceLevelRequest,
 } from './service-levels';
+import * as ShipmentsActionsAPI from '../shipments/actions';
+import * as LinesAPI from '../shipments/lines';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -25,8 +32,8 @@ import { path } from '../../../internal/utils/path';
  * List and manage carriers and their Shippo integrations.
  */
 export class Carriers extends APIResource {
-  serviceLevels: ServiceLevelsAPI.ServiceLevels = new ServiceLevelsAPI.ServiceLevels(this._client);
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
+  serviceLevels: ServiceLevelsAPI.ServiceLevels = new ServiceLevelsAPI.ServiceLevels(this._client);
 
   /**
    * Creates a carrier. If a Shippo-supported carrier code is provided, the carrier
@@ -43,7 +50,7 @@ export class Carriers extends APIResource {
    * });
    * ```
    */
-  create(params: CarrierCreateParams, options?: RequestOptions): APIPromise<Carrier> {
+  create(params: CarrierCreateParams, options?: RequestOptions): APIPromise<ShipmentsActionsAPI.Carrier> {
     const { include, ...body } = params;
     return this._client.post('/v1/operations/carriers', { query: { include }, body, ...options });
   }
@@ -54,7 +61,7 @@ export class Carriers extends APIResource {
    * @example
    * ```ts
    * const carrier = await client.operations.carriers.retrieve(
-   *   'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'cr_01784fd54c9ba197bb4e42f0e6',
    * );
    * ```
    */
@@ -62,7 +69,7 @@ export class Carriers extends APIResource {
     id: string,
     query: CarrierRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<Carrier> {
+  ): APIPromise<ShipmentsActionsAPI.Carrier> {
     return this._client.get(path`/v1/operations/carriers/${id}`, { query, ...options });
   }
 
@@ -72,7 +79,7 @@ export class Carriers extends APIResource {
    * @example
    * ```ts
    * const carrier = await client.operations.carriers.update(
-   *   'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'cr_01784fd54c9ba197bb4e42f0e6',
    *   { name: 'FedEx Express' },
    * );
    * ```
@@ -81,7 +88,7 @@ export class Carriers extends APIResource {
     id: string,
     params: CarrierUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<Carrier> {
+  ): APIPromise<ShipmentsActionsAPI.Carrier> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/carriers/${id}`, { query: { include }, body, ...options });
   }
@@ -91,13 +98,10 @@ export class Carriers extends APIResource {
    *
    * @example
    * ```ts
-   * const carriers = await client.operations.carriers.list();
+   * const listCarrier = await client.operations.carriers.list();
    * ```
    */
-  list(
-    query: CarrierListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<CarrierListResponse> {
+  list(query: CarrierListParams | null | undefined = {}, options?: RequestOptions): APIPromise<ListCarrier> {
     return this._client.get('/v1/operations/carriers', { query, ...options });
   }
 
@@ -108,7 +112,7 @@ export class Carriers extends APIResource {
    * @example
    * ```ts
    * const carrier = await client.operations.carriers.delete(
-   *   'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'cr_01784fd54c9ba197bb4e42f0e6',
    * );
    * ```
    */
@@ -122,15 +126,210 @@ export class Carriers extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const oauthStatusResponse =
    *   await client.operations.carriers.retrieveOAuthStatus(
-   *     'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'cr_01784fd54c9ba197bb4e42f0e6',
    *   );
    * ```
    */
-  retrieveOAuthStatus(id: string, options?: RequestOptions): APIPromise<CarrierRetrieveOAuthStatusResponse> {
+  retrieveOAuthStatus(id: string, options?: RequestOptions): APIPromise<OAuthStatusResponse> {
     return this._client.get(path`/v1/operations/carriers/${id}/oauth-status`, options);
   }
+}
+
+/**
+ * Account with optional branding and portal sub-resources.
+ */
+export interface Account {
+  /**
+   * Account ID.
+   */
+  id: string;
+
+  /**
+   * Branding metadata for an account.
+   */
+  branding: LinesAPI.AccountBranding | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Address with associated geolocation.
+   */
+  default_billing_address: LinesAPI.Address | null;
+
+  /**
+   * Address with associated geolocation.
+   */
+  default_shipping_address: LinesAPI.Address | null;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account';
+
+  /**
+   * Portal metadata for an account.
+   */
+  portal: LinesAPI.AccountPortal | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Branding metadata for an account.
+ */
+export interface AccountBranding {
+  /**
+   * Branding ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Facebook handle.
+   */
+  facebook_handle: string | null;
+
+  /**
+   * Instagram handle.
+   */
+  instagram_handle: string | null;
+
+  /**
+   * LinkedIn handle.
+   */
+  linkedin_handle: string | null;
+
+  /**
+   * Logo URL.
+   */
+  logo_url: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account_branding';
+
+  /**
+   * Support phone number.
+   */
+  phone_number: string | null;
+
+  /**
+   * Support email address.
+   */
+  support_email: string | null;
+
+  /**
+   * Twitter handle.
+   */
+  twitter_handle: string | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+
+  /**
+   * Website URL.
+   */
+  website_url: string | null;
+}
+
+/**
+ * Portal metadata for an account.
+ */
+export interface AccountPortal {
+  /**
+   * Portal ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account_portal';
+
+  /**
+   * Portal slug.
+   */
+  slug: string;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Address with associated geolocation.
+ */
+export interface Address {
+  /**
+   * Address ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Email address associated with the address.
+   */
+  email: string | null;
+
+  /**
+   * Geolocation sub-resource.
+   */
+  geolocation: LinesAPI.Geolocation | null;
+
+  /**
+   * Display name of the address.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'address';
+
+  /**
+   * Phone number associated with the address.
+   */
+  phone: string | null;
+
+  /**
+   * Address type.
+   */
+  type: 'standard' | 'drop_ship';
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
 }
 
 /**
@@ -180,12 +379,12 @@ export interface Carrier {
   /**
    * Owner describes the provenance of a resource.
    */
-  owner: ItemCategoriesAPI.Owner | null;
+  owner: LinesAPI.Owner | null;
 
   /**
    * List represents a paginated list of resources.
    */
-  service_levels: ServiceLevelsAPI.ListServiceLevel | null;
+  service_levels: ShipmentsActionsAPI.ListServiceLevel | null;
 
   /**
    * Last updated timestamp.
@@ -194,13 +393,84 @@ export interface Carrier {
 }
 
 /**
+ * Request to create a carrier.
+ */
+export interface CreateCarrierRequest {
+  /**
+   * Carrier account number. Required for UPS and USPS carriers.
+   */
+  account_number: string | null;
+
+  /**
+   * Carrier code.
+   */
+  code: 'fedex' | 'ups' | 'usps' | 'will_call' | 'delivery' | 'ltl' | 'ltl1' | 'freight_collect' | null;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Whether this carrier will be available for customers to select in the customer
+   * portal.
+   */
+  customer_portal_visibility?: 'visible' | 'hidden';
+}
+
+/**
+ * Geolocation sub-resource.
+ */
+export interface Geolocation {
+  /**
+   * Geolocation ID.
+   */
+  id: string;
+
+  /**
+   * Two-letter country code.
+   */
+  country: string;
+
+  /**
+   * City or locality.
+   */
+  locality: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'geolocation';
+
+  /**
+   * Postal or ZIP code.
+   */
+  postal_code: string | null;
+
+  /**
+   * State or administrative area.
+   */
+  state: string | null;
+
+  /**
+   * First line of the street address.
+   */
+  street_line_1: string | null;
+
+  /**
+   * Second line of the street address.
+   */
+  street_line_2: string | null;
+}
+
+/**
  * List represents a paginated list of resources.
  */
-export interface CarrierListResponse {
+export interface ListCarrier {
   /**
    * Resources in this page.
    */
-  data: Array<Carrier>;
+  data: Array<ShipmentsActionsAPI.Carrier>;
 
   /**
    * Resource type identifier.
@@ -210,15 +480,33 @@ export interface CarrierListResponse {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: EdiRunsAPI.PageInfo;
 }
 
-export interface CarrierDeleteResponse {}
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListServiceLevel {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ShipmentsActionsAPI.ServiceLevel>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
 
 /**
  * OAuth connection status for a carrier.
  */
-export interface CarrierRetrieveOAuthStatusResponse {
+export interface OAuthStatusResponse {
   /**
    * Resource type identifier.
    */
@@ -230,6 +518,120 @@ export interface CarrierRetrieveOAuthStatusResponse {
    */
   status: string;
 }
+
+/**
+ * Owner describes the provenance of a resource.
+ */
+export interface Owner {
+  /**
+   * Account with optional branding and portal sub-resources.
+   */
+  account: LinesAPI.Account | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'owner';
+
+  /**
+   * The owner type: "system" for platform defaults, "account" for account-owned
+   * resources.
+   */
+  type: 'system' | 'account';
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+/**
+ * Shipping service level for a carrier.
+ */
+export interface ServiceLevel {
+  /**
+   * Service level ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Customer portal visibility.
+   */
+  customer_portal_visibility: 'visible' | 'hidden';
+
+  /**
+   * Default service level for the carrier.
+   */
+  is_default: boolean;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'service_level';
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: LinesAPI.Owner | null;
+
+  /**
+   * Service level token.
+   */
+  service_level_token: string;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Request to update a carrier.
+ */
+export interface UpdateCarrierRequest {
+  /**
+   * Whether this carrier will be available for customers to select in the customer
+   * portal.
+   */
+  customer_portal_visibility?: 'visible' | 'hidden';
+
+  /**
+   * Display name.
+   */
+  name?: string;
+}
+
+export interface CarrierDeleteResponse {}
 
 export interface CarrierCreateParams {
   /**
@@ -310,15 +712,26 @@ export interface CarrierListParams {
   q?: string;
 }
 
-Carriers.ServiceLevels = ServiceLevels;
 Carriers.Actions = Actions;
+Carriers.ServiceLevels = ServiceLevels;
 
 export declare namespace Carriers {
   export {
+    type Account as Account,
+    type AccountBranding as AccountBranding,
+    type AccountPortal as AccountPortal,
+    type Address as Address,
     type Carrier as Carrier,
-    type CarrierListResponse as CarrierListResponse,
+    type CreateCarrierRequest as CreateCarrierRequest,
+    type Geolocation as Geolocation,
+    type ListCarrier as ListCarrier,
+    type ListServiceLevel as ListServiceLevel,
+    type OAuthStatusResponse as OAuthStatusResponse,
+    type Owner as Owner,
+    type PageInfo as PageInfo,
+    type ServiceLevel as ServiceLevel,
+    type UpdateCarrierRequest as UpdateCarrierRequest,
     type CarrierDeleteResponse as CarrierDeleteResponse,
-    type CarrierRetrieveOAuthStatusResponse as CarrierRetrieveOAuthStatusResponse,
     type CarrierCreateParams as CarrierCreateParams,
     type CarrierRetrieveParams as CarrierRetrieveParams,
     type CarrierUpdateParams as CarrierUpdateParams,
@@ -326,20 +739,22 @@ export declare namespace Carriers {
   };
 
   export {
-    ServiceLevels as ServiceLevels,
-    type ListServiceLevel as ListServiceLevel,
-    type ServiceLevel as ServiceLevel,
-    type ServiceLevelDeleteResponse as ServiceLevelDeleteResponse,
-    type ServiceLevelRetrieveParams as ServiceLevelRetrieveParams,
-    type ServiceLevelUpdateParams as ServiceLevelUpdateParams,
-    type ServiceLevelDeleteParams as ServiceLevelDeleteParams,
-    type ServiceLevelRetrieveServiceLevelsParams as ServiceLevelRetrieveServiceLevelsParams,
-    type ServiceLevelServiceLevelsParams as ServiceLevelServiceLevelsParams,
+    Actions as Actions,
+    type InitiateOAuthRequest as InitiateOAuthRequest,
+    type OAuthResponse as OAuthResponse,
+    type ActionInitiateOAuthParams as ActionInitiateOAuthParams,
+    type ActionSyncOptionsParams as ActionSyncOptionsParams,
   };
 
   export {
-    Actions as Actions,
-    type ActionInitiateOAuthResponse as ActionInitiateOAuthResponse,
-    type ActionInitiateOAuthParams as ActionInitiateOAuthParams,
+    ServiceLevels as ServiceLevels,
+    type CreateServiceLevelRequest as CreateServiceLevelRequest,
+    type UpdateServiceLevelRequest as UpdateServiceLevelRequest,
+    type ServiceLevelDeleteResponse as ServiceLevelDeleteResponse,
+    type ServiceLevelCreateParams as ServiceLevelCreateParams,
+    type ServiceLevelRetrieveParams as ServiceLevelRetrieveParams,
+    type ServiceLevelUpdateParams as ServiceLevelUpdateParams,
+    type ServiceLevelListParams as ServiceLevelListParams,
+    type ServiceLevelDeleteParams as ServiceLevelDeleteParams,
   };
 }

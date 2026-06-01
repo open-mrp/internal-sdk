@@ -44,6 +44,36 @@ export class Actions extends APIResource {
   }
 }
 
+/**
+ * Request for a password reset.
+ */
+export interface RequestPasswordResetRequest {
+  /**
+   * Username or email of the account to reset.
+   */
+  identifier: string;
+
+  /**
+   * Account slug for redirecting to the original login portal after password reset.
+   */
+  account_slug?: string;
+}
+
+/**
+ * Request to reset a user's password.
+ */
+export interface ResetPasswordRequest {
+  /**
+   * Password reset token.
+   */
+  token: string;
+
+  /**
+   * New password.
+   */
+  password: string;
+}
+
 export interface ActionRequestResetResponse {}
 
 export interface ActionResetResponse {}
@@ -74,6 +104,8 @@ export interface ActionResetParams {
 
 export declare namespace Actions {
   export {
+    type RequestPasswordResetRequest as RequestPasswordResetRequest,
+    type ResetPasswordRequest as ResetPasswordRequest,
     type ActionRequestResetResponse as ActionRequestResetResponse,
     type ActionResetResponse as ActionResetResponse,
     type ActionRequestResetParams as ActionRequestResetParams,

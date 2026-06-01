@@ -3,12 +3,24 @@
 import { APIResource } from '../../../core/resource';
 import * as SalesTargetsAPI from './sales-targets';
 import {
+  Account,
+  AccountBranding,
+  AccountPortal,
+  Address,
+  CreateSalesTargetRequest,
+  Geolocation,
+  ListSalesTarget,
+  Owner,
+  PageInfo,
+  Quantity,
   SalesTarget,
-  SalesTargetRetrieveSalesTargetsParams,
-  SalesTargetRetrieveSalesTargetsResponse,
-  SalesTargetSalesTargetsParams,
+  SalesTargetCreateParams,
+  SalesTargetListParams,
   SalesTargetUpdateParams,
   SalesTargets,
+  Unit,
+  UpsertSalesTargetRequest,
+  User,
 } from './sales-targets';
 
 export class AccountUsers extends APIResource {
@@ -20,10 +32,22 @@ AccountUsers.SalesTargets = SalesTargets;
 export declare namespace AccountUsers {
   export {
     SalesTargets as SalesTargets,
+    type Account as Account,
+    type AccountBranding as AccountBranding,
+    type AccountPortal as AccountPortal,
+    type Address as Address,
+    type CreateSalesTargetRequest as CreateSalesTargetRequest,
+    type Geolocation as Geolocation,
+    type ListSalesTarget as ListSalesTarget,
+    type Owner as Owner,
+    type PageInfo as PageInfo,
+    type Quantity as Quantity,
     type SalesTarget as SalesTarget,
-    type SalesTargetRetrieveSalesTargetsResponse as SalesTargetRetrieveSalesTargetsResponse,
+    type Unit as Unit,
+    type UpsertSalesTargetRequest as UpsertSalesTargetRequest,
+    type User as User,
+    type SalesTargetCreateParams as SalesTargetCreateParams,
     type SalesTargetUpdateParams as SalesTargetUpdateParams,
-    type SalesTargetRetrieveSalesTargetsParams as SalesTargetRetrieveSalesTargetsParams,
-    type SalesTargetSalesTargetsParams as SalesTargetSalesTargetsParams,
+    type SalesTargetListParams as SalesTargetListParams,
   };
 }

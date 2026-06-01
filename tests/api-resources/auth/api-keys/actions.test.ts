@@ -27,7 +27,7 @@ describe('resource actions', () => {
   });
 
   test('rotate', async () => {
-    const responsePromise = client.auth.apiKeys.actions.rotate('apke_01jm4r6700e3kxb9w2nqh7g5fp');
+    const responsePromise = client.auth.apiKeys.actions.rotate('apke_01fba3a7db3996e3b3b1a07e00');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -41,7 +41,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.auth.apiKeys.actions.rotate(
-        'apke_01jm4r6700e3kxb9w2nqh7g5fp',
+        'apke_01fba3a7db3996e3b3b1a07e00',
         { include: ['role'], expires_at: '2026-12-31T23:59:59Z' },
         { path: '/_stainless_unknown_path' },
       ),

@@ -8,6 +8,29 @@ const client = new Augno({
 });
 
 describe('resource actions', () => {
+  test('checkDuplicates: only required params', async () => {
+    const responsePromise = client.core.actions.checkDuplicates({
+      customer_id: null,
+      record_number: 'INV-001',
+      type: 'invoice_number',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('checkDuplicates: required and optional params', async () => {
+    const response = await client.core.actions.checkDuplicates({
+      customer_id: null,
+      record_number: 'INV-001',
+      type: 'invoice_number',
+    });
+  });
+
   test('emailRecord: only required params', async () => {
     const responsePromise = client.core.actions.emailRecord({ id: 'inv_abc123', type: 'invoice' });
     const rawResponse = await responsePromise.asResponse();
@@ -70,29 +93,6 @@ describe('resource actions', () => {
       answer: 'Very useful, but could use better documentation.',
       page_url: null,
       question: 'How would you rate this feature?',
-    });
-  });
-
-  test('updateCheckDuplicates: only required params', async () => {
-    const responsePromise = client.core.actions.updateCheckDuplicates({
-      customer_id: null,
-      record_number: 'INV-001',
-      type: 'invoice_number',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('updateCheckDuplicates: required and optional params', async () => {
-    const response = await client.core.actions.updateCheckDuplicates({
-      customer_id: null,
-      record_number: 'INV-001',
-      type: 'invoice_number',
     });
   });
 });

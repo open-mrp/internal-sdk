@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource actions', () => {
   test('bulkDelete: only required params', async () => {
     const responsePromise = client.operations.purchaseOrders.actions.bulkDelete({
-      purchase_order_ids: ['po_01jm4r6700f8nwq3v5hx2d9ktp'],
+      purchase_order_ids: ['po_0169aa3a722b081b117ac0e44f'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,13 +23,13 @@ describe('resource actions', () => {
 
   test('bulkDelete: required and optional params', async () => {
     const response = await client.operations.purchaseOrders.actions.bulkDelete({
-      purchase_order_ids: ['po_01jm4r6700f8nwq3v5hx2d9ktp'],
+      purchase_order_ids: ['po_0169aa3a722b081b117ac0e44f'],
     });
   });
 
-  test('updateChangeStatus: only required params', async () => {
-    const responsePromise = client.operations.purchaseOrders.actions.updateChangeStatus(
-      'po_01jm4r6700f8nwq3v5hx2d9ktp',
+  test('changeStatus: only required params', async () => {
+    const responsePromise = client.operations.purchaseOrders.actions.changeStatus(
+      'po_0169aa3a722b081b117ac0e44f',
       { send_email: true, status_change: 'issue' },
     );
     const rawResponse = await responsePromise.asResponse();
@@ -41,9 +41,9 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateChangeStatus: required and optional params', async () => {
-    const response = await client.operations.purchaseOrders.actions.updateChangeStatus(
-      'po_01jm4r6700f8nwq3v5hx2d9ktp',
+  test('changeStatus: required and optional params', async () => {
+    const response = await client.operations.purchaseOrders.actions.changeStatus(
+      'po_0169aa3a722b081b117ac0e44f',
       {
         send_email: true,
         status_change: 'issue',

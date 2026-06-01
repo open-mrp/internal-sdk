@@ -14,12 +14,13 @@ export class Photo extends APIResource {
    *
    * @example
    * ```ts
-   * const photo = await client.identity.users.photo.create(
-   *   'us_01gf7a8200e9pvbd6bgyq395ae',
-   * );
+   * const userPhotoUploadResult =
+   *   await client.identity.users.photo.update(
+   *     'us_0151164dcaea4cbded27b50aae',
+   *   );
    * ```
    */
-  create(id: string, options?: RequestOptions): APIPromise<PhotoCreateResponse> {
+  update(id: string, options?: RequestOptions): APIPromise<UserPhotoUploadResult> {
     return this._client.put(path`/v1/identity/users/${id}/photo`, options);
   }
 
@@ -28,12 +29,12 @@ export class Photo extends APIResource {
    *
    * @example
    * ```ts
-   * const photos = await client.identity.users.photo.list(
-   *   'us_01gf7a8200e9pvbd6bgyq395ae',
+   * const userPhotoURL = await client.identity.users.photo.list(
+   *   'us_0151164dcaea4cbded27b50aae',
    * );
    * ```
    */
-  list(id: string, options?: RequestOptions): APIPromise<PhotoListResponse> {
+  list(id: string, options?: RequestOptions): APIPromise<UserPhotoURL> {
     return this._client.get(path`/v1/identity/users/${id}/photo`, options);
   }
 }
@@ -41,7 +42,7 @@ export class Photo extends APIResource {
 /**
  * Result of a user photo upload.
  */
-export interface PhotoCreateResponse {
+export interface UserPhotoUploadResult {
   /**
    * Upload success status.
    */
@@ -51,7 +52,7 @@ export interface PhotoCreateResponse {
 /**
  * Presigned URL for a user's profile photo.
  */
-export interface PhotoListResponse {
+export interface UserPhotoURL {
   /**
    * Presigned URL for the profile photo, or null if no photo exists.
    */
@@ -59,5 +60,5 @@ export interface PhotoListResponse {
 }
 
 export declare namespace Photo {
-  export { type PhotoCreateResponse as PhotoCreateResponse, type PhotoListResponse as PhotoListResponse };
+  export { type UserPhotoUploadResult as UserPhotoUploadResult, type UserPhotoURL as UserPhotoURL };
 }

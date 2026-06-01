@@ -8,8 +8,8 @@ const client = new Augno({
 });
 
 describe('resource addresses', () => {
-  test('retrieve', async () => {
-    const responsePromise = client.core.addresses.retrieve('ChIJN1gggt_t2Z44AR4PVM_67p73Y');
+  test('retrieveDetails', async () => {
+    const responsePromise = client.core.addresses.retrieveDetails('ChIJN1gggt_t2Z44AR4PVM_67p73Y');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,10 +19,10 @@ describe('resource addresses', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieve: request options and params are passed correctly', async () => {
+  test('retrieveDetails: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.core.addresses.retrieve(
+      client.core.addresses.retrieveDetails(
         'ChIJN1gggt_t2Z44AR4PVM_67p73Y',
         { session_token: 'session_token' },
         { path: '/_stainless_unknown_path' },

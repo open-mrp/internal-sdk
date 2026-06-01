@@ -1,14 +1,15 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AgentsAPI from '../../ai/agents';
+import * as EdiRunsAPI from '../../operations/edi-runs';
 import * as ActionsAPI from './actions';
 import {
   ActionConfirmPaymentParams,
-  ActionConfirmPaymentResponse,
   ActionResendVerificationEmailResponse,
-  ActionSetupBillingResponse,
   Actions,
+  ConfirmPaymentRequest,
+  ConfirmPaymentResponse,
+  SetupBillingResponse,
 } from './actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
@@ -21,6 +22,23 @@ export class RegistrationSessions extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
+   * Creates a registration session. Returns the existing session ID if an active
+   * session already exists for that email.
+   *
+   * @example
+   * ```ts
+   * const createSessionResponse =
+   *   await client.auth.registrationSessions.create({
+   *     email: 'jdoe@augno.com',
+   *     plan_code: 'starter',
+   *   });
+   * ```
+   */
+  create(body: RegistrationSessionCreateParams, options?: RequestOptions): APIPromise<CreateSessionResponse> {
+    return this._client.post('/v1/auth/registration-sessions', { body, ...options });
+  }
+
+  /**
    * Returns a registration session by ID, including its current step and associated
    * user and account details.
    *
@@ -28,11 +46,11 @@ export class RegistrationSessions extends APIResource {
    * ```ts
    * const registrationSession =
    *   await client.auth.registrationSessions.retrieve(
-   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+   *     'rgfw_01011dbade766ab524553afb10',
    *   );
    * ```
    */
-  retrieve(sessionID: string, options?: RequestOptions): APIPromise<RegistrationSession> {
+  retrieve(sessionID: string, options?: RequestOptions): APIPromise<ActionsAPI.RegistrationSession> {
     return this._client.get(path`/v1/auth/registration-sessions/${sessionID}`, options);
   }
 
@@ -44,7 +62,7 @@ export class RegistrationSessions extends APIResource {
    * ```ts
    * const registrationSession =
    *   await client.auth.registrationSessions.update(
-   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+   *     'rgfw_01011dbade766ab524553afb10',
    *     {
    *       session_data: {
    *         user_name: 'Jane Smith',
@@ -59,43 +77,8 @@ export class RegistrationSessions extends APIResource {
     sessionID: string,
     body: RegistrationSessionUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<RegistrationSession> {
+  ): APIPromise<ActionsAPI.RegistrationSession> {
     return this._client.patch(path`/v1/auth/registration-sessions/${sessionID}`, { body, ...options });
-  }
-
-  /**
-   * Completes the registration flow by provisioning accounts, roles, and
-   * permissions. Requires payment to be confirmed first.
-   *
-   * @example
-   * ```ts
-   * const response =
-   *   await client.auth.registrationSessions.accounts(
-   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
-   *   );
-   * ```
-   */
-  accounts(sessionID: string, options?: RequestOptions): APIPromise<RegistrationSessionAccountsResponse> {
-    return this._client.post(path`/v1/auth/registration-sessions/${sessionID}/accounts`, options);
-  }
-
-  /**
-   * Creates a registration session. Returns the existing session ID if an active
-   * session already exists for that email.
-   *
-   * @example
-   * ```ts
-   * const response =
-   *   await client.auth.registrationSessions.registrationSessions(
-   *     { email: 'jdoe@augno.com', plan_code: 'starter' },
-   *   );
-   * ```
-   */
-  registrationSessions(
-    body: RegistrationSessionRegistrationSessionsParams,
-    options?: RequestOptions,
-  ): APIPromise<RegistrationSessionRegistrationSessionsResponse> {
-    return this._client.post('/v1/auth/registration-sessions', { body, ...options });
   }
 
   /**
@@ -104,15 +87,31 @@ export class RegistrationSessions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
-   *   await client.auth.registrationSessions.retrieveRegistrationSessions();
+   * const listRegistrationSession =
+   *   await client.auth.registrationSessions.list();
    * ```
    */
-  retrieveRegistrationSessions(
-    query: RegistrationSessionRetrieveRegistrationSessionsParams | null | undefined = {},
+  list(
+    query: RegistrationSessionListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<RegistrationSessionRetrieveRegistrationSessionsResponse> {
+  ): APIPromise<ListRegistrationSession> {
     return this._client.get('/v1/auth/registration-sessions', { query, ...options });
+  }
+
+  /**
+   * Completes the registration flow by provisioning accounts, roles, and
+   * permissions. Requires payment to be confirmed first.
+   *
+   * @example
+   * ```ts
+   * const completeRegistrationResponse =
+   *   await client.auth.registrationSessions.accounts(
+   *     'rgfw_01011dbade766ab524553afb10',
+   *   );
+   * ```
+   */
+  accounts(sessionID: string, options?: RequestOptions): APIPromise<CompleteRegistrationResponse> {
+    return this._client.post(path`/v1/auth/registration-sessions/${sessionID}/accounts`, options);
   }
 
   /**
@@ -122,9 +121,9 @@ export class RegistrationSessions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const createUserResponse =
    *   await client.auth.registrationSessions.users(
-   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+   *     'rgfw_01011dbade766ab524553afb10',
    *     { name: 'Jane Smith', password: 'P@ssw0rd123!' },
    *   );
    * ```
@@ -133,9 +132,129 @@ export class RegistrationSessions extends APIResource {
     sessionID: string,
     body: RegistrationSessionUsersParams,
     options?: RequestOptions,
-  ): APIPromise<RegistrationSessionUsersResponse> {
+  ): APIPromise<CreateUserResponse> {
     return this._client.post(path`/v1/auth/registration-sessions/${sessionID}/users`, { body, ...options });
   }
+}
+
+/**
+ * Result of completing a registration.
+ */
+export interface CompleteRegistrationResponse {
+  /**
+   * Account ID.
+   */
+  id: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account';
+}
+
+/**
+ * Request to create a registration session.
+ */
+export interface CreateRegistrationSessionRequest {
+  /**
+   * Email address.
+   */
+  email: string;
+
+  /**
+   * Plan code.
+   */
+  plan_code: 'free' | 'starter' | 'pro';
+}
+
+/**
+ * Result of creating a registration session.
+ */
+export interface CreateSessionResponse {
+  /**
+   * Session ID.
+   */
+  id: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'registration_session';
+}
+
+/**
+ * Request to create a user for a registration session.
+ */
+export interface CreateUserRequest {
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Password.
+   */
+  password: string;
+}
+
+/**
+ * Result of creating a user for a registration session.
+ */
+export interface CreateUserResponse {
+  /**
+   * User ID.
+   */
+  id: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'user';
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListRegistrationSession {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ActionsAPI.RegistrationSession>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
 }
 
 /**
@@ -150,7 +269,7 @@ export interface RegistrationSession {
   /**
    * Account data within a registration session.
    */
-  account: RegistrationSession.Account | null;
+  account: ActionsAPI.RegistrationSessionAccount | null;
 
   /**
    * Timestamp when registration was completed. Null if still in progress.
@@ -200,121 +319,27 @@ export interface RegistrationSession {
   /**
    * User data within a registration session.
    */
-  user: RegistrationSession.User;
-}
-
-export namespace RegistrationSession {
-  /**
-   * Account data within a registration session.
-   */
-  export interface Account {
-    /**
-     * Account ID, null until account is created.
-     */
-    id: string | null;
-
-    /**
-     * Address within a registration session.
-     */
-    billing_address: Account.BillingAddress;
-
-    /**
-     * Display name.
-     */
-    name: string;
-
-    /**
-     * Resource type identifier.
-     */
-    object: 'account';
-  }
-
-  export namespace Account {
-    /**
-     * Address within a registration session.
-     */
-    export interface BillingAddress {
-      /**
-       * Address ID, null until address is created.
-       */
-      id: string | null;
-
-      /**
-       * City name.
-       */
-      city: string | null;
-
-      /**
-       * Two-letter country code.
-       */
-      country: string | null;
-
-      /**
-       * Street address line 1.
-       */
-      line1: string | null;
-
-      /**
-       * Street address line 2 (apartment, suite, etc.).
-       */
-      line2: string | null;
-
-      /**
-       * Resource type identifier.
-       */
-      object: 'address';
-
-      /**
-       * Postal or ZIP code.
-       */
-      postal_code: string | null;
-
-      /**
-       * State or province.
-       */
-      state: string | null;
-    }
-  }
-
-  /**
-   * User data within a registration session.
-   */
-  export interface User {
-    /**
-     * User ID, null until user is created.
-     */
-    id: string | null;
-
-    /**
-     * Email address.
-     */
-    email: string;
-
-    /**
-     * Timestamp when email was verified, null if pending.
-     */
-    email_verified_at: string | null;
-
-    /**
-     * Display name.
-     */
-    name: string | null;
-
-    /**
-     * Resource type identifier.
-     */
-    object: 'user';
-  }
+  user: ActionsAPI.RegistrationSessionUser;
 }
 
 /**
- * Result of completing a registration.
+ * Account data within a registration session.
  */
-export interface RegistrationSessionAccountsResponse {
+export interface RegistrationSessionAccount {
   /**
-   * Account ID.
+   * Account ID, null until account is created.
    */
-  id: string;
+  id: string | null;
+
+  /**
+   * Address within a registration session.
+   */
+  billing_address: ActionsAPI.RegistrationSessionAddress;
+
+  /**
+   * Display name.
+   */
+  name: string;
 
   /**
    * Resource type identifier.
@@ -323,48 +348,73 @@ export interface RegistrationSessionAccountsResponse {
 }
 
 /**
- * Result of creating a registration session.
+ * Address within a registration session.
  */
-export interface RegistrationSessionRegistrationSessionsResponse {
+export interface RegistrationSessionAddress {
   /**
-   * Session ID.
+   * Address ID, null until address is created.
    */
-  id: string;
+  id: string | null;
+
+  /**
+   * City name.
+   */
+  city: string | null;
+
+  /**
+   * Two-letter country code.
+   */
+  country: string | null;
+
+  /**
+   * Street address line 1.
+   */
+  line1: string | null;
+
+  /**
+   * Street address line 2 (apartment, suite, etc.).
+   */
+  line2: string | null;
 
   /**
    * Resource type identifier.
    */
-  object: 'registration_session';
+  object: 'address';
+
+  /**
+   * Postal or ZIP code.
+   */
+  postal_code: string | null;
+
+  /**
+   * State or province.
+   */
+  state: string | null;
 }
 
 /**
- * List represents a paginated list of resources.
+ * User data within a registration session.
  */
-export interface RegistrationSessionRetrieveRegistrationSessionsResponse {
+export interface RegistrationSessionUser {
   /**
-   * Resources in this page.
+   * User ID, null until user is created.
    */
-  data: Array<RegistrationSession>;
+  id: string | null;
 
   /**
-   * Resource type identifier.
+   * Email address.
    */
-  object: 'list';
+  email: string;
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * Timestamp when email was verified, null if pending.
    */
-  page_info: AgentsAPI.PageInfo;
-}
+  email_verified_at: string | null;
 
-/**
- * Result of creating a user for a registration session.
- */
-export interface RegistrationSessionUsersResponse {
   /**
-   * User ID.
+   * Display name.
    */
-  id: string;
+  name: string | null;
 
   /**
    * Resource type identifier.
@@ -372,11 +422,59 @@ export interface RegistrationSessionUsersResponse {
   object: 'user';
 }
 
-export interface RegistrationSessionUpdateParams {
+/**
+ * Mutable form data for a session update.
+ */
+export interface UpdateSessionDataRequest {
+  /**
+   * Display name for the account.
+   */
+  account_name?: string;
+
+  /**
+   * Billing address city.
+   */
+  billing_address_city?: string;
+
+  /**
+   * Billing address country.
+   */
+  billing_address_country?: string;
+
+  /**
+   * Billing address line 1.
+   */
+  billing_address_line1?: string;
+
+  /**
+   * Billing address line 2.
+   */
+  billing_address_line2?: string;
+
+  /**
+   * Billing address postal code.
+   */
+  billing_address_postal_code?: string;
+
+  /**
+   * Billing address state.
+   */
+  billing_address_state?: string;
+
+  /**
+   * Display name for the user.
+   */
+  user_name?: string;
+}
+
+/**
+ * Request to update a registration session.
+ */
+export interface UpdateSessionRequest {
   /**
    * Mutable form data for a session update.
    */
-  session_data?: RegistrationSessionUpdateParams.SessionData;
+  session_data?: UpdateSessionDataRequest;
 
   /**
    * Step to advance the session to.
@@ -384,54 +482,7 @@ export interface RegistrationSessionUpdateParams {
   step?: 'verification' | 'user_details' | 'account_details' | 'review' | 'payment' | 'completed';
 }
 
-export namespace RegistrationSessionUpdateParams {
-  /**
-   * Mutable form data for a session update.
-   */
-  export interface SessionData {
-    /**
-     * Display name for the account.
-     */
-    account_name?: string;
-
-    /**
-     * Billing address city.
-     */
-    billing_address_city?: string;
-
-    /**
-     * Billing address country.
-     */
-    billing_address_country?: string;
-
-    /**
-     * Billing address line 1.
-     */
-    billing_address_line1?: string;
-
-    /**
-     * Billing address line 2.
-     */
-    billing_address_line2?: string;
-
-    /**
-     * Billing address postal code.
-     */
-    billing_address_postal_code?: string;
-
-    /**
-     * Billing address state.
-     */
-    billing_address_state?: string;
-
-    /**
-     * Display name for the user.
-     */
-    user_name?: string;
-  }
-}
-
-export interface RegistrationSessionRegistrationSessionsParams {
+export interface RegistrationSessionCreateParams {
   /**
    * Email address.
    */
@@ -443,7 +494,19 @@ export interface RegistrationSessionRegistrationSessionsParams {
   plan_code: 'free' | 'starter' | 'pro';
 }
 
-export interface RegistrationSessionRetrieveRegistrationSessionsParams {
+export interface RegistrationSessionUpdateParams {
+  /**
+   * Mutable form data for a session update.
+   */
+  session_data?: UpdateSessionDataRequest;
+
+  /**
+   * Step to advance the session to.
+   */
+  step?: 'verification' | 'user_details' | 'account_details' | 'review' | 'payment' | 'completed';
+}
+
+export interface RegistrationSessionListParams {
   /**
    * Cursor token used to retrieve the next or previous page of results.
    */
@@ -476,22 +539,31 @@ RegistrationSessions.Actions = Actions;
 
 export declare namespace RegistrationSessions {
   export {
+    type CompleteRegistrationResponse as CompleteRegistrationResponse,
+    type CreateRegistrationSessionRequest as CreateRegistrationSessionRequest,
+    type CreateSessionResponse as CreateSessionResponse,
+    type CreateUserRequest as CreateUserRequest,
+    type CreateUserResponse as CreateUserResponse,
+    type ListRegistrationSession as ListRegistrationSession,
+    type PageInfo as PageInfo,
     type RegistrationSession as RegistrationSession,
-    type RegistrationSessionAccountsResponse as RegistrationSessionAccountsResponse,
-    type RegistrationSessionRegistrationSessionsResponse as RegistrationSessionRegistrationSessionsResponse,
-    type RegistrationSessionRetrieveRegistrationSessionsResponse as RegistrationSessionRetrieveRegistrationSessionsResponse,
-    type RegistrationSessionUsersResponse as RegistrationSessionUsersResponse,
+    type RegistrationSessionAccount as RegistrationSessionAccount,
+    type RegistrationSessionAddress as RegistrationSessionAddress,
+    type RegistrationSessionUser as RegistrationSessionUser,
+    type UpdateSessionDataRequest as UpdateSessionDataRequest,
+    type UpdateSessionRequest as UpdateSessionRequest,
+    type RegistrationSessionCreateParams as RegistrationSessionCreateParams,
     type RegistrationSessionUpdateParams as RegistrationSessionUpdateParams,
-    type RegistrationSessionRegistrationSessionsParams as RegistrationSessionRegistrationSessionsParams,
-    type RegistrationSessionRetrieveRegistrationSessionsParams as RegistrationSessionRetrieveRegistrationSessionsParams,
+    type RegistrationSessionListParams as RegistrationSessionListParams,
     type RegistrationSessionUsersParams as RegistrationSessionUsersParams,
   };
 
   export {
     Actions as Actions,
-    type ActionConfirmPaymentResponse as ActionConfirmPaymentResponse,
+    type ConfirmPaymentRequest as ConfirmPaymentRequest,
+    type ConfirmPaymentResponse as ConfirmPaymentResponse,
+    type SetupBillingResponse as SetupBillingResponse,
     type ActionResendVerificationEmailResponse as ActionResendVerificationEmailResponse,
-    type ActionSetupBillingResponse as ActionSetupBillingResponse,
     type ActionConfirmPaymentParams as ActionConfirmPaymentParams,
   };
 }

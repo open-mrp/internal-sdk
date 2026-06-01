@@ -1,7 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AgentsAPI from '../ai/agents';
+import * as EdiRunsAPI from '../operations/edi-runs';
+import * as LinesAPI from '../operations/shipments/lines';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -21,7 +22,7 @@ export class Addresses extends APIResource {
    * });
    * ```
    */
-  create(body: AddressCreateParams, options?: RequestOptions): APIPromise<Address> {
+  create(body: AddressCreateParams, options?: RequestOptions): APIPromise<LinesAPI.Address> {
     return this._client.post('/v1/sales/addresses', { body, ...options });
   }
 
@@ -31,11 +32,11 @@ export class Addresses extends APIResource {
    * @example
    * ```ts
    * const address = await client.sales.addresses.retrieve(
-   *   'ad_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'ad_012100950cfaa34aa0e0ad7258',
    * );
    * ```
    */
-  retrieve(id: string, options?: RequestOptions): APIPromise<Address> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<LinesAPI.Address> {
     return this._client.get(path`/v1/sales/addresses/${id}`, options);
   }
 
@@ -45,7 +46,7 @@ export class Addresses extends APIResource {
    * @example
    * ```ts
    * const address = await client.sales.addresses.update(
-   *   'ad_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'ad_012100950cfaa34aa0e0ad7258',
    *   { name: 'Warehouse' },
    * );
    * ```
@@ -54,7 +55,7 @@ export class Addresses extends APIResource {
     id: string,
     body: AddressUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<Address> {
+  ): APIPromise<LinesAPI.Address> {
     return this._client.patch(path`/v1/sales/addresses/${id}`, { body, ...options });
   }
 
@@ -63,13 +64,10 @@ export class Addresses extends APIResource {
    *
    * @example
    * ```ts
-   * const addresses = await client.sales.addresses.list();
+   * const listAddress = await client.sales.addresses.list();
    * ```
    */
-  list(
-    query: AddressListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<AddressListResponse> {
+  list(query: AddressListParams | null | undefined = {}, options?: RequestOptions): APIPromise<ListAddress> {
     return this._client.get('/v1/sales/addresses', { query, ...options });
   }
 
@@ -80,7 +78,7 @@ export class Addresses extends APIResource {
    * @example
    * ```ts
    * const address = await client.sales.addresses.delete(
-   *   'ad_01jm4r6700f8nwq3v5hx2d9ktp',
+   *   'ad_012100950cfaa34aa0e0ad7258',
    * );
    * ```
    */
@@ -111,7 +109,7 @@ export interface Address {
   /**
    * Geolocation sub-resource.
    */
-  geolocation: Address.Geolocation | null;
+  geolocation: LinesAPI.Geolocation | null;
 
   /**
    * Display name of the address.
@@ -137,53 +135,6 @@ export interface Address {
    * Last updated timestamp.
    */
   updated_at: string;
-}
-
-export namespace Address {
-  /**
-   * Geolocation sub-resource.
-   */
-  export interface Geolocation {
-    /**
-     * Geolocation ID.
-     */
-    id: string;
-
-    /**
-     * Two-letter country code.
-     */
-    country: string;
-
-    /**
-     * City or locality.
-     */
-    locality: string | null;
-
-    /**
-     * Resource type identifier.
-     */
-    object: 'geolocation';
-
-    /**
-     * Postal or ZIP code.
-     */
-    postal_code: string | null;
-
-    /**
-     * State or administrative area.
-     */
-    state: string | null;
-
-    /**
-     * First line of the street address.
-     */
-    street_line_1: string | null;
-
-    /**
-     * Second line of the street address.
-     */
-    street_line_2: string | null;
-  }
 }
 
 /**
@@ -242,13 +193,58 @@ export interface AddressInput {
 }
 
 /**
+ * Geolocation sub-resource.
+ */
+export interface Geolocation {
+  /**
+   * Geolocation ID.
+   */
+  id: string;
+
+  /**
+   * Two-letter country code.
+   */
+  country: string;
+
+  /**
+   * City or locality.
+   */
+  locality: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'geolocation';
+
+  /**
+   * Postal or ZIP code.
+   */
+  postal_code: string | null;
+
+  /**
+   * State or administrative area.
+   */
+  state: string | null;
+
+  /**
+   * First line of the street address.
+   */
+  street_line_1: string | null;
+
+  /**
+   * Second line of the street address.
+   */
+  street_line_2: string | null;
+}
+
+/**
  * List represents a paginated list of resources.
  */
-export interface AddressListResponse {
+export interface ListAddress {
   /**
    * Resources in this page.
    */
-  data: Array<Address>;
+  data: Array<LinesAPI.Address>;
 
   /**
    * Resource type identifier.
@@ -258,7 +254,87 @@ export interface AddressListResponse {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+/**
+ * Request to partially update an address.
+ */
+export interface UpdateAddressRequest {
+  /**
+   * Two-letter country code.
+   */
+  country?: string;
+
+  /**
+   * Email address associated with the address.
+   */
+  email?: string | null;
+
+  /**
+   * City or locality.
+   */
+  locality?: string;
+
+  /**
+   * Display name of the address.
+   */
+  name?: string;
+
+  /**
+   * Phone number associated with the address.
+   */
+  phone?: string | null;
+
+  /**
+   * Postal or ZIP code.
+   */
+  postal_code?: string;
+
+  /**
+   * State or administrative area.
+   */
+  state?: string;
+
+  /**
+   * First line of the street address.
+   */
+  street_line_1?: string;
+
+  /**
+   * Second line of the street address.
+   */
+  street_line_2?: string | null;
+
+  /**
+   * Address type.
+   */
+  type?: 'standard' | 'drop_ship';
 }
 
 export interface AddressDeleteResponse {}
@@ -393,7 +469,10 @@ export declare namespace Addresses {
   export {
     type Address as Address,
     type AddressInput as AddressInput,
-    type AddressListResponse as AddressListResponse,
+    type Geolocation as Geolocation,
+    type ListAddress as ListAddress,
+    type PageInfo as PageInfo,
+    type UpdateAddressRequest as UpdateAddressRequest,
     type AddressDeleteResponse as AddressDeleteResponse,
     type AddressCreateParams as AddressCreateParams,
     type AddressUpdateParams as AddressUpdateParams,

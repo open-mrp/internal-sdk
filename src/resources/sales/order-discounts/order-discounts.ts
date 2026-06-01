@@ -1,9 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AgentsAPI from '../../ai/agents';
-import * as ActionsAPI from './actions';
-import { ActionFindByCodeParams, Actions } from './actions';
+import * as EdiRunsAPI from '../../operations/edi-runs';
+import * as ActionsAPI from '../../operations/shipments/actions';
+import * as OrderDiscountsActionsAPI from './actions';
+import { ActionFindByCodeParams, Actions, FindOrderDiscountByCodeRequest } from './actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -12,7 +13,25 @@ import { path } from '../../../internal/utils/path';
  * List and manage order discounts.
  */
 export class OrderDiscounts extends APIResource {
-  actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
+  actions: OrderDiscountsActionsAPI.Actions = new OrderDiscountsActionsAPI.Actions(this._client);
+
+  /**
+   * Creates an order discount.
+   *
+   * @example
+   * ```ts
+   * const orderDiscount =
+   *   await client.sales.orderDiscounts.create({
+   *     code: 'SAVE10',
+   *     discount_type: 'percentage',
+   *     name: '10% Off',
+   *     percentage: '10.000000000000000000000000000000',
+   *   });
+   * ```
+   */
+  create(body: OrderDiscountCreateParams, options?: RequestOptions): APIPromise<ActionsAPI.OrderDiscount> {
+    return this._client.post('/v1/sales/order-discounts', { body, ...options });
+  }
 
   /**
    * Returns an order discount by ID.
@@ -21,11 +40,11 @@ export class OrderDiscounts extends APIResource {
    * ```ts
    * const orderDiscount =
    *   await client.sales.orderDiscounts.retrieve(
-   *     'ords_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'ords_01121c5e2f6937a6b896daad3a',
    *   );
    * ```
    */
-  retrieve(id: string, options?: RequestOptions): APIPromise<OrderDiscount> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<ActionsAPI.OrderDiscount> {
     return this._client.get(path`/v1/sales/order-discounts/${id}`, options);
   }
 
@@ -36,7 +55,7 @@ export class OrderDiscounts extends APIResource {
    * ```ts
    * const orderDiscount =
    *   await client.sales.orderDiscounts.update(
-   *     'ords_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'ords_01121c5e2f6937a6b896daad3a',
    *     { code: 'SAVE15', name: '15% Off' },
    *   );
    * ```
@@ -45,8 +64,24 @@ export class OrderDiscounts extends APIResource {
     id: string,
     body: OrderDiscountUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<OrderDiscount> {
+  ): APIPromise<ActionsAPI.OrderDiscount> {
     return this._client.patch(path`/v1/sales/order-discounts/${id}`, { body, ...options });
+  }
+
+  /**
+   * Returns a paginated list of order discounts for the current account.
+   *
+   * @example
+   * ```ts
+   * const listOrderDiscount =
+   *   await client.sales.orderDiscounts.list();
+   * ```
+   */
+  list(
+    query: OrderDiscountListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ListOrderDiscount> {
+    return this._client.get('/v1/sales/order-discounts', { query, ...options });
   }
 
   /**
@@ -56,50 +91,64 @@ export class OrderDiscounts extends APIResource {
    * ```ts
    * const orderDiscount =
    *   await client.sales.orderDiscounts.delete(
-   *     'ords_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'ords_01121c5e2f6937a6b896daad3a',
    *   );
    * ```
    */
-  delete(id: string, options?: RequestOptions): APIPromise<OrderDiscount> {
+  delete(id: string, options?: RequestOptions): APIPromise<ActionsAPI.OrderDiscount> {
     return this._client.delete(path`/v1/sales/order-discounts/${id}`, options);
   }
+}
+
+/**
+ * Request to create an order discount.
+ */
+export interface CreateOrderDiscountRequest {
+  /**
+   * Discount code.
+   */
+  code: string;
 
   /**
-   * Creates an order discount.
-   *
-   * @example
-   * ```ts
-   * const orderDiscount =
-   *   await client.sales.orderDiscounts.orderDiscounts({
-   *     code: 'SAVE10',
-   *     discount_type: 'percentage',
-   *     name: '10% Off',
-   *     percentage: '10.000000000000000000000000000000',
-   *   });
-   * ```
+   * Discount type: "percentage" or "amount".
    */
-  orderDiscounts(
-    body: OrderDiscountOrderDiscountsParams,
-    options?: RequestOptions,
-  ): APIPromise<OrderDiscount> {
-    return this._client.post('/v1/sales/order-discounts', { body, ...options });
-  }
+  discount_type: string;
 
   /**
-   * Returns a paginated list of order discounts for the current account.
-   *
-   * @example
-   * ```ts
-   * const response =
-   *   await client.sales.orderDiscounts.retrieveOrderDiscounts();
-   * ```
+   * Display name.
    */
-  retrieveOrderDiscounts(
-    query: OrderDiscountRetrieveOrderDiscountsParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<OrderDiscountRetrieveOrderDiscountsResponse> {
-    return this._client.get('/v1/sales/order-discounts', { query, ...options });
-  }
+  name: string;
+
+  /**
+   * Fixed amount as a decimal string. Required when discount_type is "amount".
+   */
+  amount?: string;
+
+  /**
+   * Percentage value as a decimal string. Required when discount_type is
+   * "percentage".
+   */
+  percentage?: string;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListOrderDiscount {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ActionsAPI.OrderDiscount>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: EdiRunsAPI.PageInfo;
 }
 
 /**
@@ -158,23 +207,86 @@ export interface OrderDiscount {
 }
 
 /**
- * List represents a paginated list of resources.
+ * PageInfo contains URL-based pagination metadata.
  */
-export interface OrderDiscountRetrieveOrderDiscountsResponse {
+export interface PageInfo {
   /**
-   * Resources in this page.
+   * Whether more results exist after this page.
    */
-  data: Array<OrderDiscount>;
+  has_next_page: boolean;
 
   /**
-   * Resource type identifier.
+   * Whether results exist before this page.
    */
-  object: 'list';
+  has_prev_page: boolean;
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * URL to fetch the next page, `null` if no more pages.
    */
-  page_info: AgentsAPI.PageInfo;
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+/**
+ * Request to partially update an order discount.
+ */
+export interface UpdateOrderDiscountRequest {
+  /**
+   * Fixed amount as a decimal string.
+   */
+  amount?: string;
+
+  /**
+   * Discount code.
+   */
+  code?: string;
+
+  /**
+   * Discount type: "percentage" or "amount".
+   */
+  discount_type?: string;
+
+  /**
+   * Display name.
+   */
+  name?: string;
+
+  /**
+   * Percentage value as a decimal string.
+   */
+  percentage?: string;
+}
+
+export interface OrderDiscountCreateParams {
+  /**
+   * Discount code.
+   */
+  code: string;
+
+  /**
+   * Discount type: "percentage" or "amount".
+   */
+  discount_type: string;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Fixed amount as a decimal string. Required when discount_type is "amount".
+   */
+  amount?: string;
+
+  /**
+   * Percentage value as a decimal string. Required when discount_type is
+   * "percentage".
+   */
+  percentage?: string;
 }
 
 export interface OrderDiscountUpdateParams {
@@ -204,35 +316,7 @@ export interface OrderDiscountUpdateParams {
   percentage?: string;
 }
 
-export interface OrderDiscountOrderDiscountsParams {
-  /**
-   * Discount code.
-   */
-  code: string;
-
-  /**
-   * Discount type: "percentage" or "amount".
-   */
-  discount_type: string;
-
-  /**
-   * Display name.
-   */
-  name: string;
-
-  /**
-   * Fixed amount as a decimal string. Required when discount_type is "amount".
-   */
-  amount?: string;
-
-  /**
-   * Percentage value as a decimal string. Required when discount_type is
-   * "percentage".
-   */
-  percentage?: string;
-}
-
-export interface OrderDiscountRetrieveOrderDiscountsParams {
+export interface OrderDiscountListParams {
   /**
    * Cursor token used to retrieve the next or previous page of results.
    */
@@ -253,12 +337,19 @@ OrderDiscounts.Actions = Actions;
 
 export declare namespace OrderDiscounts {
   export {
+    type CreateOrderDiscountRequest as CreateOrderDiscountRequest,
+    type ListOrderDiscount as ListOrderDiscount,
     type OrderDiscount as OrderDiscount,
-    type OrderDiscountRetrieveOrderDiscountsResponse as OrderDiscountRetrieveOrderDiscountsResponse,
+    type PageInfo as PageInfo,
+    type UpdateOrderDiscountRequest as UpdateOrderDiscountRequest,
+    type OrderDiscountCreateParams as OrderDiscountCreateParams,
     type OrderDiscountUpdateParams as OrderDiscountUpdateParams,
-    type OrderDiscountOrderDiscountsParams as OrderDiscountOrderDiscountsParams,
-    type OrderDiscountRetrieveOrderDiscountsParams as OrderDiscountRetrieveOrderDiscountsParams,
+    type OrderDiscountListParams as OrderDiscountListParams,
   };
 
-  export { Actions as Actions, type ActionFindByCodeParams as ActionFindByCodeParams };
+  export {
+    Actions as Actions,
+    type FindOrderDiscountByCodeRequest as FindOrderDiscountByCodeRequest,
+    type ActionFindByCodeParams as ActionFindByCodeParams,
+  };
 }

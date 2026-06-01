@@ -8,9 +8,9 @@ const client = new Augno({
 });
 
 describe('resource actions', () => {
-  test('updatePick: only required params', async () => {
-    const responsePromise = client.operations.picks.lines.actions.updatePick('example', {
-      pick_id: 'pk_01jm4r6700f8nwq3v5hx2d9ktp',
+  test('pick: only required params', async () => {
+    const responsePromise = client.operations.picks.lines.actions.pick('example', {
+      pick_id: 'pk_016452192feb7952d8393f0105',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -21,15 +21,15 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updatePick: required and optional params', async () => {
-    const response = await client.operations.picks.lines.actions.updatePick('example', {
-      pick_id: 'pk_01jm4r6700f8nwq3v5hx2d9ktp',
+  test('pick: required and optional params', async () => {
+    const response = await client.operations.picks.lines.actions.pick('example', {
+      pick_id: 'pk_016452192feb7952d8393f0105',
     });
   });
 
-  test('updateVoid: only required params', async () => {
-    const responsePromise = client.operations.picks.lines.actions.updateVoid('example', {
-      pick_id: 'pk_01jm4r6700f8nwq3v5hx2d9ktp',
+  test('void: only required params', async () => {
+    const responsePromise = client.operations.picks.lines.actions.void('example', {
+      pick_id: 'pk_016452192feb7952d8393f0105',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -40,9 +40,9 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateVoid: required and optional params', async () => {
-    const response = await client.operations.picks.lines.actions.updateVoid('example', {
-      pick_id: 'pk_01jm4r6700f8nwq3v5hx2d9ktp',
+  test('void: required and optional params', async () => {
+    const response = await client.operations.picks.lines.actions.void('example', {
+      pick_id: 'pk_016452192feb7952d8393f0105',
     });
   });
 });

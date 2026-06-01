@@ -13,11 +13,11 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const enterpriseInquiry =
    *   await client.billing.actions.requestEnterprise();
    * ```
    */
-  requestEnterprise(options?: RequestOptions): APIPromise<ActionRequestEnterpriseResponse> {
+  requestEnterprise(options?: RequestOptions): APIPromise<EnterpriseInquiry> {
     return this._client.post('/v1/billing/actions/request-enterprise', options);
   }
 }
@@ -25,7 +25,7 @@ export class Actions extends APIResource {
 /**
  * Enterprise plan upgrade request.
  */
-export interface ActionRequestEnterpriseResponse {
+export interface EnterpriseInquiry {
   /**
    * Enterprise inquiry ID.
    */
@@ -43,5 +43,5 @@ export interface ActionRequestEnterpriseResponse {
 }
 
 export declare namespace Actions {
-  export { type ActionRequestEnterpriseResponse as ActionRequestEnterpriseResponse };
+  export { type EnterpriseInquiry as EnterpriseInquiry };
 }

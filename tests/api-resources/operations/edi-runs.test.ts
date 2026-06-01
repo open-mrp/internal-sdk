@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource ediRuns', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.ediRuns.retrieve('edru_01gf7a8200er3ar3pkfrb6kk30');
+    const responsePromise = client.operations.ediRuns.retrieve('edru_016aa43a99df34b744f6e2b878');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,8 +19,8 @@ describe('resource ediRuns', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveEdiRuns', async () => {
-    const responsePromise = client.operations.ediRuns.retrieveEdiRuns();
+  test('list', async () => {
+    const responsePromise = client.operations.ediRuns.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -30,10 +30,10 @@ describe('resource ediRuns', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveEdiRuns: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.operations.ediRuns.retrieveEdiRuns(
+      client.operations.ediRuns.list(
         {
           cursor: 'cursor',
           has_succeeded: true,

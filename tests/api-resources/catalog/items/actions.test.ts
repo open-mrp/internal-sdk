@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource actions', () => {
   test('bulkCreate: only required params', async () => {
     const responsePromise = client.catalog.items.actions.bulkCreate({
-      items: [{ item_category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp', sku: 'ALM-FLOUR-25LB' }],
+      items: [{ item_category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e', sku: 'ALM-FLOUR-25LB' }],
       type: 'material',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -26,7 +26,7 @@ describe('resource actions', () => {
     const response = await client.catalog.items.actions.bulkCreate({
       items: [
         {
-          item_category_id: 'ic_01jm4r6700f8nwq3v5hx2d9ktp',
+          item_category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
           sku: 'ALM-FLOUR-25LB',
           description: 'Raw almond flour, 25 lb bag',
           product_line_id: 'product_line_id',
@@ -69,8 +69,8 @@ describe('resource actions', () => {
     });
   });
 
-  test('retrieveExport', async () => {
-    const responsePromise = client.catalog.items.actions.retrieveExport();
+  test('export', async () => {
+    const responsePromise = client.catalog.items.actions.export();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

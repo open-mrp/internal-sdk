@@ -18,9 +18,9 @@ export class Actions extends APIResource {
    *   await client.operations.productionFlows.actions.connectSteps(
    *     {
    *       source_production_step_id:
-   *         'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         'prst_0159474175bb59f4b1990404ee',
    *       target_production_step_id:
-   *         'prst_01jm4r6700f8nwq3v5hx2d9ktp',
+   *         'prst_0159474175bb59f4b1990404ee',
    *     },
    *   );
    * ```
@@ -31,6 +31,22 @@ export class Actions extends APIResource {
   ): APIPromise<ActionConnectStepsResponse> {
     return this._client.post('/v1/operations/production-flows/actions/connect-steps', { body, ...options });
   }
+}
+
+/**
+ * ConnectStepsRequest is the request to connect two steps in the production flow
+ * DAG.
+ */
+export interface ConnectStepsRequest {
+  /**
+   * Source (upstream) production step ID.
+   */
+  source_production_step_id: string;
+
+  /**
+   * Target (downstream) production step ID.
+   */
+  target_production_step_id: string;
 }
 
 export interface ActionConnectStepsResponse {}
@@ -49,6 +65,7 @@ export interface ActionConnectStepsParams {
 
 export declare namespace Actions {
   export {
+    type ConnectStepsRequest as ConnectStepsRequest,
     type ActionConnectStepsResponse as ActionConnectStepsResponse,
     type ActionConnectStepsParams as ActionConnectStepsParams,
   };

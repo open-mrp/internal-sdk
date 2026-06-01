@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AgentsAPI from '../../ai/agents';
-import * as PropertiesAPI from './properties';
+import * as EdiRunsAPI from '../../operations/edi-runs';
+import * as LinesAPI from '../../operations/shipments/lines';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -18,12 +18,16 @@ export class Attributes extends APIResource {
    * ```ts
    * const attribute =
    *   await client.catalog.properties.attributes.create(
-   *     'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'pp_01e21344878064372f69e67093',
    *     { sort_order: 1, value: 'Red' },
    *   );
    * ```
    */
-  create(propertyID: string, body: AttributeCreateParams, options?: RequestOptions): APIPromise<Attribute> {
+  create(
+    propertyID: string,
+    body: AttributeCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<LinesAPI.Attribute> {
     return this._client.post(path`/v1/catalog/properties/${propertyID}/attributes`, { body, ...options });
   }
 
@@ -34,12 +38,16 @@ export class Attributes extends APIResource {
    * ```ts
    * const attribute =
    *   await client.catalog.properties.attributes.retrieve(
-   *     'at_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     { property_id: 'pp_01jm4r6700f8nwq3v5hx2d9ktp' },
+   *     'at_01c9493ec0c46bb0ed12708ae4',
+   *     { property_id: 'pp_01e21344878064372f69e67093' },
    *   );
    * ```
    */
-  retrieve(id: string, params: AttributeRetrieveParams, options?: RequestOptions): APIPromise<Attribute> {
+  retrieve(
+    id: string,
+    params: AttributeRetrieveParams,
+    options?: RequestOptions,
+  ): APIPromise<LinesAPI.Attribute> {
     const { property_id } = params;
     return this._client.get(path`/v1/catalog/properties/${property_id}/attributes/${id}`, options);
   }
@@ -51,15 +59,19 @@ export class Attributes extends APIResource {
    * ```ts
    * const attribute =
    *   await client.catalog.properties.attributes.update(
-   *     'at_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'at_01c9493ec0c46bb0ed12708ae4',
    *     {
-   *       property_id: 'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *       property_id: 'pp_01e21344878064372f69e67093',
    *       value: 'Blue',
    *     },
    *   );
    * ```
    */
-  update(id: string, params: AttributeUpdateParams, options?: RequestOptions): APIPromise<Attribute> {
+  update(
+    id: string,
+    params: AttributeUpdateParams,
+    options?: RequestOptions,
+  ): APIPromise<LinesAPI.Attribute> {
     const { property_id, ...body } = params;
     return this._client.patch(path`/v1/catalog/properties/${property_id}/attributes/${id}`, {
       body,
@@ -74,7 +86,7 @@ export class Attributes extends APIResource {
    * ```ts
    * const listAttribute =
    *   await client.catalog.properties.attributes.list(
-   *     'pp_01jm4r6700f8nwq3v5hx2d9ktp',
+   *     'pp_01e21344878064372f69e67093',
    *   );
    * ```
    */
@@ -82,7 +94,7 @@ export class Attributes extends APIResource {
     propertyID: string,
     query: AttributeListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ListAttribute> {
+  ): APIPromise<LinesAPI.ListAttribute> {
     return this._client.get(path`/v1/catalog/properties/${propertyID}/attributes`, { query, ...options });
   }
 
@@ -93,8 +105,8 @@ export class Attributes extends APIResource {
    * ```ts
    * const attribute =
    *   await client.catalog.properties.attributes.delete(
-   *     'at_01jm4r6700f8nwq3v5hx2d9ktp',
-   *     { property_id: 'pp_01jm4r6700f8nwq3v5hx2d9ktp' },
+   *     'at_01c9493ec0c46bb0ed12708ae4',
+   *     { property_id: 'pp_01e21344878064372f69e67093' },
    *   );
    * ```
    */
@@ -135,7 +147,7 @@ export interface Attribute {
   /**
    * Property that groups attributes.
    */
-  property: PropertiesAPI.Property | null;
+  property: LinesAPI.Property | null;
 
   /**
    * Display order.
@@ -154,13 +166,44 @@ export interface Attribute {
 }
 
 /**
+ * Request to create an attribute.
+ */
+export interface CreateAttributeRequest {
+  /**
+   * Display order. Defaults to last position if not provided.
+   */
+  sort_order: number | null;
+
+  /**
+   * Attribute value.
+   */
+  value: string;
+
+  /**
+   * Color code. Randomly assigned if not provided.
+   */
+  color?:
+    | 'blue'
+    | 'brown'
+    | 'default'
+    | 'gray'
+    | 'green'
+    | 'orange'
+    | 'pink'
+    | 'purple'
+    | 'red'
+    | 'yellow'
+    | null;
+}
+
+/**
  * List represents a paginated list of resources.
  */
 export interface ListAttribute {
   /**
    * Resources in this page.
    */
-  data: Array<Attribute>;
+  data: Array<LinesAPI.Attribute>;
 
   /**
    * Resource type identifier.
@@ -170,7 +213,87 @@ export interface ListAttribute {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: AgentsAPI.PageInfo;
+  page_info: EdiRunsAPI.PageInfo;
+}
+
+/**
+ * PageInfo contains URL-based pagination metadata.
+ */
+export interface PageInfo {
+  /**
+   * Whether more results exist after this page.
+   */
+  has_next_page: boolean;
+
+  /**
+   * Whether results exist before this page.
+   */
+  has_prev_page: boolean;
+
+  /**
+   * URL to fetch the next page, `null` if no more pages.
+   */
+  next_page_url: string | null;
+
+  /**
+   * URL to fetch the previous page, `null` if on the first page.
+   */
+  previous_page_url: string | null;
+}
+
+/**
+ * Property that groups attributes.
+ */
+export interface Property {
+  /**
+   * Property ID.
+   */
+  id: string;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  attributes: LinesAPI.ListAttribute | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'property';
+
+  /**
+   * Last update timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Request to update an attribute.
+ */
+export interface UpdateAttributeRequest {
+  /**
+   * Color code.
+   */
+  color?: 'blue' | 'brown' | 'default' | 'gray' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'yellow';
+
+  /**
+   * Display order. Must be a positive integer.
+   */
+  sort_order?: number;
+
+  /**
+   * Attribute value.
+   */
+  value?: string;
 }
 
 export interface AttributeDeleteResponse {}
@@ -259,7 +382,11 @@ export interface AttributeDeleteParams {
 export declare namespace Attributes {
   export {
     type Attribute as Attribute,
+    type CreateAttributeRequest as CreateAttributeRequest,
     type ListAttribute as ListAttribute,
+    type PageInfo as PageInfo,
+    type Property as Property,
+    type UpdateAttributeRequest as UpdateAttributeRequest,
     type AttributeDeleteResponse as AttributeDeleteResponse,
     type AttributeCreateParams as AttributeCreateParams,
     type AttributeRetrieveParams as AttributeRetrieveParams,

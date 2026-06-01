@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource actions', () => {
   test('bulkDelete: only required params', async () => {
     const responsePromise = client.operations.batches.actions.bulkDelete({
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
+      batch_ids: ['bt_017313a7df2d7ac8d895809747'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,13 +23,13 @@ describe('resource actions', () => {
 
   test('bulkDelete: required and optional params', async () => {
     const response = await client.operations.batches.actions.bulkDelete({
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
+      batch_ids: ['bt_017313a7df2d7ac8d895809747'],
     });
   });
 
   test('close: only required params', async () => {
     const responsePromise = client.operations.batches.actions.close({
-      batch_id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
+      batch_id: 'bt_017313a7df2d7ac8d895809747',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -42,14 +42,14 @@ describe('resource actions', () => {
 
   test('close: required and optional params', async () => {
     const response = await client.operations.batches.actions.close({
-      batch_id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
+      batch_id: 'bt_017313a7df2d7ac8d895809747',
     });
   });
 
   test('initialize: only required params', async () => {
     const responsePromise = client.operations.batches.actions.initialize({
-      batch_id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
-      scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      batch_id: 'bt_017313a7df2d7ac8d895809747',
+      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -62,16 +62,16 @@ describe('resource actions', () => {
 
   test('initialize: required and optional params', async () => {
     const response = await client.operations.batches.actions.initialize({
-      batch_id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
-      scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      batch_id: 'bt_017313a7df2d7ac8d895809747',
+      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
     });
   });
 
   test('merge: only required params', async () => {
     const responsePromise = client.operations.batches.actions.merge({
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-      scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      batch_ids: ['bt_017313a7df2d7ac8d895809747'],
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
+      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -84,17 +84,17 @@ describe('resource actions', () => {
 
   test('merge: required and optional params', async () => {
     const response = await client.operations.batches.actions.merge({
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-      scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      batch_ids: ['bt_017313a7df2d7ac8d895809747'],
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
+      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
     });
   });
 
   test('move: only required params', async () => {
     const responsePromise = client.operations.batches.actions.move({
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-      scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      batch_ids: ['bt_017313a7df2d7ac8d895809747'],
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
+      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -107,23 +107,23 @@ describe('resource actions', () => {
 
   test('move: required and optional params', async () => {
     const response = await client.operations.batches.actions.move({
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-      scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      batch_ids: ['bt_017313a7df2d7ac8d895809747'],
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
+      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
     });
   });
 
   test('split: only required params', async () => {
     const responsePromise = client.operations.batches.actions.split({
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
+      batch_ids: ['bt_017313a7df2d7ac8d895809747'],
       close_batch: false,
       firsts: {
-        id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
+        id: 'bt_017313a7df2d7ac8d895809747',
         measure: '10.5',
-        unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+        unit_id: 'un_01966263f74a5a0cae356000a1',
       },
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-      scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
+      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
       seconds: {
         id: 'id',
         measure: 'measure',
@@ -146,15 +146,15 @@ describe('resource actions', () => {
 
   test('split: required and optional params', async () => {
     const response = await client.operations.batches.actions.split({
-      batch_ids: ['bt_01jm4r6700f8nwq3v5hx2d9ktp'],
+      batch_ids: ['bt_017313a7df2d7ac8d895809747'],
       close_batch: false,
       firsts: {
-        id: 'bt_01jm4r6700f8nwq3v5hx2d9ktp',
+        id: 'bt_017313a7df2d7ac8d895809747',
         measure: '10.5',
-        unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+        unit_id: 'un_01966263f74a5a0cae356000a1',
       },
-      production_step_id: 'prst_01jm4r6700f8nwq3v5hx2d9ktp',
-      scanning_station_id: 'scst_01jm4r6700f8nwq3v5hx2d9ktp',
+      production_step_id: 'prst_0159474175bb59f4b1990404ee',
+      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
       seconds: {
         id: 'id',
         measure: 'measure',

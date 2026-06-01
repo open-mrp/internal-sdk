@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource locationTypes', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.locationTypes.retrieve('lc_01gf7a8200er3ar3pkfrb6kk31');
+    const responsePromise = client.operations.locationTypes.retrieve('lc_01e69cd3745a1bc0dd485986c0');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,8 +19,8 @@ describe('resource locationTypes', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveLocationTypes', async () => {
-    const responsePromise = client.operations.locationTypes.retrieveLocationTypes();
+  test('list', async () => {
+    const responsePromise = client.operations.locationTypes.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -30,10 +30,10 @@ describe('resource locationTypes', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveLocationTypes: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.operations.locationTypes.retrieveLocationTypes(
+      client.operations.locationTypes.list(
         {
           cursor: 'cursor',
           limit: 0,

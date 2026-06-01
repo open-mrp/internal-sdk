@@ -8,10 +8,35 @@ const client = new Augno({
 });
 
 describe('resource salesTargets', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.sales.accountUsers.salesTargets.create('acus_01ea9983ddb41dacc44ecf997c', {
+      amount_unit_id: 'un_01966263f74a5a0cae356000a1',
+      amount_value: '50000.00',
+      end_date: '2026-03-31T00:00:00Z',
+      start_date: '2026-01-01T00:00:00Z',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.sales.accountUsers.salesTargets.create('acus_01ea9983ddb41dacc44ecf997c', {
+      amount_unit_id: 'un_01966263f74a5a0cae356000a1',
+      amount_value: '50000.00',
+      end_date: '2026-03-31T00:00:00Z',
+      start_date: '2026-01-01T00:00:00Z',
+    });
+  });
+
   test('update: only required params', async () => {
     const responsePromise = client.sales.accountUsers.salesTargets.update('example', {
-      id: 'acus_01gf7a8200er3ar3pkfrb6kk29',
-      amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+      id: 'acus_01ea9983ddb41dacc44ecf997c',
+      amount_unit_id: 'un_01966263f74a5a0cae356000a1',
       amount_value: '75000.00',
       end_date: '2026-06-30T00:00:00Z',
       start_date: '2026-04-01T00:00:00Z',
@@ -27,18 +52,16 @@ describe('resource salesTargets', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.sales.accountUsers.salesTargets.update('example', {
-      id: 'acus_01gf7a8200er3ar3pkfrb6kk29',
-      amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
+      id: 'acus_01ea9983ddb41dacc44ecf997c',
+      amount_unit_id: 'un_01966263f74a5a0cae356000a1',
       amount_value: '75000.00',
       end_date: '2026-06-30T00:00:00Z',
       start_date: '2026-04-01T00:00:00Z',
     });
   });
 
-  test('retrieveSalesTargets', async () => {
-    const responsePromise = client.sales.accountUsers.salesTargets.retrieveSalesTargets(
-      'acus_01gf7a8200er3ar3pkfrb6kk29',
-    );
+  test('list', async () => {
+    const responsePromise = client.sales.accountUsers.salesTargets.list('acus_01ea9983ddb41dacc44ecf997c');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,11 +71,11 @@ describe('resource salesTargets', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveSalesTargets: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.sales.accountUsers.salesTargets.retrieveSalesTargets(
-        'acus_01gf7a8200er3ar3pkfrb6kk29',
+      client.sales.accountUsers.salesTargets.list(
+        'acus_01ea9983ddb41dacc44ecf997c',
         {
           cursor: 'cursor',
           limit: 0,
@@ -61,36 +84,5 @@ describe('resource salesTargets', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
-  });
-
-  test('salesTargets: only required params', async () => {
-    const responsePromise = client.sales.accountUsers.salesTargets.salesTargets(
-      'acus_01gf7a8200er3ar3pkfrb6kk29',
-      {
-        amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-        amount_value: '50000.00',
-        end_date: '2026-03-31T00:00:00Z',
-        start_date: '2026-01-01T00:00:00Z',
-      },
-    );
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('salesTargets: required and optional params', async () => {
-    const response = await client.sales.accountUsers.salesTargets.salesTargets(
-      'acus_01gf7a8200er3ar3pkfrb6kk29',
-      {
-        amount_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-        amount_value: '50000.00',
-        end_date: '2026-03-31T00:00:00Z',
-        start_date: '2026-01-01T00:00:00Z',
-      },
-    );
   });
 });

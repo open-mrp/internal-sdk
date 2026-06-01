@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource users', () => {
   test('retrieve', async () => {
-    const responsePromise = client.identity.users.retrieve('us_01gf7a8200e9pvbd6bgyq395ae');
+    const responsePromise = client.identity.users.retrieve('us_0151164dcaea4cbded27b50aae');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,9 +20,9 @@ describe('resource users', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.identity.users.update('us_01gf7a8200e9pvbd6bgyq395ae', {
+    const responsePromise = client.identity.users.update('us_0151164dcaea4cbded27b50aae', {
       email_verified: '2019-12-27T18:11:19.117Z',
-      image_url: 'https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg',
+      image_url: 'https://cdn.augno.com/avatars/us_0151164dcaea4cbded27b50aae.jpg',
       name: 'John Doe',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -35,9 +35,9 @@ describe('resource users', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.identity.users.update('us_01gf7a8200e9pvbd6bgyq395ae', {
+    const response = await client.identity.users.update('us_0151164dcaea4cbded27b50aae', {
       email_verified: '2019-12-27T18:11:19.117Z',
-      image_url: 'https://cdn.augno.com/avatars/us_01gf7a8200e9pvbd6bgyq395ae.jpg',
+      image_url: 'https://cdn.augno.com/avatars/us_0151164dcaea4cbded27b50aae.jpg',
       name: 'John Doe',
     });
   });

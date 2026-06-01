@@ -17,7 +17,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.finance.accounts.actions.emailReceivables(
-   *     'ac_01gf7a8200eaj8fke1xvw4h50x',
+   *     'ac_01148680966698341a9c0976db',
    *     { recipient_emails: ['jdoe@augno.com'] },
    *   );
    * ```
@@ -34,6 +34,16 @@ export class Actions extends APIResource {
   }
 }
 
+/**
+ * Request to email receivable entries for a specific customer.
+ */
+export interface EmailReceivablesForCustomerRequest {
+  /**
+   * Email addresses to send the receivables report to.
+   */
+  recipient_emails: Array<string>;
+}
+
 export interface ActionEmailReceivablesResponse {}
 
 export interface ActionEmailReceivablesParams {
@@ -45,6 +55,7 @@ export interface ActionEmailReceivablesParams {
 
 export declare namespace Actions {
   export {
+    type EmailReceivablesForCustomerRequest as EmailReceivablesForCustomerRequest,
     type ActionEmailReceivablesResponse as ActionEmailReceivablesResponse,
     type ActionEmailReceivablesParams as ActionEmailReceivablesParams,
   };

@@ -1,12 +1,29 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { Actions, type ActionInitiateOAuthResponse, type ActionInitiateOAuthParams } from './actions';
+export {
+  Actions,
+  type InitiateOAuthRequest,
+  type OAuthResponse,
+  type ActionInitiateOAuthParams,
+  type ActionSyncOptionsParams,
+} from './actions';
 export {
   Carriers,
+  type Account,
+  type AccountBranding,
+  type AccountPortal,
+  type Address,
   type Carrier,
-  type CarrierListResponse,
+  type CreateCarrierRequest,
+  type Geolocation,
+  type ListCarrier,
+  type ListServiceLevel,
+  type OAuthStatusResponse,
+  type Owner,
+  type PageInfo,
+  type ServiceLevel,
+  type UpdateCarrierRequest,
   type CarrierDeleteResponse,
-  type CarrierRetrieveOAuthStatusResponse,
   type CarrierCreateParams,
   type CarrierRetrieveParams,
   type CarrierUpdateParams,
@@ -14,12 +31,12 @@ export {
 } from './carriers';
 export {
   ServiceLevels,
-  type ListServiceLevel,
-  type ServiceLevel,
+  type CreateServiceLevelRequest,
+  type UpdateServiceLevelRequest,
   type ServiceLevelDeleteResponse,
+  type ServiceLevelCreateParams,
   type ServiceLevelRetrieveParams,
   type ServiceLevelUpdateParams,
+  type ServiceLevelListParams,
   type ServiceLevelDeleteParams,
-  type ServiceLevelRetrieveServiceLevelsParams,
-  type ServiceLevelServiceLevelsParams,
 } from './service-levels';

@@ -22,15 +22,16 @@ describe('resource departments', () => {
   test('create: required and optional params', async () => {
     const response = await client.operations.departments.create({
       name: 'Fabrication',
+      include: ['location'],
       location_id: 'location_id',
-      machine_ids: ['mc_01jm4r6700f8nwq3v5hx2d9ktp'],
+      machine_ids: ['mc_0177d18f55a1615f783d3bf8d0'],
       notes: 'notes',
-      scanning_station_ids: ['scst_01jm4r6700f8nwq3v5hx2d9ktp'],
+      scanning_station_ids: ['scst_0129335dd6286056a97024fcc1'],
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.departments.retrieve('dp_01gf7a8200er3ar3pkfrb6kk30');
+    const responsePromise = client.operations.departments.retrieve('dp_01791c25ab59da4704cba61874');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -44,7 +45,7 @@ describe('resource departments', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.departments.retrieve(
-        'dp_01gf7a8200er3ar3pkfrb6kk30',
+        'dp_01791c25ab59da4704cba61874',
         { include: ['location'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -52,7 +53,7 @@ describe('resource departments', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.departments.update('dp_01gf7a8200er3ar3pkfrb6kk30');
+    const responsePromise = client.operations.departments.update('dp_01791c25ab59da4704cba61874');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -66,8 +67,9 @@ describe('resource departments', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.departments.update(
-        'dp_01gf7a8200er3ar3pkfrb6kk30',
+        'dp_01791c25ab59da4704cba61874',
         {
+          include: ['location'],
           location_id: 'location_id',
           machine_ids: ['string'],
           name: 'Production',
@@ -96,6 +98,7 @@ describe('resource departments', () => {
       client.operations.departments.list(
         {
           cursor: 'cursor',
+          include: ['location'],
           limit: 0,
           q: 'q',
         },
@@ -105,7 +108,7 @@ describe('resource departments', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.departments.delete('dp_01gf7a8200er3ar3pkfrb6kk30');
+    const responsePromise = client.operations.departments.delete('dp_01791c25ab59da4704cba61874');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -34,7 +34,7 @@ describe('resource carriers', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.carriers.retrieve('cr_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.carriers.retrieve('cr_01784fd54c9ba197bb4e42f0e6');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,7 +48,7 @@ describe('resource carriers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.carriers.retrieve(
-        'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+        'cr_01784fd54c9ba197bb4e42f0e6',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -56,7 +56,7 @@ describe('resource carriers', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.carriers.update('cr_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.carriers.update('cr_01784fd54c9ba197bb4e42f0e6');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -70,7 +70,7 @@ describe('resource carriers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.carriers.update(
-        'cr_01jm4r6700f8nwq3v5hx2d9ktp',
+        'cr_01784fd54c9ba197bb4e42f0e6',
         {
           include: ['owner'],
           customer_portal_visibility: 'visible',
@@ -108,7 +108,7 @@ describe('resource carriers', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.carriers.delete('cr_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.carriers.delete('cr_01784fd54c9ba197bb4e42f0e6');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -119,7 +119,7 @@ describe('resource carriers', () => {
   });
 
   test('retrieveOAuthStatus', async () => {
-    const responsePromise = client.operations.carriers.retrieveOAuthStatus('cr_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.carriers.retrieveOAuthStatus('cr_01784fd54c9ba197bb4e42f0e6');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

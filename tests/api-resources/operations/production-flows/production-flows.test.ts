@@ -8,8 +8,8 @@ const client = new Augno({
 });
 
 describe('resource productionFlows', () => {
-  test('retrieve', async () => {
-    const responsePromise = client.operations.productionFlows.retrieve('example');
+  test('retrieveByItem', async () => {
+    const responsePromise = client.operations.productionFlows.retrieveByItem('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,10 +19,10 @@ describe('resource productionFlows', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieve: request options and params are passed correctly', async () => {
+  test('retrieveByItem: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.operations.productionFlows.retrieve(
+      client.operations.productionFlows.retrieveByItem(
         'example',
         { include: ['steps'] },
         { path: '/_stainless_unknown_path' },

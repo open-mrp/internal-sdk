@@ -16,13 +16,23 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.suppliers.actions.bulkDelete({
-   *     supplier_ids: ['ac_02kn5s7811g9qwce7cizr4e0mq'],
+   *     supplier_ids: ['ac_0177902104bccac5fbb173cd96'],
    *   });
    * ```
    */
   bulkDelete(body: ActionBulkDeleteParams, options?: RequestOptions): APIPromise<ActionBulkDeleteResponse> {
     return this._client.post('/v1/operations/suppliers/actions/bulk-delete', { body, ...options });
   }
+}
+
+/**
+ * BulkDeleteSuppliersRequest is the request to bulk delete suppliers.
+ */
+export interface BulkDeleteSuppliersRequest {
+  /**
+   * Supplier IDs to delete.
+   */
+  supplier_ids: Array<string>;
 }
 
 export interface ActionBulkDeleteResponse {}
@@ -36,6 +46,7 @@ export interface ActionBulkDeleteParams {
 
 export declare namespace Actions {
   export {
+    type BulkDeleteSuppliersRequest as BulkDeleteSuppliersRequest,
     type ActionBulkDeleteResponse as ActionBulkDeleteResponse,
     type ActionBulkDeleteParams as ActionBulkDeleteParams,
   };

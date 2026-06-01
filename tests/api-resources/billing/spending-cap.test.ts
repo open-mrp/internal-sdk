@@ -8,8 +8,8 @@ const client = new Augno({
 });
 
 describe('resource spendingCap', () => {
-  test('retrieveSpendingCap', async () => {
-    const responsePromise = client.billing.spendingCap.retrieveSpendingCap();
+  test('update: only required params', async () => {
+    const responsePromise = client.billing.spendingCap.update({ cap_cents: 50000 });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,8 +19,12 @@ describe('resource spendingCap', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateSpendingCap: only required params', async () => {
-    const responsePromise = client.billing.spendingCap.updateSpendingCap({ cap_cents: 50000 });
+  test('update: required and optional params', async () => {
+    const response = await client.billing.spendingCap.update({ cap_cents: 50000 });
+  });
+
+  test('list', async () => {
+    const responsePromise = client.billing.spendingCap.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -28,9 +32,5 @@ describe('resource spendingCap', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('updateSpendingCap: required and optional params', async () => {
-    const response = await client.billing.spendingCap.updateSpendingCap({ cap_cents: 50000 });
   });
 });

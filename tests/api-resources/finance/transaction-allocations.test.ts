@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource transactionAllocations', () => {
   test('update: only required params', async () => {
-    const responsePromise = client.finance.transactionAllocations.update('txal_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const responsePromise = client.finance.transactionAllocations.update('txal_016cc92c2d9c0b12801e3160e0', {
       amount: '150.00',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -22,13 +22,13 @@ describe('resource transactionAllocations', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.finance.transactionAllocations.update('txal_01jm4r6700f8nwq3v5hx2d9ktp', {
+    const response = await client.finance.transactionAllocations.update('txal_016cc92c2d9c0b12801e3160e0', {
       amount: '150.00',
     });
   });
 
-  test('delete', async () => {
-    const responsePromise = client.finance.transactionAllocations.delete('txal_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('list', async () => {
+    const responsePromise = client.finance.transactionAllocations.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,21 +38,10 @@ describe('resource transactionAllocations', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieveTransactionAllocations', async () => {
-    const responsePromise = client.finance.transactionAllocations.retrieveTransactionAllocations();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieveTransactionAllocations: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.finance.transactionAllocations.retrieveTransactionAllocations(
+      client.finance.transactionAllocations.list(
         {
           cursor: 'cursor',
           end_date: 'end_date',
@@ -64,5 +53,16 @@ describe('resource transactionAllocations', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.finance.transactionAllocations.delete('txal_016cc92c2d9c0b12801e3160e0');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

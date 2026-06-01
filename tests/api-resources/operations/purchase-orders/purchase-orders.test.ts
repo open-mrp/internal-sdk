@@ -8,8 +8,80 @@ const client = new Augno({
 });
 
 describe('resource purchaseOrders', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.operations.purchaseOrders.create({
+      lines: [
+        {
+          product_id: 'pd_013c29ab3f1518d0004094c316',
+          product_sku: 'RAW-100',
+          quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+          quantity_value: '500',
+          unit_price_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+          unit_price_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+          unit_price_value: '12.50',
+        },
+      ],
+      priority_code: 'normal',
+      supplier_account_id: 'ac_0177902104bccac5fbb173cd96',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: required and optional params', async () => {
+    const response = await client.operations.purchaseOrders.create({
+      lines: [
+        {
+          product_id: 'pd_013c29ab3f1518d0004094c316',
+          product_sku: 'RAW-100',
+          quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+          quantity_value: '500',
+          unit_price_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+          unit_price_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+          unit_price_value: '12.50',
+          item_id: 'item_id',
+          product_description: 'product_description',
+          unit_cost_denominator_unit_id: 'unit_cost_denominator_unit_id',
+          unit_cost_numerator_unit_id: 'unit_cost_numerator_unit_id',
+          unit_cost_value: 'unit_cost_value',
+        },
+      ],
+      priority_code: 'normal',
+      supplier_account_id: 'ac_0177902104bccac5fbb173cd96',
+      include: ['supplier'],
+      bill_to_country: 'bill_to_country',
+      bill_to_locality: 'bill_to_locality',
+      bill_to_name: 'bill_to_name',
+      bill_to_postal_code: 'bill_to_postal_code',
+      bill_to_state: 'bill_to_state',
+      bill_to_street_line_1: 'bill_to_street_line_1',
+      bill_to_street_line_2: 'bill_to_street_line_2',
+      carrier_billing_account: 'carrier_billing_account',
+      carrier_billing_type: 'carrier_billing_type',
+      carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+      contact_account_user_ids: ['string'],
+      note: 'Urgent restock order',
+      payment_term_id: 'payment_term_id',
+      promised_at: 'promised_at',
+      service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
+      ship_to_country: 'US',
+      ship_to_locality: 'San Francisco',
+      ship_to_name: 'Acme Inc.',
+      ship_to_postal_code: '94105',
+      ship_to_state: 'CA',
+      ship_to_street_line_1: '123 Main Street',
+      ship_to_street_line_2: 'ship_to_street_line_2',
+      shipping_term_id: 'shipping_term_id',
+    });
+  });
+
   test('retrieve', async () => {
-    const responsePromise = client.operations.purchaseOrders.retrieve('po_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.purchaseOrders.retrieve('po_0169aa3a722b081b117ac0e44f');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +95,7 @@ describe('resource purchaseOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.purchaseOrders.retrieve(
-        'po_01jm4r6700f8nwq3v5hx2d9ktp',
+        'po_0169aa3a722b081b117ac0e44f',
         { include: ['supplier'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +103,7 @@ describe('resource purchaseOrders', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.purchaseOrders.update('po_01jm4r6700f8nwq3v5hx2d9ktp');
+    const responsePromise = client.operations.purchaseOrders.update('po_0169aa3a722b081b117ac0e44f');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +117,7 @@ describe('resource purchaseOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.purchaseOrders.update(
-        'po_01jm4r6700f8nwq3v5hx2d9ktp',
+        'po_0169aa3a722b081b117ac0e44f',
         {
           include: ['supplier'],
           billing_address_id: 'billing_address_id',
@@ -61,8 +133,8 @@ describe('resource purchaseOrders', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.operations.purchaseOrders.delete('po_01jm4r6700f8nwq3v5hx2d9ktp');
+  test('list', async () => {
+    const responsePromise = client.operations.purchaseOrders.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -72,93 +144,10 @@ describe('resource purchaseOrders', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('purchaseOrders: only required params', async () => {
-    const responsePromise = client.operations.purchaseOrders.purchaseOrders({
-      lines: [
-        {
-          product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
-          product_sku: 'RAW-100',
-          quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          quantity_value: '500',
-          unit_price_denominator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          unit_price_numerator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          unit_price_value: '12.50',
-        },
-      ],
-      priority_code: 'normal',
-      supplier_account_id: 'ac_02kn5s7811g9qwce7cizr4e0mq',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('purchaseOrders: required and optional params', async () => {
-    const response = await client.operations.purchaseOrders.purchaseOrders({
-      lines: [
-        {
-          product_id: 'pd_01jm4r6700f8nwq3v5hx2d9ktp',
-          product_sku: 'RAW-100',
-          quantity_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          quantity_value: '500',
-          unit_price_denominator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          unit_price_numerator_unit_id: 'un_01jm4r6700f8nwq3v5hx2d9ktp',
-          unit_price_value: '12.50',
-          item_id: 'item_id',
-          product_description: 'product_description',
-          unit_cost_denominator_unit_id: 'unit_cost_denominator_unit_id',
-          unit_cost_numerator_unit_id: 'unit_cost_numerator_unit_id',
-          unit_cost_value: 'unit_cost_value',
-        },
-      ],
-      priority_code: 'normal',
-      supplier_account_id: 'ac_02kn5s7811g9qwce7cizr4e0mq',
-      include: ['supplier'],
-      bill_to_country: 'bill_to_country',
-      bill_to_locality: 'bill_to_locality',
-      bill_to_name: 'bill_to_name',
-      bill_to_postal_code: 'bill_to_postal_code',
-      bill_to_state: 'bill_to_state',
-      bill_to_street_line_1: 'bill_to_street_line_1',
-      bill_to_street_line_2: 'bill_to_street_line_2',
-      carrier_billing_account: 'carrier_billing_account',
-      carrier_billing_type: 'carrier_billing_type',
-      carrier_id: 'cr_01jm4r6700f8nwq3v5hx2d9ktp',
-      contact_account_user_ids: ['string'],
-      note: 'Urgent restock order',
-      payment_term_id: 'payment_term_id',
-      promised_at: 'promised_at',
-      service_level_id: 'crop_01jm4r6700f8nwq3v5hx2d9ktp',
-      ship_to_country: 'US',
-      ship_to_locality: 'San Francisco',
-      ship_to_name: 'Acme Inc.',
-      ship_to_postal_code: '94105',
-      ship_to_state: 'CA',
-      ship_to_street_line_1: '123 Main Street',
-      ship_to_street_line_2: 'ship_to_street_line_2',
-      shipping_term_id: 'shipping_term_id',
-    });
-  });
-
-  test('retrievePurchaseOrders', async () => {
-    const responsePromise = client.operations.purchaseOrders.retrievePurchaseOrders();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrievePurchaseOrders: request options and params are passed correctly', async () => {
+  test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.operations.purchaseOrders.retrievePurchaseOrders(
+      client.operations.purchaseOrders.list(
         {
           cursor: 'cursor',
           end_date: 'end_date',
@@ -172,6 +161,17 @@ describe('resource purchaseOrders', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.operations.purchaseOrders.delete('po_0169aa3a722b081b117ac0e44f');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 
   test('retrieveStatuses', async () => {

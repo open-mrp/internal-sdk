@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as RegistrationSessionsAPI from './registration-sessions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -16,9 +15,9 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const confirmPaymentResponse =
    *   await client.auth.registrationSessions.actions.confirmPayment(
-   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+   *     'rgfw_01011dbade766ab524553afb10',
    *     { setup_intent_id: 'seti_1N4kLm2eZvKYlo2C0wFVpSbx' },
    *   );
    * ```
@@ -27,7 +26,7 @@ export class Actions extends APIResource {
     sessionID: string,
     body: ActionConfirmPaymentParams,
     options?: RequestOptions,
-  ): APIPromise<ActionConfirmPaymentResponse> {
+  ): APIPromise<ConfirmPaymentResponse> {
     return this._client.post(path`/v1/auth/registration-sessions/${sessionID}/actions/confirm-payment`, {
       body,
       ...options,
@@ -42,7 +41,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.auth.registrationSessions.actions.resendVerificationEmail(
-   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+   *     'rgfw_01011dbade766ab524553afb10',
    *   );
    * ```
    */
@@ -61,13 +60,13 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const setupBillingResponse =
    *   await client.auth.registrationSessions.actions.setupBilling(
-   *     'rgfw_01gf7a8200eaj8fke1xvw4h50x',
+   *     'rgfw_01011dbade766ab524553afb10',
    *   );
    * ```
    */
-  setupBilling(sessionID: string, options?: RequestOptions): APIPromise<ActionSetupBillingResponse> {
+  setupBilling(sessionID: string, options?: RequestOptions): APIPromise<SetupBillingResponse> {
     return this._client.post(
       path`/v1/auth/registration-sessions/${sessionID}/actions/setup-billing`,
       options,
@@ -81,23 +80,30 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const registrationSession =
-   *   await client.auth.registrationSessions.actions.updateVerifyToken(
+   *   await client.auth.registrationSessions.actions.verifyToken(
    *     'example',
    *   );
    * ```
    */
-  updateVerifyToken(
-    token: string,
-    options?: RequestOptions,
-  ): APIPromise<RegistrationSessionsAPI.RegistrationSession> {
+  verifyToken(token: string, options?: RequestOptions): APIPromise<RegistrationSession> {
     return this._client.put(path`/v1/auth/registration-sessions/${token}/actions/verify-token`, options);
   }
 }
 
 /**
+ * Request to confirm payment for a registration session.
+ */
+export interface ConfirmPaymentRequest {
+  /**
+   * Stripe Setup Intent ID to verify.
+   */
+  setup_intent_id: string;
+}
+
+/**
  * Result of confirming payment for a registration.
  */
-export interface ActionConfirmPaymentResponse {
+export interface ConfirmPaymentResponse {
   /**
    * Resource type identifier.
    */
@@ -114,12 +120,175 @@ export interface ActionConfirmPaymentResponse {
   status: string;
 }
 
-export interface ActionResendVerificationEmailResponse {}
+/**
+ * Registration session.
+ */
+export interface RegistrationSession {
+  /**
+   * Session ID.
+   */
+  id: string;
+
+  /**
+   * Account data within a registration session.
+   */
+  account: RegistrationSessionAccount | null;
+
+  /**
+   * Timestamp when registration was completed. Null if still in progress.
+   */
+  completed_at: string | null;
+
+  /**
+   * Timestamp when this session was created.
+   */
+  created_at: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'registration_session';
+
+  /**
+   * Whether payment has been completed.
+   */
+  payment_completed: boolean;
+
+  /**
+   * Pricing plan code.
+   */
+  plan_code: string;
+
+  /**
+   * Current registration step.
+   */
+  step: 'verification' | 'user_details' | 'account_details' | 'review' | 'payment' | 'completed';
+
+  /**
+   * Stripe checkout session ID.
+   */
+  stripe_checkout_session_id: string | null;
+
+  /**
+   * Stripe customer ID.
+   */
+  stripe_customer_id: string | null;
+
+  /**
+   * Timestamp when this session was last updated.
+   */
+  updated_at: string;
+
+  /**
+   * User data within a registration session.
+   */
+  user: RegistrationSessionUser;
+}
+
+/**
+ * Account data within a registration session.
+ */
+export interface RegistrationSessionAccount {
+  /**
+   * Account ID, null until account is created.
+   */
+  id: string | null;
+
+  /**
+   * Address within a registration session.
+   */
+  billing_address: RegistrationSessionAddress;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account';
+}
+
+/**
+ * Address within a registration session.
+ */
+export interface RegistrationSessionAddress {
+  /**
+   * Address ID, null until address is created.
+   */
+  id: string | null;
+
+  /**
+   * City name.
+   */
+  city: string | null;
+
+  /**
+   * Two-letter country code.
+   */
+  country: string | null;
+
+  /**
+   * Street address line 1.
+   */
+  line1: string | null;
+
+  /**
+   * Street address line 2 (apartment, suite, etc.).
+   */
+  line2: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'address';
+
+  /**
+   * Postal or ZIP code.
+   */
+  postal_code: string | null;
+
+  /**
+   * State or province.
+   */
+  state: string | null;
+}
+
+/**
+ * User data within a registration session.
+ */
+export interface RegistrationSessionUser {
+  /**
+   * User ID, null until user is created.
+   */
+  id: string | null;
+
+  /**
+   * Email address.
+   */
+  email: string;
+
+  /**
+   * Timestamp when email was verified, null if pending.
+   */
+  email_verified_at: string | null;
+
+  /**
+   * Display name.
+   */
+  name: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'user';
+}
 
 /**
  * Result of setting up billing for a registration.
  */
-export interface ActionSetupBillingResponse {
+export interface SetupBillingResponse {
   /**
    * Stripe Setup Intent client secret for Stripe.js payment collection.
    */
@@ -141,6 +310,8 @@ export interface ActionSetupBillingResponse {
   stripe_customer_id: string;
 }
 
+export interface ActionResendVerificationEmailResponse {}
+
 export interface ActionConfirmPaymentParams {
   /**
    * Stripe Setup Intent ID to verify.
@@ -150,9 +321,14 @@ export interface ActionConfirmPaymentParams {
 
 export declare namespace Actions {
   export {
-    type ActionConfirmPaymentResponse as ActionConfirmPaymentResponse,
+    type ConfirmPaymentRequest as ConfirmPaymentRequest,
+    type ConfirmPaymentResponse as ConfirmPaymentResponse,
+    type RegistrationSession as RegistrationSession,
+    type RegistrationSessionAccount as RegistrationSessionAccount,
+    type RegistrationSessionAddress as RegistrationSessionAddress,
+    type RegistrationSessionUser as RegistrationSessionUser,
+    type SetupBillingResponse as SetupBillingResponse,
     type ActionResendVerificationEmailResponse as ActionResendVerificationEmailResponse,
-    type ActionSetupBillingResponse as ActionSetupBillingResponse,
     type ActionConfirmPaymentParams as ActionConfirmPaymentParams,
   };
 }
