@@ -156,8 +156,11 @@ export interface CreateCarrierRequest {
   name: string;
 
   /**
-   * Whether this carrier will be available for customers to select in the customer
-   * portal.
+   * Carrier visibility in the customer portal.
+   *
+   * If `visible`, this carrier will be available for your customers to utilize when
+   * they go to checkout. If `hidden`, this carrier will not be an option on
+   * checkout.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 }
@@ -203,8 +206,11 @@ export interface OAuthStatusResponse {
  */
 export interface UpdateCarrierRequest {
   /**
-   * Whether this carrier will be available for customers to select in the customer
-   * portal.
+   * Carrier visibility in the customer portal.
+   *
+   * If `visible`, this carrier will be available for your customers to utilize when
+   * they go to checkout. If `hidden`, this carrier will not be an option on
+   * checkout.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 
@@ -239,8 +245,11 @@ export interface CarrierCreateParams {
   include?: Array<'owner' | 'owner.account' | 'service_levels'>;
 
   /**
-   * Body param: Whether this carrier will be available for customers to select in
-   * the customer portal.
+   * Body param: Carrier visibility in the customer portal.
+   *
+   * If `visible`, this carrier will be available for your customers to utilize when
+   * they go to checkout. If `hidden`, this carrier will not be an option on
+   * checkout.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 }
@@ -261,8 +270,11 @@ export interface CarrierUpdateParams {
   include?: Array<'owner' | 'owner.account' | 'service_levels'>;
 
   /**
-   * Body param: Whether this carrier will be available for customers to select in
-   * the customer portal.
+   * Body param: Carrier visibility in the customer portal.
+   *
+   * If `visible`, this carrier will be available for your customers to utilize when
+   * they go to checkout. If `hidden`, this carrier will not be an option on
+   * checkout.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 
