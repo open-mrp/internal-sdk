@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as AuthAPI from '../../auth/auth';
 import * as PhotoAPI from './photo';
 import { Photo, UserPhotoURL, UserPhotoUploadResult } from './photo';
-import * as InventoryChangeLogsAPI from '../../operations/inventory-change-logs/inventory-change-logs';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -24,7 +24,7 @@ export class Users extends APIResource {
    * );
    * ```
    */
-  retrieve(id: string, options?: RequestOptions): APIPromise<InventoryChangeLogsAPI.User> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<AuthAPI.User> {
     return this._client.get(path`/v1/identity/users/${id}`, options);
   }
 
@@ -44,11 +44,7 @@ export class Users extends APIResource {
    * );
    * ```
    */
-  update(
-    id: string,
-    body: UserUpdateParams,
-    options?: RequestOptions,
-  ): APIPromise<InventoryChangeLogsAPI.User> {
+  update(id: string, body: UserUpdateParams, options?: RequestOptions): APIPromise<AuthAPI.User> {
     return this._client.patch(path`/v1/identity/users/${id}`, { body, ...options });
   }
 }
@@ -73,56 +69,6 @@ export interface UpdateUserRequest {
   name: string | null;
 }
 
-/**
- * User resource.
- */
-export interface User {
-  /**
-   * User ID.
-   */
-  id: string;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Email address.
-   */
-  email: string | null;
-
-  /**
-   * Email verified timestamp, null if unverified.
-   */
-  email_verified_at: string | null;
-
-  /**
-   * Profile image URL.
-   */
-  image_url: string | null;
-
-  /**
-   * Display name.
-   */
-  name: string | null;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'user';
-
-  /**
-   * Last updated timestamp.
-   */
-  updated_at: string;
-
-  /**
-   * Username.
-   */
-  username: string | null;
-}
-
 export interface UserUpdateParams {
   /**
    * Email verification timestamp. Set to null to mark as unverified.
@@ -143,11 +89,7 @@ export interface UserUpdateParams {
 Users.Photo = Photo;
 
 export declare namespace Users {
-  export {
-    type UpdateUserRequest as UpdateUserRequest,
-    type User as User,
-    type UserUpdateParams as UserUpdateParams,
-  };
+  export { type UpdateUserRequest as UpdateUserRequest, type UserUpdateParams as UserUpdateParams };
 
   export {
     Photo as Photo,

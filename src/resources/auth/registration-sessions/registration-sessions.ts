@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as EdiRunsAPI from '../../operations/edi-runs';
+import * as APIKeysAPI from '../api-keys/api-keys';
 import * as ActionsAPI from './actions';
 import {
   ActionConfirmPaymentParams,
@@ -50,7 +50,7 @@ export class RegistrationSessions extends APIResource {
    *   );
    * ```
    */
-  retrieve(sessionID: string, options?: RequestOptions): APIPromise<ActionsAPI.RegistrationSession> {
+  retrieve(sessionID: string, options?: RequestOptions): APIPromise<RegistrationSession> {
     return this._client.get(path`/v1/auth/registration-sessions/${sessionID}`, options);
   }
 
@@ -77,7 +77,7 @@ export class RegistrationSessions extends APIResource {
     sessionID: string,
     body: RegistrationSessionUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionsAPI.RegistrationSession> {
+  ): APIPromise<RegistrationSession> {
     return this._client.patch(path`/v1/auth/registration-sessions/${sessionID}`, { body, ...options });
   }
 
@@ -219,7 +219,7 @@ export interface ListRegistrationSession {
   /**
    * Resources in this page.
    */
-  data: Array<ActionsAPI.RegistrationSession>;
+  data: Array<RegistrationSession>;
 
   /**
    * Resource type identifier.
@@ -229,32 +229,7 @@ export interface ListRegistrationSession {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: EdiRunsAPI.PageInfo;
-}
-
-/**
- * PageInfo contains URL-based pagination metadata.
- */
-export interface PageInfo {
-  /**
-   * Whether more results exist after this page.
-   */
-  has_next_page: boolean;
-
-  /**
-   * Whether results exist before this page.
-   */
-  has_prev_page: boolean;
-
-  /**
-   * URL to fetch the next page, `null` if no more pages.
-   */
-  next_page_url: string | null;
-
-  /**
-   * URL to fetch the previous page, `null` if on the first page.
-   */
-  previous_page_url: string | null;
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -269,7 +244,7 @@ export interface RegistrationSession {
   /**
    * Account data within a registration session.
    */
-  account: ActionsAPI.RegistrationSessionAccount | null;
+  account: RegistrationSessionAccount | null;
 
   /**
    * Timestamp when registration was completed. Null if still in progress.
@@ -319,7 +294,7 @@ export interface RegistrationSession {
   /**
    * User data within a registration session.
    */
-  user: ActionsAPI.RegistrationSessionUser;
+  user: RegistrationSessionUser;
 }
 
 /**
@@ -334,7 +309,7 @@ export interface RegistrationSessionAccount {
   /**
    * Address within a registration session.
    */
-  billing_address: ActionsAPI.RegistrationSessionAddress;
+  billing_address: RegistrationSessionAddress;
 
   /**
    * Display name.
@@ -545,7 +520,6 @@ export declare namespace RegistrationSessions {
     type CreateUserRequest as CreateUserRequest,
     type CreateUserResponse as CreateUserResponse,
     type ListRegistrationSession as ListRegistrationSession,
-    type PageInfo as PageInfo,
     type RegistrationSession as RegistrationSession,
     type RegistrationSessionAccount as RegistrationSessionAccount,
     type RegistrationSessionAddress as RegistrationSessionAddress,

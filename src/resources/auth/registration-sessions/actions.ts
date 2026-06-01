@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as RegistrationSessionsAPI from './registration-sessions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -85,7 +86,10 @@ export class Actions extends APIResource {
    *   );
    * ```
    */
-  verifyToken(token: string, options?: RequestOptions): APIPromise<RegistrationSession> {
+  verifyToken(
+    token: string,
+    options?: RequestOptions,
+  ): APIPromise<RegistrationSessionsAPI.RegistrationSession> {
     return this._client.put(path`/v1/auth/registration-sessions/${token}/actions/verify-token`, options);
   }
 }
@@ -118,171 +122,6 @@ export interface ConfirmPaymentResponse {
    * Setup Intent status (e.g., "succeeded").
    */
   status: string;
-}
-
-/**
- * Registration session.
- */
-export interface RegistrationSession {
-  /**
-   * Session ID.
-   */
-  id: string;
-
-  /**
-   * Account data within a registration session.
-   */
-  account: RegistrationSessionAccount | null;
-
-  /**
-   * Timestamp when registration was completed. Null if still in progress.
-   */
-  completed_at: string | null;
-
-  /**
-   * Timestamp when this session was created.
-   */
-  created_at: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'registration_session';
-
-  /**
-   * Whether payment has been completed.
-   */
-  payment_completed: boolean;
-
-  /**
-   * Pricing plan code.
-   */
-  plan_code: string;
-
-  /**
-   * Current registration step.
-   */
-  step: 'verification' | 'user_details' | 'account_details' | 'review' | 'payment' | 'completed';
-
-  /**
-   * Stripe checkout session ID.
-   */
-  stripe_checkout_session_id: string | null;
-
-  /**
-   * Stripe customer ID.
-   */
-  stripe_customer_id: string | null;
-
-  /**
-   * Timestamp when this session was last updated.
-   */
-  updated_at: string;
-
-  /**
-   * User data within a registration session.
-   */
-  user: RegistrationSessionUser;
-}
-
-/**
- * Account data within a registration session.
- */
-export interface RegistrationSessionAccount {
-  /**
-   * Account ID, null until account is created.
-   */
-  id: string | null;
-
-  /**
-   * Address within a registration session.
-   */
-  billing_address: RegistrationSessionAddress;
-
-  /**
-   * Display name.
-   */
-  name: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'account';
-}
-
-/**
- * Address within a registration session.
- */
-export interface RegistrationSessionAddress {
-  /**
-   * Address ID, null until address is created.
-   */
-  id: string | null;
-
-  /**
-   * City name.
-   */
-  city: string | null;
-
-  /**
-   * Two-letter country code.
-   */
-  country: string | null;
-
-  /**
-   * Street address line 1.
-   */
-  line1: string | null;
-
-  /**
-   * Street address line 2 (apartment, suite, etc.).
-   */
-  line2: string | null;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'address';
-
-  /**
-   * Postal or ZIP code.
-   */
-  postal_code: string | null;
-
-  /**
-   * State or province.
-   */
-  state: string | null;
-}
-
-/**
- * User data within a registration session.
- */
-export interface RegistrationSessionUser {
-  /**
-   * User ID, null until user is created.
-   */
-  id: string | null;
-
-  /**
-   * Email address.
-   */
-  email: string;
-
-  /**
-   * Timestamp when email was verified, null if pending.
-   */
-  email_verified_at: string | null;
-
-  /**
-   * Display name.
-   */
-  name: string | null;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'user';
 }
 
 /**
@@ -323,10 +162,6 @@ export declare namespace Actions {
   export {
     type ConfirmPaymentRequest as ConfirmPaymentRequest,
     type ConfirmPaymentResponse as ConfirmPaymentResponse,
-    type RegistrationSession as RegistrationSession,
-    type RegistrationSessionAccount as RegistrationSessionAccount,
-    type RegistrationSessionAddress as RegistrationSessionAddress,
-    type RegistrationSessionUser as RegistrationSessionUser,
     type SetupBillingResponse as SetupBillingResponse,
     type ActionResendVerificationEmailResponse as ActionResendVerificationEmailResponse,
     type ActionConfirmPaymentParams as ActionConfirmPaymentParams,

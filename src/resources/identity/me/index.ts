@@ -1,20 +1,12 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { Me, type User } from './me';
+export { Me } from './me';
 export {
   TenancyResource,
-  type Account,
-  type AccountBranding,
-  type AccountPortal,
-  type Address,
   type CustomerAccountSummary,
-  type Geolocation,
   type ListCustomerAccountSummary,
   type ListTenancyOtherAccount,
   type ListTenancySandboxAccount,
-  type Owner,
-  type PageInfo,
-  type Role,
   type SwitchAccountRequest,
   type Tenancy,
   type TenancyAccountPlan,

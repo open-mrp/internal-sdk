@@ -1,30 +1,11 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { Actions, type FileDownload, type ActionExportParams } from './actions';
+export { Actions, type ActionExportParams } from './actions';
 export {
   Parts,
-  type Account,
-  type AccountBranding,
-  type AccountPortal,
-  type Address,
-  type Attribute,
   type CreatePartRequest,
-  type Geolocation,
-  type Item,
-  type ItemCategory,
-  type ListAttribute,
   type ListPart,
-  type ListProperty,
-  type ListUnitGroupUnit,
-  type Owner,
-  type PageInfo,
   type Part,
-  type Property,
-  type Rate,
-  type RateInput,
-  type Unit,
-  type UnitGroup,
-  type UnitGroupUnit,
   type UpdatePartRequest,
   type PartCreateParams,
   type PartRetrieveParams,

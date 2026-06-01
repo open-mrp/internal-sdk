@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as InventoryChangeLogsAPI from '../operations/inventory-change-logs/inventory-change-logs';
+import * as AuthAPI from './auth';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -21,7 +21,7 @@ export class Actions extends APIResource {
    * });
    * ```
    */
-  login(body: ActionLoginParams, options?: RequestOptions): APIPromise<InventoryChangeLogsAPI.User> {
+  login(body: ActionLoginParams, options?: RequestOptions): APIPromise<AuthAPI.User> {
     return this._client.post('/v1/auth/actions/login', { body, ...options });
   }
 
@@ -37,10 +37,7 @@ export class Actions extends APIResource {
    * });
    * ```
    */
-  magicLogin(
-    body: ActionMagicLoginParams,
-    options?: RequestOptions,
-  ): APIPromise<InventoryChangeLogsAPI.User> {
+  magicLogin(body: ActionMagicLoginParams, options?: RequestOptions): APIPromise<AuthAPI.User> {
     return this._client.post('/v1/auth/actions/magic-login', { body, ...options });
   }
 }
@@ -70,56 +67,6 @@ export interface MagicLoginRequest {
   token: string;
 }
 
-/**
- * User resource.
- */
-export interface User {
-  /**
-   * User ID.
-   */
-  id: string;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Email address.
-   */
-  email: string | null;
-
-  /**
-   * Email verified timestamp, null if unverified.
-   */
-  email_verified_at: string | null;
-
-  /**
-   * Profile image URL.
-   */
-  image_url: string | null;
-
-  /**
-   * Display name.
-   */
-  name: string | null;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'user';
-
-  /**
-   * Last updated timestamp.
-   */
-  updated_at: string;
-
-  /**
-   * Username.
-   */
-  username: string | null;
-}
-
 export interface ActionLoginParams {
   /**
    * Username or email for authentication.
@@ -143,7 +90,6 @@ export declare namespace Actions {
   export {
     type LoginRequest as LoginRequest,
     type MagicLoginRequest as MagicLoginRequest,
-    type User as User,
     type ActionLoginParams as ActionLoginParams,
     type ActionMagicLoginParams as ActionMagicLoginParams,
   };

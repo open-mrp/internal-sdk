@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../../core/resource';
-import * as ActionsAPI from '../../../operations/inventory-change-logs/actions';
+import * as ActionsAPI from '../../../catalog/items/actions';
 import { APIPromise } from '../../../../core/api-promise';
 import { RequestOptions } from '../../../../internal/request-options';
 import { path } from '../../../../internal/utils/path';
@@ -33,13 +33,6 @@ export class Actions extends APIResource {
   }
 }
 
-/**
- * FileDownload is a response type for endpoints that return a file (e.g. Excel
- * export). When the service returns \*FileDownload, the handler writes the body
- * with Content-Type and Content-Disposition.
- */
-export interface FileDownload {}
-
 export interface ActionExportParams {
   /**
    * Cutoff date for the receivables snapshot.
@@ -48,5 +41,5 @@ export interface ActionExportParams {
 }
 
 export declare namespace Actions {
-  export { type FileDownload as FileDownload, type ActionExportParams as ActionExportParams };
+  export { type ActionExportParams as ActionExportParams };
 }

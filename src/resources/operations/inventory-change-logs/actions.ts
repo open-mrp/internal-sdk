@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as ActionsAPI from '../../catalog/items/actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 
@@ -20,17 +21,10 @@ export class Actions extends APIResource {
   export(
     query: ActionExportParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<FileDownload> {
+  ): APIPromise<ActionsAPI.FileDownload> {
     return this._client.get('/v1/operations/inventory-change-logs/actions/export', { query, ...options });
   }
 }
-
-/**
- * FileDownload is a response type for endpoints that return a file (e.g. Excel
- * export). When the service returns \*FileDownload, the handler writes the body
- * with Content-Type and Content-Disposition.
- */
-export interface FileDownload {}
 
 export interface ActionExportParams {
   /**
@@ -60,5 +54,5 @@ export interface ActionExportParams {
 }
 
 export declare namespace Actions {
-  export { type FileDownload as FileDownload, type ActionExportParams as ActionExportParams };
+  export { type ActionExportParams as ActionExportParams };
 }

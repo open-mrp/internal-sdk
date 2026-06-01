@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as EdiActionsAPI from '../operations/edi/actions';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -64,10 +63,7 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  requestDemo(
-    body: ActionRequestDemoParams,
-    options?: RequestOptions,
-  ): APIPromise<EdiActionsAPI.MessageResource> {
+  requestDemo(body: ActionRequestDemoParams, options?: RequestOptions): APIPromise<MessageResource> {
     return this._client.post('/v1/core/actions/request-demo', { body, ...options });
   }
 
@@ -85,10 +81,7 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  submitFeedback(
-    body: ActionSubmitFeedbackParams,
-    options?: RequestOptions,
-  ): APIPromise<EdiActionsAPI.MessageResource> {
+  submitFeedback(body: ActionSubmitFeedbackParams, options?: RequestOptions): APIPromise<MessageResource> {
     return this._client.post('/v1/core/actions/submit-feedback', { body, ...options });
   }
 }

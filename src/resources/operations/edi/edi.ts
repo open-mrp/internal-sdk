@@ -2,7 +2,7 @@
 
 import { APIResource } from '../../../core/resource';
 import * as ActionsAPI from './actions';
-import { ActionResubmitInvoiceParams, Actions, MessageResource, ResubmitEdiInvoiceRequest } from './actions';
+import { ActionResubmitInvoiceParams, Actions, ResubmitEdiInvoiceRequest } from './actions';
 
 export class Edi extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
@@ -13,7 +13,6 @@ Edi.Actions = Actions;
 export declare namespace Edi {
   export {
     Actions as Actions,
-    type MessageResource as MessageResource,
     type ResubmitEdiInvoiceRequest as ResubmitEdiInvoiceRequest,
     type ActionResubmitInvoiceParams as ActionResubmitInvoiceParams,
   };

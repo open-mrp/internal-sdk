@@ -12,7 +12,6 @@ export {
   type AddressDetailsResult,
   type AddressSuggestion,
   type ListAddressSuggestion,
-  type PageInfo,
   type AddressRetrieveDetailsParams,
   type AddressRetrieveSuggestionsParams,
 } from './addresses';

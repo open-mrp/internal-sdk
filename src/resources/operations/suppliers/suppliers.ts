@@ -1,10 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as EdiRunsAPI from '../edi-runs';
-import * as ActionsAPI from '../shipments/actions';
-import * as LinesAPI from '../shipments/lines';
-import * as SuppliersActionsAPI from './actions';
+import * as APIKeysAPI from '../../auth/api-keys/api-keys';
+import * as ActionsAPI from './actions';
 import {
   ActionBulkDeleteParams,
   ActionBulkDeleteResponse,
@@ -13,34 +11,18 @@ import {
 } from './actions';
 import * as MaterialsAPI from './materials';
 import {
-  Account,
-  AccountBranding,
-  AccountPortal,
-  Attribute,
   CreateSupplierMaterialRequest,
-  Item,
-  ItemCategory,
-  ListAttribute,
-  ListProperty,
   ListSupplierMaterial,
-  ListUnitGroupUnit,
-  Material,
   MaterialCreateParams,
   MaterialDeleteParams,
   MaterialListParams,
   MaterialRetrieveParams,
   MaterialUpdateParams,
   Materials,
-  Owner,
-  Property,
-  Quantity,
-  Rate,
   SupplierMaterial,
-  Unit,
-  UnitGroup,
-  UnitGroupUnit,
   UpdateSupplierMaterialRequest,
 } from './materials';
+import * as CustomersAPI from '../../sales/customers/customers';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -50,7 +32,7 @@ import { path } from '../../../internal/utils/path';
  */
 export class Suppliers extends APIResource {
   materials: MaterialsAPI.Materials = new MaterialsAPI.Materials(this._client);
-  actions: SuppliersActionsAPI.Actions = new SuppliersActionsAPI.Actions(this._client);
+  actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
    * Creates a supplier, optionally with inline bill-to and ship-to addresses.
@@ -154,118 +136,13 @@ export class Suppliers extends APIResource {
 }
 
 /**
- * Address with associated geolocation.
- */
-export interface Address {
-  /**
-   * Address ID.
-   */
-  id: string;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Email address associated with the address.
-   */
-  email: string | null;
-
-  /**
-   * Geolocation sub-resource.
-   */
-  geolocation: LinesAPI.Geolocation | null;
-
-  /**
-   * Display name of the address.
-   */
-  name: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'address';
-
-  /**
-   * Phone number associated with the address.
-   */
-  phone: string | null;
-
-  /**
-   * Address type.
-   */
-  type: 'standard' | 'drop_ship';
-
-  /**
-   * Last updated timestamp.
-   */
-  updated_at: string;
-}
-
-/**
- * Request to create an address.
- */
-export interface AddressInput {
-  /**
-   * Two-letter country code.
-   */
-  country: string;
-
-  /**
-   * Display name of the address.
-   */
-  name: string;
-
-  /**
-   * Email address associated with the address.
-   */
-  email?: string | null;
-
-  /**
-   * City or locality.
-   */
-  locality?: string | null;
-
-  /**
-   * Phone number associated with the address.
-   */
-  phone?: string | null;
-
-  /**
-   * Postal or ZIP code.
-   */
-  postal_code?: string | null;
-
-  /**
-   * State or administrative area.
-   */
-  state?: string | null;
-
-  /**
-   * First line of the street address.
-   */
-  street_line_1?: string | null;
-
-  /**
-   * Second line of the street address.
-   */
-  street_line_2?: string | null;
-
-  /**
-   * Address type.
-   */
-  type?: 'standard' | 'drop_ship';
-}
-
-/**
  * CreateSupplierRequest is the request to create a supplier.
  */
 export interface CreateSupplierRequest {
   /**
    * Request to create an address.
    */
-  bill_to_address: ActionsAPI.AddressInput | null;
+  bill_to_address: CustomersAPI.AddressInput | null;
 
   /**
    * Display name.
@@ -285,52 +162,7 @@ export interface CreateSupplierRequest {
   /**
    * Request to create an address.
    */
-  ship_to_address: ActionsAPI.AddressInput | null;
-}
-
-/**
- * Geolocation sub-resource.
- */
-export interface Geolocation {
-  /**
-   * Geolocation ID.
-   */
-  id: string;
-
-  /**
-   * Two-letter country code.
-   */
-  country: string;
-
-  /**
-   * City or locality.
-   */
-  locality: string | null;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'geolocation';
-
-  /**
-   * Postal or ZIP code.
-   */
-  postal_code: string | null;
-
-  /**
-   * State or administrative area.
-   */
-  state: string | null;
-
-  /**
-   * First line of the street address.
-   */
-  street_line_1: string | null;
-
-  /**
-   * Second line of the street address.
-   */
-  street_line_2: string | null;
+  ship_to_address: CustomersAPI.AddressInput | null;
 }
 
 /**
@@ -350,32 +182,7 @@ export interface ListSupplierSummary {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: EdiRunsAPI.PageInfo;
-}
-
-/**
- * PageInfo contains URL-based pagination metadata.
- */
-export interface PageInfo {
-  /**
-   * Whether more results exist after this page.
-   */
-  has_next_page: boolean;
-
-  /**
-   * Whether results exist before this page.
-   */
-  has_prev_page: boolean;
-
-  /**
-   * URL to fetch the next page, `null` if no more pages.
-   */
-  next_page_url: string | null;
-
-  /**
-   * URL to fetch the previous page, `null` if on the first page.
-   */
-  previous_page_url: string | null;
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -390,7 +197,7 @@ export interface SupplierDetail {
   /**
    * Address with associated geolocation.
    */
-  bill_to_address: LinesAPI.Address | null;
+  bill_to_address: APIKeysAPI.Address | null;
 
   /**
    * Creation timestamp.
@@ -425,7 +232,7 @@ export interface SupplierDetail {
   /**
    * Address with associated geolocation.
    */
-  ship_to_address: LinesAPI.Address | null;
+  ship_to_address: APIKeysAPI.Address | null;
 
   /**
    * Last updated timestamp.
@@ -507,7 +314,7 @@ export interface SupplierCreateParams {
   /**
    * Request to create an address.
    */
-  bill_to_address: ActionsAPI.AddressInput | null;
+  bill_to_address: CustomersAPI.AddressInput | null;
 
   /**
    * Display name.
@@ -527,7 +334,7 @@ export interface SupplierCreateParams {
   /**
    * Request to create an address.
    */
-  ship_to_address: ActionsAPI.AddressInput | null;
+  ship_to_address: CustomersAPI.AddressInput | null;
 }
 
 export interface SupplierRetrieveParams {
@@ -607,12 +414,8 @@ Suppliers.Actions = Actions;
 
 export declare namespace Suppliers {
   export {
-    type Address as Address,
-    type AddressInput as AddressInput,
     type CreateSupplierRequest as CreateSupplierRequest,
-    type Geolocation as Geolocation,
     type ListSupplierSummary as ListSupplierSummary,
-    type PageInfo as PageInfo,
     type SupplierDetail as SupplierDetail,
     type SupplierSummary as SupplierSummary,
     type UpdateSupplierRequest as UpdateSupplierRequest,
@@ -624,26 +427,9 @@ export declare namespace Suppliers {
 
   export {
     Materials as Materials,
-    type Account as Account,
-    type AccountBranding as AccountBranding,
-    type AccountPortal as AccountPortal,
-    type Attribute as Attribute,
     type CreateSupplierMaterialRequest as CreateSupplierMaterialRequest,
-    type Item as Item,
-    type ItemCategory as ItemCategory,
-    type ListAttribute as ListAttribute,
-    type ListProperty as ListProperty,
     type ListSupplierMaterial as ListSupplierMaterial,
-    type ListUnitGroupUnit as ListUnitGroupUnit,
-    type Material as Material,
-    type Owner as Owner,
-    type Property as Property,
-    type Quantity as Quantity,
-    type Rate as Rate,
     type SupplierMaterial as SupplierMaterial,
-    type Unit as Unit,
-    type UnitGroup as UnitGroup,
-    type UnitGroupUnit as UnitGroupUnit,
     type UpdateSupplierMaterialRequest as UpdateSupplierMaterialRequest,
     type MaterialCreateParams as MaterialCreateParams,
     type MaterialRetrieveParams as MaterialRetrieveParams,

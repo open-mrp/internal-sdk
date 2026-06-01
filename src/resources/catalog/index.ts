@@ -4,7 +4,6 @@ export { Catalog } from './catalog';
 export {
   ItemCategories,
   type CreateItemCategoryRequest,
-  type ListItemCategory,
   type UpdateItemCategoryRequest,
   type ItemCategoryDeleteResponse,
   type ItemCategoryChangeUnitGroupResponse,
@@ -16,14 +15,11 @@ export {
 } from './item-categories/index';
 export {
   Items,
-  type Item,
-  type ItemCategory,
   type ItemCosts,
   type ItemTrendPoint,
   type ItemTrends,
   type ListItem,
   type ListItemTrendPoint,
-  type Rate,
   type ItemRetrieveParams,
   type ItemListParams,
   type ItemChangeCategoryParams,
@@ -34,7 +30,6 @@ export {
   type CreateMaterialRequest,
   type ListMaterial,
   type Material,
-  type Quantity,
   type QuantityInputRequest,
   type RateInput,
   type UpdateMaterialRequest,
@@ -57,8 +52,6 @@ export {
 export {
   ProductLines,
   type CreateProductLineRequest,
-  type ListProductLine,
-  type ProductLine,
   type UpdateProductLineRequest,
   type ProductLineDeleteResponse,
   type ProductLineCreateParams,
@@ -92,11 +85,7 @@ export {
 } from './products/index';
 export {
   Properties,
-  type Attribute,
   type CreatePropertyRequest,
-  type ListAttribute,
-  type ListProperty,
-  type Property,
   type UpdatePropertyRequest,
   type PropertyDeleteResponse,
   type PropertyCreateParams,
@@ -109,9 +98,6 @@ export {
   type CreateUnitGroupRequest,
   type CreateUnitGroupUnitParam,
   type ListUnitGroup,
-  type ListUnitGroupUnit,
-  type UnitGroup,
-  type UnitGroupUnit,
   type UpdateUnitGroupRequest,
   type UnitGroupDeleteResponse,
   type UnitGroupCreateParams,
@@ -121,16 +107,7 @@ export {
 } from './unit-groups/index';
 export {
   Units,
-  type Account,
-  type AccountBranding,
-  type AccountPortal,
-  type Address,
   type CreateUnitRequest,
-  type Geolocation,
-  type ListUnit,
-  type Owner,
-  type PageInfo,
-  type Unit,
   type UpdateUnitRequest,
   type UnitDeleteResponse,
   type UnitCreateParams,

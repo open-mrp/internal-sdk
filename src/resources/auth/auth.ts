@@ -44,7 +44,6 @@ import {
   CreateUserRequest,
   CreateUserResponse,
   ListRegistrationSession,
-  PageInfo as RegistrationSessionsAPIPageInfo,
   RegistrationSession,
   RegistrationSessionAccount,
   RegistrationSessionAddress,
@@ -57,7 +56,6 @@ import {
   UpdateSessionDataRequest,
   UpdateSessionRequest,
 } from './registration-sessions/registration-sessions';
-import * as InventoryChangeLogsAPI from '../operations/inventory-change-logs/inventory-change-logs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -129,7 +127,7 @@ export class Auth extends APIResource {
    * });
    * ```
    */
-  users(body: AuthUsersParams, options?: RequestOptions): APIPromise<InventoryChangeLogsAPI.User> {
+  users(body: AuthUsersParams, options?: RequestOptions): APIPromise<User> {
     return this._client.post('/v1/auth/users', { body, ...options });
   }
 }
@@ -336,7 +334,6 @@ export declare namespace Auth {
     type CreateUserRequest as CreateUserRequest,
     type CreateUserResponse as CreateUserResponse,
     type ListRegistrationSession as ListRegistrationSession,
-    type RegistrationSessionsAPIPageInfo as PageInfo,
     type RegistrationSession as RegistrationSession,
     type RegistrationSessionAccount as RegistrationSessionAccount,
     type RegistrationSessionAddress as RegistrationSessionAddress,

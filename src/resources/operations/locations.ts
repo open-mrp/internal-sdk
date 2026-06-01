@@ -1,8 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as EdiRunsAPI from './edi-runs';
-import * as ActionsAPI from './shipments/actions';
+import * as AccountUsersAPI from '../identity/account-users/account-users';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -22,7 +21,7 @@ export class Locations extends APIResource {
    * });
    * ```
    */
-  create(params: LocationCreateParams, options?: RequestOptions): APIPromise<ActionsAPI.Location> {
+  create(params: LocationCreateParams, options?: RequestOptions): APIPromise<AccountUsersAPI.Location> {
     const { include, ...body } = params;
     return this._client.post('/v1/operations/locations', { query: { include }, body, ...options });
   }
@@ -41,7 +40,7 @@ export class Locations extends APIResource {
     id: string,
     query: LocationRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionsAPI.Location> {
+  ): APIPromise<AccountUsersAPI.Location> {
     return this._client.get(path`/v1/operations/locations/${id}`, { query, ...options });
   }
 
@@ -60,7 +59,7 @@ export class Locations extends APIResource {
     id: string,
     params: LocationUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionsAPI.Location> {
+  ): APIPromise<AccountUsersAPI.Location> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/locations/${id}`, { query: { include }, body, ...options });
   }
@@ -77,7 +76,7 @@ export class Locations extends APIResource {
   list(
     query: LocationListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionsAPI.ListLocation> {
+  ): APIPromise<AccountUsersAPI.ListLocation> {
     return this._client.get('/v1/operations/locations', { query, ...options });
   }
 
@@ -119,96 +118,6 @@ export interface CreateLocationRequest {
    * Parent location ID. Null for top-level locations.
    */
   parent_id?: string | null;
-}
-
-/**
- * List represents a paginated list of resources.
- */
-export interface ListLocation {
-  /**
-   * Resources in this page.
-   */
-  data: Array<ActionsAPI.Location>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo contains URL-based pagination metadata.
-   */
-  page_info: EdiRunsAPI.PageInfo;
-}
-
-/**
- * Location resource.
- */
-export interface Location {
-  /**
-   * Location ID.
-   */
-  id: string;
-
-  /**
-   * List represents a paginated list of resources.
-   */
-  children: ActionsAPI.ListLocation | null;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Display name.
-   */
-  name: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'location';
-
-  /**
-   * Location resource.
-   */
-  parent: ActionsAPI.Location | null;
-
-  /**
-   * Location type code.
-   */
-  type: 'building' | 'section' | 'aisle' | 'rack' | 'shelf' | 'bin';
-
-  /**
-   * Last-updated timestamp.
-   */
-  updated_at: string;
-}
-
-/**
- * PageInfo contains URL-based pagination metadata.
- */
-export interface PageInfo {
-  /**
-   * Whether more results exist after this page.
-   */
-  has_next_page: boolean;
-
-  /**
-   * Whether results exist before this page.
-   */
-  has_prev_page: boolean;
-
-  /**
-   * URL to fetch the next page, `null` if no more pages.
-   */
-  next_page_url: string | null;
-
-  /**
-   * URL to fetch the previous page, `null` if on the first page.
-   */
-  previous_page_url: string | null;
 }
 
 /**
@@ -330,9 +239,6 @@ export interface LocationListParams {
 export declare namespace Locations {
   export {
     type CreateLocationRequest as CreateLocationRequest,
-    type ListLocation as ListLocation,
-    type Location as Location,
-    type PageInfo as PageInfo,
     type UpdateLocationRequest as UpdateLocationRequest,
     type LocationDeleteResponse as LocationDeleteResponse,
     type LocationCreateParams as LocationCreateParams,

@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as EdiRunsAPI from '../operations/edi-runs';
+import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -157,7 +157,7 @@ export interface ListRegistrationFlow {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: EdiRunsAPI.PageInfo;
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -177,32 +177,7 @@ export interface ListRegistrationFlowOption {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: EdiRunsAPI.PageInfo;
-}
-
-/**
- * PageInfo contains URL-based pagination metadata.
- */
-export interface PageInfo {
-  /**
-   * Whether more results exist after this page.
-   */
-  has_next_page: boolean;
-
-  /**
-   * Whether results exist before this page.
-   */
-  has_prev_page: boolean;
-
-  /**
-   * URL to fetch the next page, `null` if no more pages.
-   */
-  next_page_url: string | null;
-
-  /**
-   * URL to fetch the previous page, `null` if on the first page.
-   */
-  previous_page_url: string | null;
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -393,7 +368,6 @@ export declare namespace RegistrationFlows {
     type CreateRegistrationFlowRequest as CreateRegistrationFlowRequest,
     type ListRegistrationFlow as ListRegistrationFlow,
     type ListRegistrationFlowOption as ListRegistrationFlowOption,
-    type PageInfo as PageInfo,
     type RegistrationFlow as RegistrationFlow,
     type RegistrationFlowOption as RegistrationFlowOption,
     type UpdateRegistrationFlowRequest as UpdateRegistrationFlowRequest,

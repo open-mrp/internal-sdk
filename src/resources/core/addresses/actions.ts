@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as AddressesAPI from './addresses';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 
@@ -27,51 +28,6 @@ export class Actions extends APIResource {
   validate(body: ActionValidateParams, options?: RequestOptions): APIPromise<ValidatedAddress> {
     return this._client.put('/v1/core/addresses/actions/validate', { body, ...options });
   }
-}
-
-/**
- * Parsed address components.
- */
-export interface AddressComponents {
-  /**
-   * First line of the street address.
-   */
-  address_line_1: string;
-
-  /**
-   * Second line of the street address.
-   */
-  address_line_2: string | null;
-
-  /**
-   * City or locality.
-   */
-  city: string;
-
-  /**
-   * Country name or code.
-   */
-  country: string;
-
-  /**
-   * Two-letter country code.
-   */
-  country_code: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'address_components';
-
-  /**
-   * Postal or ZIP code.
-   */
-  postal_code: string;
-
-  /**
-   * State or administrative area.
-   */
-  state: string;
 }
 
 /**
@@ -116,7 +72,7 @@ export interface ValidatedAddress {
   /**
    * Parsed address components.
    */
-  components: AddressComponents | null;
+  components: AddressesAPI.AddressComponents | null;
 
   /**
    * Formatted address from the validation service.
@@ -173,7 +129,6 @@ export interface ActionValidateParams {
 
 export declare namespace Actions {
   export {
-    type AddressComponents as AddressComponents,
     type ValidateAddressRequest as ValidateAddressRequest,
     type ValidatedAddress as ValidatedAddress,
     type ActionValidateParams as ActionValidateParams,

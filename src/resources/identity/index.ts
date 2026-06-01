@@ -26,7 +26,6 @@ export {
   type Property,
   type Quantity,
   type Rate,
-  type Role,
   type ScanningStation,
   type Unit,
   type UnitGroup,
@@ -54,15 +53,8 @@ export {
 } from './child-accounts';
 export {
   Identity,
-  type Account,
-  type AccountBranding,
-  type AccountPortal,
-  type Address,
-  type Geolocation,
   type ListPermission,
   type ListPermissionGroup,
-  type Owner,
-  type PageInfo,
   type Permission,
   type PermissionGroup,
   type PublicAccount,
@@ -78,7 +70,7 @@ export {
   type IntegrationUpdateParams,
   type IntegrationListParams,
 } from './integrations/index';
-export { Me, type User } from './me/index';
+export { Me } from './me/index';
 export {
   Roles,
   type CreateRoleRequest,

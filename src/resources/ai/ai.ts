@@ -3,10 +3,6 @@
 import { APIResource } from '../../core/resource';
 import * as AgentsAPI from './agents';
 import {
-  Account,
-  AccountBranding,
-  AccountPortal,
-  Address,
   AgentCreateParams,
   AgentDefinition,
   AgentDefinitionConfig,
@@ -19,11 +15,8 @@ import {
   Agents,
   ConfigInput,
   CreateAgentRequest,
-  Geolocation,
   ListAgentDefinition,
   ListAgentDefinitionTool,
-  Owner,
-  Role,
   ToolInput,
   TriggerConfig,
   TriggerConfigInput,
@@ -34,7 +27,6 @@ import * as MemoriesAPI from './memories';
 import {
   AgentMemory,
   CreateMemoryRequest,
-  Entity,
   ListAgentMemory,
   Memories,
   MemoryCreateParams,
@@ -43,63 +35,29 @@ import {
   MemoryUpdateParams,
   UpdateMemoryRequest,
 } from './memories';
-import * as EdiRunsAPI from '../operations/edi-runs';
 import * as AlertsAPI from './alerts/alerts';
 import {
-  Account as AlertsAPIAccount,
-  AccountBranding as AlertsAPIAccountBranding,
-  AccountPortal as AlertsAPIAccountPortal,
-  Actor,
-  Address as AlertsAPIAddress,
   AgentAction,
   AgentAlert,
-  AgentDefinition as AlertsAPIAgentDefinition,
-  AgentDefinitionConfig as AlertsAPIAgentDefinitionConfig,
-  AgentDefinitionTool as AlertsAPIAgentDefinitionTool,
   AgentRun,
   AgentRunStep,
   AlertListParams,
   AlertRetrieveParams,
   Alerts,
-  Entity as AlertsAPIEntity,
-  Geolocation as AlertsAPIGeolocation,
   ListAgentAction,
   ListAgentAlert,
-  ListAgentDefinitionTool as AlertsAPIListAgentDefinitionTool,
   ListAgentRunStep,
-  Owner as AlertsAPIOwner,
-  Role as AlertsAPIRole,
-  TriggerConfig as AlertsAPITriggerConfig,
 } from './alerts/alerts';
-import * as ActionsAPI from './runs/actions';
 import * as RunsAPI from './runs/runs';
 import {
-  Account as RunsAPIAccount,
-  AccountBranding as RunsAPIAccountBranding,
-  AccountPortal as RunsAPIAccountPortal,
-  Actor as RunsAPIActor,
-  Address as RunsAPIAddress,
-  AgentAction as RunsAPIAgentAction,
-  AgentDefinition as RunsAPIAgentDefinition,
-  AgentDefinitionConfig as RunsAPIAgentDefinitionConfig,
-  AgentDefinitionTool as RunsAPIAgentDefinitionTool,
-  AgentRun as RunsAPIAgentRun,
-  AgentRunStep as RunsAPIAgentRunStep,
-  Entity as RunsAPIEntity,
-  Geolocation as RunsAPIGeolocation,
-  ListAgentAction as RunsAPIListAgentAction,
-  ListAgentDefinitionTool as RunsAPIListAgentDefinitionTool,
   ListAgentRun,
-  ListAgentRunStep as RunsAPIListAgentRunStep,
-  Owner as RunsAPIOwner,
-  Role as RunsAPIRole,
   RunCreateParams,
   RunListParams,
   RunRetrieveParams,
   Runs,
-  TriggerConfig as RunsAPITriggerConfig,
   TriggerRunRequest,
 } from './runs/runs';
+import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -279,7 +237,7 @@ export interface ListAgentTokenUsage {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: EdiRunsAPI.PageInfo;
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -289,7 +247,7 @@ export interface ListAvailableTool {
   /**
    * Resources in this page.
    */
-  data: Array<ActionsAPI.AvailableTool>;
+  data: Array<AvailableTool>;
 
   /**
    * Resource type identifier.
@@ -299,7 +257,7 @@ export interface ListAvailableTool {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: EdiRunsAPI.PageInfo;
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -319,32 +277,7 @@ export interface ListToolGroup {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: EdiRunsAPI.PageInfo;
-}
-
-/**
- * PageInfo contains URL-based pagination metadata.
- */
-export interface PageInfo {
-  /**
-   * Whether more results exist after this page.
-   */
-  has_next_page: boolean;
-
-  /**
-   * Whether results exist before this page.
-   */
-  has_prev_page: boolean;
-
-  /**
-   * URL to fetch the next page, `null` if no more pages.
-   */
-  next_page_url: string | null;
-
-  /**
-   * URL to fetch the previous page, `null` if on the first page.
-   */
-  previous_page_url: string | null;
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -461,7 +394,6 @@ export declare namespace AI {
     type ListAgentTokenUsage as ListAgentTokenUsage,
     type ListAvailableTool as ListAvailableTool,
     type ListToolGroup as ListToolGroup,
-    type PageInfo as PageInfo,
     type ToolGroup as ToolGroup,
     type AIRetrieveToolGroupsParams as AIRetrieveToolGroupsParams,
     type AIRetrieveToolsParams as AIRetrieveToolsParams,
@@ -470,20 +402,13 @@ export declare namespace AI {
 
   export {
     Agents as Agents,
-    type Account as Account,
-    type AccountBranding as AccountBranding,
-    type AccountPortal as AccountPortal,
-    type Address as Address,
     type AgentDefinition as AgentDefinition,
     type AgentDefinitionConfig as AgentDefinitionConfig,
     type AgentDefinitionTool as AgentDefinitionTool,
     type ConfigInput as ConfigInput,
     type CreateAgentRequest as CreateAgentRequest,
-    type Geolocation as Geolocation,
     type ListAgentDefinition as ListAgentDefinition,
     type ListAgentDefinitionTool as ListAgentDefinitionTool,
-    type Owner as Owner,
-    type Role as Role,
     type ToolInput as ToolInput,
     type TriggerConfig as TriggerConfig,
     type TriggerConfigInput as TriggerConfigInput,
@@ -499,53 +424,20 @@ export declare namespace AI {
 
   export {
     Alerts as Alerts,
-    type AlertsAPIAccount as Account,
-    type AlertsAPIAccountBranding as AccountBranding,
-    type AlertsAPIAccountPortal as AccountPortal,
-    type Actor as Actor,
-    type AlertsAPIAddress as Address,
     type AgentAction as AgentAction,
     type AgentAlert as AgentAlert,
-    type AlertsAPIAgentDefinition as AgentDefinition,
-    type AlertsAPIAgentDefinitionConfig as AgentDefinitionConfig,
-    type AlertsAPIAgentDefinitionTool as AgentDefinitionTool,
     type AgentRun as AgentRun,
     type AgentRunStep as AgentRunStep,
-    type AlertsAPIEntity as Entity,
-    type AlertsAPIGeolocation as Geolocation,
     type ListAgentAction as ListAgentAction,
     type ListAgentAlert as ListAgentAlert,
-    type AlertsAPIListAgentDefinitionTool as ListAgentDefinitionTool,
     type ListAgentRunStep as ListAgentRunStep,
-    type AlertsAPIOwner as Owner,
-    type AlertsAPIRole as Role,
-    type AlertsAPITriggerConfig as TriggerConfig,
     type AlertRetrieveParams as AlertRetrieveParams,
     type AlertListParams as AlertListParams,
   };
 
   export {
     Runs as Runs,
-    type RunsAPIAccount as Account,
-    type RunsAPIAccountBranding as AccountBranding,
-    type RunsAPIAccountPortal as AccountPortal,
-    type RunsAPIActor as Actor,
-    type RunsAPIAddress as Address,
-    type RunsAPIAgentAction as AgentAction,
-    type RunsAPIAgentDefinition as AgentDefinition,
-    type RunsAPIAgentDefinitionConfig as AgentDefinitionConfig,
-    type RunsAPIAgentDefinitionTool as AgentDefinitionTool,
-    type RunsAPIAgentRun as AgentRun,
-    type RunsAPIAgentRunStep as AgentRunStep,
-    type RunsAPIEntity as Entity,
-    type RunsAPIGeolocation as Geolocation,
-    type RunsAPIListAgentAction as ListAgentAction,
-    type RunsAPIListAgentDefinitionTool as ListAgentDefinitionTool,
     type ListAgentRun as ListAgentRun,
-    type RunsAPIListAgentRunStep as ListAgentRunStep,
-    type RunsAPIOwner as Owner,
-    type RunsAPIRole as Role,
-    type RunsAPITriggerConfig as TriggerConfig,
     type TriggerRunRequest as TriggerRunRequest,
     type RunCreateParams as RunCreateParams,
     type RunRetrieveParams as RunRetrieveParams,
@@ -556,7 +448,6 @@ export declare namespace AI {
     Memories as Memories,
     type AgentMemory as AgentMemory,
     type CreateMemoryRequest as CreateMemoryRequest,
-    type Entity as Entity,
     type ListAgentMemory as ListAgentMemory,
     type UpdateMemoryRequest as UpdateMemoryRequest,
     type MemoryDeleteResponse as MemoryDeleteResponse,

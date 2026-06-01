@@ -6,7 +6,6 @@ export {
   type CreateOrderDiscountRequest,
   type ListOrderDiscount,
   type OrderDiscount,
-  type PageInfo,
   type UpdateOrderDiscountRequest,
   type OrderDiscountCreateParams,
   type OrderDiscountUpdateParams,

@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as ActionsAPI from '../../operations/shipments/actions';
+import * as OrderDiscountsAPI from './order-discounts';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 
@@ -21,7 +21,10 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  findByCode(body: ActionFindByCodeParams, options?: RequestOptions): APIPromise<ActionsAPI.OrderDiscount> {
+  findByCode(
+    body: ActionFindByCodeParams,
+    options?: RequestOptions,
+  ): APIPromise<OrderDiscountsAPI.OrderDiscount> {
     return this._client.post('/v1/sales/order-discounts/actions/find-by-code', { body, ...options });
   }
 }
@@ -46,61 +49,6 @@ export interface FindOrderDiscountByCodeRequest {
   sales_order_id?: string;
 }
 
-/**
- * Order discount resource.
- */
-export interface OrderDiscount {
-  /**
-   * Order discount ID.
-   */
-  id: string;
-
-  /**
-   * Fixed amount as a decimal string.
-   */
-  amount: string;
-
-  /**
-   * Discount code.
-   */
-  code: string;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Discount type: "percentage" or "amount".
-   */
-  discount_type: 'percentage' | 'amount';
-
-  /**
-   * Display name.
-   */
-  name: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'order_discount';
-
-  /**
-   * Number of orders using this discount.
-   */
-  order_count: number;
-
-  /**
-   * Percentage value as a decimal string.
-   */
-  percentage: string;
-
-  /**
-   * Last updated timestamp.
-   */
-  updated_at: string;
-}
-
 export interface ActionFindByCodeParams {
   /**
    * Discount code.
@@ -121,7 +69,6 @@ export interface ActionFindByCodeParams {
 export declare namespace Actions {
   export {
     type FindOrderDiscountByCodeRequest as FindOrderDiscountByCodeRequest,
-    type OrderDiscount as OrderDiscount,
     type ActionFindByCodeParams as ActionFindByCodeParams,
   };
 }

@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -88,32 +89,7 @@ export interface ListEdiRun {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: PageInfo;
-}
-
-/**
- * PageInfo contains URL-based pagination metadata.
- */
-export interface PageInfo {
-  /**
-   * Whether more results exist after this page.
-   */
-  has_next_page: boolean;
-
-  /**
-   * Whether results exist before this page.
-   */
-  has_prev_page: boolean;
-
-  /**
-   * URL to fetch the next page, `null` if no more pages.
-   */
-  next_page_url: string | null;
-
-  /**
-   * URL to fetch the previous page, `null` if on the first page.
-   */
-  previous_page_url: string | null;
+  page_info: APIKeysAPI.PageInfo;
 }
 
 export interface EdiRunListParams {
@@ -139,10 +115,5 @@ export interface EdiRunListParams {
 }
 
 export declare namespace EdiRuns {
-  export {
-    type EdiRun as EdiRun,
-    type ListEdiRun as ListEdiRun,
-    type PageInfo as PageInfo,
-    type EdiRunListParams as EdiRunListParams,
-  };
+  export { type EdiRun as EdiRun, type ListEdiRun as ListEdiRun, type EdiRunListParams as EdiRunListParams };
 }

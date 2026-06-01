@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as EdiRunsAPI from '../../operations/edi-runs';
+import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as ActionsAPI from './actions';
 import { ActionValidateParams, Actions, ValidateAddressRequest, ValidatedAddress } from './actions';
 import { APIPromise } from '../../../core/api-promise';
@@ -104,7 +104,7 @@ export interface AddressDetailsResult {
   /**
    * Parsed address components.
    */
-  address: ActionsAPI.AddressComponents | null;
+  address: AddressComponents | null;
 
   /**
    * Formatted full address string.
@@ -164,32 +164,7 @@ export interface ListAddressSuggestion {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: EdiRunsAPI.PageInfo;
-}
-
-/**
- * PageInfo contains URL-based pagination metadata.
- */
-export interface PageInfo {
-  /**
-   * Whether more results exist after this page.
-   */
-  has_next_page: boolean;
-
-  /**
-   * Whether results exist before this page.
-   */
-  has_prev_page: boolean;
-
-  /**
-   * URL to fetch the next page, `null` if no more pages.
-   */
-  next_page_url: string | null;
-
-  /**
-   * URL to fetch the previous page, `null` if on the first page.
-   */
-  previous_page_url: string | null;
+  page_info: APIKeysAPI.PageInfo;
 }
 
 export interface AddressRetrieveDetailsParams {
@@ -219,7 +194,6 @@ export declare namespace Addresses {
     type AddressDetailsResult as AddressDetailsResult,
     type AddressSuggestion as AddressSuggestion,
     type ListAddressSuggestion as ListAddressSuggestion,
-    type PageInfo as PageInfo,
     type AddressRetrieveDetailsParams as AddressRetrieveDetailsParams,
     type AddressRetrieveSuggestionsParams as AddressRetrieveSuggestionsParams,
   };

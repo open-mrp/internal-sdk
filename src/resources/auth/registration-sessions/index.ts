@@ -16,7 +16,6 @@ export {
   type CreateUserRequest,
   type CreateUserResponse,
   type ListRegistrationSession,
-  type PageInfo,
   type RegistrationSession,
   type RegistrationSessionAccount,
   type RegistrationSessionAddress,

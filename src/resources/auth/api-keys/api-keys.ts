@@ -1,11 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as EdiRunsAPI from '../../operations/edi-runs';
 import * as ActionsAPI from './actions';
 import { ActionFetchDocAPIKeyParams, ActionRotateParams, Actions, RotateAPIKeyRequest } from './actions';
-import * as ShipmentsActionsAPI from '../../operations/shipments/actions';
-import * as LinesAPI from '../../operations/shipments/lines';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -33,7 +30,7 @@ export class APIKeys extends APIResource {
    * });
    * ```
    */
-  create(params: APIKeyCreateParams, options?: RequestOptions): APIPromise<ActionsAPI.CreatedAPIKey> {
+  create(params: APIKeyCreateParams, options?: RequestOptions): APIPromise<CreatedAPIKey> {
     const { include, ...body } = params;
     return this._client.post('/v1/auth/api-keys', { query: { include }, body, ...options });
   }
@@ -52,7 +49,7 @@ export class APIKeys extends APIResource {
     id: string,
     query: APIKeyRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionsAPI.APIKey> {
+  ): APIPromise<APIKey> {
     return this._client.get(path`/v1/auth/api-keys/${id}`, { query, ...options });
   }
 
@@ -97,7 +94,7 @@ export interface Account {
   /**
    * Branding metadata for an account.
    */
-  branding: LinesAPI.AccountBranding | null;
+  branding: AccountBranding | null;
 
   /**
    * Creation timestamp.
@@ -107,12 +104,12 @@ export interface Account {
   /**
    * Address with associated geolocation.
    */
-  default_billing_address: LinesAPI.Address | null;
+  default_billing_address: Address | null;
 
   /**
    * Address with associated geolocation.
    */
-  default_shipping_address: LinesAPI.Address | null;
+  default_shipping_address: Address | null;
 
   /**
    * Display name.
@@ -127,7 +124,7 @@ export interface Account {
   /**
    * Portal metadata for an account.
    */
-  portal: LinesAPI.AccountPortal | null;
+  portal: AccountPortal | null;
 
   /**
    * Last updated timestamp.
@@ -252,7 +249,7 @@ export interface Address {
   /**
    * Geolocation sub-resource.
    */
-  geolocation: LinesAPI.Geolocation | null;
+  geolocation: Geolocation | null;
 
   /**
    * Display name of the address.
@@ -327,7 +324,7 @@ export interface APIKey {
   /**
    * Role resource.
    */
-  role: ShipmentsActionsAPI.Role | null;
+  role: Role | null;
 
   /**
    * Last updated timestamp.
@@ -362,7 +359,7 @@ export interface CreatedAPIKey {
   /**
    * API key resource.
    */
-  api_key_info: ActionsAPI.APIKey;
+  api_key_info: APIKey;
 
   /**
    * Full secret value. Returned once and cannot be retrieved later. Learn more about
@@ -428,7 +425,7 @@ export interface ListAPIKey {
   /**
    * Resources in this page.
    */
-  data: Array<ActionsAPI.APIKey>;
+  data: Array<APIKey>;
 
   /**
    * Resource type identifier.
@@ -438,7 +435,7 @@ export interface ListAPIKey {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: EdiRunsAPI.PageInfo;
+  page_info: PageInfo;
 }
 
 /**
@@ -448,7 +445,7 @@ export interface Owner {
   /**
    * Account with optional branding and portal sub-resources.
    */
-  account: LinesAPI.Account | null;
+  account: Account | null;
 
   /**
    * Resource type identifier.
@@ -514,7 +511,7 @@ export interface Role {
   /**
    * Owner describes the provenance of a resource.
    */
-  owner: LinesAPI.Owner | null;
+  owner: Owner | null;
 
   /**
    * Permissions in `{domain}:{action}` format.

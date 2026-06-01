@@ -1,8 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as EdiRunsAPI from '../operations/edi-runs';
-import * as ActionsAPI from '../operations/shipments/actions';
+import * as CustomersAPI from './customers/customers';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -23,7 +22,7 @@ export class AccountGroups extends APIResource {
    *   });
    * ```
    */
-  create(body: AccountGroupCreateParams, options?: RequestOptions): APIPromise<ActionsAPI.AccountGroup> {
+  create(body: AccountGroupCreateParams, options?: RequestOptions): APIPromise<CustomersAPI.AccountGroup> {
     return this._client.post('/v1/sales/account-groups', { body, ...options });
   }
 
@@ -38,7 +37,7 @@ export class AccountGroups extends APIResource {
    *   );
    * ```
    */
-  retrieve(id: string, options?: RequestOptions): APIPromise<ActionsAPI.AccountGroup> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<CustomersAPI.AccountGroup> {
     return this._client.get(path`/v1/sales/account-groups/${id}`, options);
   }
 
@@ -58,7 +57,7 @@ export class AccountGroups extends APIResource {
     id: string,
     body: AccountGroupUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionsAPI.AccountGroup> {
+  ): APIPromise<CustomersAPI.AccountGroup> {
     return this._client.patch(path`/v1/sales/account-groups/${id}`, { body, ...options });
   }
 
@@ -74,7 +73,7 @@ export class AccountGroups extends APIResource {
   list(
     query: AccountGroupListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionsAPI.ListAccountGroup> {
+  ): APIPromise<CustomersAPI.ListAccountGroup> {
     return this._client.get('/v1/sales/account-groups', { query, ...options });
   }
 
@@ -93,56 +92,6 @@ export class AccountGroups extends APIResource {
   delete(id: string, options?: RequestOptions): APIPromise<AccountGroupDeleteResponse> {
     return this._client.delete(path`/v1/sales/account-groups/${id}`, options);
   }
-}
-
-/**
- * Account group resource.
- */
-export interface AccountGroup {
-  /**
-   * Account group ID.
-   */
-  id: string;
-
-  /**
-   * Commission policy.
-   */
-  commission_policy: 'commission_applied' | 'commission_exempt';
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Description.
-   */
-  description: string | null;
-
-  /**
-   * Freight policy.
-   */
-  freight_policy: 'free_freight' | 'billed_freight';
-
-  /**
-   * Display name.
-   */
-  name: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'account_group';
-
-  /**
-   * Account group type.
-   */
-  type: 'pricing_group' | 'type_group';
-
-  /**
-   * Last updated timestamp.
-   */
-  updated_at: string;
 }
 
 /**
@@ -173,51 +122,6 @@ export interface CreateAccountGroupRequest {
    * Freight policy.
    */
   freight_policy?: 'free_freight' | 'billed_freight';
-}
-
-/**
- * List represents a paginated list of resources.
- */
-export interface ListAccountGroup {
-  /**
-   * Resources in this page.
-   */
-  data: Array<ActionsAPI.AccountGroup>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo contains URL-based pagination metadata.
-   */
-  page_info: EdiRunsAPI.PageInfo;
-}
-
-/**
- * PageInfo contains URL-based pagination metadata.
- */
-export interface PageInfo {
-  /**
-   * Whether more results exist after this page.
-   */
-  has_next_page: boolean;
-
-  /**
-   * Whether results exist before this page.
-   */
-  has_prev_page: boolean;
-
-  /**
-   * URL to fetch the next page, `null` if no more pages.
-   */
-  next_page_url: string | null;
-
-  /**
-   * URL to fetch the previous page, `null` if on the first page.
-   */
-  previous_page_url: string | null;
 }
 
 /**
@@ -320,10 +224,7 @@ export interface AccountGroupListParams {
 
 export declare namespace AccountGroups {
   export {
-    type AccountGroup as AccountGroup,
     type CreateAccountGroupRequest as CreateAccountGroupRequest,
-    type ListAccountGroup as ListAccountGroup,
-    type PageInfo as PageInfo,
     type UpdateAccountGroupRequest as UpdateAccountGroupRequest,
     type AccountGroupDeleteResponse as AccountGroupDeleteResponse,
     type AccountGroupCreateParams as AccountGroupCreateParams,

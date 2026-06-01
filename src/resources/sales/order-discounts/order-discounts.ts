@@ -1,9 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as EdiRunsAPI from '../../operations/edi-runs';
-import * as ActionsAPI from '../../operations/shipments/actions';
-import * as OrderDiscountsActionsAPI from './actions';
+import * as APIKeysAPI from '../../auth/api-keys/api-keys';
+import * as ActionsAPI from './actions';
 import { ActionFindByCodeParams, Actions, FindOrderDiscountByCodeRequest } from './actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
@@ -13,7 +12,7 @@ import { path } from '../../../internal/utils/path';
  * List and manage order discounts.
  */
 export class OrderDiscounts extends APIResource {
-  actions: OrderDiscountsActionsAPI.Actions = new OrderDiscountsActionsAPI.Actions(this._client);
+  actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
    * Creates an order discount.
@@ -29,7 +28,7 @@ export class OrderDiscounts extends APIResource {
    *   });
    * ```
    */
-  create(body: OrderDiscountCreateParams, options?: RequestOptions): APIPromise<ActionsAPI.OrderDiscount> {
+  create(body: OrderDiscountCreateParams, options?: RequestOptions): APIPromise<OrderDiscount> {
     return this._client.post('/v1/sales/order-discounts', { body, ...options });
   }
 
@@ -44,7 +43,7 @@ export class OrderDiscounts extends APIResource {
    *   );
    * ```
    */
-  retrieve(id: string, options?: RequestOptions): APIPromise<ActionsAPI.OrderDiscount> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<OrderDiscount> {
     return this._client.get(path`/v1/sales/order-discounts/${id}`, options);
   }
 
@@ -64,7 +63,7 @@ export class OrderDiscounts extends APIResource {
     id: string,
     body: OrderDiscountUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionsAPI.OrderDiscount> {
+  ): APIPromise<OrderDiscount> {
     return this._client.patch(path`/v1/sales/order-discounts/${id}`, { body, ...options });
   }
 
@@ -95,7 +94,7 @@ export class OrderDiscounts extends APIResource {
    *   );
    * ```
    */
-  delete(id: string, options?: RequestOptions): APIPromise<ActionsAPI.OrderDiscount> {
+  delete(id: string, options?: RequestOptions): APIPromise<OrderDiscount> {
     return this._client.delete(path`/v1/sales/order-discounts/${id}`, options);
   }
 }
@@ -138,7 +137,7 @@ export interface ListOrderDiscount {
   /**
    * Resources in this page.
    */
-  data: Array<ActionsAPI.OrderDiscount>;
+  data: Array<OrderDiscount>;
 
   /**
    * Resource type identifier.
@@ -148,7 +147,7 @@ export interface ListOrderDiscount {
   /**
    * PageInfo contains URL-based pagination metadata.
    */
-  page_info: EdiRunsAPI.PageInfo;
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -204,31 +203,6 @@ export interface OrderDiscount {
    * Last updated timestamp.
    */
   updated_at: string;
-}
-
-/**
- * PageInfo contains URL-based pagination metadata.
- */
-export interface PageInfo {
-  /**
-   * Whether more results exist after this page.
-   */
-  has_next_page: boolean;
-
-  /**
-   * Whether results exist before this page.
-   */
-  has_prev_page: boolean;
-
-  /**
-   * URL to fetch the next page, `null` if no more pages.
-   */
-  next_page_url: string | null;
-
-  /**
-   * URL to fetch the previous page, `null` if on the first page.
-   */
-  previous_page_url: string | null;
 }
 
 /**
@@ -340,7 +314,6 @@ export declare namespace OrderDiscounts {
     type CreateOrderDiscountRequest as CreateOrderDiscountRequest,
     type ListOrderDiscount as ListOrderDiscount,
     type OrderDiscount as OrderDiscount,
-    type PageInfo as PageInfo,
     type UpdateOrderDiscountRequest as UpdateOrderDiscountRequest,
     type OrderDiscountCreateParams as OrderDiscountCreateParams,
     type OrderDiscountUpdateParams as OrderDiscountUpdateParams,

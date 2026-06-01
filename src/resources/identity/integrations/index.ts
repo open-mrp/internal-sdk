@@ -5,7 +5,6 @@ export {
   type AccountIntegration,
   type CreateAccountIntegrationRequest,
   type ListAccountIntegration,
-  type PageInfo,
   type UpdateAccountIntegrationRequest,
   type IntegrationCreateParams,
   type IntegrationUpdateParams,

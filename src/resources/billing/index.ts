@@ -16,7 +16,6 @@ export {
   type ListPlanChangeLineItem,
   type ListPlanLimit,
   type ListPricingPlan,
-  type PageInfo,
   type PlanChangeLineItem,
   type PlanChangeProration,
   type PlanLimit,
