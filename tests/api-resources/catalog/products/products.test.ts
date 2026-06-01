@@ -32,11 +32,6 @@ describe('resource products', () => {
       type: 'sale',
       include: ['product_line'],
       attribute_ids: ['string'],
-      burn_rate: {
-        denominator_unit_id: 'denominator_unit_id',
-        numerator_unit_id: 'numerator_unit_id',
-        value: 'value',
-      },
       description: 'description',
       notes: 'notes',
       portal_visibility: 'visible',

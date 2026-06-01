@@ -28,11 +28,6 @@ describe('resource materials', () => {
       sku: 'MAT-001',
       include: ['item'],
       attribute_ids: ['string'],
-      burn_rate: {
-        denominator_unit_id: 'denominator_unit_id',
-        numerator_unit_id: 'numerator_unit_id',
-        value: 'value',
-      },
       description: 'description',
       lead_time: { unit_id: 'unit_id', value: 'value' },
       notes: 'notes',

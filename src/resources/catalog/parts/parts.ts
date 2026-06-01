@@ -117,11 +117,6 @@ export interface CreatePartRequest {
   attribute_ids?: Array<string>;
 
   /**
-   * Initial burn rate (waste / scrap). No currency requirement.
-   */
-  burn_rate?: MaterialsAPI.RateInput | null;
-
-  /**
    * Description.
    */
   description?: string | null;
@@ -236,11 +231,6 @@ export interface PartCreateParams {
    * Body param: Attribute IDs to connect to the part at creation time.
    */
   attribute_ids?: Array<string>;
-
-  /**
-   * Body param: Initial burn rate (waste / scrap). No currency requirement.
-   */
-  burn_rate?: MaterialsAPI.RateInput | null;
 
   /**
    * Body param: Description.

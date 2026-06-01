@@ -28,11 +28,6 @@ describe('resource parts', () => {
       sku: 'BRG-6204-2RS',
       include: ['item'],
       attribute_ids: ['string'],
-      burn_rate: {
-        denominator_unit_id: 'denominator_unit_id',
-        numerator_unit_id: 'numerator_unit_id',
-        value: 'value',
-      },
       description: 'description',
       notes: 'notes',
       unit_cost: {
