@@ -41,17 +41,8 @@ export class Suppliers extends APIResource {
    * ```ts
    * const supplierDetail =
    *   await client.operations.suppliers.create({
-   *     bill_to_address: {
-   *       name: 'Acme Supplies Inc.',
-   *       country: 'US',
-   *     },
    *     name: 'Acme Supplies Inc.',
-   *     note: 'Primary raw materials supplier',
    *     number: 'SUP-001',
-   *     ship_to_address: {
-   *       country: 'US',
-   *       name: 'Headquarters',
-   *     },
    *   });
    * ```
    */
@@ -87,14 +78,7 @@ export class Suppliers extends APIResource {
    * const supplierDetail =
    *   await client.operations.suppliers.update(
    *     'ac_0177902104bccac5fbb173cd96',
-   *     {
-   *       bill_to_address_id: 'bill_to_address_id',
-   *       name: 'Acme Supplies LLC',
-   *       note: 'Updated contact info',
-   *       number: 'number',
-   *       ship_to_address_id: 'ship_to_address_id',
-   *       update_note: true,
-   *     },
+   *     { update_note: true },
    *   );
    * ```
    */
@@ -140,19 +124,9 @@ export class Suppliers extends APIResource {
  */
 export interface CreateSupplierRequest {
   /**
-   * Request to create an address.
-   */
-  bill_to_address: CustomersAPI.AddressInput | null;
-
-  /**
    * Display name.
    */
   name: string;
-
-  /**
-   * Supplier notes.
-   */
-  note: string | null;
 
   /**
    * Supplier number. Must be unique per account.
@@ -162,7 +136,17 @@ export interface CreateSupplierRequest {
   /**
    * Request to create an address.
    */
-  ship_to_address: CustomersAPI.AddressInput | null;
+  bill_to_address?: CustomersAPI.AddressInput;
+
+  /**
+   * Supplier notes.
+   */
+  note?: string;
+
+  /**
+   * Request to create an address.
+   */
+  ship_to_address?: CustomersAPI.AddressInput;
 }
 
 /**
@@ -280,51 +264,41 @@ export interface SupplierSummary {
  */
 export interface UpdateSupplierRequest {
   /**
+   * Whether to update the note field. Allows clearing to null.
+   */
+  update_note: boolean;
+
+  /**
    * Bill-to address ID.
    */
-  bill_to_address_id: string | null;
+  bill_to_address_id?: string;
 
   /**
    * Display name.
    */
-  name: string | null;
+  name?: string;
 
   /**
    * Note value. Set update_note to true to apply.
    */
-  note: string | null;
+  note?: string;
 
   /**
    * Supplier number.
    */
-  number: string | null;
+  number?: string;
 
   /**
    * Ship-to address ID.
    */
-  ship_to_address_id: string | null;
-
-  /**
-   * Whether to update the note field. Allows clearing to null.
-   */
-  update_note: boolean;
+  ship_to_address_id?: string;
 }
 
 export interface SupplierCreateParams {
   /**
-   * Request to create an address.
-   */
-  bill_to_address: CustomersAPI.AddressInput | null;
-
-  /**
    * Display name.
    */
   name: string;
-
-  /**
-   * Supplier notes.
-   */
-  note: string | null;
 
   /**
    * Supplier number. Must be unique per account.
@@ -334,7 +308,17 @@ export interface SupplierCreateParams {
   /**
    * Request to create an address.
    */
-  ship_to_address: CustomersAPI.AddressInput | null;
+  bill_to_address?: CustomersAPI.AddressInput;
+
+  /**
+   * Supplier notes.
+   */
+  note?: string;
+
+  /**
+   * Request to create an address.
+   */
+  ship_to_address?: CustomersAPI.AddressInput;
 }
 
 export interface SupplierRetrieveParams {
@@ -347,34 +331,34 @@ export interface SupplierRetrieveParams {
 
 export interface SupplierUpdateParams {
   /**
+   * Whether to update the note field. Allows clearing to null.
+   */
+  update_note: boolean;
+
+  /**
    * Bill-to address ID.
    */
-  bill_to_address_id: string | null;
+  bill_to_address_id?: string;
 
   /**
    * Display name.
    */
-  name: string | null;
+  name?: string;
 
   /**
    * Note value. Set update_note to true to apply.
    */
-  note: string | null;
+  note?: string;
 
   /**
    * Supplier number.
    */
-  number: string | null;
+  number?: string;
 
   /**
    * Ship-to address ID.
    */
-  ship_to_address_id: string | null;
-
-  /**
-   * Whether to update the note field. Allows clearing to null.
-   */
-  update_note: boolean;
+  ship_to_address_id?: string;
 }
 
 export interface SupplierListParams {

@@ -3,6 +3,7 @@
 import { APIResource } from '../../core/resource';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../identity/account-users/account-users';
+import * as CustomersAPI from '../sales/customers/customers';
 import * as SalesOrdersAPI from '../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
@@ -23,8 +24,12 @@ export class Deliveries extends APIResource {
    *   );
    * ```
    */
-  retrieve(id: string, options?: RequestOptions): APIPromise<Delivery> {
-    return this._client.get(path`/v1/operations/deliveries/${id}`, options);
+  retrieve(
+    id: string,
+    query: DeliveryRetrieveParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Delivery> {
+    return this._client.get(path`/v1/operations/deliveries/${id}`, { query, ...options });
   }
 
   /**
@@ -32,14 +37,14 @@ export class Deliveries extends APIResource {
    *
    * @example
    * ```ts
-   * const listDeliverySummary =
+   * const listDelivery =
    *   await client.operations.deliveries.list();
    * ```
    */
   list(
     query: DeliveryListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ListDeliverySummary> {
+  ): APIPromise<ListDelivery> {
     return this._client.get('/v1/operations/deliveries', { query, ...options });
   }
 }
@@ -79,9 +84,9 @@ export interface Delivery {
   object: 'delivery';
 
   /**
-   * Full sales order resource.
+   * Full purchase order resource.
    */
-  purchase_order: SalesOrdersAPI.SalesOrderDetail | null;
+  purchase_order: PurchaseOrder | null;
 
   /**
    * Rejected timestamp.
@@ -160,58 +165,43 @@ export interface DeliveryLine {
 }
 
 /**
- * Delivery summary with line count.
+ * Email contact sub-resource.
  */
-export interface DeliverySummary {
+export interface EmailContact {
   /**
-   * Delivery ID.
+   * Email contact ID.
    */
   id: string;
 
   /**
-   * Accepted timestamp.
+   * Account user with profile, role, and department.
    */
-  accepted_at: string | null;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Number of delivery lines.
-   */
-  line_count: number;
-
-  /**
-   * Delivery number.
-   */
-  number: string;
+  account_user: AccountUsersAPI.AccountUser | null;
 
   /**
    * Resource type identifier.
    */
-  object: 'delivery';
+  object: 'email_contact';
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListDelivery {
+  /**
+   * Resources in this page.
+   */
+  data: Array<Delivery>;
 
   /**
-   * Full sales order resource.
+   * Resource type identifier.
    */
-  purchase_order: SalesOrdersAPI.SalesOrderDetail | null;
+  object: 'list';
 
   /**
-   * Rejected timestamp.
+   * PageInfo contains URL-based pagination metadata.
    */
-  rejected_at: string | null;
-
-  /**
-   * Delivery status (accepted or rejected).
-   */
-  status: 'accepted' | 'rejected';
-
-  /**
-   * Last update timestamp.
-   */
-  updated_at: string;
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -237,11 +227,51 @@ export interface ListDeliveryLine {
 /**
  * List represents a paginated list of resources.
  */
-export interface ListDeliverySummary {
+export interface ListEmailContact {
   /**
    * Resources in this page.
    */
-  data: Array<DeliverySummary>;
+  data: Array<EmailContact>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListPurchaseOrderLine {
+  /**
+   * Resources in this page.
+   */
+  data: Array<PurchaseOrderLine>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListReceivingOrderLine {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ReceivingOrderLine>;
 
   /**
    * Resource type identifier.
@@ -274,6 +304,338 @@ export interface Lot {
   object: 'lot';
 }
 
+/**
+ * Full purchase order resource.
+ */
+export interface PurchaseOrder {
+  /**
+   * Purchase order ID.
+   */
+  id: string;
+
+  /**
+   * Acknowledgment status.
+   */
+  acknowledgment_status: 'not_sent' | 'sent';
+
+  /**
+   * Address with associated geolocation.
+   */
+  bill_to_address: APIKeysAPI.Address | null;
+
+  /**
+   * Completed timestamp.
+   */
+  completed_at: string | null;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  contacts: ListEmailContact | null;
+
+  /**
+   * Created timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Freight describes the carrier selection and freight billing for a record. It is
+   * a generic, reusable sub-resource shared by anything that carries shipping
+   * configuration — e.g. a sales order's chosen freight, or a customer's default
+   * freight preferences. It is itself expanded via its parent (e.g.
+   * include[]=freight); when present, the full carrier and service level are
+   * included.
+   */
+  freight: SalesOrdersAPI.Freight | null;
+
+  /**
+   * Issued timestamp.
+   */
+  issued_at: string | null;
+
+  /**
+   * Count of order lines.
+   */
+  line_count: number;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  lines: ListPurchaseOrderLine | null;
+
+  /**
+   * Order note.
+   */
+  note: string | null;
+
+  /**
+   * Purchase order number.
+   */
+  number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'purchase_order';
+
+  /**
+   * Payment term resource.
+   */
+  payment_term: CustomersAPI.PaymentTerm | null;
+
+  /**
+   * Priority code.
+   */
+  priority: 'low' | 'normal' | 'high';
+
+  /**
+   * Receiving order resource. The list endpoint returns this same type with only
+   * base fields populated; expandable references (purchase_order, supplier, lines)
+   * are populated via include[]=.
+   */
+  receiving_order: ReceivingOrder | null;
+
+  /**
+   * Scheduled/promised timestamp.
+   */
+  scheduled_at: string | null;
+
+  /**
+   * Address with associated geolocation.
+   */
+  ship_to_address: APIKeysAPI.Address | null;
+
+  /**
+   * ShippingTerm resource.
+   */
+  shipping_term: CustomersAPI.ShippingTerm | null;
+
+  /**
+   * Order status code.
+   */
+  status: 'estimate' | 'issued' | 'fulfilled';
+
+  /**
+   * Supplier sub-resource.
+   */
+  supplier: Supplier | null;
+
+  /**
+   * Updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Full purchase order line resource.
+ */
+export interface PurchaseOrderLine {
+  /**
+   * Purchase order line ID.
+   */
+  id: string;
+
+  /**
+   * Created timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Item is an inventory item (product, material, or part).
+   */
+  item: AccountUsersAPI.Item | null;
+
+  /**
+   * Line item number.
+   */
+  line_item_number: number;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'purchase_order_line';
+
+  /**
+   * Product description.
+   */
+  product_description: string | null;
+
+  /**
+   * Product SKU.
+   */
+  product_sku: string;
+
+  /**
+   * Value with an associated unit.
+   */
+  quantity_ordered: AccountUsersAPI.Quantity | null;
+
+  /**
+   * Value with an associated unit.
+   */
+  quantity_received: AccountUsersAPI.Quantity | null;
+
+  /**
+   * Rate resource.
+   */
+  unit_cost: AccountUsersAPI.Rate | null;
+
+  /**
+   * Rate resource.
+   */
+  unit_price: AccountUsersAPI.Rate | null;
+
+  /**
+   * Updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Receiving order resource. The list endpoint returns this same type with only
+ * base fields populated; expandable references (purchase_order, supplier, lines)
+ * are populated via include[]=.
+ */
+export interface ReceivingOrder {
+  /**
+   * Receiving order ID.
+   */
+  id: string;
+
+  /**
+   * Timestamp when the receiving order was completed.
+   */
+  completed_at: string | null;
+
+  /**
+   * Completion percentage of this receiving order.
+   */
+  completion_percentage: number;
+
+  /**
+   * Timestamp when the receiving order was created.
+   */
+  created_at: string;
+
+  /**
+   * Number of lines in this receiving order.
+   */
+  line_count: number;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  lines: ListReceivingOrderLine | null;
+
+  /**
+   * Note on the receiving order.
+   */
+  note: string | null;
+
+  /**
+   * Receiving order number.
+   */
+  number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'receiving_order';
+
+  /**
+   * Full purchase order resource.
+   */
+  purchase_order: PurchaseOrder | null;
+
+  /**
+   * Account with optional branding and portal sub-resources.
+   */
+  supplier: APIKeysAPI.Account | null;
+
+  /**
+   * Timestamp when the receiving order was last updated.
+   */
+  updated_at: string;
+}
+
+/**
+ * Line item in a receiving order.
+ */
+export interface ReceivingOrderLine {
+  /**
+   * Receiving order line ID.
+   */
+  id: string;
+
+  /**
+   * Timestamp when the line was created.
+   */
+  created_at: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'receiving_order_line';
+
+  /**
+   * Full sales order line resource.
+   */
+  order_line: SalesOrdersAPI.SalesOrderLine | null;
+
+  /**
+   * Value with an associated unit.
+   */
+  quantity: AccountUsersAPI.Quantity | null;
+
+  /**
+   * Value with an associated unit.
+   */
+  rejected_quantity: AccountUsersAPI.Quantity | null;
+
+  /**
+   * Timestamp when the line was stocked.
+   */
+  stocked_at: string | null;
+
+  /**
+   * Timestamp when the line was last updated.
+   */
+  updated_at: string;
+}
+
+/**
+ * Supplier sub-resource.
+ */
+export interface Supplier {
+  /**
+   * Supplier ID.
+   */
+  id: string;
+
+  /**
+   * Display name.
+   */
+  name: string;
+
+  /**
+   * Supplier number.
+   */
+  number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'supplier';
+}
+
+export interface DeliveryRetrieveParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'purchase_order' | 'lines'>;
+}
+
 export interface DeliveryListParams {
   /**
    * Cursor token used to retrieve the next or previous page of results.
@@ -284,6 +646,12 @@ export interface DeliveryListParams {
    * Filter by end date (inclusive).
    */
   end_date?: string;
+
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'purchase_order'>;
 
   /**
    * Filter by item IDs present in delivery lines.
@@ -320,10 +688,19 @@ export declare namespace Deliveries {
   export {
     type Delivery as Delivery,
     type DeliveryLine as DeliveryLine,
-    type DeliverySummary as DeliverySummary,
+    type EmailContact as EmailContact,
+    type ListDelivery as ListDelivery,
     type ListDeliveryLine as ListDeliveryLine,
-    type ListDeliverySummary as ListDeliverySummary,
+    type ListEmailContact as ListEmailContact,
+    type ListPurchaseOrderLine as ListPurchaseOrderLine,
+    type ListReceivingOrderLine as ListReceivingOrderLine,
     type Lot as Lot,
+    type PurchaseOrder as PurchaseOrder,
+    type PurchaseOrderLine as PurchaseOrderLine,
+    type ReceivingOrder as ReceivingOrder,
+    type ReceivingOrderLine as ReceivingOrderLine,
+    type Supplier as Supplier,
+    type DeliveryRetrieveParams as DeliveryRetrieveParams,
     type DeliveryListParams as DeliveryListParams,
   };
 }

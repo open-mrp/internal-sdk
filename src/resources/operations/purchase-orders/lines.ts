@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as PurchaseOrdersAPI from './purchase-orders';
+import * as DeliveriesAPI from '../deliveries';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -15,7 +15,7 @@ export class Lines extends APIResource {
    *
    * @example
    * ```ts
-   * const purchaseOrderLineDetail =
+   * const purchaseOrderLine =
    *   await client.operations.purchaseOrders.lines.create(
    *     'po_0169aa3a722b081b117ac0e44f',
    *     {
@@ -28,8 +28,6 @@ export class Lines extends APIResource {
    *       unit_price_numerator_unit_id:
    *         'un_01966263f74a5a0cae356000a1',
    *       unit_price_value: '25.500000000000000000000000000000',
-   *       item_id: 'it_0131e386ac683e8c29a71f6f1f',
-   *       product_description: '6061-T6 Aluminum Sheet 4x8',
    *     },
    *   );
    * ```
@@ -38,7 +36,7 @@ export class Lines extends APIResource {
     id: string,
     body: LineCreateParams,
     options?: RequestOptions,
-  ): APIPromise<PurchaseOrdersAPI.PurchaseOrderLineDetail> {
+  ): APIPromise<DeliveriesAPI.PurchaseOrderLine> {
     return this._client.post(path`/v1/operations/purchase-orders/${id}/lines`, { body, ...options });
   }
 
@@ -47,16 +45,10 @@ export class Lines extends APIResource {
    *
    * @example
    * ```ts
-   * const purchaseOrderLineDetail =
+   * const purchaseOrderLine =
    *   await client.operations.purchaseOrders.lines.update(
    *     'example',
-   *     {
-   *       id: 'po_0169aa3a722b081b117ac0e44f',
-   *       product_id: 'pd_013c29ab3f1518d0004094c316',
-   *       product_sku: 'RAW-100',
-   *       quantity_value: '250',
-   *       unit_price_value: '15.00',
-   *     },
+   *     { id: 'po_0169aa3a722b081b117ac0e44f' },
    *   );
    * ```
    */
@@ -64,7 +56,7 @@ export class Lines extends APIResource {
     lineID: string,
     params: LineUpdateParams,
     options?: RequestOptions,
-  ): APIPromise<PurchaseOrdersAPI.PurchaseOrderLineDetail> {
+  ): APIPromise<DeliveriesAPI.PurchaseOrderLine> {
     const { id, ...body } = params;
     return this._client.patch(path`/v1/operations/purchase-orders/${id}/lines/${lineID}`, {
       body,

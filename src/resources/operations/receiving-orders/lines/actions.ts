@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../../core/resource';
-import * as ReceivingOrdersAPI from '../receiving-orders';
+import * as DeliveriesAPI from '../../deliveries';
 import { APIPromise } from '../../../../core/api-promise';
 import { RequestOptions } from '../../../../internal/request-options';
 import { path } from '../../../../internal/utils/path';
@@ -28,7 +28,7 @@ export class Actions extends APIResource {
     id: string,
     params: ActionReceiveParams,
     options?: RequestOptions,
-  ): APIPromise<ReceivingOrdersAPI.ReceivingOrderLine> {
+  ): APIPromise<DeliveriesAPI.ReceivingOrderLine> {
     const { receiving_order_id } = params;
     return this._client.put(
       path`/v1/operations/receiving-orders/${receiving_order_id}/lines/${id}/actions/receive`,
@@ -54,7 +54,7 @@ export class Actions extends APIResource {
     id: string,
     params: ActionVoidParams,
     options?: RequestOptions,
-  ): APIPromise<ReceivingOrdersAPI.ReceivingOrderLine> {
+  ): APIPromise<DeliveriesAPI.ReceivingOrderLine> {
     const { receiving_order_id } = params;
     return this._client.put(
       path`/v1/operations/receiving-orders/${receiving_order_id}/lines/${id}/actions/void`,

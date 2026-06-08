@@ -10,10 +10,7 @@ export {
 export { Lines, type UpdateReceivingOrderLineRequest, type LineUpdateParams } from './lines/index';
 export {
   ReceivingOrders,
-  type ListReceivingOrderLine,
-  type ListReceivingOrderSummary,
-  type ReceivingOrder,
-  type ReceivingOrderLine,
-  type ReceivingOrderSummary,
+  type ListReceivingOrder,
+  type ReceivingOrderRetrieveParams,
   type ReceivingOrderListParams,
 } from './receiving-orders';

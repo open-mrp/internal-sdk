@@ -49,7 +49,7 @@ describe('resource picks', () => {
         {
           include: ['lines'],
           finished_at: 'finished_at',
-          number: 'PCK-2025-0042',
+          number: 'number',
         },
         { path: '/_stainless_unknown_path' },
       ),

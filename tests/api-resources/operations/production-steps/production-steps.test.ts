@@ -89,7 +89,7 @@ describe('resource productionSteps', () => {
       },
       department_id: 'department_id',
       notes: 'notes',
-      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
+      scanning_station_id: 'scanning_station_id',
     });
   });
 
@@ -133,9 +133,9 @@ describe('resource productionSteps', () => {
         'prst_0159474175bb59f4b1990404ee',
         {
           allowances: 'allowances',
-          leveling_factor: '1.15',
-          name: 'Assembly Step A',
-          scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
+          leveling_factor: 'leveling_factor',
+          name: 'name',
+          scanning_station_id: 'scanning_station_id',
         },
         { path: '/_stainless_unknown_path' },
       ),

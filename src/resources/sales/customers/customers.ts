@@ -35,7 +35,6 @@ export class Customers extends APIResource {
    *     'shtm_014341ab4bb5bf94d5b6936f86',
    *   name: 'Acme Inc.',
    *   ship_to_address: { name: 'Acme Inc.', country: 'US' },
-   *   note: 'Key enterprise account',
    * });
    * ```
    */
@@ -70,11 +69,6 @@ export class Customers extends APIResource {
    * ```ts
    * const customer = await client.sales.customers.update(
    *   'ac_0170df1ac58e4d24c66fc89f5f',
-   *   {
-   *     default_carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
-   *     freight_policy: 'billed_freight',
-   *     name: 'Acme Corp Updated',
-   *   },
    * );
    * ```
    */
@@ -125,12 +119,6 @@ export class Customers extends APIResource {
    * const response = await client.sales.customers.registration({
    *   account_slug: 'my-company',
    *   is_existing_customer: false,
-   *   address: { name: 'Headquarters', country: 'US' },
-   *   customer_group_id: 'cgrp_01abc',
-   *   customer_name: 'Acme Corp',
-   *   payment_term_id: 'pt_01abc',
-   *   phone: '+15551234567',
-   *   shipping_term_id: 'st_01abc',
    * });
    * ```
    */
@@ -172,6 +160,10 @@ export interface AccountGroup {
 
   /**
    * Commission policy.
+   *
+   * - `commission_exempt`: no commission applies.
+   * - `commission_applied`: commission applies; if the account group is within a
+   *   sales rep's territory, it will be assigned to that rep unless overridden.
    */
   commission_policy: 'commission_applied' | 'commission_exempt';
 
@@ -187,6 +179,10 @@ export interface AccountGroup {
 
   /**
    * Freight policy.
+   *
+   * - `free_freight`: customers within this group will not have to pay for freight.
+   * - `billed_freight`: freight will be applied to any order within this account
+   *   group, unless overridden elsewhere.
    */
   freight_policy: 'free_freight' | 'billed_freight';
 
@@ -203,11 +199,10 @@ export interface AccountGroup {
   /**
    * Account group type.
    *
-   * The type `pricing_group` indicates this account group is utilized for pricing
-   * rules. For example, you may have a 'Preferred' price group that receives a
-   * special discount rate. The type `type_group` indicates the account group is
-   * utilized to categorize a set of accounts. For example, you may have a group of
-   * accounts that are 'Consumers' or 'Distributors'.
+   * - `pricing_group`: used for pricing rules, such as a "Preferred" group that
+   *   receives a special discount.
+   * - `type_group`: used to categorize accounts, such as "Consumers" or
+   *   "Distributors".
    */
   type: 'pricing_group' | 'type_group';
 
@@ -234,37 +229,37 @@ export interface AddressInput {
   /**
    * Email address associated with the address.
    */
-  email?: string | null;
+  email?: string;
 
   /**
    * City or locality.
    */
-  locality?: string | null;
+  locality?: string;
 
   /**
    * Phone number associated with the address.
    */
-  phone?: string | null;
+  phone?: string;
 
   /**
    * Postal or ZIP code.
    */
-  postal_code?: string | null;
+  postal_code?: string;
 
   /**
    * State or administrative area.
    */
-  state?: string | null;
+  state?: string;
 
   /**
    * First line of the street address.
    */
-  street_line_1?: string | null;
+  street_line_1?: string;
 
   /**
    * Second line of the street address.
    */
-  street_line_2?: string | null;
+  street_line_2?: string;
 
   /**
    * Address type.

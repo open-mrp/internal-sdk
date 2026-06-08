@@ -64,7 +64,6 @@ export class AccountPrices extends APIResource {
    * const accountPrice =
    *   await client.sales.accountPrices.update(
    *     'acpr_01dfc47cc46b1e0b66ca8eec0a',
-   *     { rate_value: '30.000000000000000000000000000000' },
    *   );
    * ```
    */

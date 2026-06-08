@@ -21,10 +21,6 @@ export class AccountUsers extends APIResource {
    * ```ts
    * const accountUser =
    *   await client.identity.accountUsers.create({
-   *     email: 'jdoe@augno.com',
-   *     name: 'John Doe',
-   *     password: 'QgS7Z8Hhj3&1',
-   *     username: 'jdoe',
    *     preferences: [
    *       {
    *         notification_type: 'order_acknowledgement',
@@ -34,8 +30,11 @@ export class AccountUsers extends APIResource {
    *   });
    * ```
    */
-  create(params: AccountUserCreateParams, options?: RequestOptions): APIPromise<AccountUser> {
-    const { include, ...body } = params;
+  create(
+    params: AccountUserCreateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<AccountUser> {
+    const { include, ...body } = params ?? {};
     return this._client.post('/v1/identity/account-users', { query: { include }, body, ...options });
   }
 
@@ -66,7 +65,6 @@ export class AccountUsers extends APIResource {
    * const accountUser =
    *   await client.identity.accountUsers.update(
    *     'acus_01ea9983ddb41dacc44ecf997c',
-   *     { name: 'John Doe' },
    *   );
    * ```
    */
@@ -158,6 +156,11 @@ export interface AccountUser {
    * When the account user was last updated.
    */
   updated_at: string;
+
+  /**
+   * Underlying user ID.
+   */
+  user_id: string;
 
   /**
    * Username.
@@ -260,30 +263,25 @@ export interface Consumption {
  */
 export interface CreateAccountUserRequest {
   /**
+   * Department assigned to the user.
+   */
+  department_id?: string;
+
+  /**
    * User email address.
    */
-  email: string | null;
+  email?: string;
 
   /**
    * User display name.
    */
-  name: string | null;
+  name?: string;
 
   /**
    * Password. Only used for scanner-role users (scanning stations). Must be 8–72
    * chars and include upper, lower, number, and special character.
    */
-  password: string | null;
-
-  /**
-   * Unique username (3–255 chars; letters, numbers, underscores, hyphens).
-   */
-  username: string | null;
-
-  /**
-   * Department assigned to the user.
-   */
-  department_id?: string | null;
+  password?: string;
 
   /**
    * Notification preferences for the user (external targets only).
@@ -293,7 +291,12 @@ export interface CreateAccountUserRequest {
   /**
    * Role assigned to the user.
    */
-  role_id?: string | null;
+  role_id?: string;
+
+  /**
+   * Unique username (3–255 chars; letters, numbers, underscores, hyphens).
+   */
+  username?: string;
 }
 
 /**
@@ -1271,28 +1274,6 @@ export interface UpdateAccountUserRequest {
 
 export interface AccountUserCreateParams {
   /**
-   * Body param: User email address.
-   */
-  email: string | null;
-
-  /**
-   * Body param: User display name.
-   */
-  name: string | null;
-
-  /**
-   * Body param: Password. Only used for scanner-role users (scanning stations). Must
-   * be 8–72 chars and include upper, lower, number, and special character.
-   */
-  password: string | null;
-
-  /**
-   * Body param: Unique username (3–255 chars; letters, numbers, underscores,
-   * hyphens).
-   */
-  username: string | null;
-
-  /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
@@ -1301,7 +1282,23 @@ export interface AccountUserCreateParams {
   /**
    * Body param: Department assigned to the user.
    */
-  department_id?: string | null;
+  department_id?: string;
+
+  /**
+   * Body param: User email address.
+   */
+  email?: string;
+
+  /**
+   * Body param: User display name.
+   */
+  name?: string;
+
+  /**
+   * Body param: Password. Only used for scanner-role users (scanning stations). Must
+   * be 8–72 chars and include upper, lower, number, and special character.
+   */
+  password?: string;
 
   /**
    * Body param: Notification preferences for the user (external targets only).
@@ -1311,7 +1308,13 @@ export interface AccountUserCreateParams {
   /**
    * Body param: Role assigned to the user.
    */
-  role_id?: string | null;
+  role_id?: string;
+
+  /**
+   * Body param: Unique username (3–255 chars; letters, numbers, underscores,
+   * hyphens).
+   */
+  username?: string;
 }
 
 export interface AccountUserRetrieveParams {

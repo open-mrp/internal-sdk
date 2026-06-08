@@ -44,9 +44,9 @@ describe('resource productions', () => {
   test('update: required and optional params', async () => {
     const response = await client.operations.productionSteps.productions.update('example', {
       production_step_id: 'prst_0159474175bb59f4b1990404ee',
-      item_id: 'it_0131e386ac683e8c29a71f6f1f',
-      quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-      quantity_value: '500',
+      item_id: 'item_id',
+      quantity_unit_id: 'quantity_unit_id',
+      quantity_value: 'quantity_value',
     });
   });
 });

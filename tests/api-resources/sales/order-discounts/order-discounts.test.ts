@@ -29,7 +29,7 @@ describe('resource orderDiscounts', () => {
       discount_type: 'percentage',
       name: '10% Off',
       amount: 'amount',
-      percentage: '10.000000000000000000000000000000',
+      percentage: 'percentage',
     });
   });
 
@@ -62,9 +62,9 @@ describe('resource orderDiscounts', () => {
         'ords_01121c5e2f6937a6b896daad3a',
         {
           amount: 'amount',
-          code: 'SAVE15',
+          code: 'code',
           discount_type: 'discount_type',
-          name: '15% Off',
+          name: 'name',
           percentage: 'percentage',
         },
         { path: '/_stainless_unknown_path' },

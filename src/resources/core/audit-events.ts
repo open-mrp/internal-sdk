@@ -127,6 +127,10 @@ export interface AuditEvent {
     | 'account'
     | 'actor'
     | 'entity'
+    | 'record'
+    | 'freight'
+    | 'sales_order_totals'
+    | 'sales_order_related'
     | 'user'
     | 'address'
     | 'api_key'
@@ -398,6 +402,10 @@ export interface ListObjectType {
     | 'account'
     | 'actor'
     | 'entity'
+    | 'record'
+    | 'freight'
+    | 'sales_order_totals'
+    | 'sales_order_related'
     | 'user'
     | 'address'
     | 'api_key'
@@ -613,7 +621,7 @@ export interface AuditEventListParams {
   /**
    * Filter by the actor identifier.
    *
-   * Will be `account_user.id` when `identity_type`=`user` or an `api_key.id` when
+   * Will be `user.id` when `identity_type`=`user` or an `api_key.id` when
    * `identity_type`=`api_key`.
    */
   actor_ids?: Array<string>;
@@ -656,6 +664,10 @@ export interface AuditEventListParams {
     | 'account'
     | 'actor'
     | 'entity'
+    | 'record'
+    | 'freight'
+    | 'sales_order_totals'
+    | 'sales_order_related'
     | 'user'
     | 'address'
     | 'api_key'

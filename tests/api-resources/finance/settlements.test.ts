@@ -14,7 +14,6 @@ describe('resource settlements', () => {
         {
           amount: '150.00',
           invoice_id: 'iv_018b5949ada8abca36358bbea9',
-          note: 'note',
           transaction_id: 'tx_01fc4d4f2b2ee1fa6b6d87257a',
         },
       ],
@@ -35,8 +34,8 @@ describe('resource settlements', () => {
         {
           amount: '150.00',
           invoice_id: 'iv_018b5949ada8abca36358bbea9',
-          note: 'note',
           transaction_id: 'tx_01fc4d4f2b2ee1fa6b6d87257a',
+          note: 'note',
         },
       ],
       responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
@@ -65,12 +64,8 @@ describe('resource settlements', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('update: only required params', async () => {
-    const responsePromise = client.finance.settlements.update('sl_014f3f9af18ff1c8ded3205149', {
-      note: 'Partial payment applied',
-      number: 'number',
-      responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
-    });
+  test('update', async () => {
+    const responsePromise = client.finance.settlements.update('sl_014f3f9af18ff1c8ded3205149');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -80,12 +75,19 @@ describe('resource settlements', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: required and optional params', async () => {
-    const response = await client.finance.settlements.update('sl_014f3f9af18ff1c8ded3205149', {
-      note: 'Partial payment applied',
-      number: 'number',
-      responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
-    });
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.finance.settlements.update(
+        'sl_014f3f9af18ff1c8ded3205149',
+        {
+          note: 'note',
+          number: 'number',
+          responsible_user_id: 'responsible_user_id',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('list', async () => {

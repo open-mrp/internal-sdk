@@ -72,7 +72,7 @@ describe('resource itemCategories', () => {
         'ic_01ae7bd7bfd21ca0ab81e1357e',
         {
           include: ['owner'],
-          name: 'Electronic Components',
+          name: 'name',
           notes: 'notes',
         },
         { path: '/_stainless_unknown_path' },

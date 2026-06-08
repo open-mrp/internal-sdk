@@ -77,7 +77,7 @@ describe('resource serviceLevels', () => {
         code: 'code',
         customer_portal_visibility: 'visible',
         is_default: false,
-        name: 'Express Shipping',
+        name: 'name',
       },
     );
   });

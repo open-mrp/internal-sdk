@@ -30,8 +30,6 @@ import {
   Lines,
   UpdateShipmentLineRequest,
 } from './lines';
-import * as CustomersAPI from '../../sales/customers/customers';
-import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -48,17 +46,16 @@ export class Shipments extends APIResource {
    *
    * @example
    * ```ts
-   * const shipmentDetail =
-   *   await client.operations.shipments.retrieve(
-   *     'sh_018b3a946651bfb6572b06b2b2',
-   *   );
+   * const shipment = await client.operations.shipments.retrieve(
+   *   'sh_018b3a946651bfb6572b06b2b2',
+   * );
    * ```
    */
   retrieve(
     id: string,
     query: ShipmentRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<InvoicesAPI.ShipmentDetail> {
+  ): APIPromise<InvoicesAPI.Shipment> {
     return this._client.get(path`/v1/operations/shipments/${id}`, { query, ...options });
   }
 
@@ -67,18 +64,16 @@ export class Shipments extends APIResource {
    *
    * @example
    * ```ts
-   * const shipmentDetail =
-   *   await client.operations.shipments.update(
-   *     'sh_018b3a946651bfb6572b06b2b2',
-   *     { note: 'Updated shipping note' },
-   *   );
+   * const shipment = await client.operations.shipments.update(
+   *   'sh_018b3a946651bfb6572b06b2b2',
+   * );
    * ```
    */
   update(
     id: string,
     params: ShipmentUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<InvoicesAPI.ShipmentDetail> {
+  ): APIPromise<InvoicesAPI.Shipment> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/shipments/${id}`, { query: { include }, body, ...options });
   }
@@ -88,14 +83,14 @@ export class Shipments extends APIResource {
    *
    * @example
    * ```ts
-   * const listShipmentSummary =
+   * const listShipment =
    *   await client.operations.shipments.list();
    * ```
    */
   list(
     query: ShipmentListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ListShipmentSummary> {
+  ): APIPromise<ListShipment> {
     return this._client.get('/v1/operations/shipments', { query, ...options });
   }
 
@@ -117,11 +112,11 @@ export class Shipments extends APIResource {
 /**
  * List represents a paginated list of resources.
  */
-export interface ListShipmentSummary {
+export interface ListShipment {
   /**
    * Resources in this page.
    */
-  data: Array<ShipmentSummary>;
+  data: Array<InvoicesAPI.Shipment>;
 
   /**
    * Resource type identifier.
@@ -132,81 +127,6 @@ export interface ListShipmentSummary {
    * PageInfo contains URL-based pagination metadata.
    */
   page_info: APIKeysAPI.PageInfo;
-}
-
-/**
- * Shipment list view resource.
- */
-export interface ShipmentSummary {
-  /**
-   * Shipment ID.
-   */
-  id: string;
-
-  /**
-   * Bill of lading number.
-   */
-  bill_of_lading: string | null;
-
-  /**
-   * Carrier resource.
-   */
-  carrier: CustomersAPI.Carrier | null;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Customer account.
-   */
-  customer: CustomersAPI.Customer | null;
-
-  /**
-   * Master tracking number.
-   */
-  master_tracking_number: string | null;
-
-  /**
-   * Note attached to this shipment.
-   */
-  note: string | null;
-
-  /**
-   * Shipment number.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'shipment_summary';
-
-  /**
-   * Full sales order resource.
-   */
-  sales_order: SalesOrdersAPI.SalesOrderDetail | null;
-
-  /**
-   * Shipping service level for a carrier.
-   */
-  service_level: CustomersAPI.ServiceLevel | null;
-
-  /**
-   * Timestamp when shipped.
-   */
-  shipped_at: string | null;
-
-  /**
-   * Shipment status sub-resource.
-   */
-  status: InvoicesAPI.ShipmentStatus;
-
-  /**
-   * Last updated timestamp.
-   */
-  updated_at: string;
 }
 
 /**
@@ -251,8 +171,7 @@ export interface ShipmentRetrieveParams {
     | 'shipping_cases'
     | 'sales_order'
     | 'customer'
-    | 'carrier'
-    | 'service_level'
+    | 'freight'
     | 'shipping_address'
     | 'shipped_by'
     | 'invoice'
@@ -270,8 +189,7 @@ export interface ShipmentUpdateParams {
     | 'shipping_cases'
     | 'sales_order'
     | 'customer'
-    | 'carrier'
-    | 'service_level'
+    | 'freight'
     | 'shipping_address'
     | 'shipped_by'
     | 'invoice'
@@ -366,8 +284,7 @@ Shipments.Lines = Lines;
 
 export declare namespace Shipments {
   export {
-    type ListShipmentSummary as ListShipmentSummary,
-    type ShipmentSummary as ShipmentSummary,
+    type ListShipment as ListShipment,
     type UpdateShipmentRequest as UpdateShipmentRequest,
     type ShipmentDeleteResponse as ShipmentDeleteResponse,
     type ShipmentRetrieveParams as ShipmentRetrieveParams,

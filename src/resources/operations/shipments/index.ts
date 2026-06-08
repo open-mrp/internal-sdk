@@ -27,8 +27,7 @@ export {
 } from './lines';
 export {
   Shipments,
-  type ListShipmentSummary,
-  type ShipmentSummary,
+  type ListShipment,
   type UpdateShipmentRequest,
   type ShipmentDeleteResponse,
   type ShipmentRetrieveParams,

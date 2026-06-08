@@ -18,14 +18,7 @@ export class Agents extends APIResource {
    * ```ts
    * const agentDefinition = await client.ai.agents.create({
    *   category_code: 'inventory',
-   *   config: {
-   *     system_prompt:
-   *       'You are an order processing agent. Parse incoming emails and create draft orders.',
-   *     model: 'claude-sonnet-4',
-   *     provider: 'anthropic',
-   *     temperature: 0.2,
-   *     trigger_config: { event_filters: ['email.received'] },
-   *   },
+   *   config: {},
    *   description:
    *     'Monitors inventory levels and creates restock alerts.',
    *   name: 'Inventory Monitor',
@@ -72,7 +65,6 @@ export class Agents extends APIResource {
    * ```ts
    * const agentDefinition = await client.ai.agents.update(
    *   'agdf_01b9ef28feb99e6954201aca63',
-   *   { name: 'Inventory Monitor' },
    * );
    * ```
    */
@@ -298,27 +290,27 @@ export interface ConfigInput {
   /**
    * LLM model identifier (e.g. "claude-sonnet-4").
    */
-  model: string | null;
+  model?: string;
 
   /**
    * LLM provider name (e.g. "anthropic", "openai"). Inferred from model if omitted.
    */
-  provider: string | null;
+  provider?: string;
 
   /**
    * System prompt / instructions for the agent.
    */
-  system_prompt: string | null;
+  system_prompt?: string;
 
   /**
    * LLM sampling temperature between 0 and 1.
    */
-  temperature: number | null;
+  temperature?: number;
 
   /**
    * Trigger-type-specific settings for agent creation/update requests.
    */
-  trigger_config: TriggerConfigInput | null;
+  trigger_config?: TriggerConfigInput;
 }
 
 /**
@@ -462,19 +454,19 @@ export interface TriggerConfig {
  */
 export interface TriggerConfigInput {
   /**
-   * Cron expression for scheduled triggers (e.g. "0 9 \* \* \*").
-   */
-  cron_schedule: string | null;
-
-  /**
    * Event types that trigger this agent (e.g. ["email.received", "order.created"]).
    */
   event_filters: Array<string>;
 
   /**
+   * Cron expression for scheduled triggers (e.g. "0 9 \* \* \*").
+   */
+  cron_schedule?: string;
+
+  /**
    * IANA timezone for the cron schedule (e.g. "America/New_York").
    */
-  timezone: string | null;
+  timezone?: string;
 }
 
 /**
@@ -667,6 +659,9 @@ export interface AgentListParams {
 
   /**
    * Filter by account-level status.
+   *
+   * Omit to return agents of every status (active and inactive); pass e.g.
+   * ?statuses=active to narrow.
    */
   statuses?: Array<'active' | 'inactive'>;
 

@@ -76,7 +76,7 @@ describe('resource shippingTerms', () => {
           flat_rate: { unit_id: 'unit_id', value: 'value' },
           free_shipping_service_level_ids: ['string'],
           minimum_order_value: { unit_id: 'unit_id', value: 'value' },
-          name: 'Collect',
+          name: 'name',
           type: 'free_freight',
         },
         { path: '/_stainless_unknown_path' },

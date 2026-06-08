@@ -2,6 +2,7 @@
 
 import { APIResource } from '../../../core/resource';
 import * as RequestLogsAPI from '../../core/request-logs';
+import * as AccountPricesAPI from '../account-prices';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as CustomersAPI from '../customers/customers';
@@ -10,12 +11,18 @@ import * as ActionsAPI from './actions';
 import {
   ActionBulkDeleteParams,
   ActionBulkDeleteResponse,
-  ActionChangeStatusParams,
+  ActionCloseParams,
+  ActionIssueParams,
+  ActionOpenParams,
+  ActionUnissueParams,
   Actions,
   BulkDeleteSalesOrdersRequest,
-  ChangeSalesOrderStatusRequest,
+  CloseSalesOrderRequest,
   CreateProductionRunResponse,
   CreateProductionRunResponseRef,
+  IssueSalesOrderRequest,
+  OpenSalesOrderRequest,
+  UnissueSalesOrderRequest,
 } from './actions';
 import * as LinesAPI from './lines';
 import {
@@ -25,6 +32,7 @@ import {
   LineDeleteResponse,
   LineUpdateParams,
   Lines,
+  RateInput,
   UpdateSalesOrderLineRequest,
 } from './lines';
 import { APIPromise } from '../../../core/api-promise';
@@ -40,37 +48,27 @@ export class SalesOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const salesOrderDetail =
-   *   await client.sales.salesOrders.create({
-   *     buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-   *     lines: [
-   *       {
-   *         product_id: 'pd_013c29ab3f1518d0004094c316',
-   *         product_sku: 'WIDGET-001',
-   *         quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *         quantity_value: '10',
-   *         unit_price_denominator_unit_id:
-   *           'un_01966263f74a5a0cae356000a1',
-   *         unit_price_numerator_unit_id:
-   *           'un_01966263f74a5a0cae356000a1',
-   *         unit_price_value: '25.00',
-   *       },
-   *     ],
-   *     priority_code: 'normal',
-   *     sales_order_type_code: 'sales_order',
-   *     carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
-   *     note: 'Rush order for trade show',
-   *     service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
-   *     ship_to_country: 'US',
-   *     ship_to_locality: 'San Francisco',
-   *     ship_to_name: 'Acme Inc.',
-   *     ship_to_postal_code: '94105',
-   *     ship_to_state: 'CA',
-   *     ship_to_street_line_1: '123 Main Street',
-   *   });
+   * const salesOrder = await client.sales.salesOrders.create({
+   *   buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+   *   lines: [
+   *     {
+   *       product_id: 'pd_013c29ab3f1518d0004094c316',
+   *       product_sku: 'WIDGET-001',
+   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       quantity_value: '10',
+   *       unit_price_denominator_unit_id:
+   *         'un_01966263f74a5a0cae356000a1',
+   *       unit_price_numerator_unit_id:
+   *         'un_01966263f74a5a0cae356000a1',
+   *       unit_price_value: '25.00',
+   *     },
+   *   ],
+   *   priority_code: 'normal',
+   *   sales_order_type_code: 'sales_order',
+   * });
    * ```
    */
-  create(params: SalesOrderCreateParams, options?: RequestOptions): APIPromise<SalesOrderDetail> {
+  create(params: SalesOrderCreateParams, options?: RequestOptions): APIPromise<SalesOrder> {
     const { include, ...body } = params;
     return this._client.post('/v1/sales/sales-orders', { query: { include }, body, ...options });
   }
@@ -80,17 +78,16 @@ export class SalesOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const salesOrderDetail =
-   *   await client.sales.salesOrders.retrieve(
-   *     'or_01d5034136c3ccc048abecc312',
-   *   );
+   * const salesOrder = await client.sales.salesOrders.retrieve(
+   *   'or_01d5034136c3ccc048abecc312',
+   * );
    * ```
    */
   retrieve(
     id: string,
     query: SalesOrderRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<SalesOrderDetail> {
+  ): APIPromise<SalesOrder> {
     return this._client.get(path`/v1/sales/sales-orders/${id}`, { query, ...options });
   }
 
@@ -99,24 +96,16 @@ export class SalesOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const salesOrderDetail =
-   *   await client.sales.salesOrders.update(
-   *     'or_01d5034136c3ccc048abecc312',
-   *     {
-   *       carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
-   *       note: 'Updated shipping instructions',
-   *       priority_code: 'normal',
-   *       ship_to_name: 'Acme Inc.',
-   *       ship_to_street_line_1: '123 Main Street',
-   *     },
-   *   );
+   * const salesOrder = await client.sales.salesOrders.update(
+   *   'or_01d5034136c3ccc048abecc312',
+   * );
    * ```
    */
   update(
     id: string,
     params: SalesOrderUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<SalesOrderDetail> {
+  ): APIPromise<SalesOrder> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/sales/sales-orders/${id}`, { query: { include }, body, ...options });
   }
@@ -126,14 +115,14 @@ export class SalesOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const listSalesOrderDetail =
+   * const listSalesOrder =
    *   await client.sales.salesOrders.list();
    * ```
    */
   list(
     query: SalesOrderListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ListSalesOrderDetail> {
+  ): APIPromise<ListSalesOrder> {
     return this._client.get('/v1/sales/sales-orders', { query, ...options });
   }
 
@@ -159,13 +148,7 @@ export class SalesOrders extends APIResource {
    * const checkoutSalesOrderResponse =
    *   await client.sales.salesOrders.checkout(
    *     'or_01d5034136c3ccc048abecc312',
-   *     {
-   *       email: 'operations@acme.example.com',
-   *       cancel_url:
-   *         'https://dashboard.example.com/checkout/cancel',
-   *       success_url:
-   *         'https://dashboard.example.com/checkout/success',
-   *     },
+   *     { email: 'operations@acme.example.com' },
    *   );
    * ```
    */
@@ -225,13 +208,69 @@ export interface CheckoutSalesOrderResponse {
 }
 
 /**
- * Line item input for a create sales order request.
+ * OrderLineInput represents the shared fields for creating an order line item.
+ * Used as an embedded struct in purchase order and sales order line inputs.
  */
-export interface CreateSalesOrderLineInput extends OrderLineInput {
+export interface CreateSalesOrderLineInput {
   /**
-   * EDI line item ID.
+   * The product ID.
    */
-  edi_line_item_id?: string;
+  product_id: string;
+
+  /**
+   * The product SKU.
+   */
+  product_sku: string;
+
+  /**
+   * The quantity unit ID.
+   */
+  quantity_unit_id: string;
+
+  /**
+   * The quantity value.
+   */
+  quantity_value: string;
+
+  /**
+   * The unit price denominator unit ID.
+   */
+  unit_price_denominator_unit_id: string;
+
+  /**
+   * The unit price numerator unit ID.
+   */
+  unit_price_numerator_unit_id: string;
+
+  /**
+   * The unit price value.
+   */
+  unit_price_value: string;
+
+  /**
+   * The item ID.
+   */
+  item_id?: string;
+
+  /**
+   * The product description.
+   */
+  product_description?: string;
+
+  /**
+   * The unit cost denominator unit ID.
+   */
+  unit_cost_denominator_unit_id?: string;
+
+  /**
+   * The unit cost numerator unit ID.
+   */
+  unit_cost_numerator_unit_id?: string;
+
+  /**
+   * The unit cost value.
+   */
+  unit_cost_value?: string;
 }
 
 /**
@@ -301,12 +340,12 @@ export interface CreateSalesOrderRequest {
   /**
    * Carrier billing account number.
    */
-  carrier_billing_account?: string;
+  carrier_billing_account_number?: string;
 
   /**
-   * Carrier billing type.
+   * Who is billed for freight (sender or third_party).
    */
-  carrier_billing_type?: string;
+  carrier_billing_type?: 'sender' | 'third_party';
 
   /**
    * Carrier ID.
@@ -314,9 +353,9 @@ export interface CreateSalesOrderRequest {
   carrier_id?: string;
 
   /**
-   * Customer purchase order number.
+   * Customer's purchase order number.
    */
-  customer_po_number?: string;
+  customer_purchase_order_number?: string;
 
   /**
    * Account users who should receive invoice emails.
@@ -390,13 +429,54 @@ export interface CreateSalesOrderRequest {
 }
 
 /**
+ * Freight describes the carrier selection and freight billing for a record. It is
+ * a generic, reusable sub-resource shared by anything that carries shipping
+ * configuration — e.g. a sales order's chosen freight, or a customer's default
+ * freight preferences. It is itself expanded via its parent (e.g.
+ * include[]=freight); when present, the full carrier and service level are
+ * included.
+ */
+export interface Freight {
+  /**
+   * Carrier billing account number, used when a third party is billed.
+   */
+  billing_account_number: string | null;
+
+  /**
+   * Who is billed for freight (sender or third_party).
+   */
+  billing_type: 'sender' | 'third_party' | null;
+
+  /**
+   * Carrier resource.
+   */
+  carrier: CustomersAPI.Carrier | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'freight';
+
+  /**
+   * Freight policy (who arranges and pays for freight). Populated where a policy
+   * applies, such as customer defaults.
+   */
+  policy: 'free_freight' | 'billed_freight' | null;
+
+  /**
+   * Shipping service level for a carrier.
+   */
+  service_level: CustomersAPI.ServiceLevel | null;
+}
+
+/**
  * List represents a paginated list of resources.
  */
-export interface ListSalesOrderDetail {
+export interface ListRecord {
   /**
    * Resources in this page.
    */
-  data: Array<SalesOrderDetail>;
+  data: Array<Record>;
 
   /**
    * Resource type identifier.
@@ -412,11 +492,31 @@ export interface ListSalesOrderDetail {
 /**
  * List represents a paginated list of resources.
  */
-export interface ListSalesOrderLineDetail {
+export interface ListSalesOrder {
   /**
    * Resources in this page.
    */
-  data: Array<SalesOrderLineDetail>;
+  data: Array<SalesOrder>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListSalesOrderLine {
+  /**
+   * Resources in this page.
+   */
+  data: Array<SalesOrderLine>;
 
   /**
    * Resource type identifier.
@@ -516,68 +616,117 @@ export interface OrderLineInput {
 }
 
 /**
- * Minimal pick sub-resource.
+ * Product with expandable item, product line, and product type.
  */
-export interface Pick {
+export interface Product {
   /**
-   * Pick ID.
+   * Product ID.
    */
   id: string;
 
   /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Item is an inventory item (product, material, or part).
+   */
+  item: AccountUsersAPI.Item | null;
+
+  /**
    * Resource type identifier.
    */
-  object: 'pick';
+  object: 'product';
+
+  /**
+   * Product portal visibility.
+   */
+  portal_visibility: 'visible' | 'hidden';
+
+  /**
+   * Product line resource.
+   */
+  product_line: AccountPricesAPI.ProductLine | null;
+
+  /**
+   * Product type code.
+   */
+  type: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
 }
 
 /**
- * Production run sub-resource.
+ * Record is a lightweight reference to a business record — a sales order, purchase
+ * order, pick, shipment, production run, invoice, etc. Like Actor and Entity, it
+ * carries just enough to identify and label the referenced record without
+ * embedding its full resource. The optional status and metadata fields hold
+ * type-specific detail that varies by the kind of record referenced.
  */
-export interface ProductionRun {
+export interface Record {
   /**
-   * Production run ID.
+   * Record ID.
    */
   id: string;
 
   /**
-   * Production run number.
+   * Type-specific metadata. The set of keys varies by record type.
    */
-  number: string;
+  metadata: { [key: string]: string };
+
+  /**
+   * Human-readable record number, when the record has one.
+   */
+  number: string | null;
 
   /**
    * Resource type identifier.
    */
-  object: 'production_run';
+  object: 'record';
+
+  /**
+   * Type-specific status code, when applicable.
+   */
+  status: string | null;
+
+  /**
+   * The kind of record referenced.
+   */
+  type:
+    | 'sales_order'
+    | 'purchase_order'
+    | 'receiving_order'
+    | 'pick'
+    | 'shipment'
+    | 'delivery'
+    | 'production_run'
+    | 'invoice'
+    | 'transaction'
+    | 'settlement';
 }
 
 /**
  * Full sales order resource.
  */
-export interface SalesOrderDetail {
+export interface SalesOrder {
   /**
    * Sales order ID.
    */
   id: string;
 
   /**
+   * Acknowledgment status.
+   */
+  acknowledgment_status: 'not_sent' | 'sent';
+
+  /**
    * Address with associated geolocation.
    */
   bill_to_address: APIKeysAPI.Address | null;
-
-  /**
-   * Carrier resource.
-   */
-  carrier: CustomersAPI.Carrier | null;
-
-  /**
-   * Carrier billing account number.
-   */
-  carrier_billing_account: string | null;
-
-  /**
-   * Carrier billing type.
-   */
-  carrier_billing_type: string | null;
 
   /**
    * Completed timestamp.
@@ -595,9 +744,9 @@ export interface SalesOrderDetail {
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Customer purchase order number.
+   * Customer's purchase order number.
    */
-  customer_po: string | null;
+  customer_purchase_order_number: string | null;
 
   /**
    * Expiration timestamp.
@@ -610,9 +759,14 @@ export interface SalesOrderDetail {
   first_ship_at: string | null;
 
   /**
-   * Whether the acknowledgment has been sent.
+   * Freight describes the carrier selection and freight billing for a record. It is
+   * a generic, reusable sub-resource shared by anything that carries shipping
+   * configuration — e.g. a sales order's chosen freight, or a customer's default
+   * freight preferences. It is itself expanded via its parent (e.g.
+   * include[]=freight); when present, the full carrier and service level are
+   * included.
    */
-  is_acknowledgment_sent: boolean;
+  freight: Freight | null;
 
   /**
    * Issued timestamp.
@@ -620,14 +774,14 @@ export interface SalesOrderDetail {
   issued_at: string | null;
 
   /**
-   * Count of order lines. Always populated in list responses.
+   * Count of order lines.
    */
   line_count: number;
 
   /**
    * List represents a paginated list of resources.
    */
-  lines: ListSalesOrderLineDetail | null;
+  lines: ListSalesOrderLine | null;
 
   /**
    * Order note.
@@ -650,24 +804,19 @@ export interface SalesOrderDetail {
   order_discount: OrderDiscountsAPI.OrderDiscount | null;
 
   /**
+   * Payment status.
+   */
+  payment_status: 'unpaid' | 'partially_paid' | 'paid';
+
+  /**
    * Payment term resource.
    */
   payment_term: CustomersAPI.PaymentTerm | null;
 
   /**
-   * Minimal pick sub-resource.
+   * Priority code.
    */
-  pick: Pick | null;
-
-  /**
-   * Priority level used by sales orders and picks.
-   */
-  priority: CustomersAPI.Priority | null;
-
-  /**
-   * Production run sub-resource.
-   */
-  production_run: ProductionRun | null;
+  priority: 'low' | 'normal' | 'high';
 
   /**
    * Promised timestamp.
@@ -675,14 +824,16 @@ export interface SalesOrderDetail {
   promised_at: string | null;
 
   /**
+   * SalesOrderRelated groups the records related to a sales order. The members are
+   * individually expandable (e.g. include[]=related.pick); the group itself is
+   * always present.
+   */
+  related: SalesOrderRelated | null;
+
+  /**
    * Reference to an actor (user, API key, or agent).
    */
   sales_rep: RequestLogsAPI.Actor | null;
-
-  /**
-   * Shipping service level for a carrier.
-   */
-  service_level: CustomersAPI.ServiceLevel | null;
 
   /**
    * Address with associated geolocation.
@@ -695,14 +846,15 @@ export interface SalesOrderDetail {
   shipping_term: CustomersAPI.ShippingTerm | null;
 
   /**
-   * Sales order status sub-resource.
+   * Order status code.
    */
-  status: SalesOrderStatusDetail | null;
+  status: 'estimate' | 'issued' | 'fulfilled';
 
   /**
-   * Sales order type sub-resource.
+   * SalesOrderTotals holds the derived monetary totals for a sales order or one of
+   * its lines, following the lifecycle ordered -> packed -> invoiced.
    */
-  type: SalesOrderType | null;
+  totals: SalesOrderTotals | null;
 
   /**
    * Last updated timestamp.
@@ -724,31 +876,16 @@ export interface SalesOrderEmailContactInput {
 /**
  * Full sales order line resource.
  */
-export interface SalesOrderLineDetail {
+export interface SalesOrderLine {
   /**
    * Sales order line ID.
    */
   id: string;
 
   /**
-   * Completed timestamp.
-   */
-  completed_at: string | null;
-
-  /**
    * Creation timestamp.
    */
   created_at: string;
-
-  /**
-   * EDI line item ID.
-   */
-  edi_line_item_id: string | null;
-
-  /**
-   * Item is an inventory item (product, material, or part).
-   */
-  item: AccountUsersAPI.Item | null;
 
   /**
    * Line item number.
@@ -759,6 +896,11 @@ export interface SalesOrderLineDetail {
    * Resource type identifier.
    */
   object: 'sales_order_line';
+
+  /**
+   * Product with expandable item, product line, and product type.
+   */
+  product: Product | null;
 
   /**
    * Product description.
@@ -773,22 +915,13 @@ export interface SalesOrderLineDetail {
   /**
    * Value with an associated unit.
    */
-  quantity_invoiced: AccountUsersAPI.Quantity | null;
-
-  /**
-   * Value with an associated unit.
-   */
   quantity_ordered: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * SalesOrderTotals holds the derived monetary totals for a sales order or one of
+   * its lines, following the lifecycle ordered -> packed -> invoiced.
    */
-  quantity_packed: AccountUsersAPI.Quantity | null;
-
-  /**
-   * Value with an associated unit.
-   */
-  quantity_picked: AccountUsersAPI.Quantity | null;
+  totals: SalesOrderTotals | null;
 
   /**
    * Rate resource.
@@ -804,6 +937,41 @@ export interface SalesOrderLineDetail {
    * Last updated timestamp.
    */
   updated_at: string;
+}
+
+/**
+ * SalesOrderRelated groups the records related to a sales order. The members are
+ * individually expandable (e.g. include[]=related.pick); the group itself is
+ * always present.
+ */
+export interface SalesOrderRelated {
+  /**
+   * Resource type identifier.
+   */
+  object: 'sales_order_related';
+
+  /**
+   * Record is a lightweight reference to a business record — a sales order, purchase
+   * order, pick, shipment, production run, invoice, etc. Like Actor and Entity, it
+   * carries just enough to identify and label the referenced record without
+   * embedding its full resource. The optional status and metadata fields hold
+   * type-specific detail that varies by the kind of record referenced.
+   */
+  pick: Record | null;
+
+  /**
+   * Record is a lightweight reference to a business record — a sales order, purchase
+   * order, pick, shipment, production run, invoice, etc. Like Actor and Entity, it
+   * carries just enough to identify and label the referenced record without
+   * embedding its full resource. The optional status and metadata fields hold
+   * type-specific detail that varies by the kind of record referenced.
+   */
+  production_run: Record | null;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  shipments: ListRecord | null;
 }
 
 /**
@@ -847,43 +1015,29 @@ export interface SalesOrderStatus {
 }
 
 /**
- * Sales order status sub-resource.
+ * SalesOrderTotals holds the derived monetary totals for a sales order or one of
+ * its lines, following the lifecycle ordered -> packed -> invoiced.
  */
-export interface SalesOrderStatusDetail {
+export interface SalesOrderTotals {
   /**
-   * Status code.
+   * Total invoiced amount as a decimal string (unit price x quantity invoiced).
    */
-  code: string;
-
-  /**
-   * Display name.
-   */
-  name: string;
+  invoiced: string;
 
   /**
    * Resource type identifier.
    */
-  object: 'sales_order_status';
-}
-
-/**
- * Sales order type sub-resource.
- */
-export interface SalesOrderType {
-  /**
-   * Type code.
-   */
-  code: string;
+  object: 'sales_order_totals';
 
   /**
-   * Display name.
+   * Total ordered amount as a decimal string (unit price x quantity ordered).
    */
-  name: string;
+  ordered: string;
 
   /**
-   * Resource type identifier.
+   * Total packed amount as a decimal string (unit price x quantity packed).
    */
-  object: 'sales_order_type';
+  packed: string;
 }
 
 /**
@@ -897,49 +1051,25 @@ export interface UpdateSalesOrderRequest {
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Bill-to country.
+   * Acknowledgment status (not_sent, sent).
    */
-  bill_to_country?: string;
+  acknowledgment_status?: 'not_sent' | 'sent';
 
   /**
-   * Bill-to locality/city.
+   * Billing address ID. Re-points the order to an existing address. To change an
+   * address's contents, use the update-address endpoint.
    */
-  bill_to_locality?: string;
-
-  /**
-   * Bill-to address name.
-   */
-  bill_to_name?: string;
-
-  /**
-   * Bill-to postal code.
-   */
-  bill_to_postal_code?: string;
-
-  /**
-   * Bill-to state/province.
-   */
-  bill_to_state?: string;
-
-  /**
-   * Bill-to street line 1.
-   */
-  bill_to_street_line_1?: string;
-
-  /**
-   * Bill-to street line 2.
-   */
-  bill_to_street_line_2?: string;
+  billing_address_id?: string;
 
   /**
    * Carrier billing account number.
    */
-  carrier_billing_account?: string;
+  carrier_billing_account_number?: string;
 
   /**
-   * Carrier billing type.
+   * Who is billed for freight (sender or third_party).
    */
-  carrier_billing_type?: string;
+  carrier_billing_type?: 'sender' | 'third_party';
 
   /**
    * Carrier ID.
@@ -952,20 +1082,15 @@ export interface UpdateSalesOrderRequest {
   customer_id?: string;
 
   /**
-   * Customer purchase order number.
+   * Customer's purchase order number.
    */
-  customer_po_number?: string;
+  customer_purchase_order_number?: string;
 
   /**
    * When set, replaces invoice email contacts on the order. An empty list clears all
    * contacts; omitted leaves existing contacts untouched.
    */
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
-
-  /**
-   * Whether the acknowledgment has been sent.
-   */
-  is_acknowledgment_sent?: boolean;
 
   /**
    * Order note.
@@ -1008,39 +1133,10 @@ export interface UpdateSalesOrderRequest {
   service_level_id?: string;
 
   /**
-   * Ship-to country.
+   * Shipping address ID. Re-points the order to an existing address. To change an
+   * address's contents, use the update-address endpoint.
    */
-  ship_to_country?: string;
-
-  /**
-   * Ship-to locality/city.
-   */
-  ship_to_locality?: string;
-
-  /**
-   * Ship-to address name.
-   */
-  ship_to_name?: string;
-
-  /**
-   * Ship-to postal code.
-   */
-  ship_to_postal_code?: string;
-
-  /**
-   * Ship-to state/province.
-   */
-  ship_to_state?: string;
-
-  /**
-   * Ship-to street line 1.
-   */
-  ship_to_street_line_1?: string;
-
-  /**
-   * Ship-to street line 2.
-   */
-  ship_to_street_line_2?: string;
+  shipping_address_id?: string;
 
   /**
    * Shipping term ID.
@@ -1077,15 +1173,23 @@ export interface SalesOrderCreateParams {
    */
   include?: Array<
     | 'customer'
+    | 'sales_rep'
     | 'bill_to_address'
     | 'ship_to_address'
-    | 'carrier'
-    | 'service_level'
+    | 'freight'
     | 'payment_term'
     | 'shipping_term'
     | 'order_discount'
+    | 'totals'
+    | 'related.pick'
+    | 'related.production_run'
+    | 'related.shipments'
     | 'lines'
-    | 'lines.item'
+    | 'lines.product'
+    | 'lines.quantity_ordered'
+    | 'lines.unit_price'
+    | 'lines.unit_cost'
+    | 'lines.totals'
   >;
 
   /**
@@ -1131,12 +1235,12 @@ export interface SalesOrderCreateParams {
   /**
    * Body param: Carrier billing account number.
    */
-  carrier_billing_account?: string;
+  carrier_billing_account_number?: string;
 
   /**
-   * Body param: Carrier billing type.
+   * Body param: Who is billed for freight (sender or third_party).
    */
-  carrier_billing_type?: string;
+  carrier_billing_type?: 'sender' | 'third_party';
 
   /**
    * Body param: Carrier ID.
@@ -1144,9 +1248,9 @@ export interface SalesOrderCreateParams {
   carrier_id?: string;
 
   /**
-   * Body param: Customer purchase order number.
+   * Body param: Customer's purchase order number.
    */
-  customer_po_number?: string;
+  customer_purchase_order_number?: string;
 
   /**
    * Body param: Account users who should receive invoice emails.
@@ -1226,15 +1330,23 @@ export interface SalesOrderRetrieveParams {
    */
   include?: Array<
     | 'customer'
+    | 'sales_rep'
     | 'bill_to_address'
     | 'ship_to_address'
-    | 'carrier'
-    | 'service_level'
+    | 'freight'
     | 'payment_term'
     | 'shipping_term'
     | 'order_discount'
+    | 'totals'
+    | 'related.pick'
+    | 'related.production_run'
+    | 'related.shipments'
     | 'lines'
-    | 'lines.item'
+    | 'lines.product'
+    | 'lines.quantity_ordered'
+    | 'lines.unit_price'
+    | 'lines.unit_cost'
+    | 'lines.totals'
   >;
 }
 
@@ -1245,15 +1357,23 @@ export interface SalesOrderUpdateParams {
    */
   include?: Array<
     | 'customer'
+    | 'sales_rep'
     | 'bill_to_address'
     | 'ship_to_address'
-    | 'carrier'
-    | 'service_level'
+    | 'freight'
     | 'payment_term'
     | 'shipping_term'
     | 'order_discount'
+    | 'totals'
+    | 'related.pick'
+    | 'related.production_run'
+    | 'related.shipments'
     | 'lines'
-    | 'lines.item'
+    | 'lines.product'
+    | 'lines.quantity_ordered'
+    | 'lines.unit_price'
+    | 'lines.unit_cost'
+    | 'lines.totals'
   >;
 
   /**
@@ -1263,49 +1383,25 @@ export interface SalesOrderUpdateParams {
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Body param: Bill-to country.
+   * Body param: Acknowledgment status (not_sent, sent).
    */
-  bill_to_country?: string;
+  acknowledgment_status?: 'not_sent' | 'sent';
 
   /**
-   * Body param: Bill-to locality/city.
+   * Body param: Billing address ID. Re-points the order to an existing address. To
+   * change an address's contents, use the update-address endpoint.
    */
-  bill_to_locality?: string;
-
-  /**
-   * Body param: Bill-to address name.
-   */
-  bill_to_name?: string;
-
-  /**
-   * Body param: Bill-to postal code.
-   */
-  bill_to_postal_code?: string;
-
-  /**
-   * Body param: Bill-to state/province.
-   */
-  bill_to_state?: string;
-
-  /**
-   * Body param: Bill-to street line 1.
-   */
-  bill_to_street_line_1?: string;
-
-  /**
-   * Body param: Bill-to street line 2.
-   */
-  bill_to_street_line_2?: string;
+  billing_address_id?: string;
 
   /**
    * Body param: Carrier billing account number.
    */
-  carrier_billing_account?: string;
+  carrier_billing_account_number?: string;
 
   /**
-   * Body param: Carrier billing type.
+   * Body param: Who is billed for freight (sender or third_party).
    */
-  carrier_billing_type?: string;
+  carrier_billing_type?: 'sender' | 'third_party';
 
   /**
    * Body param: Carrier ID.
@@ -1318,20 +1414,15 @@ export interface SalesOrderUpdateParams {
   customer_id?: string;
 
   /**
-   * Body param: Customer purchase order number.
+   * Body param: Customer's purchase order number.
    */
-  customer_po_number?: string;
+  customer_purchase_order_number?: string;
 
   /**
    * Body param: When set, replaces invoice email contacts on the order. An empty
    * list clears all contacts; omitted leaves existing contacts untouched.
    */
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
-
-  /**
-   * Body param: Whether the acknowledgment has been sent.
-   */
-  is_acknowledgment_sent?: boolean;
 
   /**
    * Body param: Order note.
@@ -1374,39 +1465,10 @@ export interface SalesOrderUpdateParams {
   service_level_id?: string;
 
   /**
-   * Body param: Ship-to country.
+   * Body param: Shipping address ID. Re-points the order to an existing address. To
+   * change an address's contents, use the update-address endpoint.
    */
-  ship_to_country?: string;
-
-  /**
-   * Body param: Ship-to locality/city.
-   */
-  ship_to_locality?: string;
-
-  /**
-   * Body param: Ship-to address name.
-   */
-  ship_to_name?: string;
-
-  /**
-   * Body param: Ship-to postal code.
-   */
-  ship_to_postal_code?: string;
-
-  /**
-   * Body param: Ship-to state/province.
-   */
-  ship_to_state?: string;
-
-  /**
-   * Body param: Ship-to street line 1.
-   */
-  ship_to_street_line_1?: string;
-
-  /**
-   * Body param: Ship-to street line 2.
-   */
-  ship_to_street_line_2?: string;
+  shipping_address_id?: string;
 
   /**
    * Body param: Shipping term ID.
@@ -1531,18 +1593,20 @@ export declare namespace SalesOrders {
     type CheckoutSalesOrderResponse as CheckoutSalesOrderResponse,
     type CreateSalesOrderLineInput as CreateSalesOrderLineInput,
     type CreateSalesOrderRequest as CreateSalesOrderRequest,
-    type ListSalesOrderDetail as ListSalesOrderDetail,
-    type ListSalesOrderLineDetail as ListSalesOrderLineDetail,
+    type Freight as Freight,
+    type ListRecord as ListRecord,
+    type ListSalesOrder as ListSalesOrder,
+    type ListSalesOrderLine as ListSalesOrderLine,
     type ListSalesOrderStatus as ListSalesOrderStatus,
     type OrderLineInput as OrderLineInput,
-    type Pick as Pick,
-    type ProductionRun as ProductionRun,
-    type SalesOrderDetail as SalesOrderDetail,
+    type Product as Product,
+    type Record as Record,
+    type SalesOrder as SalesOrder,
     type SalesOrderEmailContactInput as SalesOrderEmailContactInput,
-    type SalesOrderLineDetail as SalesOrderLineDetail,
+    type SalesOrderLine as SalesOrderLine,
+    type SalesOrderRelated as SalesOrderRelated,
     type SalesOrderStatus as SalesOrderStatus,
-    type SalesOrderStatusDetail as SalesOrderStatusDetail,
-    type SalesOrderType as SalesOrderType,
+    type SalesOrderTotals as SalesOrderTotals,
     type UpdateSalesOrderRequest as UpdateSalesOrderRequest,
     type SalesOrderDeleteResponse as SalesOrderDeleteResponse,
     type SalesOrderCreateParams as SalesOrderCreateParams,
@@ -1556,17 +1620,24 @@ export declare namespace SalesOrders {
   export {
     Actions as Actions,
     type BulkDeleteSalesOrdersRequest as BulkDeleteSalesOrdersRequest,
-    type ChangeSalesOrderStatusRequest as ChangeSalesOrderStatusRequest,
+    type CloseSalesOrderRequest as CloseSalesOrderRequest,
     type CreateProductionRunResponse as CreateProductionRunResponse,
     type CreateProductionRunResponseRef as CreateProductionRunResponseRef,
+    type IssueSalesOrderRequest as IssueSalesOrderRequest,
+    type OpenSalesOrderRequest as OpenSalesOrderRequest,
+    type UnissueSalesOrderRequest as UnissueSalesOrderRequest,
     type ActionBulkDeleteResponse as ActionBulkDeleteResponse,
     type ActionBulkDeleteParams as ActionBulkDeleteParams,
-    type ActionChangeStatusParams as ActionChangeStatusParams,
+    type ActionCloseParams as ActionCloseParams,
+    type ActionIssueParams as ActionIssueParams,
+    type ActionOpenParams as ActionOpenParams,
+    type ActionUnissueParams as ActionUnissueParams,
   };
 
   export {
     Lines as Lines,
     type CreateSalesOrderLineRequest as CreateSalesOrderLineRequest,
+    type RateInput as RateInput,
     type UpdateSalesOrderLineRequest as UpdateSalesOrderLineRequest,
     type LineDeleteResponse as LineDeleteResponse,
     type LineCreateParams as LineCreateParams,

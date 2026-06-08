@@ -51,7 +51,7 @@ describe('resource accounts', () => {
           facebook_handle: 'facebook_handle',
           instagram_handle: 'instagram_handle',
           linkedin_handle: 'linkedin_handle',
-          name: 'Acme Inc.',
+          name: 'name',
           phone_number: 'phone_number',
           slug: 'slug',
           support_email: 'support_email',

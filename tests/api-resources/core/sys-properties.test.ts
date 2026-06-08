@@ -35,7 +35,7 @@ describe('resource sysProperties', () => {
     await expect(
       client.core.sysProperties.update(
         'sypp_01d8fd3a8b1a8e4c41be55ab5a',
-        { value: 30 },
+        { value: 0 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);

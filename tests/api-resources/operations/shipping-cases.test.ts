@@ -30,14 +30,8 @@ describe('resource shippingCases', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('update: only required params', async () => {
-    const responsePromise = client.operations.shippingCases.update('shcs_01207a101ea1475c687a39cf76', {
-      freight_amount_unit_id: 'freight_amount_unit_id',
-      freight_amount_value: 'freight_amount_value',
-      freight_weight_unit_id: 'freight_weight_unit_id',
-      freight_weight_value: 'freight_weight_value',
-      tracking_number: '1Z999AA10123456784',
-    });
+  test('update', async () => {
+    const responsePromise = client.operations.shippingCases.update('shcs_01207a101ea1475c687a39cf76');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -47,15 +41,22 @@ describe('resource shippingCases', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: required and optional params', async () => {
-    const response = await client.operations.shippingCases.update('shcs_01207a101ea1475c687a39cf76', {
-      freight_amount_unit_id: 'freight_amount_unit_id',
-      freight_amount_value: 'freight_amount_value',
-      freight_weight_unit_id: 'freight_weight_unit_id',
-      freight_weight_value: 'freight_weight_value',
-      tracking_number: '1Z999AA10123456784',
-      include: ['carrier'],
-    });
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.shippingCases.update(
+        'shcs_01207a101ea1475c687a39cf76',
+        {
+          include: ['carrier'],
+          freight_amount_unit_id: 'freight_amount_unit_id',
+          freight_amount_value: 'freight_amount_value',
+          freight_weight_unit_id: 'freight_weight_unit_id',
+          freight_weight_value: 'freight_weight_value',
+          tracking_number: 'tracking_number',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('delete', async () => {

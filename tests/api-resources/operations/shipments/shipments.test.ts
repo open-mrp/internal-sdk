@@ -50,7 +50,7 @@ describe('resource shipments', () => {
           include: ['lines'],
           carrier_id: 'carrier_id',
           master_tracking_number: 'master_tracking_number',
-          note: 'Updated shipping note',
+          note: 'note',
           number: 'number',
           service_level_id: 'service_level_id',
         },

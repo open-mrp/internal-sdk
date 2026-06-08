@@ -22,10 +22,19 @@ import {
   Delivery,
   DeliveryLine,
   DeliveryListParams,
-  DeliverySummary,
+  DeliveryRetrieveParams,
+  EmailContact,
+  ListDelivery,
   ListDeliveryLine,
-  ListDeliverySummary,
+  ListEmailContact,
+  ListPurchaseOrderLine,
+  ListReceivingOrderLine,
   Lot,
+  PurchaseOrder,
+  PurchaseOrderLine,
+  ReceivingOrder,
+  ReceivingOrderLine,
+  Supplier,
 } from './deliveries';
 import * as DepartmentsAPI from './departments';
 import {
@@ -121,6 +130,7 @@ import {
   ListBatchFlowNode,
   ListBatchLot,
   ListScanningProductionStepInfo,
+  ProductionRun,
   ScanningProductionStepInfo,
 } from './batches/batches';
 import * as CarriersAPI from './carriers/carriers';
@@ -148,12 +158,11 @@ import {
 } from './inventory-change-logs/inventory-change-logs';
 import * as PicksAPI from './picks/picks';
 import {
-  ListPickSummary,
+  ListPick,
   PickListParams,
   PickRetrieveParams,
   PickRetrieveShipmentsParams,
   PickShipmentsResponse,
-  PickSummary,
   PickUpdateParams,
   Picks,
   UpdatePickRequest,
@@ -201,40 +210,29 @@ import * as PurchaseOrdersAPI from './purchase-orders/purchase-orders';
 import {
   CreatePurchaseOrderLineInput,
   CreatePurchaseOrderRequest,
-  EmailContact,
-  ListEmailContact,
-  ListPurchaseOrderLineDetail,
-  ListPurchaseOrderSummary,
+  ListPurchaseOrder,
   PurchaseOrderCreateParams,
   PurchaseOrderDeleteResponse,
-  PurchaseOrderDetail,
-  PurchaseOrderLineDetail,
   PurchaseOrderListParams,
   PurchaseOrderRetrieveParams,
   PurchaseOrderRetrieveStatusesParams,
-  PurchaseOrderSummary,
   PurchaseOrderUpdateParams,
   PurchaseOrders,
-  Supplier,
   UpdatePurchaseOrderRequest,
 } from './purchase-orders/purchase-orders';
 import * as ReceivingOrdersAPI from './receiving-orders/receiving-orders';
 import {
-  ListReceivingOrderLine,
-  ListReceivingOrderSummary,
-  ReceivingOrder,
-  ReceivingOrderLine,
+  ListReceivingOrder,
   ReceivingOrderListParams,
-  ReceivingOrderSummary,
+  ReceivingOrderRetrieveParams,
   ReceivingOrders,
 } from './receiving-orders/receiving-orders';
 import * as ShipmentsAPI from './shipments/shipments';
 import {
-  ListShipmentSummary,
+  ListShipment,
   ShipmentDeleteResponse,
   ShipmentListParams,
   ShipmentRetrieveParams,
-  ShipmentSummary,
   ShipmentUpdateParams,
   Shipments,
   UpdateShipmentRequest,
@@ -308,10 +306,6 @@ export class Operations extends APIResource {
    * ```ts
    * const quantity = await client.operations.updateQuantities(
    *   'qty_015a85becc1a6afdfb1afc27ff',
-   *   {
-   *     unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     value: '50.000000000000000000000000000000',
-   *   },
    * );
    * ```
    */
@@ -335,10 +329,6 @@ export class Operations extends APIResource {
    * ```ts
    * const rate = await client.operations.updateRates(
    *   'ra_015aa0a9522cf222024fd21d1a',
-   *   {
-   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     value: '25.500000000000000000000000000000',
-   *   },
    * );
    * ```
    */
@@ -619,6 +609,7 @@ export declare namespace Operations {
     type ListBatchFlowNode as ListBatchFlowNode,
     type ListBatchLot as ListBatchLot,
     type ListScanningProductionStepInfo as ListScanningProductionStepInfo,
+    type ProductionRun as ProductionRun,
     type ScanningProductionStepInfo as ScanningProductionStepInfo,
     type BatchNextStepsParams as BatchNextStepsParams,
     type BatchRemainingQuantitiesParams as BatchRemainingQuantitiesParams,
@@ -679,10 +670,19 @@ export declare namespace Operations {
     Deliveries as Deliveries,
     type Delivery as Delivery,
     type DeliveryLine as DeliveryLine,
-    type DeliverySummary as DeliverySummary,
+    type EmailContact as EmailContact,
+    type ListDelivery as ListDelivery,
     type ListDeliveryLine as ListDeliveryLine,
-    type ListDeliverySummary as ListDeliverySummary,
+    type ListEmailContact as ListEmailContact,
+    type ListPurchaseOrderLine as ListPurchaseOrderLine,
+    type ListReceivingOrderLine as ListReceivingOrderLine,
     type Lot as Lot,
+    type PurchaseOrder as PurchaseOrder,
+    type PurchaseOrderLine as PurchaseOrderLine,
+    type ReceivingOrder as ReceivingOrder,
+    type ReceivingOrderLine as ReceivingOrderLine,
+    type Supplier as Supplier,
+    type DeliveryRetrieveParams as DeliveryRetrieveParams,
     type DeliveryListParams as DeliveryListParams,
   };
 
@@ -707,11 +707,8 @@ export declare namespace Operations {
 
   export {
     ReceivingOrders as ReceivingOrders,
-    type ListReceivingOrderLine as ListReceivingOrderLine,
-    type ListReceivingOrderSummary as ListReceivingOrderSummary,
-    type ReceivingOrder as ReceivingOrder,
-    type ReceivingOrderLine as ReceivingOrderLine,
-    type ReceivingOrderSummary as ReceivingOrderSummary,
+    type ListReceivingOrder as ListReceivingOrder,
+    type ReceivingOrderRetrieveParams as ReceivingOrderRetrieveParams,
     type ReceivingOrderListParams as ReceivingOrderListParams,
   };
 
@@ -744,14 +741,7 @@ export declare namespace Operations {
     PurchaseOrders as PurchaseOrders,
     type CreatePurchaseOrderLineInput as CreatePurchaseOrderLineInput,
     type CreatePurchaseOrderRequest as CreatePurchaseOrderRequest,
-    type EmailContact as EmailContact,
-    type ListEmailContact as ListEmailContact,
-    type ListPurchaseOrderLineDetail as ListPurchaseOrderLineDetail,
-    type ListPurchaseOrderSummary as ListPurchaseOrderSummary,
-    type PurchaseOrderDetail as PurchaseOrderDetail,
-    type PurchaseOrderLineDetail as PurchaseOrderLineDetail,
-    type PurchaseOrderSummary as PurchaseOrderSummary,
-    type Supplier as Supplier,
+    type ListPurchaseOrder as ListPurchaseOrder,
     type UpdatePurchaseOrderRequest as UpdatePurchaseOrderRequest,
     type PurchaseOrderDeleteResponse as PurchaseOrderDeleteResponse,
     type PurchaseOrderCreateParams as PurchaseOrderCreateParams,
@@ -763,9 +753,8 @@ export declare namespace Operations {
 
   export {
     Picks as Picks,
-    type ListPickSummary as ListPickSummary,
+    type ListPick as ListPick,
     type PickShipmentsResponse as PickShipmentsResponse,
-    type PickSummary as PickSummary,
     type UpdatePickRequest as UpdatePickRequest,
     type PickRetrieveParams as PickRetrieveParams,
     type PickUpdateParams as PickUpdateParams,
@@ -803,8 +792,7 @@ export declare namespace Operations {
 
   export {
     Shipments as Shipments,
-    type ListShipmentSummary as ListShipmentSummary,
-    type ShipmentSummary as ShipmentSummary,
+    type ListShipment as ListShipment,
     type UpdateShipmentRequest as UpdateShipmentRequest,
     type ShipmentDeleteResponse as ShipmentDeleteResponse,
     type ShipmentRetrieveParams as ShipmentRetrieveParams,

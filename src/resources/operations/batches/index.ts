@@ -27,6 +27,7 @@ export {
   type ListBatchFlowNode,
   type ListBatchLot,
   type ListScanningProductionStepInfo,
+  type ProductionRun,
   type ScanningProductionStepInfo,
   type BatchNextStepsParams,
   type BatchRemainingQuantitiesParams,

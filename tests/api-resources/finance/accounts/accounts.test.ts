@@ -26,6 +26,7 @@ describe('resource accounts', () => {
         'example',
         {
           cursor: 'cursor',
+          include: ['customer'],
           include_child_accounts: true,
           limit: 0,
           q: 'q',

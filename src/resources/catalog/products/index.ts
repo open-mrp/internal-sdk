@@ -11,7 +11,6 @@ export {
   Products,
   type CreateProductRequest,
   type ListProduct,
-  type Product,
   type UpdateProductRequest,
   type ProductCreateParams,
   type ProductRetrieveParams,

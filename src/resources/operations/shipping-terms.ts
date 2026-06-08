@@ -57,7 +57,6 @@ export class ShippingTerms extends APIResource {
    * const shippingTerm =
    *   await client.operations.shippingTerms.update(
    *     'shtm_014341ab4bb5bf94d5b6936f86',
-   *     { name: 'Collect' },
    *   );
    * ```
    */
@@ -126,7 +125,7 @@ export interface CreateShippingTermRequest {
    * QuantityInput represents a value with an associated unit for create/update
    * requests.
    */
-  flat_rate?: CustomersAPI.QuantityInput | null;
+  flat_rate?: CustomersAPI.QuantityInput;
 
   /**
    * Service level IDs that qualify for free shipping.
@@ -137,7 +136,7 @@ export interface CreateShippingTermRequest {
    * QuantityInput represents a value with an associated unit for create/update
    * requests.
    */
-  minimum_order_value?: CustomersAPI.QuantityInput | null;
+  minimum_order_value?: CustomersAPI.QuantityInput;
 }
 
 /**
@@ -220,7 +219,7 @@ export interface ShippingTermCreateParams {
    * Body param: QuantityInput represents a value with an associated unit for
    * create/update requests.
    */
-  flat_rate?: CustomersAPI.QuantityInput | null;
+  flat_rate?: CustomersAPI.QuantityInput;
 
   /**
    * Body param: Service level IDs that qualify for free shipping.
@@ -231,7 +230,7 @@ export interface ShippingTermCreateParams {
    * Body param: QuantityInput represents a value with an associated unit for
    * create/update requests.
    */
-  minimum_order_value?: CustomersAPI.QuantityInput | null;
+  minimum_order_value?: CustomersAPI.QuantityInput;
 }
 
 export interface ShippingTermRetrieveParams {

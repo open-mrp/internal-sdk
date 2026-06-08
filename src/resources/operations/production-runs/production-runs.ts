@@ -64,19 +64,15 @@ export class ProductionRuns extends APIResource {
    * const productionRunDetail =
    *   await client.operations.productionRuns.update(
    *     'prru_0141c28081df4faac0fe726c41',
-   *     {
-   *       number: 'PR-00042',
-   *       responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
-   *     },
    *   );
    * ```
    */
   update(
     id: string,
-    params: ProductionRunUpdateParams,
+    params: ProductionRunUpdateParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<ProductionRunDetail> {
-    const { include, ...body } = params;
+    const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/production-runs/${id}`, {
       query: { include },
       body,
@@ -253,12 +249,12 @@ export interface UpdateProductionRunRequest {
   /**
    * Production run number.
    */
-  number: string | null;
+  number?: string;
 
   /**
    * Responsible user ID.
    */
-  responsible_user_id: string | null;
+  responsible_user_id?: string;
 }
 
 export interface ProductionRunDeleteResponse {}
@@ -286,20 +282,20 @@ export interface ProductionRunRetrieveParams {
 
 export interface ProductionRunUpdateParams {
   /**
-   * Body param: Production run number.
-   */
-  number: string | null;
-
-  /**
-   * Body param: Responsible user ID.
-   */
-  responsible_user_id: string | null;
-
-  /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
   include?: Array<'responsible_user'>;
+
+  /**
+   * Body param: Production run number.
+   */
+  number?: string;
+
+  /**
+   * Body param: Responsible user ID.
+   */
+  responsible_user_id?: string;
 }
 
 export interface ProductionRunListParams {

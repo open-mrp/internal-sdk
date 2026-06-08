@@ -848,27 +848,29 @@ Types:
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CheckoutSalesOrderResponse</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CreateSalesOrderLineInput</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CreateSalesOrderRequest</a></code>
-- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrderDetail</a></code>
-- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrderLineDetail</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">Freight</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListRecord</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrder</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrderLine</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrderStatus</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">OrderLineInput</a></code>
-- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">Pick</a></code>
-- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ProductionRun</a></code>
-- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderDetail</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">Product</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">Record</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrder</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderEmailContactInput</a></code>
-- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderLineDetail</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderLine</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderRelated</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderStatus</a></code>
-- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderStatusDetail</a></code>
-- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderType</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderTotals</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">UpdateSalesOrderRequest</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderDeleteResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/sales/sales-orders">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">create</a>({ ...params }) -> SalesOrderDetail</code>
-- <code title="get /v1/sales/sales-orders/{id}">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">retrieve</a>(id, { ...params }) -> SalesOrderDetail</code>
-- <code title="patch /v1/sales/sales-orders/{id}">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">update</a>(id, { ...params }) -> SalesOrderDetail</code>
-- <code title="get /v1/sales/sales-orders">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">list</a>({ ...params }) -> ListSalesOrderDetail</code>
+- <code title="post /v1/sales/sales-orders">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">create</a>({ ...params }) -> SalesOrder</code>
+- <code title="get /v1/sales/sales-orders/{id}">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">retrieve</a>(id, { ...params }) -> SalesOrder</code>
+- <code title="patch /v1/sales/sales-orders/{id}">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">update</a>(id, { ...params }) -> SalesOrder</code>
+- <code title="get /v1/sales/sales-orders">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">list</a>({ ...params }) -> ListSalesOrder</code>
 - <code title="delete /v1/sales/sales-orders/{id}">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">delete</a>(id) -> SalesOrderDeleteResponse</code>
 - <code title="post /v1/sales/sales-orders/{id}/checkout">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">checkout</a>(id, { ...params }) -> CheckoutSalesOrderResponse</code>
 - <code title="get /v1/sales/sales-orders/statuses">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">retrieveStatuses</a>({ ...params }) -> ListSalesOrderStatus</code>
@@ -878,29 +880,36 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">BulkDeleteSalesOrdersRequest</a></code>
-- <code><a href="./src/resources/sales/sales-orders/actions.ts">ChangeSalesOrderStatusRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/actions.ts">CloseSalesOrderRequest</a></code>
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">CreateProductionRunResponse</a></code>
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">CreateProductionRunResponseRef</a></code>
+- <code><a href="./src/resources/sales/sales-orders/actions.ts">IssueSalesOrderRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/actions.ts">OpenSalesOrderRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/actions.ts">UnissueSalesOrderRequest</a></code>
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">ActionBulkDeleteResponse</a></code>
 
 Methods:
 
 - <code title="post /v1/sales/sales-orders/actions/bulk-delete">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">bulkDelete</a>({ ...params }) -> ActionBulkDeleteResponse</code>
-- <code title="put /v1/sales/sales-orders/{id}/actions/change-status">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">changeStatus</a>(id, { ...params }) -> SalesOrderDetail</code>
+- <code title="put /v1/sales/sales-orders/{id}/actions/close">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">close</a>(id, { ...params }) -> SalesOrder</code>
 - <code title="post /v1/sales/sales-orders/{id}/actions/create-production-run">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">createProductionRun</a>(id) -> CreateProductionRunResponse</code>
+- <code title="put /v1/sales/sales-orders/{id}/actions/issue">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">issue</a>(id, { ...params }) -> SalesOrder</code>
+- <code title="put /v1/sales/sales-orders/{id}/actions/open">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">open</a>(id, { ...params }) -> SalesOrder</code>
+- <code title="put /v1/sales/sales-orders/{id}/actions/unissue">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">unissue</a>(id, { ...params }) -> SalesOrder</code>
 
 ### Lines
 
 Types:
 
 - <code><a href="./src/resources/sales/sales-orders/lines.ts">CreateSalesOrderLineRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/lines.ts">RateInput</a></code>
 - <code><a href="./src/resources/sales/sales-orders/lines.ts">UpdateSalesOrderLineRequest</a></code>
 - <code><a href="./src/resources/sales/sales-orders/lines.ts">LineDeleteResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/sales/sales-orders/{id}/lines">client.sales.salesOrders.lines.<a href="./src/resources/sales/sales-orders/lines.ts">create</a>(id, { ...params }) -> SalesOrderLineDetail</code>
-- <code title="patch /v1/sales/sales-orders/{id}/lines/{line_id}">client.sales.salesOrders.lines.<a href="./src/resources/sales/sales-orders/lines.ts">update</a>(lineID, { ...params }) -> SalesOrderLineDetail</code>
+- <code title="post /v1/sales/sales-orders/{id}/lines">client.sales.salesOrders.lines.<a href="./src/resources/sales/sales-orders/lines.ts">create</a>(id, { ...params }) -> SalesOrderLine</code>
+- <code title="patch /v1/sales/sales-orders/{id}/lines/{line_id}">client.sales.salesOrders.lines.<a href="./src/resources/sales/sales-orders/lines.ts">update</a>(lineID, { ...params }) -> SalesOrderLine</code>
 - <code title="delete /v1/sales/sales-orders/{id}/lines/{line_id}">client.sales.salesOrders.lines.<a href="./src/resources/sales/sales-orders/lines.ts">delete</a>(lineID, { ...params }) -> LineDeleteResponse</code>
 
 ## VolumeDiscounts
@@ -1142,7 +1151,6 @@ Types:
 - <code><a href="./src/resources/catalog/materials/materials.ts">ListMaterial</a></code>
 - <code><a href="./src/resources/catalog/materials/materials.ts">Material</a></code>
 - <code><a href="./src/resources/catalog/materials/materials.ts">QuantityInputRequest</a></code>
-- <code><a href="./src/resources/catalog/materials/materials.ts">RateInput</a></code>
 - <code><a href="./src/resources/catalog/materials/materials.ts">UpdateMaterialRequest</a></code>
 
 Methods:
@@ -1204,7 +1212,6 @@ Types:
 
 - <code><a href="./src/resources/catalog/products/products.ts">CreateProductRequest</a></code>
 - <code><a href="./src/resources/catalog/products/products.ts">ListProduct</a></code>
-- <code><a href="./src/resources/catalog/products/products.ts">Product</a></code>
 - <code><a href="./src/resources/catalog/products/products.ts">UpdateProductRequest</a></code>
 
 Methods:
@@ -1430,24 +1437,22 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/finance/invoices.ts">AllocationInvoice</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">Invoice</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">InvoiceAllocation</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">InvoiceLine</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">InvoiceSummary</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListDepartment</a></code>
+- <code><a href="./src/resources/finance/invoices.ts">ListInvoice</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListInvoiceAllocation</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListInvoiceLine</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">ListInvoiceSummary</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">ListPickLineDetail</a></code>
+- <code><a href="./src/resources/finance/invoices.ts">ListPickLine</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListShipmentLine</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListShippingCaseDetail</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListTransactionAllocation</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">PickDetail</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">PickLineDetail</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">ShipmentBilling</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">ShipmentDetail</a></code>
+- <code><a href="./src/resources/finance/invoices.ts">Pick</a></code>
+- <code><a href="./src/resources/finance/invoices.ts">PickLine</a></code>
+- <code><a href="./src/resources/finance/invoices.ts">Shipment</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ShipmentLine</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">ShipmentStatus</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ShippingCaseDetail</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">TransactionAllocation</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">TransactionDetail</a></code>
@@ -1456,8 +1461,8 @@ Types:
 Methods:
 
 - <code title="get /v1/finance/invoices/{id}">client.finance.invoices.<a href="./src/resources/finance/invoices.ts">retrieve</a>(id, { ...params }) -> Invoice</code>
-- <code title="patch /v1/finance/invoices/{id}">client.finance.invoices.<a href="./src/resources/finance/invoices.ts">update</a>(id, { ...params }) -> InvoiceSummary</code>
-- <code title="get /v1/finance/invoices">client.finance.invoices.<a href="./src/resources/finance/invoices.ts">list</a>({ ...params }) -> ListInvoiceSummary</code>
+- <code title="patch /v1/finance/invoices/{id}">client.finance.invoices.<a href="./src/resources/finance/invoices.ts">update</a>(id, { ...params }) -> Invoice</code>
+- <code title="get /v1/finance/invoices">client.finance.invoices.<a href="./src/resources/finance/invoices.ts">list</a>({ ...params }) -> ListInvoice</code>
 
 ## Accounts
 
@@ -1528,7 +1533,6 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/finance/transaction-allocations.ts">AllocationEntry</a></code>
-- <code><a href="./src/resources/finance/transaction-allocations.ts">AllocationInvoice</a></code>
 - <code><a href="./src/resources/finance/transaction-allocations.ts">AllocationTransaction</a></code>
 - <code><a href="./src/resources/finance/transaction-allocations.ts">ListAllocationEntry</a></code>
 - <code><a href="./src/resources/finance/transaction-allocations.ts">UpdateTransactionAllocationRequest</a></code>
@@ -1696,6 +1700,7 @@ Types:
 - <code><a href="./src/resources/operations/batches/batches.ts">ListBatchFlowNode</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ListBatchLot</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ListScanningProductionStepInfo</a></code>
+- <code><a href="./src/resources/operations/batches/batches.ts">ProductionRun</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ScanningProductionStepInfo</a></code>
 
 Methods:
@@ -1843,15 +1848,23 @@ Types:
 
 - <code><a href="./src/resources/operations/deliveries.ts">Delivery</a></code>
 - <code><a href="./src/resources/operations/deliveries.ts">DeliveryLine</a></code>
-- <code><a href="./src/resources/operations/deliveries.ts">DeliverySummary</a></code>
+- <code><a href="./src/resources/operations/deliveries.ts">EmailContact</a></code>
+- <code><a href="./src/resources/operations/deliveries.ts">ListDelivery</a></code>
 - <code><a href="./src/resources/operations/deliveries.ts">ListDeliveryLine</a></code>
-- <code><a href="./src/resources/operations/deliveries.ts">ListDeliverySummary</a></code>
+- <code><a href="./src/resources/operations/deliveries.ts">ListEmailContact</a></code>
+- <code><a href="./src/resources/operations/deliveries.ts">ListPurchaseOrderLine</a></code>
+- <code><a href="./src/resources/operations/deliveries.ts">ListReceivingOrderLine</a></code>
 - <code><a href="./src/resources/operations/deliveries.ts">Lot</a></code>
+- <code><a href="./src/resources/operations/deliveries.ts">PurchaseOrder</a></code>
+- <code><a href="./src/resources/operations/deliveries.ts">PurchaseOrderLine</a></code>
+- <code><a href="./src/resources/operations/deliveries.ts">ReceivingOrder</a></code>
+- <code><a href="./src/resources/operations/deliveries.ts">ReceivingOrderLine</a></code>
+- <code><a href="./src/resources/operations/deliveries.ts">Supplier</a></code>
 
 Methods:
 
-- <code title="get /v1/operations/deliveries/{id}">client.operations.deliveries.<a href="./src/resources/operations/deliveries.ts">retrieve</a>(id) -> Delivery</code>
-- <code title="get /v1/operations/deliveries">client.operations.deliveries.<a href="./src/resources/operations/deliveries.ts">list</a>({ ...params }) -> ListDeliverySummary</code>
+- <code title="get /v1/operations/deliveries/{id}">client.operations.deliveries.<a href="./src/resources/operations/deliveries.ts">retrieve</a>(id, { ...params }) -> Delivery</code>
+- <code title="get /v1/operations/deliveries">client.operations.deliveries.<a href="./src/resources/operations/deliveries.ts">list</a>({ ...params }) -> ListDelivery</code>
 
 ## InventoryChangeLogs
 
@@ -1891,16 +1904,12 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ListReceivingOrderLine</a></code>
-- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ListReceivingOrderSummary</a></code>
-- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ReceivingOrder</a></code>
-- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ReceivingOrderLine</a></code>
-- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ReceivingOrderSummary</a></code>
+- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ListReceivingOrder</a></code>
 
 Methods:
 
-- <code title="get /v1/operations/receiving-orders/{id}">client.operations.receivingOrders.<a href="./src/resources/operations/receiving-orders/receiving-orders.ts">retrieve</a>(id) -> ReceivingOrder</code>
-- <code title="get /v1/operations/receiving-orders">client.operations.receivingOrders.<a href="./src/resources/operations/receiving-orders/receiving-orders.ts">list</a>({ ...params }) -> ListReceivingOrderSummary</code>
+- <code title="get /v1/operations/receiving-orders/{id}">client.operations.receivingOrders.<a href="./src/resources/operations/receiving-orders/receiving-orders.ts">retrieve</a>(id, { ...params }) -> ReceivingOrder</code>
+- <code title="get /v1/operations/receiving-orders">client.operations.receivingOrders.<a href="./src/resources/operations/receiving-orders/receiving-orders.ts">list</a>({ ...params }) -> ListReceivingOrder</code>
 
 ### Actions
 
@@ -1996,23 +2005,16 @@ Types:
 
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">CreatePurchaseOrderLineInput</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">CreatePurchaseOrderRequest</a></code>
-- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">EmailContact</a></code>
-- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">ListEmailContact</a></code>
-- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">ListPurchaseOrderLineDetail</a></code>
-- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">ListPurchaseOrderSummary</a></code>
-- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">PurchaseOrderDetail</a></code>
-- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">PurchaseOrderLineDetail</a></code>
-- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">PurchaseOrderSummary</a></code>
-- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">Supplier</a></code>
+- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">ListPurchaseOrder</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">UpdatePurchaseOrderRequest</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">PurchaseOrderDeleteResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/operations/purchase-orders">client.operations.purchaseOrders.<a href="./src/resources/operations/purchase-orders/purchase-orders.ts">create</a>({ ...params }) -> PurchaseOrderDetail</code>
-- <code title="get /v1/operations/purchase-orders/{id}">client.operations.purchaseOrders.<a href="./src/resources/operations/purchase-orders/purchase-orders.ts">retrieve</a>(id, { ...params }) -> PurchaseOrderDetail</code>
-- <code title="patch /v1/operations/purchase-orders/{id}">client.operations.purchaseOrders.<a href="./src/resources/operations/purchase-orders/purchase-orders.ts">update</a>(id, { ...params }) -> PurchaseOrderDetail</code>
-- <code title="get /v1/operations/purchase-orders">client.operations.purchaseOrders.<a href="./src/resources/operations/purchase-orders/purchase-orders.ts">list</a>({ ...params }) -> ListPurchaseOrderSummary</code>
+- <code title="post /v1/operations/purchase-orders">client.operations.purchaseOrders.<a href="./src/resources/operations/purchase-orders/purchase-orders.ts">create</a>({ ...params }) -> PurchaseOrder</code>
+- <code title="get /v1/operations/purchase-orders/{id}">client.operations.purchaseOrders.<a href="./src/resources/operations/purchase-orders/purchase-orders.ts">retrieve</a>(id, { ...params }) -> PurchaseOrder</code>
+- <code title="patch /v1/operations/purchase-orders/{id}">client.operations.purchaseOrders.<a href="./src/resources/operations/purchase-orders/purchase-orders.ts">update</a>(id, { ...params }) -> PurchaseOrder</code>
+- <code title="get /v1/operations/purchase-orders">client.operations.purchaseOrders.<a href="./src/resources/operations/purchase-orders/purchase-orders.ts">list</a>({ ...params }) -> ListPurchaseOrder</code>
 - <code title="delete /v1/operations/purchase-orders/{id}">client.operations.purchaseOrders.<a href="./src/resources/operations/purchase-orders/purchase-orders.ts">delete</a>(id) -> PurchaseOrderDeleteResponse</code>
 - <code title="get /v1/operations/purchase-orders/statuses">client.operations.purchaseOrders.<a href="./src/resources/operations/purchase-orders/purchase-orders.ts">retrieveStatuses</a>({ ...params }) -> ListSalesOrderStatus</code>
 
@@ -2027,7 +2029,7 @@ Types:
 Methods:
 
 - <code title="post /v1/operations/purchase-orders/actions/bulk-delete">client.operations.purchaseOrders.actions.<a href="./src/resources/operations/purchase-orders/actions.ts">bulkDelete</a>({ ...params }) -> ActionBulkDeleteResponse</code>
-- <code title="put /v1/operations/purchase-orders/{id}/actions/change-status">client.operations.purchaseOrders.actions.<a href="./src/resources/operations/purchase-orders/actions.ts">changeStatus</a>(id, { ...params }) -> PurchaseOrderDetail</code>
+- <code title="put /v1/operations/purchase-orders/{id}/actions/change-status">client.operations.purchaseOrders.actions.<a href="./src/resources/operations/purchase-orders/actions.ts">changeStatus</a>(id, { ...params }) -> PurchaseOrder</code>
 
 ### Lines
 
@@ -2039,24 +2041,23 @@ Types:
 
 Methods:
 
-- <code title="post /v1/operations/purchase-orders/{id}/lines">client.operations.purchaseOrders.lines.<a href="./src/resources/operations/purchase-orders/lines.ts">create</a>(id, { ...params }) -> PurchaseOrderLineDetail</code>
-- <code title="patch /v1/operations/purchase-orders/{id}/lines/{line_id}">client.operations.purchaseOrders.lines.<a href="./src/resources/operations/purchase-orders/lines.ts">update</a>(lineID, { ...params }) -> PurchaseOrderLineDetail</code>
+- <code title="post /v1/operations/purchase-orders/{id}/lines">client.operations.purchaseOrders.lines.<a href="./src/resources/operations/purchase-orders/lines.ts">create</a>(id, { ...params }) -> PurchaseOrderLine</code>
+- <code title="patch /v1/operations/purchase-orders/{id}/lines/{line_id}">client.operations.purchaseOrders.lines.<a href="./src/resources/operations/purchase-orders/lines.ts">update</a>(lineID, { ...params }) -> PurchaseOrderLine</code>
 - <code title="delete /v1/operations/purchase-orders/{id}/lines/{line_id}">client.operations.purchaseOrders.lines.<a href="./src/resources/operations/purchase-orders/lines.ts">delete</a>(lineID, { ...params }) -> LineDeleteResponse</code>
 
 ## Picks
 
 Types:
 
-- <code><a href="./src/resources/operations/picks/picks.ts">ListPickSummary</a></code>
+- <code><a href="./src/resources/operations/picks/picks.ts">ListPick</a></code>
 - <code><a href="./src/resources/operations/picks/picks.ts">PickShipmentsResponse</a></code>
-- <code><a href="./src/resources/operations/picks/picks.ts">PickSummary</a></code>
 - <code><a href="./src/resources/operations/picks/picks.ts">UpdatePickRequest</a></code>
 
 Methods:
 
-- <code title="get /v1/operations/picks/{id}">client.operations.picks.<a href="./src/resources/operations/picks/picks.ts">retrieve</a>(id, { ...params }) -> PickDetail</code>
-- <code title="patch /v1/operations/picks/{id}">client.operations.picks.<a href="./src/resources/operations/picks/picks.ts">update</a>(id, { ...params }) -> PickDetail</code>
-- <code title="get /v1/operations/picks">client.operations.picks.<a href="./src/resources/operations/picks/picks.ts">list</a>({ ...params }) -> ListPickSummary</code>
+- <code title="get /v1/operations/picks/{id}">client.operations.picks.<a href="./src/resources/operations/picks/picks.ts">retrieve</a>(id, { ...params }) -> Pick</code>
+- <code title="patch /v1/operations/picks/{id}">client.operations.picks.<a href="./src/resources/operations/picks/picks.ts">update</a>(id, { ...params }) -> Pick</code>
+- <code title="get /v1/operations/picks">client.operations.picks.<a href="./src/resources/operations/picks/picks.ts">list</a>({ ...params }) -> ListPick</code>
 - <code title="get /v1/operations/picks/{id}/shipments">client.operations.picks.<a href="./src/resources/operations/picks/picks.ts">retrieveShipments</a>(id, { ...params }) -> PickShipmentsResponse</code>
 
 ### Actions
@@ -2069,8 +2070,8 @@ Types:
 Methods:
 
 - <code title="post /v1/operations/picks/{id}/actions/pack">client.operations.picks.actions.<a href="./src/resources/operations/picks/actions.ts">pack</a>(id, { ...params }) -> PackPickResponse</code>
-- <code title="put /v1/operations/picks/{id}/actions/pick">client.operations.picks.actions.<a href="./src/resources/operations/picks/actions.ts">pick</a>(id) -> PickDetail</code>
-- <code title="put /v1/operations/picks/{id}/actions/void">client.operations.picks.actions.<a href="./src/resources/operations/picks/actions.ts">void</a>(id) -> PickDetail</code>
+- <code title="put /v1/operations/picks/{id}/actions/pick">client.operations.picks.actions.<a href="./src/resources/operations/picks/actions.ts">pick</a>(id) -> Pick</code>
+- <code title="put /v1/operations/picks/{id}/actions/void">client.operations.picks.actions.<a href="./src/resources/operations/picks/actions.ts">void</a>(id) -> Pick</code>
 
 ### Lines
 
@@ -2080,14 +2081,14 @@ Types:
 
 Methods:
 
-- <code title="patch /v1/operations/picks/{pick_id}/lines/{id}">client.operations.picks.lines.<a href="./src/resources/operations/picks/lines/lines.ts">update</a>(id, { ...params }) -> PickLineDetail</code>
+- <code title="patch /v1/operations/picks/{pick_id}/lines/{id}">client.operations.picks.lines.<a href="./src/resources/operations/picks/lines/lines.ts">update</a>(id, { ...params }) -> PickLine</code>
 
 #### Actions
 
 Methods:
 
-- <code title="put /v1/operations/picks/{pick_id}/lines/{id}/actions/pick">client.operations.picks.lines.actions.<a href="./src/resources/operations/picks/lines/actions.ts">pick</a>(id, { ...params }) -> PickLineDetail</code>
-- <code title="put /v1/operations/picks/{pick_id}/lines/{id}/actions/void">client.operations.picks.lines.actions.<a href="./src/resources/operations/picks/lines/actions.ts">void</a>(id, { ...params }) -> PickLineDetail</code>
+- <code title="put /v1/operations/picks/{pick_id}/lines/{id}/actions/pick">client.operations.picks.lines.actions.<a href="./src/resources/operations/picks/lines/actions.ts">pick</a>(id, { ...params }) -> PickLine</code>
+- <code title="put /v1/operations/picks/{pick_id}/lines/{id}/actions/void">client.operations.picks.lines.actions.<a href="./src/resources/operations/picks/lines/actions.ts">void</a>(id, { ...params }) -> PickLine</code>
 
 ## Locations
 
@@ -2137,16 +2138,15 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/operations/shipments/shipments.ts">ListShipmentSummary</a></code>
-- <code><a href="./src/resources/operations/shipments/shipments.ts">ShipmentSummary</a></code>
+- <code><a href="./src/resources/operations/shipments/shipments.ts">ListShipment</a></code>
 - <code><a href="./src/resources/operations/shipments/shipments.ts">UpdateShipmentRequest</a></code>
 - <code><a href="./src/resources/operations/shipments/shipments.ts">ShipmentDeleteResponse</a></code>
 
 Methods:
 
-- <code title="get /v1/operations/shipments/{id}">client.operations.shipments.<a href="./src/resources/operations/shipments/shipments.ts">retrieve</a>(id, { ...params }) -> ShipmentDetail</code>
-- <code title="patch /v1/operations/shipments/{id}">client.operations.shipments.<a href="./src/resources/operations/shipments/shipments.ts">update</a>(id, { ...params }) -> ShipmentDetail</code>
-- <code title="get /v1/operations/shipments">client.operations.shipments.<a href="./src/resources/operations/shipments/shipments.ts">list</a>({ ...params }) -> ListShipmentSummary</code>
+- <code title="get /v1/operations/shipments/{id}">client.operations.shipments.<a href="./src/resources/operations/shipments/shipments.ts">retrieve</a>(id, { ...params }) -> Shipment</code>
+- <code title="patch /v1/operations/shipments/{id}">client.operations.shipments.<a href="./src/resources/operations/shipments/shipments.ts">update</a>(id, { ...params }) -> Shipment</code>
+- <code title="get /v1/operations/shipments">client.operations.shipments.<a href="./src/resources/operations/shipments/shipments.ts">list</a>({ ...params }) -> ListShipment</code>
 - <code title="delete /v1/operations/shipments/{id}">client.operations.shipments.<a href="./src/resources/operations/shipments/shipments.ts">delete</a>(id) -> ShipmentDeleteResponse</code>
 
 ### Actions
@@ -2166,8 +2166,8 @@ Methods:
 
 - <code title="post /v1/operations/shipments/actions/estimate-rate">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">estimateRate</a>({ ...params }) -> EstimateRateResult</code>
 - <code title="post /v1/operations/shipments/actions/rate-shop">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">rateShop</a>({ ...params }) -> RateShopResult</code>
-- <code title="post /v1/operations/shipments/{id}/actions/ship">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">ship</a>(id, { ...params }) -> ShipmentDetail</code>
-- <code title="post /v1/operations/shipments/{id}/actions/void">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">void</a>(id) -> ShipmentDetail</code>
+- <code title="post /v1/operations/shipments/{id}/actions/ship">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">ship</a>(id, { ...params }) -> Shipment</code>
+- <code title="post /v1/operations/shipments/{id}/actions/void">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">void</a>(id) -> Shipment</code>
 
 ### Lines
 

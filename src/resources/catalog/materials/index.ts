@@ -7,7 +7,6 @@ export {
   type ListMaterial,
   type Material,
   type QuantityInputRequest,
-  type RateInput,
   type UpdateMaterialRequest,
   type MaterialCreateParams,
   type MaterialRetrieveParams,

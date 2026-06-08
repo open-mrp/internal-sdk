@@ -9,11 +9,7 @@ const client = new Augno({
 
 describe('resource carriers', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.carriers.create({
-      account_number: '1234567890',
-      code: 'fedex',
-      name: 'FedEx',
-    });
+    const responsePromise = client.operations.carriers.create({ name: 'FedEx' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -25,10 +21,10 @@ describe('resource carriers', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.operations.carriers.create({
-      account_number: '1234567890',
-      code: 'fedex',
       name: 'FedEx',
       include: ['owner'],
+      account_number: 'account_number',
+      code: 'fedex',
       customer_portal_visibility: 'visible',
     });
   });
@@ -74,7 +70,7 @@ describe('resource carriers', () => {
         {
           include: ['owner'],
           customer_portal_visibility: 'visible',
-          name: 'FedEx Express',
+          name: 'name',
         },
         { path: '/_stainless_unknown_path' },
       ),

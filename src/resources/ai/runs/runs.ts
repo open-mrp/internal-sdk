@@ -22,7 +22,6 @@ export class Runs extends APIResource {
    * ```ts
    * const agentRun = await client.ai.runs.create({
    *   agent_definition_id: 'agdf_01b9ef28feb99e6954201aca63',
-   *   input: 'Process the latest incoming orders.',
    * });
    * ```
    */
@@ -94,7 +93,7 @@ export interface TriggerRunRequest {
   /**
    * Input text for the agent.
    */
-  input: string;
+  input?: string;
 }
 
 export interface RunCreateParams {
@@ -104,15 +103,15 @@ export interface RunCreateParams {
   agent_definition_id: string;
 
   /**
-   * Body param: Input text for the agent.
-   */
-  input: string;
-
-  /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
   include?: Array<'actions' | 'definition' | 'definition.config' | 'definition.tools' | 'definition.role'>;
+
+  /**
+   * Body param: Input text for the agent.
+   */
+  input?: string;
 }
 
 export interface RunRetrieveParams {

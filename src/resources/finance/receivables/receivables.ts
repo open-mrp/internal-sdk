@@ -62,7 +62,7 @@ export interface ReceivableEntry {
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Full invoice with expandable lines and allocations.
+   * Invoice resource.
    */
   invoice: InvoicesAPI.Invoice | null;
 

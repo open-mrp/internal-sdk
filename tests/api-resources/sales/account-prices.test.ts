@@ -85,7 +85,7 @@ describe('resource accountPrices', () => {
           product_line_id: 'product_line_id',
           rate_denominator_unit_id: 'rate_denominator_unit_id',
           rate_numerator_unit_id: 'rate_numerator_unit_id',
-          rate_value: '30.000000000000000000000000000000',
+          rate_value: 'rate_value',
           recipient_account_id: 'recipient_account_id',
         },
         { path: '/_stainless_unknown_path' },

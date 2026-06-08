@@ -60,15 +60,14 @@ export class Settlements extends APIResource {
    * ```ts
    * const settlement = await client.finance.settlements.update(
    *   'sl_014f3f9af18ff1c8ded3205149',
-   *   {
-   *     note: 'Partial payment applied',
-   *     number: 'number',
-   *     responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
-   *   },
    * );
    * ```
    */
-  update(id: string, body: SettlementUpdateParams, options?: RequestOptions): APIPromise<Settlement> {
+  update(
+    id: string,
+    body: SettlementUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Settlement> {
     return this._client.patch(path`/v1/finance/settlements/${id}`, { body, ...options });
   }
 
@@ -120,14 +119,14 @@ export interface CreateSettlementAllocationRequest {
   invoice_id: string;
 
   /**
-   * Note about this allocation.
-   */
-  note: string | null;
-
-  /**
    * Transaction ID.
    */
   transaction_id: string;
+
+  /**
+   * Note about this allocation.
+   */
+  note?: string;
 }
 
 /**
@@ -282,17 +281,17 @@ export interface UpdateSettlementRequest {
   /**
    * Note for this settlement.
    */
-  note: string | null;
+  note?: string;
 
   /**
    * Settlement number.
    */
-  number: string | null;
+  number?: string;
 
   /**
    * Responsible user ID.
    */
-  responsible_user_id: string | null;
+  responsible_user_id?: string;
 }
 
 export interface SettlementCreateParams {
@@ -319,17 +318,17 @@ export interface SettlementUpdateParams {
   /**
    * Note for this settlement.
    */
-  note: string | null;
+  note?: string;
 
   /**
    * Settlement number.
    */
-  number: string | null;
+  number?: string;
 
   /**
    * Responsible user ID.
    */
-  responsible_user_id: string | null;
+  responsible_user_id?: string;
 }
 
 export interface SettlementListParams {

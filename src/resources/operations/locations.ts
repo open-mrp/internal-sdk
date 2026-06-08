@@ -51,7 +51,6 @@ export class Locations extends APIResource {
    * ```ts
    * const location = await client.operations.locations.update(
    *   'lc_014d187d99b31926f0c74af9d8',
-   *   { name: 'Warehouse B' },
    * );
    * ```
    */
@@ -112,12 +111,12 @@ export interface CreateLocationRequest {
   /**
    * IDs of child locations to attach.
    */
-  child_ids?: Array<string> | null;
+  child_ids?: Array<string>;
 
   /**
    * Parent location ID. Null for top-level locations.
    */
-  parent_id?: string | null;
+  parent_id?: string;
 }
 
 /**
@@ -168,12 +167,12 @@ export interface LocationCreateParams {
   /**
    * Body param: IDs of child locations to attach.
    */
-  child_ids?: Array<string> | null;
+  child_ids?: Array<string>;
 
   /**
    * Body param: Parent location ID. Null for top-level locations.
    */
-  parent_id?: string | null;
+  parent_id?: string;
 }
 
 export interface LocationRetrieveParams {

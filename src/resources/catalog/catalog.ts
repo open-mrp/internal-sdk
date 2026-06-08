@@ -63,7 +63,6 @@ import {
   MaterialUpdateParams,
   Materials,
   QuantityInputRequest,
-  RateInput,
   UpdateMaterialRequest,
 } from './materials/materials';
 import * as PartsAPI from './parts/parts';
@@ -82,7 +81,6 @@ import * as ProductsAPI from './products/products';
 import {
   CreateProductRequest,
   ListProduct,
-  Product,
   ProductChangeProductLineParams,
   ProductCreateParams,
   ProductDeleteParams,
@@ -222,7 +220,6 @@ export declare namespace Catalog {
     type ListMaterial as ListMaterial,
     type Material as Material,
     type QuantityInputRequest as QuantityInputRequest,
-    type RateInput as RateInput,
     type UpdateMaterialRequest as UpdateMaterialRequest,
     type MaterialCreateParams as MaterialCreateParams,
     type MaterialRetrieveParams as MaterialRetrieveParams,
@@ -257,7 +254,6 @@ export declare namespace Catalog {
     Products as Products,
     type CreateProductRequest as CreateProductRequest,
     type ListProduct as ListProduct,
-    type Product as Product,
     type UpdateProductRequest as UpdateProductRequest,
     type ProductCreateParams as ProductCreateParams,
     type ProductRetrieveParams as ProductRetrieveParams,

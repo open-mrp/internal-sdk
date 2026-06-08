@@ -10,13 +10,13 @@ const client = new Augno({
 describe('resource lines', () => {
   test('create: only required params', async () => {
     const responsePromise = client.sales.salesOrders.lines.create('or_01d5034136c3ccc048abecc312', {
-      product_id: 'product_id',
-      product_sku: 'product_sku',
-      quantity_unit_id: 'quantity_unit_id',
-      quantity_value: 'quantity_value',
-      unit_price_denominator_unit_id: 'unit_price_denominator_unit_id',
-      unit_price_numerator_unit_id: 'unit_price_numerator_unit_id',
-      unit_price_value: 'unit_price_value',
+      product_id: 'pd_013c29ab3f1518d0004094c316',
+      product_sku: 'WIDGET-001',
+      quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+      quantity_value: '10',
+      unit_price_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+      unit_price_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+      unit_price_value: '25.00',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -29,14 +29,14 @@ describe('resource lines', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.sales.salesOrders.lines.create('or_01d5034136c3ccc048abecc312', {
-      product_id: 'product_id',
-      product_sku: 'product_sku',
-      quantity_unit_id: 'quantity_unit_id',
-      quantity_value: 'quantity_value',
-      unit_price_denominator_unit_id: 'unit_price_denominator_unit_id',
-      unit_price_numerator_unit_id: 'unit_price_numerator_unit_id',
-      unit_price_value: 'unit_price_value',
-      edi_line_item_id: 'edi_line_item_id',
+      product_id: 'pd_013c29ab3f1518d0004094c316',
+      product_sku: 'WIDGET-001',
+      quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+      quantity_value: '10',
+      unit_price_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+      unit_price_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+      unit_price_value: '25.00',
+      include: ['product'],
       item_id: 'item_id',
       product_description: 'product_description',
       unit_cost_denominator_unit_id: 'unit_cost_denominator_unit_id',
@@ -61,19 +61,21 @@ describe('resource lines', () => {
   test('update: required and optional params', async () => {
     const response = await client.sales.salesOrders.lines.update('example', {
       id: 'or_01d5034136c3ccc048abecc312',
-      edi_line_item_id: 'edi_line_item_id',
+      include: ['product'],
       item_id: 'item_id',
       product_description: 'product_description',
-      product_id: 'pd_013c29ab3f1518d0004094c316',
-      product_sku: 'WIDGET-001',
-      quantity_unit_id: 'quantity_unit_id',
-      quantity_value: '20',
-      unit_cost_denominator_unit_id: 'unit_cost_denominator_unit_id',
-      unit_cost_numerator_unit_id: 'unit_cost_numerator_unit_id',
-      unit_cost_value: 'unit_cost_value',
-      unit_price_denominator_unit_id: 'unit_price_denominator_unit_id',
-      unit_price_numerator_unit_id: 'unit_price_numerator_unit_id',
-      unit_price_value: '30.00',
+      product_sku: 'product_sku',
+      quantity: { unit_id: 'unit_id', value: 'value' },
+      unit_cost: {
+        denominator_unit_id: 'denominator_unit_id',
+        numerator_unit_id: 'numerator_unit_id',
+        value: 'value',
+      },
+      unit_price: {
+        denominator_unit_id: 'denominator_unit_id',
+        numerator_unit_id: 'numerator_unit_id',
+        value: 'value',
+      },
     });
   });
 

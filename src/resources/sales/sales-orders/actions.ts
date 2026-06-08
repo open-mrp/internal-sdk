@@ -26,29 +26,23 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Changes the status of a sales order. Supported actions: issue, unissue, close,
-   * and open.
+   * Closes a sales order, transitioning it from issued to fulfilled.
    *
    * @example
    * ```ts
-   * const salesOrderDetail =
-   *   await client.sales.salesOrders.actions.changeStatus(
+   * const salesOrder =
+   *   await client.sales.salesOrders.actions.close(
    *     'or_01d5034136c3ccc048abecc312',
-   *     { send_email: true, status_change: 'issue' },
+   *     { notify_customer: false },
    *   );
    * ```
    */
-  changeStatus(
+  close(
     id: string,
-    params: ActionChangeStatusParams,
+    body: ActionCloseParams,
     options?: RequestOptions,
-  ): APIPromise<SalesOrdersAPI.SalesOrderDetail> {
-    const { include, ...body } = params;
-    return this._client.put(path`/v1/sales/sales-orders/${id}/actions/change-status`, {
-      query: { include },
-      body,
-      ...options,
-    });
+  ): APIPromise<SalesOrdersAPI.SalesOrder> {
+    return this._client.put(path`/v1/sales/sales-orders/${id}/actions/close`, { body, ...options });
   }
 
   /**
@@ -65,6 +59,62 @@ export class Actions extends APIResource {
   createProductionRun(id: string, options?: RequestOptions): APIPromise<CreateProductionRunResponse> {
     return this._client.post(path`/v1/sales/sales-orders/${id}/actions/create-production-run`, options);
   }
+
+  /**
+   * Issues a sales order, transitioning it from estimate to issued.
+   *
+   * @example
+   * ```ts
+   * const salesOrder =
+   *   await client.sales.salesOrders.actions.issue(
+   *     'or_01d5034136c3ccc048abecc312',
+   *     { notify_customer: true },
+   *   );
+   * ```
+   */
+  issue(
+    id: string,
+    body: ActionIssueParams,
+    options?: RequestOptions,
+  ): APIPromise<SalesOrdersAPI.SalesOrder> {
+    return this._client.put(path`/v1/sales/sales-orders/${id}/actions/issue`, { body, ...options });
+  }
+
+  /**
+   * Reopens a sales order, transitioning it from fulfilled back to issued.
+   *
+   * @example
+   * ```ts
+   * const salesOrder =
+   *   await client.sales.salesOrders.actions.open(
+   *     'or_01d5034136c3ccc048abecc312',
+   *     { notify_customer: false },
+   *   );
+   * ```
+   */
+  open(id: string, body: ActionOpenParams, options?: RequestOptions): APIPromise<SalesOrdersAPI.SalesOrder> {
+    return this._client.put(path`/v1/sales/sales-orders/${id}/actions/open`, { body, ...options });
+  }
+
+  /**
+   * Unissues a sales order, transitioning it from issued back to estimate.
+   *
+   * @example
+   * ```ts
+   * const salesOrder =
+   *   await client.sales.salesOrders.actions.unissue(
+   *     'or_01d5034136c3ccc048abecc312',
+   *     { notify_customer: false },
+   *   );
+   * ```
+   */
+  unissue(
+    id: string,
+    body: ActionUnissueParams,
+    options?: RequestOptions,
+  ): APIPromise<SalesOrdersAPI.SalesOrder> {
+    return this._client.put(path`/v1/sales/sales-orders/${id}/actions/unissue`, { body, ...options });
+  }
 }
 
 /**
@@ -78,18 +128,13 @@ export interface BulkDeleteSalesOrdersRequest {
 }
 
 /**
- * Request to change the status of a sales order.
+ * Request to close a sales order.
  */
-export interface ChangeSalesOrderStatusRequest {
+export interface CloseSalesOrderRequest {
   /**
-   * Whether to send a notification email.
+   * Whether to notify the customer.
    */
-  send_email: boolean;
-
-  /**
-   * Status change action (e.g., "issue", "unissue", "close", "open").
-   */
-  status_change: string;
+  notify_customer: boolean;
 }
 
 /**
@@ -117,6 +162,36 @@ export interface CreateProductionRunResponseRef {
   object: 'production_run';
 }
 
+/**
+ * Request to issue a sales order.
+ */
+export interface IssueSalesOrderRequest {
+  /**
+   * Whether to notify the customer (e.g. send an order acknowledgement email).
+   */
+  notify_customer: boolean;
+}
+
+/**
+ * Request to reopen a sales order.
+ */
+export interface OpenSalesOrderRequest {
+  /**
+   * Whether to notify the customer.
+   */
+  notify_customer: boolean;
+}
+
+/**
+ * Request to unissue a sales order.
+ */
+export interface UnissueSalesOrderRequest {
+  /**
+   * Whether to notify the customer.
+   */
+  notify_customer: boolean;
+}
+
 export interface ActionBulkDeleteResponse {}
 
 export interface ActionBulkDeleteParams {
@@ -126,43 +201,48 @@ export interface ActionBulkDeleteParams {
   sales_order_ids: Array<string>;
 }
 
-export interface ActionChangeStatusParams {
+export interface ActionCloseParams {
   /**
-   * Body param: Whether to send a notification email.
+   * Whether to notify the customer.
    */
-  send_email: boolean;
+  notify_customer: boolean;
+}
 
+export interface ActionIssueParams {
   /**
-   * Body param: Status change action (e.g., "issue", "unissue", "close", "open").
+   * Whether to notify the customer (e.g. send an order acknowledgement email).
    */
-  status_change: string;
+  notify_customer: boolean;
+}
 
+export interface ActionOpenParams {
   /**
-   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
-   * are returned as `null`.
+   * Whether to notify the customer.
    */
-  include?: Array<
-    | 'customer'
-    | 'bill_to_address'
-    | 'ship_to_address'
-    | 'carrier'
-    | 'service_level'
-    | 'payment_term'
-    | 'shipping_term'
-    | 'order_discount'
-    | 'lines'
-    | 'lines.item'
-  >;
+  notify_customer: boolean;
+}
+
+export interface ActionUnissueParams {
+  /**
+   * Whether to notify the customer.
+   */
+  notify_customer: boolean;
 }
 
 export declare namespace Actions {
   export {
     type BulkDeleteSalesOrdersRequest as BulkDeleteSalesOrdersRequest,
-    type ChangeSalesOrderStatusRequest as ChangeSalesOrderStatusRequest,
+    type CloseSalesOrderRequest as CloseSalesOrderRequest,
     type CreateProductionRunResponse as CreateProductionRunResponse,
     type CreateProductionRunResponseRef as CreateProductionRunResponseRef,
+    type IssueSalesOrderRequest as IssueSalesOrderRequest,
+    type OpenSalesOrderRequest as OpenSalesOrderRequest,
+    type UnissueSalesOrderRequest as UnissueSalesOrderRequest,
     type ActionBulkDeleteResponse as ActionBulkDeleteResponse,
     type ActionBulkDeleteParams as ActionBulkDeleteParams,
-    type ActionChangeStatusParams as ActionChangeStatusParams,
+    type ActionCloseParams as ActionCloseParams,
+    type ActionIssueParams as ActionIssueParams,
+    type ActionOpenParams as ActionOpenParams,
+    type ActionUnissueParams as ActionUnissueParams,
   };
 }

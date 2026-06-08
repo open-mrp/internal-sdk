@@ -179,6 +179,12 @@ export interface AccountRetrieveInvoicesParams {
   cursor?: string;
 
   /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'customer' | 'parent_account'>;
+
+  /**
    * Whether to include child account invoices.
    */
   include_child_accounts?: boolean;

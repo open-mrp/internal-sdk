@@ -70,7 +70,7 @@ describe('resource locations', () => {
         {
           include: ['parent'],
           child_ids: ['string'],
-          name: 'Warehouse B',
+          name: 'name',
           parent_id: 'parent_id',
           type: 'building',
         },

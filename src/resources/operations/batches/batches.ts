@@ -21,7 +21,6 @@ import {
   SplitBatchRequest,
   SplitQuantityInput,
 } from './actions';
-import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -163,7 +162,7 @@ export interface Batch {
   /**
    * Production run sub-resource.
    */
-  production_run: SalesOrdersAPI.ProductionRun | null;
+  production_run: ProductionRun | null;
 
   /**
    * Production step with all nested data.
@@ -327,6 +326,26 @@ export interface ListScanningProductionStepInfo {
 }
 
 /**
+ * Production run sub-resource.
+ */
+export interface ProductionRun {
+  /**
+   * Production run ID.
+   */
+  id: string;
+
+  /**
+   * Production run number.
+   */
+  number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'production_run';
+}
+
+/**
  * Production step information for the scanning next-steps response.
  */
 export interface ScanningProductionStepInfo {
@@ -382,6 +401,7 @@ export declare namespace Batches {
     type ListBatchFlowNode as ListBatchFlowNode,
     type ListBatchLot as ListBatchLot,
     type ListScanningProductionStepInfo as ListScanningProductionStepInfo,
+    type ProductionRun as ProductionRun,
     type ScanningProductionStepInfo as ScanningProductionStepInfo,
     type BatchNextStepsParams as BatchNextStepsParams,
     type BatchRemainingQuantitiesParams as BatchRemainingQuantitiesParams,

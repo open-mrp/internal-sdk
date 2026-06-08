@@ -18,7 +18,7 @@ export class Attributes extends APIResource {
    * const attribute =
    *   await client.catalog.properties.attributes.create(
    *     'pp_01e21344878064372f69e67093',
-   *     { sort_order: 1, value: 'Red' },
+   *     { value: 'Red' },
    *   );
    * ```
    */
@@ -59,10 +59,7 @@ export class Attributes extends APIResource {
    * const attribute =
    *   await client.catalog.properties.attributes.update(
    *     'at_01c9493ec0c46bb0ed12708ae4',
-   *     {
-   *       property_id: 'pp_01e21344878064372f69e67093',
-   *       value: 'Blue',
-   *     },
+   *     { property_id: 'pp_01e21344878064372f69e67093' },
    *   );
    * ```
    */
@@ -124,11 +121,6 @@ export class Attributes extends APIResource {
  */
 export interface CreateAttributeRequest {
   /**
-   * Display order. Defaults to last position if not provided.
-   */
-  sort_order: number | null;
-
-  /**
    * Attribute value.
    */
   value: string;
@@ -136,18 +128,12 @@ export interface CreateAttributeRequest {
   /**
    * Color code. Randomly assigned if not provided.
    */
-  color?:
-    | 'blue'
-    | 'brown'
-    | 'default'
-    | 'gray'
-    | 'green'
-    | 'orange'
-    | 'pink'
-    | 'purple'
-    | 'red'
-    | 'yellow'
-    | null;
+  color?: 'blue' | 'brown' | 'default' | 'gray' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'yellow';
+
+  /**
+   * Display order. Defaults to last position if not provided.
+   */
+  sort_order?: number;
 }
 
 /**
@@ -174,11 +160,6 @@ export interface AttributeDeleteResponse {}
 
 export interface AttributeCreateParams {
   /**
-   * Display order. Defaults to last position if not provided.
-   */
-  sort_order: number | null;
-
-  /**
    * Attribute value.
    */
   value: string;
@@ -186,18 +167,12 @@ export interface AttributeCreateParams {
   /**
    * Color code. Randomly assigned if not provided.
    */
-  color?:
-    | 'blue'
-    | 'brown'
-    | 'default'
-    | 'gray'
-    | 'green'
-    | 'orange'
-    | 'pink'
-    | 'purple'
-    | 'red'
-    | 'yellow'
-    | null;
+  color?: 'blue' | 'brown' | 'default' | 'gray' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'yellow';
+
+  /**
+   * Display order. Defaults to last position if not provided.
+   */
+  sort_order?: number;
 }
 
 export interface AttributeRetrieveParams {

@@ -50,11 +50,8 @@ describe('resource productionRuns', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('update: only required params', async () => {
-    const responsePromise = client.operations.productionRuns.update('prru_0141c28081df4faac0fe726c41', {
-      number: 'PR-00042',
-      responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
-    });
+  test('update', async () => {
+    const responsePromise = client.operations.productionRuns.update('prru_0141c28081df4faac0fe726c41');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -64,12 +61,19 @@ describe('resource productionRuns', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: required and optional params', async () => {
-    const response = await client.operations.productionRuns.update('prru_0141c28081df4faac0fe726c41', {
-      number: 'PR-00042',
-      responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
-      include: ['responsible_user'],
-    });
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.productionRuns.update(
+        'prru_0141c28081df4faac0fe726c41',
+        {
+          include: ['responsible_user'],
+          number: 'number',
+          responsible_user_id: 'responsible_user_id',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('list', async () => {

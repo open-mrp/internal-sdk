@@ -31,13 +31,12 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const pickDetail =
-   *   await client.operations.picks.actions.pick(
-   *     'pk_016452192feb7952d8393f0105',
-   *   );
+   * const pick = await client.operations.picks.actions.pick(
+   *   'pk_016452192feb7952d8393f0105',
+   * );
    * ```
    */
-  pick(id: string, options?: RequestOptions): APIPromise<InvoicesAPI.PickDetail> {
+  pick(id: string, options?: RequestOptions): APIPromise<InvoicesAPI.Pick> {
     return this._client.put(path`/v1/operations/picks/${id}/actions/pick`, options);
   }
 
@@ -46,13 +45,12 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const pickDetail =
-   *   await client.operations.picks.actions.void(
-   *     'pk_016452192feb7952d8393f0105',
-   *   );
+   * const pick = await client.operations.picks.actions.void(
+   *   'pk_016452192feb7952d8393f0105',
+   * );
    * ```
    */
-  void(id: string, options?: RequestOptions): APIPromise<InvoicesAPI.PickDetail> {
+  void(id: string, options?: RequestOptions): APIPromise<InvoicesAPI.Pick> {
     return this._client.put(path`/v1/operations/picks/${id}/actions/void`, options);
   }
 }
@@ -73,9 +71,9 @@ export interface PackPickRequest {
  */
 export interface PackPickResponse {
   /**
-   * PickDetail is a full pick resource.
+   * Pick is a full pick resource.
    */
-  pick: InvoicesAPI.PickDetail | null;
+  pick: InvoicesAPI.Pick | null;
 
   /**
    * Created shipment number.

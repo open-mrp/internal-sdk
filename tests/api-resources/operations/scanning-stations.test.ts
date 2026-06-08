@@ -79,7 +79,7 @@ describe('resource scanningStations', () => {
           include: ['department'],
           label_size: '1x1',
           label_type: 'tag',
-          name: 'Station B',
+          name: 'name',
           notes: 'notes',
           operator_requirement: 'none',
         },

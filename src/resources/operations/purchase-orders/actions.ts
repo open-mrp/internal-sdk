@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as PurchaseOrdersAPI from './purchase-orders';
+import * as DeliveriesAPI from '../deliveries';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -34,7 +34,7 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const purchaseOrderDetail =
+   * const purchaseOrder =
    *   await client.operations.purchaseOrders.actions.changeStatus(
    *     'po_0169aa3a722b081b117ac0e44f',
    *     { send_email: true, status_change: 'issue' },
@@ -45,7 +45,7 @@ export class Actions extends APIResource {
     id: string,
     params: ActionChangeStatusParams,
     options?: RequestOptions,
-  ): APIPromise<PurchaseOrdersAPI.PurchaseOrderDetail> {
+  ): APIPromise<DeliveriesAPI.PurchaseOrder> {
     const { include, ...body } = params;
     return this._client.put(path`/v1/operations/purchase-orders/${id}/actions/change-status`, {
       query: { include },
@@ -108,8 +108,7 @@ export interface ActionChangeStatusParams {
     | 'supplier'
     | 'bill_to_address'
     | 'ship_to_address'
-    | 'carrier'
-    | 'service_level'
+    | 'freight'
     | 'payment_term'
     | 'shipping_term'
     | 'receiving_order'

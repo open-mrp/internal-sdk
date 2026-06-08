@@ -5,8 +5,6 @@ import * as InvoicesAPI from '../../finance/invoices';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as ActionsAPI from './actions';
 import { ActionPackParams, Actions, PackPickRequest, PackPickResponse } from './actions';
-import * as CustomersAPI from '../../sales/customers/customers';
-import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import * as LinesAPI from './lines/lines';
 import { LineUpdateParams, Lines, UpdatePickLineRequest } from './lines/lines';
 import { APIPromise } from '../../../core/api-promise';
@@ -25,7 +23,7 @@ export class Picks extends APIResource {
    *
    * @example
    * ```ts
-   * const pickDetail = await client.operations.picks.retrieve(
+   * const pick = await client.operations.picks.retrieve(
    *   'pk_016452192feb7952d8393f0105',
    * );
    * ```
@@ -34,7 +32,7 @@ export class Picks extends APIResource {
     id: string,
     query: PickRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<InvoicesAPI.PickDetail> {
+  ): APIPromise<InvoicesAPI.Pick> {
     return this._client.get(path`/v1/operations/picks/${id}`, { query, ...options });
   }
 
@@ -43,9 +41,8 @@ export class Picks extends APIResource {
    *
    * @example
    * ```ts
-   * const pickDetail = await client.operations.picks.update(
+   * const pick = await client.operations.picks.update(
    *   'pk_016452192feb7952d8393f0105',
-   *   { number: 'PCK-2025-0042' },
    * );
    * ```
    */
@@ -53,7 +50,7 @@ export class Picks extends APIResource {
     id: string,
     params: PickUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<InvoicesAPI.PickDetail> {
+  ): APIPromise<InvoicesAPI.Pick> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/picks/${id}`, { query: { include }, body, ...options });
   }
@@ -63,11 +60,10 @@ export class Picks extends APIResource {
    *
    * @example
    * ```ts
-   * const listPickSummary =
-   *   await client.operations.picks.list();
+   * const listPick = await client.operations.picks.list();
    * ```
    */
-  list(query: PickListParams | null | undefined = {}, options?: RequestOptions): APIPromise<ListPickSummary> {
+  list(query: PickListParams | null | undefined = {}, options?: RequestOptions): APIPromise<ListPick> {
     return this._client.get('/v1/operations/picks', { query, ...options });
   }
 
@@ -94,11 +90,11 @@ export class Picks extends APIResource {
 /**
  * List represents a paginated list of resources.
  */
-export interface ListPickSummary {
+export interface ListPick {
   /**
    * Resources in this page.
    */
-  data: Array<PickSummary>;
+  data: Array<InvoicesAPI.Pick>;
 
   /**
    * Resource type identifier.
@@ -127,56 +123,6 @@ export interface PickShipmentsResponse {
 }
 
 /**
- * PickSummary is a pick resource for list views.
- */
-export interface PickSummary {
-  /**
-   * Pick ID.
-   */
-  id: string;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Customer account.
-   */
-  customer: CustomersAPI.Customer | null;
-
-  /**
-   * Timestamp when the pick was finished.
-   */
-  finished_at: string | null;
-
-  /**
-   * Pick number.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'pick';
-
-  /**
-   * Priority level used by sales orders and picks.
-   */
-  priority: CustomersAPI.Priority | null;
-
-  /**
-   * Full sales order resource.
-   */
-  sales_order: SalesOrdersAPI.SalesOrderDetail | null;
-
-  /**
-   * Last updated timestamp.
-   */
-  updated_at: string;
-}
-
-/**
  * UpdatePickRequest is the request to partially update a pick's metadata.
  */
 export interface UpdatePickRequest {
@@ -196,7 +142,7 @@ export interface PickRetrieveParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'sales_order' | 'departments' | 'lines' | 'lines.sales_order_line'>;
+  include?: Array<'sales_order' | 'customer' | 'departments' | 'lines' | 'lines.sales_order_line'>;
 }
 
 export interface PickUpdateParams {
@@ -247,7 +193,7 @@ export interface PickListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'sales_order'>;
+  include?: Array<'sales_order' | 'customer'>;
 
   /**
    * Maximum number of results per page (default: 100, max: 1000).
@@ -297,9 +243,8 @@ Picks.Lines = Lines;
 
 export declare namespace Picks {
   export {
-    type ListPickSummary as ListPickSummary,
+    type ListPick as ListPick,
     type PickShipmentsResponse as PickShipmentsResponse,
-    type PickSummary as PickSummary,
     type UpdatePickRequest as UpdatePickRequest,
     type PickRetrieveParams as PickRetrieveParams,
     type PickUpdateParams as PickUpdateParams,

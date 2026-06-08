@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as CustomersAPI from '../customers/customers';
 import * as SalesOrdersAPI from './sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
@@ -15,29 +16,34 @@ export class Lines extends APIResource {
    *
    * @example
    * ```ts
-   * const salesOrderLineDetail =
+   * const salesOrderLine =
    *   await client.sales.salesOrders.lines.create(
    *     'or_01d5034136c3ccc048abecc312',
    *     {
-   *       product_id: 'product_id',
-   *       product_sku: 'product_sku',
-   *       quantity_unit_id: 'quantity_unit_id',
-   *       quantity_value: 'quantity_value',
+   *       product_id: 'pd_013c29ab3f1518d0004094c316',
+   *       product_sku: 'WIDGET-001',
+   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       quantity_value: '10',
    *       unit_price_denominator_unit_id:
-   *         'unit_price_denominator_unit_id',
+   *         'un_01966263f74a5a0cae356000a1',
    *       unit_price_numerator_unit_id:
-   *         'unit_price_numerator_unit_id',
-   *       unit_price_value: 'unit_price_value',
+   *         'un_01966263f74a5a0cae356000a1',
+   *       unit_price_value: '25.00',
    *     },
    *   );
    * ```
    */
   create(
     id: string,
-    body: LineCreateParams,
+    params: LineCreateParams,
     options?: RequestOptions,
-  ): APIPromise<SalesOrdersAPI.SalesOrderLineDetail> {
-    return this._client.post(path`/v1/sales/sales-orders/${id}/lines`, { body, ...options });
+  ): APIPromise<SalesOrdersAPI.SalesOrderLine> {
+    const { include, ...body } = params;
+    return this._client.post(path`/v1/sales/sales-orders/${id}/lines`, {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -45,13 +51,9 @@ export class Lines extends APIResource {
    *
    * @example
    * ```ts
-   * const salesOrderLineDetail =
+   * const salesOrderLine =
    *   await client.sales.salesOrders.lines.update('example', {
    *     id: 'or_01d5034136c3ccc048abecc312',
-   *     product_id: 'pd_013c29ab3f1518d0004094c316',
-   *     product_sku: 'WIDGET-001',
-   *     quantity_value: '20',
-   *     unit_price_value: '30.00',
    *   });
    * ```
    */
@@ -59,9 +61,13 @@ export class Lines extends APIResource {
     lineID: string,
     params: LineUpdateParams,
     options?: RequestOptions,
-  ): APIPromise<SalesOrdersAPI.SalesOrderLineDetail> {
-    const { id, ...body } = params;
-    return this._client.patch(path`/v1/sales/sales-orders/${id}/lines/${lineID}`, { body, ...options });
+  ): APIPromise<SalesOrdersAPI.SalesOrderLine> {
+    const { id, include, ...body } = params;
+    return this._client.patch(path`/v1/sales/sales-orders/${id}/lines/${lineID}`, {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -82,88 +88,10 @@ export class Lines extends APIResource {
 }
 
 /**
- * Request to create a line on a sales order.
+ * OrderLineInput represents the shared fields for creating an order line item.
+ * Used as an embedded struct in purchase order and sales order line inputs.
  */
-export interface CreateSalesOrderLineRequest extends SalesOrdersAPI.OrderLineInput {
-  /**
-   * EDI line item ID.
-   */
-  edi_line_item_id?: string;
-}
-
-/**
- * Request to update a sales order line.
- */
-export interface UpdateSalesOrderLineRequest {
-  /**
-   * EDI line item ID.
-   */
-  edi_line_item_id?: string;
-
-  /**
-   * Item ID.
-   */
-  item_id?: string;
-
-  /**
-   * Product description.
-   */
-  product_description?: string;
-
-  /**
-   * Product ID.
-   */
-  product_id?: string;
-
-  /**
-   * Product SKU.
-   */
-  product_sku?: string;
-
-  /**
-   * Quantity unit ID.
-   */
-  quantity_unit_id?: string;
-
-  /**
-   * Quantity value.
-   */
-  quantity_value?: string;
-
-  /**
-   * Unit cost denominator unit ID.
-   */
-  unit_cost_denominator_unit_id?: string;
-
-  /**
-   * Unit cost numerator unit ID.
-   */
-  unit_cost_numerator_unit_id?: string;
-
-  /**
-   * Unit cost value.
-   */
-  unit_cost_value?: string;
-
-  /**
-   * Unit price denominator unit ID.
-   */
-  unit_price_denominator_unit_id?: string;
-
-  /**
-   * Unit price numerator unit ID.
-   */
-  unit_price_numerator_unit_id?: string;
-
-  /**
-   * Unit price value.
-   */
-  unit_price_value?: string;
-}
-
-export interface LineDeleteResponse {}
-
-export interface LineCreateParams {
+export interface CreateSalesOrderLineRequest {
   /**
    * The product ID.
    */
@@ -200,11 +128,6 @@ export interface LineCreateParams {
   unit_price_value: string;
 
   /**
-   * EDI line item ID.
-   */
-  edi_line_item_id?: string;
-
-  /**
    * The item ID.
    */
   item_id?: string;
@@ -230,6 +153,132 @@ export interface LineCreateParams {
   unit_cost_value?: string;
 }
 
+/**
+ * RateInput represents the input for creating or updating a rate.
+ */
+export interface RateInput {
+  /**
+   * Denominator unit ID.
+   */
+  denominator_unit_id: string;
+
+  /**
+   * Numerator unit ID.
+   */
+  numerator_unit_id: string;
+
+  /**
+   * Decimal value of the rate.
+   */
+  value: string;
+}
+
+/**
+ * Request to update a sales order line.
+ */
+export interface UpdateSalesOrderLineRequest {
+  /**
+   * Item ID.
+   */
+  item_id?: string;
+
+  /**
+   * Product description.
+   */
+  product_description?: string;
+
+  /**
+   * Product SKU.
+   */
+  product_sku?: string;
+
+  /**
+   * QuantityInput represents a value with an associated unit for create/update
+   * requests.
+   */
+  quantity?: CustomersAPI.QuantityInput;
+
+  /**
+   * RateInput represents the input for creating or updating a rate.
+   */
+  unit_cost?: RateInput;
+
+  /**
+   * RateInput represents the input for creating or updating a rate.
+   */
+  unit_price?: RateInput;
+}
+
+export interface LineDeleteResponse {}
+
+export interface LineCreateParams {
+  /**
+   * Body param: The product ID.
+   */
+  product_id: string;
+
+  /**
+   * Body param: The product SKU.
+   */
+  product_sku: string;
+
+  /**
+   * Body param: The quantity unit ID.
+   */
+  quantity_unit_id: string;
+
+  /**
+   * Body param: The quantity value.
+   */
+  quantity_value: string;
+
+  /**
+   * Body param: The unit price denominator unit ID.
+   */
+  unit_price_denominator_unit_id: string;
+
+  /**
+   * Body param: The unit price numerator unit ID.
+   */
+  unit_price_numerator_unit_id: string;
+
+  /**
+   * Body param: The unit price value.
+   */
+  unit_price_value: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'product' | 'quantity_ordered' | 'unit_price' | 'unit_cost' | 'totals'>;
+
+  /**
+   * Body param: The item ID.
+   */
+  item_id?: string;
+
+  /**
+   * Body param: The product description.
+   */
+  product_description?: string;
+
+  /**
+   * Body param: The unit cost denominator unit ID.
+   */
+  unit_cost_denominator_unit_id?: string;
+
+  /**
+   * Body param: The unit cost numerator unit ID.
+   */
+  unit_cost_numerator_unit_id?: string;
+
+  /**
+   * Body param: The unit cost value.
+   */
+  unit_cost_value?: string;
+}
+
 export interface LineUpdateParams {
   /**
    * Path param: Sales order ID.
@@ -237,9 +286,10 @@ export interface LineUpdateParams {
   id: string;
 
   /**
-   * Body param: EDI line item ID.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
    */
-  edi_line_item_id?: string;
+  include?: Array<'product' | 'quantity_ordered' | 'unit_price' | 'unit_cost' | 'totals'>;
 
   /**
    * Body param: Item ID.
@@ -252,54 +302,25 @@ export interface LineUpdateParams {
   product_description?: string;
 
   /**
-   * Body param: Product ID.
-   */
-  product_id?: string;
-
-  /**
    * Body param: Product SKU.
    */
   product_sku?: string;
 
   /**
-   * Body param: Quantity unit ID.
+   * Body param: QuantityInput represents a value with an associated unit for
+   * create/update requests.
    */
-  quantity_unit_id?: string;
+  quantity?: CustomersAPI.QuantityInput;
 
   /**
-   * Body param: Quantity value.
+   * Body param: RateInput represents the input for creating or updating a rate.
    */
-  quantity_value?: string;
+  unit_cost?: RateInput;
 
   /**
-   * Body param: Unit cost denominator unit ID.
+   * Body param: RateInput represents the input for creating or updating a rate.
    */
-  unit_cost_denominator_unit_id?: string;
-
-  /**
-   * Body param: Unit cost numerator unit ID.
-   */
-  unit_cost_numerator_unit_id?: string;
-
-  /**
-   * Body param: Unit cost value.
-   */
-  unit_cost_value?: string;
-
-  /**
-   * Body param: Unit price denominator unit ID.
-   */
-  unit_price_denominator_unit_id?: string;
-
-  /**
-   * Body param: Unit price numerator unit ID.
-   */
-  unit_price_numerator_unit_id?: string;
-
-  /**
-   * Body param: Unit price value.
-   */
-  unit_price_value?: string;
+  unit_price?: RateInput;
 }
 
 export interface LineDeleteParams {
@@ -312,6 +333,7 @@ export interface LineDeleteParams {
 export declare namespace Lines {
   export {
     type CreateSalesOrderLineRequest as CreateSalesOrderLineRequest,
+    type RateInput as RateInput,
     type UpdateSalesOrderLineRequest as UpdateSalesOrderLineRequest,
     type LineDeleteResponse as LineDeleteResponse,
     type LineCreateParams as LineCreateParams,

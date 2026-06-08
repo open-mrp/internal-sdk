@@ -72,15 +72,7 @@ export class VolumeDiscounts extends APIResource {
    *       has_product_lines: false,
    *       has_tiers: true,
    *       has_units: false,
-   *       name: 'Updated Bulk Discount',
-   *       tiers: [
-   *         {
-   *           name: '50+ Units',
-   *           discount_percentage:
-   *             '10.000000000000000000000000000000',
-   *           threshold: '50.000000000000000000000000000000',
-   *         },
-   *       ],
+   *       tiers: [null],
    *     },
    *   );
    * ```

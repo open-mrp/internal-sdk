@@ -21,12 +21,8 @@ export class Transactions extends APIResource {
    * ```ts
    * const transactionDetail =
    *   await client.finance.transactions.create({
-   *     adjustment_type: 'adjustment_type',
    *     amount: '500.00',
    *     customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-   *     method: 'check',
-   *     note: 'Q1 invoice payment',
-   *     responsible_user_id: 'responsible_user_id',
    *     type: 'payment',
    *   });
    * ```
@@ -63,16 +59,9 @@ export class Transactions extends APIResource {
    *   await client.finance.transactions.update(
    *     'tx_01fc4d4f2b2ee1fa6b6d87257a',
    *     {
-   *       adjustment_type: 'adjustment_type',
-   *       amount: '750.00',
    *       clear_adjustment_type: false,
    *       clear_responsible_user: false,
    *       clear_transaction_method: false,
-   *       is_fully_allocated: true,
-   *       method: 'ach',
-   *       note: 'Updated payment note',
-   *       number: 'number',
-   *       responsible_user_id: 'responsible_user_id',
    *     },
    *   );
    * ```
@@ -122,11 +111,6 @@ export class Transactions extends APIResource {
  */
 export interface CreateTransactionRequest {
   /**
-   * Adjustment type code.
-   */
-  adjustment_type: string | null;
-
-  /**
    * Transaction amount as a decimal string.
    */
   amount: string;
@@ -137,24 +121,29 @@ export interface CreateTransactionRequest {
   customer_id: string;
 
   /**
+   * Transaction type code.
+   */
+  type: string;
+
+  /**
+   * Adjustment type code.
+   */
+  adjustment_type?: string;
+
+  /**
    * Transaction method code.
    */
-  method: string | null;
+  method?: string;
 
   /**
    * Note.
    */
-  note: string | null;
+  note?: string;
 
   /**
    * Responsible user ID.
    */
-  responsible_user_id: string | null;
-
-  /**
-   * Transaction type code.
-   */
-  type: string;
+  responsible_user_id?: string;
 }
 
 /**
@@ -247,16 +236,6 @@ export interface TransactionSummary {
  */
 export interface UpdateTransactionRequest {
   /**
-   * Adjustment type code.
-   */
-  adjustment_type: string | null;
-
-  /**
-   * Amount as a decimal string.
-   */
-  amount: string | null;
-
-  /**
    * Set to true to clear the adjustment type.
    */
   clear_adjustment_type: boolean;
@@ -272,37 +251,42 @@ export interface UpdateTransactionRequest {
   clear_transaction_method: boolean;
 
   /**
+   * Adjustment type code.
+   */
+  adjustment_type?: string;
+
+  /**
+   * Amount as a decimal string.
+   */
+  amount?: string;
+
+  /**
    * Allocation status.
    */
-  is_fully_allocated: boolean | null;
+  is_fully_allocated?: boolean;
 
   /**
    * Transaction method code.
    */
-  method: string | null;
+  method?: string;
 
   /**
    * Note.
    */
-  note: string | null;
+  note?: string;
 
   /**
    * Transaction number.
    */
-  number: string | null;
+  number?: string;
 
   /**
    * Responsible user ID.
    */
-  responsible_user_id: string | null;
+  responsible_user_id?: string;
 }
 
 export interface TransactionCreateParams {
-  /**
-   * Adjustment type code.
-   */
-  adjustment_type: string | null;
-
   /**
    * Transaction amount as a decimal string.
    */
@@ -314,24 +298,29 @@ export interface TransactionCreateParams {
   customer_id: string;
 
   /**
+   * Transaction type code.
+   */
+  type: string;
+
+  /**
+   * Adjustment type code.
+   */
+  adjustment_type?: string;
+
+  /**
    * Transaction method code.
    */
-  method: string | null;
+  method?: string;
 
   /**
    * Note.
    */
-  note: string | null;
+  note?: string;
 
   /**
    * Responsible user ID.
    */
-  responsible_user_id: string | null;
-
-  /**
-   * Transaction type code.
-   */
-  type: string;
+  responsible_user_id?: string;
 }
 
 export interface TransactionRetrieveParams {
@@ -344,16 +333,6 @@ export interface TransactionRetrieveParams {
 
 export interface TransactionUpdateParams {
   /**
-   * Adjustment type code.
-   */
-  adjustment_type: string | null;
-
-  /**
-   * Amount as a decimal string.
-   */
-  amount: string | null;
-
-  /**
    * Set to true to clear the adjustment type.
    */
   clear_adjustment_type: boolean;
@@ -369,29 +348,39 @@ export interface TransactionUpdateParams {
   clear_transaction_method: boolean;
 
   /**
+   * Adjustment type code.
+   */
+  adjustment_type?: string;
+
+  /**
+   * Amount as a decimal string.
+   */
+  amount?: string;
+
+  /**
    * Allocation status.
    */
-  is_fully_allocated: boolean | null;
+  is_fully_allocated?: boolean;
 
   /**
    * Transaction method code.
    */
-  method: string | null;
+  method?: string;
 
   /**
    * Note.
    */
-  note: string | null;
+  note?: string;
 
   /**
    * Transaction number.
    */
-  number: string | null;
+  number?: string;
 
   /**
    * Responsible user ID.
    */
-  responsible_user_id: string | null;
+  responsible_user_id?: string;
 }
 
 export interface TransactionListParams {

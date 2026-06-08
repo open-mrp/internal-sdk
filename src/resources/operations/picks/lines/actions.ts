@@ -15,18 +15,14 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const pickLineDetail =
+   * const pickLine =
    *   await client.operations.picks.lines.actions.pick(
    *     'example',
    *     { pick_id: 'pk_016452192feb7952d8393f0105' },
    *   );
    * ```
    */
-  pick(
-    id: string,
-    params: ActionPickParams,
-    options?: RequestOptions,
-  ): APIPromise<InvoicesAPI.PickLineDetail> {
+  pick(id: string, params: ActionPickParams, options?: RequestOptions): APIPromise<InvoicesAPI.PickLine> {
     const { pick_id } = params;
     return this._client.put(path`/v1/operations/picks/${pick_id}/lines/${id}/actions/pick`, options);
   }
@@ -36,18 +32,14 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const pickLineDetail =
+   * const pickLine =
    *   await client.operations.picks.lines.actions.void(
    *     'example',
    *     { pick_id: 'pk_016452192feb7952d8393f0105' },
    *   );
    * ```
    */
-  void(
-    id: string,
-    params: ActionVoidParams,
-    options?: RequestOptions,
-  ): APIPromise<InvoicesAPI.PickLineDetail> {
+  void(id: string, params: ActionVoidParams, options?: RequestOptions): APIPromise<InvoicesAPI.PickLine> {
     const { pick_id } = params;
     return this._client.put(path`/v1/operations/picks/${pick_id}/lines/${id}/actions/void`, options);
   }

@@ -85,7 +85,7 @@ describe('resource parts', () => {
           include: ['item'],
           description: 'description',
           notes: 'notes',
-          sku: 'BRG-6204-2RS',
+          sku: 'sku',
         },
         { path: '/_stainless_unknown_path' },
       ),

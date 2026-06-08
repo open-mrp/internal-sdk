@@ -61,7 +61,7 @@ describe('resource paymentTerms', () => {
     await expect(
       client.finance.paymentTerms.update(
         'pytm_018694d6601ea771cd1b52e890',
-        { include: ['owner'], name: 'Net 60' },
+        { include: ['owner'], name: 'name' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);

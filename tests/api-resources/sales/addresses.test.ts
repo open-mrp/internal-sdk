@@ -65,7 +65,7 @@ describe('resource addresses', () => {
           country: 'country',
           email: 'email',
           locality: 'locality',
-          name: 'Warehouse',
+          name: 'name',
           phone: 'phone',
           postal_code: 'postal_code',
           state: 'state',

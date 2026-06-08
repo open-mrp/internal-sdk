@@ -5,6 +5,7 @@ import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as ActionsAPI from './actions';
 import { ActionExportParams, Actions } from './actions';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
+import * as LinesAPI from '../../sales/sales-orders/lines';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -56,7 +57,6 @@ export class Materials extends APIResource {
    * ```ts
    * const material = await client.catalog.materials.update(
    *   'ml_014613b8f7959a091d8cc0cef4',
-   *   { sku: 'MAT-001-UPDATED' },
    * );
    * ```
    */
@@ -121,33 +121,32 @@ export interface CreateMaterialRequest {
   /**
    * Description.
    */
-  description?: string | null;
+  description?: string;
 
   /**
    * QuantityInputRequest is a quantity value and unit.
    */
-  lead_time?: QuantityInputRequest | null;
+  lead_time?: QuantityInputRequest;
 
   /**
    * Notes.
    */
-  notes?: string | null;
+  notes?: string;
 
   /**
    * QuantityInputRequest is a quantity value and unit.
    */
-  order_point?: QuantityInputRequest | null;
+  order_point?: QuantityInputRequest;
 
   /**
-   * Initial unit cost. Same currency rule as unit_price.
+   * RateInput represents the input for creating or updating a rate.
    */
-  unit_cost?: RateInput | null;
+  unit_cost?: LinesAPI.RateInput;
 
   /**
-   * Initial unit price. When set, numerator must be a currency unit and denominator
-   * must not be.
+   * RateInput represents the input for creating or updating a rate.
    */
-  unit_price?: RateInput | null;
+  unit_price?: LinesAPI.RateInput;
 }
 
 /**
@@ -225,23 +224,6 @@ export interface QuantityInputRequest {
   value: string;
 }
 
-export interface RateInput {
-  /**
-   * Denominator unit ID.
-   */
-  denominator_unit_id: string;
-
-  /**
-   * Numerator unit ID.
-   */
-  numerator_unit_id: string;
-
-  /**
-   * Decimal value of the rate.
-   */
-  value: string;
-}
-
 /**
  * Request to update a material.
  */
@@ -272,9 +254,9 @@ export interface UpdateMaterialRequest {
   sku?: string;
 
   /**
-   * Updated unit cost. Same currency rule as on create.
+   * RateInput represents the input for creating or updating a rate.
    */
-  unit_cost?: RateInput | null;
+  unit_cost?: LinesAPI.RateInput;
 }
 
 export interface MaterialCreateParams {
@@ -311,33 +293,32 @@ export interface MaterialCreateParams {
   /**
    * Body param: Description.
    */
-  description?: string | null;
+  description?: string;
 
   /**
    * Body param: QuantityInputRequest is a quantity value and unit.
    */
-  lead_time?: QuantityInputRequest | null;
+  lead_time?: QuantityInputRequest;
 
   /**
    * Body param: Notes.
    */
-  notes?: string | null;
+  notes?: string;
 
   /**
    * Body param: QuantityInputRequest is a quantity value and unit.
    */
-  order_point?: QuantityInputRequest | null;
+  order_point?: QuantityInputRequest;
 
   /**
-   * Body param: Initial unit cost. Same currency rule as unit_price.
+   * Body param: RateInput represents the input for creating or updating a rate.
    */
-  unit_cost?: RateInput | null;
+  unit_cost?: LinesAPI.RateInput;
 
   /**
-   * Body param: Initial unit price. When set, numerator must be a currency unit and
-   * denominator must not be.
+   * Body param: RateInput represents the input for creating or updating a rate.
    */
-  unit_price?: RateInput | null;
+  unit_price?: LinesAPI.RateInput;
 }
 
 export interface MaterialRetrieveParams {
@@ -399,9 +380,9 @@ export interface MaterialUpdateParams {
   sku?: string;
 
   /**
-   * Body param: Updated unit cost. Same currency rule as on create.
+   * Body param: RateInput represents the input for creating or updating a rate.
    */
-  unit_cost?: RateInput | null;
+  unit_cost?: LinesAPI.RateInput;
 }
 
 export interface MaterialListParams {
@@ -464,7 +445,6 @@ export declare namespace Materials {
     type ListMaterial as ListMaterial,
     type Material as Material,
     type QuantityInputRequest as QuantityInputRequest,
-    type RateInput as RateInput,
     type UpdateMaterialRequest as UpdateMaterialRequest,
     type MaterialCreateParams as MaterialCreateParams,
     type MaterialRetrieveParams as MaterialRetrieveParams,

@@ -64,11 +64,7 @@ export class Lines extends APIResource {
    * const shipmentLine =
    *   await client.operations.shipments.lines.update(
    *     'example',
-   *     {
-   *       shipment_id: 'sh_018b3a946651bfb6572b06b2b2',
-   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *       quantity_value: '5.000000000000000000000000000000',
-   *     },
+   *     { shipment_id: 'sh_018b3a946651bfb6572b06b2b2' },
    *   );
    * ```
    */

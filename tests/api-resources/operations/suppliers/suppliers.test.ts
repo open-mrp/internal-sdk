@@ -10,11 +10,8 @@ const client = new Augno({
 describe('resource suppliers', () => {
   test('create: only required params', async () => {
     const responsePromise = client.operations.suppliers.create({
-      bill_to_address: { country: 'US', name: 'Acme Supplies Inc.' },
       name: 'Acme Supplies Inc.',
-      note: 'Primary raw materials supplier',
       number: 'SUP-001',
-      ship_to_address: { country: 'US', name: 'Headquarters' },
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -27,9 +24,11 @@ describe('resource suppliers', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.operations.suppliers.create({
+      name: 'Acme Supplies Inc.',
+      number: 'SUP-001',
       bill_to_address: {
         country: 'US',
-        name: 'Acme Supplies Inc.',
+        name: 'Headquarters',
         email: 'email',
         locality: 'locality',
         phone: 'phone',
@@ -39,9 +38,7 @@ describe('resource suppliers', () => {
         street_line_2: 'street_line_2',
         type: 'standard',
       },
-      name: 'Acme Supplies Inc.',
-      note: 'Primary raw materials supplier',
-      number: 'SUP-001',
+      note: 'note',
       ship_to_address: {
         country: 'US',
         name: 'Headquarters',
@@ -81,11 +78,6 @@ describe('resource suppliers', () => {
 
   test('update: only required params', async () => {
     const responsePromise = client.operations.suppliers.update('ac_0177902104bccac5fbb173cd96', {
-      bill_to_address_id: 'bill_to_address_id',
-      name: 'Acme Supplies LLC',
-      note: 'Updated contact info',
-      number: 'number',
-      ship_to_address_id: 'ship_to_address_id',
       update_note: true,
     });
     const rawResponse = await responsePromise.asResponse();
@@ -99,12 +91,12 @@ describe('resource suppliers', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.operations.suppliers.update('ac_0177902104bccac5fbb173cd96', {
+      update_note: true,
       bill_to_address_id: 'bill_to_address_id',
-      name: 'Acme Supplies LLC',
-      note: 'Updated contact info',
+      name: 'name',
+      note: 'note',
       number: 'number',
       ship_to_address_id: 'ship_to_address_id',
-      update_note: true,
     });
   });
 

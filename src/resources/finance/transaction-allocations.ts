@@ -20,13 +20,12 @@ export class TransactionAllocations extends APIResource {
    * const transactionAllocation =
    *   await client.finance.transactionAllocations.update(
    *     'txal_016cc92c2d9c0b12801e3160e0',
-   *     { amount: '150.00' },
    *   );
    * ```
    */
   update(
     id: string,
-    body: TransactionAllocationUpdateParams,
+    body: TransactionAllocationUpdateParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<InvoicesAPI.TransactionAllocation> {
     return this._client.patch(path`/v1/finance/transaction-allocations/${id}`, { body, ...options });
@@ -97,7 +96,7 @@ export interface AllocationEntry {
   /**
    * Minimal invoice sub-resource for allocation entries.
    */
-  invoice: AllocationInvoice | null;
+  invoice: InvoicesAPI.AllocationInvoice | null;
 
   /**
    * Note about this allocation.
@@ -113,26 +112,6 @@ export interface AllocationEntry {
    * Minimal transaction sub-resource for allocation entries.
    */
   transaction: AllocationTransaction | null;
-}
-
-/**
- * Minimal invoice sub-resource for allocation entries.
- */
-export interface AllocationInvoice {
-  /**
-   * Invoice ID.
-   */
-  id: string;
-
-  /**
-   * Invoice number.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'invoice_summary';
 }
 
 /**
@@ -192,7 +171,7 @@ export interface UpdateTransactionAllocationRequest {
   /**
    * Allocation amount as a decimal string.
    */
-  amount: string | null;
+  amount?: string;
 }
 
 export interface TransactionAllocationDeleteResponse {}
@@ -201,7 +180,7 @@ export interface TransactionAllocationUpdateParams {
   /**
    * Allocation amount as a decimal string.
    */
-  amount: string | null;
+  amount?: string;
 }
 
 export interface TransactionAllocationListParams {
@@ -239,7 +218,6 @@ export interface TransactionAllocationListParams {
 export declare namespace TransactionAllocations {
   export {
     type AllocationEntry as AllocationEntry,
-    type AllocationInvoice as AllocationInvoice,
     type AllocationTransaction as AllocationTransaction,
     type ListAllocationEntry as ListAllocationEntry,
     type UpdateTransactionAllocationRequest as UpdateTransactionAllocationRequest,

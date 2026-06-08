@@ -42,10 +42,7 @@ export class Carriers extends APIResource {
    * @example
    * ```ts
    * const carrier = await client.operations.carriers.create({
-   *   account_number: '1234567890',
-   *   code: 'fedex',
    *   name: 'FedEx',
-   *   customer_portal_visibility: 'visible',
    * });
    * ```
    */
@@ -79,7 +76,6 @@ export class Carriers extends APIResource {
    * ```ts
    * const carrier = await client.operations.carriers.update(
    *   'cr_01784fd54c9ba197bb4e42f0e6',
-   *   { name: 'FedEx Express' },
    * );
    * ```
    */
@@ -141,19 +137,19 @@ export class Carriers extends APIResource {
  */
 export interface CreateCarrierRequest {
   /**
+   * Display name.
+   */
+  name: string;
+
+  /**
    * Carrier account number. Required for UPS and USPS carriers.
    */
-  account_number: string | null;
+  account_number?: string;
 
   /**
    * Carrier code.
    */
-  code: 'fedex' | 'ups' | 'usps' | 'will_call' | 'delivery' | 'ltl' | 'ltl1' | 'freight_collect' | null;
-
-  /**
-   * Display name.
-   */
-  name: string;
+  code?: 'fedex' | 'ups' | 'usps' | 'will_call' | 'delivery' | 'ltl' | 'ltl1' | 'freight_collect';
 
   /**
    * Carrier visibility in the customer portal.
@@ -224,16 +220,6 @@ export interface CarrierDeleteResponse {}
 
 export interface CarrierCreateParams {
   /**
-   * Body param: Carrier account number. Required for UPS and USPS carriers.
-   */
-  account_number: string | null;
-
-  /**
-   * Body param: Carrier code.
-   */
-  code: 'fedex' | 'ups' | 'usps' | 'will_call' | 'delivery' | 'ltl' | 'ltl1' | 'freight_collect' | null;
-
-  /**
    * Body param: Display name.
    */
   name: string;
@@ -243,6 +229,16 @@ export interface CarrierCreateParams {
    * are returned as `null`.
    */
   include?: Array<'owner' | 'owner.account' | 'service_levels'>;
+
+  /**
+   * Body param: Carrier account number. Required for UPS and USPS carriers.
+   */
+  account_number?: string;
+
+  /**
+   * Body param: Carrier code.
+   */
+  code?: 'fedex' | 'ups' | 'usps' | 'will_call' | 'delivery' | 'ltl' | 'ltl1' | 'freight_collect';
 
   /**
    * Body param: Carrier visibility in the customer portal.

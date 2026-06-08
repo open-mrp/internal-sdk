@@ -80,7 +80,6 @@ export class ProductionSteps extends APIResource {
    *     quantity_value: '100',
    *     quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
    *   },
-   *   scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
    * });
    * ```
    */
@@ -118,12 +117,6 @@ export class ProductionSteps extends APIResource {
    * const productionStep =
    *   await client.operations.productionSteps.update(
    *     'prst_0159474175bb59f4b1990404ee',
-   *     {
-   *       leveling_factor: '1.15',
-   *       name: 'Assembly Step A',
-   *       scanning_station_id:
-   *         'scst_0129335dd6286056a97024fcc1',
-   *     },
    *   );
    * ```
    */

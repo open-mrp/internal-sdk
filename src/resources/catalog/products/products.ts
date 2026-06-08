@@ -1,9 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AccountPricesAPI from '../../sales/account-prices';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
-import * as MaterialsAPI from '../materials/materials';
 import * as ActionsAPI from './actions';
 import {
   ActionExportParams,
@@ -12,7 +10,8 @@ import {
   ValidateProductsRequest,
   ValidateProductsResponse,
 } from './actions';
-import * as AccountUsersAPI from '../../identity/account-users/account-users';
+import * as LinesAPI from '../../sales/sales-orders/lines';
+import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -30,13 +29,12 @@ export class Products extends APIResource {
    * ```ts
    * const product = await client.catalog.products.create({
    *   category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
-   *   product_line_id: 'product_line_id',
    *   sku: 'ALM-2024-1001',
    *   type: 'sale',
    * });
    * ```
    */
-  create(params: ProductCreateParams, options?: RequestOptions): APIPromise<Product> {
+  create(params: ProductCreateParams, options?: RequestOptions): APIPromise<SalesOrdersAPI.Product> {
     const { include, ...body } = params;
     return this._client.post('/v1/catalog/products', { query: { include }, body, ...options });
   }
@@ -55,7 +53,7 @@ export class Products extends APIResource {
     id: string,
     query: ProductRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<Product> {
+  ): APIPromise<SalesOrdersAPI.Product> {
     return this._client.get(path`/v1/catalog/products/${id}`, { query, ...options });
   }
 
@@ -66,7 +64,6 @@ export class Products extends APIResource {
    * ```ts
    * const product = await client.catalog.products.update(
    *   'pd_013c29ab3f1518d0004094c316',
-   *   { sku: 'SKU-002' },
    * );
    * ```
    */
@@ -74,7 +71,7 @@ export class Products extends APIResource {
     id: string,
     params: ProductUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<Product> {
+  ): APIPromise<SalesOrdersAPI.Product> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/catalog/products/${id}`, { query: { include }, body, ...options });
   }
@@ -105,7 +102,7 @@ export class Products extends APIResource {
     id: string,
     params: ProductDeleteParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<Product> {
+  ): APIPromise<SalesOrdersAPI.Product> {
     const { include } = params ?? {};
     return this._client.delete(path`/v1/catalog/products/${id}`, { query: { include }, ...options });
   }
@@ -126,7 +123,7 @@ export class Products extends APIResource {
     productLineID: string,
     params: ProductChangeProductLineParams,
     options?: RequestOptions,
-  ): APIPromise<Product> {
+  ): APIPromise<SalesOrdersAPI.Product> {
     const { id, include } = params;
     return this._client.put(path`/v1/catalog/products/${id}/product-line/${productLineID}`, {
       query: { include },
@@ -143,11 +140,6 @@ export interface CreateProductRequest {
    * Category ID.
    */
   category_id: string;
-
-  /**
-   * Product line ID.
-   */
-  product_line_id: string | null;
 
   /**
    * SKU.
@@ -167,12 +159,12 @@ export interface CreateProductRequest {
   /**
    * Description.
    */
-  description?: string | null;
+  description?: string;
 
   /**
    * Notes.
    */
-  notes?: string | null;
+  notes?: string;
 
   /**
    * Whether visible in the customer portal.
@@ -180,15 +172,19 @@ export interface CreateProductRequest {
   portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Initial unit cost. Same currency rule as unit_price.
+   * Product line ID.
    */
-  unit_cost?: MaterialsAPI.RateInput | null;
+  product_line_id?: string;
 
   /**
-   * Initial unit price. When set, numerator must be a currency unit and denominator
-   * must not be.
+   * RateInput represents the input for creating or updating a rate.
    */
-  unit_price?: MaterialsAPI.RateInput | null;
+  unit_cost?: LinesAPI.RateInput;
+
+  /**
+   * RateInput represents the input for creating or updating a rate.
+   */
+  unit_price?: LinesAPI.RateInput;
 }
 
 /**
@@ -198,7 +194,7 @@ export interface ListProduct {
   /**
    * Resources in this page.
    */
-  data: Array<Product>;
+  data: Array<SalesOrdersAPI.Product>;
 
   /**
    * Resource type identifier.
@@ -209,51 +205,6 @@ export interface ListProduct {
    * PageInfo contains URL-based pagination metadata.
    */
   page_info: APIKeysAPI.PageInfo;
-}
-
-/**
- * Product with expandable item, product line, and product type.
- */
-export interface Product {
-  /**
-   * Product ID.
-   */
-  id: string;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Item is an inventory item (product, material, or part).
-   */
-  item: AccountUsersAPI.Item | null;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'product';
-
-  /**
-   * Product portal visibility.
-   */
-  portal_visibility: 'visible' | 'hidden';
-
-  /**
-   * Product line resource.
-   */
-  product_line: AccountPricesAPI.ProductLine | null;
-
-  /**
-   * Product type code.
-   */
-  type: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
-
-  /**
-   * Last updated timestamp.
-   */
-  updated_at: string;
 }
 
 /**
@@ -281,9 +232,9 @@ export interface UpdateProductRequest {
   sku?: string;
 
   /**
-   * Updated unit price. Numerator must be a currency unit; denominator must not be.
+   * RateInput represents the input for creating or updating a rate.
    */
-  unit_price?: MaterialsAPI.RateInput | null;
+  unit_price?: LinesAPI.RateInput;
 }
 
 export interface ProductCreateParams {
@@ -291,11 +242,6 @@ export interface ProductCreateParams {
    * Body param: Category ID.
    */
   category_id: string;
-
-  /**
-   * Body param: Product line ID.
-   */
-  product_line_id: string | null;
 
   /**
    * Body param: SKU.
@@ -338,12 +284,12 @@ export interface ProductCreateParams {
   /**
    * Body param: Description.
    */
-  description?: string | null;
+  description?: string;
 
   /**
    * Body param: Notes.
    */
-  notes?: string | null;
+  notes?: string;
 
   /**
    * Body param: Whether visible in the customer portal.
@@ -351,15 +297,19 @@ export interface ProductCreateParams {
   portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Body param: Initial unit cost. Same currency rule as unit_price.
+   * Body param: Product line ID.
    */
-  unit_cost?: MaterialsAPI.RateInput | null;
+  product_line_id?: string;
 
   /**
-   * Body param: Initial unit price. When set, numerator must be a currency unit and
-   * denominator must not be.
+   * Body param: RateInput represents the input for creating or updating a rate.
    */
-  unit_price?: MaterialsAPI.RateInput | null;
+  unit_cost?: LinesAPI.RateInput;
+
+  /**
+   * Body param: RateInput represents the input for creating or updating a rate.
+   */
+  unit_price?: LinesAPI.RateInput;
 }
 
 export interface ProductRetrieveParams {
@@ -432,10 +382,9 @@ export interface ProductUpdateParams {
   sku?: string;
 
   /**
-   * Body param: Updated unit price. Numerator must be a currency unit; denominator
-   * must not be.
+   * Body param: RateInput represents the input for creating or updating a rate.
    */
-  unit_price?: MaterialsAPI.RateInput | null;
+  unit_price?: LinesAPI.RateInput;
 }
 
 export interface ProductListParams {
@@ -574,7 +523,6 @@ export declare namespace Products {
   export {
     type CreateProductRequest as CreateProductRequest,
     type ListProduct as ListProduct,
-    type Product as Product,
     type UpdateProductRequest as UpdateProductRequest,
     type ProductCreateParams as ProductCreateParams,
     type ProductRetrieveParams as ProductRetrieveParams,

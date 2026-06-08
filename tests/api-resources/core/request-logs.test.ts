@@ -61,6 +61,7 @@ describe('resource requestLogs', () => {
           normalized_routes: ['string'],
           q: 'q',
           start_date: '2019-12-27T18:11:19.117Z',
+          status_code_classes: [0],
           status_codes: [0],
         },
         { path: '/_stainless_unknown_path' },

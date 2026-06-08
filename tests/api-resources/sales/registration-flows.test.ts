@@ -65,7 +65,7 @@ describe('resource registrationFlows', () => {
       has_payment_term_ids: false,
       has_shipping_term_ids: false,
       customer_group_ids: ['string'],
-      name: 'Wholesale Registration Updated',
+      name: 'name',
       payment_term_ids: ['string'],
       shipping_term_ids: ['string'],
     });

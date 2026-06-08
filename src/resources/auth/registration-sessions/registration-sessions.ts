@@ -63,13 +63,6 @@ export class RegistrationSessions extends APIResource {
    * const registrationSession =
    *   await client.auth.registrationSessions.update(
    *     'rgfw_01011dbade766ab524553afb10',
-   *     {
-   *       session_data: {
-   *         user_name: 'Jane Smith',
-   *         account_name: 'Acme Corp',
-   *       },
-   *       step: 'user_details',
-   *     },
    *   );
    * ```
    */

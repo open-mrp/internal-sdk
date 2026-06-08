@@ -19,6 +19,17 @@ describe('resource deliveries', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.deliveries.retrieve(
+        'dlv_0143cbea89e0f17c3d19828a3a',
+        { include: ['purchase_order'] },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
+  });
+
   test('list', async () => {
     const responsePromise = client.operations.deliveries.list();
     const rawResponse = await responsePromise.asResponse();
@@ -37,6 +48,7 @@ describe('resource deliveries', () => {
         {
           cursor: 'cursor',
           end_date: 'end_date',
+          include: ['purchase_order'],
           item_ids: ['string'],
           limit: 0,
           q: 'q',

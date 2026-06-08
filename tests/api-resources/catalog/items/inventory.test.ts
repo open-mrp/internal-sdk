@@ -25,12 +25,12 @@ describe('resource inventory', () => {
       client.catalog.items.inventory.update(
         'it_0131e386ac683e8c29a71f6f1f',
         {
-          customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-          location_id: 'lc_014d187d99b31926f0c74af9d8',
+          customer_id: 'customer_id',
+          location_id: 'location_id',
           lot_number: 'lot_number',
           operation: 'adjust',
-          quantity_change: 10.5,
-          unit_id: 'un_01966263f74a5a0cae356000a1',
+          quantity_change: 0,
+          unit_id: 'unit_id',
         },
         { path: '/_stainless_unknown_path' },
       ),

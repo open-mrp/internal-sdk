@@ -24,7 +24,7 @@ describe('resource invoices', () => {
     await expect(
       client.finance.invoices.retrieve(
         'iv_018b5949ada8abca36358bbea9',
-        { include: ['lines'] },
+        { include: ['customer'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
@@ -47,10 +47,11 @@ describe('resource invoices', () => {
       client.finance.invoices.update(
         'iv_018b5949ada8abca36358bbea9',
         {
-          has_been_sent: true,
+          include: ['customer'],
+          has_been_sent: false,
           is_edi_sent: false,
           is_paid_in_full: false,
-          note: 'Payment received via wire transfer',
+          note: 'note',
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -77,6 +78,7 @@ describe('resource invoices', () => {
           customer_group_ids: ['string'],
           customer_ids: ['string'],
           end_date: 'end_date',
+          include: ['customer'],
           item_ids: ['string'],
           limit: 0,
           product_line_ids: ['string'],

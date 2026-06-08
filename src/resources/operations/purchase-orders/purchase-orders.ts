@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as DeliveriesAPI from '../deliveries';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
-import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as ActionsAPI from './actions';
 import {
   ActionBulkDeleteParams,
@@ -22,8 +22,6 @@ import {
   Lines,
   UpdatePurchaseOrderLineRequest,
 } from './lines';
-import * as ReceivingOrdersAPI from '../receiving-orders/receiving-orders';
-import * as CustomersAPI from '../../sales/customers/customers';
 import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
@@ -41,7 +39,7 @@ export class PurchaseOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const purchaseOrderDetail =
+   * const purchaseOrder =
    *   await client.operations.purchaseOrders.create({
    *     lines: [
    *       {
@@ -58,19 +56,13 @@ export class PurchaseOrders extends APIResource {
    *     ],
    *     priority_code: 'normal',
    *     supplier_account_id: 'ac_0177902104bccac5fbb173cd96',
-   *     carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
-   *     note: 'Urgent restock order',
-   *     service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
-   *     ship_to_country: 'US',
-   *     ship_to_locality: 'San Francisco',
-   *     ship_to_name: 'Acme Inc.',
-   *     ship_to_postal_code: '94105',
-   *     ship_to_state: 'CA',
-   *     ship_to_street_line_1: '123 Main Street',
    *   });
    * ```
    */
-  create(params: PurchaseOrderCreateParams, options?: RequestOptions): APIPromise<PurchaseOrderDetail> {
+  create(
+    params: PurchaseOrderCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<DeliveriesAPI.PurchaseOrder> {
     const { include, ...body } = params;
     return this._client.post('/v1/operations/purchase-orders', { query: { include }, body, ...options });
   }
@@ -80,7 +72,7 @@ export class PurchaseOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const purchaseOrderDetail =
+   * const purchaseOrder =
    *   await client.operations.purchaseOrders.retrieve(
    *     'po_0169aa3a722b081b117ac0e44f',
    *   );
@@ -90,7 +82,7 @@ export class PurchaseOrders extends APIResource {
     id: string,
     query: PurchaseOrderRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<PurchaseOrderDetail> {
+  ): APIPromise<DeliveriesAPI.PurchaseOrder> {
     return this._client.get(path`/v1/operations/purchase-orders/${id}`, { query, ...options });
   }
 
@@ -99,15 +91,9 @@ export class PurchaseOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const purchaseOrderDetail =
+   * const purchaseOrder =
    *   await client.operations.purchaseOrders.update(
    *     'po_0169aa3a722b081b117ac0e44f',
-   *     {
-   *       note: 'Updated delivery notes',
-   *       number: 'PO-001',
-   *       priority_code: 'normal',
-   *       promised_at: '2026-05-15T00:00:00Z',
-   *     },
    *   );
    * ```
    */
@@ -115,7 +101,7 @@ export class PurchaseOrders extends APIResource {
     id: string,
     params: PurchaseOrderUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<PurchaseOrderDetail> {
+  ): APIPromise<DeliveriesAPI.PurchaseOrder> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/purchase-orders/${id}`, {
       query: { include },
@@ -129,14 +115,14 @@ export class PurchaseOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const listPurchaseOrderSummary =
+   * const listPurchaseOrder =
    *   await client.operations.purchaseOrders.list();
    * ```
    */
   list(
     query: PurchaseOrderListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ListPurchaseOrderSummary> {
+  ): APIPromise<ListPurchaseOrder> {
     return this._client.get('/v1/operations/purchase-orders', { query, ...options });
   }
 
@@ -374,33 +360,13 @@ export interface CreatePurchaseOrderRequest {
 }
 
 /**
- * Email contact sub-resource.
- */
-export interface EmailContact {
-  /**
-   * Email contact ID.
-   */
-  id: string;
-
-  /**
-   * Account user with profile, role, and department.
-   */
-  account_user: AccountUsersAPI.AccountUser | null;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'email_contact';
-}
-
-/**
  * List represents a paginated list of resources.
  */
-export interface ListEmailContact {
+export interface ListPurchaseOrder {
   /**
    * Resources in this page.
    */
-  data: Array<EmailContact>;
+  data: Array<DeliveriesAPI.PurchaseOrder>;
 
   /**
    * Resource type identifier.
@@ -411,336 +377,6 @@ export interface ListEmailContact {
    * PageInfo contains URL-based pagination metadata.
    */
   page_info: APIKeysAPI.PageInfo;
-}
-
-/**
- * List represents a paginated list of resources.
- */
-export interface ListPurchaseOrderLineDetail {
-  /**
-   * Resources in this page.
-   */
-  data: Array<PurchaseOrderLineDetail>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo contains URL-based pagination metadata.
-   */
-  page_info: APIKeysAPI.PageInfo;
-}
-
-/**
- * List represents a paginated list of resources.
- */
-export interface ListPurchaseOrderSummary {
-  /**
-   * Resources in this page.
-   */
-  data: Array<PurchaseOrderSummary>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo contains URL-based pagination metadata.
-   */
-  page_info: APIKeysAPI.PageInfo;
-}
-
-/**
- * Full purchase order resource.
- */
-export interface PurchaseOrderDetail {
-  /**
-   * Purchase order ID.
-   */
-  id: string;
-
-  /**
-   * Address with associated geolocation.
-   */
-  bill_to_address: APIKeysAPI.Address | null;
-
-  /**
-   * Carrier resource.
-   */
-  carrier: CustomersAPI.Carrier | null;
-
-  /**
-   * Carrier billing account number.
-   */
-  carrier_billing_account: string | null;
-
-  /**
-   * Carrier billing type.
-   */
-  carrier_billing_type: string | null;
-
-  /**
-   * Completed timestamp.
-   */
-  completed_at: string | null;
-
-  /**
-   * List represents a paginated list of resources.
-   */
-  contacts: ListEmailContact | null;
-
-  /**
-   * Created timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Whether the acknowledgment has been sent.
-   */
-  is_acknowledgment_sent: boolean;
-
-  /**
-   * Issued timestamp.
-   */
-  issued_at: string | null;
-
-  /**
-   * List represents a paginated list of resources.
-   */
-  lines: ListPurchaseOrderLineDetail | null;
-
-  /**
-   * Order note.
-   */
-  note: string | null;
-
-  /**
-   * Purchase order number.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'purchase_order';
-
-  /**
-   * Payment term resource.
-   */
-  payment_term: CustomersAPI.PaymentTerm | null;
-
-  /**
-   * Priority level used by sales orders and picks.
-   */
-  priority: CustomersAPI.Priority | null;
-
-  /**
-   * Receiving order with lines.
-   */
-  receiving_order: ReceivingOrdersAPI.ReceivingOrder | null;
-
-  /**
-   * Scheduled/promised timestamp.
-   */
-  scheduled_at: string | null;
-
-  /**
-   * Shipping service level for a carrier.
-   */
-  service_level: CustomersAPI.ServiceLevel | null;
-
-  /**
-   * Address with associated geolocation.
-   */
-  ship_to_address: APIKeysAPI.Address | null;
-
-  /**
-   * ShippingTerm resource.
-   */
-  shipping_term: CustomersAPI.ShippingTerm | null;
-
-  /**
-   * Sales order status sub-resource.
-   */
-  status: SalesOrdersAPI.SalesOrderStatusDetail | null;
-
-  /**
-   * Supplier sub-resource.
-   */
-  supplier: Supplier | null;
-
-  /**
-   * Sales order type sub-resource.
-   */
-  type: SalesOrdersAPI.SalesOrderType | null;
-
-  /**
-   * Updated timestamp.
-   */
-  updated_at: string;
-}
-
-/**
- * Full purchase order line resource.
- */
-export interface PurchaseOrderLineDetail {
-  /**
-   * Purchase order line ID.
-   */
-  id: string;
-
-  /**
-   * Created timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Item is an inventory item (product, material, or part).
-   */
-  item: AccountUsersAPI.Item | null;
-
-  /**
-   * Line item number.
-   */
-  line_item_number: number;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'purchase_order_line';
-
-  /**
-   * Product description.
-   */
-  product_description: string | null;
-
-  /**
-   * Product SKU.
-   */
-  product_sku: string;
-
-  /**
-   * Value with an associated unit.
-   */
-  quantity_ordered: AccountUsersAPI.Quantity | null;
-
-  /**
-   * Value with an associated unit.
-   */
-  quantity_received: AccountUsersAPI.Quantity | null;
-
-  /**
-   * Rate resource.
-   */
-  unit_cost: AccountUsersAPI.Rate | null;
-
-  /**
-   * Rate resource.
-   */
-  unit_price: AccountUsersAPI.Rate | null;
-
-  /**
-   * Updated timestamp.
-   */
-  updated_at: string;
-}
-
-/**
- * Lightweight purchase order for list views.
- */
-export interface PurchaseOrderSummary {
-  /**
-   * Purchase order ID.
-   */
-  id: string;
-
-  /**
-   * Completed timestamp.
-   */
-  completed_at: string | null;
-
-  /**
-   * Created timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Whether the acknowledgment has been sent.
-   */
-  is_acknowledgment_sent: boolean;
-
-  /**
-   * Issued timestamp.
-   */
-  issued_at: string | null;
-
-  /**
-   * Line item count.
-   */
-  line_count: number;
-
-  /**
-   * Purchase order number.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'purchase_order';
-
-  /**
-   * Priority level used by sales orders and picks.
-   */
-  priority: CustomersAPI.Priority | null;
-
-  /**
-   * Sales order status sub-resource.
-   */
-  status: SalesOrdersAPI.SalesOrderStatusDetail | null;
-
-  /**
-   * Supplier sub-resource.
-   */
-  supplier: Supplier | null;
-
-  /**
-   * Sales order type sub-resource.
-   */
-  type: SalesOrdersAPI.SalesOrderType | null;
-
-  /**
-   * Updated timestamp.
-   */
-  updated_at: string;
-}
-
-/**
- * Supplier sub-resource.
- */
-export interface Supplier {
-  /**
-   * Supplier ID.
-   */
-  id: string;
-
-  /**
-   * Display name.
-   */
-  name: string;
-
-  /**
-   * Supplier number.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'supplier';
 }
 
 /**
@@ -809,8 +445,7 @@ export interface PurchaseOrderCreateParams {
     | 'supplier'
     | 'bill_to_address'
     | 'ship_to_address'
-    | 'carrier'
-    | 'service_level'
+    | 'freight'
     | 'payment_term'
     | 'shipping_term'
     | 'receiving_order'
@@ -943,8 +578,7 @@ export interface PurchaseOrderRetrieveParams {
     | 'supplier'
     | 'bill_to_address'
     | 'ship_to_address'
-    | 'carrier'
-    | 'service_level'
+    | 'freight'
     | 'payment_term'
     | 'shipping_term'
     | 'receiving_order'
@@ -962,8 +596,7 @@ export interface PurchaseOrderUpdateParams {
     | 'supplier'
     | 'bill_to_address'
     | 'ship_to_address'
-    | 'carrier'
-    | 'service_level'
+    | 'freight'
     | 'payment_term'
     | 'shipping_term'
     | 'receiving_order'
@@ -1073,14 +706,7 @@ export declare namespace PurchaseOrders {
   export {
     type CreatePurchaseOrderLineInput as CreatePurchaseOrderLineInput,
     type CreatePurchaseOrderRequest as CreatePurchaseOrderRequest,
-    type EmailContact as EmailContact,
-    type ListEmailContact as ListEmailContact,
-    type ListPurchaseOrderLineDetail as ListPurchaseOrderLineDetail,
-    type ListPurchaseOrderSummary as ListPurchaseOrderSummary,
-    type PurchaseOrderDetail as PurchaseOrderDetail,
-    type PurchaseOrderLineDetail as PurchaseOrderLineDetail,
-    type PurchaseOrderSummary as PurchaseOrderSummary,
-    type Supplier as Supplier,
+    type ListPurchaseOrder as ListPurchaseOrder,
     type UpdatePurchaseOrderRequest as UpdatePurchaseOrderRequest,
     type PurchaseOrderDeleteResponse as PurchaseOrderDeleteResponse,
     type PurchaseOrderCreateParams as PurchaseOrderCreateParams,

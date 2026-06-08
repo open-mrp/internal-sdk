@@ -70,8 +70,8 @@ describe('resource roles', () => {
         'rl_01c16d2eb637c0d1f3a372937c',
         {
           include: ['owner'],
-          name: 'Updated Manager',
-          permissions: ['customers:read', 'customers:update'],
+          name: 'name',
+          permissions: ['string'],
         },
         { path: '/_stainless_unknown_path' },
       ),

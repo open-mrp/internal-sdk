@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../../core/resource';
-import * as ReceivingOrdersAPI from '../receiving-orders';
+import * as DeliveriesAPI from '../../deliveries';
 import * as ActionsAPI from './actions';
 import { ActionReceiveParams, ActionVoidParams, Actions } from './actions';
 import { APIPromise } from '../../../../core/api-promise';
@@ -24,7 +24,6 @@ export class Lines extends APIResource {
    *     'orln_0142f9b74268973450b3a76ce3',
    *     {
    *       receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e',
-   *       quantity_value: '50',
    *     },
    *   );
    * ```
@@ -33,7 +32,7 @@ export class Lines extends APIResource {
     id: string,
     params: LineUpdateParams,
     options?: RequestOptions,
-  ): APIPromise<ReceivingOrdersAPI.ReceivingOrderLine> {
+  ): APIPromise<DeliveriesAPI.ReceivingOrderLine> {
     const { receiving_order_id, ...body } = params;
     return this._client.patch(path`/v1/operations/receiving-orders/${receiving_order_id}/lines/${id}`, {
       body,

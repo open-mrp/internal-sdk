@@ -11,17 +11,7 @@ describe('resource agents', () => {
   test('create: only required params', async () => {
     const responsePromise = client.ai.agents.create({
       category_code: 'inventory',
-      config: {
-        model: 'claude-sonnet-4',
-        provider: 'anthropic',
-        system_prompt: 'You are an order processing agent. Parse incoming emails and create draft orders.',
-        temperature: 0.2,
-        trigger_config: {
-          cron_schedule: 'cron_schedule',
-          event_filters: ['email.received'],
-          timezone: 'timezone',
-        },
-      },
+      config: {},
       description: 'Monitors inventory levels and creates restock alerts.',
       name: 'Inventory Monitor',
       role_id: 'rl_01c16d2eb637c0d1f3a372937c',
@@ -41,13 +31,13 @@ describe('resource agents', () => {
     const response = await client.ai.agents.create({
       category_code: 'inventory',
       config: {
-        model: 'claude-sonnet-4',
-        provider: 'anthropic',
-        system_prompt: 'You are an order processing agent. Parse incoming emails and create draft orders.',
-        temperature: 0.2,
+        model: 'model',
+        provider: 'provider',
+        system_prompt: 'system_prompt',
+        temperature: 0,
         trigger_config: {
-          cron_schedule: 'cron_schedule',
           event_filters: ['email.received'],
+          cron_schedule: 'cron_schedule',
           timezone: 'timezone',
         },
       },
@@ -110,19 +100,18 @@ describe('resource agents', () => {
           include: ['config'],
           category_code: 'category_code',
           config: {
-            model: 'claude-sonnet-4',
-            provider: 'anthropic',
-            system_prompt:
-              'You are an order processing agent. Parse incoming emails and create draft orders.',
-            temperature: 0.2,
+            model: 'model',
+            provider: 'provider',
+            system_prompt: 'system_prompt',
+            temperature: 0,
             trigger_config: {
-              cron_schedule: 'cron_schedule',
               event_filters: ['email.received'],
+              cron_schedule: 'cron_schedule',
               timezone: 'timezone',
             },
           },
           description: 'description',
-          name: 'Inventory Monitor',
+          name: 'name',
           role_id: 'role_id',
           slug: 'slug',
           tools: [

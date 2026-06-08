@@ -50,7 +50,7 @@ describe('resource productTypes', () => {
     await expect(
       client.catalog.productTypes.update(
         'prty_01ddca85eedfb6b101a3c2f379',
-        { code: 'service', name: 'Service' },
+        { code: 'code', name: 'name' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);

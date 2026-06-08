@@ -10,12 +10,8 @@ const client = new Augno({
 describe('resource transactions', () => {
   test('create: only required params', async () => {
     const responsePromise = client.finance.transactions.create({
-      adjustment_type: 'adjustment_type',
       amount: '500.00',
       customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-      method: 'check',
-      note: 'Q1 invoice payment',
-      responsible_user_id: 'responsible_user_id',
       type: 'payment',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -29,13 +25,13 @@ describe('resource transactions', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.finance.transactions.create({
-      adjustment_type: 'adjustment_type',
       amount: '500.00',
       customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-      method: 'check',
-      note: 'Q1 invoice payment',
-      responsible_user_id: 'responsible_user_id',
       type: 'payment',
+      adjustment_type: 'adjustment_type',
+      method: 'method',
+      note: 'note',
+      responsible_user_id: 'responsible_user_id',
     });
   });
 
@@ -63,16 +59,9 @@ describe('resource transactions', () => {
 
   test('update: only required params', async () => {
     const responsePromise = client.finance.transactions.update('tx_01fc4d4f2b2ee1fa6b6d87257a', {
-      adjustment_type: 'adjustment_type',
-      amount: '750.00',
       clear_adjustment_type: false,
       clear_responsible_user: false,
       clear_transaction_method: false,
-      is_fully_allocated: true,
-      method: 'ach',
-      note: 'Updated payment note',
-      number: 'number',
-      responsible_user_id: 'responsible_user_id',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -85,14 +74,14 @@ describe('resource transactions', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.finance.transactions.update('tx_01fc4d4f2b2ee1fa6b6d87257a', {
-      adjustment_type: 'adjustment_type',
-      amount: '750.00',
       clear_adjustment_type: false,
       clear_responsible_user: false,
       clear_transaction_method: false,
-      is_fully_allocated: true,
-      method: 'ach',
-      note: 'Updated payment note',
+      adjustment_type: 'adjustment_type',
+      amount: 'amount',
+      is_fully_allocated: false,
+      method: 'method',
+      note: 'note',
       number: 'number',
       responsible_user_id: 'responsible_user_id',
     });

@@ -27,7 +27,7 @@ describe('resource units', () => {
       include: ['unit'],
       customer_portal_visibility: 'visible',
       discount_fixed: 0,
-      discount_percentage: 1,
+      discount_percentage: 0,
     });
   });
 
@@ -70,8 +70,8 @@ describe('resource units', () => {
       include: ['unit'],
       customer_portal_visibility: 'visible',
       discount_fixed: 0,
-      discount_percentage: 0.9,
-      unit_id: 'un_01966263f74a5a0cae356000a1',
+      discount_percentage: 0,
+      unit_id: 'unit_id',
     });
   });
 

@@ -9,10 +9,7 @@ const client = new Augno({
 
 describe('resource runs', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.ai.runs.create({
-      agent_definition_id: 'agdf_01b9ef28feb99e6954201aca63',
-      input: 'Process the latest incoming orders.',
-    });
+    const responsePromise = client.ai.runs.create({ agent_definition_id: 'agdf_01b9ef28feb99e6954201aca63' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -25,8 +22,8 @@ describe('resource runs', () => {
   test('create: required and optional params', async () => {
     const response = await client.ai.runs.create({
       agent_definition_id: 'agdf_01b9ef28feb99e6954201aca63',
-      input: 'Process the latest incoming orders.',
       include: ['actions'],
+      input: 'input',
     });
   });
 

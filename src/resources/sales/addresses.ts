@@ -46,7 +46,6 @@ export class Addresses extends APIResource {
    * ```ts
    * const address = await client.sales.addresses.update(
    *   'ad_012100950cfaa34aa0e0ad7258',
-   *   { name: 'Warehouse' },
    * );
    * ```
    */
@@ -177,37 +176,37 @@ export interface AddressCreateParams {
   /**
    * Email address associated with the address.
    */
-  email?: string | null;
+  email?: string;
 
   /**
    * City or locality.
    */
-  locality?: string | null;
+  locality?: string;
 
   /**
    * Phone number associated with the address.
    */
-  phone?: string | null;
+  phone?: string;
 
   /**
    * Postal or ZIP code.
    */
-  postal_code?: string | null;
+  postal_code?: string;
 
   /**
    * State or administrative area.
    */
-  state?: string | null;
+  state?: string;
 
   /**
    * First line of the street address.
    */
-  street_line_1?: string | null;
+  street_line_1?: string;
 
   /**
    * Second line of the street address.
    */
-  street_line_2?: string | null;
+  street_line_2?: string;
 
   /**
    * Address type.

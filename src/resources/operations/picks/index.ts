@@ -4,9 +4,8 @@ export { Actions, type PackPickRequest, type PackPickResponse, type ActionPackPa
 export { Lines, type UpdatePickLineRequest, type LineUpdateParams } from './lines/index';
 export {
   Picks,
-  type ListPickSummary,
+  type ListPick,
   type PickShipmentsResponse,
-  type PickSummary,
   type UpdatePickRequest,
   type PickRetrieveParams,
   type PickUpdateParams,

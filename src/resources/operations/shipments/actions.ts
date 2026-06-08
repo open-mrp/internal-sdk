@@ -76,18 +76,14 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const shipmentDetail =
+   * const shipment =
    *   await client.operations.shipments.actions.ship(
    *     'sh_018b3a946651bfb6572b06b2b2',
    *     { email_customer: true },
    *   );
    * ```
    */
-  ship(
-    id: string,
-    params: ActionShipParams,
-    options?: RequestOptions,
-  ): APIPromise<InvoicesAPI.ShipmentDetail> {
+  ship(id: string, params: ActionShipParams, options?: RequestOptions): APIPromise<InvoicesAPI.Shipment> {
     const { include, ...body } = params;
     return this._client.post(path`/v1/operations/shipments/${id}/actions/ship`, {
       query: { include },
@@ -101,13 +97,13 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const shipmentDetail =
+   * const shipment =
    *   await client.operations.shipments.actions.void(
    *     'sh_018b3a946651bfb6572b06b2b2',
    *   );
    * ```
    */
-  void(id: string, options?: RequestOptions): APIPromise<InvoicesAPI.ShipmentDetail> {
+  void(id: string, options?: RequestOptions): APIPromise<InvoicesAPI.Shipment> {
     return this._client.post(path`/v1/operations/shipments/${id}/actions/void`, options);
   }
 }
@@ -406,8 +402,7 @@ export interface ActionShipParams {
     | 'shipping_cases'
     | 'sales_order'
     | 'customer'
-    | 'carrier'
-    | 'service_level'
+    | 'freight'
     | 'shipping_address'
     | 'shipped_by'
     | 'invoice'

@@ -48,7 +48,7 @@ describe('resource actions', () => {
       {
         line_items: [
           {
-            allocations: [{ quantity: '100', location_id: 'lc_014d187d99b31926f0c74af9d8' }],
+            allocations: [{ quantity: '100', location_id: 'location_id' }],
             receiving_order_line_id: 'rcorln_01f2aca124f3f5add7c94d5e4f',
             lot_number: 'lot_number',
             rejected_quantity: 'rejected_quantity',

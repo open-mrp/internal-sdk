@@ -39,18 +39,15 @@ export class ShippingCases extends APIResource {
    * const shippingCase =
    *   await client.operations.shippingCases.update(
    *     'shcs_01207a101ea1475c687a39cf76',
-   *     {
-   *       freight_amount_unit_id: 'freight_amount_unit_id',
-   *       freight_amount_value: 'freight_amount_value',
-   *       freight_weight_unit_id: 'freight_weight_unit_id',
-   *       freight_weight_value: 'freight_weight_value',
-   *       tracking_number: '1Z999AA10123456784',
-   *     },
    *   );
    * ```
    */
-  update(id: string, params: ShippingCaseUpdateParams, options?: RequestOptions): APIPromise<ShippingCase> {
-    const { include, ...body } = params;
+  update(
+    id: string,
+    params: ShippingCaseUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ShippingCase> {
+    const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/shipping-cases/${id}`, {
       query: { include },
       body,
@@ -131,7 +128,7 @@ export interface ShippingCase {
   /**
    * Full shipment resource.
    */
-  shipment: InvoicesAPI.ShipmentDetail | null;
+  shipment: InvoicesAPI.Shipment | null;
 
   /**
    * Shipped timestamp.
@@ -176,27 +173,27 @@ export interface UpdateShippingCaseRequest {
   /**
    * Freight amount unit ID.
    */
-  freight_amount_unit_id: string | null;
+  freight_amount_unit_id?: string;
 
   /**
    * Freight amount value.
    */
-  freight_amount_value: string | null;
+  freight_amount_value?: string;
 
   /**
    * Freight weight unit ID.
    */
-  freight_weight_unit_id: string | null;
+  freight_weight_unit_id?: string;
 
   /**
    * Freight weight value.
    */
-  freight_weight_value: string | null;
+  freight_weight_value?: string;
 
   /**
    * Tracking number.
    */
-  tracking_number: string | null;
+  tracking_number?: string;
 }
 
 export interface ShippingCaseDeleteResponse {}
@@ -211,35 +208,35 @@ export interface ShippingCaseRetrieveParams {
 
 export interface ShippingCaseUpdateParams {
   /**
-   * Body param: Freight amount unit ID.
-   */
-  freight_amount_unit_id: string | null;
-
-  /**
-   * Body param: Freight amount value.
-   */
-  freight_amount_value: string | null;
-
-  /**
-   * Body param: Freight weight unit ID.
-   */
-  freight_weight_unit_id: string | null;
-
-  /**
-   * Body param: Freight weight value.
-   */
-  freight_weight_value: string | null;
-
-  /**
-   * Body param: Tracking number.
-   */
-  tracking_number: string | null;
-
-  /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
   include?: Array<'carrier' | 'shipment' | 'freight_amount.unit' | 'freight_weight.unit'>;
+
+  /**
+   * Body param: Freight amount unit ID.
+   */
+  freight_amount_unit_id?: string;
+
+  /**
+   * Body param: Freight amount value.
+   */
+  freight_amount_value?: string;
+
+  /**
+   * Body param: Freight weight unit ID.
+   */
+  freight_weight_unit_id?: string;
+
+  /**
+   * Body param: Freight weight value.
+   */
+  freight_weight_value?: string;
+
+  /**
+   * Body param: Tracking number.
+   */
+  tracking_number?: string;
 }
 
 export declare namespace ShippingCases {

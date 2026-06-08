@@ -55,7 +55,6 @@ export class RegistrationFlows extends APIResource {
    *       has_customer_group_ids: false,
    *       has_payment_term_ids: false,
    *       has_shipping_term_ids: false,
-   *       name: 'Wholesale Registration Updated',
    *     },
    *   );
    * ```

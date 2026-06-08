@@ -21,8 +21,6 @@ export class ScanningStations extends APIResource {
    *     name: 'Packaging Line 1',
    *     operator_requirement: 'none',
    *     type: 'init_batch',
-   *     label_size: '1x1',
-   *     label_type: 'tag',
    *   });
    * ```
    */
@@ -61,7 +59,6 @@ export class ScanningStations extends APIResource {
    * const scanningStation =
    *   await client.operations.scanningStations.update(
    *     'scst_0129335dd6286056a97024fcc1',
-   *     { name: 'Station B' },
    *   );
    * ```
    */

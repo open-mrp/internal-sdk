@@ -63,7 +63,7 @@ describe('resource accountGroups', () => {
           commission_policy: 'commission_applied',
           description: 'description',
           freight_policy: 'free_freight',
-          name: 'Updated Wholesale Customers',
+          name: 'name',
         },
         { path: '/_stainless_unknown_path' },
       ),

@@ -49,7 +49,6 @@ export class DcLocations extends APIResource {
    * const dcLocation =
    *   await client.operations.dcLocations.update(
    *     'dclo_0191ce9223b21dc31c9ee09b3e',
-   *     { location: 'Warehouse B - Bay 1' },
    *   );
    * ```
    */

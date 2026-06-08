@@ -66,8 +66,8 @@ describe('resource lines', () => {
   test('update: required and optional params', async () => {
     const response = await client.operations.shipments.lines.update('example', {
       shipment_id: 'sh_018b3a946651bfb6572b06b2b2',
-      quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-      quantity_value: '5.000000000000000000000000000000',
+      quantity_unit_id: 'quantity_unit_id',
+      quantity_value: 'quantity_value',
     });
   });
 

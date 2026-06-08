@@ -59,7 +59,6 @@ export class Departments extends APIResource {
    * const department =
    *   await client.operations.departments.update(
    *     'dp_01791c25ab59da4704cba61874',
-   *     { name: 'Production' },
    *   );
    * ```
    */

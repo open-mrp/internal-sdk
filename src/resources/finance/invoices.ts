@@ -37,21 +37,18 @@ export class Invoices extends APIResource {
    *
    * @example
    * ```ts
-   * const invoiceSummary = await client.finance.invoices.update(
+   * const invoice = await client.finance.invoices.update(
    *   'iv_018b5949ada8abca36358bbea9',
-   *   {
-   *     has_been_sent: true,
-   *     note: 'Payment received via wire transfer',
-   *   },
    * );
    * ```
    */
   update(
     id: string,
-    body: InvoiceUpdateParams | null | undefined = {},
+    params: InvoiceUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<InvoiceSummary> {
-    return this._client.patch(path`/v1/finance/invoices/${id}`, { body, ...options });
+  ): APIPromise<Invoice> {
+    const { include, ...body } = params ?? {};
+    return this._client.patch(path`/v1/finance/invoices/${id}`, { query: { include }, body, ...options });
   }
 
   /**
@@ -59,20 +56,36 @@ export class Invoices extends APIResource {
    *
    * @example
    * ```ts
-   * const listInvoiceSummary =
-   *   await client.finance.invoices.list();
+   * const listInvoice = await client.finance.invoices.list();
    * ```
    */
-  list(
-    query: InvoiceListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<ListInvoiceSummary> {
+  list(query: InvoiceListParams | null | undefined = {}, options?: RequestOptions): APIPromise<ListInvoice> {
     return this._client.get('/v1/finance/invoices', { query, ...options });
   }
 }
 
 /**
- * Full invoice with expandable lines and allocations.
+ * Minimal invoice sub-resource for allocation entries.
+ */
+export interface AllocationInvoice {
+  /**
+   * Invoice ID.
+   */
+  id: string;
+
+  /**
+   * Invoice number.
+   */
+  number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'invoice_summary';
+}
+
+/**
+ * Invoice resource.
  */
 export interface Invoice {
   /**
@@ -101,6 +114,16 @@ export interface Invoice {
   created_at: string;
 
   /**
+   * Customer account.
+   */
+  customer: CustomersAPI.Customer | null;
+
+  /**
+   * Whether the customer is EDI enabled.
+   */
+  customer_is_edi_enabled: boolean;
+
+  /**
    * Whether the invoice has been sent.
    */
   has_been_sent: boolean;
@@ -111,14 +134,9 @@ export interface Invoice {
   is_edi_sent: boolean;
 
   /**
-   * Whether the invoice has been overpaid.
+   * Number of line items.
    */
-  is_over_paid: boolean;
-
-  /**
-   * Whether the invoice has been paid in full.
-   */
-  is_paid_in_full: boolean;
+  line_count: number;
 
   /**
    * List represents a paginated list of resources.
@@ -143,12 +161,32 @@ export interface Invoice {
   /**
    * Full sales order resource.
    */
-  order: SalesOrdersAPI.SalesOrderDetail | null;
+  order: SalesOrdersAPI.SalesOrder | null;
+
+  /**
+   * Payment status of the invoice.
+   */
+  payment_status: 'unpaid' | 'partially_paid' | 'paid' | 'overpaid';
+
+  /**
+   * Payment term resource.
+   */
+  payment_term: CustomersAPI.PaymentTerm | null;
+
+  /**
+   * Customer priority code.
+   */
+  priority: 'low' | 'normal' | 'high';
 
   /**
    * Full shipment resource.
    */
-  shipment: ShipmentDetail | null;
+  shipment: Shipment | null;
+
+  /**
+   * Total invoiced amount as a decimal string.
+   */
+  total_invoiced: string;
 
   /**
    * Timestamp when the invoice was last updated.
@@ -218,7 +256,7 @@ export interface InvoiceLine {
   /**
    * Full sales order line resource.
    */
-  order_line: SalesOrdersAPI.SalesOrderLineDetail | null;
+  order_line: SalesOrdersAPI.SalesOrderLine | null;
 
   /**
    * Value with an associated unit.
@@ -237,106 +275,6 @@ export interface InvoiceLine {
 }
 
 /**
- * Lightweight invoice for list views.
- */
-export interface InvoiceSummary {
-  /**
-   * Invoice ID.
-   */
-  id: string;
-
-  /**
-   * Whether the customer accepts invoice emails.
-   */
-  accepts_invoice_emails: boolean;
-
-  /**
-   * Address with associated geolocation.
-   */
-  billing_address: APIKeysAPI.Address | null;
-
-  /**
-   * Timestamp when the invoice was created.
-   */
-  created_at: string;
-
-  /**
-   * Customer account.
-   */
-  customer: CustomersAPI.Customer | null;
-
-  /**
-   * Whether the customer is EDI enabled.
-   */
-  customer_is_edi_enabled: boolean;
-
-  /**
-   * Whether the invoice has been sent.
-   */
-  has_been_sent: boolean;
-
-  /**
-   * Whether the invoice has been sent via EDI.
-   */
-  is_edi_sent: boolean;
-
-  /**
-   * Whether the invoice has been paid in full.
-   */
-  is_paid_in_full: boolean;
-
-  /**
-   * Number of line items.
-   */
-  line_count: number;
-
-  /**
-   * Note attached to the invoice.
-   */
-  note: string | null;
-
-  /**
-   * Invoice number.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'invoice_summary';
-
-  /**
-   * Full sales order resource.
-   */
-  order: SalesOrdersAPI.SalesOrderDetail | null;
-
-  /**
-   * Payment term resource.
-   */
-  payment_term: CustomersAPI.PaymentTerm | null;
-
-  /**
-   * Customer priority code.
-   */
-  priority: 'low' | 'normal' | 'high';
-
-  /**
-   * Full shipment resource.
-   */
-  shipment: ShipmentDetail | null;
-
-  /**
-   * Total invoiced amount as a decimal string.
-   */
-  total_invoiced: string;
-
-  /**
-   * Timestamp when the invoice was last updated.
-   */
-  updated_at: string;
-}
-
-/**
  * List represents a paginated list of resources.
  */
 export interface ListDepartment {
@@ -344,6 +282,26 @@ export interface ListDepartment {
    * Resources in this page.
    */
   data: Array<AccountUsersAPI.Department>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListInvoice {
+  /**
+   * Resources in this page.
+   */
+  data: Array<Invoice>;
 
   /**
    * Resource type identifier.
@@ -399,31 +357,11 @@ export interface ListInvoiceLine {
 /**
  * List represents a paginated list of resources.
  */
-export interface ListInvoiceSummary {
+export interface ListPickLine {
   /**
    * Resources in this page.
    */
-  data: Array<InvoiceSummary>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo contains URL-based pagination metadata.
-   */
-  page_info: APIKeysAPI.PageInfo;
-}
-
-/**
- * List represents a paginated list of resources.
- */
-export interface ListPickLineDetail {
-  /**
-   * Resources in this page.
-   */
-  data: Array<PickLineDetail>;
+  data: Array<PickLine>;
 
   /**
    * Resource type identifier.
@@ -497,9 +435,9 @@ export interface ListTransactionAllocation {
 }
 
 /**
- * PickDetail is a full pick resource.
+ * Pick is a full pick resource.
  */
-export interface PickDetail {
+export interface Pick {
   /**
    * Pick ID.
    */
@@ -528,7 +466,7 @@ export interface PickDetail {
   /**
    * List represents a paginated list of resources.
    */
-  lines: ListPickLineDetail | null;
+  lines: ListPickLine | null;
 
   /**
    * Pick number.
@@ -541,14 +479,14 @@ export interface PickDetail {
   object: 'pick';
 
   /**
-   * Priority level used by sales orders and picks.
+   * Pick priority code.
    */
-  priority: CustomersAPI.Priority | null;
+  priority: 'low' | 'normal' | 'high';
 
   /**
    * Full sales order resource.
    */
-  sales_order: SalesOrdersAPI.SalesOrderDetail | null;
+  sales_order: SalesOrdersAPI.SalesOrder | null;
 
   /**
    * Last updated timestamp.
@@ -557,9 +495,9 @@ export interface PickDetail {
 }
 
 /**
- * PickLineDetail is a pick line resource.
+ * PickLine is a pick line resource.
  */
-export interface PickLineDetail {
+export interface PickLine {
   /**
    * Pick line ID.
    */
@@ -593,7 +531,7 @@ export interface PickLineDetail {
   /**
    * Full sales order line resource.
    */
-  sales_order_line: SalesOrdersAPI.SalesOrderLineDetail | null;
+  sales_order_line: SalesOrdersAPI.SalesOrderLine | null;
 
   /**
    * Last updated timestamp.
@@ -602,34 +540,9 @@ export interface PickLineDetail {
 }
 
 /**
- * Carrier billing info on a shipment.
- */
-export interface ShipmentBilling {
-  /**
-   * Carrier billing account number.
-   */
-  account: string | null;
-
-  /**
-   * Billing address country.
-   */
-  country: string | null;
-
-  /**
-   * Carrier billing type (e.g. "third_party").
-   */
-  type: string;
-
-  /**
-   * Billing address postal code.
-   */
-  zip: string | null;
-}
-
-/**
  * Full shipment resource.
  */
-export interface ShipmentDetail {
+export interface Shipment {
   /**
    * Shipment ID.
    */
@@ -639,16 +552,6 @@ export interface ShipmentDetail {
    * Bill of lading number.
    */
   bill_of_lading: string | null;
-
-  /**
-   * Carrier billing info on a shipment.
-   */
-  billing: ShipmentBilling | null;
-
-  /**
-   * Carrier resource.
-   */
-  carrier: CustomersAPI.Carrier | null;
 
   /**
    * Creation timestamp.
@@ -661,7 +564,17 @@ export interface ShipmentDetail {
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Full invoice with expandable lines and allocations.
+   * Freight describes the carrier selection and freight billing for a record. It is
+   * a generic, reusable sub-resource shared by anything that carries shipping
+   * configuration — e.g. a sales order's chosen freight, or a customer's default
+   * freight preferences. It is itself expanded via its parent (e.g.
+   * include[]=freight); when present, the full carrier and service level are
+   * included.
+   */
+  freight: SalesOrdersAPI.Freight | null;
+
+  /**
+   * Invoice resource.
    */
   invoice: Invoice | null;
 
@@ -691,19 +604,14 @@ export interface ShipmentDetail {
   object: 'shipment';
 
   /**
-   * PickDetail is a full pick resource.
+   * Pick is a full pick resource.
    */
-  pick: PickDetail | null;
+  pick: Pick | null;
 
   /**
    * Full sales order resource.
    */
-  sales_order: SalesOrdersAPI.SalesOrderDetail | null;
-
-  /**
-   * Shipping service level for a carrier.
-   */
-  service_level: CustomersAPI.ServiceLevel | null;
+  sales_order: SalesOrdersAPI.SalesOrder | null;
 
   /**
    * Timestamp when shipped.
@@ -726,9 +634,9 @@ export interface ShipmentDetail {
   shipping_cases: ListShippingCaseDetail | null;
 
   /**
-   * Shipment status sub-resource.
+   * Shipment status code.
    */
-  status: ShipmentStatus;
+  status: 'packed' | 'shipped';
 
   /**
    * Last updated timestamp.
@@ -763,27 +671,12 @@ export interface ShipmentLine {
   /**
    * Full sales order line resource.
    */
-  sales_order_line: SalesOrdersAPI.SalesOrderLineDetail | null;
+  sales_order_line: SalesOrdersAPI.SalesOrderLine | null;
 
   /**
    * Last updated timestamp.
    */
   updated_at: string;
-}
-
-/**
- * Shipment status sub-resource.
- */
-export interface ShipmentStatus {
-  /**
-   * Status code.
-   */
-  code: string;
-
-  /**
-   * Display name.
-   */
-  name: string;
 }
 
 /**
@@ -876,9 +769,9 @@ export interface TransactionAllocation {
   created_at: string;
 
   /**
-   * Lightweight invoice for list views.
+   * Minimal invoice sub-resource for allocation entries.
    */
-  invoice: InvoiceSummary | null;
+  invoice: AllocationInvoice | null;
 
   /**
    * Note.
@@ -1016,27 +909,37 @@ export interface InvoiceRetrieveParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'lines' | 'allocations'>;
+  include?: Array<
+    'customer' | 'order' | 'shipment' | 'billing_address' | 'payment_term' | 'lines' | 'allocations'
+  >;
 }
 
 export interface InvoiceUpdateParams {
   /**
-   * Whether the invoice has been sent.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    'customer' | 'order' | 'shipment' | 'billing_address' | 'payment_term' | 'lines' | 'allocations'
+  >;
+
+  /**
+   * Body param: Whether the invoice has been sent.
    */
   has_been_sent?: boolean;
 
   /**
-   * Whether the invoice has been sent via EDI.
+   * Body param: Whether the invoice has been sent via EDI.
    */
   is_edi_sent?: boolean;
 
   /**
-   * Whether the invoice has been paid in full.
+   * Body param: Whether the invoice has been paid in full.
    */
   is_paid_in_full?: boolean;
 
   /**
-   * Note to attach to the invoice.
+   * Body param: Note to attach to the invoice.
    */
   note?: string;
 }
@@ -1061,6 +964,12 @@ export interface InvoiceListParams {
    * Filter by end date (inclusive).
    */
   end_date?: string;
+
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'customer' | 'order' | 'shipment' | 'billing_address' | 'payment_term'>;
 
   /**
    * Filter by item IDs present in invoice lines.
@@ -1100,24 +1009,22 @@ export interface InvoiceListParams {
 
 export declare namespace Invoices {
   export {
+    type AllocationInvoice as AllocationInvoice,
     type Invoice as Invoice,
     type InvoiceAllocation as InvoiceAllocation,
     type InvoiceLine as InvoiceLine,
-    type InvoiceSummary as InvoiceSummary,
     type ListDepartment as ListDepartment,
+    type ListInvoice as ListInvoice,
     type ListInvoiceAllocation as ListInvoiceAllocation,
     type ListInvoiceLine as ListInvoiceLine,
-    type ListInvoiceSummary as ListInvoiceSummary,
-    type ListPickLineDetail as ListPickLineDetail,
+    type ListPickLine as ListPickLine,
     type ListShipmentLine as ListShipmentLine,
     type ListShippingCaseDetail as ListShippingCaseDetail,
     type ListTransactionAllocation as ListTransactionAllocation,
-    type PickDetail as PickDetail,
-    type PickLineDetail as PickLineDetail,
-    type ShipmentBilling as ShipmentBilling,
-    type ShipmentDetail as ShipmentDetail,
+    type Pick as Pick,
+    type PickLine as PickLine,
+    type Shipment as Shipment,
     type ShipmentLine as ShipmentLine,
-    type ShipmentStatus as ShipmentStatus,
     type ShippingCaseDetail as ShippingCaseDetail,
     type TransactionAllocation as TransactionAllocation,
     type TransactionDetail as TransactionDetail,

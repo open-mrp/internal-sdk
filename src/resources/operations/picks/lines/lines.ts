@@ -19,18 +19,13 @@ export class Lines extends APIResource {
    *
    * @example
    * ```ts
-   * const pickLineDetail =
-   *   await client.operations.picks.lines.update('example', {
-   *     pick_id: 'pk_016452192feb7952d8393f0105',
-   *     quantity_value: '10.000000000000000000000000000000',
-   *   });
+   * const pickLine = await client.operations.picks.lines.update(
+   *   'example',
+   *   { pick_id: 'pk_016452192feb7952d8393f0105' },
+   * );
    * ```
    */
-  update(
-    id: string,
-    params: LineUpdateParams,
-    options?: RequestOptions,
-  ): APIPromise<InvoicesAPI.PickLineDetail> {
+  update(id: string, params: LineUpdateParams, options?: RequestOptions): APIPromise<InvoicesAPI.PickLine> {
     const { pick_id, ...body } = params;
     return this._client.patch(path`/v1/operations/picks/${pick_id}/lines/${id}`, { body, ...options });
   }

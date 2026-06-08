@@ -8,10 +8,8 @@ const client = new Augno({
 });
 
 describe('resource transactionAllocations', () => {
-  test('update: only required params', async () => {
-    const responsePromise = client.finance.transactionAllocations.update('txal_016cc92c2d9c0b12801e3160e0', {
-      amount: '150.00',
-    });
+  test('update', async () => {
+    const responsePromise = client.finance.transactionAllocations.update('txal_016cc92c2d9c0b12801e3160e0');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,10 +19,15 @@ describe('resource transactionAllocations', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: required and optional params', async () => {
-    const response = await client.finance.transactionAllocations.update('txal_016cc92c2d9c0b12801e3160e0', {
-      amount: '150.00',
-    });
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.finance.transactionAllocations.update(
+        'txal_016cc92c2d9c0b12801e3160e0',
+        { amount: 'amount' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('list', async () => {

@@ -83,7 +83,7 @@ export interface CreateSandboxRequest {
   /**
    * Controls whether the sandbox is blank or seeded with sample data.
    */
-  mode?: 'blank' | 'seeded' | null;
+  mode?: 'blank' | 'seeded';
 }
 
 /**
@@ -158,7 +158,7 @@ export interface SandboxCreateParams {
   /**
    * Body param: Controls whether the sandbox is blank or seeded with sample data.
    */
-  mode?: 'blank' | 'seeded' | null;
+  mode?: 'blank' | 'seeded';
 }
 
 export interface SandboxRetrieveParams {

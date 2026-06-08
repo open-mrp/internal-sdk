@@ -26,7 +26,6 @@ export class Consumptions extends APIResource {
    *         'un_01966263f74a5a0cae356000a1',
    *       waste_quantity_value:
    *         '0.500000000000000000000000000000',
-   *       instructions: 'Mix with water before adding',
    *     },
    *   );
    * ```
@@ -80,8 +79,6 @@ export class Consumptions extends APIResource {
    *     'cp_0152c5d4330f178ebe1158f910',
    *     {
    *       production_step_id: 'prst_0159474175bb59f4b1990404ee',
-   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *       quantity_value: '20.000000000000000000000000000000',
    *     },
    *   );
    * ```

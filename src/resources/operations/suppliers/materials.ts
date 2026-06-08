@@ -20,7 +20,6 @@ export class Materials extends APIResource {
    *   await client.operations.suppliers.materials.create(
    *     'example',
    *     {
-   *       is_active: true,
    *       material_id: 'ml_014613b8f7959a091d8cc0cef4',
    *       supplier_part_number: 'SUP-PART-001',
    *     },
@@ -67,10 +66,7 @@ export class Materials extends APIResource {
    * const supplierMaterial =
    *   await client.operations.suppliers.materials.update(
    *     'ml_014613b8f7959a091d8cc0cef4',
-   *     {
-   *       supplier_id: 'example',
-   *       supplier_part_number: 'SUP-PART-002',
-   *     },
+   *     { supplier_id: 'example' },
    *   );
    * ```
    */
@@ -124,11 +120,6 @@ export class Materials extends APIResource {
  */
 export interface CreateSupplierMaterialRequest {
   /**
-   * Active status.
-   */
-  is_active: boolean | null;
-
-  /**
    * Material ID.
    */
   material_id: string;
@@ -137,6 +128,11 @@ export interface CreateSupplierMaterialRequest {
    * Supplier part number for this material.
    */
   supplier_part_number: string;
+
+  /**
+   * Active status.
+   */
+  is_active?: boolean;
 
   /**
    * Supplier description for this material.
@@ -231,11 +227,6 @@ export interface UpdateSupplierMaterialRequest {
 
 export interface MaterialCreateParams {
   /**
-   * Active status.
-   */
-  is_active: boolean | null;
-
-  /**
    * Material ID.
    */
   material_id: string;
@@ -244,6 +235,11 @@ export interface MaterialCreateParams {
    * Supplier part number for this material.
    */
   supplier_part_number: string;
+
+  /**
+   * Active status.
+   */
+  is_active?: boolean;
 
   /**
    * Supplier description for this material.

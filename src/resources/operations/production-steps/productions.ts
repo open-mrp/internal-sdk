@@ -46,9 +46,6 @@ export class Productions extends APIResource {
    *     'example',
    *     {
    *       production_step_id: 'prst_0159474175bb59f4b1990404ee',
-   *       item_id: 'it_0131e386ac683e8c29a71f6f1f',
-   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *       quantity_value: '500',
    *     },
    *   );
    * ```

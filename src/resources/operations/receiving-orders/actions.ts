@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as ReceivingOrdersAPI from './receiving-orders';
+import * as DeliveriesAPI from '../deliveries';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -21,7 +21,7 @@ export class Actions extends APIResource {
    *   );
    * ```
    */
-  receive(id: string, options?: RequestOptions): APIPromise<ReceivingOrdersAPI.ReceivingOrder> {
+  receive(id: string, options?: RequestOptions): APIPromise<DeliveriesAPI.ReceivingOrder> {
     return this._client.put(path`/v1/operations/receiving-orders/${id}/actions/receive`, options);
   }
 
@@ -38,12 +38,7 @@ export class Actions extends APIResource {
    *         {
    *           receiving_order_line_id:
    *             'rcorln_01f2aca124f3f5add7c94d5e4f',
-   *           allocations: [
-   *             {
-   *               location_id: 'lc_014d187d99b31926f0c74af9d8',
-   *               quantity: '100',
-   *             },
-   *           ],
+   *           allocations: [{ quantity: '100' }],
    *         },
    *       ],
    *     },
@@ -54,7 +49,7 @@ export class Actions extends APIResource {
     id: string,
     body: ActionStockParams,
     options?: RequestOptions,
-  ): APIPromise<ReceivingOrdersAPI.ReceivingOrder> {
+  ): APIPromise<DeliveriesAPI.ReceivingOrder> {
     return this._client.post(path`/v1/operations/receiving-orders/${id}/actions/stock`, { body, ...options });
   }
 
@@ -69,7 +64,7 @@ export class Actions extends APIResource {
    *   );
    * ```
    */
-  void(id: string, options?: RequestOptions): APIPromise<ReceivingOrdersAPI.ReceivingOrder> {
+  void(id: string, options?: RequestOptions): APIPromise<DeliveriesAPI.ReceivingOrder> {
     return this._client.put(path`/v1/operations/receiving-orders/${id}/actions/void`, options);
   }
 }
