@@ -23,6 +23,10 @@ export class Actions extends APIResource {
    *     carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
    *     from_address: {
    *       name: 'Origin Warehouse',
+   *       street_line_1: '123 Main Street',
+   *       locality: 'San Francisco',
+   *       state: 'CA',
+   *       postal_code: '94105',
    *       country: 'US',
    *     },
    *     parcels: [
@@ -34,7 +38,14 @@ export class Actions extends APIResource {
    *       },
    *     ],
    *     service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
-   *     to_address: { name: 'Destination', country: 'US' },
+   *     to_address: {
+   *       name: 'Destination',
+   *       street_line_1: '456 Oak Avenue',
+   *       locality: 'Los Angeles',
+   *       state: 'CA',
+   *       postal_code: '90001',
+   *       country: 'US',
+   *     },
    *   });
    * ```
    */
@@ -52,6 +63,10 @@ export class Actions extends APIResource {
    *   await client.operations.shipments.actions.rateShop({
    *     from_address: {
    *       name: 'Origin Warehouse',
+   *       street_line_1: '123 Main Street',
+   *       locality: 'San Francisco',
+   *       state: 'CA',
+   *       postal_code: '94105',
    *       country: 'US',
    *     },
    *     parcels: [
@@ -62,7 +77,14 @@ export class Actions extends APIResource {
    *         height: 6,
    *       },
    *     ],
-   *     to_address: { name: 'Destination', country: 'US' },
+   *     to_address: {
+   *       name: 'Destination',
+   *       street_line_1: '456 Oak Avenue',
+   *       locality: 'Los Angeles',
+   *       state: 'CA',
+   *       postal_code: '90001',
+   *       country: 'US',
+   *     },
    *   });
    * ```
    */

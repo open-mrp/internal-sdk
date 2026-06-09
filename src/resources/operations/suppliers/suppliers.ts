@@ -43,6 +43,15 @@ export class Suppliers extends APIResource {
    *   await client.operations.suppliers.create({
    *     name: 'Acme Supplies Inc.',
    *     number: 'SUP-001',
+   *     bill_to_address: {
+   *       name: 'Acme Supplies Inc.',
+   *       street_line_1: '456 Industrial Pkwy',
+   *       locality: 'Chicago',
+   *       state: 'IL',
+   *       postal_code: '60601',
+   *       country: 'US',
+   *     },
+   *     note: 'Primary raw materials supplier',
    *   });
    * ```
    */
@@ -78,7 +87,11 @@ export class Suppliers extends APIResource {
    * const supplierDetail =
    *   await client.operations.suppliers.update(
    *     'ac_0177902104bccac5fbb173cd96',
-   *     { update_note: true },
+   *     {
+   *       update_note: true,
+   *       name: 'Acme Supplies LLC',
+   *       note: 'Updated contact info',
+   *     },
    *   );
    * ```
    */

@@ -35,6 +35,11 @@ export class Users extends APIResource {
    * ```ts
    * const user = await client.identity.users.update(
    *   'us_0151164dcaea4cbded27b50aae',
+   *   {
+   *     image_url:
+   *       'https://cdn.augno.com/avatars/us_0151164dcaea4cbded27b50aae.jpg',
+   *     name: 'John Doe',
+   *   },
    * );
    * ```
    */

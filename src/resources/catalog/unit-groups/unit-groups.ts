@@ -35,7 +35,12 @@ export class UnitGroups extends APIResource {
    *   name: 'Weight Units',
    *   type: 'mass',
    *   associated_units: [
-   *     { unit_id: 'un_01966263f74a5a0cae356000a1' },
+   *     {
+   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       discount_percentage: 1,
+   *       discount_fixed: 0,
+   *       customer_portal_visibility: 'visible',
+   *     },
    *   ],
    * });
    * ```
@@ -70,6 +75,10 @@ export class UnitGroups extends APIResource {
    * ```ts
    * const unitGroup = await client.catalog.unitGroups.update(
    *   'ug_01aad07abb8e41fd392d2d7013',
+   *   {
+   *     base_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     name: 'Weight Units (Updated)',
+   *   },
    * );
    * ```
    */

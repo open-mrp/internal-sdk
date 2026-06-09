@@ -22,7 +22,7 @@ export class Actions extends APIResource {
    *     {
    *       redirect_uri:
    *         'https://app.example.com/carriers/oauth/callback',
-   *       state: 'state',
+   *       state: null,
    *     },
    *   );
    * ```

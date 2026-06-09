@@ -52,9 +52,10 @@ export class RegistrationFlows extends APIResource {
    *   await client.sales.registrationFlows.update(
    *     'rgfw_015273c2a7354d6c3e5ae4e90e',
    *     {
-   *       has_customer_group_ids: false,
-   *       has_payment_term_ids: false,
-   *       has_shipping_term_ids: false,
+   *       has_customer_group_ids: true,
+   *       has_payment_term_ids: true,
+   *       has_shipping_term_ids: true,
+   *       name: 'Wholesale Registration Updated',
    *     },
    *   );
    * ```

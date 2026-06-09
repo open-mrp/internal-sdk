@@ -90,7 +90,7 @@ describe('resource products', () => {
           description: 'description',
           notes: 'notes',
           portal_visibility: 'visible',
-          sku: 'sku',
+          sku: 'SKU-002',
           unit_price: {
             denominator_unit_id: 'denominator_unit_id',
             numerator_unit_id: 'numerator_unit_id',

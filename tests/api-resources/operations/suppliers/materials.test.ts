@@ -26,7 +26,7 @@ describe('resource materials', () => {
     const response = await client.operations.suppliers.materials.create('example', {
       material_id: 'ml_014613b8f7959a091d8cc0cef4',
       supplier_part_number: 'SUP-PART-001',
-      is_active: false,
+      is_active: true,
       supplier_description: 'supplier_description',
     });
   });
@@ -69,7 +69,7 @@ describe('resource materials', () => {
       supplier_id: 'example',
       is_active: false,
       supplier_description: 'supplier_description',
-      supplier_part_number: 'supplier_part_number',
+      supplier_part_number: 'SUP-PART-002',
     });
   });
 

@@ -43,6 +43,7 @@ export class Picks extends APIResource {
    * ```ts
    * const pick = await client.operations.picks.update(
    *   'pk_016452192feb7952d8393f0105',
+   *   { number: 'PCK-2025-0042' },
    * );
    * ```
    */
@@ -193,7 +194,7 @@ export interface PickListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'sales_order' | 'customer'>;
+  include?: Array<'sales_order' | 'customer' | 'departments'>;
 
   /**
    * Maximum number of results per page (default: 100, max: 1000).

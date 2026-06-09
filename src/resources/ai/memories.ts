@@ -21,11 +21,7 @@ export class Memories extends APIResource {
    *   content:
    *     'Customer prefers express shipping on all orders.',
    *   importance: 0.8,
-   *   metadata: [
-   *     123, 34, 115, 111, 117, 114, 99, 101, 34, 58, 32, 34,
-   *     115, 117, 112, 112, 111, 114, 116, 95, 116, 105, 99,
-   *     107, 101, 116, 34, 125,
-   *   ],
+   *   metadata: { source: 'support_ticket' },
    * });
    * ```
    */

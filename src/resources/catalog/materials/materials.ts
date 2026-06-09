@@ -57,6 +57,7 @@ export class Materials extends APIResource {
    * ```ts
    * const material = await client.catalog.materials.update(
    *   'ml_014613b8f7959a091d8cc0cef4',
+   *   { sku: 'MAT-001-UPDATED' },
    * );
    * ```
    */

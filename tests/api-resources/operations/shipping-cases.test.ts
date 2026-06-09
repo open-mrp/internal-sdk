@@ -52,7 +52,7 @@ describe('resource shippingCases', () => {
           freight_amount_value: 'freight_amount_value',
           freight_weight_unit_id: 'freight_weight_unit_id',
           freight_weight_value: 'freight_weight_value',
-          tracking_number: 'tracking_number',
+          tracking_number: '1Z999AA10123456784',
         },
         { path: '/_stainless_unknown_path' },
       ),

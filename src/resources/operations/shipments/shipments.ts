@@ -66,6 +66,7 @@ export class Shipments extends APIResource {
    * ```ts
    * const shipment = await client.operations.shipments.update(
    *   'sh_018b3a946651bfb6572b06b2b2',
+   *   { note: 'Updated shipping note' },
    * );
    * ```
    */
@@ -242,6 +243,12 @@ export interface ShipmentListParams {
    * Filter by end date (inclusive).
    */
   end_date?: string;
+
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'customer' | 'sales_order' | 'lines'>;
 
   /**
    * Filter by item IDs.

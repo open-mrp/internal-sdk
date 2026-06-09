@@ -37,7 +37,7 @@ describe('resource lines', () => {
       unit_price_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
       unit_price_value: '25.00',
       include: ['product'],
-      item_id: 'item_id',
+      item_id: 'it_0131e386ac683e8c29a71f6f1f',
       product_description: 'product_description',
       unit_cost_denominator_unit_id: 'unit_cost_denominator_unit_id',
       unit_cost_numerator_unit_id: 'unit_cost_numerator_unit_id',
@@ -62,19 +62,19 @@ describe('resource lines', () => {
     const response = await client.sales.salesOrders.lines.update('example', {
       id: 'or_01d5034136c3ccc048abecc312',
       include: ['product'],
-      item_id: 'item_id',
+      item_id: 'it_0131e386ac683e8c29a71f6f1f',
       product_description: 'product_description',
       product_sku: 'product_sku',
-      quantity: { unit_id: 'unit_id', value: 'value' },
+      quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '20' },
       unit_cost: {
         denominator_unit_id: 'denominator_unit_id',
         numerator_unit_id: 'numerator_unit_id',
         value: 'value',
       },
       unit_price: {
-        denominator_unit_id: 'denominator_unit_id',
-        numerator_unit_id: 'numerator_unit_id',
-        value: 'value',
+        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        value: '30.00',
       },
     });
   });

@@ -56,7 +56,7 @@ describe('resource dcLocations', () => {
     await expect(
       client.operations.dcLocations.update(
         'dclo_0191ce9223b21dc31c9ee09b3e',
-        { customer_id: 'customer_id', location: 'location' },
+        { customer_id: 'customer_id', location: 'Warehouse B - Bay 1' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);

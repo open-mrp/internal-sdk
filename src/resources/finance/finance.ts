@@ -217,6 +217,11 @@ export interface AdjustmentType {
  */
 export interface AllocationCustomer {
   /**
+   * Customer account id.
+   */
+  id: string;
+
+  /**
    * Customer display name.
    */
   name: string;

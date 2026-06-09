@@ -24,6 +24,7 @@ export class OrderDiscounts extends APIResource {
    *     code: 'SAVE10',
    *     discount_type: 'percentage',
    *     name: '10% Off',
+   *     percentage: '10.000000000000000000000000000000',
    *   });
    * ```
    */
@@ -54,6 +55,7 @@ export class OrderDiscounts extends APIResource {
    * const orderDiscount =
    *   await client.sales.orderDiscounts.update(
    *     'ords_01121c5e2f6937a6b896daad3a',
+   *     { code: 'SAVE15', name: '15% Off' },
    *   );
    * ```
    */

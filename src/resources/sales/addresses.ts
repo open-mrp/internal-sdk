@@ -18,6 +18,10 @@ export class Addresses extends APIResource {
    * const address = await client.sales.addresses.create({
    *   country: 'US',
    *   name: 'Headquarters',
+   *   locality: 'Springfield',
+   *   postal_code: '62701',
+   *   state: 'IL',
+   *   street_line_1: '123 Main St',
    * });
    * ```
    */
@@ -46,6 +50,7 @@ export class Addresses extends APIResource {
    * ```ts
    * const address = await client.sales.addresses.update(
    *   'ad_012100950cfaa34aa0e0ad7258',
+   *   { name: 'Warehouse' },
    * );
    * ```
    */

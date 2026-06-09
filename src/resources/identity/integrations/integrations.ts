@@ -42,6 +42,7 @@ export class Integrations extends APIResource {
    * const accountIntegration =
    *   await client.identity.integrations.update(
    *     'ai_0177772eae113431f64d473124',
+   *     { name: 'Updated Stripe Integration' },
    *   );
    * ```
    */

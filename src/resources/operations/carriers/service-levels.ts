@@ -71,7 +71,10 @@ export class ServiceLevels extends APIResource {
    * const serviceLevel =
    *   await client.operations.carriers.serviceLevels.update(
    *     'crop_01cfaf03f104e90ef9680e2a30',
-   *     { carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6' },
+   *     {
+   *       carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+   *       name: 'Express Shipping',
+   *     },
    *   );
    * ```
    */

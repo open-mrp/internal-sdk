@@ -29,6 +29,7 @@ export class Lines extends APIResource {
    *       unit_price_numerator_unit_id:
    *         'un_01966263f74a5a0cae356000a1',
    *       unit_price_value: '25.00',
+   *       item_id: 'it_0131e386ac683e8c29a71f6f1f',
    *     },
    *   );
    * ```
@@ -54,6 +55,16 @@ export class Lines extends APIResource {
    * const salesOrderLine =
    *   await client.sales.salesOrders.lines.update('example', {
    *     id: 'or_01d5034136c3ccc048abecc312',
+   *     item_id: 'it_0131e386ac683e8c29a71f6f1f',
+   *     quantity: {
+   *       value: '20',
+   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     },
+   *     unit_price: {
+   *       value: '30.00',
+   *       numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     },
    *   });
    * ```
    */

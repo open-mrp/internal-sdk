@@ -306,6 +306,10 @@ export class Operations extends APIResource {
    * ```ts
    * const quantity = await client.operations.updateQuantities(
    *   'qty_015a85becc1a6afdfb1afc27ff',
+   *   {
+   *     unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     value: '50.000000000000000000000000000000',
+   *   },
    * );
    * ```
    */
@@ -329,6 +333,10 @@ export class Operations extends APIResource {
    * ```ts
    * const rate = await client.operations.updateRates(
    *   'ra_015aa0a9522cf222024fd21d1a',
+   *   {
+   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     value: '25.500000000000000000000000000000',
+   *   },
    * );
    * ```
    */

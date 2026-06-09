@@ -24,8 +24,13 @@ export class Batches extends APIResource {
    *           item_id: 'it_0131e386ac683e8c29a71f6f1f',
    *           quantity_value: '100',
    *           quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *           seconds_value: null,
+   *           seconds_unit_id: null,
+   *           waste_value: null,
+   *           waste_unit_id: null,
    *           production_step_id:
    *             'prst_0159474175bb59f4b1990404ee',
+   *           scanning_station_id: null,
    *         },
    *       ],
    *     },

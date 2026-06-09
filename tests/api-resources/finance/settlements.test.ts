@@ -81,9 +81,9 @@ describe('resource settlements', () => {
       client.finance.settlements.update(
         'sl_014f3f9af18ff1c8ded3205149',
         {
-          note: 'note',
+          note: 'Partial payment applied',
           number: 'number',
-          responsible_user_id: 'responsible_user_id',
+          responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
         },
         { path: '/_stainless_unknown_path' },
       ),

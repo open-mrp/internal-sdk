@@ -18,7 +18,14 @@ export class Agents extends APIResource {
    * ```ts
    * const agentDefinition = await client.ai.agents.create({
    *   category_code: 'inventory',
-   *   config: {},
+   *   config: {
+   *     system_prompt:
+   *       'You are an order processing agent. Parse incoming emails and create draft orders.',
+   *     model: 'claude-sonnet-4',
+   *     provider: 'anthropic',
+   *     temperature: 0.2,
+   *     trigger_config: { event_filters: ['email.received'] },
+   *   },
    *   description:
    *     'Monitors inventory levels and creates restock alerts.',
    *   name: 'Inventory Monitor',
@@ -65,6 +72,7 @@ export class Agents extends APIResource {
    * ```ts
    * const agentDefinition = await client.ai.agents.update(
    *   'agdf_01b9ef28feb99e6954201aca63',
+   *   { name: 'Inventory Monitor' },
    * );
    * ```
    */

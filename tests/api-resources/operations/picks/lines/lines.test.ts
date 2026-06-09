@@ -24,7 +24,7 @@ describe('resource lines', () => {
   test('update: required and optional params', async () => {
     const response = await client.operations.picks.lines.update('example', {
       pick_id: 'pk_016452192feb7952d8393f0105',
-      quantity_value: 'quantity_value',
+      quantity_value: '10.000000000000000000000000000000',
     });
   });
 });

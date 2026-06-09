@@ -80,8 +80,8 @@ describe('resource units', () => {
         'un_01966263f74a5a0cae356000a1',
         {
           include: ['owner'],
-          abbreviation: 'abbreviation',
-          name: 'name',
+          abbreviation: 'kg',
+          name: 'Kilogram',
           offset_denominator: 'offset_denominator',
           offset_numerator: 'offset_numerator',
           ratio_denominator: 'ratio_denominator',

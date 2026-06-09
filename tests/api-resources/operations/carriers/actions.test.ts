@@ -11,7 +11,7 @@ describe('resource actions', () => {
   test('initiateOAuth: only required params', async () => {
     const responsePromise = client.operations.carriers.actions.initiateOAuth(
       'cr_01784fd54c9ba197bb4e42f0e6',
-      { redirect_uri: 'https://app.example.com/carriers/oauth/callback', state: 'state' },
+      { redirect_uri: 'https://app.example.com/carriers/oauth/callback', state: null },
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -25,7 +25,7 @@ describe('resource actions', () => {
   test('initiateOAuth: required and optional params', async () => {
     const response = await client.operations.carriers.actions.initiateOAuth('cr_01784fd54c9ba197bb4e42f0e6', {
       redirect_uri: 'https://app.example.com/carriers/oauth/callback',
-      state: 'state',
+      state: null,
     });
   });
 

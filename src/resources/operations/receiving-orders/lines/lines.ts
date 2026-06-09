@@ -24,6 +24,7 @@ export class Lines extends APIResource {
    *     'orln_0142f9b74268973450b3a76ce3',
    *     {
    *       receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e',
+   *       quantity_value: '50',
    *     },
    *   );
    * ```

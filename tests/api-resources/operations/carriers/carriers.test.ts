@@ -23,7 +23,7 @@ describe('resource carriers', () => {
     const response = await client.operations.carriers.create({
       name: 'FedEx',
       include: ['owner'],
-      account_number: 'account_number',
+      account_number: '1234567890',
       code: 'fedex',
       customer_portal_visibility: 'visible',
     });
@@ -70,7 +70,7 @@ describe('resource carriers', () => {
         {
           include: ['owner'],
           customer_portal_visibility: 'visible',
-          name: 'name',
+          name: 'FedEx Express',
         },
         { path: '/_stainless_unknown_path' },
       ),

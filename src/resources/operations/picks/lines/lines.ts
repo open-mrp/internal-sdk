@@ -21,7 +21,10 @@ export class Lines extends APIResource {
    * ```ts
    * const pickLine = await client.operations.picks.lines.update(
    *   'example',
-   *   { pick_id: 'pk_016452192feb7952d8393f0105' },
+   *   {
+   *     pick_id: 'pk_016452192feb7952d8393f0105',
+   *     quantity_value: '10.000000000000000000000000000000',
+   *   },
    * );
    * ```
    */

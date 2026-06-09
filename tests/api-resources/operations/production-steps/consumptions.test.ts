@@ -38,7 +38,7 @@ describe('resource consumptions', () => {
         waste_quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
         waste_quantity_value: '0.500000000000000000000000000000',
         include: ['consumed_item'],
-        instructions: 'instructions',
+        instructions: 'Mix with water before adding',
       },
     );
   });
@@ -86,8 +86,8 @@ describe('resource consumptions', () => {
         include: ['consumed_item'],
         instructions: 'instructions',
         item_id: 'item_id',
-        quantity_unit_id: 'quantity_unit_id',
-        quantity_value: 'quantity_value',
+        quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+        quantity_value: '20.000000000000000000000000000000',
         waste_quantity_unit_id: 'waste_quantity_unit_id',
         waste_quantity_value: 'waste_quantity_value',
       },

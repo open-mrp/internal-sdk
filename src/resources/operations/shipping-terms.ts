@@ -20,7 +20,6 @@ export class ShippingTerms extends APIResource {
    *   await client.operations.shippingTerms.create({
    *     name: 'Prepaid',
    *     type: 'carrier_rate_freight',
-   *     free_shipping_service_level_ids: [],
    *   });
    * ```
    */
@@ -57,6 +56,7 @@ export class ShippingTerms extends APIResource {
    * const shippingTerm =
    *   await client.operations.shippingTerms.update(
    *     'shtm_014341ab4bb5bf94d5b6936f86',
+   *     { name: 'Collect' },
    *   );
    * ```
    */

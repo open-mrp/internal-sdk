@@ -23,6 +23,8 @@ export class Territories extends APIResource {
    *     {
    *       sales_rep_id: 'acus_01ea9983ddb41dacc44ecf997c',
    *       state: 'NY',
+   *       end_zipcode: 10999,
+   *       start_zipcode: 10001,
    *     },
    *   );
    * ```
@@ -61,7 +63,10 @@ export class Territories extends APIResource {
    * const territory =
    *   await client.sales.accounts.territories.update(
    *     'te_0132f802e5603f7d356fac79d1',
-   *     { account_id: 'ac_01148680966698341a9c0976db' },
+   *     {
+   *       account_id: 'ac_01148680966698341a9c0976db',
+   *       state: 'CA',
+   *     },
    *   );
    * ```
    */

@@ -24,8 +24,8 @@ describe('resource attributes', () => {
   test('create: required and optional params', async () => {
     const response = await client.catalog.properties.attributes.create('pp_01e21344878064372f69e67093', {
       value: 'Red',
-      color: 'blue',
-      sort_order: 0,
+      color: 'red',
+      sort_order: 1,
     });
   });
 
@@ -66,7 +66,7 @@ describe('resource attributes', () => {
       property_id: 'pp_01e21344878064372f69e67093',
       color: 'blue',
       sort_order: 0,
-      value: 'value',
+      value: 'Blue',
     });
   });
 

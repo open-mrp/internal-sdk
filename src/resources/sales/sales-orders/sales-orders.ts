@@ -65,6 +65,15 @@ export class SalesOrders extends APIResource {
    *   ],
    *   priority_code: 'normal',
    *   sales_order_type_code: 'sales_order',
+   *   carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+   *   note: 'Rush order for trade show',
+   *   service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
+   *   ship_to_country: 'US',
+   *   ship_to_locality: 'San Francisco',
+   *   ship_to_name: 'Acme Inc.',
+   *   ship_to_postal_code: '94105',
+   *   ship_to_state: 'CA',
+   *   ship_to_street_line_1: '123 Main Street',
    * });
    * ```
    */
@@ -98,6 +107,12 @@ export class SalesOrders extends APIResource {
    * ```ts
    * const salesOrder = await client.sales.salesOrders.update(
    *   'or_01d5034136c3ccc048abecc312',
+   *   {
+   *     carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+   *     note: 'Updated shipping instructions',
+   *     priority_code: 'normal',
+   *     shipping_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
+   *   },
    * );
    * ```
    */
@@ -148,7 +163,13 @@ export class SalesOrders extends APIResource {
    * const checkoutSalesOrderResponse =
    *   await client.sales.salesOrders.checkout(
    *     'or_01d5034136c3ccc048abecc312',
-   *     { email: 'operations@acme.example.com' },
+   *     {
+   *       email: 'operations@acme.example.com',
+   *       cancel_url:
+   *         'https://dashboard.example.com/checkout/cancel',
+   *       success_url:
+   *         'https://dashboard.example.com/checkout/success',
+   *     },
    *   );
    * ```
    */
@@ -1343,6 +1364,8 @@ export interface SalesOrderRetrieveParams {
     | 'related.shipments'
     | 'lines'
     | 'lines.product'
+    | 'lines.product.item'
+    | 'lines.product.product_line'
     | 'lines.quantity_ordered'
     | 'lines.unit_price'
     | 'lines.unit_cost'
@@ -1506,7 +1529,28 @@ export interface SalesOrderListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'customer'>;
+  include?: Array<
+    | 'customer'
+    | 'sales_rep'
+    | 'bill_to_address'
+    | 'ship_to_address'
+    | 'freight'
+    | 'payment_term'
+    | 'shipping_term'
+    | 'order_discount'
+    | 'totals'
+    | 'related.pick'
+    | 'related.production_run'
+    | 'related.shipments'
+    | 'lines'
+    | 'lines.product'
+    | 'lines.product.item'
+    | 'lines.product.product_line'
+    | 'lines.quantity_ordered'
+    | 'lines.unit_price'
+    | 'lines.unit_cost'
+    | 'lines.totals'
+  >;
 
   /**
    * Filter by item IDs.

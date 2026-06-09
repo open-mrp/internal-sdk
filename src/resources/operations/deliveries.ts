@@ -548,9 +548,9 @@ export interface ReceivingOrder {
   purchase_order: PurchaseOrder | null;
 
   /**
-   * Account with optional branding and portal sub-resources.
+   * Supplier sub-resource.
    */
-  supplier: APIKeysAPI.Account | null;
+  supplier: Supplier | null;
 
   /**
    * Timestamp when the receiving order was last updated.
@@ -571,6 +571,11 @@ export interface ReceivingOrderLine {
    * Timestamp when the line was created.
    */
   created_at: string;
+
+  /**
+   * Item is an inventory item (product, material, or part).
+   */
+  item: AccountUsersAPI.Item | null;
 
   /**
    * Resource type identifier.
@@ -651,7 +656,7 @@ export interface DeliveryListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'purchase_order'>;
+  include?: Array<'purchase_order' | 'purchase_order.supplier' | 'lines'>;
 
   /**
    * Filter by item IDs present in delivery lines.

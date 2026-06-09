@@ -17,6 +17,7 @@ export class Sandboxes extends APIResource {
    * ```ts
    * const sandbox = await client.core.sandboxes.create({
    *   name: 'Integration Testing',
+   *   mode: 'blank',
    * });
    * ```
    */

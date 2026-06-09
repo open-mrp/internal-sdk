@@ -56,6 +56,15 @@ export class PurchaseOrders extends APIResource {
    *     ],
    *     priority_code: 'normal',
    *     supplier_account_id: 'ac_0177902104bccac5fbb173cd96',
+   *     carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+   *     note: 'Urgent restock order',
+   *     service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
+   *     ship_to_country: 'US',
+   *     ship_to_locality: 'San Francisco',
+   *     ship_to_name: 'Acme Inc.',
+   *     ship_to_postal_code: '94105',
+   *     ship_to_state: 'CA',
+   *     ship_to_street_line_1: '123 Main Street',
    *   });
    * ```
    */
@@ -94,6 +103,12 @@ export class PurchaseOrders extends APIResource {
    * const purchaseOrder =
    *   await client.operations.purchaseOrders.update(
    *     'po_0169aa3a722b081b117ac0e44f',
+   *     {
+   *       note: 'Updated delivery notes',
+   *       number: 'PO-001',
+   *       priority_code: 'normal',
+   *       promised_at: '2026-05-15T00:00:00Z',
+   *     },
    *   );
    * ```
    */
@@ -650,6 +665,12 @@ export interface PurchaseOrderListParams {
    * Filter by end date (inclusive).
    */
   end_date?: string;
+
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'supplier' | 'lines'>;
 
   /**
    * Filter by item IDs.

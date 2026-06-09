@@ -60,6 +60,10 @@ export class Settlements extends APIResource {
    * ```ts
    * const settlement = await client.finance.settlements.update(
    *   'sl_014f3f9af18ff1c8ded3205149',
+   *   {
+   *     note: 'Partial payment applied',
+   *     responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+   *   },
    * );
    * ```
    */

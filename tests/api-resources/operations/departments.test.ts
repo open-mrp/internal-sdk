@@ -72,7 +72,7 @@ describe('resource departments', () => {
           include: ['location'],
           location_id: 'location_id',
           machine_ids: ['string'],
-          name: 'name',
+          name: 'Production',
           notes: 'notes',
           scanning_station_ids: ['string'],
         },

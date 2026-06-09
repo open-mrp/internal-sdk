@@ -193,6 +193,7 @@ export class Sales extends APIResource {
    *     order_id: 'or_01d5034136c3ccc048abecc312',
    *     order_number: 'SO-001',
    *     order_total_cents: 125050,
+   *     customer_po: 'PO-4242',
    *   });
    * ```
    */

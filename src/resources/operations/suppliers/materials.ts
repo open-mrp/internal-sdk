@@ -22,6 +22,7 @@ export class Materials extends APIResource {
    *     {
    *       material_id: 'ml_014613b8f7959a091d8cc0cef4',
    *       supplier_part_number: 'SUP-PART-001',
+   *       is_active: true,
    *     },
    *   );
    * ```
@@ -66,7 +67,10 @@ export class Materials extends APIResource {
    * const supplierMaterial =
    *   await client.operations.suppliers.materials.update(
    *     'ml_014613b8f7959a091d8cc0cef4',
-   *     { supplier_id: 'example' },
+   *     {
+   *       supplier_id: 'example',
+   *       supplier_part_number: 'SUP-PART-002',
+   *     },
    *   );
    * ```
    */

@@ -24,7 +24,7 @@ describe('resource transactionAllocations', () => {
     await expect(
       client.finance.transactionAllocations.update(
         'txal_016cc92c2d9c0b12801e3160e0',
-        { amount: 'amount' },
+        { amount: '150.00' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);

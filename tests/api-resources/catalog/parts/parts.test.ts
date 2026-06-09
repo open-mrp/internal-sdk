@@ -28,7 +28,7 @@ describe('resource parts', () => {
       sku: 'BRG-6204-2RS',
       include: ['item'],
       attribute_ids: ['string'],
-      description: 'description',
+      description: 'Deep groove ball bearing, 20x47x14mm',
       notes: 'notes',
       unit_cost: {
         denominator_unit_id: 'denominator_unit_id',
@@ -83,9 +83,9 @@ describe('resource parts', () => {
         'pt_018d7bab53e864351f4c693a21',
         {
           include: ['item'],
-          description: 'description',
+          description: 'Deep groove ball bearing, 20x47x14mm',
           notes: 'notes',
-          sku: 'sku',
+          sku: 'BRG-6204-2RS',
         },
         { path: '/_stainless_unknown_path' },
       ),

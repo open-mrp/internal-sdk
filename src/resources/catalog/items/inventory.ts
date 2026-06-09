@@ -20,6 +20,13 @@ export class Inventory extends APIResource {
    * const inventory =
    *   await client.catalog.items.inventory.update(
    *     'it_0131e386ac683e8c29a71f6f1f',
+   *     {
+   *       customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+   *       location_id: 'lc_014d187d99b31926f0c74af9d8',
+   *       operation: 'adjust',
+   *       quantity_change: 10.5,
+   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     },
    *   );
    * ```
    */

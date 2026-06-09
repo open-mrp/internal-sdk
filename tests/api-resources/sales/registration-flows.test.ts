@@ -46,9 +46,9 @@ describe('resource registrationFlows', () => {
 
   test('update: only required params', async () => {
     const responsePromise = client.sales.registrationFlows.update('rgfw_015273c2a7354d6c3e5ae4e90e', {
-      has_customer_group_ids: false,
-      has_payment_term_ids: false,
-      has_shipping_term_ids: false,
+      has_customer_group_ids: true,
+      has_payment_term_ids: true,
+      has_shipping_term_ids: true,
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -61,11 +61,11 @@ describe('resource registrationFlows', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.sales.registrationFlows.update('rgfw_015273c2a7354d6c3e5ae4e90e', {
-      has_customer_group_ids: false,
-      has_payment_term_ids: false,
-      has_shipping_term_ids: false,
+      has_customer_group_ids: true,
+      has_payment_term_ids: true,
+      has_shipping_term_ids: true,
       customer_group_ids: ['string'],
-      name: 'name',
+      name: 'Wholesale Registration Updated',
       payment_term_ids: ['string'],
       shipping_term_ids: ['string'],
     });

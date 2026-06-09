@@ -68,8 +68,8 @@ describe('resource productionRuns', () => {
         'prru_0141c28081df4faac0fe726c41',
         {
           include: ['responsible_user'],
-          number: 'number',
-          responsible_user_id: 'responsible_user_id',
+          number: 'PR-00042',
+          responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
         },
         { path: '/_stainless_unknown_path' },
       ),

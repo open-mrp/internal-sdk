@@ -60,7 +60,7 @@ describe('resource accountGroups', () => {
     await expect(
       client.sales.productLineAccess.accountGroups.update(
         'acgp_018e88072d1320808dc979cfac',
-        { product_line_ids: ['string'] },
+        { product_line_ids: ['pl_01996357326a0d3f7b129542ea'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);

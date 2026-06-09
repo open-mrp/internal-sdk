@@ -49,6 +49,7 @@ export class ProductTypes extends APIResource {
    * const productType =
    *   await client.catalog.productTypes.update(
    *     'prty_01ddca85eedfb6b101a3c2f379',
+   *     { code: 'service', name: 'Service' },
    *   );
    * ```
    */

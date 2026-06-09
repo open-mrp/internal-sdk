@@ -89,7 +89,7 @@ describe('resource materials', () => {
           lead_time: { unit_id: 'unit_id', value: 'value' },
           notes: 'notes',
           order_point: { unit_id: 'unit_id', value: 'value' },
-          sku: 'sku',
+          sku: 'MAT-001-UPDATED',
           unit_cost: {
             denominator_unit_id: 'denominator_unit_id',
             numerator_unit_id: 'numerator_unit_id',

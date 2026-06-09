@@ -51,6 +51,7 @@ export class Locations extends APIResource {
    * ```ts
    * const location = await client.operations.locations.update(
    *   'lc_014d187d99b31926f0c74af9d8',
+   *   { name: 'Warehouse B' },
    * );
    * ```
    */

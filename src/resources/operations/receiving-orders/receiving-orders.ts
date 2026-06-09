@@ -103,7 +103,7 @@ export interface ReceivingOrderListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'supplier' | 'purchase_order'>;
+  include?: Array<'supplier' | 'purchase_order' | 'lines' | 'lines.order_line'>;
 
   /**
    * Filter by item IDs present in receiving order lines.

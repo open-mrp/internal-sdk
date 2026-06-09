@@ -18,7 +18,11 @@ export class Attributes extends APIResource {
    * const attribute =
    *   await client.catalog.properties.attributes.create(
    *     'pp_01e21344878064372f69e67093',
-   *     { value: 'Red' },
+   *     {
+   *       value: 'Red',
+   *       color: 'red',
+   *       sort_order: 1,
+   *     },
    *   );
    * ```
    */
@@ -59,7 +63,10 @@ export class Attributes extends APIResource {
    * const attribute =
    *   await client.catalog.properties.attributes.update(
    *     'at_01c9493ec0c46bb0ed12708ae4',
-   *     { property_id: 'pp_01e21344878064372f69e67093' },
+   *     {
+   *       property_id: 'pp_01e21344878064372f69e67093',
+   *       value: 'Blue',
+   *     },
    *   );
    * ```
    */

@@ -66,13 +66,21 @@ export class VolumeDiscounts extends APIResource {
    *   await client.sales.volumeDiscounts.update(
    *     'quds_01b64658b647f3c5266b8f6ae1',
    *     {
-   *       has_attributes: false,
-   *       has_categories: false,
-   *       has_customer_groups: false,
-   *       has_product_lines: false,
+   *       has_attributes: true,
+   *       has_categories: true,
+   *       has_customer_groups: true,
+   *       has_product_lines: true,
    *       has_tiers: true,
-   *       has_units: false,
-   *       tiers: [null],
+   *       has_units: true,
+   *       name: 'Updated Bulk Discount',
+   *       tiers: [
+   *         {
+   *           name: '50+ Units',
+   *           discount_percentage:
+   *             '10.000000000000000000000000000000',
+   *           threshold: '50.000000000000000000000000000000',
+   *         },
+   *       ],
    *     },
    *   );
    * ```

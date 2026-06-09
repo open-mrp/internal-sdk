@@ -39,6 +39,10 @@ export class Invoices extends APIResource {
    * ```ts
    * const invoice = await client.finance.invoices.update(
    *   'iv_018b5949ada8abca36358bbea9',
+   *   {
+   *     has_been_sent: true,
+   *     note: 'Payment received via wire transfer',
+   *   },
    * );
    * ```
    */
@@ -247,6 +251,11 @@ export interface InvoiceLine {
    * Timestamp when the line was created.
    */
   created_at: string;
+
+  /**
+   * Item is an inventory item (product, material, or part).
+   */
+  item: AccountUsersAPI.Item | null;
 
   /**
    * Resource type identifier.
@@ -659,6 +668,11 @@ export interface ShipmentLine {
   created_at: string;
 
   /**
+   * Item is an inventory item (product, material, or part).
+   */
+  item: AccountUsersAPI.Item | null;
+
+  /**
    * Resource type identifier.
    */
   object: 'shipment_line';
@@ -969,7 +983,7 @@ export interface InvoiceListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'customer' | 'order' | 'shipment' | 'billing_address' | 'payment_term'>;
+  include?: Array<'customer' | 'order' | 'shipment' | 'billing_address' | 'payment_term' | 'lines'>;
 
   /**
    * Filter by item IDs present in invoice lines.

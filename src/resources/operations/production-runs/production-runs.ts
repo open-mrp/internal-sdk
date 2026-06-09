@@ -64,6 +64,10 @@ export class ProductionRuns extends APIResource {
    * const productionRunDetail =
    *   await client.operations.productionRuns.update(
    *     'prru_0141c28081df4faac0fe726c41',
+   *     {
+   *       number: 'PR-00042',
+   *       responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+   *     },
    *   );
    * ```
    */

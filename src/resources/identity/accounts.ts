@@ -35,6 +35,7 @@ export class Accounts extends APIResource {
    * ```ts
    * const account = await client.identity.accounts.update(
    *   'ac_01148680966698341a9c0976db',
+   *   { name: 'Acme Inc.' },
    * );
    * ```
    */

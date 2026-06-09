@@ -37,8 +37,8 @@ export class Actions extends APIResource {
    * const agentRun = await client.ai.runs.actions.continue(
    *   'agrn_01502aa6da9bbdbaa595915fa4',
    *   {
-   *     allowed_tool_slugs: ['string'],
-   *     approved_tool_slugs: ['string'],
+   *     allowed_tool_slugs: [],
+   *     approved_tool_slugs: [],
    *     message: 'Yes, proceed with creating the order.',
    *   },
    * );

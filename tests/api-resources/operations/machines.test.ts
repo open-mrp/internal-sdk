@@ -73,7 +73,7 @@ describe('resource machines', () => {
         'mc_0177d18f55a1615f783d3bf8d0',
         {
           include: ['department'],
-          name: 'name',
+          name: 'Updated CNC Router',
           notes: 'notes',
           serial_number: 'serial_number',
         },

@@ -51,6 +51,7 @@ export class Customers extends APIResource {
    * const customerProductLineAccess =
    *   await client.sales.productLineAccess.customers.update(
    *     'ac_0170df1ac58e4d24c66fc89f5f',
+   *     { product_line_ids: ['pl_01996357326a0d3f7b129542ea'] },
    *   );
    * ```
    */

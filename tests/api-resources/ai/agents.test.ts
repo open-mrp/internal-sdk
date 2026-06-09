@@ -31,10 +31,10 @@ describe('resource agents', () => {
     const response = await client.ai.agents.create({
       category_code: 'inventory',
       config: {
-        model: 'model',
-        provider: 'provider',
-        system_prompt: 'system_prompt',
-        temperature: 0,
+        model: 'claude-sonnet-4',
+        provider: 'anthropic',
+        system_prompt: 'You are an order processing agent. Parse incoming emails and create draft orders.',
+        temperature: 0.2,
         trigger_config: {
           event_filters: ['email.received'],
           cron_schedule: 'cron_schedule',
@@ -100,10 +100,11 @@ describe('resource agents', () => {
           include: ['config'],
           category_code: 'category_code',
           config: {
-            model: 'model',
-            provider: 'provider',
-            system_prompt: 'system_prompt',
-            temperature: 0,
+            model: 'claude-sonnet-4',
+            provider: 'anthropic',
+            system_prompt:
+              'You are an order processing agent. Parse incoming emails and create draft orders.',
+            temperature: 0.2,
             trigger_config: {
               event_filters: ['email.received'],
               cron_schedule: 'cron_schedule',
@@ -111,7 +112,7 @@ describe('resource agents', () => {
             },
           },
           description: 'description',
-          name: 'name',
+          name: 'Inventory Monitor',
           role_id: 'role_id',
           slug: 'slug',
           tools: [

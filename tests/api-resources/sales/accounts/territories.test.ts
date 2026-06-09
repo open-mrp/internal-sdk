@@ -27,9 +27,9 @@ describe('resource territories', () => {
       sales_rep_id: 'acus_01ea9983ddb41dacc44ecf997c',
       state: 'NY',
       include: ['sales_rep'],
-      end_zipcode: 0,
+      end_zipcode: 10999,
       product_line_id: 'product_line_id',
-      start_zipcode: 0,
+      start_zipcode: 10001,
     });
   });
 
@@ -77,7 +77,7 @@ describe('resource territories', () => {
       product_line_id: 'product_line_id',
       sales_rep_id: 'sales_rep_id',
       start_zipcode: 0,
-      state: 'state',
+      state: 'CA',
     });
   });
 

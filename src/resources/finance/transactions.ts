@@ -24,6 +24,8 @@ export class Transactions extends APIResource {
    *     amount: '500.00',
    *     customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
    *     type: 'payment',
+   *     method: 'check',
+   *     note: 'Q1 invoice payment',
    *   });
    * ```
    */
@@ -62,6 +64,9 @@ export class Transactions extends APIResource {
    *       clear_adjustment_type: false,
    *       clear_responsible_user: false,
    *       clear_transaction_method: false,
+   *       amount: '750.00',
+   *       method: 'ach',
+   *       note: 'Updated payment note',
    *     },
    *   );
    * ```
@@ -408,6 +413,12 @@ export interface TransactionListParams {
    * Filter by end date (inclusive).
    */
   end_date?: string;
+
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'customer'>;
 
   /**
    * Maximum number of results per page (default: 100, max: 1000).

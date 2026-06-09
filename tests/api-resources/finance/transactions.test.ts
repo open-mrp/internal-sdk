@@ -29,8 +29,8 @@ describe('resource transactions', () => {
       customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
       type: 'payment',
       adjustment_type: 'adjustment_type',
-      method: 'method',
-      note: 'note',
+      method: 'check',
+      note: 'Q1 invoice payment',
       responsible_user_id: 'responsible_user_id',
     });
   });
@@ -78,10 +78,10 @@ describe('resource transactions', () => {
       clear_responsible_user: false,
       clear_transaction_method: false,
       adjustment_type: 'adjustment_type',
-      amount: 'amount',
+      amount: '750.00',
       is_fully_allocated: false,
-      method: 'method',
-      note: 'note',
+      method: 'ach',
+      note: 'Updated payment note',
       number: 'number',
       responsible_user_id: 'responsible_user_id',
     });
@@ -108,6 +108,7 @@ describe('resource transactions', () => {
           customer_group_ids: ['string'],
           customer_ids: ['string'],
           end_date: 'end_date',
+          include: ['customer'],
           limit: 0,
           methods: ['string'],
           q: 'q',

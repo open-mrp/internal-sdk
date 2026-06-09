@@ -23,7 +23,7 @@ describe('resource runs', () => {
     const response = await client.ai.runs.create({
       agent_definition_id: 'agdf_01b9ef28feb99e6954201aca63',
       include: ['actions'],
-      input: 'input',
+      input: 'Process the latest incoming orders.',
     });
   });
 

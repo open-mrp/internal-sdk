@@ -31,10 +31,7 @@ describe('resource memories', () => {
       entity_id: 'entity_id',
       entity_type: 'entity_type',
       expires_at: 'expires_at',
-      metadata: [
-        123, 34, 115, 111, 117, 114, 99, 101, 34, 58, 32, 34, 115, 117, 112, 112, 111, 114, 116, 95, 116, 105,
-        99, 107, 101, 116, 34, 125,
-      ],
+      metadata: { source: 'support_ticket' },
     });
   });
 

@@ -22,6 +22,7 @@ export class Runs extends APIResource {
    * ```ts
    * const agentRun = await client.ai.runs.create({
    *   agent_definition_id: 'agdf_01b9ef28feb99e6954201aca63',
+   *   input: 'Process the latest incoming orders.',
    * });
    * ```
    */

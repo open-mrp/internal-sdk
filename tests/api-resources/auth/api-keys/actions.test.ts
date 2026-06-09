@@ -42,7 +42,11 @@ describe('resource actions', () => {
     await expect(
       client.auth.apiKeys.actions.rotate(
         'apke_01fba3a7db3996e3b3b1a07e00',
-        { include: ['role'], expires_at: '2026-12-31T23:59:59Z' },
+        {
+          include: ['role'],
+          expires_at: '2026-12-31T23:59:59Z',
+          revoke_at: '2026-06-16T00:00:00Z',
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);

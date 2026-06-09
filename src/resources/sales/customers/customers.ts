@@ -26,7 +26,14 @@ export class Customers extends APIResource {
    * @example
    * ```ts
    * const customer = await client.sales.customers.create({
-   *   bill_to_address: { name: 'Acme Inc.', country: 'US' },
+   *   bill_to_address: {
+   *     name: 'Acme Inc.',
+   *     street_line_1: '123 Main St',
+   *     locality: 'New York',
+   *     state: 'NY',
+   *     postal_code: '10001',
+   *     country: 'US',
+   *   },
    *   customer_type_group_id: 'acgp_018e88072d1320808dc979cfac',
    *   default_carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
    *   default_payment_term_id:
@@ -34,7 +41,15 @@ export class Customers extends APIResource {
    *   default_shipping_term_id:
    *     'shtm_014341ab4bb5bf94d5b6936f86',
    *   name: 'Acme Inc.',
-   *   ship_to_address: { name: 'Acme Inc.', country: 'US' },
+   *   ship_to_address: {
+   *     name: 'Acme Inc.',
+   *     street_line_1: '123 Main St',
+   *     locality: 'New York',
+   *     state: 'NY',
+   *     postal_code: '10001',
+   *     country: 'US',
+   *   },
+   *   note: 'Key enterprise account',
    * });
    * ```
    */
@@ -69,6 +84,12 @@ export class Customers extends APIResource {
    * ```ts
    * const customer = await client.sales.customers.update(
    *   'ac_0170df1ac58e4d24c66fc89f5f',
+   *   {
+   *     default_carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+   *     freight_policy: 'billed_freight',
+   *     name: 'Acme Corp Updated',
+   *     note: 'Updated account notes',
+   *   },
    * );
    * ```
    */
@@ -119,6 +140,19 @@ export class Customers extends APIResource {
    * const response = await client.sales.customers.registration({
    *   account_slug: 'my-company',
    *   is_existing_customer: false,
+   *   address: {
+   *     name: 'Headquarters',
+   *     street_line_1: '123 Main St',
+   *     locality: 'Springfield',
+   *     state: 'IL',
+   *     postal_code: '62701',
+   *     country: 'US',
+   *   },
+   *   customer_group_id: 'cgrp_01abc',
+   *   customer_name: 'Acme Corp',
+   *   payment_term_id: 'pt_01abc',
+   *   phone: '+15551234567',
+   *   shipping_term_id: 'st_01abc',
    * });
    * ```
    */

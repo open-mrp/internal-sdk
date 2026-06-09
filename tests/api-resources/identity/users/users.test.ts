@@ -37,8 +37,8 @@ describe('resource users', () => {
         'us_0151164dcaea4cbded27b50aae',
         {
           email_verified: '2019-12-27T18:11:19.117Z',
-          image_url: 'image_url',
-          name: 'name',
+          image_url: 'https://cdn.augno.com/avatars/us_0151164dcaea4cbded27b50aae.jpg',
+          name: 'John Doe',
         },
         { path: '/_stainless_unknown_path' },
       ),

@@ -39,6 +39,7 @@ export class ShippingCases extends APIResource {
    * const shippingCase =
    *   await client.operations.shippingCases.update(
    *     'shcs_01207a101ea1475c687a39cf76',
+   *     { tracking_number: '1Z999AA10123456784' },
    *   );
    * ```
    */

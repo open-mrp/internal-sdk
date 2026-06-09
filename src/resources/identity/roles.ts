@@ -57,6 +57,10 @@ export class Roles extends APIResource {
    * ```ts
    * const role = await client.identity.roles.update(
    *   'rl_01c16d2eb637c0d1f3a372937c',
+   *   {
+   *     name: 'Updated Manager',
+   *     permissions: ['customers:read', 'customers:update'],
+   *   },
    * );
    * ```
    */

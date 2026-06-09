@@ -71,12 +71,12 @@ describe('resource volumeDiscounts', () => {
 
   test('update: only required params', async () => {
     const responsePromise = client.sales.volumeDiscounts.update('quds_01b64658b647f3c5266b8f6ae1', {
-      has_attributes: false,
-      has_categories: false,
-      has_customer_groups: false,
-      has_product_lines: false,
+      has_attributes: true,
+      has_categories: true,
+      has_customer_groups: true,
+      has_product_lines: true,
       has_tiers: true,
-      has_units: false,
+      has_units: true,
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -89,24 +89,24 @@ describe('resource volumeDiscounts', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.sales.volumeDiscounts.update('quds_01b64658b647f3c5266b8f6ae1', {
-      has_attributes: false,
-      has_categories: false,
-      has_customer_groups: false,
-      has_product_lines: false,
+      has_attributes: true,
+      has_categories: true,
+      has_customer_groups: true,
+      has_product_lines: true,
       has_tiers: true,
-      has_units: false,
+      has_units: true,
       attribute_ids: ['string'],
       category_ids: ['string'],
       customer_group_ids: ['string'],
-      name: 'name',
+      name: 'Updated Bulk Discount',
       product_line_ids: ['string'],
       tiers: [
         {
           id: 'id',
-          discount_percentage: 'discount_percentage',
-          name: 'name',
+          discount_percentage: '10.000000000000000000000000000000',
+          name: '50+ Units',
           parent_tier_id: 'parent_tier_id',
-          threshold: 'threshold',
+          threshold: '50.000000000000000000000000000000',
         },
       ],
       unit_ids: ['string'],

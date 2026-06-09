@@ -38,7 +38,12 @@ export class Actions extends APIResource {
    *         {
    *           receiving_order_line_id:
    *             'rcorln_01f2aca124f3f5add7c94d5e4f',
-   *           allocations: [{ quantity: '100' }],
+   *           allocations: [
+   *             {
+   *               location_id: 'lc_014d187d99b31926f0c74af9d8',
+   *               quantity: '100',
+   *             },
+   *           ],
    *         },
    *       ],
    *     },

@@ -61,7 +61,7 @@ describe('resource properties', () => {
     await expect(
       client.catalog.properties.update(
         'pp_01e21344878064372f69e67093',
-        { include: ['attributes'], name: 'name' },
+        { include: ['attributes'], name: 'Size' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);

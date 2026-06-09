@@ -24,6 +24,7 @@ export class Parts extends APIResource {
    * const part = await client.catalog.parts.create({
    *   category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
    *   sku: 'BRG-6204-2RS',
+   *   description: 'Deep groove ball bearing, 20x47x14mm',
    * });
    * ```
    */
@@ -57,6 +58,10 @@ export class Parts extends APIResource {
    * ```ts
    * const part = await client.catalog.parts.update(
    *   'pt_018d7bab53e864351f4c693a21',
+   *   {
+   *     description: 'Deep groove ball bearing, 20x47x14mm',
+   *     sku: 'BRG-6204-2RS',
+   *   },
    * );
    * ```
    */

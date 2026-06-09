@@ -64,6 +64,7 @@ export class Products extends APIResource {
    * ```ts
    * const product = await client.catalog.products.update(
    *   'pd_013c29ab3f1518d0004094c316',
+   *   { sku: 'SKU-002' },
    * );
    * ```
    */
