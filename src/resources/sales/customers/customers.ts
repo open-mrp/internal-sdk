@@ -642,7 +642,8 @@ export interface CustomerDefaults {
   priority: Priority | null;
 
   /**
-   * Account user with profile, role, and department.
+   * Account user with role and department. Profile fields (name, email, username,
+   * image URL) live on the expandable user sub-resource.
    */
   sales_rep: AccountUsersAPI.AccountUser | null;
 
@@ -1233,6 +1234,7 @@ export interface CustomerCreateParams {
     | 'defaults.payment_term'
     | 'defaults.shipping_term'
     | 'defaults.sales_rep'
+    | 'defaults.sales_rep.user'
     | 'defaults.priority'
     | 'contact_info'
     | 'freight_preferences'
@@ -1340,6 +1342,7 @@ export interface CustomerRetrieveParams {
     | 'defaults.payment_term'
     | 'defaults.shipping_term'
     | 'defaults.sales_rep'
+    | 'defaults.sales_rep.user'
     | 'defaults.priority'
     | 'contact_info'
     | 'freight_preferences'
@@ -1366,6 +1369,7 @@ export interface CustomerUpdateParams {
     | 'defaults.payment_term'
     | 'defaults.shipping_term'
     | 'defaults.sales_rep'
+    | 'defaults.sales_rep.user'
     | 'defaults.priority'
     | 'contact_info'
     | 'freight_preferences'
@@ -1543,6 +1547,7 @@ export interface CustomerListParams {
     | 'defaults.payment_term'
     | 'defaults.shipping_term'
     | 'defaults.sales_rep'
+    | 'defaults.sales_rep.user'
     | 'defaults.priority'
     | 'contact_info'
     | 'freight_preferences'

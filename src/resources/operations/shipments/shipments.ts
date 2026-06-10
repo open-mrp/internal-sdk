@@ -175,6 +175,7 @@ export interface ShipmentRetrieveParams {
     | 'freight'
     | 'shipping_address'
     | 'shipped_by'
+    | 'shipped_by.user'
     | 'invoice'
     | 'pick'
   >;
@@ -193,6 +194,7 @@ export interface ShipmentUpdateParams {
     | 'freight'
     | 'shipping_address'
     | 'shipped_by'
+    | 'shipped_by.user'
     | 'invoice'
     | 'pick'
   >;

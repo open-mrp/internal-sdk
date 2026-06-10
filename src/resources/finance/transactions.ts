@@ -29,8 +29,12 @@ export class Transactions extends APIResource {
    *   });
    * ```
    */
-  create(body: TransactionCreateParams, options?: RequestOptions): APIPromise<InvoicesAPI.TransactionDetail> {
-    return this._client.post('/v1/finance/transactions', { body, ...options });
+  create(
+    params: TransactionCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<InvoicesAPI.TransactionDetail> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/finance/transactions', { query: { include }, body, ...options });
   }
 
   /**
@@ -73,10 +77,11 @@ export class Transactions extends APIResource {
    */
   update(
     id: string,
-    body: TransactionUpdateParams,
+    params: TransactionUpdateParams,
     options?: RequestOptions,
   ): APIPromise<InvoicesAPI.TransactionDetail> {
-    return this._client.patch(path`/v1/finance/transactions/${id}`, { body, ...options });
+    const { include, ...body } = params;
+    return this._client.patch(path`/v1/finance/transactions/${id}`, { query: { include }, body, ...options });
   }
 
   /**
@@ -106,8 +111,13 @@ export class Transactions extends APIResource {
    *   );
    * ```
    */
-  delete(id: string, options?: RequestOptions): APIPromise<InvoicesAPI.TransactionDetail> {
-    return this._client.delete(path`/v1/finance/transactions/${id}`, options);
+  delete(
+    id: string,
+    params: TransactionDeleteParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<InvoicesAPI.TransactionDetail> {
+    const { include } = params ?? {};
+    return this._client.delete(path`/v1/finance/transactions/${id}`, { query: { include }, ...options });
   }
 }
 
@@ -293,37 +303,43 @@ export interface UpdateTransactionRequest {
 
 export interface TransactionCreateParams {
   /**
-   * Transaction amount as a decimal string.
+   * Body param: Transaction amount as a decimal string.
    */
   amount: string;
 
   /**
-   * Customer ID.
+   * Body param: Customer ID.
    */
   customer_id: string;
 
   /**
-   * Transaction type code.
+   * Body param: Transaction type code.
    */
   type: string;
 
   /**
-   * Adjustment type code.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
+
+  /**
+   * Body param: Adjustment type code.
    */
   adjustment_type?: string;
 
   /**
-   * Transaction method code.
+   * Body param: Transaction method code.
    */
   method?: string;
 
   /**
-   * Note.
+   * Body param: Note.
    */
   note?: string;
 
   /**
-   * Responsible user ID.
+   * Body param: Responsible user ID.
    */
   responsible_user_id?: string;
 }
@@ -333,57 +349,63 @@ export interface TransactionRetrieveParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'allocations' | 'customer' | 'responsible_user'>;
+  include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
 }
 
 export interface TransactionUpdateParams {
   /**
-   * Set to true to clear the adjustment type.
+   * Body param: Set to true to clear the adjustment type.
    */
   clear_adjustment_type: boolean;
 
   /**
-   * Set to true to clear the responsible user.
+   * Body param: Set to true to clear the responsible user.
    */
   clear_responsible_user: boolean;
 
   /**
-   * Set to true to clear the transaction method.
+   * Body param: Set to true to clear the transaction method.
    */
   clear_transaction_method: boolean;
 
   /**
-   * Adjustment type code.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
+
+  /**
+   * Body param: Adjustment type code.
    */
   adjustment_type?: string;
 
   /**
-   * Amount as a decimal string.
+   * Body param: Amount as a decimal string.
    */
   amount?: string;
 
   /**
-   * Allocation status.
+   * Body param: Allocation status.
    */
   is_fully_allocated?: boolean;
 
   /**
-   * Transaction method code.
+   * Body param: Transaction method code.
    */
   method?: string;
 
   /**
-   * Note.
+   * Body param: Note.
    */
   note?: string;
 
   /**
-   * Transaction number.
+   * Body param: Transaction number.
    */
   number?: string;
 
   /**
-   * Responsible user ID.
+   * Body param: Responsible user ID.
    */
   responsible_user_id?: string;
 }
@@ -451,6 +473,14 @@ export interface TransactionListParams {
   types?: Array<string>;
 }
 
+export interface TransactionDeleteParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
+}
+
 export declare namespace Transactions {
   export {
     type CreateTransactionRequest as CreateTransactionRequest,
@@ -461,5 +491,6 @@ export declare namespace Transactions {
     type TransactionRetrieveParams as TransactionRetrieveParams,
     type TransactionUpdateParams as TransactionUpdateParams,
     type TransactionListParams as TransactionListParams,
+    type TransactionDeleteParams as TransactionDeleteParams,
   };
 }

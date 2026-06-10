@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AnalyticsAPI from '../core/analytics';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
+import * as AccountUsersAPI from '../identity/account-users/account-users';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -123,7 +123,7 @@ export interface AgentMemory {
   /**
    * Entity is a polymorphic reference to any resource in the system.
    */
-  entity: AnalyticsAPI.Entity | null;
+  entity: AccountUsersAPI.Entity | null;
 
   /**
    * Expiration timestamp. Null means it never expires.

@@ -628,7 +628,8 @@ export interface Shipment {
   shipped_at: string | null;
 
   /**
-   * Account user with profile, role, and department.
+   * Account user with role and department. Profile fields (name, email, username,
+   * image URL) live on the expandable user sub-resource.
    */
   shipped_by: AccountUsersAPI.AccountUser | null;
 
@@ -868,7 +869,8 @@ export interface TransactionDetail {
   object: 'transaction';
 
   /**
-   * Account user with profile, role, and department.
+   * Account user with role and department. Profile fields (name, email, username,
+   * image URL) live on the expandable user sub-resource.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 

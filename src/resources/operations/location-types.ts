@@ -2,6 +2,7 @@
 
 import { APIResource } from '../../core/resource';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
+import * as AccountUsersAPI from '../identity/account-users/account-users';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -74,7 +75,7 @@ export interface LocationType {
   /**
    * Location type code.
    */
-  code: 'building' | 'section' | 'aisle' | 'rack' | 'shelf' | 'bin';
+  code: AccountUsersAPI.LocationTypeCode;
 
   /**
    * Creation timestamp.

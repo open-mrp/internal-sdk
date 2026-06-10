@@ -24,7 +24,7 @@ describe('resource accountUsers', () => {
     await expect(
       client.identity.accountUsers.create(
         {
-          include: ['role'],
+          include: ['user'],
           department_id: 'department_id',
           email: 'jdoe@augno.com',
           name: 'John Doe',
@@ -54,7 +54,7 @@ describe('resource accountUsers', () => {
     await expect(
       client.identity.accountUsers.retrieve(
         'acus_01ea9983ddb41dacc44ecf997c',
-        { include: ['role'] },
+        { include: ['user'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
@@ -77,7 +77,7 @@ describe('resource accountUsers', () => {
       client.identity.accountUsers.update(
         'acus_01ea9983ddb41dacc44ecf997c',
         {
-          include: ['role'],
+          include: ['user'],
           department_id: 'dp_01791c25ab59da4704cba61874',
           email: 'email',
           name: 'John Doe',
@@ -107,7 +107,7 @@ describe('resource accountUsers', () => {
       client.identity.accountUsers.list(
         {
           cursor: 'cursor',
-          include: ['role'],
+          include: ['user'],
           limit: 0,
           q: 'q',
           removed_scope: 'excluded',

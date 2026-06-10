@@ -194,6 +194,7 @@ Types:
 - <code><a href="./src/resources/identity/account-users/account-users.ts">Consumption</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">CreateAccountUserRequest</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">Department</a></code>
+- <code><a href="./src/resources/identity/account-users/account-users.ts">Entity</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">Item</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">ItemCategory</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">ListAccountUser</a></code>
@@ -206,6 +207,7 @@ Types:
 - <code><a href="./src/resources/identity/account-users/account-users.ts">ListScanningStation</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">ListUnitGroupUnit</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">Location</a></code>
+- <code><a href="./src/resources/identity/account-users/account-users.ts">LocationTypeCode</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">Machine</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">NotificationPreferenceItem</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">ProductionOutput</a></code>
@@ -483,7 +485,6 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastForecastPoint</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastPoint</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastRow</a></code>
-- <code><a href="./src/resources/core/analytics.ts">Entity</a></code>
 - <code><a href="./src/resources/core/analytics.ts">InventoryReceiptSummaryEntry</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ManufacturingMetrics</a></code>
 - <code><a href="./src/resources/core/analytics.ts">MaterialAnalyticsEntry</a></code>
@@ -1402,6 +1403,7 @@ Types:
 - <code><a href="./src/resources/finance/finance.ts">AllocationCustomer</a></code>
 - <code><a href="./src/resources/finance/finance.ts">InvoiceAllocationEntry</a></code>
 - <code><a href="./src/resources/finance/finance.ts">ListAdjustmentType</a></code>
+- <code><a href="./src/resources/finance/finance.ts">ListInvoiceAllocationEntry</a></code>
 - <code><a href="./src/resources/finance/finance.ts">ListOpenCreditEntry</a></code>
 - <code><a href="./src/resources/finance/finance.ts">ListTransactionMethod</a></code>
 - <code><a href="./src/resources/finance/finance.ts">ListTransactionType</a></code>
@@ -1526,7 +1528,7 @@ Methods:
 - <code title="get /v1/finance/transactions/{id}">client.finance.transactions.<a href="./src/resources/finance/transactions.ts">retrieve</a>(id, { ...params }) -> TransactionDetail</code>
 - <code title="patch /v1/finance/transactions/{id}">client.finance.transactions.<a href="./src/resources/finance/transactions.ts">update</a>(id, { ...params }) -> TransactionDetail</code>
 - <code title="get /v1/finance/transactions">client.finance.transactions.<a href="./src/resources/finance/transactions.ts">list</a>({ ...params }) -> ListTransactionSummary</code>
-- <code title="delete /v1/finance/transactions/{id}">client.finance.transactions.<a href="./src/resources/finance/transactions.ts">delete</a>(id) -> TransactionDetail</code>
+- <code title="delete /v1/finance/transactions/{id}">client.finance.transactions.<a href="./src/resources/finance/transactions.ts">delete</a>(id, { ...params }) -> TransactionDetail</code>
 
 ## TransactionAllocations
 
@@ -1568,13 +1570,13 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/operations/operations.ts">InventoryItem</a></code>
+- <code><a href="./src/resources/operations/operations.ts">ListInventoryItem</a></code>
 - <code><a href="./src/resources/operations/operations.ts">UpdateQuantityRequest</a></code>
 - <code><a href="./src/resources/operations/operations.ts">UpdateRateRequest</a></code>
-- <code><a href="./src/resources/operations/operations.ts">OperationRetrieveInventoriesResponse</a></code>
 
 Methods:
 
-- <code title="get /v1/operations/inventories">client.operations.<a href="./src/resources/operations/operations.ts">retrieveInventories</a>({ ...params }) -> OperationRetrieveInventoriesResponse</code>
+- <code title="get /v1/operations/inventories">client.operations.<a href="./src/resources/operations/operations.ts">retrieveInventories</a>({ ...params }) -> ListInventoryItem</code>
 - <code title="patch /v1/operations/quantities/{id}">client.operations.<a href="./src/resources/operations/operations.ts">updateQuantities</a>(id, { ...params }) -> Quantity</code>
 - <code title="patch /v1/operations/rates/{id}">client.operations.<a href="./src/resources/operations/operations.ts">updateRates</a>(id, { ...params }) -> Rate</code>
 
@@ -1695,10 +1697,12 @@ Types:
 - <code><a href="./src/resources/operations/batches/batches.ts">Batch</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">BatchFlowNode</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">BatchLot</a></code>
+- <code><a href="./src/resources/operations/batches/batches.ts">BatchReference</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">GetPossibleNextStepsRequest</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">GetRemainingQuantityToSplitRequest</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ListBatchFlowNode</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ListBatchLot</a></code>
+- <code><a href="./src/resources/operations/batches/batches.ts">ListBatchReference</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ListScanningProductionStepInfo</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ProductionRun</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ScanningProductionStepInfo</a></code>

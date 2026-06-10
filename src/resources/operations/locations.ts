@@ -107,7 +107,7 @@ export interface CreateLocationRequest {
   /**
    * Location type code.
    */
-  type: 'building' | 'section' | 'aisle' | 'rack' | 'shelf' | 'bin';
+  type: AccountUsersAPI.LocationTypeCode;
 
   /**
    * IDs of child locations to attach.
@@ -143,7 +143,7 @@ export interface UpdateLocationRequest {
   /**
    * Location type code.
    */
-  type?: 'building' | 'section' | 'aisle' | 'rack' | 'shelf' | 'bin';
+  type?: AccountUsersAPI.LocationTypeCode;
 }
 
 export interface LocationDeleteResponse {}
@@ -157,7 +157,7 @@ export interface LocationCreateParams {
   /**
    * Body param: Location type code.
    */
-  type: 'building' | 'section' | 'aisle' | 'rack' | 'shelf' | 'bin';
+  type: AccountUsersAPI.LocationTypeCode;
 
   /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
@@ -210,7 +210,7 @@ export interface LocationUpdateParams {
   /**
    * Body param: Location type code.
    */
-  type?: 'building' | 'section' | 'aisle' | 'rack' | 'shelf' | 'bin';
+  type?: AccountUsersAPI.LocationTypeCode;
 }
 
 export interface LocationListParams {

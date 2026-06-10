@@ -132,7 +132,7 @@ export interface Batch {
   /**
    * List represents a paginated list of resources.
    */
-  input_batches: Batch.InputBatches | null;
+  input_batches: ListBatchReference | null;
 
   /**
    * Item is an inventory item (product, material, or part).
@@ -157,7 +157,7 @@ export interface Batch {
   /**
    * List represents a paginated list of resources.
    */
-  output_batches: Batch.OutputBatches | null;
+  output_batches: ListBatchReference | null;
 
   /**
    * Production run sub-resource.
@@ -200,84 +200,6 @@ export interface Batch {
   waste: AccountUsersAPI.Quantity | null;
 }
 
-export namespace Batch {
-  /**
-   * List represents a paginated list of resources.
-   */
-  export interface InputBatches {
-    /**
-     * Resources in this page.
-     */
-    data: Array<InputBatches.Data>;
-
-    /**
-     * Resource type identifier.
-     */
-    object: 'list';
-
-    /**
-     * PageInfo contains URL-based pagination metadata.
-     */
-    page_info: APIKeysAPI.PageInfo;
-  }
-
-  export namespace InputBatches {
-    /**
-     * Minimal reference to another batch, carrying only the id and object
-     * discriminator.
-     */
-    export interface Data {
-      /**
-       * Batch ID.
-       */
-      id: string;
-
-      /**
-       * Resource type identifier.
-       */
-      object: 'batch';
-    }
-  }
-
-  /**
-   * List represents a paginated list of resources.
-   */
-  export interface OutputBatches {
-    /**
-     * Resources in this page.
-     */
-    data: Array<OutputBatches.Data>;
-
-    /**
-     * Resource type identifier.
-     */
-    object: 'list';
-
-    /**
-     * PageInfo contains URL-based pagination metadata.
-     */
-    page_info: APIKeysAPI.PageInfo;
-  }
-
-  export namespace OutputBatches {
-    /**
-     * Minimal reference to another batch, carrying only the id and object
-     * discriminator.
-     */
-    export interface Data {
-      /**
-       * Batch ID.
-       */
-      id: string;
-
-      /**
-       * Resource type identifier.
-       */
-      object: 'batch';
-    }
-  }
-}
-
 /**
  * Batch within a production flow graph, including input and output edges.
  */
@@ -290,7 +212,7 @@ export interface BatchFlowNode {
   /**
    * List represents a paginated list of resources.
    */
-  input_batches: BatchFlowNode.InputBatches | null;
+  input_batches: ListBatchReference | null;
 
   /**
    * Resource type identifier.
@@ -300,85 +222,7 @@ export interface BatchFlowNode {
   /**
    * List represents a paginated list of resources.
    */
-  output_batches: BatchFlowNode.OutputBatches | null;
-}
-
-export namespace BatchFlowNode {
-  /**
-   * List represents a paginated list of resources.
-   */
-  export interface InputBatches {
-    /**
-     * Resources in this page.
-     */
-    data: Array<InputBatches.Data>;
-
-    /**
-     * Resource type identifier.
-     */
-    object: 'list';
-
-    /**
-     * PageInfo contains URL-based pagination metadata.
-     */
-    page_info: APIKeysAPI.PageInfo;
-  }
-
-  export namespace InputBatches {
-    /**
-     * Minimal reference to another batch, carrying only the id and object
-     * discriminator.
-     */
-    export interface Data {
-      /**
-       * Batch ID.
-       */
-      id: string;
-
-      /**
-       * Resource type identifier.
-       */
-      object: 'batch';
-    }
-  }
-
-  /**
-   * List represents a paginated list of resources.
-   */
-  export interface OutputBatches {
-    /**
-     * Resources in this page.
-     */
-    data: Array<OutputBatches.Data>;
-
-    /**
-     * Resource type identifier.
-     */
-    object: 'list';
-
-    /**
-     * PageInfo contains URL-based pagination metadata.
-     */
-    page_info: APIKeysAPI.PageInfo;
-  }
-
-  export namespace OutputBatches {
-    /**
-     * Minimal reference to another batch, carrying only the id and object
-     * discriminator.
-     */
-    export interface Data {
-      /**
-       * Batch ID.
-       */
-      id: string;
-
-      /**
-       * Resource type identifier.
-       */
-      object: 'batch';
-    }
-  }
+  output_batches: ListBatchReference | null;
 }
 
 /**
@@ -399,6 +243,22 @@ export interface BatchLot {
    * Lot type (material or productionRun).
    */
   type: string;
+}
+
+/**
+ * Minimal reference to another batch, carrying only the id and object
+ * discriminator.
+ */
+export interface BatchReference {
+  /**
+   * Batch ID.
+   */
+  id: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'batch';
 }
 
 /**
@@ -454,6 +314,26 @@ export interface ListBatchLot {
    * Resources in this page.
    */
   data: Array<BatchLot>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListBatchReference {
+  /**
+   * Resources in this page.
+   */
+  data: Array<BatchReference>;
 
   /**
    * Resource type identifier.
@@ -557,10 +437,12 @@ export declare namespace Batches {
     type Batch as Batch,
     type BatchFlowNode as BatchFlowNode,
     type BatchLot as BatchLot,
+    type BatchReference as BatchReference,
     type GetPossibleNextStepsRequest as GetPossibleNextStepsRequest,
     type GetRemainingQuantityToSplitRequest as GetRemainingQuantityToSplitRequest,
     type ListBatchFlowNode as ListBatchFlowNode,
     type ListBatchLot as ListBatchLot,
+    type ListBatchReference as ListBatchReference,
     type ListScanningProductionStepInfo as ListScanningProductionStepInfo,
     type ProductionRun as ProductionRun,
     type ScanningProductionStepInfo as ScanningProductionStepInfo,

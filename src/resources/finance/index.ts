@@ -14,6 +14,7 @@ export {
   type AllocationCustomer,
   type InvoiceAllocationEntry,
   type ListAdjustmentType,
+  type ListInvoiceAllocationEntry,
   type ListOpenCreditEntry,
   type ListTransactionMethod,
   type ListTransactionType,
@@ -101,4 +102,5 @@ export {
   type TransactionRetrieveParams,
   type TransactionUpdateParams,
   type TransactionListParams,
+  type TransactionDeleteParams,
 } from './transactions';

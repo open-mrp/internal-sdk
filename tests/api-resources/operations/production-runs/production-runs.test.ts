@@ -94,6 +94,7 @@ describe('resource productionRuns', () => {
         {
           cursor: 'cursor',
           end_date: 'end_date',
+          include: ['responsible_user'],
           item_ids: ['string'],
           limit: 0,
           machine_ids: ['string'],

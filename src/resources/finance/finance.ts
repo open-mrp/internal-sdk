@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as FinanceAPI from './finance';
 import * as InvoicesAPI from './invoices';
 import {
   AllocationInvoice,
@@ -71,6 +70,7 @@ import {
   CreateTransactionRequest,
   ListTransactionSummary,
   TransactionCreateParams,
+  TransactionDeleteParams,
   TransactionListParams,
   TransactionRetrieveParams,
   TransactionSummary,
@@ -283,6 +283,26 @@ export interface ListAdjustmentType {
 /**
  * List represents a paginated list of resources.
  */
+export interface ListInvoiceAllocationEntry {
+  /**
+   * Resources in this page.
+   */
+  data: Array<InvoiceAllocationEntry>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
 export interface ListOpenCreditEntry {
   /**
    * Resources in this page.
@@ -374,7 +394,7 @@ export interface OpenCreditEntry {
   /**
    * List represents a paginated list of resources.
    */
-  invoice_allocations: OpenCreditEntry.InvoiceAllocations | null;
+  invoice_allocations: ListInvoiceAllocationEntry | null;
 
   /**
    * Remaining unallocated amount as a decimal string.
@@ -420,28 +440,6 @@ export interface OpenCreditEntry {
    * Transaction type.
    */
   transaction_type: string;
-}
-
-export namespace OpenCreditEntry {
-  /**
-   * List represents a paginated list of resources.
-   */
-  export interface InvoiceAllocations {
-    /**
-     * Resources in this page.
-     */
-    data: Array<FinanceAPI.InvoiceAllocationEntry>;
-
-    /**
-     * Resource type identifier.
-     */
-    object: 'list';
-
-    /**
-     * PageInfo contains URL-based pagination metadata.
-     */
-    page_info: APIKeysAPI.PageInfo;
-  }
 }
 
 /**
@@ -597,6 +595,7 @@ export declare namespace Finance {
     type AllocationCustomer as AllocationCustomer,
     type InvoiceAllocationEntry as InvoiceAllocationEntry,
     type ListAdjustmentType as ListAdjustmentType,
+    type ListInvoiceAllocationEntry as ListInvoiceAllocationEntry,
     type ListOpenCreditEntry as ListOpenCreditEntry,
     type ListTransactionMethod as ListTransactionMethod,
     type ListTransactionType as ListTransactionType,
@@ -674,6 +673,7 @@ export declare namespace Finance {
     type TransactionRetrieveParams as TransactionRetrieveParams,
     type TransactionUpdateParams as TransactionUpdateParams,
     type TransactionListParams as TransactionListParams,
+    type TransactionDeleteParams as TransactionDeleteParams,
   };
 
   export {

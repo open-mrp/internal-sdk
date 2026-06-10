@@ -174,7 +174,8 @@ export interface EmailContact {
   id: string;
 
   /**
-   * Account user with profile, role, and department.
+   * Account user with role and department. Profile fields (name, email, username,
+   * image URL) live on the expandable user sub-resource.
    */
   account_user: AccountUsersAPI.AccountUser | null;
 

@@ -181,7 +181,8 @@ export interface ProductionRunDetail {
   object: 'production_run';
 
   /**
-   * Account user with profile, role, and department.
+   * Account user with role and department. Profile fields (name, email, username,
+   * image URL) live on the expandable user sub-resource.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 
@@ -231,7 +232,8 @@ export interface ProductionRunSummary {
   object: 'production_run';
 
   /**
-   * Account user with profile, role, and department.
+   * Account user with role and department. Profile fields (name, email, username,
+   * image URL) live on the expandable user sub-resource.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 
@@ -273,7 +275,7 @@ export interface ProductionRunCreateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'responsible_user'>;
+  include?: Array<'responsible_user' | 'responsible_user.user'>;
 }
 
 export interface ProductionRunRetrieveParams {
@@ -281,7 +283,7 @@ export interface ProductionRunRetrieveParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'responsible_user'>;
+  include?: Array<'responsible_user' | 'responsible_user.user'>;
 }
 
 export interface ProductionRunUpdateParams {
@@ -289,7 +291,7 @@ export interface ProductionRunUpdateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'responsible_user'>;
+  include?: Array<'responsible_user' | 'responsible_user.user'>;
 
   /**
    * Body param: Production run number.
@@ -312,6 +314,12 @@ export interface ProductionRunListParams {
    * Filter by end date (inclusive).
    */
   end_date?: string;
+
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'responsible_user' | 'responsible_user.user'>;
 
   /**
    * Filter by item IDs (batches containing these items).

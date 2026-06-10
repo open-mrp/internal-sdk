@@ -200,7 +200,8 @@ export interface Territory {
   product_line: AccountPricesAPI.ProductLine | null;
 
   /**
-   * Account user with profile, role, and department.
+   * Account user with role and department. Profile fields (name, email, username,
+   * image URL) live on the expandable user sub-resource.
    */
   sales_rep: AccountUsersAPI.AccountUser | null;
 
@@ -282,7 +283,7 @@ export interface TerritoryCreateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'sales_rep' | 'product_line'>;
+  include?: Array<'sales_rep' | 'sales_rep.user' | 'product_line'>;
 
   /**
    * Body param: End of ZIP code range (501-99999).
@@ -310,7 +311,7 @@ export interface TerritoryRetrieveParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'sales_rep' | 'product_line'>;
+  include?: Array<'sales_rep' | 'sales_rep.user' | 'product_line'>;
 }
 
 export interface TerritoryUpdateParams {
@@ -323,7 +324,7 @@ export interface TerritoryUpdateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'sales_rep' | 'product_line'>;
+  include?: Array<'sales_rep' | 'sales_rep.user' | 'product_line'>;
 
   /**
    * Body param: Set to true to remove the end ZIP code.
@@ -376,7 +377,7 @@ export interface TerritoryListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'sales_rep' | 'product_line'>;
+  include?: Array<'sales_rep' | 'sales_rep.user' | 'product_line'>;
 
   /**
    * Maximum number of results per page (default: 100, max: 1000).

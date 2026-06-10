@@ -123,12 +123,14 @@ import {
   BatchFlowNode,
   BatchLot,
   BatchNextStepsParams,
+  BatchReference,
   BatchRemainingQuantitiesParams,
   Batches,
   GetPossibleNextStepsRequest,
   GetRemainingQuantityToSplitRequest,
   ListBatchFlowNode,
   ListBatchLot,
+  ListBatchReference,
   ListScanningProductionStepInfo,
   ProductionRun,
   ScanningProductionStepInfo,
@@ -288,14 +290,14 @@ export class Operations extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
+   * const listInventoryItem =
    *   await client.operations.retrieveInventories();
    * ```
    */
   retrieveInventories(
     query: OperationRetrieveInventoriesParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<OperationRetrieveInventoriesResponse> {
+  ): APIPromise<ListInventoryItem> {
     return this._client.get('/v1/operations/inventories', { query, ...options });
   }
 
@@ -371,6 +373,26 @@ export interface InventoryItem {
 }
 
 /**
+ * List represents a paginated list of resources.
+ */
+export interface ListInventoryItem {
+  /**
+   * Resources in this page.
+   */
+  data: Array<InventoryItem>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
  * Request to partially update a quantity.
  */
 export interface UpdateQuantityRequest {
@@ -423,26 +445,6 @@ export interface UpdateRateRequest {
    * Decimal value of the rate.
    */
   value?: string;
-}
-
-/**
- * List represents a paginated list of resources.
- */
-export interface OperationRetrieveInventoriesResponse {
-  /**
-   * Resources in this page.
-   */
-  data: Array<InventoryItem>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo contains URL-based pagination metadata.
-   */
-  page_info: APIKeysAPI.PageInfo;
 }
 
 export interface OperationRetrieveInventoriesParams {
@@ -556,9 +558,9 @@ Operations.EdiRuns = EdiRuns;
 export declare namespace Operations {
   export {
     type InventoryItem as InventoryItem,
+    type ListInventoryItem as ListInventoryItem,
     type UpdateQuantityRequest as UpdateQuantityRequest,
     type UpdateRateRequest as UpdateRateRequest,
-    type OperationRetrieveInventoriesResponse as OperationRetrieveInventoriesResponse,
     type OperationRetrieveInventoriesParams as OperationRetrieveInventoriesParams,
     type OperationUpdateQuantitiesParams as OperationUpdateQuantitiesParams,
     type OperationUpdateRatesParams as OperationUpdateRatesParams,
@@ -607,10 +609,12 @@ export declare namespace Operations {
     type Batch as Batch,
     type BatchFlowNode as BatchFlowNode,
     type BatchLot as BatchLot,
+    type BatchReference as BatchReference,
     type GetPossibleNextStepsRequest as GetPossibleNextStepsRequest,
     type GetRemainingQuantityToSplitRequest as GetRemainingQuantityToSplitRequest,
     type ListBatchFlowNode as ListBatchFlowNode,
     type ListBatchLot as ListBatchLot,
+    type ListBatchReference as ListBatchReference,
     type ListScanningProductionStepInfo as ListScanningProductionStepInfo,
     type ProductionRun as ProductionRun,
     type ScanningProductionStepInfo as ScanningProductionStepInfo,

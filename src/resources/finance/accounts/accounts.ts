@@ -207,6 +207,12 @@ export interface AccountRetrieveTransactionsParams {
   cursor?: string;
 
   /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
+
+  /**
    * Include transactions from child accounts. Defaults to true.
    */
   include_child_accounts?: boolean;

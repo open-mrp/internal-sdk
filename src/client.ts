@@ -54,6 +54,7 @@ import {
   FinanceRetrieveTransactionTypesParams,
   InvoiceAllocationEntry,
   ListAdjustmentType,
+  ListInvoiceAllocationEntry,
   ListOpenCreditEntry,
   ListTransactionMethod,
   ListTransactionType,
@@ -72,8 +73,8 @@ import {
 } from './resources/identity/identity';
 import {
   InventoryItem,
+  ListInventoryItem,
   OperationRetrieveInventoriesParams,
-  OperationRetrieveInventoriesResponse,
   OperationUpdateQuantitiesParams,
   OperationUpdateRatesParams,
   Operations,
@@ -926,6 +927,7 @@ export declare namespace Augno {
     type AllocationCustomer as AllocationCustomer,
     type InvoiceAllocationEntry as InvoiceAllocationEntry,
     type ListAdjustmentType as ListAdjustmentType,
+    type ListInvoiceAllocationEntry as ListInvoiceAllocationEntry,
     type ListOpenCreditEntry as ListOpenCreditEntry,
     type ListTransactionMethod as ListTransactionMethod,
     type ListTransactionType as ListTransactionType,
@@ -941,9 +943,9 @@ export declare namespace Augno {
   export {
     Operations as Operations,
     type InventoryItem as InventoryItem,
+    type ListInventoryItem as ListInventoryItem,
     type UpdateQuantityRequest as UpdateQuantityRequest,
     type UpdateRateRequest as UpdateRateRequest,
-    type OperationRetrieveInventoriesResponse as OperationRetrieveInventoriesResponse,
     type OperationRetrieveInventoriesParams as OperationRetrieveInventoriesParams,
     type OperationUpdateQuantitiesParams as OperationUpdateQuantitiesParams,
     type OperationUpdateRatesParams as OperationUpdateRatesParams,

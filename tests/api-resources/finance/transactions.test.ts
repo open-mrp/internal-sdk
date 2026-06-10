@@ -28,6 +28,7 @@ describe('resource transactions', () => {
       amount: '500.00',
       customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
       type: 'payment',
+      include: ['allocations'],
       adjustment_type: 'adjustment_type',
       method: 'check',
       note: 'Q1 invoice payment',
@@ -77,6 +78,7 @@ describe('resource transactions', () => {
       clear_adjustment_type: false,
       clear_responsible_user: false,
       clear_transaction_method: false,
+      include: ['allocations'],
       adjustment_type: 'adjustment_type',
       amount: '750.00',
       is_fully_allocated: false,
@@ -130,5 +132,16 @@ describe('resource transactions', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('delete: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.finance.transactions.delete(
+        'tx_01fc4d4f2b2ee1fa6b6d87257a',
+        { include: ['allocations'] },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 });

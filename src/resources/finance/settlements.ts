@@ -203,7 +203,8 @@ export interface Settlement {
   object: 'settlement';
 
   /**
-   * Account user with profile, role, and department.
+   * Account user with role and department. Profile fields (name, email, username,
+   * image URL) live on the expandable user sub-resource.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 
@@ -315,7 +316,7 @@ export interface SettlementRetrieveParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'responsible_user' | 'allocations'>;
+  include?: Array<'responsible_user' | 'responsible_user.user' | 'allocations'>;
 }
 
 export interface SettlementUpdateParams {

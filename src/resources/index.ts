@@ -32,6 +32,7 @@ export {
   type AllocationCustomer,
   type InvoiceAllocationEntry,
   type ListAdjustmentType,
+  type ListInvoiceAllocationEntry,
   type ListOpenCreditEntry,
   type ListTransactionMethod,
   type ListTransactionType,
@@ -56,9 +57,9 @@ export {
 export {
   Operations,
   type InventoryItem,
+  type ListInventoryItem,
   type UpdateQuantityRequest,
   type UpdateRateRequest,
-  type OperationRetrieveInventoriesResponse,
   type OperationRetrieveInventoriesParams,
   type OperationUpdateQuantitiesParams,
   type OperationUpdateRatesParams,
