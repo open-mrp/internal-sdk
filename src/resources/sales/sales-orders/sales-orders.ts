@@ -226,6 +226,11 @@ export interface CheckoutSalesOrderResponse {
    * Checkout URL.
    */
   checkout_url: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'checkout_sales_order_response';
 }
 
 /**
@@ -364,7 +369,7 @@ export interface CreateSalesOrderRequest {
   carrier_billing_account_number?: string;
 
   /**
-   * Who is billed for freight (sender or third_party).
+   * Who is billed for freight.
    */
   carrier_billing_type?: 'sender' | 'third_party';
 
@@ -464,7 +469,7 @@ export interface Freight {
   billing_account_number: string | null;
 
   /**
-   * Who is billed for freight (sender or third_party).
+   * Who is billed for freight.
    */
   billing_type: 'sender' | 'third_party' | null;
 
@@ -1072,7 +1077,7 @@ export interface UpdateSalesOrderRequest {
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Acknowledgment status (not_sent, sent).
+   * Acknowledgment status.
    */
   acknowledgment_status?: 'not_sent' | 'sent';
 
@@ -1088,7 +1093,7 @@ export interface UpdateSalesOrderRequest {
   carrier_billing_account_number?: string;
 
   /**
-   * Who is billed for freight (sender or third_party).
+   * Who is billed for freight.
    */
   carrier_billing_type?: 'sender' | 'third_party';
 
@@ -1259,7 +1264,7 @@ export interface SalesOrderCreateParams {
   carrier_billing_account_number?: string;
 
   /**
-   * Body param: Who is billed for freight (sender or third_party).
+   * Body param: Who is billed for freight.
    */
   carrier_billing_type?: 'sender' | 'third_party';
 
@@ -1406,7 +1411,7 @@ export interface SalesOrderUpdateParams {
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Body param: Acknowledgment status (not_sent, sent).
+   * Body param: Acknowledgment status.
    */
   acknowledgment_status?: 'not_sent' | 'sent';
 
@@ -1422,7 +1427,7 @@ export interface SalesOrderUpdateParams {
   carrier_billing_account_number?: string;
 
   /**
-   * Body param: Who is billed for freight (sender or third_party).
+   * Body param: Who is billed for freight.
    */
   carrier_billing_type?: 'sender' | 'third_party';
 

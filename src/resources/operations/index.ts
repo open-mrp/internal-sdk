@@ -107,9 +107,9 @@ export {
 export {
   Operations,
   type InventoryItem,
-  type ListInventoriesResponse,
   type UpdateQuantityRequest,
   type UpdateRateRequest,
+  type OperationRetrieveInventoriesResponse,
   type OperationRetrieveInventoriesParams,
   type OperationUpdateQuantitiesParams,
   type OperationUpdateRatesParams,

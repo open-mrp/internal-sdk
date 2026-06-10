@@ -84,6 +84,11 @@ export class Accounts extends APIResource {
  */
 export interface AccountLogoURL {
   /**
+   * Resource type identifier.
+   */
+  object: 'account_logo_url';
+
+  /**
    * Presigned URL. Null if no logo exists.
    */
   url: string | null;
@@ -93,6 +98,11 @@ export interface AccountLogoURL {
  * Result of an account photo upload.
  */
 export interface AccountPhotoUploadResult {
+  /**
+   * Resource type identifier.
+   */
+  object: 'account_photo_upload_result';
+
   /**
    * Whether the upload was successful.
    */

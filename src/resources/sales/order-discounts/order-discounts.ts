@@ -175,7 +175,7 @@ export interface OrderDiscount {
   created_at: string;
 
   /**
-   * Discount type: "percentage" or "amount".
+   * Discount type.
    */
   discount_type: 'percentage' | 'amount';
 

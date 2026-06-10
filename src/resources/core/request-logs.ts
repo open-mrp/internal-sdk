@@ -209,7 +209,9 @@ export interface RequestLog {
   response_body: unknown | null;
 
   /**
-   * HTTP status code.
+   * HTTP status code. Exception to the `status` naming convention: this is a numeric
+   * HTTP response code (200/404/…), not a domain lifecycle status enum, so the
+   * `_code` suffix is meaningful.
    */
   status_code: number;
 

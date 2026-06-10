@@ -31,7 +31,7 @@ export class Actions extends APIResource {
    * ```ts
    * const messageResource =
    *   await client.operations.edi.actions.resubmitInvoice({
-   *     invoice_id: 'inv_abc123',
+   *     invoice_id: 'iv_018b5949ada8abca36358bbea9',
    *   });
    * ```
    */

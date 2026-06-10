@@ -118,6 +118,11 @@ export interface PickShipmentsResponse {
   count: number;
 
   /**
+   * Resource type identifier.
+   */
+  object: 'pick_shipments_response';
+
+  /**
    * Shipment numbers associated with the pick.
    */
   shipment_numbers: Array<string>;

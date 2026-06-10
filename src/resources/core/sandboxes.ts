@@ -57,8 +57,7 @@ export class Sandboxes extends APIResource {
   }
 
   /**
-   * Deletes a sandbox account. At least one sandbox must remain per production
-   * account.
+   * Deletes a sandbox account. Account-scoped data is purged asynchronously.
    *
    * @example
    * ```ts

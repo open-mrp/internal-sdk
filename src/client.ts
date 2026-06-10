@@ -72,8 +72,8 @@ import {
 } from './resources/identity/identity';
 import {
   InventoryItem,
-  ListInventoriesResponse,
   OperationRetrieveInventoriesParams,
+  OperationRetrieveInventoriesResponse,
   OperationUpdateQuantitiesParams,
   OperationUpdateRatesParams,
   Operations,
@@ -941,9 +941,9 @@ export declare namespace Augno {
   export {
     Operations as Operations,
     type InventoryItem as InventoryItem,
-    type ListInventoriesResponse as ListInventoriesResponse,
     type UpdateQuantityRequest as UpdateQuantityRequest,
     type UpdateRateRequest as UpdateRateRequest,
+    type OperationRetrieveInventoriesResponse as OperationRetrieveInventoriesResponse,
     type OperationRetrieveInventoriesParams as OperationRetrieveInventoriesParams,
     type OperationUpdateQuantitiesParams as OperationUpdateQuantitiesParams,
     type OperationUpdateRatesParams as OperationUpdateRatesParams,

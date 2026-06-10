@@ -128,15 +128,7 @@ describe('resource scanningStations', () => {
   test('consumptions: only required params', async () => {
     const responsePromise = client.operations.scanningStations.consumptions(
       'scst_0129335dd6286056a97024fcc1',
-      {
-        batch_ids: ['bt_017313a7df2d7ac8d895809747'],
-        production_step_id: 'prst_0159474175bb59f4b1990404ee',
-        split_quantity: {
-          id: 'bt_017313a7df2d7ac8d895809747',
-          measure: '10.5',
-          unit_id: 'un_01966263f74a5a0cae356000a1',
-        },
-      },
+      { batch_ids: ['bt_017313a7df2d7ac8d895809747'] },
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);

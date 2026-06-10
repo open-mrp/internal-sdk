@@ -130,9 +130,9 @@ export interface Batch {
   department: AccountUsersAPI.Department | null;
 
   /**
-   * Input batch IDs.
+   * List represents a paginated list of resources.
    */
-  input_batch_ids: Array<string>;
+  input_batches: Batch.InputBatches | null;
 
   /**
    * Item is an inventory item (product, material, or part).
@@ -155,9 +155,9 @@ export interface Batch {
   object: 'batch';
 
   /**
-   * Output batch IDs.
+   * List represents a paginated list of resources.
    */
-  output_batch_ids: Array<string>;
+  output_batches: Batch.OutputBatches | null;
 
   /**
    * Production run sub-resource.
@@ -200,6 +200,84 @@ export interface Batch {
   waste: AccountUsersAPI.Quantity | null;
 }
 
+export namespace Batch {
+  /**
+   * List represents a paginated list of resources.
+   */
+  export interface InputBatches {
+    /**
+     * Resources in this page.
+     */
+    data: Array<InputBatches.Data>;
+
+    /**
+     * Resource type identifier.
+     */
+    object: 'list';
+
+    /**
+     * PageInfo contains URL-based pagination metadata.
+     */
+    page_info: APIKeysAPI.PageInfo;
+  }
+
+  export namespace InputBatches {
+    /**
+     * Minimal reference to another batch, carrying only the id and object
+     * discriminator.
+     */
+    export interface Data {
+      /**
+       * Batch ID.
+       */
+      id: string;
+
+      /**
+       * Resource type identifier.
+       */
+      object: 'batch';
+    }
+  }
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  export interface OutputBatches {
+    /**
+     * Resources in this page.
+     */
+    data: Array<OutputBatches.Data>;
+
+    /**
+     * Resource type identifier.
+     */
+    object: 'list';
+
+    /**
+     * PageInfo contains URL-based pagination metadata.
+     */
+    page_info: APIKeysAPI.PageInfo;
+  }
+
+  export namespace OutputBatches {
+    /**
+     * Minimal reference to another batch, carrying only the id and object
+     * discriminator.
+     */
+    export interface Data {
+      /**
+       * Batch ID.
+       */
+      id: string;
+
+      /**
+       * Resource type identifier.
+       */
+      object: 'batch';
+    }
+  }
+}
+
 /**
  * Batch within a production flow graph, including input and output edges.
  */
@@ -210,9 +288,9 @@ export interface BatchFlowNode {
   batch: Batch;
 
   /**
-   * IDs of batches that feed into this batch.
+   * List represents a paginated list of resources.
    */
-  input_batch_ids: Array<string>;
+  input_batches: BatchFlowNode.InputBatches | null;
 
   /**
    * Resource type identifier.
@@ -220,9 +298,87 @@ export interface BatchFlowNode {
   object: 'batch_flow_node';
 
   /**
-   * IDs of batches this batch feeds into.
+   * List represents a paginated list of resources.
    */
-  output_batch_ids: Array<string>;
+  output_batches: BatchFlowNode.OutputBatches | null;
+}
+
+export namespace BatchFlowNode {
+  /**
+   * List represents a paginated list of resources.
+   */
+  export interface InputBatches {
+    /**
+     * Resources in this page.
+     */
+    data: Array<InputBatches.Data>;
+
+    /**
+     * Resource type identifier.
+     */
+    object: 'list';
+
+    /**
+     * PageInfo contains URL-based pagination metadata.
+     */
+    page_info: APIKeysAPI.PageInfo;
+  }
+
+  export namespace InputBatches {
+    /**
+     * Minimal reference to another batch, carrying only the id and object
+     * discriminator.
+     */
+    export interface Data {
+      /**
+       * Batch ID.
+       */
+      id: string;
+
+      /**
+       * Resource type identifier.
+       */
+      object: 'batch';
+    }
+  }
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  export interface OutputBatches {
+    /**
+     * Resources in this page.
+     */
+    data: Array<OutputBatches.Data>;
+
+    /**
+     * Resource type identifier.
+     */
+    object: 'list';
+
+    /**
+     * PageInfo contains URL-based pagination metadata.
+     */
+    page_info: APIKeysAPI.PageInfo;
+  }
+
+  export namespace OutputBatches {
+    /**
+     * Minimal reference to another batch, carrying only the id and object
+     * discriminator.
+     */
+    export interface Data {
+      /**
+       * Batch ID.
+       */
+      id: string;
+
+      /**
+       * Resource type identifier.
+       */
+      object: 'batch';
+    }
+  }
 }
 
 /**
@@ -233,6 +389,11 @@ export interface BatchLot {
    * Lot number.
    */
   lot_number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'batch_lot';
 
   /**
    * Lot type (material or productionRun).

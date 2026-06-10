@@ -51,7 +51,6 @@ export class Memories extends APIResource {
    * const agentMemory = await client.ai.memories.update(
    *   'agmm_018731bdaf4ab04bd5bff1b65c',
    *   {
-   *     category: 'category',
    *     content:
    *       'Customer prefers next-day shipping on all orders.',
    *     importance: 0.9,
@@ -59,7 +58,11 @@ export class Memories extends APIResource {
    * );
    * ```
    */
-  update(id: string, body: MemoryUpdateParams, options?: RequestOptions): APIPromise<AgentMemory> {
+  update(
+    id: string,
+    body: MemoryUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<AgentMemory> {
     return this._client.patch(path`/v1/ai/memories/${id}`, { body, ...options });
   }
 
@@ -164,11 +167,6 @@ export interface CreateMemoryRequest {
   content: string;
 
   /**
-   * Importance score between 0 and 1.
-   */
-  importance: number;
-
-  /**
    * Entity ID.
    */
   entity_id?: string;
@@ -182,6 +180,11 @@ export interface CreateMemoryRequest {
    * ISO 8601 expiration timestamp.
    */
   expires_at?: string;
+
+  /**
+   * Importance score between 0 and 1.
+   */
+  importance?: number;
 
   /**
    * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
@@ -217,17 +220,12 @@ export interface UpdateMemoryRequest {
   /**
    * Memory category (e.g. "preference", "fact", "instruction").
    */
-  category: string;
+  category?: string;
 
   /**
    * Text content.
    */
-  content: string;
-
-  /**
-   * Importance score between 0 and 1.
-   */
-  importance: number;
+  content?: string;
 
   /**
    * Entity ID.
@@ -243,6 +241,11 @@ export interface UpdateMemoryRequest {
    * ISO 8601 expiration timestamp.
    */
   expires_at?: string;
+
+  /**
+   * Importance score between 0 and 1.
+   */
+  importance?: number;
 
   /**
    * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
@@ -265,11 +268,6 @@ export interface MemoryCreateParams {
   content: string;
 
   /**
-   * Importance score between 0 and 1.
-   */
-  importance: number;
-
-  /**
    * Entity ID.
    */
   entity_id?: string;
@@ -283,6 +281,11 @@ export interface MemoryCreateParams {
    * ISO 8601 expiration timestamp.
    */
   expires_at?: string;
+
+  /**
+   * Importance score between 0 and 1.
+   */
+  importance?: number;
 
   /**
    * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
@@ -295,17 +298,12 @@ export interface MemoryUpdateParams {
   /**
    * Memory category (e.g. "preference", "fact", "instruction").
    */
-  category: string;
+  category?: string;
 
   /**
    * Text content.
    */
-  content: string;
-
-  /**
-   * Importance score between 0 and 1.
-   */
-  importance: number;
+  content?: string;
 
   /**
    * Entity ID.
@@ -321,6 +319,11 @@ export interface MemoryUpdateParams {
    * ISO 8601 expiration timestamp.
    */
   expires_at?: string;
+
+  /**
+   * Importance score between 0 and 1.
+   */
+  importance?: number;
 
   /**
    * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,

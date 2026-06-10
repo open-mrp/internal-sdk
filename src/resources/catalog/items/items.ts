@@ -176,6 +176,11 @@ export interface ItemCosts {
  */
 export interface ItemTrendPoint {
   /**
+   * Resource type identifier.
+   */
+  object: 'item_trend_point';
+
+  /**
    * Timestamp of the data point.
    */
   occurred_at: string;

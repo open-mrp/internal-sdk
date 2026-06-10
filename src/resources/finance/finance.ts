@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as FinanceAPI from './finance';
 import * as InvoicesAPI from './invoices';
 import {
   AllocationInvoice,
@@ -213,13 +214,15 @@ export interface AdjustmentType {
 }
 
 /**
- * Minimal customer sub-resource for allocation entries.
+ * Minimal customer sub-resource for allocation entries. It carries its own
+ * allocation_customer discriminator (not customer) because allocation list entries
+ * do not carry a customer id, so it is not a resolvable customer reference.
  */
 export interface AllocationCustomer {
   /**
-   * Customer account id.
+   * Customer account ID. Null when the entry does not carry one.
    */
-  id: string;
+  id: string | null;
 
   /**
    * Customer display name.
@@ -230,6 +233,11 @@ export interface AllocationCustomer {
    * Customer number.
    */
   number: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'allocation_customer';
 }
 
 /**
@@ -245,6 +253,11 @@ export interface InvoiceAllocationEntry {
    * Invoice number.
    */
   invoice_number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'invoice_allocation_entry';
 }
 
 /**
@@ -352,14 +365,16 @@ export interface OpenCreditEntry {
   created_at: string;
 
   /**
-   * Minimal customer sub-resource for allocation entries.
+   * Minimal customer sub-resource for allocation entries. It carries its own
+   * allocation_customer discriminator (not customer) because allocation list entries
+   * do not carry a customer id, so it is not a resolvable customer reference.
    */
   customer: AllocationCustomer | null;
 
   /**
-   * Allocations against invoices for this transaction.
+   * List represents a paginated list of resources.
    */
-  invoice_allocations: Array<InvoiceAllocationEntry>;
+  invoice_allocations: OpenCreditEntry.InvoiceAllocations | null;
 
   /**
    * Remaining unallocated amount as a decimal string.
@@ -405,6 +420,28 @@ export interface OpenCreditEntry {
    * Transaction type.
    */
   transaction_type: string;
+}
+
+export namespace OpenCreditEntry {
+  /**
+   * List represents a paginated list of resources.
+   */
+  export interface InvoiceAllocations {
+    /**
+     * Resources in this page.
+     */
+    data: Array<FinanceAPI.InvoiceAllocationEntry>;
+
+    /**
+     * Resource type identifier.
+     */
+    object: 'list';
+
+    /**
+     * PageInfo contains URL-based pagination metadata.
+     */
+    page_info: APIKeysAPI.PageInfo;
+  }
 }
 
 /**

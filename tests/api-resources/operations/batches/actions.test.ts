@@ -124,16 +124,6 @@ describe('resource actions', () => {
       },
       production_step_id: 'prst_0159474175bb59f4b1990404ee',
       scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
-      seconds: {
-        id: 'id',
-        measure: 'measure',
-        unit_id: 'unit_id',
-      },
-      waste: {
-        id: 'id',
-        measure: 'measure',
-        unit_id: 'unit_id',
-      },
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);

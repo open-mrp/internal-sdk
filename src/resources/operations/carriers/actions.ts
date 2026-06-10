@@ -22,7 +22,6 @@ export class Actions extends APIResource {
    *     {
    *       redirect_uri:
    *         'https://app.example.com/carriers/oauth/callback',
-   *       state: null,
    *     },
    *   );
    * ```
@@ -75,7 +74,7 @@ export interface InitiateOAuthRequest {
   /**
    * Opaque state value passed through the OAuth flow.
    */
-  state: string | null;
+  state?: string;
 }
 
 /**
@@ -102,7 +101,7 @@ export interface ActionInitiateOAuthParams {
   /**
    * Opaque state value passed through the OAuth flow.
    */
-  state: string | null;
+  state?: string;
 }
 
 export interface ActionSyncOptionsParams {

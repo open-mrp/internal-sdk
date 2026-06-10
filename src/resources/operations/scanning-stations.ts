@@ -243,12 +243,12 @@ export interface GetScanningStationConsumptionRequest {
   /**
    * Production step ID to scope the consumption calculation.
    */
-  production_step_id: string | null;
+  production_step_id?: string;
 
   /**
    * Quantity input for a split operation.
    */
-  split_quantity: ActionsAPI.SplitQuantityInput | null;
+  split_quantity?: ActionsAPI.SplitQuantityInput;
 }
 
 /**
@@ -481,12 +481,12 @@ export interface ScanningStationConsumptionsParams {
   /**
    * Production step ID to scope the consumption calculation.
    */
-  production_step_id: string | null;
+  production_step_id?: string;
 
   /**
    * Quantity input for a split operation.
    */
-  split_quantity: ActionsAPI.SplitQuantityInput | null;
+  split_quantity?: ActionsAPI.SplitQuantityInput;
 }
 
 export interface ScanningStationRetrieveBatchesParams {

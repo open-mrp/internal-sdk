@@ -94,7 +94,7 @@ export interface Delivery {
   rejected_at: string | null;
 
   /**
-   * Delivery status (accepted or rejected).
+   * Delivery status.
    */
   status: 'accepted' | 'rejected';
 

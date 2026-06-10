@@ -142,6 +142,11 @@ export interface CloseSalesOrderRequest {
  */
 export interface CreateProductionRunResponse {
   /**
+   * Resource type identifier.
+   */
+  object: 'create_production_run_response';
+
+  /**
    * Lightweight reference to a production run.
    */
   production_run: CreateProductionRunResponseRef;

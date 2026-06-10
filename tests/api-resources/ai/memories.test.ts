@@ -12,7 +12,6 @@ describe('resource memories', () => {
     const responsePromise = client.ai.memories.create({
       category: 'preference',
       content: 'Customer prefers express shipping on all orders.',
-      importance: 0.8,
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -27,10 +26,10 @@ describe('resource memories', () => {
     const response = await client.ai.memories.create({
       category: 'preference',
       content: 'Customer prefers express shipping on all orders.',
-      importance: 0.8,
       entity_id: 'entity_id',
       entity_type: 'entity_type',
       expires_at: 'expires_at',
+      importance: 0.8,
       metadata: { source: 'support_ticket' },
     });
   });
@@ -46,12 +45,8 @@ describe('resource memories', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: only required params', async () => {
-    const responsePromise = client.ai.memories.update('agmm_018731bdaf4ab04bd5bff1b65c', {
-      category: 'category',
-      content: 'Customer prefers next-day shipping on all orders.',
-      importance: 0.9,
-    });
+  test('update', async () => {
+    const responsePromise = client.ai.memories.update('agmm_018731bdaf4ab04bd5bff1b65c');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -61,16 +56,23 @@ describe('resource memories', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: required and optional params', async () => {
-    const response = await client.ai.memories.update('agmm_018731bdaf4ab04bd5bff1b65c', {
-      category: 'category',
-      content: 'Customer prefers next-day shipping on all orders.',
-      importance: 0.9,
-      entity_id: 'entity_id',
-      entity_type: 'entity_type',
-      expires_at: 'expires_at',
-      metadata: {},
-    });
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.ai.memories.update(
+        'agmm_018731bdaf4ab04bd5bff1b65c',
+        {
+          category: 'category',
+          content: 'Customer prefers next-day shipping on all orders.',
+          entity_id: 'entity_id',
+          entity_type: 'entity_type',
+          expires_at: 'expires_at',
+          importance: 0.9,
+          metadata: {},
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('list', async () => {

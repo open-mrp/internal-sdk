@@ -148,7 +148,7 @@ export interface CreateProductRequest {
   sku: string;
 
   /**
-   * Product type code (e.g. sale, sample).
+   * Product type code.
    */
   type: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
 
@@ -250,7 +250,7 @@ export interface ProductCreateParams {
   sku: string;
 
   /**
-   * Body param: Product type code (e.g. sale, sample).
+   * Body param: Product type code.
    */
   type: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
 

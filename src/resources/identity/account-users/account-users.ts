@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as AnalyticsAPI from '../../core/analytics';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as ActionsAPI from './actions';
 import { ActionActivateResponse, ActionDisableResponse, ActionRemoveResponse, Actions } from './actions';
@@ -168,9 +169,9 @@ export interface AccountUser {
   updated_at: string;
 
   /**
-   * Underlying user ID.
+   * Entity is a polymorphic reference to any resource in the system.
    */
-  user_id: string;
+  user: AnalyticsAPI.Entity | null;
 
   /**
    * Username.

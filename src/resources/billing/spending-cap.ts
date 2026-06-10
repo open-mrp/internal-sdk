@@ -19,7 +19,10 @@ export class SpendingCap extends APIResource {
    *   });
    * ```
    */
-  update(body: SpendingCapUpdateParams, options?: RequestOptions): APIPromise<SpendingCapResponse> {
+  update(
+    body: SpendingCapUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<SpendingCapResponse> {
     return this._client.put('/v1/billing/spending-cap', { body, ...options });
   }
 
@@ -43,9 +46,10 @@ export class SpendingCap extends APIResource {
  */
 export interface SetSpendingCapRequest {
   /**
-   * Monthly spending cap in cents. Null removes the cap.
+   * Monthly spending cap in cents. Null removes the cap; omitting the field leaves
+   * the current cap unchanged.
    */
-  cap_cents: number | null;
+  cap_cents?: number | null;
 }
 
 /**
@@ -65,9 +69,10 @@ export interface SpendingCapResponse {
 
 export interface SpendingCapUpdateParams {
   /**
-   * Monthly spending cap in cents. Null removes the cap.
+   * Monthly spending cap in cents. Null removes the cap; omitting the field leaves
+   * the current cap unchanged.
    */
-  cap_cents: number | null;
+  cap_cents?: number | null;
 }
 
 export declare namespace SpendingCap {

@@ -12,9 +12,7 @@ describe('resource agents', () => {
     const responsePromise = client.ai.agents.create({
       category_code: 'inventory',
       config: {},
-      description: 'Monitors inventory levels and creates restock alerts.',
       name: 'Inventory Monitor',
-      role_id: 'rl_01c16d2eb637c0d1f3a372937c',
       slug: 'inventory_monitor',
       trigger_type: 'event',
     });
@@ -41,18 +39,18 @@ describe('resource agents', () => {
           timezone: 'timezone',
         },
       },
-      description: 'Monitors inventory levels and creates restock alerts.',
       name: 'Inventory Monitor',
-      role_id: 'rl_01c16d2eb637c0d1f3a372937c',
       slug: 'inventory_monitor',
       trigger_type: 'event',
       include: ['config'],
+      description: 'Monitors inventory levels and creates restock alerts.',
+      role_id: 'rl_01c16d2eb637c0d1f3a372937c',
       tools: [
         {
+          tool_id: 'tdef_01f0c4d04780ace864e6cc3a74',
           config_json: 'config_json',
           require_review: true,
           sort_order: 1,
-          tool_id: 'tdef_01f0c4d04780ace864e6cc3a74',
         },
       ],
     });
@@ -117,10 +115,10 @@ describe('resource agents', () => {
           slug: 'slug',
           tools: [
             {
+              tool_id: 'tdef_01f0c4d04780ace864e6cc3a74',
               config_json: 'config_json',
               require_review: true,
               sort_order: 1,
-              tool_id: 'tdef_01f0c4d04780ace864e6cc3a74',
             },
           ],
           trigger_type: 'scheduled',
@@ -172,7 +170,7 @@ describe('resource agents', () => {
 
   test('updateStatus: only required params', async () => {
     const responsePromise = client.ai.agents.updateStatus('agdf_01b9ef28feb99e6954201aca63', {
-      status_code: 'active',
+      status: 'active',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -185,7 +183,7 @@ describe('resource agents', () => {
 
   test('updateStatus: required and optional params', async () => {
     const response = await client.ai.agents.updateStatus('agdf_01b9ef28feb99e6954201aca63', {
-      status_code: 'active',
+      status: 'active',
       include: ['config'],
     });
   });

@@ -288,14 +288,14 @@ export class Operations extends APIResource {
    *
    * @example
    * ```ts
-   * const listInventoriesResponse =
+   * const response =
    *   await client.operations.retrieveInventories();
    * ```
    */
   retrieveInventories(
     query: OperationRetrieveInventoriesParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ListInventoriesResponse> {
+  ): APIPromise<OperationRetrieveInventoriesResponse> {
     return this._client.get('/v1/operations/inventories', { query, ...options });
   }
 
@@ -371,31 +371,6 @@ export interface InventoryItem {
 }
 
 /**
- * Paginated list of inventory items.
- */
-export interface ListInventoriesResponse {
-  /**
-   * Total count.
-   */
-  count: number;
-
-  /**
-   * Inventory items.
-   */
-  data: Array<InventoryItem>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo contains URL-based pagination metadata.
-   */
-  page_info: APIKeysAPI.PageInfo;
-}
-
-/**
  * Request to partially update a quantity.
  */
 export interface UpdateQuantityRequest {
@@ -448,6 +423,26 @@ export interface UpdateRateRequest {
    * Decimal value of the rate.
    */
   value?: string;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface OperationRetrieveInventoriesResponse {
+  /**
+   * Resources in this page.
+   */
+  data: Array<InventoryItem>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
 }
 
 export interface OperationRetrieveInventoriesParams {
@@ -561,9 +556,9 @@ Operations.EdiRuns = EdiRuns;
 export declare namespace Operations {
   export {
     type InventoryItem as InventoryItem,
-    type ListInventoriesResponse as ListInventoriesResponse,
     type UpdateQuantityRequest as UpdateQuantityRequest,
     type UpdateRateRequest as UpdateRateRequest,
+    type OperationRetrieveInventoriesResponse as OperationRetrieveInventoriesResponse,
     type OperationRetrieveInventoriesParams as OperationRetrieveInventoriesParams,
     type OperationUpdateQuantitiesParams as OperationUpdateQuantitiesParams,
     type OperationUpdateRatesParams as OperationUpdateRatesParams,

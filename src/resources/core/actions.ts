@@ -16,7 +16,6 @@ export class Actions extends APIResource {
    * ```ts
    * const checkDuplicateResult =
    *   await client.core.actions.checkDuplicates({
-   *     customer_id: null,
    *     record_number: 'INV-001',
    *     type: 'invoice_number',
    *   });
@@ -36,7 +35,7 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const response = await client.core.actions.emailRecord({
-   *   id: 'inv_abc123',
+   *   id: 'iv_018b5949ada8abca36358bbea9',
    *   type: 'invoice',
    * });
    * ```
@@ -57,9 +56,7 @@ export class Actions extends APIResource {
    *   await client.core.actions.requestDemo({
    *     company: 'Acme Corp',
    *     email: 'jane@example.com',
-   *     message: null,
    *     name: 'Jane Smith',
-   *     phone_number: null,
    *   });
    * ```
    */
@@ -76,7 +73,6 @@ export class Actions extends APIResource {
    *   await client.core.actions.submitFeedback({
    *     answer:
    *       'Very useful, but could use better documentation.',
-   *     page_url: null,
    *     question: 'How would you rate this feature?',
    *   });
    * ```
@@ -91,11 +87,6 @@ export class Actions extends APIResource {
  */
 export interface CheckDuplicateRequest {
   /**
-   * Customer ID, required for customer_po_number checks.
-   */
-  customer_id: string | null;
-
-  /**
    * Record number to check.
    */
   record_number: string;
@@ -104,6 +95,11 @@ export interface CheckDuplicateRequest {
    * Duplicate check type: invoice_number, order_number, or customer_po_number.
    */
   type: string;
+
+  /**
+   * Customer ID, required for customer_po_number checks.
+   */
+  customer_id?: string;
 }
 
 /**
@@ -119,6 +115,11 @@ export interface CheckDuplicateResult {
    * Human-readable message if the record is a duplicate.
    */
   message: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'check_duplicate_result';
 }
 
 /**
@@ -166,19 +167,19 @@ export interface RequestDemoRequest {
   email: string;
 
   /**
-   * Message from the requester.
-   */
-  message: string | null;
-
-  /**
    * Name of the requester.
    */
   name: string;
 
   /**
+   * Message from the requester.
+   */
+  message?: string;
+
+  /**
    * Phone number.
    */
-  phone_number: string | null;
+  phone_number?: string;
 }
 
 /**
@@ -191,24 +192,19 @@ export interface SubmitFeedbackRequest {
   answer: string;
 
   /**
-   * URL of the page where feedback was submitted.
-   */
-  page_url: string | null;
-
-  /**
    * Question presented to the user.
    */
   question: string;
+
+  /**
+   * URL of the page where feedback was submitted.
+   */
+  page_url?: string;
 }
 
 export interface ActionEmailRecordResponse {}
 
 export interface ActionCheckDuplicatesParams {
-  /**
-   * Customer ID, required for customer_po_number checks.
-   */
-  customer_id: string | null;
-
   /**
    * Record number to check.
    */
@@ -218,6 +214,11 @@ export interface ActionCheckDuplicatesParams {
    * Duplicate check type: invoice_number, order_number, or customer_po_number.
    */
   type: string;
+
+  /**
+   * Customer ID, required for customer_po_number checks.
+   */
+  customer_id?: string;
 }
 
 export interface ActionEmailRecordParams {
@@ -244,19 +245,19 @@ export interface ActionRequestDemoParams {
   email: string;
 
   /**
-   * Message from the requester.
-   */
-  message: string | null;
-
-  /**
    * Name of the requester.
    */
   name: string;
 
   /**
+   * Message from the requester.
+   */
+  message?: string;
+
+  /**
    * Phone number.
    */
-  phone_number: string | null;
+  phone_number?: string;
 }
 
 export interface ActionSubmitFeedbackParams {
@@ -266,14 +267,14 @@ export interface ActionSubmitFeedbackParams {
   answer: string;
 
   /**
-   * URL of the page where feedback was submitted.
-   */
-  page_url: string | null;
-
-  /**
    * Question presented to the user.
    */
   question: string;
+
+  /**
+   * URL of the page where feedback was submitted.
+   */
+  page_url?: string;
 }
 
 export declare namespace Actions {

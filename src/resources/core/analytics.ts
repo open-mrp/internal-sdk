@@ -1364,8 +1364,7 @@ export interface Entity {
   object: 'entity';
 
   /**
-   * The resource kind that this entity references (e.g. "user", "customer",
-   * "sales_order").
+   * The resource kind that this entity references.
    */
   type:
     | 'account'
@@ -1384,6 +1383,7 @@ export interface Entity {
     | 'sandbox'
     | 'registration_session'
     | 'pricing_plan'
+    | 'account_plan'
     | 'plan_change'
     | 'enterprise_inquiry'
     | 'request_log'
@@ -1450,8 +1450,6 @@ export interface Entity {
     | 'delivery'
     | 'delivery_line'
     | 'sales_order'
-    | 'sales_order_line'
-    | 'sales_order_type'
     | 'location'
     | 'location_type'
     | 'lot'
@@ -1508,6 +1506,8 @@ export interface Entity {
     | 'customer_defaults'
     | 'customer_notification_preferences'
     | 'order_discount'
+    | 'sales_order_line'
+    | 'sales_order_type'
     | 'sales_order_status'
     | 'material'
     | 'supplier_material'
@@ -1559,7 +1559,19 @@ export interface Entity {
     | 'rate_shop_result'
     | 'owner'
     | 'message'
-    | 'account_plan';
+    | 'account_photo_upload_result'
+    | 'user_photo_upload_result'
+    | 'user_photo_url'
+    | 'batch_lot'
+    | 'check_duplicate_result'
+    | 'item_trend_point'
+    | 'pack_pick_response'
+    | 'pick_shipments_response'
+    | 'tenancy_pending_registration'
+    | 'invoice_allocation_entry'
+    | 'allocation_customer'
+    | 'checkout_sales_order_response'
+    | 'create_production_run_response';
 }
 
 /**

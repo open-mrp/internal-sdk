@@ -81,9 +81,9 @@ export interface RotateAPIKeyRequest {
   /**
    * When to revoke the old key.
    *
-   * If omitted (or in the past), the old key is revoked immediately. A future
-   * timestamp schedules revocation (keeping the old key valid until then) up to a
-   * maximum of 30 days out.
+   * If omitted, the old key is revoked immediately. A future timestamp schedules
+   * revocation (keeping the old key valid until then) up to a maximum of 30 days
+   * out.
    */
   revoke_at?: string;
 }
@@ -113,9 +113,9 @@ export interface ActionRotateParams {
   /**
    * Body param: When to revoke the old key.
    *
-   * If omitted (or in the past), the old key is revoked immediately. A future
-   * timestamp schedules revocation (keeping the old key valid until then) up to a
-   * maximum of 30 days out.
+   * If omitted, the old key is revoked immediately. A future timestamp schedules
+   * revocation (keeping the old key valid until then) up to a maximum of 30 days
+   * out.
    */
   revoke_at?: string;
 }

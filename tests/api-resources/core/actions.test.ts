@@ -10,7 +10,6 @@ const client = new Augno({
 describe('resource actions', () => {
   test('checkDuplicates: only required params', async () => {
     const responsePromise = client.core.actions.checkDuplicates({
-      customer_id: null,
       record_number: 'INV-001',
       type: 'invoice_number',
     });
@@ -25,14 +24,17 @@ describe('resource actions', () => {
 
   test('checkDuplicates: required and optional params', async () => {
     const response = await client.core.actions.checkDuplicates({
-      customer_id: null,
       record_number: 'INV-001',
       type: 'invoice_number',
+      customer_id: 'customer_id',
     });
   });
 
   test('emailRecord: only required params', async () => {
-    const responsePromise = client.core.actions.emailRecord({ id: 'inv_abc123', type: 'invoice' });
+    const responsePromise = client.core.actions.emailRecord({
+      id: 'iv_018b5949ada8abca36358bbea9',
+      type: 'invoice',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -43,16 +45,17 @@ describe('resource actions', () => {
   });
 
   test('emailRecord: required and optional params', async () => {
-    const response = await client.core.actions.emailRecord({ id: 'inv_abc123', type: 'invoice' });
+    const response = await client.core.actions.emailRecord({
+      id: 'iv_018b5949ada8abca36358bbea9',
+      type: 'invoice',
+    });
   });
 
   test('requestDemo: only required params', async () => {
     const responsePromise = client.core.actions.requestDemo({
       company: 'Acme Corp',
       email: 'jane@example.com',
-      message: null,
       name: 'Jane Smith',
-      phone_number: null,
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -67,16 +70,15 @@ describe('resource actions', () => {
     const response = await client.core.actions.requestDemo({
       company: 'Acme Corp',
       email: 'jane@example.com',
-      message: null,
       name: 'Jane Smith',
-      phone_number: null,
+      message: 'message',
+      phone_number: 'phone_number',
     });
   });
 
   test('submitFeedback: only required params', async () => {
     const responsePromise = client.core.actions.submitFeedback({
       answer: 'Very useful, but could use better documentation.',
-      page_url: null,
       question: 'How would you rate this feature?',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -91,8 +93,8 @@ describe('resource actions', () => {
   test('submitFeedback: required and optional params', async () => {
     const response = await client.core.actions.submitFeedback({
       answer: 'Very useful, but could use better documentation.',
-      page_url: null,
       question: 'How would you rate this feature?',
+      page_url: 'page_url',
     });
   });
 });

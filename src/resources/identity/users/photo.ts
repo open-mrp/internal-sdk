@@ -44,6 +44,11 @@ export class Photo extends APIResource {
  */
 export interface UserPhotoUploadResult {
   /**
+   * Resource type identifier.
+   */
+  object: 'user_photo_upload_result';
+
+  /**
    * Upload success status.
    */
   success: boolean;
@@ -53,6 +58,11 @@ export interface UserPhotoUploadResult {
  * Presigned URL for a user's profile photo.
  */
 export interface UserPhotoURL {
+  /**
+   * Resource type identifier.
+   */
+  object: 'user_photo_url';
+
   /**
    * Presigned URL for the profile photo, or null if no photo exists.
    */

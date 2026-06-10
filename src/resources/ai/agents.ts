@@ -26,12 +26,12 @@ export class Agents extends APIResource {
    *     temperature: 0.2,
    *     trigger_config: { event_filters: ['email.received'] },
    *   },
-   *   description:
-   *     'Monitors inventory levels and creates restock alerts.',
    *   name: 'Inventory Monitor',
-   *   role_id: 'rl_01c16d2eb637c0d1f3a372937c',
    *   slug: 'inventory_monitor',
    *   trigger_type: 'event',
+   *   description:
+   *     'Monitors inventory levels and creates restock alerts.',
+   *   role_id: 'rl_01c16d2eb637c0d1f3a372937c',
    *   tools: [
    *     {
    *       tool_id: 'tdef_01f0c4d04780ace864e6cc3a74',
@@ -121,7 +121,7 @@ export class Agents extends APIResource {
    * ```ts
    * const agentDefinition = await client.ai.agents.updateStatus(
    *   'agdf_01b9ef28feb99e6954201aca63',
-   *   { status_code: 'active' },
+   *   { status: 'active' },
    * );
    * ```
    */
@@ -336,19 +336,9 @@ export interface CreateAgentRequest {
   config: ConfigInput;
 
   /**
-   * Description of what the agent does.
-   */
-  description: string;
-
-  /**
    * Display name.
    */
   name: string;
-
-  /**
-   * Role ID defining agent permissions.
-   */
-  role_id: string;
 
   /**
    * URL-friendly identifier.
@@ -356,9 +346,19 @@ export interface CreateAgentRequest {
   slug: string;
 
   /**
-   * Trigger type: "manual", "scheduled", or "event".
+   * Trigger type.
    */
   trigger_type: 'scheduled' | 'manual' | 'event';
+
+  /**
+   * Description of what the agent does.
+   */
+  description?: string;
+
+  /**
+   * Role ID defining agent permissions.
+   */
+  role_id?: string;
 
   /**
    * Tools to attach.
@@ -411,24 +411,24 @@ export interface ListAgentDefinitionTool {
  */
 export interface ToolInput {
   /**
+   * Available tool ID.
+   */
+  tool_id: string;
+
+  /**
    * JSON configuration for this tool instance.
    */
-  config_json: string;
+  config_json?: string;
 
   /**
    * Requires human review before execution.
    */
-  require_review: boolean;
+  require_review?: boolean;
 
   /**
    * Display order among the agent's tools (lower values appear first).
    */
-  sort_order: number;
-
-  /**
-   * Available tool ID.
-   */
-  tool_id: string;
+  sort_order?: number;
 }
 
 /**
@@ -517,7 +517,7 @@ export interface UpdateAgentRequest {
   tools?: Array<ToolInput>;
 
   /**
-   * Trigger type: "manual", "scheduled", or "event".
+   * Trigger type.
    */
   trigger_type?: 'scheduled' | 'manual' | 'event';
 }
@@ -527,9 +527,9 @@ export interface UpdateAgentRequest {
  */
 export interface UpdateAgentStatusRequest {
   /**
-   * Account-level status code: "active" or "inactive".
+   * Account-level status: "active" or "inactive".
    */
-  status_code: string;
+  status: string;
 }
 
 export interface AgentDeleteResponse {}
@@ -546,19 +546,9 @@ export interface AgentCreateParams {
   config: ConfigInput;
 
   /**
-   * Body param: Description of what the agent does.
-   */
-  description: string;
-
-  /**
    * Body param: Display name.
    */
   name: string;
-
-  /**
-   * Body param: Role ID defining agent permissions.
-   */
-  role_id: string;
 
   /**
    * Body param: URL-friendly identifier.
@@ -566,7 +556,7 @@ export interface AgentCreateParams {
   slug: string;
 
   /**
-   * Body param: Trigger type: "manual", "scheduled", or "event".
+   * Body param: Trigger type.
    */
   trigger_type: 'scheduled' | 'manual' | 'event';
 
@@ -575,6 +565,16 @@ export interface AgentCreateParams {
    * are returned as `null`.
    */
   include?: Array<'config' | 'tools' | 'role' | 'role.permissions'>;
+
+  /**
+   * Body param: Description of what the agent does.
+   */
+  description?: string;
+
+  /**
+   * Body param: Role ID defining agent permissions.
+   */
+  role_id?: string;
 
   /**
    * Body param: Tools to attach.
@@ -633,7 +633,7 @@ export interface AgentUpdateParams {
   tools?: Array<ToolInput>;
 
   /**
-   * Body param: Trigger type: "manual", "scheduled", or "event".
+   * Body param: Trigger type.
    */
   trigger_type?: 'scheduled' | 'manual' | 'event';
 }
@@ -668,8 +668,7 @@ export interface AgentListParams {
   /**
    * Filter by account-level status.
    *
-   * Omit to return agents of every status (active and inactive); pass e.g.
-   * ?statuses=active to narrow.
+   * Omit to return agents of every status; pass e.g. ?statuses=active to narrow.
    */
   statuses?: Array<'active' | 'inactive'>;
 
@@ -681,9 +680,9 @@ export interface AgentListParams {
 
 export interface AgentUpdateStatusParams {
   /**
-   * Body param: Account-level status code: "active" or "inactive".
+   * Body param: Account-level status: "active" or "inactive".
    */
-  status_code: string;
+  status: string;
 
   /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects

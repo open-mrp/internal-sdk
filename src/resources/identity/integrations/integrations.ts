@@ -116,7 +116,7 @@ export interface AccountIntegration {
   object: 'account_integration';
 
   /**
-   * Integration provider code (e.g. "stripe", "shippo").
+   * Integration provider code.
    */
   provider: 'stripe' | 'shippo';
 
@@ -136,7 +136,7 @@ export interface CreateAccountIntegrationRequest {
   credentials: string;
 
   /**
-   * Integration provider code (e.g. "stripe", "shippo").
+   * Integration provider code.
    */
   integration_code: 'stripe' | 'shippo';
 
@@ -188,7 +188,7 @@ export interface IntegrationCreateParams {
   credentials: string;
 
   /**
-   * Integration provider code (e.g. "stripe", "shippo").
+   * Integration provider code.
    */
   integration_code: 'stripe' | 'shippo';
 

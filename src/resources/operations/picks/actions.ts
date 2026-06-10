@@ -71,6 +71,11 @@ export interface PackPickRequest {
  */
 export interface PackPickResponse {
   /**
+   * Resource type identifier.
+   */
+  object: 'pack_pick_response';
+
+  /**
    * Pick is a full pick resource.
    */
   pick: InvoicesAPI.Pick | null;

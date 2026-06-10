@@ -85,7 +85,9 @@ export interface AllocationEntry {
   created_at: string;
 
   /**
-   * Minimal customer sub-resource for allocation entries.
+   * Minimal customer sub-resource for allocation entries. It carries its own
+   * allocation_customer discriminator (not customer) because allocation list entries
+   * do not carry a customer id, so it is not a resolvable customer reference.
    */
   customer: FinanceAPI.AllocationCustomer | null;
 

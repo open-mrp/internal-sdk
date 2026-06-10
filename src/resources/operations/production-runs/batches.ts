@@ -24,13 +24,8 @@ export class Batches extends APIResource {
    *           item_id: 'it_0131e386ac683e8c29a71f6f1f',
    *           quantity_value: '100',
    *           quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *           seconds_value: null,
-   *           seconds_unit_id: null,
-   *           waste_value: null,
-   *           waste_unit_id: null,
    *           production_step_id:
    *             'prst_0159474175bb59f4b1990404ee',
-   *           scanning_station_id: null,
    *         },
    *       ],
    *     },
@@ -75,11 +70,6 @@ export interface AddBatchInputRequest {
   item_id: string;
 
   /**
-   * Production step ID.
-   */
-  production_step_id: string | null;
-
-  /**
    * Quantity unit ID.
    */
   quantity_unit_id: string;
@@ -90,29 +80,34 @@ export interface AddBatchInputRequest {
   quantity_value: string;
 
   /**
+   * Production step ID.
+   */
+  production_step_id?: string;
+
+  /**
    * Scanning station ID.
    */
-  scanning_station_id: string | null;
+  scanning_station_id?: string;
 
   /**
    * Seconds unit ID.
    */
-  seconds_unit_id: string | null;
+  seconds_unit_id?: string;
 
   /**
    * Seconds value as a decimal string.
    */
-  seconds_value: string | null;
+  seconds_value?: string;
 
   /**
    * Waste unit ID.
    */
-  waste_unit_id: string | null;
+  waste_unit_id?: string;
 
   /**
    * Waste value as a decimal string.
    */
-  waste_value: string | null;
+  waste_value?: string;
 }
 
 /**

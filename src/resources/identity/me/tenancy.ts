@@ -353,6 +353,11 @@ export interface TenancyPendingRegistration {
   created_at: string;
 
   /**
+   * Resource type identifier.
+   */
+  object: 'tenancy_pending_registration';
+
+  /**
    * Plan code selected during registration.
    */
   plan_code: string;

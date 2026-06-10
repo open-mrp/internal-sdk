@@ -12,7 +12,7 @@ describe('resource sales', () => {
     const responsePromise = client.sales.checkoutSessions({
       order_id: 'or_01d5034136c3ccc048abecc312',
       order_number: 'SO-001',
-      order_total_cents: 125050,
+      order_total_cents: 50000,
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -27,7 +27,7 @@ describe('resource sales', () => {
     const response = await client.sales.checkoutSessions({
       order_id: 'or_01d5034136c3ccc048abecc312',
       order_number: 'SO-001',
-      order_total_cents: 125050,
+      order_total_cents: 50000,
       customer_po: 'PO-4242',
     });
   });

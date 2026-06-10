@@ -1568,13 +1568,13 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/operations/operations.ts">InventoryItem</a></code>
-- <code><a href="./src/resources/operations/operations.ts">ListInventoriesResponse</a></code>
 - <code><a href="./src/resources/operations/operations.ts">UpdateQuantityRequest</a></code>
 - <code><a href="./src/resources/operations/operations.ts">UpdateRateRequest</a></code>
+- <code><a href="./src/resources/operations/operations.ts">OperationRetrieveInventoriesResponse</a></code>
 
 Methods:
 
-- <code title="get /v1/operations/inventories">client.operations.<a href="./src/resources/operations/operations.ts">retrieveInventories</a>({ ...params }) -> ListInventoriesResponse</code>
+- <code title="get /v1/operations/inventories">client.operations.<a href="./src/resources/operations/operations.ts">retrieveInventories</a>({ ...params }) -> OperationRetrieveInventoriesResponse</code>
 - <code title="patch /v1/operations/quantities/{id}">client.operations.<a href="./src/resources/operations/operations.ts">updateQuantities</a>(id, { ...params }) -> Quantity</code>
 - <code title="patch /v1/operations/rates/{id}">client.operations.<a href="./src/resources/operations/operations.ts">updateRates</a>(id, { ...params }) -> Rate</code>
 

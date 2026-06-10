@@ -106,16 +106,6 @@ export class Actions extends APIResource {
    *     },
    *     production_step_id: 'prst_0159474175bb59f4b1990404ee',
    *     scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
-   *     seconds: {
-   *       id: 'id',
-   *       measure: 'measure',
-   *       unit_id: 'unit_id',
-   *     },
-   *     waste: {
-   *       id: 'id',
-   *       measure: 'measure',
-   *       unit_id: 'unit_id',
-   *     },
    *   },
    * );
    * ```
@@ -232,12 +222,12 @@ export interface SplitBatchRequest {
   /**
    * Quantity input for a split operation.
    */
-  seconds: SplitQuantityInput | null;
+  seconds?: SplitQuantityInput;
 
   /**
    * Quantity input for a split operation.
    */
-  waste: SplitQuantityInput | null;
+  waste?: SplitQuantityInput;
 }
 
 /**
@@ -351,12 +341,12 @@ export interface ActionSplitParams {
   /**
    * Quantity input for a split operation.
    */
-  seconds: SplitQuantityInput | null;
+  seconds?: SplitQuantityInput;
 
   /**
    * Quantity input for a split operation.
    */
-  waste: SplitQuantityInput | null;
+  waste?: SplitQuantityInput;
 }
 
 export declare namespace Actions {
