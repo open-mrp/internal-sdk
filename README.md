@@ -122,6 +122,22 @@ On timeout, an `APIConnectionTimeoutError` is thrown.
 
 Note that requests which time out will be [retried twice by default](#retries).
 
+## Default Headers
+
+We automatically send the `Augno-Version` header set to `1.0.forge-preview.2`.
+
+If you need to, you can override it by setting default headers on a per-request basis.
+
+Be aware that doing so may result in incorrect types and other unexpected or undefined behavior in the SDK.
+
+```ts
+import Augno from '@augno/internal-sdk';
+
+const client = new Augno();
+
+const healthcheck = await client.healthz.list({ headers: { 'Augno-Version': 'My-Custom-Value' } });
+```
+
 ## Advanced Usage
 
 ### Accessing raw Response data (e.g., headers)

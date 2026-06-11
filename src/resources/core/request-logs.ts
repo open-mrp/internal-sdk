@@ -54,8 +54,11 @@ export interface Actor {
   id: string;
 
   /**
-   * Human-readable handle (`email` for users, `redacted_value` for API keys, `slug`
-   * for agents).
+   * Human-readable handle.
+   *
+   * - `email` for users
+   * - `redacted_value` for API keys
+   * - `slug` for agents
    */
   handle: string | null;
 

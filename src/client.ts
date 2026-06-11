@@ -740,7 +740,12 @@ export class Augno {
 
     const headers = buildHeaders([
       idempotencyHeaders,
-      { Accept: 'application/json', 'User-Agent': this.getUserAgent(), 'Augno-Account': this.augnoAccountID },
+      {
+        Accept: 'application/json',
+        'User-Agent': this.getUserAgent(),
+        'Augno-Version': '1.0.forge-preview.2',
+        'Augno-Account': this.augnoAccountID,
+      },
       await this.authHeaders(options),
       this._options.defaultHeaders,
       bodyHeaders,

@@ -7,7 +7,6 @@ export {
   type Consumption,
   type CreateAccountUserRequest,
   type Department,
-  type Entity,
   type Item,
   type ItemCategory,
   type ListAccountUser,

@@ -66,6 +66,7 @@ export {
   type DemandForecastForecastPoint,
   type DemandForecastPoint,
   type DemandForecastRow,
+  type Entity,
   type InventoryReceiptSummaryEntry,
   type ManufacturingMetrics,
   type MaterialAnalyticsEntry,

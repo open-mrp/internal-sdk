@@ -194,7 +194,6 @@ Types:
 - <code><a href="./src/resources/identity/account-users/account-users.ts">Consumption</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">CreateAccountUserRequest</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">Department</a></code>
-- <code><a href="./src/resources/identity/account-users/account-users.ts">Entity</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">Item</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">ItemCategory</a></code>
 - <code><a href="./src/resources/identity/account-users/account-users.ts">ListAccountUser</a></code>
@@ -485,6 +484,7 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastForecastPoint</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastPoint</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastRow</a></code>
+- <code><a href="./src/resources/core/analytics.ts">Entity</a></code>
 - <code><a href="./src/resources/core/analytics.ts">InventoryReceiptSummaryEntry</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ManufacturingMetrics</a></code>
 - <code><a href="./src/resources/core/analytics.ts">MaterialAnalyticsEntry</a></code>

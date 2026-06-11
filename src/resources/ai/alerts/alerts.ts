@@ -2,11 +2,11 @@
 
 import { APIResource } from '../../../core/resource';
 import * as AgentsAPI from '../agents';
+import * as AnalyticsAPI from '../../core/analytics';
 import * as RequestLogsAPI from '../../core/request-logs';
 import * as ActionsAPI from './actions';
 import { ActionAcknowledgeParams, Actions } from './actions';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
-import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -70,7 +70,7 @@ export interface AgentAction {
   /**
    * Entity is a polymorphic reference to any resource in the system.
    */
-  entity: AccountUsersAPI.Entity | null;
+  entity: AnalyticsAPI.Entity | null;
 
   /**
    * Error message if the action failed.
