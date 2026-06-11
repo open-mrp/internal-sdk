@@ -35,9 +35,11 @@ export class Carriers extends APIResource {
   serviceLevels: ServiceLevelsAPI.ServiceLevels = new ServiceLevelsAPI.ServiceLevels(this._client);
 
   /**
-   * Creates a carrier. If a Shippo-supported carrier code is provided, the carrier
-   * will be registered with Shippo and service levels will be auto-synced as
-   * options.
+   * Creates a carrier.
+   *
+   * If a Shippo-supported code (`fedex`, `ups`, `usps`) is provided, the carrier is
+   * connected through Shippo and its service levels are auto-synced, initially
+   * hidden from the customer portal. Sandbox accounts skip the Shippo connection.
    *
    * @example
    * ```ts
@@ -105,8 +107,10 @@ export class Carriers extends APIResource {
   }
 
   /**
-   * Deletes a carrier and cascades to remove all options. If the carrier is managed
-   * by Shippo, the Shippo account is deactivated.
+   * Deletes a carrier and all of its service levels.
+   *
+   * If the carrier is connected through Shippo, its Shippo carrier account is
+   * deactivated. System-owned carriers cannot be deleted.
    *
    * @example
    * ```ts
@@ -120,8 +124,10 @@ export class Carriers extends APIResource {
   }
 
   /**
-   * Returns the OAuth connection status for a carrier. Sandbox accounts always
-   * return disconnected.
+   * Returns the OAuth connection status for a carrier.
+   *
+   * The status is one of `connected`, `authorization_pending`, or `disconnected`.
+   * Sandbox accounts always return `disconnected`.
    *
    * @example
    * ```ts
@@ -141,26 +147,33 @@ export class Carriers extends APIResource {
  */
 export interface CreateCarrierRequest {
   /**
-   * Display name.
+   * Human-readable name for the carrier.
+   *
+   * Must be unique among your account's carriers.
    */
   name: string;
 
   /**
-   * Carrier account number. Required for UPS and USPS carriers.
+   * Your account number with this carrier.
+   *
+   * Required when `code` is `ups` or `usps`, which connect to Shippo using this
+   * number; FedEx connects via OAuth instead.
    */
   account_number?: string;
 
   /**
-   * Carrier code.
+   * Well-known carrier code.
+   *
+   * Omit for a custom carrier. Providing a Shippo-supported code (`fedex`, `ups`,
+   * `usps`) connects the carrier through Shippo and auto-syncs its service levels.
    */
   code?: 'fedex' | 'ups' | 'usps' | 'will_call' | 'delivery' | 'ltl' | 'ltl1' | 'freight_collect';
 
   /**
    * Carrier visibility in the customer portal.
    *
-   * If `visible`, this carrier will be available for your customers to utilize when
-   * they go to checkout. If `hidden`, this carrier will not be an option on
-   * checkout.
+   * A `visible` carrier can be selected by your customers at checkout; a `hidden`
+   * carrier is not offered there. New carriers are visible unless set to `hidden`.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 }
@@ -197,7 +210,12 @@ export interface OAuthStatusResponse {
   /**
    * OAuth connection status.
    *
-   * One of "connected", "authorization_pending", or "disconnected".
+   * - `connected`: the carrier account is authorized and ready for live rating and
+   *   labels.
+   * - `authorization_pending`: the carrier account exists but OAuth authorization
+   *   has not been completed.
+   * - `disconnected`: no carrier account is connected. Sandbox accounts always
+   *   report this status.
    */
   status: string;
 }
@@ -216,7 +234,7 @@ export interface UpdateCarrierRequest {
   customer_portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Display name.
+   * Human-readable name for the carrier, unique among your account's carriers.
    */
   name?: string;
 }
@@ -225,7 +243,9 @@ export interface CarrierDeleteResponse {}
 
 export interface CarrierCreateParams {
   /**
-   * Body param: Display name.
+   * Body param: Human-readable name for the carrier.
+   *
+   * Must be unique among your account's carriers.
    */
   name: string;
 
@@ -236,21 +256,26 @@ export interface CarrierCreateParams {
   include?: Array<'owner' | 'owner.account' | 'service_levels'>;
 
   /**
-   * Body param: Carrier account number. Required for UPS and USPS carriers.
+   * Body param: Your account number with this carrier.
+   *
+   * Required when `code` is `ups` or `usps`, which connect to Shippo using this
+   * number; FedEx connects via OAuth instead.
    */
   account_number?: string;
 
   /**
-   * Body param: Carrier code.
+   * Body param: Well-known carrier code.
+   *
+   * Omit for a custom carrier. Providing a Shippo-supported code (`fedex`, `ups`,
+   * `usps`) connects the carrier through Shippo and auto-syncs its service levels.
    */
   code?: 'fedex' | 'ups' | 'usps' | 'will_call' | 'delivery' | 'ltl' | 'ltl1' | 'freight_collect';
 
   /**
    * Body param: Carrier visibility in the customer portal.
    *
-   * If `visible`, this carrier will be available for your customers to utilize when
-   * they go to checkout. If `hidden`, this carrier will not be an option on
-   * checkout.
+   * A `visible` carrier can be selected by your customers at checkout; a `hidden`
+   * carrier is not offered there. New carriers are visible unless set to `hidden`.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 }
@@ -280,14 +305,19 @@ export interface CarrierUpdateParams {
   customer_portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Body param: Display name.
+   * Body param: Human-readable name for the carrier, unique among your account's
+   * carriers.
    */
   name?: string;
 }
 
 export interface CarrierListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -298,12 +328,14 @@ export interface CarrierListParams {
   include?: Array<'owner' | 'owner.account' | 'service_levels'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

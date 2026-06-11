@@ -11,8 +11,9 @@ import { path } from '../../../internal/utils/path';
  */
 export class Attributes extends APIResource {
   /**
-   * Adds an attribute to an item. If the attribute is already associated with the
-   * item, this is a no-op.
+   * Adds an attribute to an item and returns the updated item.
+   *
+   * If the attribute is already associated with the item, this is a no-op.
    *
    * @example
    * ```ts

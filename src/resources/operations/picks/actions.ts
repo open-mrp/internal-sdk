@@ -13,6 +13,12 @@ export class Actions extends APIResource {
   /**
    * Packs a pick and creates a shipment from the picked lines.
    *
+   * Every unpacked line with a picked quantity greater than zero is marked as packed
+   * and added to a new shipment. When a sales order line still has outstanding
+   * quantity afterward, a new zero-quantity pick line is created for the remainder.
+   * The pick is marked finished once no unpacked line still has a quantity left to
+   * pick.
+   *
    * @example
    * ```ts
    * const packPickResponse =
@@ -29,6 +35,9 @@ export class Actions extends APIResource {
   /**
    * Marks all lines on a pick as picked.
    *
+   * Sets each unpacked line's picked quantity to the quantity still outstanding on
+   * its sales order line. Lines that have already been packed are unaffected.
+   *
    * @example
    * ```ts
    * const pick = await client.operations.picks.actions.pick(
@@ -42,6 +51,10 @@ export class Actions extends APIResource {
 
   /**
    * Voids a pick, cancelling all lines.
+   *
+   * Resets the picked quantity on every unpacked line to zero and clears the pick's
+   * `finished_at` timestamp. Fails if a shipment has already been created for the
+   * pick's sales order.
    *
    * @example
    * ```ts
@@ -61,7 +74,10 @@ export class Actions extends APIResource {
  */
 export interface PackPickRequest {
   /**
-   * Number of cases for the shipment.
+   * Number of shipping cases to create on the new shipment.
+   *
+   * Must be at least 1. Cases are numbered sequentially from the shipment number
+   * (e.g. `SH-001-1`, `SH-001-2`).
    */
   shipment_case_count: number;
 }
@@ -76,19 +92,26 @@ export interface PackPickResponse {
   object: 'pack_pick_response';
 
   /**
-   * Pick is a full pick resource.
+   * A warehouse picking task for a sales order, tracking the quantities to pull from
+   * inventory and pack for shipment.
    */
   pick: InvoicesAPI.Pick | null;
 
   /**
-   * Created shipment number.
+   * Number of the shipment created by the pack operation.
+   *
+   * Derived from the sales order number: the first shipment for an order uses the
+   * order number itself; later shipments append a sequence suffix (e.g. `SO-123-2`).
    */
   shipment_number: string;
 }
 
 export interface ActionPackParams {
   /**
-   * Number of cases for the shipment.
+   * Number of shipping cases to create on the new shipment.
+   *
+   * Must be at least 1. Cases are numbered sequentially from the shipment number
+   * (e.g. `SH-001-1`, `SH-001-2`).
    */
   shipment_case_count: number;
 }

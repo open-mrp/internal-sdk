@@ -14,6 +14,10 @@ export class TenancyResource extends APIResource {
    * Switches the authenticated user's active account and returns the updated tenancy
    * context.
    *
+   * The user must have access to the requested account; switching to an account
+   * where the user is disabled or removed, or to a suspended or deactivated account,
+   * is rejected.
+   *
    * @example
    * ```ts
    * const tenancy = await client.identity.me.tenancy.update({
@@ -27,6 +31,10 @@ export class TenancyResource extends APIResource {
 
   /**
    * Returns the authenticated user's tenancy context.
+   *
+   * The tenancy describes which account the user is currently acting in and every
+   * other account they can switch to, including sandboxes. It can be called before
+   * an account is selected, such as immediately after authentication.
    *
    * @example
    * ```ts
@@ -146,13 +154,14 @@ export interface ListTenancySandboxAccount {
  */
 export interface SwitchAccountRequest {
   /**
-   * Account ID.
+   * ID of the account to switch to.
    */
   account_id: string;
 }
 
 /**
- * Authenticated user's tenancy context.
+ * The authenticated user's tenancy context: which account they are currently
+ * acting in and every other account they can switch to.
  */
 export interface Tenancy {
   /**
@@ -192,12 +201,12 @@ export interface Tenancy {
  */
 export interface TenancyAccountPlan {
   /**
-   * Feature flags.
+   * Feature availability for this plan, keyed by feature code.
    */
   features: { [key: string]: boolean };
 
   /**
-   * Resource limits; null value means unlimited.
+   * Resource limits, keyed by limit code; a `null` value means unlimited.
    */
   limits: { [key: string]: number };
 
@@ -277,22 +286,27 @@ export interface TenancyCurrentAccount {
   onboarding_status: string;
 
   /**
-   * Plan code.
+   * Code of the account's subscription plan (for example `free`, `starter`, or
+   * `pro`).
    */
   plan: string;
 
   /**
-   * Role resource.
+   * A named set of permissions that can be assigned to users to control what they
+   * can access.
    */
   role: APIKeysAPI.Role | null;
 
   /**
-   * Account slug.
+   * The account's customer portal slug.
    */
   slug: string | null;
 
   /**
    * Account type.
+   *
+   * - `company`: a standard production account.
+   * - `sandbox`: an isolated testing account.
    */
   type: string;
 }
@@ -318,6 +332,9 @@ export interface TenancyOtherAccount {
 
   /**
    * Account type.
+   *
+   * - `company`: a standard production account.
+   * - `sandbox`: an isolated testing account.
    */
   type: string;
 }
@@ -395,24 +412,30 @@ export interface TenancySandboxAccount {
 
 export interface TenancyUpdateParams {
   /**
-   * Account ID.
+   * ID of the account to switch to.
    */
   account_id: string;
 }
 
 export interface TenancyRetrieveCustomerAccountsParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

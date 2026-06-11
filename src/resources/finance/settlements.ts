@@ -13,8 +13,10 @@ import { path } from '../../internal/utils/path';
  */
 export class Settlements extends APIResource {
   /**
-   * Creates a settlement with transaction allocations. A settlement number is
-   * automatically generated.
+   * Creates a settlement that applies transaction amounts to invoices.
+   *
+   * The settlement number is generated automatically from a per-account sequence,
+   * and the allocated transactions are marked as fully allocated.
    *
    * @example
    * ```ts
@@ -92,8 +94,11 @@ export class Settlements extends APIResource {
   }
 
   /**
-   * Deletes a settlement, removing allocations and reverting payment statuses on
-   * affected invoices and transactions.
+   * Deletes a settlement and all of its allocations.
+   *
+   * Affected invoices revert to an `unpaid` payment status, affected transactions
+   * are no longer marked fully allocated, and adjustment transactions referenced
+   * only by this settlement are removed.
    *
    * @example
    * ```ts
@@ -108,8 +113,7 @@ export class Settlements extends APIResource {
 }
 
 /**
- * CreateSettlementAllocationRequest is an allocation in a create settlement
- * request.
+ * A single allocation applying part of a transaction's amount to an invoice.
  */
 export interface CreateSettlementAllocationRequest {
   /**
@@ -118,12 +122,13 @@ export interface CreateSettlementAllocationRequest {
   amount: string;
 
   /**
-   * Invoice ID.
+   * ID of the invoice the amount is applied to.
    */
   invoice_id: string;
 
   /**
-   * Transaction ID.
+   * ID of the transaction (payment, rebate, adjustment, or credit memo) to allocate
+   * from.
    */
   transaction_id: string;
 
@@ -134,16 +139,19 @@ export interface CreateSettlementAllocationRequest {
 }
 
 /**
- * CreateSettlementRequest is the request to create a settlement.
+ * Request to create a settlement.
  */
 export interface CreateSettlementRequest {
   /**
-   * Allocations for this settlement.
+   * Allocations to record in this settlement.
    */
   allocations: Array<CreateSettlementAllocationRequest>;
 
   /**
-   * Responsible user ID.
+   * ID of the user responsible for this settlement.
+   *
+   * Accepts either an account user ID or a user ID; the value is resolved to an
+   * account user in the current account.
    */
   responsible_user_id: string;
 }
@@ -169,7 +177,11 @@ export interface ListSettlementSummary {
 }
 
 /**
- * Settlement with expandable allocations.
+ * A batch of transaction allocations applying customer payments and credits to
+ * invoices.
+ *
+ * Each allocation in a settlement applies part of a transaction (payment, rebate,
+ * adjustment, or credit memo) to a specific invoice.
  */
 export interface Settlement {
   /**
@@ -193,7 +205,10 @@ export interface Settlement {
   note: string | null;
 
   /**
-   * Settlement number.
+   * Number identifying the settlement within the account.
+   *
+   * Generated automatically from a per-account sequence at creation; it can be
+   * changed later but must remain unique within the account.
    */
   number: string;
 
@@ -203,10 +218,11 @@ export interface Settlement {
   object: 'settlement';
 
   /**
-   * Account user with role and department.
+   * A user's membership in an account, carrying the account-specific status, role,
+   * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable user
-   * sub-resource.
+   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * sub-resource, which is shared across every account the user belongs to.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 
@@ -217,7 +233,10 @@ export interface Settlement {
 }
 
 /**
- * SettlementSummary is a lightweight settlement for list views.
+ * A condensed settlement shape returned by List Settlements.
+ *
+ * Replaces the full allocation list with aggregate totals per transaction type,
+ * plus the invoice numbers and customer names the allocations touch.
  */
 export interface SettlementSummary {
   /**
@@ -256,22 +275,22 @@ export interface SettlementSummary {
   object: 'settlement_summary';
 
   /**
-   * Total adjustment amount as a decimal string.
+   * Total amount allocated from `adjustment` transactions, as a decimal string.
    */
   total_adjustments: string | null;
 
   /**
-   * Total credit amount as a decimal string.
+   * Total amount allocated from `credit_memo` transactions, as a decimal string.
    */
   total_credits: string | null;
 
   /**
-   * Total payment amount as a decimal string.
+   * Total amount allocated from `payment` transactions, as a decimal string.
    */
   total_payments: string | null;
 
   /**
-   * Total rebate amount as a decimal string.
+   * Total amount allocated from `rebate` transactions, as a decimal string.
    */
   total_rebates: string | null;
 
@@ -282,7 +301,7 @@ export interface SettlementSummary {
 }
 
 /**
- * UpdateSettlementRequest is the request to update a settlement.
+ * Request to partially update a settlement.
  */
 export interface UpdateSettlementRequest {
   /**
@@ -291,24 +310,32 @@ export interface UpdateSettlementRequest {
   note?: string;
 
   /**
-   * Settlement number.
+   * New settlement number.
+   *
+   * Must be unique within the account.
    */
   number?: string;
 
   /**
-   * Responsible user ID.
+   * ID of the user responsible for this settlement.
+   *
+   * Accepts either an account user ID or a user ID; the value is resolved to an
+   * account user in the current account.
    */
   responsible_user_id?: string;
 }
 
 export interface SettlementCreateParams {
   /**
-   * Allocations for this settlement.
+   * Allocations to record in this settlement.
    */
   allocations: Array<CreateSettlementAllocationRequest>;
 
   /**
-   * Responsible user ID.
+   * ID of the user responsible for this settlement.
+   *
+   * Accepts either an account user ID or a user ID; the value is resolved to an
+   * account user in the current account.
    */
   responsible_user_id: string;
 }
@@ -328,24 +355,33 @@ export interface SettlementUpdateParams {
   note?: string;
 
   /**
-   * Settlement number.
+   * New settlement number.
+   *
+   * Must be unique within the account.
    */
   number?: string;
 
   /**
-   * Responsible user ID.
+   * ID of the user responsible for this settlement.
+   *
+   * Accepts either an account user ID or a user ID; the value is resolved to an
+   * account user in the current account.
    */
   responsible_user_id?: string;
 }
 
 export interface SettlementListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Filter by end date (inclusive).
+   * Only return settlements created before this date (`YYYY-MM-DD`).
    */
   end_date?: string;
 
@@ -355,17 +391,19 @@ export interface SettlementListParams {
   invoice_ids?: Array<string>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by start date (inclusive).
+   * Only return settlements created on or after this date (`YYYY-MM-DD`).
    */
   start_date?: string;
 

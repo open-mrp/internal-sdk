@@ -21,8 +21,11 @@ export class Passwords extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Updates a user's password, revoking previous tokens and setting new access and
-   * refresh tokens in cookies.
+   * Updates the authenticated user's password after verifying their current
+   * password.
+   *
+   * All of the user's existing refresh tokens are revoked, signing out their other
+   * active sessions.
    *
    * @example
    * ```ts

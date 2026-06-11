@@ -71,6 +71,9 @@ export class Picks extends APIResource {
   /**
    * Returns the shipment numbers associated with a pick.
    *
+   * Shipments are matched through the pick's sales order, so the list covers every
+   * shipment created for that order.
+   *
    * @example
    * ```ts
    * const pickShipmentsResponse =
@@ -113,7 +116,7 @@ export interface ListPick {
  */
 export interface PickShipmentsResponse {
   /**
-   * Total count of matching shipment numbers.
+   * Total number of matching shipments, ignoring `limit` and `offset`.
    */
   count: number;
 
@@ -133,12 +136,14 @@ export interface PickShipmentsResponse {
  */
 export interface UpdatePickRequest {
   /**
-   * Timestamp when the pick was finished. Pass an empty string to clear.
+   * Timestamp when the pick was finished, in RFC 3339 format.
+   *
+   * Pass an empty string to clear the value and reopen the pick.
    */
   finished_at?: string;
 
   /**
-   * Pick number.
+   * New number to assign to the pick.
    */
   number?: string;
 }
@@ -159,39 +164,45 @@ export interface PickUpdateParams {
   include?: Array<'lines'>;
 
   /**
-   * Body param: Timestamp when the pick was finished. Pass an empty string to clear.
+   * Body param: Timestamp when the pick was finished, in RFC 3339 format.
+   *
+   * Pass an empty string to clear the value and reopen the pick.
    */
   finished_at?: string;
 
   /**
-   * Body param: Pick number.
+   * Body param: New number to assign to the pick.
    */
   number?: string;
 }
 
 export interface PickListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Query parameter: customer_group_ids for List Picks
+   * Filter by customer group IDs.
    */
   customer_group_ids?: Array<string>;
 
   /**
-   * Query parameter: customer_ids for List Picks
+   * Filter by customer IDs.
    */
   customer_ids?: Array<string>;
 
   /**
-   * Query parameter: department_ids for List Picks
+   * Filter by department IDs.
    */
   department_ids?: Array<string>;
 
   /**
-   * Query parameter: end_date for List Picks
+   * Only return picks created before this date (`YYYY-MM-DD`).
    */
   end_date?: string;
 
@@ -202,27 +213,35 @@ export interface PickListParams {
   include?: Array<'sales_order' | 'customer' | 'departments'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Query parameter: product_line_ids for List Picks
+   * Filter by product line IDs.
+   *
+   * Matches picks that contain at least one line for a product in any of the given
+   * product lines.
    */
   product_line_ids?: Array<string>;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Query parameter: start_date for List Picks
+   * Only return picks created on or after this date (`YYYY-MM-DD`).
    */
   start_date?: string;
 
   /**
-   * Query parameter: status for List Picks
+   * Filter by pick status.
+   *
+   * - `open`: picks still in progress (not yet finished).
+   * - `closed`: picks that have been finished.
    */
   status?: string;
 }
@@ -239,7 +258,7 @@ export interface PickRetrieveShipmentsParams {
   offset?: number;
 
   /**
-   * Query parameter: q for Get Pick Shipments
+   * Search query that filters shipment numbers by substring match.
    */
   q?: string;
 }

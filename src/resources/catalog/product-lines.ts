@@ -54,8 +54,10 @@ export class ProductLines extends APIResource {
   }
 
   /**
-   * Partially updates an account-owned product line. Default system product lines
-   * cannot be updated.
+   * Partially updates an account-owned product line.
+   *
+   * Only the provided fields are changed. The reserved default product lines
+   * (shipping, service, credit, tax) cannot be updated.
    *
    * @example
    * ```ts
@@ -97,7 +99,9 @@ export class ProductLines extends APIResource {
   }
 
   /**
-   * Deletes an account-owned product line. Default system product lines cannot be
+   * Permanently deletes an account-owned product line.
+   *
+   * The reserved default product lines (shipping, service, credit, tax) cannot be
    * deleted.
    *
    * @example
@@ -118,23 +122,36 @@ export class ProductLines extends APIResource {
  */
 export interface CreateProductLineRequest {
   /**
-   * Commission policy of products in this product line.
+   * Default commission policy for products in this product line.
+   *
+   * - `commission_exempt`: no commission applies to these products.
+   * - `commission_applied`: commission applies to these products, unless overridden
+   *   elsewhere.
    */
   commission_policy: 'commission_applied' | 'commission_exempt';
 
   /**
-   * Freight policy for all items in this product line.
+   * Default freight policy for products in this product line.
+   *
+   * - `free_freight`: these products do not incur a freight charge.
+   * - `billed_freight`: freight is billed for these products, unless overridden
+   *   elsewhere.
    */
   freight_policy: 'free_freight' | 'billed_freight';
 
   /**
    * Display name.
+   *
+   * Must be unique among the account's product lines; a duplicate name returns a
+   * conflict error.
    */
   name: string;
 
   /**
-   * Unit group ID associated with this product line. This unit group dictates the
-   * units that products in this product line may be purchased in.
+   * ID of the unit group to associate with this product line.
+   *
+   * The unit group determines the set of units available to products in this product
+   * line.
    */
   unit_group_id: string;
 }
@@ -144,23 +161,36 @@ export interface CreateProductLineRequest {
  */
 export interface UpdateProductLineRequest {
   /**
-   * Commission policy of products in this product line.
+   * Default commission policy for products in this product line.
+   *
+   * - `commission_exempt`: no commission applies to these products.
+   * - `commission_applied`: commission applies to these products, unless overridden
+   *   elsewhere.
    */
   commission_policy?: 'commission_applied' | 'commission_exempt';
 
   /**
-   * Freight policy for all items in this product line.
+   * Default freight policy for products in this product line.
+   *
+   * - `free_freight`: these products do not incur a freight charge.
+   * - `billed_freight`: freight is billed for these products, unless overridden
+   *   elsewhere.
    */
   freight_policy?: 'free_freight' | 'billed_freight';
 
   /**
    * Display name.
+   *
+   * Must be unique among the account's product lines; a duplicate name returns a
+   * conflict error.
    */
   name?: string;
 
   /**
-   * Unit group ID associated with this product line. This unit group dictates the
-   * units that products in this product line may be purchased in.
+   * ID of the unit group to associate with this product line.
+   *
+   * The unit group determines the set of units available to products in this product
+   * line.
    */
   unit_group_id?: string;
 }
@@ -169,23 +199,36 @@ export interface ProductLineDeleteResponse {}
 
 export interface ProductLineCreateParams {
   /**
-   * Body param: Commission policy of products in this product line.
+   * Body param: Default commission policy for products in this product line.
+   *
+   * - `commission_exempt`: no commission applies to these products.
+   * - `commission_applied`: commission applies to these products, unless overridden
+   *   elsewhere.
    */
   commission_policy: 'commission_applied' | 'commission_exempt';
 
   /**
-   * Body param: Freight policy for all items in this product line.
+   * Body param: Default freight policy for products in this product line.
+   *
+   * - `free_freight`: these products do not incur a freight charge.
+   * - `billed_freight`: freight is billed for these products, unless overridden
+   *   elsewhere.
    */
   freight_policy: 'free_freight' | 'billed_freight';
 
   /**
    * Body param: Display name.
+   *
+   * Must be unique among the account's product lines; a duplicate name returns a
+   * conflict error.
    */
   name: string;
 
   /**
-   * Body param: Unit group ID associated with this product line. This unit group
-   * dictates the units that products in this product line may be purchased in.
+   * Body param: ID of the unit group to associate with this product line.
+   *
+   * The unit group determines the set of units available to products in this product
+   * line.
    */
   unit_group_id: string;
 
@@ -212,30 +255,47 @@ export interface ProductLineUpdateParams {
   include?: Array<'owner' | 'owner.account' | 'unit_group'>;
 
   /**
-   * Body param: Commission policy of products in this product line.
+   * Body param: Default commission policy for products in this product line.
+   *
+   * - `commission_exempt`: no commission applies to these products.
+   * - `commission_applied`: commission applies to these products, unless overridden
+   *   elsewhere.
    */
   commission_policy?: 'commission_applied' | 'commission_exempt';
 
   /**
-   * Body param: Freight policy for all items in this product line.
+   * Body param: Default freight policy for products in this product line.
+   *
+   * - `free_freight`: these products do not incur a freight charge.
+   * - `billed_freight`: freight is billed for these products, unless overridden
+   *   elsewhere.
    */
   freight_policy?: 'free_freight' | 'billed_freight';
 
   /**
    * Body param: Display name.
+   *
+   * Must be unique among the account's product lines; a duplicate name returns a
+   * conflict error.
    */
   name?: string;
 
   /**
-   * Body param: Unit group ID associated with this product line. This unit group
-   * dictates the units that products in this product line may be purchased in.
+   * Body param: ID of the unit group to associate with this product line.
+   *
+   * The unit group determines the set of units available to products in this product
+   * line.
    */
   unit_group_id?: string;
 }
 
 export interface ProductLineListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -246,12 +306,14 @@ export interface ProductLineListParams {
   include?: Array<'owner' | 'owner.account' | 'unit_group'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

@@ -13,6 +13,10 @@ export class Consumptions extends APIResource {
   /**
    * Creates a consumption within a production step.
    *
+   * Adding a consumption recomputes the production flow: if another production step
+   * produces the consumed item, the two steps are linked upstream/downstream
+   * automatically.
+   *
    * @example
    * ```ts
    * const consumption =
@@ -73,6 +77,8 @@ export class Consumptions extends APIResource {
   /**
    * Partially updates a consumption within a production step.
    *
+   * Omitted fields are left unchanged.
+   *
    * @example
    * ```ts
    * const consumption =
@@ -100,6 +106,9 @@ export class Consumptions extends APIResource {
 
   /**
    * Deletes a consumption from a production step.
+   *
+   * Any production-flow connections established through this consumption are
+   * disconnected. Returns the deleted consumption.
    *
    * @example
    * ```ts
@@ -130,27 +139,28 @@ export class Consumptions extends APIResource {
  */
 export interface CreateConsumptionRequest {
   /**
-   * Item ID.
+   * ID of the item to consume.
    */
   item_id: string;
 
   /**
-   * Consumed quantity unit ID.
+   * ID of the unit of measure for `quantity_value`.
    */
   quantity_unit_id: string;
 
   /**
-   * Consumed quantity value.
+   * Amount of the item consumed, as a decimal string.
    */
   quantity_value: string;
 
   /**
-   * Waste quantity unit ID.
+   * ID of the unit of measure for `waste_quantity_value`.
    */
   waste_quantity_unit_id: string;
 
   /**
-   * Waste quantity value.
+   * Amount of the item lost as waste, as a decimal string, tracked separately from
+   * the consumed quantity.
    */
   waste_quantity_value: string;
 
@@ -170,54 +180,59 @@ export interface UpdateConsumptionRequest {
   instructions?: string;
 
   /**
-   * Item ID.
+   * ID of the item to consume.
+   *
+   * Changing the item disconnects any production-flow link based on the previous
+   * item and re-links the flow using the new item.
    */
   item_id?: string;
 
   /**
-   * Consumed quantity unit ID.
+   * ID of the unit of measure for `quantity_value`.
    */
   quantity_unit_id?: string;
 
   /**
-   * Consumed quantity value.
+   * Amount of the item consumed, as a decimal string.
    */
   quantity_value?: string;
 
   /**
-   * Waste quantity unit ID.
+   * ID of the unit of measure for `waste_quantity_value`.
    */
   waste_quantity_unit_id?: string;
 
   /**
-   * Waste quantity value.
+   * Amount of the item lost as waste, as a decimal string, tracked separately from
+   * the consumed quantity.
    */
   waste_quantity_value?: string;
 }
 
 export interface ConsumptionCreateParams {
   /**
-   * Body param: Item ID.
+   * Body param: ID of the item to consume.
    */
   item_id: string;
 
   /**
-   * Body param: Consumed quantity unit ID.
+   * Body param: ID of the unit of measure for `quantity_value`.
    */
   quantity_unit_id: string;
 
   /**
-   * Body param: Consumed quantity value.
+   * Body param: Amount of the item consumed, as a decimal string.
    */
   quantity_value: string;
 
   /**
-   * Body param: Waste quantity unit ID.
+   * Body param: ID of the unit of measure for `waste_quantity_value`.
    */
   waste_quantity_unit_id: string;
 
   /**
-   * Body param: Waste quantity value.
+   * Body param: Amount of the item lost as waste, as a decimal string, tracked
+   * separately from the consumed quantity.
    */
   waste_quantity_value: string;
 
@@ -264,27 +279,31 @@ export interface ConsumptionUpdateParams {
   instructions?: string;
 
   /**
-   * Body param: Item ID.
+   * Body param: ID of the item to consume.
+   *
+   * Changing the item disconnects any production-flow link based on the previous
+   * item and re-links the flow using the new item.
    */
   item_id?: string;
 
   /**
-   * Body param: Consumed quantity unit ID.
+   * Body param: ID of the unit of measure for `quantity_value`.
    */
   quantity_unit_id?: string;
 
   /**
-   * Body param: Consumed quantity value.
+   * Body param: Amount of the item consumed, as a decimal string.
    */
   quantity_value?: string;
 
   /**
-   * Body param: Waste quantity unit ID.
+   * Body param: ID of the unit of measure for `waste_quantity_value`.
    */
   waste_quantity_unit_id?: string;
 
   /**
-   * Body param: Waste quantity value.
+   * Body param: Amount of the item lost as waste, as a decimal string, tracked
+   * separately from the consumed quantity.
    */
   waste_quantity_value?: string;
 }

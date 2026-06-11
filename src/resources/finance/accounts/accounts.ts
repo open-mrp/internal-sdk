@@ -19,8 +19,8 @@ export class Accounts extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Returns a paginated list of invoices for a specific customer account, optionally
-   * including child account invoices.
+   * Returns a paginated list of payment-oriented invoices for a specific customer
+   * account, including invoices billed to its child accounts.
    *
    * @example
    * ```ts
@@ -58,7 +58,10 @@ export class Accounts extends APIResource {
 }
 
 /**
- * Invoice in the customer payment context.
+ * A payment-oriented view of an invoice, as returned by List Customer Invoices.
+ *
+ * Carries the fields needed to apply customer payments: the invoice total,
+ * paid-in-full state, and the allocations already applied.
  */
 export interface InvoiceForPayment {
   /**
@@ -72,7 +75,8 @@ export interface InvoiceForPayment {
   allocations: InvoicesAPI.ListInvoiceAllocation | null;
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   billing_address: APIKeysAPI.Address | null;
 
@@ -82,12 +86,13 @@ export interface InvoiceForPayment {
   created_at: string;
 
   /**
-   * Customer account.
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
    */
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Customer's purchase order number.
+   * Purchase order number the customer supplied for the underlying order.
    */
   customer_po: string | null;
 
@@ -102,12 +107,13 @@ export interface InvoiceForPayment {
   is_paid_in_full: boolean;
 
   /**
-   * Whether the customer is a parent account.
+   * Whether the billed customer is a child of a parent account (i.e. it has a parent
+   * account). When true, `parent_account` identifies that parent.
    */
   is_parent_account: boolean;
 
   /**
-   * Whether the order was prepaid.
+   * Whether the billed customer's payment term is prepaid.
    */
   is_prepaid: boolean;
 
@@ -122,7 +128,7 @@ export interface InvoiceForPayment {
   object: 'invoice_for_payment';
 
   /**
-   * Account with optional branding and portal sub-resources.
+   * A customer account, including its branding and customer portal sub-resources.
    */
   parent_account: APIKeysAPI.Account | null;
 
@@ -174,7 +180,11 @@ export interface ListTransactionDetail {
 
 export interface AccountRetrieveInvoicesParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -185,24 +195,32 @@ export interface AccountRetrieveInvoicesParams {
   include?: Array<'customer' | 'parent_account'>;
 
   /**
-   * Whether to include child account invoices.
+   * Whether to also include invoices billed to the customer's child accounts.
+   *
+   * Currently has no effect: invoices for child accounts are always included.
    */
   include_child_accounts?: boolean;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }
 
 export interface AccountRetrieveTransactionsParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -213,27 +231,34 @@ export interface AccountRetrieveTransactionsParams {
   include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
 
   /**
-   * Include transactions from child accounts. Defaults to true.
+   * Whether to also include transactions recorded against the customer's child
+   * accounts.
+   *
+   * Child account transactions are included unless this is set to `false`.
    */
   include_child_accounts?: boolean;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by allocation status.
+   * Filter by allocation status: `allocated` (fully allocated against invoices) or
+   * `unallocated` (has an open balance).
    */
   status?: string;
 
   /**
-   * Filter by transaction type.
+   * Filter by transaction type code (`payment`, `credit_memo`, `adjustment`, or
+   * `rebate`).
    */
   type?: string;
 }

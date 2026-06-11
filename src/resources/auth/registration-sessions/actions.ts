@@ -57,7 +57,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Creates a Stripe customer and billing profile for a registration session.
+   * Creates a Stripe customer and Setup Intent for collecting the registration's
+   * payment method.
+   *
+   * Returns the Setup Intent client secret and publishable key needed to collect a
+   * payment method with Stripe.js. Safe to retry; an existing Stripe customer is
+   * reused.
    *
    * @example
    * ```ts
@@ -99,7 +104,10 @@ export class Actions extends APIResource {
  */
 export interface ConfirmPaymentRequest {
   /**
-   * Stripe Setup Intent ID to verify.
+   * ID of the Stripe Setup Intent to verify.
+   *
+   * Must be the Setup Intent created for this session by **Setup Registration
+   * Billing**, and its status must be `succeeded`.
    */
   setup_intent_id: string;
 }
@@ -115,11 +123,17 @@ export interface ConfirmPaymentResponse {
 
   /**
    * Payment method ID attached by the Setup Intent.
+   *
+   * Returned only the first time payment is confirmed; a repeat confirmation of an
+   * already-completed session succeeds but omits it.
    */
   payment_method_id: string | null;
 
   /**
-   * Setup Intent status (e.g., "succeeded").
+   * Status of the Stripe Setup Intent.
+   *
+   * Always `succeeded` on a successful response; any other Setup Intent status
+   * results in a validation error instead.
    */
   status: string;
 }
@@ -153,7 +167,10 @@ export interface ActionResendVerificationEmailResponse {}
 
 export interface ActionConfirmPaymentParams {
   /**
-   * Stripe Setup Intent ID to verify.
+   * ID of the Stripe Setup Intent to verify.
+   *
+   * Must be the Setup Intent created for this session by **Setup Registration
+   * Billing**, and its status must be `succeeded`.
    */
   setup_intent_id: string;
 }

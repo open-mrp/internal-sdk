@@ -11,6 +11,9 @@ export class Stripe extends APIResource {
   /**
    * Returns the Stripe publishable key for the target account.
    *
+   * Fails if the account has no Stripe integration or the Stripe integration is
+   * inactive.
+   *
    * @example
    * ```ts
    * const stripePublishableKey =
@@ -45,7 +48,8 @@ export interface StripePublishableKey {
   object: 'stripe_publishable_key';
 
   /**
-   * Stripe publishable key.
+   * The publishable key (`pk_...`) from the account's Stripe integration, safe to
+   * use in client-side code.
    */
   publishable_key: string;
 }
@@ -56,6 +60,9 @@ export interface StripePublishableKey {
 export interface StripeStatus {
   /**
    * Whether a Stripe integration is configured.
+   *
+   * `true` if the account has a Stripe integration on file, regardless of whether
+   * the integration is currently active.
    */
   has_stripe_integration: boolean;
 

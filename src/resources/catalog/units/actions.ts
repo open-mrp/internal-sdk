@@ -10,8 +10,8 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Validates unit abbreviations and returns matching units keyed by the original
-   * map keys.
+   * Looks up units by abbreviation and returns the matches keyed by the original map
+   * keys; keys with no matching unit are omitted from the response.
    *
    * @example
    * ```ts
@@ -31,7 +31,9 @@ export class Actions extends APIResource {
  */
 export interface ValidateUnitsRequest {
   /**
-   * Map of arbitrary keys to unit abbreviation values to validate.
+   * Map of arbitrary keys to unit abbreviations to validate.
+   *
+   * Abbreviations are matched case-insensitively against the account's units.
    */
   unit_map: { [key: string]: string };
 }
@@ -47,6 +49,9 @@ export interface ValidateUnitsResponse {
 
   /**
    * Validated units keyed by the original map key.
+   *
+   * Abbreviations are matched case-insensitively; keys whose abbreviation did not
+   * match any unit are omitted.
    */
   units: { [key: string]: ValidateUnitsResponse.Units };
 }
@@ -74,7 +79,8 @@ export namespace ValidateUnitsResponse {
     /**
      * Whether this is the base unit for its dimension.
      *
-     * Conversion ratios are relative to this unit.
+     * Conversion ratios are relative to this unit. Base units are platform-defined;
+     * account-created units always have this set to `false`.
      */
     is_base_unit: boolean;
 
@@ -120,18 +126,11 @@ export namespace ValidateUnitsResponse {
     ratio_numerator: string;
 
     /**
-     * Unit dimension.
+     * Physical dimension the unit measures, such as mass, volume, or currency.
      *
-     * Units can only be converted to other units sharing the same dimension.
-     *
-     * - `currency`: monetary units such as dollars or euros.
-     * - `quantity`: discrete countable units.
-     * - `time`: time-based units such as hours or minutes.
-     * - `mass`: weight-based units such as kilograms or pounds.
-     * - `volume`: volumetric units such as liters or gallons.
-     * - `length`: distance-based units such as meters or feet.
-     * - `temperature`: temperature units such as Celsius or Fahrenheit.
-     * - `area`: area-based units such as square meters or acres.
+     * A unit can only be converted to another unit of the same dimension. The
+     * `quantity` dimension is for discrete countable items rather than a physical
+     * measure.
      */
     type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
 
@@ -144,7 +143,9 @@ export namespace ValidateUnitsResponse {
 
 export interface ActionValidateParams {
   /**
-   * Map of arbitrary keys to unit abbreviation values to validate.
+   * Map of arbitrary keys to unit abbreviations to validate.
+   *
+   * Abbreviations are matched case-insensitively against the account's units.
    */
   unit_map: { [key: string]: string };
 }

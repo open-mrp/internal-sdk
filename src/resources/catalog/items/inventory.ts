@@ -11,9 +11,12 @@ import { path } from '../../../internal/utils/path';
  */
 export class Inventory extends APIResource {
   /**
-   * Adjusts or reconciles inventory for an item. When operation is reconcile,
-   * inventory is set to the exact value; when operation is adjust, the quantity
-   * change is added to the current inventory.
+   * Adjusts or reconciles on-hand inventory for an item.
+   *
+   * With `operation` set to `adjust` (the default), `quantity_change` is added to
+   * the current on-hand quantity; with `reconcile`, the on-hand quantity is set to
+   * exactly `quantity_change`. The change is recorded in the item's inventory audit
+   * trail as a user correction.
    *
    * @example
    * ```ts
@@ -95,33 +98,45 @@ export interface ItemInventory {
  */
 export interface UpdateItemInventoryRequest {
   /**
-   * Customer ID.
+   * ID of the customer account that owns the resulting inventory.
+   *
+   * When provided, added inventory is recorded as owned by this customer account
+   * instead of your own; requires edit access to that customer.
    */
   customer_id?: string;
 
   /**
-   * Location ID.
+   * ID of the location to record the inventory change against.
+   *
+   * Must be a location in your account.
    */
   location_id?: string;
 
   /**
-   * Lot number.
+   * Lot number to record the inventory change against.
+   *
+   * The lot is created for the item if it does not already exist.
    */
   lot_number?: string;
 
   /**
-   * How quantity_change is applied: adjust adds to current inventory; reconcile sets
-   * inventory to the exact value.
+   * How `quantity_change` is applied.
+   *
+   * - `adjust`: adds `quantity_change` to the current on-hand quantity.
+   * - `reconcile`: sets the on-hand quantity to exactly `quantity_change`.
    */
   operation?: 'adjust' | 'reconcile';
 
   /**
-   * Quantity change to apply.
+   * The quantity to apply, interpreted according to `operation`.
+   *
+   * With `adjust`, it is added to the current on-hand quantity and may be negative;
+   * with `reconcile`, the on-hand quantity is set to exactly this value.
    */
   quantity_change?: number;
 
   /**
-   * Unit ID for the quantity change.
+   * ID of the unit `quantity_change` is expressed in.
    */
   unit_id?: string;
 }
@@ -130,33 +145,45 @@ export interface InventoryUpdateResponse {}
 
 export interface InventoryUpdateParams {
   /**
-   * Customer ID.
+   * ID of the customer account that owns the resulting inventory.
+   *
+   * When provided, added inventory is recorded as owned by this customer account
+   * instead of your own; requires edit access to that customer.
    */
   customer_id?: string;
 
   /**
-   * Location ID.
+   * ID of the location to record the inventory change against.
+   *
+   * Must be a location in your account.
    */
   location_id?: string;
 
   /**
-   * Lot number.
+   * Lot number to record the inventory change against.
+   *
+   * The lot is created for the item if it does not already exist.
    */
   lot_number?: string;
 
   /**
-   * How quantity_change is applied: adjust adds to current inventory; reconcile sets
-   * inventory to the exact value.
+   * How `quantity_change` is applied.
+   *
+   * - `adjust`: adds `quantity_change` to the current on-hand quantity.
+   * - `reconcile`: sets the on-hand quantity to exactly `quantity_change`.
    */
   operation?: 'adjust' | 'reconcile';
 
   /**
-   * Quantity change to apply.
+   * The quantity to apply, interpreted according to `operation`.
+   *
+   * With `adjust`, it is added to the current on-hand quantity and may be negative;
+   * with `reconcile`, the on-hand quantity is set to exactly this value.
    */
   quantity_change?: number;
 
   /**
-   * Unit ID for the quantity change.
+   * ID of the unit `quantity_change` is expressed in.
    */
   unit_id?: string;
 }

@@ -10,8 +10,12 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Creates multiple items in a single operation, returning per-item results
+   * Creates multiple items of a single type in one call, returning a per-item result
    * indicating success or failure.
+   *
+   * An input whose SKU already exists updates the existing item in place instead of
+   * creating a duplicate. A failure on one item does not abort the rest of the
+   * batch; check each result's status.
    *
    * @example
    * ```ts
@@ -33,8 +37,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Reconciles inventory for multiple items by SKU, either adding to or forcing the
-   * exact quantity depending on reconcile_type.
+   * Reconciles on-hand inventory for multiple items by SKU in one call.
+   *
+   * `reconcile_type` controls whether each quantity is added to the item's current
+   * on-hand quantity (`addition`) or replaces it (`force`). The response reports
+   * each item as reconciled, skipped (e.g. unknown SKU), or errored (e.g. unknown
+   * unit), so a problem with one item does not fail the rest of the batch.
    *
    * @example
    * ```ts
@@ -59,7 +67,8 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Exports all items with on-hand inventory as an Excel file.
+   * Exports all items, with their on-hand inventory quantities, as an Excel file
+   * (`items.xlsx`).
    *
    * @example
    * ```ts
@@ -77,12 +86,18 @@ export class Actions extends APIResource {
  */
 export interface BulkCreateItemInput {
   /**
-   * Item category ID.
+   * ID of the category to assign to the item.
+   *
+   * The category determines the base unit the item's rates are expressed in.
    */
   item_category_id: string;
 
   /**
-   * Item SKU.
+   * SKU for the new item, unique within the account.
+   *
+   * If an item with this SKU already exists, that item is updated in place
+   * (description, category, and product line) instead of a new item being created;
+   * this path additionally requires permission to update items.
    */
   sku: string;
 
@@ -92,7 +107,9 @@ export interface BulkCreateItemInput {
   description?: string;
 
   /**
-   * Product line ID.
+   * ID of the product line to assign the item's product to.
+   *
+   * Only applies when `type` is `product`; ignored for materials and parts.
    */
   product_line_id?: string;
 }
@@ -133,7 +150,11 @@ export interface BulkCreateItemsRequest {
   items: Array<BulkCreateItemInput>;
 
   /**
-   * Item type (product, material, or part).
+   * The item type applied to every item in the request.
+   *
+   * - `product`: a finished product.
+   * - `material`: a raw material or component consumed in production.
+   * - `part`: a part used in production.
    */
   type: string;
 }
@@ -160,17 +181,23 @@ export interface BulkCreateItemsResponse {
  */
 export interface BulkReconcileItemInput {
   /**
-   * Quantity.
+   * Quantity to apply, interpreted according to the request's `reconcile_type`.
    */
   quantity: number;
 
   /**
-   * Item SKU.
+   * SKU of the item to reconcile.
+   *
+   * Items whose SKU does not match an existing item are reported in the response's
+   * `skipped_items` rather than failing the request.
    */
   sku: string;
 
   /**
-   * Unit abbreviation for the quantity.
+   * Abbreviation of the unit the quantity is expressed in (e.g. `kg`).
+   *
+   * Must match a unit defined on the account; items with an unknown unit are
+   * reported in the response's `errors`.
    */
   unit: string;
 }
@@ -185,7 +212,10 @@ export interface BulkReconcileItemsRequest {
   data: Array<BulkReconcileItemInput>;
 
   /**
-   * Reconcile type: "addition" or "force".
+   * How each item's quantity is applied to its current on-hand inventory.
+   *
+   * - `addition`: adds the quantity to the item's current on-hand quantity.
+   * - `force`: sets the item's on-hand quantity to exactly the given quantity.
    */
   reconcile_type: string;
 }
@@ -307,12 +337,12 @@ export interface ReconciledItemResult {
   item_id: string;
 
   /**
-   * New quantity.
+   * On-hand quantity after the reconciliation.
    */
   new_quantity: number;
 
   /**
-   * Previous quantity.
+   * On-hand quantity before the reconciliation.
    */
   previous_quantity: number;
 
@@ -327,7 +357,7 @@ export interface ReconciledItemResult {
  */
 export interface SkippedItemResult {
   /**
-   * Reason for skipping.
+   * Human-readable reason the item was skipped.
    */
   reason: string;
 
@@ -344,7 +374,11 @@ export interface ActionBulkCreateParams {
   items: Array<BulkCreateItemInput>;
 
   /**
-   * Item type (product, material, or part).
+   * The item type applied to every item in the request.
+   *
+   * - `product`: a finished product.
+   * - `material`: a raw material or component consumed in production.
+   * - `part`: a part used in production.
    */
   type: string;
 }
@@ -356,7 +390,10 @@ export interface ActionBulkReconcileParams {
   data: Array<BulkReconcileItemInput>;
 
   /**
-   * Reconcile type: "addition" or "force".
+   * How each item's quantity is applied to its current on-hand inventory.
+   *
+   * - `addition`: adds the quantity to the item's current on-hand quantity.
+   * - `force`: sets the item's on-hand quantity to exactly the given quantity.
    */
   reconcile_type: string;
 }

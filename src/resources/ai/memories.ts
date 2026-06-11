@@ -67,7 +67,9 @@ export class Memories extends APIResource {
   }
 
   /**
-   * Returns a paginated list of agent memories.
+   * Returns a paginated list of agent memories for the current account.
+   *
+   * Memories whose `expires_at` has passed are excluded.
    *
    * @example
    * ```ts
@@ -97,7 +99,7 @@ export class Memories extends APIResource {
 }
 
 /**
- * Agent memory resource.
+ * A piece of information an agent has saved for recall in future runs.
  */
 export interface AgentMemory {
   /**
@@ -126,9 +128,10 @@ export interface AgentMemory {
   entity: AnalyticsAPI.Entity | null;
 
   /**
-   * Expiration timestamp.
+   * When this memory expires.
    *
-   * Null means it never expires.
+   * `null` means it never expires. Expired memories are excluded from list results
+   * and are no longer recalled by agents.
    */
   expires_at: string | null;
 
@@ -162,7 +165,8 @@ export interface AgentMemory {
  */
 export interface CreateMemoryRequest {
   /**
-   * Memory category (e.g. "preference", "fact", "instruction").
+   * Free-form category used to group related memories (e.g. `preference`, `fact`,
+   * `instruction`).
    */
   category: string;
 
@@ -172,28 +176,40 @@ export interface CreateMemoryRequest {
   content: string;
 
   /**
-   * Entity ID.
+   * ID of the platform record this memory is scoped to.
+   *
+   * Provide together with `entity_type`.
    */
   entity_id?: string;
 
   /**
-   * Entity type this memory is scoped to (e.g. "customer", "product").
+   * Type of platform record this memory is scoped to (e.g. `customer`, `product`).
+   *
+   * Provide together with `entity_id` to scope the memory to a specific record; omit
+   * both for an account-wide memory.
    */
   entity_type?: string;
 
   /**
-   * ISO 8601 expiration timestamp.
+   * Expiration timestamp in ISO 8601 format (e.g. `2026-01-02T15:04:05Z`).
+   *
+   * Omit for a memory that never expires. Expired memories are excluded from list
+   * results and are no longer recalled by agents.
    */
   expires_at?: string;
 
   /**
-   * Importance score between 0 and 1.
+   * Relative importance from `0` to `1`, used to prioritize which memories the agent
+   * recalls.
+   *
+   * Higher is more important. When omitted, the memory is stored at the lowest
+   * priority (`0`).
    */
   importance?: number;
 
   /**
-   * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
-   * or null), not a JSON-encoded string.
+   * Arbitrary metadata as JSON. Encoded as a JSON value (object, array, string,
+   * number, boolean, or null), not a JSON-encoded string.
    */
   metadata?: unknown | null;
 }
@@ -223,7 +239,8 @@ export interface ListAgentMemory {
  */
 export interface UpdateMemoryRequest {
   /**
-   * Memory category (e.g. "preference", "fact", "instruction").
+   * Free-form category used to group related memories (e.g. `preference`, `fact`,
+   * `instruction`).
    */
   category?: string;
 
@@ -233,28 +250,38 @@ export interface UpdateMemoryRequest {
   content?: string;
 
   /**
-   * Entity ID.
+   * ID of the platform record this memory is scoped to.
+   *
+   * Provide together with `entity_type`.
    */
   entity_id?: string;
 
   /**
-   * Entity type this memory is scoped to (e.g. "customer", "product").
+   * Type of platform record this memory is scoped to (e.g. `customer`, `product`).
+   *
+   * Provide together with `entity_id` to scope the memory to a specific record.
    */
   entity_type?: string;
 
   /**
-   * ISO 8601 expiration timestamp.
+   * Expiration timestamp in ISO 8601 format (e.g. `2026-01-02T15:04:05Z`).
+   *
+   * Expired memories are excluded from list results and are no longer recalled by
+   * agents.
    */
   expires_at?: string;
 
   /**
-   * Importance score between 0 and 1.
+   * Relative importance from `0` to `1`, used to prioritize which memories the agent
+   * recalls.
+   *
+   * Higher is more important.
    */
   importance?: number;
 
   /**
-   * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
-   * or null), not a JSON-encoded string.
+   * Arbitrary metadata as JSON. Encoded as a JSON value (object, array, string,
+   * number, boolean, or null), not a JSON-encoded string.
    */
   metadata?: unknown | null;
 }
@@ -263,7 +290,8 @@ export interface MemoryDeleteResponse {}
 
 export interface MemoryCreateParams {
   /**
-   * Memory category (e.g. "preference", "fact", "instruction").
+   * Free-form category used to group related memories (e.g. `preference`, `fact`,
+   * `instruction`).
    */
   category: string;
 
@@ -273,35 +301,48 @@ export interface MemoryCreateParams {
   content: string;
 
   /**
-   * Entity ID.
+   * ID of the platform record this memory is scoped to.
+   *
+   * Provide together with `entity_type`.
    */
   entity_id?: string;
 
   /**
-   * Entity type this memory is scoped to (e.g. "customer", "product").
+   * Type of platform record this memory is scoped to (e.g. `customer`, `product`).
+   *
+   * Provide together with `entity_id` to scope the memory to a specific record; omit
+   * both for an account-wide memory.
    */
   entity_type?: string;
 
   /**
-   * ISO 8601 expiration timestamp.
+   * Expiration timestamp in ISO 8601 format (e.g. `2026-01-02T15:04:05Z`).
+   *
+   * Omit for a memory that never expires. Expired memories are excluded from list
+   * results and are no longer recalled by agents.
    */
   expires_at?: string;
 
   /**
-   * Importance score between 0 and 1.
+   * Relative importance from `0` to `1`, used to prioritize which memories the agent
+   * recalls.
+   *
+   * Higher is more important. When omitted, the memory is stored at the lowest
+   * priority (`0`).
    */
   importance?: number;
 
   /**
-   * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
-   * or null), not a JSON-encoded string.
+   * Arbitrary metadata as JSON. Encoded as a JSON value (object, array, string,
+   * number, boolean, or null), not a JSON-encoded string.
    */
   metadata?: unknown | null;
 }
 
 export interface MemoryUpdateParams {
   /**
-   * Memory category (e.g. "preference", "fact", "instruction").
+   * Free-form category used to group related memories (e.g. `preference`, `fact`,
+   * `instruction`).
    */
   category?: string;
 
@@ -311,55 +352,71 @@ export interface MemoryUpdateParams {
   content?: string;
 
   /**
-   * Entity ID.
+   * ID of the platform record this memory is scoped to.
+   *
+   * Provide together with `entity_type`.
    */
   entity_id?: string;
 
   /**
-   * Entity type this memory is scoped to (e.g. "customer", "product").
+   * Type of platform record this memory is scoped to (e.g. `customer`, `product`).
+   *
+   * Provide together with `entity_id` to scope the memory to a specific record.
    */
   entity_type?: string;
 
   /**
-   * ISO 8601 expiration timestamp.
+   * Expiration timestamp in ISO 8601 format (e.g. `2026-01-02T15:04:05Z`).
+   *
+   * Expired memories are excluded from list results and are no longer recalled by
+   * agents.
    */
   expires_at?: string;
 
   /**
-   * Importance score between 0 and 1.
+   * Relative importance from `0` to `1`, used to prioritize which memories the agent
+   * recalls.
+   *
+   * Higher is more important.
    */
   importance?: number;
 
   /**
-   * JSON metadata. Encoded as a JSON value (object, array, string, number, boolean,
-   * or null), not a JSON-encoded string.
+   * Arbitrary metadata as JSON. Encoded as a JSON value (object, array, string,
+   * number, boolean, or null), not a JSON-encoded string.
    */
   metadata?: unknown | null;
 }
 
 export interface MemoryListParams {
   /**
-   * Category filter (e.g. "preference", "fact").
+   * Filter to memories with this exact category (e.g. `preference`, `fact`).
    */
   category?: string;
 
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Entity type filter (e.g. "customer", "product").
+   * Filter to memories scoped to this entity type (e.g. `customer`, `product`).
    */
   entity_type?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

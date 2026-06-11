@@ -288,6 +288,9 @@ export class Operations extends APIResource {
    * Returns a paginated list of items with on-hand inventory quantities for the
    * account.
    *
+   * Every item in the account appears once; items with no recorded inventory report
+   * a zero quantity.
+   *
    * @example
    * ```ts
    * const listInventoryItem =
@@ -353,7 +356,7 @@ export class Operations extends APIResource {
 }
 
 /**
- * Item with on-hand inventory quantity.
+ * An item together with its current on-hand inventory quantity.
  */
 export interface InventoryItem {
   /**
@@ -397,22 +400,28 @@ export interface ListInventoryItem {
  */
 export interface UpdateQuantityRequest {
   /**
-   * Owner resource ID.
+   * ID of the resource that owns this quantity.
+   *
+   * Used together with `object_type` to verify the owning resource exists; it does
+   * not reassign the quantity.
    */
   object_id?: string;
 
   /**
-   * Owner resource type (e.g. "item", "production_step").
+   * Type of the resource that owns this quantity.
+   *
+   * Determines the permission required for the update. Must be `item` or
+   * `production_step`.
    */
   object_type?: string;
 
   /**
-   * Unit ID.
+   * ID of the new unit of measure for the quantity.
    */
   unit_id?: string;
 
   /**
-   * Decimal value.
+   * New decimal value for the quantity, as a string to preserve precision.
    */
   value?: string;
 }
@@ -422,34 +431,45 @@ export interface UpdateQuantityRequest {
  */
 export interface UpdateRateRequest {
   /**
-   * Denominator unit ID.
+   * ID of the new unit for the rate's denominator (the per-unit basis).
    */
   denominator_unit_id?: string;
 
   /**
-   * Numerator unit ID.
+   * ID of the new unit for the rate's numerator (e.g. the currency of a price).
    */
   numerator_unit_id?: string;
 
   /**
-   * Parent resource ID.
+   * ID of the resource that owns this rate.
+   *
+   * Used together with `object_type` to verify the owning resource exists; it does
+   * not reassign the rate.
    */
   object_id?: string;
 
   /**
-   * Parent resource type (e.g. "item", "production_step").
+   * Type of the resource that owns this rate.
+   *
+   * Determines the permission required for the update. Must be `item` or
+   * `production_step`.
    */
   object_type?: string;
 
   /**
-   * Decimal value of the rate.
+   * New decimal value for the rate, expressed as the amount of the numerator unit
+   * per one denominator unit.
    */
   value?: string;
 }
 
 export interface OperationRetrieveInventoriesParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -460,12 +480,14 @@ export interface OperationRetrieveInventoriesParams {
   include?: Array<'quantity.unit'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }
@@ -478,22 +500,29 @@ export interface OperationUpdateQuantitiesParams {
   include?: Array<'unit'>;
 
   /**
-   * Body param: Owner resource ID.
+   * Body param: ID of the resource that owns this quantity.
+   *
+   * Used together with `object_type` to verify the owning resource exists; it does
+   * not reassign the quantity.
    */
   object_id?: string;
 
   /**
-   * Body param: Owner resource type (e.g. "item", "production_step").
+   * Body param: Type of the resource that owns this quantity.
+   *
+   * Determines the permission required for the update. Must be `item` or
+   * `production_step`.
    */
   object_type?: string;
 
   /**
-   * Body param: Unit ID.
+   * Body param: ID of the new unit of measure for the quantity.
    */
   unit_id?: string;
 
   /**
-   * Body param: Decimal value.
+   * Body param: New decimal value for the quantity, as a string to preserve
+   * precision.
    */
   value?: string;
 }
@@ -506,27 +535,35 @@ export interface OperationUpdateRatesParams {
   include?: Array<'numerator_unit' | 'denominator_unit'>;
 
   /**
-   * Body param: Denominator unit ID.
+   * Body param: ID of the new unit for the rate's denominator (the per-unit basis).
    */
   denominator_unit_id?: string;
 
   /**
-   * Body param: Numerator unit ID.
+   * Body param: ID of the new unit for the rate's numerator (e.g. the currency of a
+   * price).
    */
   numerator_unit_id?: string;
 
   /**
-   * Body param: Parent resource ID.
+   * Body param: ID of the resource that owns this rate.
+   *
+   * Used together with `object_type` to verify the owning resource exists; it does
+   * not reassign the rate.
    */
   object_id?: string;
 
   /**
-   * Body param: Parent resource type (e.g. "item", "production_step").
+   * Body param: Type of the resource that owns this rate.
+   *
+   * Determines the permission required for the update. Must be `item` or
+   * `production_step`.
    */
   object_type?: string;
 
   /**
-   * Body param: Decimal value of the rate.
+   * Body param: New decimal value for the rate, expressed as the amount of the
+   * numerator unit per one denominator unit.
    */
   value?: string;
 }

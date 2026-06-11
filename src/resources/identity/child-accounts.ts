@@ -11,7 +11,11 @@ import { path } from '../../internal/utils/path';
  */
 export class ChildAccounts extends APIResource {
   /**
-   * Adds a child account relationship to the target account.
+   * Links an existing account as a child of the target account.
+   *
+   * This call is idempotent: linking an account that is already a child of the
+   * target account succeeds without changes. Circular relationships (making an
+   * account a child of its own child) are rejected with a conflict error.
    *
    * @example
    * ```ts
@@ -42,7 +46,11 @@ export class ChildAccounts extends APIResource {
   }
 
   /**
-   * Removes a child account from the target account.
+   * Unlinks a child account from the target account.
+   *
+   * Only the parent-child relationship is removed; the child account itself is not
+   * deleted. This call is idempotent: removing an account that is not currently a
+   * child succeeds without changes.
    *
    * @example
    * ```ts
@@ -63,11 +71,14 @@ export class ChildAccounts extends APIResource {
 export interface ChildAccount {
   /**
    * Account relation ID.
+   *
+   * Identifies the relationship record, not the child account itself; use
+   * `account.id` for the account.
    */
   id: string;
 
   /**
-   * Account with optional branding and portal sub-resources.
+   * A customer account, including its branding and customer portal sub-resources.
    */
   account: APIKeysAPI.Account | null;
 
@@ -77,15 +88,13 @@ export interface ChildAccount {
   created_at: string;
 
   /**
-   * Support email from account branding.
+   * Support email address copied from the child account's branding.
    */
   email: string | null;
 
   /**
-   * Your own identifier for this customer (e.g. a CRM or ERP customer number),
-   * stored on the relation.
-   *
-   * Null if not set.
+   * Your own identifier for this customer, such as a CRM or ERP customer number,
+   * stored on the parent-child relation rather than on the account.
    */
   external_number: string | null;
 
@@ -124,17 +133,23 @@ export interface ChildAccountDeleteResponse {}
 
 export interface ChildAccountListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

@@ -32,6 +32,8 @@ export interface Healthcheck {
 
   /**
    * Current operational status of the API service.
+   *
+   * Returns `healthy` when the service is up and able to handle requests.
    */
   status: string;
 }

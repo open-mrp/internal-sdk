@@ -11,7 +11,13 @@ import { path } from '../../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Marks a receiving order line as received.
+   * Records the full outstanding quantity as received on a single receiving order
+   * line.
+   *
+   * Sets the line's quantity to the quantity still outstanding on its purchase order
+   * line (ordered minus previously received); if nothing is outstanding, the line is
+   * returned unchanged. This does not add inventory — use Stock Receiving Order to
+   * put the received quantity away.
    *
    * @example
    * ```ts
@@ -38,6 +44,9 @@ export class Actions extends APIResource {
 
   /**
    * Voids a receiving order line.
+   *
+   * The line's received quantity is reset to `0` and its stocked state is cleared.
+   * The line itself is not deleted.
    *
    * @example
    * ```ts

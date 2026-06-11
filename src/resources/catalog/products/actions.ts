@@ -53,7 +53,10 @@ export class Actions extends APIResource {
  */
 export interface ValidateProductsRequest {
   /**
-   * Map of arbitrary keys to SKU values.
+   * Map of caller-chosen keys to SKU values to look up.
+   *
+   * SKUs are matched case-insensitively. Each key is echoed back in the response
+   * with its matched product; keys whose SKU does not match any product are omitted.
    */
   products_map: { [key: string]: string };
 }
@@ -68,14 +71,18 @@ export interface ValidateProductsResponse {
   object: 'map';
 
   /**
-   * Validated products keyed by original map key.
+   * Matched products keyed by the same keys supplied in the request's
+   * `products_map`.
+   *
+   * Keys whose SKU did not match any product are omitted.
    */
   products: { [key: string]: ValidateProductsResponse.Products };
 }
 
 export namespace ValidateProductsResponse {
   /**
-   * Product with expandable item, product line, and product type.
+   * Product pairs an inventory item with how it is sold: its product type, optional
+   * product line, and customer portal visibility.
    */
   export interface Products {
     /**
@@ -109,6 +116,9 @@ export namespace ValidateProductsResponse {
 
     /**
      * Product line resource.
+     *
+     * A product line groups related products in your catalog and carries the default
+     * commission policy, freight policy, and unit group for those products.
      */
     product_line: AccountPricesAPI.ProductLine | null;
 
@@ -159,7 +169,7 @@ export interface ActionExportParams {
   product_line_ids?: Array<string>;
 
   /**
-   * Optional search query.
+   * Free-text query matched against products before exporting.
    */
   q?: string;
 
@@ -171,7 +181,10 @@ export interface ActionExportParams {
 
 export interface ActionValidateParams {
   /**
-   * Body param: Map of arbitrary keys to SKU values.
+   * Body param: Map of caller-chosen keys to SKU values to look up.
+   *
+   * SKUs are matched case-insensitively. Each key is echoed back in the response
+   * with its matched product; keys whose SKU does not match any product are omitted.
    */
   products_map: { [key: string]: string };
 
