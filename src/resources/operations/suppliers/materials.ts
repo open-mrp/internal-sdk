@@ -12,7 +12,8 @@ import { path } from '../../../internal/utils/path';
  */
 export class Materials extends APIResource {
   /**
-   * Creates a supplier material association.
+   * Links a material to a supplier, recording the supplier's part number and
+   * description for it.
    *
    * @example
    * ```ts
@@ -36,7 +37,7 @@ export class Materials extends APIResource {
   }
 
   /**
-   * Returns a supplier material by ID.
+   * Returns the supplier material link for the given supplier and material.
    *
    * @example
    * ```ts
@@ -62,6 +63,8 @@ export class Materials extends APIResource {
   /**
    * Partially updates a supplier material.
    *
+   * Fields not provided retain their current values.
+   *
    * @example
    * ```ts
    * const supplierMaterial =
@@ -83,7 +86,7 @@ export class Materials extends APIResource {
   }
 
   /**
-   * Returns a paginated list of supplier materials.
+   * Returns a paginated list of materials linked to the given supplier.
    *
    * @example
    * ```ts
@@ -102,7 +105,9 @@ export class Materials extends APIResource {
   }
 
   /**
-   * Deletes a supplier material association.
+   * Deletes a supplier material link.
+   *
+   * Removing the link does not affect the underlying material or supplier.
    *
    * @example
    * ```ts
@@ -124,22 +129,28 @@ export class Materials extends APIResource {
  */
 export interface CreateSupplierMaterialRequest {
   /**
-   * Material ID.
+   * ID of the material the supplier provides.
+   *
+   * A material can be linked to a given supplier at most once; creating a duplicate
+   * link fails with a conflict error.
    */
   material_id: string;
 
   /**
-   * Supplier part number for this material.
+   * The part number the supplier uses for this material in their own catalog.
    */
   supplier_part_number: string;
 
   /**
-   * Active status.
+   * Whether the supplier is available to source this material.
+   *
+   * When omitted, the link is created active so the supplier is immediately usable
+   * as a source.
    */
   is_active?: boolean;
 
   /**
-   * Supplier description for this material.
+   * The supplier's own description of this material.
    */
   supplier_description?: string;
 }
@@ -165,11 +176,14 @@ export interface ListSupplierMaterial {
 }
 
 /**
- * Supplier material resource.
+ * Links a material to a supplier that provides it, carrying the supplier's own
+ * part number and description for the material.
+ *
+ * Each material can be linked to a given supplier at most once.
  */
 export interface SupplierMaterial {
   /**
-   * Supplier material ID.
+   * ID of the linked material, which also identifies this supplier material.
    */
   id: string;
 
@@ -179,7 +193,12 @@ export interface SupplierMaterial {
   created_at: string;
 
   /**
-   * Material with order point and lead time.
+   * A material in the account's catalog: a raw material or component consumed in
+   * production.
+   *
+   * Material-level data such as the SKU, description, category, pricing, and
+   * attributes lives on the underlying `item`; the material record adds the
+   * reordering fields `order_point` and `lead_time`.
    */
   material: MaterialsAPI.Material | null;
 
@@ -189,21 +208,17 @@ export interface SupplierMaterial {
   object: 'supplier_material';
 
   /**
-   * Whether this supplier can currently be sourced for the material.
-   *
-   * - `active`: the supplier is available to source this material.
-   * - `inactive`: the link is retained for history but the supplier is not
-   *   considered when sourcing this material.
+   * Whether this supplier is currently available as a source for the material.
    */
   status: 'active' | 'inactive';
 
   /**
-   * Supplier description for this material.
+   * The supplier's own description of this material.
    */
   supplier_description: string | null;
 
   /**
-   * Supplier part number for this material.
+   * The part number the supplier uses for this material in their own catalog.
    */
   supplier_part_number: string;
 
@@ -218,46 +233,52 @@ export interface SupplierMaterial {
  */
 export interface UpdateSupplierMaterialRequest {
   /**
-   * Active status.
+   * Whether the supplier is available to source this material.
    */
   is_active?: boolean;
 
   /**
-   * Supplier description for this material.
+   * New supplier description of this material.
    */
   supplier_description?: string;
 
   /**
-   * Supplier part number for this material.
+   * New part number the supplier uses for this material.
    */
   supplier_part_number?: string;
 }
 
 export interface MaterialCreateParams {
   /**
-   * Material ID.
+   * ID of the material the supplier provides.
+   *
+   * A material can be linked to a given supplier at most once; creating a duplicate
+   * link fails with a conflict error.
    */
   material_id: string;
 
   /**
-   * Supplier part number for this material.
+   * The part number the supplier uses for this material in their own catalog.
    */
   supplier_part_number: string;
 
   /**
-   * Active status.
+   * Whether the supplier is available to source this material.
+   *
+   * When omitted, the link is created active so the supplier is immediately usable
+   * as a source.
    */
   is_active?: boolean;
 
   /**
-   * Supplier description for this material.
+   * The supplier's own description of this material.
    */
   supplier_description?: string;
 }
 
 export interface MaterialRetrieveParams {
   /**
-   * Path param: Supplier ID.
+   * Path param: ID of the supplier the material is linked to.
    */
   supplier_id: string;
 
@@ -270,29 +291,33 @@ export interface MaterialRetrieveParams {
 
 export interface MaterialUpdateParams {
   /**
-   * Path param: Supplier ID.
+   * Path param: ID of the supplier the material is linked to.
    */
   supplier_id: string;
 
   /**
-   * Body param: Active status.
+   * Body param: Whether the supplier is available to source this material.
    */
   is_active?: boolean;
 
   /**
-   * Body param: Supplier description for this material.
+   * Body param: New supplier description of this material.
    */
   supplier_description?: string;
 
   /**
-   * Body param: Supplier part number for this material.
+   * Body param: New part number the supplier uses for this material.
    */
   supplier_part_number?: string;
 }
 
 export interface MaterialListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -303,19 +328,21 @@ export interface MaterialListParams {
   include?: Array<'material' | 'material.item'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }
 
 export interface MaterialDeleteParams {
   /**
-   * Supplier ID.
+   * ID of the supplier the material is linked to.
    */
   supplier_id: string;
 }

@@ -183,8 +183,11 @@ export class Sales extends APIResource {
   accounts: AccountsAPI.Accounts = new AccountsAPI.Accounts(this._client);
 
   /**
-   * Creates an embedded Stripe checkout session for a customer actor and returns a
-   * client secret for use with Stripe.js.
+   * Creates an embedded Stripe checkout session for paying a sales order and returns
+   * a client secret for use with Stripe.js.
+   *
+   * The session is created on the target account's own Stripe integration, so the
+   * caller must be a customer user of that account.
    *
    * @example
    * ```ts
@@ -210,7 +213,9 @@ export class Sales extends APIResource {
  */
 export interface CheckoutSessionResponse {
   /**
-   * Stripe checkout session client secret for embedded checkout.
+   * Client secret for the Stripe embedded checkout session.
+   *
+   * Pass this to Stripe.js to mount the embedded checkout form.
    */
   checkout_session_client_secret: string;
 
@@ -225,44 +230,44 @@ export interface CheckoutSessionResponse {
  */
 export interface CreateCheckoutSessionRequest {
   /**
-   * Sales order ID.
+   * ID of the sales order to collect payment for.
    */
   order_id: string;
 
   /**
-   * Order number for display.
+   * Human-readable order number shown to the customer during checkout.
    */
   order_number: string;
 
   /**
-   * Order total in cents.
+   * Order total in cents; the amount the customer is charged.
    */
   order_total_cents: number;
 
   /**
-   * Customer PO number.
+   * Customer purchase order (PO) number to associate with the payment.
    */
   customer_po?: string;
 }
 
 export interface SaleCheckoutSessionsParams {
   /**
-   * Sales order ID.
+   * ID of the sales order to collect payment for.
    */
   order_id: string;
 
   /**
-   * Order number for display.
+   * Human-readable order number shown to the customer during checkout.
    */
   order_number: string;
 
   /**
-   * Order total in cents.
+   * Order total in cents; the amount the customer is charged.
    */
   order_total_cents: number;
 
   /**
-   * Customer PO number.
+   * Customer purchase order (PO) number to associate with the payment.
    */
   customer_po?: string;
 }

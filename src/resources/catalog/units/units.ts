@@ -112,11 +112,15 @@ export class Units extends APIResource {
 export interface CreateUnitRequest {
   /**
    * Short abbreviation for the unit (e.g. "g").
+   *
+   * Must be unique within the account.
    */
   abbreviation: string;
 
   /**
    * Display name of the unit (e.g. "Gram").
+   *
+   * Must be unique within the account.
    */
   name: string;
 
@@ -142,7 +146,9 @@ export interface CreateUnitRequest {
   ratio_numerator: string;
 
   /**
-   * Unit dimension code.
+   * Unit dimension (e.g. `mass`, `volume`, `currency`).
+   *
+   * Units can only be converted to other units of the same dimension.
    */
   type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
 }
@@ -153,11 +159,15 @@ export interface CreateUnitRequest {
 export interface UpdateUnitRequest {
   /**
    * Short abbreviation for the unit.
+   *
+   * Must be unique within the account.
    */
   abbreviation?: string;
 
   /**
    * Display name of the unit.
+   *
+   * Must be unique within the account.
    */
   name?: string;
 
@@ -187,11 +197,15 @@ export interface UnitDeleteResponse {}
 export interface UnitCreateParams {
   /**
    * Body param: Short abbreviation for the unit (e.g. "g").
+   *
+   * Must be unique within the account.
    */
   abbreviation: string;
 
   /**
    * Body param: Display name of the unit (e.g. "Gram").
+   *
+   * Must be unique within the account.
    */
   name: string;
 
@@ -219,7 +233,9 @@ export interface UnitCreateParams {
   ratio_numerator: string;
 
   /**
-   * Body param: Unit dimension code.
+   * Body param: Unit dimension (e.g. `mass`, `volume`, `currency`).
+   *
+   * Units can only be converted to other units of the same dimension.
    */
   type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
 
@@ -247,11 +263,15 @@ export interface UnitUpdateParams {
 
   /**
    * Body param: Short abbreviation for the unit.
+   *
+   * Must be unique within the account.
    */
   abbreviation?: string;
 
   /**
    * Body param: Display name of the unit.
+   *
+   * Must be unique within the account.
    */
   name?: string;
 
@@ -279,7 +299,11 @@ export interface UnitUpdateParams {
 
 export interface UnitListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -290,22 +314,24 @@ export interface UnitListParams {
   include?: Array<'owner' | 'owner.account'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by unit dimension code.
+   * Filter by unit dimension (e.g. `mass`).
    */
   type?: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
 
   /**
-   * Filter by unit group membership.
+   * Return only units that belong to at least one of the given unit groups.
    */
   unit_group_ids?: Array<string>;
 }

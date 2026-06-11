@@ -125,7 +125,8 @@ export class Finance extends APIResource {
   }
 
   /**
-   * Returns a paginated list of open credit transactions for the current account.
+   * Returns a paginated list of transactions that are not fully allocated against
+   * invoices, with the remaining balance available to apply.
    *
    * @example
    * ```ts
@@ -174,23 +175,26 @@ export class Finance extends APIResource {
 }
 
 /**
- * Adjustment type resource.
+ * A category of financial adjustment, such as a discount, fee, or write-off.
+ *
+ * Adjustment types classify adjustment transactions recorded against customer
+ * invoices.
  */
 export interface AdjustmentType {
   /**
-   * Adjustment ID.
+   * Adjustment type ID.
    */
   id: string;
 
   /**
    * Machine-readable code identifying what kind of adjustment this is.
    *
-   * - `discount`: a price reduction applied to an order.
+   * - `discount`: a price reduction.
    * - `shipping_discrepancy`: corrects a difference between quoted and actual
    *   freight.
    * - `short_payment`: reconciles an invoice paid for less than the amount due.
    * - `write_off`: cancels an uncollectible balance.
-   * - `fee`: an additional charge added to an order.
+   * - `fee`: an additional charge.
    * - `refund`: returns money to the customer.
    */
   code: 'discount' | 'shipping_discrepancy' | 'short_payment' | 'write_off' | 'fee' | 'refund';
@@ -201,7 +205,7 @@ export interface AdjustmentType {
   created_at: string;
 
   /**
-   * Display name.
+   * Human-readable name of the adjustment type (e.g. "Discount").
    */
   name: string;
 
@@ -222,17 +226,15 @@ export interface AdjustmentType {
 }
 
 /**
- * Minimal customer sub-resource for allocation entries.
+ * Minimal customer sub-resource for allocation entries and open-credit entries.
  *
- * It carries its own allocation_customer discriminator (not customer) because
- * allocation list entries do not carry a customer id, so it is not a resolvable
- * customer reference.
+ * It carries its own allocation_customer discriminator (not customer) because the
+ * customer id is not always present (allocation list entries omit it), so it is
+ * not a guaranteed-resolvable customer reference.
  */
 export interface AllocationCustomer {
   /**
    * Customer account ID.
-   *
-   * Null when the entry does not carry one.
    */
   id: string | null;
 
@@ -382,10 +384,9 @@ export interface OpenCreditEntry {
   id: string;
 
   /**
-   * Adjustment category code.
+   * Adjustment category of the underlying transaction.
    *
-   * Typically populated when `transaction_type` is `adjustment`; null for other
-   * types.
+   * Typically populated for adjustment transactions; null for other types.
    */
   adjustment_type: string | null;
 
@@ -400,11 +401,11 @@ export interface OpenCreditEntry {
   created_at: string;
 
   /**
-   * Minimal customer sub-resource for allocation entries.
+   * Minimal customer sub-resource for allocation entries and open-credit entries.
    *
-   * It carries its own allocation_customer discriminator (not customer) because
-   * allocation list entries do not carry a customer id, so it is not a resolvable
-   * customer reference.
+   * It carries its own allocation_customer discriminator (not customer) because the
+   * customer id is not always present (allocation list entries omit it), so it is
+   * not a guaranteed-resolvable customer reference.
    */
   customer: AllocationCustomer | null;
 
@@ -452,7 +453,7 @@ export interface OpenCreditEntry {
   stripe_payment_id: string | null;
 
   /**
-   * Payment method code (e.g. `check`, `ach`).
+   * Payment method of the underlying transaction.
    *
    * Typically present only on payment transactions and null for credit memos,
    * adjustments, and rebates.
@@ -460,14 +461,16 @@ export interface OpenCreditEntry {
   transaction_method: string | null;
 
   /**
-   * Transaction type code: one of `payment`, `credit_memo`, `adjustment`, or
-   * `rebate`.
+   * Type of the underlying transaction.
+   *
+   * Corresponds to one of the standard transaction types: payment, credit memo,
+   * adjustment, or rebate.
    */
   transaction_type: string;
 }
 
 /**
- * Transaction method resource.
+ * The payment method used to make a transaction, such as cash or check.
  */
 export interface TransactionMethod {
   /**
@@ -477,12 +480,6 @@ export interface TransactionMethod {
 
   /**
    * Machine-readable code identifying how the transaction was made.
-   *
-   * - `cash`
-   * - `check`
-   * - `credit_card`
-   * - `gift_card`
-   * - `ach`
    */
   code: 'cash' | 'check' | 'credit_card' | 'gift_card' | 'ach';
 
@@ -498,11 +495,11 @@ export interface TransactionMethod {
 }
 
 /**
- * Transaction type resource.
+ * The category of a financial transaction, such as a payment or credit memo.
  */
 export interface TransactionType {
   /**
-   * Transaction ID.
+   * Transaction type ID.
    */
   id: string;
 
@@ -529,7 +526,11 @@ export interface TransactionType {
 
 export interface FinanceRetrieveAdjustmentTypesParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -540,19 +541,25 @@ export interface FinanceRetrieveAdjustmentTypesParams {
   include?: Array<'owner'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }
 
 export interface FinanceRetrieveOpenCreditsParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -562,56 +569,70 @@ export interface FinanceRetrieveOpenCreditsParams {
   customer_ids?: Array<string>;
 
   /**
-   * Filter by end date (exclusive, YYYY-MM-DD).
+   * Only include transactions created before this date (`YYYY-MM-DD`).
    */
   end_date?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by start date (inclusive, YYYY-MM-DD).
+   * Only include transactions created on or after this date (`YYYY-MM-DD`).
    */
   start_date?: string;
 }
 
 export interface FinanceRetrieveTransactionMethodsParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }
 
 export interface FinanceRetrieveTransactionTypesParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

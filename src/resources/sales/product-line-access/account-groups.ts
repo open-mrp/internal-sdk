@@ -13,7 +13,10 @@ import { path } from '../../../internal/utils/path';
  */
 export class AccountGroups extends APIResource {
   /**
-   * Creates product line access for an account group.
+   * Creates a product line access record for an account group.
+   *
+   * Each account group can have at most one access record; creating one for an
+   * account group that already has one returns a conflict error.
    *
    * @example
    * ```ts
@@ -49,7 +52,10 @@ export class AccountGroups extends APIResource {
   }
 
   /**
-   * Replaces all product line access for an account group.
+   * Replaces the set of product lines accessible to an account group.
+   *
+   * This is a full replacement, not a merge: product lines omitted from the request
+   * lose access.
    *
    * @example
    * ```ts
@@ -72,8 +78,7 @@ export class AccountGroups extends APIResource {
   }
 
   /**
-   * Returns a paginated list of product line access records grouped by account
-   * group.
+   * Returns a paginated list of product line access records, one per account group.
    *
    * @example
    * ```ts
@@ -105,12 +110,13 @@ export class AccountGroups extends APIResource {
 }
 
 /**
- * AccountGroupProductLineAccess is the product lines accessible to an account
- * group.
+ * The set of product lines that accounts in an account group are allowed to order
+ * from.
  */
 export interface AccountGroupProductLineAccess {
   /**
-   * Account group resource.
+   * A named grouping of customer accounts, used for pricing rules or to categorize
+   * accounts.
    */
   account_group: CustomersAPI.AccountGroup | null;
 
@@ -136,17 +142,18 @@ export interface AccountGroupProductLineAccess {
 }
 
 /**
- * CreateAccountGroupProductLineAccessRequest is a request to create product line
- * access for an account group.
+ * Request to create product line access for an account group.
  */
 export interface CreateAccountGroupProductLineAccessRequest {
   /**
-   * Account group ID.
+   * ID of the account group to grant product line access to.
    */
   account_group_id: string;
 
   /**
-   * Product line IDs to grant access to.
+   * IDs of the product lines the account group is granted access to.
+   *
+   * Must contain at least one product line ID; every ID must belong to your account.
    */
   product_line_ids: Array<string>;
 }
@@ -192,12 +199,14 @@ export interface ListProductLine {
 }
 
 /**
- * UpdateAccountGroupProductLineAccessRequest is a request to update product line
- * access for an account group.
+ * Request to update product line access for an account group.
  */
 export interface UpdateAccountGroupProductLineAccessRequest {
   /**
-   * Product line IDs to grant access to.
+   * IDs of the product lines the account group should have access to.
+   *
+   * The provided list replaces the account group's existing set of product lines;
+   * every ID must belong to your account.
    */
   product_line_ids?: Array<string>;
 }
@@ -206,36 +215,47 @@ export interface AccountGroupDeleteResponse {}
 
 export interface AccountGroupCreateParams {
   /**
-   * Account group ID.
+   * ID of the account group to grant product line access to.
    */
   account_group_id: string;
 
   /**
-   * Product line IDs to grant access to.
+   * IDs of the product lines the account group is granted access to.
+   *
+   * Must contain at least one product line ID; every ID must belong to your account.
    */
   product_line_ids: Array<string>;
 }
 
 export interface AccountGroupUpdateParams {
   /**
-   * Product line IDs to grant access to.
+   * IDs of the product lines the account group should have access to.
+   *
+   * The provided list replaces the account group's existing set of product lines;
+   * every ID must belong to your account.
    */
   product_line_ids?: Array<string>;
 }
 
 export interface AccountGroupListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

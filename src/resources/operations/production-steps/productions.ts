@@ -71,17 +71,23 @@ export class Productions extends APIResource {
  */
 export interface UpdateProductionRequest {
   /**
-   * Item ID.
+   * New produced item ID.
+   *
+   * Changing the item re-links the step's connections in the production flow graph.
    */
   item_id?: string;
 
   /**
-   * Quantity unit ID.
+   * Unit ID for `quantity_value`.
+   *
+   * Ignored unless `quantity_value` is also provided.
    */
   quantity_unit_id?: string;
 
   /**
    * Quantity value as a decimal string.
+   *
+   * Ignored unless `quantity_unit_id` is also provided.
    */
   quantity_value?: string;
 }
@@ -106,17 +112,23 @@ export interface ProductionUpdateParams {
   production_step_id: string;
 
   /**
-   * Body param: Item ID.
+   * Body param: New produced item ID.
+   *
+   * Changing the item re-links the step's connections in the production flow graph.
    */
   item_id?: string;
 
   /**
-   * Body param: Quantity unit ID.
+   * Body param: Unit ID for `quantity_value`.
+   *
+   * Ignored unless `quantity_value` is also provided.
    */
   quantity_unit_id?: string;
 
   /**
    * Body param: Quantity value as a decimal string.
+   *
+   * Ignored unless `quantity_unit_id` is also provided.
    */
   quantity_value?: string;
 }

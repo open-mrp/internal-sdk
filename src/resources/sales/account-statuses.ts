@@ -30,8 +30,11 @@ export class AccountStatuses extends APIResource {
   }
 
   /**
-   * Returns a paginated list of account statuses. Global lookup values for setting
-   * account relationship statuses.
+   * Returns a paginated list of account statuses.
+   *
+   * Account statuses are system-provided lookup values shared across all accounts,
+   * used to set a customer's status (for example, placing a customer on shipment
+   * hold).
    *
    * @example
    * ```ts
@@ -48,7 +51,8 @@ export class AccountStatuses extends APIResource {
 }
 
 /**
- * AccountStatus is an account status lookup value.
+ * AccountStatus is a lookup value describing the standing of a customer account,
+ * such as whether shipments or all activity should be held.
  */
 export interface AccountStatus {
   /**
@@ -58,6 +62,8 @@ export interface AccountStatus {
 
   /**
    * Machine-readable status code.
+   *
+   * This is the value used as a customer's `status`.
    *
    * - `normal`: standard account with no restrictions.
    * - `preferred`: account flagged as preferred (e.g. for prioritized handling).
@@ -123,7 +129,11 @@ export interface AccountStatusRetrieveParams {
 
 export interface AccountStatusListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -134,12 +144,14 @@ export interface AccountStatusListParams {
   include?: Array<'owner'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

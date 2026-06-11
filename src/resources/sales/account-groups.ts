@@ -13,6 +13,8 @@ export class AccountGroups extends APIResource {
   /**
    * Creates an account group.
    *
+   * Returns a conflict error if an account group with the same name already exists.
+   *
    * @example
    * ```ts
    * const accountGroup =
@@ -81,8 +83,11 @@ export class AccountGroups extends APIResource {
   }
 
   /**
-   * Deletes an account group. Fails if the account group is actively used in
-   * production.
+   * Deletes an account group.
+   *
+   * Deletion fails with a validation error while the account group is still in use —
+   * for example by customer records, product line access, volume discounts, pricing
+   * assignments, or an active registration flow.
    *
    * @example
    * ```ts
@@ -102,38 +107,41 @@ export class AccountGroups extends APIResource {
  */
 export interface CreateAccountGroupRequest {
   /**
-   * Display name.
+   * Display name of the account group.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name: string;
 
   /**
-   * Account group type.
-   *
-   * Cannot be changed after creation.
+   * How this account group will be used.
    *
    * - `pricing_group`: used for pricing rules, such as a "Preferred" group that
    *   receives a special discount.
    * - `type_group`: used to categorize accounts, such as "Consumers" or
    *   "Distributors".
+   *
+   * The type cannot be changed after creation.
    */
   type: 'pricing_group' | 'type_group';
 
   /**
-   * Commission policy. Defaults to `commission_exempt`.
+   * How sales commission applies to accounts in this group.
    *
-   * - `commission_exempt`: no commission applies.
-   * - `commission_applied`: commission applies; if the account group is within a
-   *   sales rep's territory, it will be assigned to that rep unless overridden.
+   * - `commission_applied`: sales commission is calculated on orders from accounts
+   *   in this group.
+   * - `commission_exempt`: orders from accounts in this group are exempt from
+   *   commission.
    */
   commission_policy?: 'commission_applied' | 'commission_exempt';
 
   /**
-   * Description.
+   * Free-form description of the account group.
    */
   description?: string;
 
   /**
-   * Freight policy. Defaults to `billed_freight`.
+   * How freight charges apply to orders from accounts in this group.
    *
    * - `free_freight`: customers within this group will not have to pay for freight.
    * - `billed_freight`: freight will be applied to any order within this account
@@ -149,9 +157,10 @@ export interface UpdateAccountGroupRequest {
   /**
    * How sales commission applies to accounts in this group.
    *
-   * - `commission_exempt`: no commission applies.
-   * - `commission_applied`: commission applies; if the account group is within a
-   *   sales rep's territory, it will be assigned to that rep unless overridden.
+   * - `commission_applied`: sales commission is calculated on orders from accounts
+   *   in this group.
+   * - `commission_exempt`: orders from accounts in this group are exempt from
+   *   commission.
    */
   commission_policy?: 'commission_applied' | 'commission_exempt';
 
@@ -181,38 +190,41 @@ export interface AccountGroupDeleteResponse {}
 
 export interface AccountGroupCreateParams {
   /**
-   * Display name.
+   * Display name of the account group.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name: string;
 
   /**
-   * Account group type.
-   *
-   * Cannot be changed after creation.
+   * How this account group will be used.
    *
    * - `pricing_group`: used for pricing rules, such as a "Preferred" group that
    *   receives a special discount.
    * - `type_group`: used to categorize accounts, such as "Consumers" or
    *   "Distributors".
+   *
+   * The type cannot be changed after creation.
    */
   type: 'pricing_group' | 'type_group';
 
   /**
-   * Commission policy. Defaults to `commission_exempt`.
+   * How sales commission applies to accounts in this group.
    *
-   * - `commission_exempt`: no commission applies.
-   * - `commission_applied`: commission applies; if the account group is within a
-   *   sales rep's territory, it will be assigned to that rep unless overridden.
+   * - `commission_applied`: sales commission is calculated on orders from accounts
+   *   in this group.
+   * - `commission_exempt`: orders from accounts in this group are exempt from
+   *   commission.
    */
   commission_policy?: 'commission_applied' | 'commission_exempt';
 
   /**
-   * Description.
+   * Free-form description of the account group.
    */
   description?: string;
 
   /**
-   * Freight policy. Defaults to `billed_freight`.
+   * How freight charges apply to orders from accounts in this group.
    *
    * - `free_freight`: customers within this group will not have to pay for freight.
    * - `billed_freight`: freight will be applied to any order within this account
@@ -225,9 +237,10 @@ export interface AccountGroupUpdateParams {
   /**
    * How sales commission applies to accounts in this group.
    *
-   * - `commission_exempt`: no commission applies.
-   * - `commission_applied`: commission applies; if the account group is within a
-   *   sales rep's territory, it will be assigned to that rep unless overridden.
+   * - `commission_applied`: sales commission is calculated on orders from accounts
+   *   in this group.
+   * - `commission_exempt`: orders from accounts in this group are exempt from
+   *   commission.
    */
   commission_policy?: 'commission_applied' | 'commission_exempt';
 
@@ -255,22 +268,28 @@ export interface AccountGroupUpdateParams {
 
 export interface AccountGroupListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Account group type filter.
+   * Filters results to account groups of the given type.
    */
   type?: 'pricing_group' | 'type_group';
 }

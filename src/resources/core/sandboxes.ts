@@ -11,7 +11,11 @@ import { path } from '../../internal/utils/path';
  */
 export class Sandboxes extends APIResource {
   /**
-   * Creates a sandbox account.
+   * Creates a sandbox account owned by your production account.
+   *
+   * When `mode` is `seeded`, sample data is populated asynchronously and may not be
+   * available immediately after the sandbox is created. Sandboxes cannot be created
+   * while acting in a sandbox.
    *
    * @example
    * ```ts
@@ -57,7 +61,10 @@ export class Sandboxes extends APIResource {
   }
 
   /**
-   * Deletes a sandbox account. Account-scoped data is purged asynchronously.
+   * Deletes a sandbox account.
+   *
+   * The sandbox's data is purged asynchronously, so it may persist briefly after
+   * this call returns.
    *
    * @example
    * ```ts
@@ -81,7 +88,11 @@ export interface CreateSandboxRequest {
   name: string;
 
   /**
-   * Controls whether the sandbox is blank or seeded with sample data.
+   * Controls how the sandbox is initialized.
+   *
+   * - `blank`: starts empty, with no pre-populated data.
+   * - `seeded`: starts with sample data, populated asynchronously after the sandbox
+   *   is created.
    */
   mode?: 'blank' | 'seeded';
 }
@@ -131,7 +142,7 @@ export interface Sandbox {
   object: 'sandbox';
 
   /**
-   * Account with optional branding and portal sub-resources.
+   * A customer account, including its branding and customer portal sub-resources.
    */
   owner_account: APIKeysAPI.Account | null;
 
@@ -156,7 +167,11 @@ export interface SandboxCreateParams {
   include?: Array<'owner_account'>;
 
   /**
-   * Body param: Controls whether the sandbox is blank or seeded with sample data.
+   * Body param: Controls how the sandbox is initialized.
+   *
+   * - `blank`: starts empty, with no pre-populated data.
+   * - `seeded`: starts with sample data, populated asynchronously after the sandbox
+   *   is created.
    */
   mode?: 'blank' | 'seeded';
 }
@@ -171,7 +186,11 @@ export interface SandboxRetrieveParams {
 
 export interface SandboxListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -182,12 +201,14 @@ export interface SandboxListParams {
   include?: Array<'owner_account'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

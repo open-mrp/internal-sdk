@@ -11,7 +11,7 @@ import { path } from '../../internal/utils/path';
  */
 export class Locations extends APIResource {
   /**
-   * Creates a location for the caller's account.
+   * Creates a storage location, optionally placing it in the location hierarchy.
    *
    * @example
    * ```ts
@@ -65,7 +65,7 @@ export class Locations extends APIResource {
   }
 
   /**
-   * Returns a paginated list of locations for the caller's account.
+   * Returns a paginated list of locations in your account.
    *
    * @example
    * ```ts
@@ -81,7 +81,10 @@ export class Locations extends APIResource {
   }
 
   /**
-   * Deletes a location. Fails if the location has child locations.
+   * Deletes a location.
+   *
+   * Fails if the location has child locations; remove or reassign the children
+   * first.
    *
    * @example
    * ```ts
@@ -100,22 +103,35 @@ export class Locations extends APIResource {
  */
 export interface CreateLocationRequest {
   /**
-   * Display name.
+   * Display name of the location.
+   *
+   * Maximum 255 characters.
    */
   name: string;
 
   /**
-   * Location type code.
+   * Location type code, identifying this location's level in the storage hierarchy.
+   *
+   * - `building`: a building-level location.
+   * - `section`: a section within a building.
+   * - `aisle`: an aisle within a section.
+   * - `rack`: a rack within an aisle.
+   * - `shelf`: a shelf within a rack.
+   * - `bin`: a bin within a shelf.
    */
   type: AccountUsersAPI.LocationTypeCode;
 
   /**
-   * IDs of child locations to attach.
+   * IDs of existing locations to attach as children of the new location.
+   *
+   * Listed locations are moved from their current parent, if any.
    */
   child_ids?: Array<string>;
 
   /**
-   * Parent location ID. Null for top-level locations.
+   * ID of the parent location.
+   *
+   * Omit for top-level locations.
    */
   parent_id?: string;
 }
@@ -125,23 +141,37 @@ export interface CreateLocationRequest {
  */
 export interface UpdateLocationRequest {
   /**
-   * Child location IDs. Replaces all current children when provided. Send null to
-   * clear.
+   * IDs of locations to set as this location's children.
+   *
+   * When provided, replaces the full set of children: current children not listed
+   * are detached, and listed locations are moved from their current parent. Send
+   * `null` to detach all children.
    */
   child_ids?: Array<string> | null;
 
   /**
-   * Display name.
+   * Display name of the location.
+   *
+   * Maximum 255 characters.
    */
   name?: string;
 
   /**
-   * Parent location ID. Send null to clear.
+   * ID of the parent location.
+   *
+   * Send `null` to clear the parent and make this a top-level location.
    */
   parent_id?: string | null;
 
   /**
-   * Location type code.
+   * Location type code, identifying this location's level in the storage hierarchy.
+   *
+   * - `building`: a building-level location.
+   * - `section`: a section within a building.
+   * - `aisle`: an aisle within a section.
+   * - `rack`: a rack within an aisle.
+   * - `shelf`: a shelf within a rack.
+   * - `bin`: a bin within a shelf.
    */
   type?: AccountUsersAPI.LocationTypeCode;
 }
@@ -150,12 +180,22 @@ export interface LocationDeleteResponse {}
 
 export interface LocationCreateParams {
   /**
-   * Body param: Display name.
+   * Body param: Display name of the location.
+   *
+   * Maximum 255 characters.
    */
   name: string;
 
   /**
-   * Body param: Location type code.
+   * Body param: Location type code, identifying this location's level in the storage
+   * hierarchy.
+   *
+   * - `building`: a building-level location.
+   * - `section`: a section within a building.
+   * - `aisle`: an aisle within a section.
+   * - `rack`: a rack within an aisle.
+   * - `shelf`: a shelf within a rack.
+   * - `bin`: a bin within a shelf.
    */
   type: AccountUsersAPI.LocationTypeCode;
 
@@ -166,12 +206,16 @@ export interface LocationCreateParams {
   include?: Array<'parent' | 'children'>;
 
   /**
-   * Body param: IDs of child locations to attach.
+   * Body param: IDs of existing locations to attach as children of the new location.
+   *
+   * Listed locations are moved from their current parent, if any.
    */
   child_ids?: Array<string>;
 
   /**
-   * Body param: Parent location ID. Null for top-level locations.
+   * Body param: ID of the parent location.
+   *
+   * Omit for top-level locations.
    */
   parent_id?: string;
 }
@@ -192,30 +236,49 @@ export interface LocationUpdateParams {
   include?: Array<'parent' | 'children'>;
 
   /**
-   * Body param: Child location IDs. Replaces all current children when provided.
-   * Send null to clear.
+   * Body param: IDs of locations to set as this location's children.
+   *
+   * When provided, replaces the full set of children: current children not listed
+   * are detached, and listed locations are moved from their current parent. Send
+   * `null` to detach all children.
    */
   child_ids?: Array<string> | null;
 
   /**
-   * Body param: Display name.
+   * Body param: Display name of the location.
+   *
+   * Maximum 255 characters.
    */
   name?: string;
 
   /**
-   * Body param: Parent location ID. Send null to clear.
+   * Body param: ID of the parent location.
+   *
+   * Send `null` to clear the parent and make this a top-level location.
    */
   parent_id?: string | null;
 
   /**
-   * Body param: Location type code.
+   * Body param: Location type code, identifying this location's level in the storage
+   * hierarchy.
+   *
+   * - `building`: a building-level location.
+   * - `section`: a section within a building.
+   * - `aisle`: an aisle within a section.
+   * - `rack`: a rack within an aisle.
+   * - `shelf`: a shelf within a rack.
+   * - `bin`: a bin within a shelf.
    */
   type?: AccountUsersAPI.LocationTypeCode;
 }
 
 export interface LocationListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -226,12 +289,14 @@ export interface LocationListParams {
   include?: Array<'parent' | 'children'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

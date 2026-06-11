@@ -14,6 +14,9 @@ export class Agents extends APIResource {
   /**
    * Creates a custom agent definition with optional tool configuration.
    *
+   * The new agent has `definition_type` `custom` and is immediately `active` for the
+   * account.
+   *
    * @example
    * ```ts
    * const agentDefinition = await client.ai.agents.create({
@@ -66,7 +69,10 @@ export class Agents extends APIResource {
   }
 
   /**
-   * Partially updates a custom agent definition. System agents cannot be modified.
+   * Partially updates a custom agent definition.
+   *
+   * Only the fields provided in the request are changed. System agents cannot be
+   * modified.
    *
    * @example
    * ```ts
@@ -101,7 +107,10 @@ export class Agents extends APIResource {
   }
 
   /**
-   * Soft-deletes a custom agent definition. System agents cannot be deleted.
+   * Deletes a custom agent definition.
+   *
+   * The agent is soft-deleted and can no longer be run or modified. System agents
+   * cannot be deleted.
    *
    * @example
    * ```ts
@@ -115,7 +124,11 @@ export class Agents extends APIResource {
   }
 
   /**
-   * Upserts the per-account status for an agent definition.
+   * Enables or disables an agent for the current account.
+   *
+   * Sets the account-level status without modifying the underlying agent definition,
+   * so it works for both `system` and `custom` agents. Returns the updated agent
+   * definition.
    *
    * @example
    * ```ts
@@ -136,7 +149,10 @@ export class Agents extends APIResource {
 }
 
 /**
- * Agent definition resource.
+ * An AI agent available to the account.
+ *
+ * The definition describes what the agent does, how its runs are triggered, the
+ * tools it can use, and whether it is currently enabled for the account.
  */
 export interface AgentDefinition {
   /**
@@ -151,9 +167,10 @@ export interface AgentDefinition {
   category_code: string;
 
   /**
-   * Agent-level configuration controlling LLM behavior.
+   * Agent-level configuration controlling LLM behavior and trigger settings.
    *
-   * Separate from AgentDefinitionTool.Config, which configures individual tools.
+   * Distinct from per-tool configuration (`tools[].config`), which configures
+   * individual tools attached to the agent.
    */
   config: AgentDefinitionConfig | null;
 
@@ -163,7 +180,7 @@ export interface AgentDefinition {
   created_at: string;
 
   /**
-   * Agent definition type.
+   * Whether the agent is provided by Augno or created in this account.
    *
    * - `system`: provided by Augno; cannot be edited or deleted.
    * - `custom`: created by a user in this account.
@@ -183,7 +200,7 @@ export interface AgentDefinition {
   is_editable: boolean;
 
   /**
-   * Display name.
+   * Human-readable name of the agent.
    */
   name: string;
 
@@ -193,20 +210,22 @@ export interface AgentDefinition {
   object: 'agent_definition';
 
   /**
-   * Role resource.
+   * A named set of permissions that can be assigned to users to control what they
+   * can access.
    */
   role: APIKeysAPI.Role | null;
 
   /**
-   * URL-friendly slug.
+   * URL-friendly identifier for the agent.
    */
   slug: string;
 
   /**
    * Whether this agent is enabled for the current account.
    *
-   * - `active`: enabled and able to run for this account.
-   * - `inactive`: disabled for this account; will not run.
+   * Activation is per-account: a `system` agent shared across accounts can be
+   * `active` for one account and `inactive` for another. An `inactive` agent does
+   * not run.
    */
   status: 'active' | 'inactive';
 
@@ -233,13 +252,14 @@ export interface AgentDefinition {
 }
 
 /**
- * Agent-level configuration controlling LLM behavior.
+ * Agent-level configuration controlling LLM behavior and trigger settings.
  *
- * Separate from AgentDefinitionTool.Config, which configures individual tools.
+ * Distinct from per-tool configuration (`tools[].config`), which configures
+ * individual tools attached to the agent.
  */
 export interface AgentDefinitionConfig {
   /**
-   * LLM model identifier (e.g. "claude-sonnet-4").
+   * LLM model identifier (e.g. `claude-sonnet-4`).
    */
   model: string | null;
 
@@ -249,9 +269,9 @@ export interface AgentDefinitionConfig {
   object: 'agent_definition_config';
 
   /**
-   * LLM provider name (e.g. "anthropic", "openai").
+   * LLM provider name (e.g. `anthropic`, `openai`).
    *
-   * Inferred from model if omitted.
+   * Inferred from `model` if omitted.
    */
   provider: string | null;
 
@@ -268,8 +288,11 @@ export interface AgentDefinitionConfig {
   /**
    * Trigger-type-specific configuration.
    *
-   * For "scheduled": CronSchedule is populated. For "event": EventFilters is
-   * populated. For "manual": all fields are empty.
+   * Which fields are populated depends on the agent's `trigger_type`:
+   *
+   * - `scheduled`: `cron_schedule` (and optionally `timezone`) is set.
+   * - `event`: `event_filters` is set.
+   * - `manual`: all fields are empty.
    */
   trigger_config: TriggerConfig | null;
 }
@@ -288,7 +311,7 @@ export interface AgentDefinitionTool {
   /**
    * Instance-specific configuration for this tool.
    *
-   * Must conform to the tool's config_schema. Encoded as a JSON value (object,
+   * Must conform to the tool's `config_schema`. Encoded as a JSON value (object,
    * array, string, number, boolean, or null), not a JSON-encoded string.
    */
   config: unknown | null;
@@ -299,7 +322,11 @@ export interface AgentDefinitionTool {
   object: 'agent_definition_tool';
 
   /**
-   * Requires human review before execution.
+   * Whether calls to this tool must be approved by a user before they execute.
+   *
+   * When `true`, the run pauses in the `awaiting_approval` status each time the
+   * agent invokes this tool; approve or allow the tool via the Continue Agent Run
+   * endpoint to proceed.
    */
   require_review: boolean;
 
@@ -319,12 +346,14 @@ export interface AgentDefinitionTool {
  */
 export interface ConfigInput {
   /**
-   * LLM model identifier (e.g. "claude-sonnet-4").
+   * LLM model identifier (e.g. `claude-sonnet-4`).
    */
   model?: string;
 
   /**
-   * LLM provider name (e.g. "anthropic", "openai"). Inferred from model if omitted.
+   * LLM provider name (e.g. `anthropic`, `openai`).
+   *
+   * Inferred from `model` if omitted.
    */
   provider?: string;
 
@@ -340,6 +369,12 @@ export interface ConfigInput {
 
   /**
    * Trigger-type-specific settings for agent creation/update requests.
+   *
+   * Required contents depend on the agent's `trigger_type`:
+   *
+   * - `scheduled`: `cron_schedule` is required.
+   * - `event`: at least one entry in `event_filters` is required.
+   * - `manual`: no trigger configuration is needed.
    */
   trigger_config?: TriggerConfigInput;
 }
@@ -349,7 +384,8 @@ export interface ConfigInput {
  */
 export interface CreateAgentRequest {
   /**
-   * Category code (e.g. "order_processing").
+   * Category grouping for the agent (e.g. `order_processing`), used to organize
+   * agents in the UI.
    */
   category_code: string;
 
@@ -359,17 +395,23 @@ export interface CreateAgentRequest {
   config: ConfigInput;
 
   /**
-   * Display name.
+   * Human-readable name of the agent.
    */
   name: string;
 
   /**
-   * URL-friendly identifier.
+   * URL-friendly identifier for the agent.
    */
   slug: string;
 
   /**
-   * Trigger type.
+   * How runs of this agent are initiated.
+   *
+   * - `scheduled`: runs on a cron schedule; `config.trigger_config.cron_schedule` is
+   *   required.
+   * - `event`: runs in response to platform events; at least one
+   *   `config.trigger_config.event_filters` entry is required.
+   * - `manual`: runs only when explicitly invoked.
    */
   trigger_type: 'scheduled' | 'manual' | 'event';
 
@@ -379,12 +421,12 @@ export interface CreateAgentRequest {
   description?: string;
 
   /**
-   * Role ID defining agent permissions.
+   * ID of the role that defines the permissions the agent operates with.
    */
   role_id?: string;
 
   /**
-   * Tools to attach.
+   * Tools to attach to the agent.
    */
   tools?: Array<ToolInput>;
 }
@@ -434,17 +476,22 @@ export interface ListAgentDefinitionTool {
  */
 export interface ToolInput {
   /**
-   * Available tool ID.
+   * ID of the tool to attach.
+   *
+   * Available tool IDs can be discovered with the List Tools endpoint
+   * (`GET /v1/ai/tools`).
    */
   tool_id: string;
 
   /**
-   * JSON configuration for this tool instance.
+   * JSON-encoded configuration for this tool instance.
+   *
+   * The expected structure depends on the tool (see the tool's `config_schema`).
    */
   config_json?: string;
 
   /**
-   * Requires human review before execution.
+   * Whether actions from this tool require human review before they execute.
    */
   require_review?: boolean;
 
@@ -457,17 +504,21 @@ export interface ToolInput {
 /**
  * Trigger-type-specific configuration.
  *
- * For "scheduled": CronSchedule is populated. For "event": EventFilters is
- * populated. For "manual": all fields are empty.
+ * Which fields are populated depends on the agent's `trigger_type`:
+ *
+ * - `scheduled`: `cron_schedule` (and optionally `timezone`) is set.
+ * - `event`: `event_filters` is set.
+ * - `manual`: all fields are empty.
  */
 export interface TriggerConfig {
   /**
-   * Cron expression for scheduled triggers (e.g. "0 9 \* \* \*").
+   * Cron expression for scheduled triggers (e.g. `0 9 * * *`).
    */
   cron_schedule: string | null;
 
   /**
-   * Event types that trigger this agent (e.g. ["email.received", "order.created"]).
+   * Event types that trigger this agent (e.g.
+   * `["email.received", "order.created"]`).
    */
   event_filters: Array<string>;
 
@@ -477,27 +528,34 @@ export interface TriggerConfig {
   object: 'trigger_config';
 
   /**
-   * IANA timezone for the cron schedule (e.g. "America/New_York").
+   * IANA timezone for the cron schedule (e.g. `America/New_York`).
    */
   timezone: string | null;
 }
 
 /**
  * Trigger-type-specific settings for agent creation/update requests.
+ *
+ * Required contents depend on the agent's `trigger_type`:
+ *
+ * - `scheduled`: `cron_schedule` is required.
+ * - `event`: at least one entry in `event_filters` is required.
+ * - `manual`: no trigger configuration is needed.
  */
 export interface TriggerConfigInput {
   /**
-   * Event types that trigger this agent (e.g. ["email.received", "order.created"]).
+   * Event types that trigger this agent (e.g.
+   * `["email.received", "order.created"]`).
    */
   event_filters: Array<string>;
 
   /**
-   * Cron expression for scheduled triggers (e.g. "0 9 \* \* \*").
+   * Cron expression for scheduled triggers (e.g. `0 9 * * *`).
    */
   cron_schedule?: string;
 
   /**
-   * IANA timezone for the cron schedule (e.g. "America/New_York").
+   * IANA timezone for the cron schedule (e.g. `America/New_York`).
    */
   timezone?: string;
 }
@@ -507,7 +565,8 @@ export interface TriggerConfigInput {
  */
 export interface UpdateAgentRequest {
   /**
-   * Category code (e.g. "order_processing").
+   * Category grouping for the agent (e.g. `order_processing`), used to organize
+   * agents in the UI.
    */
   category_code?: string;
 
@@ -522,27 +581,33 @@ export interface UpdateAgentRequest {
   description?: string;
 
   /**
-   * Display name.
+   * Human-readable name of the agent.
    */
   name?: string;
 
   /**
-   * Role ID defining agent permissions.
+   * ID of the role that defines the permissions the agent operates with.
    */
   role_id?: string;
 
   /**
-   * URL-friendly identifier.
+   * URL-friendly identifier for the agent.
    */
   slug?: string;
 
   /**
-   * Tools to attach. Replaces the existing tool set when provided.
+   * Tools to attach to the agent.
+   *
+   * Replaces the existing tool set when provided.
    */
   tools?: Array<ToolInput>;
 
   /**
-   * Trigger type.
+   * How runs of this agent are initiated: `scheduled`, `event`, or `manual`.
+   *
+   * When changing the trigger type, also provide a `config` with a `trigger_config`
+   * appropriate for the new type (a cron schedule for `scheduled`, at least one
+   * event filter for `event`).
    */
   trigger_type?: 'scheduled' | 'manual' | 'event';
 }
@@ -552,7 +617,11 @@ export interface UpdateAgentRequest {
  */
 export interface UpdateAgentStatusRequest {
   /**
-   * Account-level status: "active" or "inactive".
+   * Account-level status to set: `active` to enable the agent for this account,
+   * `inactive` to disable it.
+   *
+   * This only affects activation for the current account and leaves the shared agent
+   * definition unchanged.
    */
   status: string;
 }
@@ -561,7 +630,8 @@ export interface AgentDeleteResponse {}
 
 export interface AgentCreateParams {
   /**
-   * Body param: Category code (e.g. "order_processing").
+   * Body param: Category grouping for the agent (e.g. `order_processing`), used to
+   * organize agents in the UI.
    */
   category_code: string;
 
@@ -571,17 +641,23 @@ export interface AgentCreateParams {
   config: ConfigInput;
 
   /**
-   * Body param: Display name.
+   * Body param: Human-readable name of the agent.
    */
   name: string;
 
   /**
-   * Body param: URL-friendly identifier.
+   * Body param: URL-friendly identifier for the agent.
    */
   slug: string;
 
   /**
-   * Body param: Trigger type.
+   * Body param: How runs of this agent are initiated.
+   *
+   * - `scheduled`: runs on a cron schedule; `config.trigger_config.cron_schedule` is
+   *   required.
+   * - `event`: runs in response to platform events; at least one
+   *   `config.trigger_config.event_filters` entry is required.
+   * - `manual`: runs only when explicitly invoked.
    */
   trigger_type: 'scheduled' | 'manual' | 'event';
 
@@ -597,12 +673,12 @@ export interface AgentCreateParams {
   description?: string;
 
   /**
-   * Body param: Role ID defining agent permissions.
+   * Body param: ID of the role that defines the permissions the agent operates with.
    */
   role_id?: string;
 
   /**
-   * Body param: Tools to attach.
+   * Body param: Tools to attach to the agent.
    */
   tools?: Array<ToolInput>;
 }
@@ -623,7 +699,8 @@ export interface AgentUpdateParams {
   include?: Array<'config' | 'tools' | 'role' | 'role.permissions'>;
 
   /**
-   * Body param: Category code (e.g. "order_processing").
+   * Body param: Category grouping for the agent (e.g. `order_processing`), used to
+   * organize agents in the UI.
    */
   category_code?: string;
 
@@ -638,39 +715,50 @@ export interface AgentUpdateParams {
   description?: string;
 
   /**
-   * Body param: Display name.
+   * Body param: Human-readable name of the agent.
    */
   name?: string;
 
   /**
-   * Body param: Role ID defining agent permissions.
+   * Body param: ID of the role that defines the permissions the agent operates with.
    */
   role_id?: string;
 
   /**
-   * Body param: URL-friendly identifier.
+   * Body param: URL-friendly identifier for the agent.
    */
   slug?: string;
 
   /**
-   * Body param: Tools to attach. Replaces the existing tool set when provided.
+   * Body param: Tools to attach to the agent.
+   *
+   * Replaces the existing tool set when provided.
    */
   tools?: Array<ToolInput>;
 
   /**
-   * Body param: Trigger type.
+   * Body param: How runs of this agent are initiated: `scheduled`, `event`, or
+   * `manual`.
+   *
+   * When changing the trigger type, also provide a `config` with a `trigger_config`
+   * appropriate for the new type (a cron schedule for `scheduled`, at least one
+   * event filter for `event`).
    */
   trigger_type?: 'scheduled' | 'manual' | 'event';
 }
 
 export interface AgentListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Filter by definition type.
+   * Restricts results to agents of one of the given definition types.
    */
   definition_types?: Array<'system' | 'custom'>;
 
@@ -681,31 +769,38 @@ export interface AgentListParams {
   include?: Array<'config' | 'tools' | 'role' | 'role.permissions'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by account-level status.
+   * Restricts results to agents with one of the given account-level statuses.
    *
-   * Omit to return agents of every status; pass e.g. ?statuses=active to narrow.
+   * Omit to return agents of every status; repeat the parameter to match more than
+   * one status.
    */
   statuses?: Array<'active' | 'inactive'>;
 
   /**
-   * Filter by trigger type.
+   * Restricts results to agents with one of the given trigger types.
    */
   trigger_types?: Array<'scheduled' | 'manual' | 'event'>;
 }
 
 export interface AgentUpdateStatusParams {
   /**
-   * Body param: Account-level status: "active" or "inactive".
+   * Body param: Account-level status to set: `active` to enable the agent for this
+   * account, `inactive` to disable it.
+   *
+   * This only affects activation for the current account and leaves the shared agent
+   * definition unchanged.
    */
   status: string;
 

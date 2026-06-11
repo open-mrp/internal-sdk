@@ -11,7 +11,8 @@ import { path } from '../../internal/utils/path';
  */
 export class RegistrationFlows extends APIResource {
   /**
-   * Creates a registration flow.
+   * Creates a registration flow defining the customer group, payment term, and
+   * shipping term options offered during customer self-registration.
    *
    * @example
    * ```ts
@@ -100,7 +101,7 @@ export class RegistrationFlows extends APIResource {
   }
 
   /**
-   * Returns a registration flow by slug.
+   * Returns the registration flow of the account with the given slug.
    *
    * @example
    * ```ts
@@ -120,7 +121,7 @@ export class RegistrationFlows extends APIResource {
  */
 export interface CreateRegistrationFlowRequest {
   /**
-   * Customer group IDs.
+   * IDs of the customer groups offered as options in this flow.
    */
   customer_group_ids: Array<string>;
 
@@ -130,12 +131,12 @@ export interface CreateRegistrationFlowRequest {
   name: string;
 
   /**
-   * Payment term IDs.
+   * IDs of the payment terms offered as options in this flow.
    */
   payment_term_ids: Array<string>;
 
   /**
-   * Shipping term IDs.
+   * IDs of the shipping terms offered as options in this flow.
    */
   shipping_term_ids: Array<string>;
 }
@@ -181,7 +182,10 @@ export interface ListRegistrationFlowOption {
 }
 
 /**
- * Registration flow for customer onboarding.
+ * Configuration for customer self-registration.
+ *
+ * A registration flow defines which customer groups, payment terms, and shipping
+ * terms a customer can choose from when registering with your account.
  */
 export interface RegistrationFlow {
   /**
@@ -230,12 +234,13 @@ export interface RegistrationFlow {
  */
 export interface RegistrationFlowOption {
   /**
-   * Registration flow option ID.
+   * ID of the underlying customer group, payment term, or shipping term this option
+   * refers to.
    */
   id: string;
 
   /**
-   * Display name.
+   * Display name of the underlying customer group, payment term, or shipping term.
    */
   name: string;
 
@@ -250,22 +255,34 @@ export interface RegistrationFlowOption {
  */
 export interface UpdateRegistrationFlowRequest {
   /**
-   * Whether to replace customer groups.
+   * Whether to replace the flow's customer group options with `customer_group_ids`.
+   *
+   * When `true`, existing options are cleared and replaced (an empty list removes
+   * all options). When `false` or omitted, customer group options are left
+   * unchanged.
    */
   has_customer_group_ids: boolean;
 
   /**
-   * Whether to replace payment terms.
+   * Whether to replace the flow's payment term options with `payment_term_ids`.
+   *
+   * When `true`, existing options are cleared and replaced (an empty list removes
+   * all options). When `false` or omitted, payment term options are left unchanged.
    */
   has_payment_term_ids: boolean;
 
   /**
-   * Whether to replace shipping terms.
+   * Whether to replace the flow's shipping term options with `shipping_term_ids`.
+   *
+   * When `true`, existing options are cleared and replaced (an empty list removes
+   * all options). When `false` or omitted, shipping term options are left unchanged.
    */
   has_shipping_term_ids: boolean;
 
   /**
-   * Customer group IDs.
+   * IDs of the customer groups to set as this flow's options.
+   *
+   * Ignored unless `has_customer_group_ids` is `true`.
    */
   customer_group_ids?: Array<string>;
 
@@ -275,12 +292,16 @@ export interface UpdateRegistrationFlowRequest {
   name?: string;
 
   /**
-   * Payment term IDs.
+   * IDs of the payment terms to set as this flow's options.
+   *
+   * Ignored unless `has_payment_term_ids` is `true`.
    */
   payment_term_ids?: Array<string>;
 
   /**
-   * Shipping term IDs.
+   * IDs of the shipping terms to set as this flow's options.
+   *
+   * Ignored unless `has_shipping_term_ids` is `true`.
    */
   shipping_term_ids?: Array<string>;
 }
@@ -289,7 +310,7 @@ export interface RegistrationFlowDeleteResponse {}
 
 export interface RegistrationFlowCreateParams {
   /**
-   * Customer group IDs.
+   * IDs of the customer groups offered as options in this flow.
    */
   customer_group_ids: Array<string>;
 
@@ -299,34 +320,46 @@ export interface RegistrationFlowCreateParams {
   name: string;
 
   /**
-   * Payment term IDs.
+   * IDs of the payment terms offered as options in this flow.
    */
   payment_term_ids: Array<string>;
 
   /**
-   * Shipping term IDs.
+   * IDs of the shipping terms offered as options in this flow.
    */
   shipping_term_ids: Array<string>;
 }
 
 export interface RegistrationFlowUpdateParams {
   /**
-   * Whether to replace customer groups.
+   * Whether to replace the flow's customer group options with `customer_group_ids`.
+   *
+   * When `true`, existing options are cleared and replaced (an empty list removes
+   * all options). When `false` or omitted, customer group options are left
+   * unchanged.
    */
   has_customer_group_ids: boolean;
 
   /**
-   * Whether to replace payment terms.
+   * Whether to replace the flow's payment term options with `payment_term_ids`.
+   *
+   * When `true`, existing options are cleared and replaced (an empty list removes
+   * all options). When `false` or omitted, payment term options are left unchanged.
    */
   has_payment_term_ids: boolean;
 
   /**
-   * Whether to replace shipping terms.
+   * Whether to replace the flow's shipping term options with `shipping_term_ids`.
+   *
+   * When `true`, existing options are cleared and replaced (an empty list removes
+   * all options). When `false` or omitted, shipping term options are left unchanged.
    */
   has_shipping_term_ids: boolean;
 
   /**
-   * Customer group IDs.
+   * IDs of the customer groups to set as this flow's options.
+   *
+   * Ignored unless `has_customer_group_ids` is `true`.
    */
   customer_group_ids?: Array<string>;
 
@@ -336,29 +369,39 @@ export interface RegistrationFlowUpdateParams {
   name?: string;
 
   /**
-   * Payment term IDs.
+   * IDs of the payment terms to set as this flow's options.
+   *
+   * Ignored unless `has_payment_term_ids` is `true`.
    */
   payment_term_ids?: Array<string>;
 
   /**
-   * Shipping term IDs.
+   * IDs of the shipping terms to set as this flow's options.
+   *
+   * Ignored unless `has_shipping_term_ids` is `true`.
    */
   shipping_term_ids?: Array<string>;
 }
 
 export interface RegistrationFlowListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

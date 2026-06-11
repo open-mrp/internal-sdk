@@ -10,7 +10,11 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Deletes multiple batches.
+   * Deletes multiple batches in one request.
+   *
+   * Batch IDs that cannot be found are skipped; the request fails only if none of
+   * the batches exist. After deletion, any production run whose batches are now all
+   * scanned or deleted is closed automatically.
    *
    * @example
    * ```ts
@@ -25,7 +29,7 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Closes a batch, marking it as completed.
+   * Closes a batch so it can no longer be scanned or advanced through production.
    *
    * @example
    * ```ts
@@ -39,7 +43,14 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Initializes a batch at the specified scanning station.
+   * Marks a production run batch as scanned at a scanning station, starting it
+   * through production.
+   *
+   * The batch is attached to the production step that produces its item at the
+   * station, the step's material consumption is executed asynchronously, and the
+   * batch is closed automatically if the step is the last one. The batch's
+   * production run is started, and the run is closed once all of its batches are
+   * scanned or deleted.
    *
    * @example
    * ```ts
@@ -55,8 +66,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Merges multiple batches into one at the specified production step and scanning
-   * station.
+   * Merges multiple batches into a single new batch at a production step.
+   *
+   * A new batch is created at the target step with its quantity calculated from the
+   * step's configuration, the source batches are linked as inputs and closed, and
+   * the step's material consumption is executed asynchronously. Returns the newly
+   * created batch.
    *
    * @example
    * ```ts
@@ -74,7 +89,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Moves batches to a production step at the specified scanning station.
+   * Advances batches to a production step by creating a new batch at that step.
+   *
+   * A new batch is created with its item and quantity calculated from the target
+   * step's configuration, the source batches are linked as inputs and closed, and
+   * the step's material consumption is executed asynchronously. Returns the newly
+   * created batch.
    *
    * @example
    * ```ts
@@ -90,8 +110,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Splits one or more batches into multiple parts with specified quantities,
-   * optionally tracking waste and closing the originals.
+   * Splits a quantity off one or more batches into a new batch, grading the output
+   * as firsts, seconds, and waste.
+   *
+   * A new batch carrying the firsts quantity is created at the production step, with
+   * any seconds and waste recorded on it; the source batches are linked as inputs.
+   * Returns the newly created batch.
    *
    * @example
    * ```ts
@@ -140,7 +164,7 @@ export interface DeleteManyBatchesRequest {
  */
 export interface InitializeBatchRequest {
   /**
-   * Batch ID.
+   * ID of the batch to initialize; the batch must be open and not yet scanned.
    */
   batch_id: string;
 
@@ -156,11 +180,15 @@ export interface InitializeBatchRequest {
 export interface MergeBatchesRequest {
   /**
    * Batch IDs to merge.
+   *
+   * Duplicates are rejected. For single-part production steps all batches must be of
+   * the same item; for multi-part steps supply at least one batch per part the step
+   * consumes.
    */
   batch_ids: Array<string>;
 
   /**
-   * Production step ID for the merged batch.
+   * The production step the merged batch is created at.
    */
   production_step_id: string;
 
@@ -176,6 +204,9 @@ export interface MergeBatchesRequest {
 export interface MoveBatchesRequest {
   /**
    * Batch IDs to move.
+   *
+   * Pass a single ID to advance one batch, or multiple IDs (one per part) when the
+   * target step combines multiple parts.
    */
   batch_ids: Array<string>;
 
@@ -191,16 +222,22 @@ export interface MoveBatchesRequest {
 }
 
 /**
- * Request to split batches into multiple parts.
+ * Request to split a quantity off one or more batches into a new batch.
  */
 export interface SplitBatchRequest {
   /**
-   * Batch IDs to split.
+   * Batch IDs to split from.
+   *
+   * Pass a single ID for single-part production steps, or multiple IDs (one per
+   * part) for multi-part steps.
    */
   batch_ids: Array<string>;
 
   /**
-   * Whether to close the original batches after splitting.
+   * Whether to close the source batches after splitting.
+   *
+   * When the source batches are left open, each is still closed automatically once
+   * its quantity is fully used by splits.
    */
   close_batch: boolean;
 
@@ -210,7 +247,7 @@ export interface SplitBatchRequest {
   firsts: SplitQuantityInput;
 
   /**
-   * Production step ID for the split.
+   * The production step the new batch is created at.
    */
   production_step_id: string;
 
@@ -240,12 +277,12 @@ export interface SplitQuantityInput {
   id: string;
 
   /**
-   * Decimal measure value.
+   * Quantity to split off, as a decimal measure expressed in `unit_id`.
    */
   measure: string;
 
   /**
-   * Unit ID.
+   * ID of the unit the measure is expressed in.
    */
   unit_id: string;
 }
@@ -268,7 +305,7 @@ export interface ActionCloseParams {
 
 export interface ActionInitializeParams {
   /**
-   * Batch ID.
+   * ID of the batch to initialize; the batch must be open and not yet scanned.
    */
   batch_id: string;
 
@@ -281,11 +318,15 @@ export interface ActionInitializeParams {
 export interface ActionMergeParams {
   /**
    * Batch IDs to merge.
+   *
+   * Duplicates are rejected. For single-part production steps all batches must be of
+   * the same item; for multi-part steps supply at least one batch per part the step
+   * consumes.
    */
   batch_ids: Array<string>;
 
   /**
-   * Production step ID for the merged batch.
+   * The production step the merged batch is created at.
    */
   production_step_id: string;
 
@@ -298,6 +339,9 @@ export interface ActionMergeParams {
 export interface ActionMoveParams {
   /**
    * Batch IDs to move.
+   *
+   * Pass a single ID to advance one batch, or multiple IDs (one per part) when the
+   * target step combines multiple parts.
    */
   batch_ids: Array<string>;
 
@@ -314,12 +358,18 @@ export interface ActionMoveParams {
 
 export interface ActionSplitParams {
   /**
-   * Batch IDs to split.
+   * Batch IDs to split from.
+   *
+   * Pass a single ID for single-part production steps, or multiple IDs (one per
+   * part) for multi-part steps.
    */
   batch_ids: Array<string>;
 
   /**
-   * Whether to close the original batches after splitting.
+   * Whether to close the source batches after splitting.
+   *
+   * When the source batches are left open, each is still closed automatically once
+   * its quantity is fully used by splits.
    */
   close_batch: boolean;
 
@@ -329,7 +379,7 @@ export interface ActionSplitParams {
   firsts: SplitQuantityInput;
 
   /**
-   * Production step ID for the split.
+   * The production step the new batch is created at.
    */
   production_step_id: string;
 

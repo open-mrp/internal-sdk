@@ -44,7 +44,11 @@ export class SalesOrders extends APIResource {
   lines: LinesAPI.Lines = new LinesAPI.Lines(this._client);
 
   /**
-   * Creates a sales order.
+   * Creates a sales order in `estimate` status.
+   *
+   * The order number is assigned automatically, and a sales rep is auto-assigned
+   * when none is provided. A shipping line is always added to the order, plus a
+   * discount line when an order discount is supplied.
    *
    * @example
    * ```ts
@@ -144,6 +148,8 @@ export class SalesOrders extends APIResource {
   /**
    * Deletes a sales order and all its related records.
    *
+   * Fulfilled orders cannot be deleted.
+   *
    * @example
    * ```ts
    * const salesOrder = await client.sales.salesOrders.delete(
@@ -156,7 +162,11 @@ export class SalesOrders extends APIResource {
   }
 
   /**
-   * Creates a checkout session for a sales order.
+   * Creates a hosted payment checkout session for a sales order.
+   *
+   * Requires an active Stripe integration on the account. The checkout is built from
+   * the order's lines, and the checkout link is emailed to the provided address.
+   * Fails with a conflict if the order already has a payment.
    *
    * @example
    * ```ts
@@ -203,17 +213,19 @@ export class SalesOrders extends APIResource {
  */
 export interface CheckoutSalesOrderRequest {
   /**
-   * Email for the checkout session.
+   * Email address to send the checkout link to.
+   *
+   * Also set as the customer email on the payment provider's checkout session.
    */
   email: string;
 
   /**
-   * Redirect URL on cancel.
+   * URL the customer is redirected to if they cancel the checkout.
    */
   cancel_url?: string;
 
   /**
-   * Redirect URL on success.
+   * URL the customer is redirected to after completing the checkout.
    */
   success_url?: string;
 }
@@ -223,7 +235,7 @@ export interface CheckoutSalesOrderRequest {
  */
 export interface CheckoutSalesOrderResponse {
   /**
-   * Checkout URL.
+   * URL of the hosted payment page where the customer completes the checkout.
    */
   checkout_url: string;
 
@@ -235,66 +247,74 @@ export interface CheckoutSalesOrderResponse {
 
 /**
  * OrderLineInput represents the shared fields for creating an order line item.
+ *
  * Used as an embedded struct in purchase order and sales order line inputs.
  */
 export interface CreateSalesOrderLineInput {
   /**
-   * The product ID.
+   * ID of the product being ordered.
    */
   product_id: string;
 
   /**
-   * The product SKU.
+   * The product SKU recorded on the line.
+   *
+   * Stored on the line itself, so it stays stable even if the product's SKU changes
+   * later.
    */
   product_sku: string;
 
   /**
-   * The quantity unit ID.
+   * ID of the unit of measure for the quantity.
    */
   quantity_unit_id: string;
 
   /**
-   * The quantity value.
+   * Quantity ordered, as a decimal string.
    */
   quantity_value: string;
 
   /**
-   * The unit price denominator unit ID.
+   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
    */
   unit_price_denominator_unit_id: string;
 
   /**
-   * The unit price numerator unit ID.
+   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_price_numerator_unit_id: string;
 
   /**
-   * The unit price value.
+   * Price charged per unit, as a decimal string.
    */
   unit_price_value: string;
 
   /**
-   * The item ID.
+   * ID of the inventory item to tie the line to.
+   *
+   * Lines tied to an item have inventory reserved for them when the order is issued.
    */
   item_id?: string;
 
   /**
-   * The product description.
+   * The product description recorded on the line.
    */
   product_description?: string;
 
   /**
-   * The unit cost denominator unit ID.
+   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
    */
   unit_cost_denominator_unit_id?: string;
 
   /**
-   * The unit cost numerator unit ID.
+   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_cost_numerator_unit_id?: string;
 
   /**
-   * The unit cost value.
+   * Internal cost per unit, as a decimal string.
    */
   unit_cost_value?: string;
 }
@@ -304,7 +324,7 @@ export interface CreateSalesOrderLineInput {
  */
 export interface CreateSalesOrderRequest {
   /**
-   * Buyer account ID.
+   * ID of the customer account the order is for.
    */
   buyer_account_id: string;
 
@@ -314,7 +334,7 @@ export interface CreateSalesOrderRequest {
   lines: Array<CreateSalesOrderLineInput>;
 
   /**
-   * Priority code.
+   * Fulfillment priority used to rank the order on the shop floor.
    */
   priority_code: string;
 
@@ -329,7 +349,7 @@ export interface CreateSalesOrderRequest {
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Bill-to country.
+   * Bill-to country, as a two-letter ISO code.
    */
   bill_to_country?: string;
 
@@ -370,6 +390,10 @@ export interface CreateSalesOrderRequest {
 
   /**
    * Who is billed for freight.
+   *
+   * - `sender`: the sender pays for shipping.
+   * - `third_party`: a third party pays for shipping, using the carrier billing
+   *   account number.
    */
   carrier_billing_type?: 'sender' | 'third_party';
 
@@ -379,7 +403,9 @@ export interface CreateSalesOrderRequest {
   carrier_id?: string;
 
   /**
-   * Customer's purchase order number.
+   * The customer's own purchase order number, for cross-referencing.
+   *
+   * Must be unique among your orders for this customer.
    */
   customer_purchase_order_number?: string;
 
@@ -395,6 +421,8 @@ export interface CreateSalesOrderRequest {
 
   /**
    * Order discount ID.
+   *
+   * When supplied, a discount line is added to the order automatically.
    */
   order_discount_id?: string;
 
@@ -405,6 +433,10 @@ export interface CreateSalesOrderRequest {
 
   /**
    * Sales rep ID.
+   *
+   * When omitted, a rep is assigned automatically: the customer's default sales rep
+   * first, then the sales territory matching the ship-to postal code, then the
+   * ship-to state.
    */
   sales_rep_id?: string;
 
@@ -414,7 +446,7 @@ export interface CreateSalesOrderRequest {
   service_level_id?: string;
 
   /**
-   * Ship-to country.
+   * Ship-to country, as a two-letter ISO code.
    */
   ship_to_country?: string;
 
@@ -478,7 +510,11 @@ export interface Freight {
   billing_type: 'sender' | 'third_party' | null;
 
   /**
-   * Carrier resource.
+   * A shipping carrier configured for fulfilling orders.
+   *
+   * Carriers with a Shippo-supported `code` (`fedex`, `ups`, `usps`) are connected
+   * through Shippo for live rating and label purchase; other carriers represent
+   * self-managed shipping methods such as will call or local delivery.
    */
   carrier: CustomersAPI.Carrier | null;
 
@@ -585,72 +621,81 @@ export interface ListSalesOrderStatus {
 
 /**
  * OrderLineInput represents the shared fields for creating an order line item.
+ *
  * Used as an embedded struct in purchase order and sales order line inputs.
  */
 export interface OrderLineInput {
   /**
-   * The product ID.
+   * ID of the product being ordered.
    */
   product_id: string;
 
   /**
-   * The product SKU.
+   * The product SKU recorded on the line.
+   *
+   * Stored on the line itself, so it stays stable even if the product's SKU changes
+   * later.
    */
   product_sku: string;
 
   /**
-   * The quantity unit ID.
+   * ID of the unit of measure for the quantity.
    */
   quantity_unit_id: string;
 
   /**
-   * The quantity value.
+   * Quantity ordered, as a decimal string.
    */
   quantity_value: string;
 
   /**
-   * The unit price denominator unit ID.
+   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
    */
   unit_price_denominator_unit_id: string;
 
   /**
-   * The unit price numerator unit ID.
+   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_price_numerator_unit_id: string;
 
   /**
-   * The unit price value.
+   * Price charged per unit, as a decimal string.
    */
   unit_price_value: string;
 
   /**
-   * The item ID.
+   * ID of the inventory item to tie the line to.
+   *
+   * Lines tied to an item have inventory reserved for them when the order is issued.
    */
   item_id?: string;
 
   /**
-   * The product description.
+   * The product description recorded on the line.
    */
   product_description?: string;
 
   /**
-   * The unit cost denominator unit ID.
+   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
    */
   unit_cost_denominator_unit_id?: string;
 
   /**
-   * The unit cost numerator unit ID.
+   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_cost_numerator_unit_id?: string;
 
   /**
-   * The unit cost value.
+   * Internal cost per unit, as a decimal string.
    */
   unit_cost_value?: string;
 }
 
 /**
- * Product with expandable item, product line, and product type.
+ * Product pairs an inventory item with how it is sold: its product type, optional
+ * product line, and customer portal visibility.
  */
 export interface Product {
   /**
@@ -684,6 +729,9 @@ export interface Product {
 
   /**
    * Product line resource.
+   *
+   * A product line groups related products in your catalog and carries the default
+   * commission policy, freight policy, and unit group for those products.
    */
   product_line: AccountPricesAPI.ProductLine | null;
 
@@ -784,21 +832,17 @@ export interface SalesOrder {
 
   /**
    * Whether an order acknowledgment has been sent to the customer.
-   *
-   * - `not_sent`: no acknowledgment has been sent.
-   * - `sent`: the acknowledgment has been sent.
    */
   acknowledgment_status: 'not_sent' | 'sent';
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   bill_to_address: APIKeysAPI.Address | null;
 
   /**
    * When the order was fulfilled and closed.
-   *
-   * Null until the order reaches `fulfilled`.
    */
   completed_at: string | null;
 
@@ -808,26 +852,25 @@ export interface SalesOrder {
   created_at: string;
 
   /**
-   * Customer account.
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
    */
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Customer's purchase order number.
+   * The customer's own purchase order number, for cross-referencing.
+   *
+   * Unique among this customer's orders.
    */
   customer_purchase_order_number: string | null;
 
   /**
    * When this estimate expires, if an expiration was set.
-   *
-   * `null` when no expiration applies.
    */
   expired_at: string | null;
 
   /**
    * When the first shipment against this order went out.
-   *
-   * Null until something ships.
    */
   first_ship_at: string | null;
 
@@ -844,8 +887,6 @@ export interface SalesOrder {
 
   /**
    * When the order was issued (moved out of `estimate`).
-   *
-   * Null while still an estimate.
    */
   issued_at: string | null;
 
@@ -866,7 +907,9 @@ export interface SalesOrder {
   note: string | null;
 
   /**
-   * Sales order number.
+   * Human-readable order number, e.g. `SO-001`.
+   *
+   * Assigned automatically when the order is created; unique within your account.
    */
   number: string;
 
@@ -876,30 +919,28 @@ export interface SalesOrder {
   object: 'sales_order';
 
   /**
-   * Order discount resource.
+   * A discount code that can be applied to a sales order.
+   *
+   * An order discount reduces the order total by either a percentage or a fixed
+   * amount, depending on `discount_type`.
    */
   order_discount: OrderDiscountsAPI.OrderDiscount | null;
 
   /**
    * Payment state of the order.
    *
-   * - `unpaid`: no payment has been received.
-   * - `partially_paid`: some, but not all, of the balance has been paid.
-   * - `paid`: the order has been paid in full.
+   * Payment tracking is not yet wired up, so this currently always reports `unpaid`.
    */
   payment_status: 'unpaid' | 'partially_paid' | 'paid';
 
   /**
-   * Payment term resource.
+   * A payment term describing when payment is due (e.g. `Net 30`), assignable to
+   * customers, sales orders, purchase orders, and invoices.
    */
   payment_term: CustomersAPI.PaymentTerm | null;
 
   /**
    * Fulfillment priority, used to rank orders on the shop floor.
-   *
-   * - `low`: lower than default urgency.
-   * - `normal`: the default urgency.
-   * - `high`: expedited ahead of normal-priority orders.
    */
   priority: 'low' | 'normal' | 'high';
 
@@ -922,12 +963,13 @@ export interface SalesOrder {
   sales_rep: RequestLogsAPI.Actor | null;
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   ship_to_address: APIKeysAPI.Address | null;
 
   /**
-   * ShippingTerm resource.
+   * A shipping term defining how freight charges are calculated for an order.
    */
   shipping_term: CustomersAPI.ShippingTerm | null;
 
@@ -938,6 +980,9 @@ export interface SalesOrder {
    *   real order.
    * - `issued`: the order has been issued and is being fulfilled.
    * - `fulfilled`: the order has been completed and closed.
+   *
+   * Status changes are made through the issue, unissue, close, and reopen action
+   * endpoints rather than by updating this field.
    */
   status: 'estimate' | 'issued' | 'fulfilled';
 
@@ -979,7 +1024,9 @@ export interface SalesOrderLine {
   created_at: string;
 
   /**
-   * Line item number.
+   * Position of the line on the order.
+   *
+   * Assigned automatically in sequence, starting at `1`.
    */
   line_item_number: number;
 
@@ -989,7 +1036,8 @@ export interface SalesOrderLine {
   object: 'sales_order_line';
 
   /**
-   * Product with expandable item, product line, and product type.
+   * Product pairs an inventory item with how it is sold: its product type, optional
+   * product line, and customer portal visibility.
    */
   product: Product | null;
 
@@ -1015,12 +1063,14 @@ export interface SalesOrderLine {
   totals: SalesOrderTotals | null;
 
   /**
-   * Rate resource.
+   * Value expressed as a ratio of two units, such as a price per kilogram or a
+   * throughput per hour.
    */
   unit_cost: AccountUsersAPI.Rate | null;
 
   /**
-   * Rate resource.
+   * Value expressed as a ratio of two units, such as a price per kilogram or a
+   * throughput per hour.
    */
   unit_price: AccountUsersAPI.Rate | null;
 
@@ -1145,19 +1195,26 @@ export interface SalesOrderTotals {
  */
 export interface UpdateSalesOrderRequest {
   /**
-   * When set, replaces acknowledgement email contacts on the order. An empty list
-   * clears all contacts; omitted leaves existing contacts untouched.
+   * Replaces the acknowledgement email contacts on the order.
+   *
+   * An empty list clears all contacts; omitting the field leaves existing contacts
+   * untouched.
    */
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Acknowledgment status.
+   * Acknowledgment status of the order.
+   *
+   * Set to `sent` to mark the acknowledgement as sent without emailing the customer,
+   * or `not_sent` to reset it.
    */
   acknowledgment_status?: 'not_sent' | 'sent';
 
   /**
-   * Billing address ID. Re-points the order to an existing address. To change an
-   * address's contents, use the update-address endpoint.
+   * Billing address ID.
+   *
+   * Re-points the order to an existing address. To change an address's contents, use
+   * the update-address endpoint.
    */
   billing_address_id?: string;
 
@@ -1168,6 +1225,10 @@ export interface UpdateSalesOrderRequest {
 
   /**
    * Who is billed for freight.
+   *
+   * - `sender`: the sender pays for shipping.
+   * - `third_party`: a third party pays for shipping, using the carrier billing
+   *   account number.
    */
   carrier_billing_type?: 'sender' | 'third_party';
 
@@ -1187,8 +1248,10 @@ export interface UpdateSalesOrderRequest {
   customer_purchase_order_number?: string;
 
   /**
-   * When set, replaces invoice email contacts on the order. An empty list clears all
-   * contacts; omitted leaves existing contacts untouched.
+   * Replaces the invoice email contacts on the order.
+   *
+   * An empty list clears all contacts; omitting the field leaves existing contacts
+   * untouched.
    */
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
@@ -1199,6 +1262,8 @@ export interface UpdateSalesOrderRequest {
 
   /**
    * Order number.
+   *
+   * Must be unique within your account.
    */
   number?: string;
 
@@ -1213,7 +1278,7 @@ export interface UpdateSalesOrderRequest {
   payment_term_id?: string;
 
   /**
-   * Priority code.
+   * New fulfillment priority for the order.
    */
   priority_code?: string;
 
@@ -1233,8 +1298,10 @@ export interface UpdateSalesOrderRequest {
   service_level_id?: string;
 
   /**
-   * Shipping address ID. Re-points the order to an existing address. To change an
-   * address's contents, use the update-address endpoint.
+   * Shipping address ID.
+   *
+   * Re-points the order to an existing address. To change an address's contents, use
+   * the update-address endpoint.
    */
   shipping_address_id?: string;
 
@@ -1248,7 +1315,7 @@ export interface SalesOrderDeleteResponse {}
 
 export interface SalesOrderCreateParams {
   /**
-   * Body param: Buyer account ID.
+   * Body param: ID of the customer account the order is for.
    */
   buyer_account_id: string;
 
@@ -1258,7 +1325,7 @@ export interface SalesOrderCreateParams {
   lines: Array<CreateSalesOrderLineInput>;
 
   /**
-   * Body param: Priority code.
+   * Body param: Fulfillment priority used to rank the order on the shop floor.
    */
   priority_code: string;
 
@@ -1298,7 +1365,7 @@ export interface SalesOrderCreateParams {
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Body param: Bill-to country.
+   * Body param: Bill-to country, as a two-letter ISO code.
    */
   bill_to_country?: string;
 
@@ -1339,6 +1406,10 @@ export interface SalesOrderCreateParams {
 
   /**
    * Body param: Who is billed for freight.
+   *
+   * - `sender`: the sender pays for shipping.
+   * - `third_party`: a third party pays for shipping, using the carrier billing
+   *   account number.
    */
   carrier_billing_type?: 'sender' | 'third_party';
 
@@ -1348,7 +1419,9 @@ export interface SalesOrderCreateParams {
   carrier_id?: string;
 
   /**
-   * Body param: Customer's purchase order number.
+   * Body param: The customer's own purchase order number, for cross-referencing.
+   *
+   * Must be unique among your orders for this customer.
    */
   customer_purchase_order_number?: string;
 
@@ -1364,6 +1437,8 @@ export interface SalesOrderCreateParams {
 
   /**
    * Body param: Order discount ID.
+   *
+   * When supplied, a discount line is added to the order automatically.
    */
   order_discount_id?: string;
 
@@ -1374,6 +1449,10 @@ export interface SalesOrderCreateParams {
 
   /**
    * Body param: Sales rep ID.
+   *
+   * When omitted, a rep is assigned automatically: the customer's default sales rep
+   * first, then the sales territory matching the ship-to postal code, then the
+   * ship-to state.
    */
   sales_rep_id?: string;
 
@@ -1383,7 +1462,7 @@ export interface SalesOrderCreateParams {
   service_level_id?: string;
 
   /**
-   * Body param: Ship-to country.
+   * Body param: Ship-to country, as a two-letter ISO code.
    */
   ship_to_country?: string;
 
@@ -1479,19 +1558,26 @@ export interface SalesOrderUpdateParams {
   >;
 
   /**
-   * Body param: When set, replaces acknowledgement email contacts on the order. An
-   * empty list clears all contacts; omitted leaves existing contacts untouched.
+   * Body param: Replaces the acknowledgement email contacts on the order.
+   *
+   * An empty list clears all contacts; omitting the field leaves existing contacts
+   * untouched.
    */
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Body param: Acknowledgment status.
+   * Body param: Acknowledgment status of the order.
+   *
+   * Set to `sent` to mark the acknowledgement as sent without emailing the customer,
+   * or `not_sent` to reset it.
    */
   acknowledgment_status?: 'not_sent' | 'sent';
 
   /**
-   * Body param: Billing address ID. Re-points the order to an existing address. To
-   * change an address's contents, use the update-address endpoint.
+   * Body param: Billing address ID.
+   *
+   * Re-points the order to an existing address. To change an address's contents, use
+   * the update-address endpoint.
    */
   billing_address_id?: string;
 
@@ -1502,6 +1588,10 @@ export interface SalesOrderUpdateParams {
 
   /**
    * Body param: Who is billed for freight.
+   *
+   * - `sender`: the sender pays for shipping.
+   * - `third_party`: a third party pays for shipping, using the carrier billing
+   *   account number.
    */
   carrier_billing_type?: 'sender' | 'third_party';
 
@@ -1521,8 +1611,10 @@ export interface SalesOrderUpdateParams {
   customer_purchase_order_number?: string;
 
   /**
-   * Body param: When set, replaces invoice email contacts on the order. An empty
-   * list clears all contacts; omitted leaves existing contacts untouched.
+   * Body param: Replaces the invoice email contacts on the order.
+   *
+   * An empty list clears all contacts; omitting the field leaves existing contacts
+   * untouched.
    */
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
@@ -1533,6 +1625,8 @@ export interface SalesOrderUpdateParams {
 
   /**
    * Body param: Order number.
+   *
+   * Must be unique within your account.
    */
   number?: string;
 
@@ -1547,7 +1641,7 @@ export interface SalesOrderUpdateParams {
   payment_term_id?: string;
 
   /**
-   * Body param: Priority code.
+   * Body param: New fulfillment priority for the order.
    */
   priority_code?: string;
 
@@ -1567,8 +1661,10 @@ export interface SalesOrderUpdateParams {
   service_level_id?: string;
 
   /**
-   * Body param: Shipping address ID. Re-points the order to an existing address. To
-   * change an address's contents, use the update-address endpoint.
+   * Body param: Shipping address ID.
+   *
+   * Re-points the order to an existing address. To change an address's contents, use
+   * the update-address endpoint.
    */
   shipping_address_id?: string;
 
@@ -1580,7 +1676,11 @@ export interface SalesOrderUpdateParams {
 
 export interface SalesOrderListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -1595,12 +1695,15 @@ export interface SalesOrderListParams {
   customer_ids?: Array<string>;
 
   /**
-   * Filter by end date (inclusive).
+   * Latest order creation date to include, in `YYYY-MM-DD` format (inclusive).
    */
   end_date?: string;
 
   /**
    * Whether to exclude internal orders.
+   *
+   * When `true`, omits orders the account placed with itself (the buyer is the same
+   * account that owns the order).
    */
   exclude_internal_orders?: boolean;
 
@@ -1637,7 +1740,7 @@ export interface SalesOrderListParams {
   item_ids?: Array<string>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
@@ -1647,7 +1750,9 @@ export interface SalesOrderListParams {
   product_line_ids?: Array<string>;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
@@ -1657,7 +1762,7 @@ export interface SalesOrderListParams {
   sales_rep_ids?: Array<string>;
 
   /**
-   * Filter by start date (inclusive).
+   * Earliest order creation date to include, in `YYYY-MM-DD` format (inclusive).
    */
   start_date?: string;
 
@@ -1669,24 +1774,30 @@ export interface SalesOrderListParams {
 
 export interface SalesOrderCheckoutParams {
   /**
-   * Email for the checkout session.
+   * Email address to send the checkout link to.
+   *
+   * Also set as the customer email on the payment provider's checkout session.
    */
   email: string;
 
   /**
-   * Redirect URL on cancel.
+   * URL the customer is redirected to if they cancel the checkout.
    */
   cancel_url?: string;
 
   /**
-   * Redirect URL on success.
+   * URL the customer is redirected to after completing the checkout.
    */
   success_url?: string;
 }
 
 export interface SalesOrderRetrieveStatusesParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -1697,12 +1808,14 @@ export interface SalesOrderRetrieveStatusesParams {
   include?: Array<'owner'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

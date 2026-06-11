@@ -21,8 +21,12 @@ export class ProductionFlows extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Returns the production flow graph for the given item, including all production
-   * steps, their consumptions, and connections.
+   * Returns the production flow graph for the given item.
+   *
+   * The graph contains the step(s) that produce the item, every upstream step that
+   * feeds them, and any connected downstream steps, with each step's production
+   * output, consumptions, and connections. The list of steps is empty if no
+   * production step produces the item.
    *
    * @example
    * ```ts
@@ -83,6 +87,9 @@ export interface ListProductionFlowStep {
 
 /**
  * ProductionFlow is the production flow graph for an item.
+ *
+ * Contains the step(s) that produce the item, every upstream step that feeds them,
+ * and any connected downstream steps.
  */
 export interface ProductionFlow {
   /**
@@ -186,7 +193,11 @@ export interface ProductionFlowStep {
   id: string;
 
   /**
-   * Allowances as a decimal string.
+   * Allowance correction factor applied to labor time in cost calculations, as a
+   * decimal string.
+   *
+   * Effective labor time per unit is
+   * `labor_time × (1 + leveling_factor) × (1 + allowances)`.
    */
   allowances: string;
 
@@ -201,7 +212,8 @@ export interface ProductionFlowStep {
   created_at: string;
 
   /**
-   * Department resource.
+   * A functional area of a production operation, such as fabrication or packaging,
+   * that groups scanning stations and machines.
    */
   department: AccountUsersAPI.Department | null;
 
@@ -211,17 +223,23 @@ export interface ProductionFlowStep {
   in_steps: AccountUsersAPI.ListProductionStep | null;
 
   /**
-   * Rate resource.
+   * Value expressed as a ratio of two units, such as a price per kilogram or a
+   * throughput per hour.
    */
   labor_rate: AccountUsersAPI.Rate | null;
 
   /**
-   * Rate resource.
+   * Value expressed as a ratio of two units, such as a price per kilogram or a
+   * throughput per hour.
    */
   labor_time: AccountUsersAPI.Rate | null;
 
   /**
-   * Leveling factor as a decimal string.
+   * Leveling correction factor applied to labor time in cost calculations, as a
+   * decimal string.
+   *
+   * Effective labor time per unit is
+   * `labor_time × (1 + leveling_factor) × (1 + allowances)`.
    */
   leveling_factor: string;
 
@@ -251,7 +269,8 @@ export interface ProductionFlowStep {
   out_steps: AccountUsersAPI.ListProductionStep | null;
 
   /**
-   * Rate resource.
+   * Value expressed as a ratio of two units, such as a price per kilogram or a
+   * throughput per hour.
    */
   overhead_rate: AccountUsersAPI.Rate | null;
 
@@ -261,7 +280,8 @@ export interface ProductionFlowStep {
   production: ProductionFlowProduction | null;
 
   /**
-   * Scanning station resource.
+   * A station on the production floor where operators scan batches to perform a
+   * batch operation, such as initializing or moving a batch.
    */
   scanning_station: AccountUsersAPI.ScanningStation | null;
 
