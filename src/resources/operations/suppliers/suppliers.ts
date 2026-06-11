@@ -183,7 +183,8 @@ export interface ListSupplierSummary {
 }
 
 /**
- * SupplierDetail is the full supplier resource.
+ * A business you purchase materials from, with its default billing and shipping
+ * addresses.
  */
 export interface SupplierDetail {
   /**
@@ -202,7 +203,7 @@ export interface SupplierDetail {
   created_at: string;
 
   /**
-   * Number of associated materials.
+   * Number of materials sourced from this supplier.
    */
   material_count: number;
 
@@ -212,12 +213,12 @@ export interface SupplierDetail {
   name: string;
 
   /**
-   * Supplier notes.
+   * Free-form notes about the supplier.
    */
   note: string | null;
 
   /**
-   * Supplier number.
+   * Human-facing supplier code, unique per account (e.g. `SUP-001`).
    */
   number: string;
 
@@ -238,7 +239,7 @@ export interface SupplierDetail {
 }
 
 /**
- * SupplierSummary is the lightweight supplier resource for list results.
+ * A condensed supplier representation returned by list endpoints.
  */
 export interface SupplierSummary {
   /**
@@ -252,7 +253,7 @@ export interface SupplierSummary {
   created_at: string;
 
   /**
-   * Number of associated materials.
+   * Number of materials sourced from this supplier.
    */
   material_count: number;
 
@@ -262,7 +263,7 @@ export interface SupplierSummary {
   name: string;
 
   /**
-   * Supplier number.
+   * Human-facing supplier code, unique per account (e.g. `SUP-001`).
    */
   number: string;
 

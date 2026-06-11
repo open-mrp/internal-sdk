@@ -59,8 +59,9 @@ export class AuditEvents extends APIResource {
 }
 
 /**
- * Immutable audit event record. Captures the actor, changed resource, and
- * timestamp.
+ * Immutable audit event record.
+ *
+ * Captures the actor, changed resource, and timestamp.
  */
 export interface AuditEvent {
   /**
@@ -70,6 +71,12 @@ export interface AuditEvent {
 
   /**
    * Mutation type.
+   *
+   * - `create`: the resource was created.
+   * - `update`: one or more fields were changed.
+   * - `delete`: the resource was deleted.
+   * - `restore`: a previously deleted resource was restored.
+   * - `archive`: the resource was archived.
    */
   action: 'create' | 'update' | 'delete' | 'restore' | 'archive';
 
@@ -346,8 +353,10 @@ export interface AuditFieldChange {
   field: string;
 
   /**
-   * New value as a JSON fragment. Null for deletion events. Encoded as a JSON value
-   * (object, array, string, number, boolean, or null), not a JSON-encoded string.
+   * New value as a JSON fragment.
+   *
+   * Null for deletion events. Encoded as a JSON value (object, array, string,
+   * number, boolean, or null), not a JSON-encoded string.
    */
   new_value: unknown | null;
 
@@ -357,9 +366,10 @@ export interface AuditFieldChange {
   object: 'audit_field_change';
 
   /**
-   * Previous value as a JSON fragment. Null for creation events. Encoded as a JSON
-   * value (object, array, string, number, boolean, or null), not a JSON-encoded
-   * string.
+   * Previous value as a JSON fragment.
+   *
+   * Null for creation events. Encoded as a JSON value (object, array, string,
+   * number, boolean, or null), not a JSON-encoded string.
    */
   old_value: unknown | null;
 }

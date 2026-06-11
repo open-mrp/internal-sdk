@@ -62,7 +62,13 @@ export interface InventoryChangeLog {
   id: string;
 
   /**
-   * Inventory action type code.
+   * Action that produced this inventory change.
+   *
+   * - `scan`: change driven by a scan, typically a production step.
+   * - `user_action`: change made manually by a user.
+   * - `system_action`: change made automatically by the system.
+   * - `user_correction`: manual adjustment a user made to correct an inventory
+   *   discrepancy.
    */
   action_type: 'scan' | 'user_action' | 'system_action' | 'user_correction';
 

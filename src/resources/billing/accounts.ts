@@ -86,7 +86,9 @@ export interface AccountUsageResponse {
  */
 export interface AgentSpendInfo {
   /**
-   * Monthly spending cap in cents. Null means no cap.
+   * Monthly spending cap in cents.
+   *
+   * Null means no cap.
    */
   cap_cents: number | null;
 
@@ -211,7 +213,9 @@ export interface UsageItem {
   current: number;
 
   /**
-   * Maximum allowed usage. Null means unlimited.
+   * Maximum allowed usage.
+   *
+   * Null means unlimited.
    */
   limit: number | null;
 

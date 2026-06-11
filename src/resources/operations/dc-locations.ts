@@ -128,7 +128,8 @@ export interface DcLocation {
   customer: DcLocationCustomer | null;
 
   /**
-   * Location description.
+   * Free-form description identifying this distribution-center location, such as a
+   * warehouse name and bay (for example, `Warehouse A - Bay 3`).
    */
   location: string;
 

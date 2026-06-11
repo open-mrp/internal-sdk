@@ -110,8 +110,10 @@ export class AccountUsers extends APIResource {
 }
 
 /**
- * Account user with role and department. Profile fields (name, email, username,
- * image URL) live on the expandable user sub-resource.
+ * Account user with role and department.
+ *
+ * Profile fields (name, email, username, image URL) live on the expandable user
+ * sub-resource.
  */
 export interface AccountUser {
   /**
@@ -146,6 +148,10 @@ export interface AccountUser {
 
   /**
    * Account user status.
+   *
+   * - `active`: the user can access the account.
+   * - `disabled`: the user is locked out of the account.
+   * - `removed`: the user has been removed (soft-deleted) from the account.
    */
   status: 'active' | 'disabled' | 'removed';
 
@@ -170,7 +176,10 @@ export interface Attribute {
   id: string;
 
   /**
-   * Color code.
+   * Swatch color used to display this attribute in the UI.
+   *
+   * One of `blue`, `brown`, `gray`, `green`, `orange`, `pink`, `purple`, `red`,
+   * `yellow`, or `default` (a neutral fallback color).
    */
   color: 'blue' | 'brown' | 'default' | 'gray' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'yellow';
 
@@ -190,7 +199,10 @@ export interface Attribute {
   property: Property | null;
 
   /**
-   * Display order.
+   * Position of this attribute relative to its siblings within the property,
+   * ascending.
+   *
+   * Lower values sort first.
    */
   sort_order: number;
 
@@ -200,7 +212,8 @@ export interface Attribute {
   updated_at: string;
 
   /**
-   * Attribute value.
+   * The selectable value this attribute represents, such as `Red` for a `Color`
+   * property or `Large` for a `Size` property.
    */
   value: string;
 }
@@ -391,7 +404,11 @@ export interface Item {
   sku: string;
 
   /**
-   * Item type code.
+   * What kind of item this is.
+   *
+   * - `product`: a finished product.
+   * - `material`: a raw material or component consumed in production.
+   * - `part`: a part used in production.
    */
   type: 'product' | 'material' | 'part';
 
@@ -451,7 +468,10 @@ export interface ItemCategory {
   properties: ListProperty | null;
 
   /**
-   * Item category type.
+   * What kind of items this category groups.
+   *
+   * - `material_category`: groups raw materials or components.
+   * - `product_category`: groups finished products.
    */
   type: 'material_category' | 'product_category';
 
@@ -681,7 +701,14 @@ export interface Location {
   parent: Location | null;
 
   /**
-   * Location type code.
+   * Location type code, identifying this location's level in the storage hierarchy.
+   *
+   * - `building`: a building-level location.
+   * - `section`: a section within a building.
+   * - `aisle`: an aisle within a section.
+   * - `rack`: a rack within an aisle.
+   * - `shelf`: a shelf within a rack.
+   * - `bin`: a bin within a shelf.
    */
   type: LocationTypeCode;
 
@@ -903,7 +930,7 @@ export interface Property {
   created_at: string;
 
   /**
-   * Display name.
+   * Display name of the property, such as `Color` or `Size`.
    */
   name: string;
 
@@ -943,7 +970,10 @@ export interface Quantity {
   unit: Unit | null;
 
   /**
-   * Decimal value.
+   * Raw decimal value of the quantity, as a string to preserve precision.
+   *
+   * This is the unformatted machine value; see `display_value` for the
+   * human-readable rendering with unit and thousands separators.
    */
   value: string;
 }
@@ -1013,12 +1043,24 @@ export interface ScanningStation {
   department: Department | null;
 
   /**
-   * Label size code.
+   * Label size printed at this station.
+   *
+   * `null` when no label size is configured.
+   *
+   * - `1x1`: 1x1 inch label.
+   * - `1x3`: 1x3 inch label.
+   * - `1x4`: 1x4 inch label.
+   * - `2x4`: 2x4 inch label.
    */
   label_size: '1x1' | '1x3' | '1x4' | '2x4' | null;
 
   /**
-   * Label type code.
+   * Label type printed at this station.
+   *
+   * `null` when no label type is configured.
+   *
+   * - `tag`: a tag label.
+   * - `traveler`: a traveler label that accompanies the batch through production.
    */
   label_type: 'tag' | 'traveler' | null;
 
@@ -1039,6 +1081,10 @@ export interface ScanningStation {
 
   /**
    * Operator requirement behavior for this station.
+   *
+   * - `none`: no operator action is required to complete a scan.
+   * - `material_check`: the operator must perform a material check before the scan
+   *   is accepted.
    */
   operator_requirement: 'none' | 'material_check';
 
@@ -1048,7 +1094,12 @@ export interface ScanningStation {
   production_steps: ListProductionStep | null;
 
   /**
-   * Scanning station type.
+   * Scanning station type, determining which batch operation the station performs.
+   *
+   * - `init_batch`: initializes a new batch.
+   * - `merge_batch`: merges multiple batches into one.
+   * - `move_batch`: moves a batch to another location or step.
+   * - `split_batch`: splits a batch into multiple batches.
    */
   type: 'init_batch' | 'merge_batch' | 'move_batch' | 'split_batch';
 
@@ -1078,8 +1129,9 @@ export interface Unit {
   created_at: string;
 
   /**
-   * Whether this is the base unit for its dimension. Conversion ratios are relative
-   * to this unit.
+   * Whether this is the base unit for its dimension.
+   *
+   * Conversion ratios are relative to this unit.
    */
   is_base_unit: boolean;
 
@@ -1094,13 +1146,16 @@ export interface Unit {
   object: 'unit';
 
   /**
-   * Conversion offset denominator. Typically 1. Cannot be zero.
+   * Conversion offset denominator.
+   *
+   * Typically 1. Cannot be zero.
    */
   offset_denominator: string;
 
   /**
-   * Conversion offset numerator, used for temperature-like conversions. Zero for
-   * most unit types.
+   * Conversion offset numerator, used for temperature-like conversions.
+   *
+   * Zero for most unit types.
    */
   offset_numerator: string;
 
@@ -1111,6 +1166,7 @@ export interface Unit {
 
   /**
    * Conversion ratio denominator relative to the base unit in the same dimension.
+   *
    * Cannot be zero.
    */
   ratio_denominator: string;
@@ -1122,6 +1178,17 @@ export interface Unit {
 
   /**
    * Unit dimension.
+   *
+   * Units can only be converted to other units sharing the same dimension.
+   *
+   * - `currency`: monetary units such as dollars or euros.
+   * - `quantity`: discrete countable units.
+   * - `time`: time-based units such as hours or minutes.
+   * - `mass`: weight-based units such as kilograms or pounds.
+   * - `volume`: volumetric units such as liters or gallons.
+   * - `length`: distance-based units such as meters or feet.
+   * - `temperature`: temperature units such as Celsius or Fahrenheit.
+   * - `area`: area-based units such as square meters or acres.
    */
   type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
 
@@ -1176,7 +1243,18 @@ export interface UnitGroup {
   owner: APIKeysAPI.Owner | null;
 
   /**
-   * Unit type.
+   * Dimension shared by every unit in this group.
+   *
+   * Only units of this dimension can belong to the group.
+   *
+   * - `currency`: monetary units such as dollars or euros.
+   * - `quantity`: discrete countable units.
+   * - `time`: time-based units such as hours or minutes.
+   * - `mass`: weight-based units such as kilograms or pounds.
+   * - `volume`: volumetric units such as liters or gallons.
+   * - `length`: distance-based units such as meters or feet.
+   * - `temperature`: temperature units such as Celsius or Fahrenheit.
+   * - `area`: area-based units such as square meters or acres.
    */
   type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
 
@@ -1201,17 +1279,26 @@ export interface UnitGroupUnit {
   created_at: string;
 
   /**
-   * Customer portal visibility.
+   * Whether this unit is shown to customers in the customer portal.
+   *
+   * - `visible`: the unit is selectable in the customer portal.
+   * - `hidden`: the unit is hidden from the customer portal.
    */
   customer_portal_visibility: 'visible' | 'hidden';
 
   /**
-   * Fixed discount amount.
+   * Fixed per-unit discount amount applied when ordering in this unit, in the
+   * account's currency.
+   *
+   * Defaults to `0`.
    */
   discount_fixed: number;
 
   /**
-   * Discount percentage.
+   * Percentage discount applied when ordering in this unit, as a number out of 100
+   * (e.g. `1` means 1%).
+   *
+   * Defaults to `1`.
    */
   discount_percentage: number;
 

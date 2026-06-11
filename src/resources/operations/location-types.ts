@@ -73,7 +73,15 @@ export interface LocationType {
   id: string;
 
   /**
-   * Location type code.
+   * Location type code, identifying the level of the storage hierarchy this type
+   * represents.
+   *
+   * - `building`: a building-level location.
+   * - `section`: a section within a building.
+   * - `aisle`: an aisle within a section.
+   * - `rack`: a rack within an aisle.
+   * - `shelf`: a shelf within a rack.
+   * - `bin`: a bin within a shelf.
    */
   code: AccountUsersAPI.LocationTypeCode;
 

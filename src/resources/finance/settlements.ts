@@ -203,8 +203,10 @@ export interface Settlement {
   object: 'settlement';
 
   /**
-   * Account user with role and department. Profile fields (name, email, username,
-   * image URL) live on the expandable user sub-resource.
+   * Account user with role and department.
+   *
+   * Profile fields (name, email, username, image URL) live on the expandable user
+   * sub-resource.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 

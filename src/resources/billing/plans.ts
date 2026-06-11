@@ -187,7 +187,9 @@ export interface PlanLimit {
   object: 'plan_limit';
 
   /**
-   * Maximum allowed value. Null means unlimited.
+   * Maximum allowed value.
+   *
+   * Null means unlimited.
    */
   value: number | null;
 }
@@ -217,7 +219,10 @@ export interface PricingPlan {
   display_order: number;
 
   /**
-   * Name of the previous plan tier this plan includes.
+   * Name of the lower plan tier whose features this plan also includes, for an
+   * "everything in X, plus..." callout on the pricing page.
+   *
+   * Null for the entry tier, which builds on no prior plan.
    */
   includes_previous_plan: string | null;
 
@@ -242,12 +247,19 @@ export interface PricingPlan {
   object: 'pricing_plan';
 
   /**
-   * Plan type code.
+   * Plan tier code.
+   *
+   * - `free`: the no-cost entry tier.
+   * - `starter`: the paid entry tier for small teams.
+   * - `pro`: the higher tier with expanded limits and support.
    */
   plan_type: 'free' | 'starter' | 'pro';
 
   /**
-   * Flat monthly price in dollars, if applicable.
+   * Per-seat price override in dollars used in place of `price_per_seat` when set.
+   *
+   * The monthly bill multiplies this by the number of seats (at least
+   * `seat_minimum`). `null` or `0` falls back to `price_per_seat`.
    */
   price_per_month: number | null;
 

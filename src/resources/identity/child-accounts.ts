@@ -82,7 +82,10 @@ export interface ChildAccount {
   email: string | null;
 
   /**
-   * External number for the account relation.
+   * Your own identifier for this customer (e.g. a CRM or ERP customer number),
+   * stored on the relation.
+   *
+   * Null if not set.
    */
   external_number: string | null;
 

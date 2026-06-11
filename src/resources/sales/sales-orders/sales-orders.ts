@@ -455,8 +455,9 @@ export interface CreateSalesOrderRequest {
 }
 
 /**
- * Freight describes the carrier selection and freight billing for a record. It is
- * a generic, reusable sub-resource shared by anything that carries shipping
+ * Freight describes the carrier selection and freight billing for a record.
+ *
+ * It is a generic, reusable sub-resource shared by anything that carries shipping
  * configuration — e.g. a sales order's chosen freight, or a customer's default
  * freight preferences. It is itself expanded via its parent (e.g.
  * include[]=freight); when present, the full carrier and service level are
@@ -464,12 +465,15 @@ export interface CreateSalesOrderRequest {
  */
 export interface Freight {
   /**
-   * Carrier billing account number, used when a third party is billed.
+   * Carrier account number to bill, used when `billing_type` is `third_party`.
    */
   billing_account_number: string | null;
 
   /**
-   * Who is billed for freight.
+   * Which party the carrier bills for the shipment.
+   *
+   * - `sender`: the shipper (your account) is billed.
+   * - `third_party`: a third party is billed via `billing_account_number`.
    */
   billing_type: 'sender' | 'third_party' | null;
 
@@ -484,8 +488,12 @@ export interface Freight {
   object: 'freight';
 
   /**
-   * Freight policy (who arranges and pays for freight). Populated where a policy
-   * applies, such as customer defaults.
+   * Freight policy (who arranges and pays for freight).
+   *
+   * Populated where a policy applies, such as customer defaults; null otherwise.
+   *
+   * - `free_freight`: no shipping cost to the buyer.
+   * - `billed_freight`: freight is billed to the buyer.
    */
   policy: 'free_freight' | 'billed_freight' | null;
 
@@ -666,7 +674,11 @@ export interface Product {
   object: 'product';
 
   /**
-   * Product portal visibility.
+   * Whether the product is shown to buyers in the customer portal.
+   *
+   * - `visible`: buyers can see and order the product in the portal.
+   * - `hidden`: the product is concealed from the portal but remains usable
+   *   internally.
    */
   portal_visibility: 'visible' | 'hidden';
 
@@ -676,7 +688,15 @@ export interface Product {
   product_line: AccountPricesAPI.ProductLine | null;
 
   /**
-   * Product type code.
+   * Product type code, which determines how the product behaves on orders and
+   * invoices.
+   *
+   * - `sale`: a standard sellable product.
+   * - `service`: a non-physical service line, such as labor or installation.
+   * - `shipping`: a shipping charge applied to an order.
+   * - `credit`: a credit applied against an order or invoice.
+   * - `return`: a returned product (RMA).
+   * - `tax`: a tax line.
    */
   type: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
 
@@ -688,10 +708,12 @@ export interface Product {
 
 /**
  * Record is a lightweight reference to a business record — a sales order, purchase
- * order, pick, shipment, production run, invoice, etc. Like Actor and Entity, it
- * carries just enough to identify and label the referenced record without
- * embedding its full resource. The optional status and metadata fields hold
- * type-specific detail that varies by the kind of record referenced.
+ * order, pick, shipment, production run, invoice, etc.
+ *
+ * Like Actor and Entity, it carries just enough to identify and label the
+ * referenced record without embedding its full resource. The optional status and
+ * metadata fields hold type-specific detail that varies by the kind of record
+ * referenced.
  */
 export interface Record {
   /**
@@ -700,7 +722,9 @@ export interface Record {
   id: string;
 
   /**
-   * Type-specific metadata. The set of keys varies by record type.
+   * Type-specific metadata.
+   *
+   * The set of keys varies by record type.
    */
   metadata: { [key: string]: string };
 
@@ -720,7 +744,21 @@ export interface Record {
   status: string | null;
 
   /**
-   * The kind of record referenced.
+   * The kind of business record referenced.
+   *
+   * Determines how to resolve the record and which `status` and `metadata` keys may
+   * appear.
+   *
+   * - `sales_order`: a customer order.
+   * - `purchase_order`: an order placed with a supplier.
+   * - `receiving_order`: an inbound order being received into inventory.
+   * - `pick`: a warehouse pick task.
+   * - `shipment`: an outbound shipment.
+   * - `delivery`: a delivery of one or more shipments to a destination.
+   * - `production_run`: a manufacturing production run.
+   * - `invoice`: a customer invoice.
+   * - `transaction`: a payment or financial transaction.
+   * - `settlement`: a settlement reconciling transactions against invoices.
    */
   type:
     | 'sales_order'
@@ -745,7 +783,10 @@ export interface SalesOrder {
   id: string;
 
   /**
-   * Acknowledgment status.
+   * Whether an order acknowledgment has been sent to the customer.
+   *
+   * - `not_sent`: no acknowledgment has been sent.
+   * - `sent`: the acknowledgment has been sent.
    */
   acknowledgment_status: 'not_sent' | 'sent';
 
@@ -755,7 +796,9 @@ export interface SalesOrder {
   bill_to_address: APIKeysAPI.Address | null;
 
   /**
-   * Completed timestamp.
+   * When the order was fulfilled and closed.
+   *
+   * Null until the order reaches `fulfilled`.
    */
   completed_at: string | null;
 
@@ -775,18 +818,23 @@ export interface SalesOrder {
   customer_purchase_order_number: string | null;
 
   /**
-   * Expiration timestamp.
+   * When this estimate expires, if an expiration was set.
+   *
+   * `null` when no expiration applies.
    */
   expired_at: string | null;
 
   /**
-   * First shipment timestamp.
+   * When the first shipment against this order went out.
+   *
+   * Null until something ships.
    */
   first_ship_at: string | null;
 
   /**
-   * Freight describes the carrier selection and freight billing for a record. It is
-   * a generic, reusable sub-resource shared by anything that carries shipping
+   * Freight describes the carrier selection and freight billing for a record.
+   *
+   * It is a generic, reusable sub-resource shared by anything that carries shipping
    * configuration — e.g. a sales order's chosen freight, or a customer's default
    * freight preferences. It is itself expanded via its parent (e.g.
    * include[]=freight); when present, the full carrier and service level are
@@ -795,12 +843,15 @@ export interface SalesOrder {
   freight: Freight | null;
 
   /**
-   * Issued timestamp.
+   * When the order was issued (moved out of `estimate`).
+   *
+   * Null while still an estimate.
    */
   issued_at: string | null;
 
   /**
-   * Count of order lines.
+   * Number of order lines on this order, returned even when the `lines` list itself
+   * is not expanded.
    */
   line_count: number;
 
@@ -830,7 +881,11 @@ export interface SalesOrder {
   order_discount: OrderDiscountsAPI.OrderDiscount | null;
 
   /**
-   * Payment status.
+   * Payment state of the order.
+   *
+   * - `unpaid`: no payment has been received.
+   * - `partially_paid`: some, but not all, of the balance has been paid.
+   * - `paid`: the order has been paid in full.
    */
   payment_status: 'unpaid' | 'partially_paid' | 'paid';
 
@@ -840,19 +895,24 @@ export interface SalesOrder {
   payment_term: CustomersAPI.PaymentTerm | null;
 
   /**
-   * Priority code.
+   * Fulfillment priority, used to rank orders on the shop floor.
+   *
+   * - `low`: lower than default urgency.
+   * - `normal`: the default urgency.
+   * - `high`: expedited ahead of normal-priority orders.
    */
   priority: 'low' | 'normal' | 'high';
 
   /**
-   * Promised timestamp.
+   * Date promised to the customer for delivery, if one was committed.
    */
   promised_at: string | null;
 
   /**
-   * SalesOrderRelated groups the records related to a sales order. The members are
-   * individually expandable (e.g. include[]=related.pick); the group itself is
-   * always present.
+   * SalesOrderRelated groups the records related to a sales order.
+   *
+   * The members are individually expandable (e.g. include[]=related.pick); the group
+   * itself is always present.
    */
   related: SalesOrderRelated | null;
 
@@ -872,7 +932,12 @@ export interface SalesOrder {
   shipping_term: CustomersAPI.ShippingTerm | null;
 
   /**
-   * Order status code.
+   * Order lifecycle status.
+   *
+   * - `estimate`: a draft quote that has not yet been committed; not counted as a
+   *   real order.
+   * - `issued`: the order has been issued and is being fulfilled.
+   * - `fulfilled`: the order has been completed and closed.
    */
   status: 'estimate' | 'issued' | 'fulfilled';
 
@@ -966,9 +1031,10 @@ export interface SalesOrderLine {
 }
 
 /**
- * SalesOrderRelated groups the records related to a sales order. The members are
- * individually expandable (e.g. include[]=related.pick); the group itself is
- * always present.
+ * SalesOrderRelated groups the records related to a sales order.
+ *
+ * The members are individually expandable (e.g. include[]=related.pick); the group
+ * itself is always present.
  */
 export interface SalesOrderRelated {
   /**
@@ -978,19 +1044,23 @@ export interface SalesOrderRelated {
 
   /**
    * Record is a lightweight reference to a business record — a sales order, purchase
-   * order, pick, shipment, production run, invoice, etc. Like Actor and Entity, it
-   * carries just enough to identify and label the referenced record without
-   * embedding its full resource. The optional status and metadata fields hold
-   * type-specific detail that varies by the kind of record referenced.
+   * order, pick, shipment, production run, invoice, etc.
+   *
+   * Like Actor and Entity, it carries just enough to identify and label the
+   * referenced record without embedding its full resource. The optional status and
+   * metadata fields hold type-specific detail that varies by the kind of record
+   * referenced.
    */
   pick: Record | null;
 
   /**
    * Record is a lightweight reference to a business record — a sales order, purchase
-   * order, pick, shipment, production run, invoice, etc. Like Actor and Entity, it
-   * carries just enough to identify and label the referenced record without
-   * embedding its full resource. The optional status and metadata fields hold
-   * type-specific detail that varies by the kind of record referenced.
+   * order, pick, shipment, production run, invoice, etc.
+   *
+   * Like Actor and Entity, it carries just enough to identify and label the
+   * referenced record without embedding its full resource. The optional status and
+   * metadata fields hold type-specific detail that varies by the kind of record
+   * referenced.
    */
   production_run: Record | null;
 
@@ -1011,6 +1081,10 @@ export interface SalesOrderStatus {
 
   /**
    * Machine-readable status code.
+   *
+   * - `estimate`: a draft quote that has not yet been committed.
+   * - `issued`: the order has been issued and is being fulfilled.
+   * - `fulfilled`: the order has been completed and closed.
    */
   code: 'estimate' | 'issued' | 'fulfilled';
 

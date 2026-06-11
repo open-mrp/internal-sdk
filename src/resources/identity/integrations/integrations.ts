@@ -117,6 +117,9 @@ export interface AccountIntegration {
 
   /**
    * Integration provider code.
+   *
+   * - `stripe`: Stripe payment processing.
+   * - `shippo`: Shippo shipping and label generation.
    */
   provider: 'stripe' | 'shippo';
 

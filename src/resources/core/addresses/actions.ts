@@ -75,7 +75,10 @@ export interface ValidatedAddress {
   components: AddressesAPI.AddressComponents | null;
 
   /**
-   * Formatted address from the validation service.
+   * Formatted, single-line address as standardized by the validation service.
+   *
+   * `null` when the service did not return a formatted address (this can occur
+   * regardless of `status`).
    */
   formatted_address: string | null;
 
@@ -86,11 +89,17 @@ export interface ValidatedAddress {
 
   /**
    * Address validation status.
+   *
+   * - `valid`: the address was validated successfully.
+   * - `invalid`: the address could not be validated; see `validation_messages` for
+   *   the issues found.
    */
   status: 'valid' | 'invalid';
 
   /**
-   * Validation messages for issues found.
+   * Human-readable messages describing issues found during validation.
+   *
+   * Empty when no issues were reported.
    */
   validation_messages: Array<string>;
 }

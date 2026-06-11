@@ -98,7 +98,8 @@ export interface ListSysProperty {
 }
 
 /**
- * System property counter.
+ * Monotonic counter maintained by the system, such as the next transaction or
+ * document number to assign.
  */
 export interface SysProperty {
   /**
@@ -137,12 +138,13 @@ export interface SysProperty {
  */
 export interface SysPropertyType {
   /**
-   * System property ID.
+   * System property type ID.
    */
   id: string;
 
   /**
-   * Type code.
+   * Machine-readable code identifying which counter this is, such as
+   * `transaction_number`.
    */
   code: string;
 

@@ -156,12 +156,14 @@ export interface ProductionRunDetail {
   id: string;
 
   /**
-   * Batch count.
+   * Number of batches currently recorded against this run.
    */
   batch_count: number;
 
   /**
-   * Completion timestamp.
+   * Time the run was marked complete, or `null` if still in progress.
+   *
+   * Once set, new batches can no longer be added to the run.
    */
   completed_at: string | null;
 
@@ -181,13 +183,15 @@ export interface ProductionRunDetail {
   object: 'production_run';
 
   /**
-   * Account user with role and department. Profile fields (name, email, username,
-   * image URL) live on the expandable user sub-resource.
+   * Account user with role and department.
+   *
+   * Profile fields (name, email, username, image URL) live on the expandable user
+   * sub-resource.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 
   /**
-   * Start timestamp.
+   * Time the run started production, or `null` if it has not started yet.
    */
   started_at: string | null;
 
@@ -207,12 +211,14 @@ export interface ProductionRunSummary {
   id: string;
 
   /**
-   * Batch count.
+   * Number of batches currently recorded against this run.
    */
   batch_count: number;
 
   /**
-   * Completion timestamp.
+   * Time the run was marked complete, or `null` if still in progress.
+   *
+   * Once set, new batches can no longer be added to the run.
    */
   completed_at: string | null;
 
@@ -232,13 +238,15 @@ export interface ProductionRunSummary {
   object: 'production_run';
 
   /**
-   * Account user with role and department. Profile fields (name, email, username,
-   * image URL) live on the expandable user sub-resource.
+   * Account user with role and department.
+   *
+   * Profile fields (name, email, username, image URL) live on the expandable user
+   * sub-resource.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 
   /**
-   * Start timestamp.
+   * Time the run started production, or `null` if it has not started yet.
    */
   started_at: string | null;
 

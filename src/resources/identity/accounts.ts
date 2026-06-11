@@ -89,7 +89,9 @@ export interface AccountLogoURL {
   object: 'account_logo_url';
 
   /**
-   * Presigned URL. Null if no logo exists.
+   * Presigned URL.
+   *
+   * Null if no logo exists.
    */
   url: string | null;
 }

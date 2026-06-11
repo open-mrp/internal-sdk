@@ -421,7 +421,9 @@ export interface VolumeDiscountTier {
   created_at: string;
 
   /**
-   * Discount percentage as a decimal string.
+   * Percentage taken off the price once the threshold is met, as a decimal string.
+   *
+   * For example, `5` means a 5% discount.
    */
   discount_percentage: string;
 
@@ -436,7 +438,8 @@ export interface VolumeDiscountTier {
   object: 'volume_discount_tier';
 
   /**
-   * Quantity threshold as a decimal string.
+   * Minimum ordered quantity at which this tier's discount begins to apply, as a
+   * decimal string.
    */
   threshold: string;
 

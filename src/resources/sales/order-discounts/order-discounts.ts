@@ -160,7 +160,9 @@ export interface OrderDiscount {
   id: string;
 
   /**
-   * Fixed amount as a decimal string.
+   * Fixed amount off as a decimal string.
+   *
+   * Applies when `discount_type` is `amount`; otherwise `0`.
    */
   amount: string;
 
@@ -175,7 +177,11 @@ export interface OrderDiscount {
   created_at: string;
 
   /**
-   * Discount type.
+   * How the discount is calculated, determining whether `percentage` or `amount` is
+   * used.
+   *
+   * - `percentage`: the discount is a percent off, taken from `percentage`.
+   * - `amount`: the discount is a fixed amount off, taken from `amount`.
    */
   discount_type: 'percentage' | 'amount';
 
@@ -190,12 +196,14 @@ export interface OrderDiscount {
   object: 'order_discount';
 
   /**
-   * Number of orders using this discount.
+   * Number of orders currently using this discount.
    */
   order_count: number;
 
   /**
-   * Percentage value as a decimal string.
+   * Percent off as a decimal string (e.g. `10` for 10%).
+   *
+   * Applies when `discount_type` is `percentage`; otherwise `0`.
    */
   percentage: string;
 

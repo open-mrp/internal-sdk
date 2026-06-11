@@ -72,8 +72,9 @@ export namespace ValidateUnitsResponse {
     created_at: string;
 
     /**
-     * Whether this is the base unit for its dimension. Conversion ratios are relative
-     * to this unit.
+     * Whether this is the base unit for its dimension.
+     *
+     * Conversion ratios are relative to this unit.
      */
     is_base_unit: boolean;
 
@@ -88,13 +89,16 @@ export namespace ValidateUnitsResponse {
     object: 'unit';
 
     /**
-     * Conversion offset denominator. Typically 1. Cannot be zero.
+     * Conversion offset denominator.
+     *
+     * Typically 1. Cannot be zero.
      */
     offset_denominator: string;
 
     /**
-     * Conversion offset numerator, used for temperature-like conversions. Zero for
-     * most unit types.
+     * Conversion offset numerator, used for temperature-like conversions.
+     *
+     * Zero for most unit types.
      */
     offset_numerator: string;
 
@@ -105,6 +109,7 @@ export namespace ValidateUnitsResponse {
 
     /**
      * Conversion ratio denominator relative to the base unit in the same dimension.
+     *
      * Cannot be zero.
      */
     ratio_denominator: string;
@@ -116,6 +121,17 @@ export namespace ValidateUnitsResponse {
 
     /**
      * Unit dimension.
+     *
+     * Units can only be converted to other units sharing the same dimension.
+     *
+     * - `currency`: monetary units such as dollars or euros.
+     * - `quantity`: discrete countable units.
+     * - `time`: time-based units such as hours or minutes.
+     * - `mass`: weight-based units such as kilograms or pounds.
+     * - `volume`: volumetric units such as liters or gallons.
+     * - `length`: distance-based units such as meters or feet.
+     * - `temperature`: temperature units such as Celsius or Fahrenheit.
+     * - `area`: area-based units such as square meters or acres.
      */
     type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
 

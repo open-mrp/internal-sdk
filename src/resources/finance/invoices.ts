@@ -168,7 +168,12 @@ export interface Invoice {
   order: SalesOrdersAPI.SalesOrder | null;
 
   /**
-   * Payment status of the invoice.
+   * Payment status of the invoice, derived from the allocations applied to it.
+   *
+   * - `unpaid`: no payment has been received.
+   * - `partially_paid`: some but not all of the invoiced amount has been paid.
+   * - `paid`: paid in full.
+   * - `overpaid`: allocations exceed the invoiced amount.
    */
   payment_status: 'unpaid' | 'partially_paid' | 'paid' | 'overpaid';
 
@@ -178,7 +183,11 @@ export interface Invoice {
   payment_term: CustomersAPI.PaymentTerm | null;
 
   /**
-   * Customer priority code.
+   * Customer priority code carried onto the invoice.
+   *
+   * - `low`
+   * - `normal`
+   * - `high`
    */
   priority: 'low' | 'normal' | 'high';
 
@@ -469,6 +478,8 @@ export interface Pick {
 
   /**
    * Timestamp when the pick was finished.
+   *
+   * `null` while the pick is still in progress.
    */
   finished_at: string | null;
 
@@ -488,7 +499,11 @@ export interface Pick {
   object: 'pick';
 
   /**
-   * Pick priority code.
+   * Pick priority code, used to order picks for fulfillment.
+   *
+   * - `low`: low priority.
+   * - `normal`: normal priority.
+   * - `high`: high priority.
    */
   priority: 'low' | 'normal' | 'high';
 
@@ -529,6 +544,8 @@ export interface PickLine {
 
   /**
    * Timestamp when the line was packed.
+   *
+   * `null` until the line has been packed.
    */
   packed_at: string | null;
 
@@ -573,8 +590,9 @@ export interface Shipment {
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Freight describes the carrier selection and freight billing for a record. It is
-   * a generic, reusable sub-resource shared by anything that carries shipping
+   * Freight describes the carrier selection and freight billing for a record.
+   *
+   * It is a generic, reusable sub-resource shared by anything that carries shipping
    * configuration — e.g. a sales order's chosen freight, or a customer's default
    * freight preferences. It is itself expanded via its parent (e.g.
    * include[]=freight); when present, the full carrier and service level are
@@ -628,8 +646,10 @@ export interface Shipment {
   shipped_at: string | null;
 
   /**
-   * Account user with role and department. Profile fields (name, email, username,
-   * image URL) live on the expandable user sub-resource.
+   * Account user with role and department.
+   *
+   * Profile fields (name, email, username, image URL) live on the expandable user
+   * sub-resource.
    */
   shipped_by: AccountUsersAPI.AccountUser | null;
 
@@ -645,6 +665,9 @@ export interface Shipment {
 
   /**
    * Shipment status code.
+   *
+   * - `packed`: the shipment has been packed but not yet dispatched.
+   * - `shipped`: the shipment has left the facility (`shipped_at` is set).
    */
   status: 'packed' | 'shipped';
 
@@ -824,7 +847,7 @@ export interface TransactionDetail {
   adjustment_type: FinanceAPI.AdjustmentType | null;
 
   /**
-   * Number of allocations.
+   * Number of allocations against invoices for this transaction.
    */
   allocation_count: number;
 
@@ -849,7 +872,9 @@ export interface TransactionDetail {
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Whether fully allocated against invoices.
+   * Whether the full transaction amount has been allocated against invoices.
+   *
+   * When `false`, some of the amount remains as an open (unapplied) balance.
    */
   is_fully_allocated: boolean;
 
@@ -869,13 +894,18 @@ export interface TransactionDetail {
   object: 'transaction';
 
   /**
-   * Account user with role and department. Profile fields (name, email, username,
-   * image URL) live on the expandable user sub-resource.
+   * Account user with role and department.
+   *
+   * Profile fields (name, email, username, image URL) live on the expandable user
+   * sub-resource.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 
   /**
    * Stripe payment ID.
+   *
+   * Set only for transactions collected through Stripe; null for transactions
+   * recorded outside Stripe.
    */
   stripe_payment_id: string | null;
 

@@ -195,8 +195,9 @@ export interface OAuthStatusResponse {
   object: 'oauth_status_response';
 
   /**
-   * OAuth connection status. One of "connected", "authorization_pending", or
-   * "disconnected".
+   * OAuth connection status.
+   *
+   * One of "connected", "authorization_pending", or "disconnected".
    */
   status: string;
 }

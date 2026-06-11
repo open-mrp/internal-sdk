@@ -57,7 +57,9 @@ export interface SetSpendingCapRequest {
  */
 export interface SpendingCapResponse {
   /**
-   * Monthly spending cap in cents. Null means no cap.
+   * Monthly spending cap in cents.
+   *
+   * Null means no cap.
    */
   cap_cents: number | null;
 

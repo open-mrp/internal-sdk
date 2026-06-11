@@ -177,7 +177,7 @@ export interface Permission {
   id: string;
 
   /**
-   * Permission code.
+   * Permission code in `{domain}:{action}` format, such as `customers:read`.
    */
   code: string;
 
@@ -188,11 +188,13 @@ export interface Permission {
 
   /**
    * Description of what this permission controls.
+   *
+   * `null` when not set.
    */
   description: string | null;
 
   /**
-   * Permission group code.
+   * Code of the permission group this permission belongs to, such as `customers`.
    */
   group: string;
 
@@ -232,7 +234,9 @@ export interface PermissionGroup {
   created_at: string;
 
   /**
-   * Description.
+   * Free-form description of the permission group.
+   *
+   * `null` when not set.
    */
   description: string | null;
 

@@ -174,13 +174,14 @@ export interface AvailableTool {
   id: string;
 
   /**
-   * Tool category.
+   * Category grouping for the tool (e.g. `built_in`).
    */
   category: string;
 
   /**
-   * JSON schema describing the configuration options this tool accepts. Defines the
-   * shape of the `config` field on AgentDefinitionTool.
+   * JSON schema describing the configuration options this tool accepts.
+   *
+   * Defines the shape of the `config` field on AgentDefinitionTool.
    *
    * For example:
    *
@@ -215,7 +216,8 @@ export interface AvailableTool {
   object: 'available_tool';
 
   /**
-   * Required permissions.
+   * Permission scopes the agent's role must hold for this tool to be usable (e.g.
+   * `products:read`).
    */
   required_permissions: Array<string>;
 }

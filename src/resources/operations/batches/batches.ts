@@ -115,7 +115,7 @@ export interface Batch {
   id: string;
 
   /**
-   * Closed timestamp.
+   * When the batch was closed; `null` while the batch is still open.
    */
   closed_at: string | null;
 
@@ -175,7 +175,8 @@ export interface Batch {
   quantity: AccountUsersAPI.Quantity | null;
 
   /**
-   * Scanned timestamp.
+   * When the batch was scanned at its scanning station; `null` if it has not been
+   * scanned yet.
    */
   scanned_at: string | null;
 
@@ -240,7 +241,11 @@ export interface BatchLot {
   object: 'batch_lot';
 
   /**
-   * Lot type (material or productionRun).
+   * Source of the lot number.
+   *
+   * - `material`: the lot number traces a raw material consumed by the batch.
+   * - `productionRun`: the lot number is the production run number the batch belongs
+   *   to.
    */
   type: string;
 }

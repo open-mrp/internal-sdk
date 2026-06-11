@@ -44,6 +44,9 @@ export class AccountGroups extends APIResource {
   /**
    * Partially updates an account group.
    *
+   * Only the provided fields are changed. The account group's `type` cannot be
+   * changed after creation.
+   *
    * @example
    * ```ts
    * const accountGroup =
@@ -144,7 +147,7 @@ export interface CreateAccountGroupRequest {
  */
 export interface UpdateAccountGroupRequest {
   /**
-   * Commission policy.
+   * How sales commission applies to accounts in this group.
    *
    * - `commission_exempt`: no commission applies.
    * - `commission_applied`: commission applies; if the account group is within a
@@ -153,12 +156,12 @@ export interface UpdateAccountGroupRequest {
   commission_policy?: 'commission_applied' | 'commission_exempt';
 
   /**
-   * Description.
+   * Free-form description of the account group.
    */
   description?: string | null;
 
   /**
-   * Freight policy.
+   * How freight charges apply to orders from accounts in this group.
    *
    * - `free_freight`: customers within this group will not have to pay for freight.
    * - `billed_freight`: freight will be applied to any order within this account
@@ -167,7 +170,9 @@ export interface UpdateAccountGroupRequest {
   freight_policy?: 'free_freight' | 'billed_freight';
 
   /**
-   * Display name.
+   * Display name of the account group.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name?: string;
 }
@@ -218,7 +223,7 @@ export interface AccountGroupCreateParams {
 
 export interface AccountGroupUpdateParams {
   /**
-   * Commission policy.
+   * How sales commission applies to accounts in this group.
    *
    * - `commission_exempt`: no commission applies.
    * - `commission_applied`: commission applies; if the account group is within a
@@ -227,12 +232,12 @@ export interface AccountGroupUpdateParams {
   commission_policy?: 'commission_applied' | 'commission_exempt';
 
   /**
-   * Description.
+   * Free-form description of the account group.
    */
   description?: string | null;
 
   /**
-   * Freight policy.
+   * How freight charges apply to orders from accounts in this group.
    *
    * - `free_freight`: customers within this group will not have to pay for freight.
    * - `billed_freight`: freight will be applied to any order within this account
@@ -241,7 +246,9 @@ export interface AccountGroupUpdateParams {
   freight_policy?: 'free_freight' | 'billed_freight';
 
   /**
-   * Display name.
+   * Display name of the account group.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name?: string;
 }

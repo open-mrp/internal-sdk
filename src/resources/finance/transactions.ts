@@ -196,7 +196,7 @@ export interface TransactionSummary {
   adjustment_type: FinanceAPI.AdjustmentType | null;
 
   /**
-   * Number of allocations.
+   * Number of allocations against invoices for this transaction.
    */
   allocation_count: number;
 
@@ -216,7 +216,9 @@ export interface TransactionSummary {
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Whether fully allocated against invoices.
+   * Whether the full transaction amount has been allocated against invoices.
+   *
+   * When `false`, some of the amount remains as an open (unapplied) balance.
    */
   is_fully_allocated: boolean;
 

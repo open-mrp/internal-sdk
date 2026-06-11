@@ -293,30 +293,37 @@ export interface ListScanningConsumption {
 
 /**
  * Material consumption data for a scanning operation.
+ *
+ * The `demand_*` pair is how much of the material this operation requires. The
+ * `inventory_*` pair is the material's currently available-to-promise (on-hand)
+ * inventory — an independent value, not the demand amount converted.
  */
 export interface ScanningConsumption {
   /**
-   * Demand measure value.
+   * Amount the operation requires, as a decimal measure expressed in `demand_unit`.
    */
   demand_measure: string;
 
   /**
-   * Demand unit abbreviation.
+   * Unit abbreviation that `demand_measure` is expressed in.
    */
   demand_unit: string;
 
   /**
-   * Consumption instructions.
+   * Optional free-text instructions for consuming this material; `null` when none
+   * are configured.
    */
   instructions: string | null;
 
   /**
-   * Inventory measure value.
+   * Material's currently available-to-promise (on-hand) inventory, as a decimal
+   * measure expressed in `inventory_unit`.
    */
   inventory_measure: string;
 
   /**
-   * Inventory unit abbreviation.
+   * Unit abbreviation that the available-to-promise `inventory_measure` is expressed
+   * in.
    */
   inventory_unit: string;
 
@@ -326,7 +333,7 @@ export interface ScanningConsumption {
   object: 'scanning_consumption';
 
   /**
-   * SKU.
+   * SKU of the material to consume.
    */
   sku: string;
 }

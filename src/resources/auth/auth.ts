@@ -194,21 +194,29 @@ export interface User {
 
   /**
    * Email address.
+   *
+   * `null` if the user has no email on record.
    */
   email: string | null;
 
   /**
-   * Email verified timestamp, null if unverified.
+   * When the user verified their email address.
+   *
+   * `null` if the email is unverified.
    */
   email_verified_at: string | null;
 
   /**
-   * Profile image URL.
+   * URL of the user's profile image.
+   *
+   * `null` if no image has been uploaded.
    */
   image_url: string | null;
 
   /**
-   * Display name.
+   * User's full display name.
+   *
+   * `null` if not set.
    */
   name: string | null;
 
@@ -224,6 +232,8 @@ export interface User {
 
   /**
    * Username.
+   *
+   * `null` if the user has no username.
    */
   username: string | null;
 }

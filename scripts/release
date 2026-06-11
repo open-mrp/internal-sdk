@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -euxo pipefail
-
-cd "$(dirname "$0")/.."
-
-pnpm run build
-pnpm exec changeset publish

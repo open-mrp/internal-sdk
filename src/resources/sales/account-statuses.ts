@@ -58,6 +58,12 @@ export interface AccountStatus {
 
   /**
    * Machine-readable status code.
+   *
+   * - `normal`: standard account with no restrictions.
+   * - `preferred`: account flagged as preferred (e.g. for prioritized handling).
+   * - `hold_shipment`: shipments to this account are held; orders may still be
+   *   placed.
+   * - `hold_all`: all activity for this account is held.
    */
   code: 'normal' | 'preferred' | 'hold_shipment' | 'hold_all';
 

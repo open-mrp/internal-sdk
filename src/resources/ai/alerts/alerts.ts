@@ -83,8 +83,10 @@ export interface AgentAction {
   executed_at: string | null;
 
   /**
-   * Action input. Encoded as a JSON value (object, array, string, number, boolean,
-   * or null), not a JSON-encoded string.
+   * Arguments passed to the tool, as JSON.
+   *
+   * Shape depends on `tool_slug`. Encoded as a JSON value (object, array, string,
+   * number, boolean, or null), not a JSON-encoded string.
    */
   input: unknown | null;
 
@@ -99,18 +101,23 @@ export interface AgentAction {
   object: 'agent_action';
 
   /**
-   * Action output. Encoded as a JSON value (object, array, string, number, boolean,
-   * or null), not a JSON-encoded string.
+   * Result returned by the tool, as JSON.
+   *
+   * Shape depends on `tool_slug`. `null` until the action executes. Encoded as a
+   * JSON value (object, array, string, number, boolean, or null), not a JSON-encoded
+   * string.
    */
   output: unknown | null;
 
   /**
-   * Whether human review is required.
+   * Whether this action must be reviewed by a human before it can execute.
    */
   requires_review: boolean;
 
   /**
    * When the action was reviewed.
+   *
+   * `null` until a review decision is recorded.
    */
   reviewed_at: string | null;
 
@@ -126,11 +133,30 @@ export interface AgentAction {
 
   /**
    * Current action status.
+   *
+   * - `pending_review`: awaiting human review before it can execute.
+   * - `auto_approved`: automatically approved by policy.
+   * - `approved`: manually approved by a user.
+   * - `rejected`: rejected by a user; will not execute.
+   * - `executed`: successfully executed.
+   * - `failed`: errored during execution; see `error_message`.
    */
   status: 'pending_review' | 'auto_approved' | 'approved' | 'rejected' | 'executed' | 'failed';
 
   /**
-   * Tool slug.
+   * Slug of the tool the agent invoked for this action.
+   *
+   * - `save_memory`: store an observation about a customer or product.
+   * - `update_memory`: update an existing memory entry.
+   * - `delete_memory`: delete a memory entry.
+   * - `create_alert`: raise an alert that requires human attention.
+   * - `search_products`: search for products by keyword.
+   * - `list_products`: list all products in the account catalog.
+   * - `lookup_customer`: look up a customer by email.
+   * - `create_artifact`: create an artifact such as a report, document, or data
+   *   export.
+   * - `read_doc`: read Augno documentation pages.
+   * - `fetch_url`: fetch content from a public URL.
    */
   tool_slug:
     | 'save_memory'
@@ -202,11 +228,20 @@ export interface AgentAlert {
 
   /**
    * Alert severity.
+   *
+   * - `info`: informational; requires no immediate action.
+   * - `warning`: a potential issue that should be reviewed.
+   * - `urgent`: an issue that requires prompt attention.
+   * - `critical`: a severe issue requiring immediate action.
    */
   severity: 'info' | 'warning' | 'urgent' | 'critical';
 
   /**
    * Alert status.
+   *
+   * - `open`: not yet acknowledged.
+   * - `acknowledged`: seen and acknowledged by a user; see `acknowledged_at` and
+   *   `acknowledged_by`.
    */
   status: 'open' | 'acknowledged';
 
@@ -261,8 +296,9 @@ export interface AgentRun {
   error_message: string | null;
 
   /**
-   * Input provided to the agent. Encoded as a JSON value (object, array, string,
-   * number, boolean, or null), not a JSON-encoded string.
+   * Input provided to the agent at the start of the run, as JSON. Encoded as a JSON
+   * value (object, array, string, number, boolean, or null), not a JSON-encoded
+   * string.
    */
   input: unknown | null;
 
@@ -272,7 +308,9 @@ export interface AgentRun {
   object: 'agent_run';
 
   /**
-   * Output produced by the agent. Encoded as a JSON value (object, array, string,
+   * Final output produced by the agent, as JSON.
+   *
+   * `null` until the run completes. Encoded as a JSON value (object, array, string,
    * number, boolean, or null), not a JSON-encoded string.
    */
   output: unknown | null;
@@ -284,6 +322,14 @@ export interface AgentRun {
 
   /**
    * Current run status.
+   *
+   * - `pending`: queued but not yet started.
+   * - `running`: currently executing.
+   * - `awaiting_input`: paused, waiting for user input before continuing.
+   * - `awaiting_approval`: paused, waiting for a pending action to be approved.
+   * - `completed`: finished successfully.
+   * - `failed`: stopped after an error; see `error_message`.
+   * - `cancelled`: stopped before completion by a user.
    */
   status:
     | 'pending'
@@ -310,7 +356,11 @@ export interface AgentRun {
   total_output_tokens: number | null;
 
   /**
-   * Trigger type.
+   * How this run was initiated.
+   *
+   * - `scheduled`: started by the agent's cron schedule.
+   * - `event`: started in response to a platform event.
+   * - `manual`: started by an explicit request; see `triggered_by`.
    */
   trigger_type: 'scheduled' | 'manual' | 'event';
 

@@ -95,6 +95,9 @@ export interface Delivery {
 
   /**
    * Delivery status.
+   *
+   * - `accepted`: the delivery was received and accepted (`accepted_at` is set).
+   * - `rejected`: the delivery was refused (`rejected_at` is set).
    */
   status: 'accepted' | 'rejected';
 
@@ -174,8 +177,10 @@ export interface EmailContact {
   id: string;
 
   /**
-   * Account user with role and department. Profile fields (name, email, username,
-   * image URL) live on the expandable user sub-resource.
+   * Account user with role and department.
+   *
+   * Profile fields (name, email, username, image URL) live on the expandable user
+   * sub-resource.
    */
   account_user: AccountUsersAPI.AccountUser | null;
 
@@ -315,7 +320,10 @@ export interface PurchaseOrder {
   id: string;
 
   /**
-   * Acknowledgment status.
+   * Whether an acknowledgment has been sent to the supplier.
+   *
+   * - `not_sent`: no acknowledgment has been sent.
+   * - `sent`: the acknowledgment has been sent.
    */
   acknowledgment_status: 'not_sent' | 'sent';
 
@@ -325,7 +333,9 @@ export interface PurchaseOrder {
   bill_to_address: APIKeysAPI.Address | null;
 
   /**
-   * Completed timestamp.
+   * When the order was completed.
+   *
+   * Null until status reaches `fulfilled`.
    */
   completed_at: string | null;
 
@@ -340,8 +350,9 @@ export interface PurchaseOrder {
   created_at: string;
 
   /**
-   * Freight describes the carrier selection and freight billing for a record. It is
-   * a generic, reusable sub-resource shared by anything that carries shipping
+   * Freight describes the carrier selection and freight billing for a record.
+   *
+   * It is a generic, reusable sub-resource shared by anything that carries shipping
    * configuration — e.g. a sales order's chosen freight, or a customer's default
    * freight preferences. It is itself expanded via its parent (e.g.
    * include[]=freight); when present, the full carrier and service level are
@@ -350,12 +361,14 @@ export interface PurchaseOrder {
   freight: SalesOrdersAPI.Freight | null;
 
   /**
-   * Issued timestamp.
+   * When the order was issued to the supplier.
+   *
+   * Null until status reaches `issued`.
    */
   issued_at: string | null;
 
   /**
-   * Count of order lines.
+   * Total number of lines on the order, independent of whether `lines` is expanded.
    */
   line_count: number;
 
@@ -385,19 +398,25 @@ export interface PurchaseOrder {
   payment_term: CustomersAPI.PaymentTerm | null;
 
   /**
-   * Priority code.
+   * Priority level for fulfilling the order.
+   *
+   * - `low`
+   * - `normal`
+   * - `high`
    */
   priority: 'low' | 'normal' | 'high';
 
   /**
-   * Receiving order resource. The list endpoint returns this same type with only
-   * base fields populated; expandable references (purchase_order, supplier, lines)
-   * are populated via include[]=.
+   * Receiving order resource.
+   *
+   * The list endpoint returns this same type with only base fields populated;
+   * expandable references (purchase_order, supplier, lines) are populated via
+   * include[]=.
    */
   receiving_order: ReceivingOrder | null;
 
   /**
-   * Scheduled/promised timestamp.
+   * Promised or scheduled date for the order, if one has been set.
    */
   scheduled_at: string | null;
 
@@ -412,7 +431,11 @@ export interface PurchaseOrder {
   shipping_term: CustomersAPI.ShippingTerm | null;
 
   /**
-   * Order status code.
+   * Lifecycle status of the order.
+   *
+   * - `estimate`: a draft that has not yet been issued to the supplier.
+   * - `issued`: the order has been issued to the supplier and is open for receiving.
+   * - `fulfilled`: the order is complete and closed.
    */
   status: 'estimate' | 'issued' | 'fulfilled';
 
@@ -447,7 +470,7 @@ export interface PurchaseOrderLine {
   item: AccountUsersAPI.Item | null;
 
   /**
-   * Line item number.
+   * Position of this line within the order, starting at 1.
    */
   line_item_number: number;
 
@@ -457,12 +480,12 @@ export interface PurchaseOrderLine {
   object: 'purchase_order_line';
 
   /**
-   * Product description.
+   * Free-text description of the ordered product.
    */
   product_description: string | null;
 
   /**
-   * Product SKU.
+   * SKU of the ordered product, copied onto the line at order time.
    */
   product_sku: string;
 
@@ -493,9 +516,11 @@ export interface PurchaseOrderLine {
 }
 
 /**
- * Receiving order resource. The list endpoint returns this same type with only
- * base fields populated; expandable references (purchase_order, supplier, lines)
- * are populated via include[]=.
+ * Receiving order resource.
+ *
+ * The list endpoint returns this same type with only base fields populated;
+ * expandable references (purchase_order, supplier, lines) are populated via
+ * include[]=.
  */
 export interface ReceivingOrder {
   /**
@@ -504,12 +529,19 @@ export interface ReceivingOrder {
   id: string;
 
   /**
-   * Timestamp when the receiving order was completed.
+   * Timestamp when the receiving order was completed, set automatically once all of
+   * its lines have been stocked.
+   *
+   * `null` while any line remains unstocked.
    */
   completed_at: string | null;
 
   /**
-   * Completion percentage of this receiving order.
+   * Percentage of lines that have been stocked, from `0` to `100`, rounded to two
+   * decimal places.
+   *
+   * A line counts toward completion once its `stocked_at` is set. Reaches `100` when
+   * every line is stocked, at which point the order is marked complete.
    */
   completion_percentage: number;
 
@@ -519,7 +551,9 @@ export interface ReceivingOrder {
   created_at: string;
 
   /**
-   * Number of lines in this receiving order.
+   * Total number of lines on this receiving order.
+   *
+   * Always populated, even when `lines` is not expanded.
    */
   line_count: number;
 
@@ -534,7 +568,11 @@ export interface ReceivingOrder {
   note: string | null;
 
   /**
-   * Receiving order number.
+   * Human-readable identifier for the receiving order, assigned when the originating
+   * purchase order is issued.
+   *
+   * It mirrors that purchase order's number (e.g. `PO-001`). Distinct from `id`; use
+   * it to reference the order in the UI and on documents.
    */
   number: string;
 
@@ -599,7 +637,10 @@ export interface ReceivingOrderLine {
   rejected_quantity: AccountUsersAPI.Quantity | null;
 
   /**
-   * Timestamp when the line was stocked.
+   * Timestamp when the received quantity was stocked into inventory.
+   *
+   * `null` until the line is stocked; once set, the line counts toward the order's
+   * `completion_percentage`.
    */
   stocked_at: string | null;
 

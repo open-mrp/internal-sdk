@@ -1364,7 +1364,11 @@ export interface Entity {
   object: 'entity';
 
   /**
-   * The resource kind that this entity references.
+   * The resource kind that this entity references, as an object-type value (e.g.
+   * `user`, `account`).
+   *
+   * Unlike `object` — which is always `entity` — this names the underlying resource
+   * the `id` points to.
    */
   type:
     | 'account'
@@ -1774,7 +1778,8 @@ export interface OeeDepartment {
  */
 export interface OpenBatchSummary {
   /**
-   * Count of open batches.
+   * Aggregated open quantity for this item and scanning station, as a decimal
+   * measure expressed in `unit`.
    */
   count: string;
 
@@ -1799,7 +1804,7 @@ export interface OpenBatchSummary {
   scanning_station: AccountUsersAPI.ScanningStation | null;
 
   /**
-   * Unit abbreviation.
+   * Unit abbreviation that `count` is expressed in (for example `kg`).
    */
   unit: string;
 }

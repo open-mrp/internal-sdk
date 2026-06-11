@@ -183,7 +183,15 @@ export interface AdjustmentType {
   id: string;
 
   /**
-   * Machine-readable code.
+   * Machine-readable code identifying what kind of adjustment this is.
+   *
+   * - `discount`: a price reduction applied to an order.
+   * - `shipping_discrepancy`: corrects a difference between quoted and actual
+   *   freight.
+   * - `short_payment`: reconciles an invoice paid for less than the amount due.
+   * - `write_off`: cancels an uncollectible balance.
+   * - `fee`: an additional charge added to an order.
+   * - `refund`: returns money to the customer.
    */
   code: 'discount' | 'shipping_discrepancy' | 'short_payment' | 'write_off' | 'fee' | 'refund';
 
@@ -214,13 +222,17 @@ export interface AdjustmentType {
 }
 
 /**
- * Minimal customer sub-resource for allocation entries. It carries its own
- * allocation_customer discriminator (not customer) because allocation list entries
- * do not carry a customer id, so it is not a resolvable customer reference.
+ * Minimal customer sub-resource for allocation entries.
+ *
+ * It carries its own allocation_customer discriminator (not customer) because
+ * allocation list entries do not carry a customer id, so it is not a resolvable
+ * customer reference.
  */
 export interface AllocationCustomer {
   /**
-   * Customer account ID. Null when the entry does not carry one.
+   * Customer account ID.
+   *
+   * Null when the entry does not carry one.
    */
   id: string | null;
 
@@ -370,12 +382,15 @@ export interface OpenCreditEntry {
   id: string;
 
   /**
-   * Adjustment type, if applicable.
+   * Adjustment category code.
+   *
+   * Typically populated when `transaction_type` is `adjustment`; null for other
+   * types.
    */
   adjustment_type: string | null;
 
   /**
-   * Total amount already allocated as a decimal string.
+   * Total amount already allocated against invoices as a decimal string.
    */
   allocated_amount: string;
 
@@ -385,9 +400,11 @@ export interface OpenCreditEntry {
   created_at: string;
 
   /**
-   * Minimal customer sub-resource for allocation entries. It carries its own
-   * allocation_customer discriminator (not customer) because allocation list entries
-   * do not carry a customer id, so it is not a resolvable customer reference.
+   * Minimal customer sub-resource for allocation entries.
+   *
+   * It carries its own allocation_customer discriminator (not customer) because
+   * allocation list entries do not carry a customer id, so it is not a resolvable
+   * customer reference.
    */
   customer: AllocationCustomer | null;
 
@@ -397,7 +414,10 @@ export interface OpenCreditEntry {
   invoice_allocations: ListInvoiceAllocationEntry | null;
 
   /**
-   * Remaining unallocated amount as a decimal string.
+   * Remaining unallocated credit as a decimal string (`original_amount` minus
+   * `allocated_amount`).
+   *
+   * This is the balance still available to apply.
    */
   leftover_amount: string;
 
@@ -432,12 +452,16 @@ export interface OpenCreditEntry {
   stripe_payment_id: string | null;
 
   /**
-   * Transaction method.
+   * Payment method code (e.g. `check`, `ach`).
+   *
+   * Typically present only on payment transactions and null for credit memos,
+   * adjustments, and rebates.
    */
   transaction_method: string | null;
 
   /**
-   * Transaction type.
+   * Transaction type code: one of `payment`, `credit_memo`, `adjustment`, or
+   * `rebate`.
    */
   transaction_type: string;
 }
@@ -452,7 +476,13 @@ export interface TransactionMethod {
   id: string;
 
   /**
-   * Machine-readable code.
+   * Machine-readable code identifying how the transaction was made.
+   *
+   * - `cash`
+   * - `check`
+   * - `credit_card`
+   * - `gift_card`
+   * - `ach`
    */
   code: 'cash' | 'check' | 'credit_card' | 'gift_card' | 'ach';
 
@@ -477,7 +507,12 @@ export interface TransactionType {
   id: string;
 
   /**
-   * Machine-readable code.
+   * Machine-readable code identifying the kind of transaction.
+   *
+   * - `payment`: money received from the customer.
+   * - `credit_memo`: a credit issued to the customer.
+   * - `adjustment`: a manual correction (see the transaction's `adjustment_type`).
+   * - `rebate`: a rebate granted to the customer.
    */
   code: 'payment' | 'credit_memo' | 'adjustment' | 'rebate';
 

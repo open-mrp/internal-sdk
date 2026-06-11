@@ -106,7 +106,7 @@ export interface AgentMemory {
   id: string;
 
   /**
-   * Memory category.
+   * Free-form category used to group related memories (e.g. `preference`).
    */
   category: string;
 
@@ -126,12 +126,17 @@ export interface AgentMemory {
   entity: AnalyticsAPI.Entity | null;
 
   /**
-   * Expiration timestamp. Null means it never expires.
+   * Expiration timestamp.
+   *
+   * Null means it never expires.
    */
   expires_at: string | null;
 
   /**
-   * Importance score (0–1 scale).
+   * Relative importance from `0` to `1`, used to prioritize which memories the agent
+   * recalls.
+   *
+   * Higher is more important.
    */
   importance: number;
 

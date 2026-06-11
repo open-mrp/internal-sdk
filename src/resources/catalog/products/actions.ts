@@ -99,7 +99,11 @@ export namespace ValidateProductsResponse {
     object: 'product';
 
     /**
-     * Product portal visibility.
+     * Whether the product is shown to buyers in the customer portal.
+     *
+     * - `visible`: buyers can see and order the product in the portal.
+     * - `hidden`: the product is concealed from the portal but remains usable
+     *   internally.
      */
     portal_visibility: 'visible' | 'hidden';
 
@@ -109,7 +113,15 @@ export namespace ValidateProductsResponse {
     product_line: AccountPricesAPI.ProductLine | null;
 
     /**
-     * Product type code.
+     * Product type code, which determines how the product behaves on orders and
+     * invoices.
+     *
+     * - `sale`: a standard sellable product.
+     * - `service`: a non-physical service line, such as labor or installation.
+     * - `shipping`: a shipping charge applied to an order.
+     * - `credit`: a credit applied against an order or invoice.
+     * - `return`: a returned product (RMA).
+     * - `tax`: a tax line.
      */
     type: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
 

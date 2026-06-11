@@ -134,12 +134,19 @@ export interface ListProductType {
  */
 export interface ProductType {
   /**
-   * Product ID.
+   * Product type ID.
    */
   id: string;
 
   /**
-   * Unique code.
+   * Stable machine-readable code identifying the kind of product type.
+   *
+   * - `sale`: a standard sellable product.
+   * - `service`: a non-physical service line, such as labor or installation.
+   * - `shipping`: a shipping charge applied to an order.
+   * - `credit`: a credit applied against an order or invoice.
+   * - `return`: a returned product (RMA).
+   * - `tax`: a tax line.
    */
   code: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
 

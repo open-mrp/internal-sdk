@@ -189,7 +189,11 @@ export interface SupplierMaterial {
   object: 'supplier_material';
 
   /**
-   * Whether this supplier material link is active.
+   * Whether this supplier can currently be sourced for the material.
+   *
+   * - `active`: the supplier is available to source this material.
+   * - `inactive`: the link is retained for history but the supplier is not
+   *   considered when sourcing this material.
    */
   status: 'active' | 'inactive';
 

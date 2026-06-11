@@ -148,7 +148,7 @@ export interface SalesTarget {
   created_at: string;
 
   /**
-   * End date.
+   * End of the period this target applies to (e.g. the close of a quarter).
    */
   end_at: string;
 
@@ -163,7 +163,7 @@ export interface SalesTarget {
   sales_rep: AuthAPI.User | null;
 
   /**
-   * Start date.
+   * Start of the period this target applies to (inclusive).
    */
   start_at: string;
 

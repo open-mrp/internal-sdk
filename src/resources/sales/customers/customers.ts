@@ -207,7 +207,9 @@ export interface AccountGroup {
   created_at: string;
 
   /**
-   * Description.
+   * Free-form description of the account group.
+   *
+   * Optional; `null` when not set.
    */
   description: string | null;
 
@@ -311,12 +313,21 @@ export interface Carrier {
   id: string;
 
   /**
-   * Account number.
+   * Your account number with this carrier, used for rating and billing.
    */
   account_number: string | null;
 
   /**
-   * Carrier code.
+   * Well-known carrier identifier.
+   *
+   * Null for custom carriers without a recognized code.
+   *
+   * - `fedex`, `ups`, `usps`: integrated carriers managed through Shippo (live
+   *   rating and labels).
+   * - `will_call`: customer picks the order up; no carrier shipment.
+   * - `delivery`: delivered by your own vehicles/drivers.
+   * - `ltl`, `ltl1`: less-than-truckload freight carriers.
+   * - `freight_collect`: freight billed to and arranged by the receiver.
    */
   code: 'fedex' | 'ups' | 'usps' | 'will_call' | 'delivery' | 'ltl' | 'ltl1' | 'freight_collect' | null;
 
@@ -326,7 +337,10 @@ export interface Carrier {
   created_at: string;
 
   /**
-   * Customer portal visibility.
+   * Whether this carrier is shown to customers in the customer portal.
+   *
+   * - `visible`: customers can see and select this carrier.
+   * - `hidden`: the carrier is concealed from the customer portal.
    */
   customer_portal_visibility: 'visible' | 'hidden';
 
@@ -502,7 +516,10 @@ export interface Customer {
   child_accounts: ListCustomer | null;
 
   /**
-   * Commission policy.
+   * Commission policy applied to this customer's orders.
+   *
+   * - `commission_applied`: commission applies to orders.
+   * - `commission_exempt`: no commission applies.
    */
   commission_policy: 'commission_applied' | 'commission_exempt';
 
@@ -527,7 +544,10 @@ export interface Customer {
   defaults: CustomerDefaults | null;
 
   /**
-   * EDI status.
+   * Whether EDI (Electronic Data Interchange) is enabled for this customer.
+   *
+   * - `enabled`: EDI is enabled.
+   * - `disabled`: EDI is disabled.
    */
   edi_status: 'enabled' | 'disabled';
 
@@ -552,7 +572,8 @@ export interface Customer {
   notification_preferences: CustomerNotificationPreferences | null;
 
   /**
-   * Customer number.
+   * Human-readable customer number used to identify the account, distinct from the
+   * `id`.
    */
   number: string;
 
@@ -572,7 +593,11 @@ export interface Customer {
   price_groups: ListAccountGroup | null;
 
   /**
-   * Customer relationship type.
+   * The customer's position in the account hierarchy.
+   *
+   * - `standalone`: no parent or child accounts.
+   * - `parent`: has one or more child accounts (see `child_accounts`).
+   * - `child`: belongs to a parent account (see `parent_account`).
    */
   relationship_type: 'standalone' | 'parent' | 'child';
 
@@ -582,7 +607,12 @@ export interface Customer {
   ship_to_address: APIKeysAPI.Address | null;
 
   /**
-   * Account status code.
+   * Account status code, controlling whether the customer can transact.
+   *
+   * - `normal`: standard active account with no restrictions.
+   * - `preferred`: active account flagged as preferred.
+   * - `hold_shipment`: orders can be placed, but shipments are held.
+   * - `hold_all`: all activity is on hold.
    */
   status: 'normal' | 'preferred' | 'hold_shipment' | 'hold_all';
 
@@ -642,8 +672,10 @@ export interface CustomerDefaults {
   priority: Priority | null;
 
   /**
-   * Account user with role and department. Profile fields (name, email, username,
-   * image URL) live on the expandable user sub-resource.
+   * Account user with role and department.
+   *
+   * Profile fields (name, email, username, image URL) live on the expandable user
+   * sub-resource.
    */
   sales_rep: AccountUsersAPI.AccountUser | null;
 
@@ -658,12 +690,15 @@ export interface CustomerDefaults {
  */
 export interface CustomerFreightPreferences {
   /**
-   * Carrier billing account number.
+   * Carrier billing account number charged when `billing_type` is `third_party`.
    */
   billing_account: string | null;
 
   /**
-   * Carrier billing type.
+   * Who pays the carrier for shipments.
+   *
+   * - `sender`: the shipper (you) pays the carrier.
+   * - `third_party`: a third party is billed, using `billing_account`.
    */
   billing_type: 'sender' | 'third_party' | null;
 
@@ -683,7 +718,11 @@ export interface CustomerFreightPreferences {
   service_level: ServiceLevel | null;
 
   /**
-   * Freight policy.
+   * Freight policy applied to this customer's orders.
+   *
+   * - `free_freight`: the customer is not billed for freight.
+   * - `billed_freight`: freight is billed to the customer, unless overridden
+   *   elsewhere.
    */
   status: 'free_freight' | 'billed_freight';
 }
@@ -839,6 +878,10 @@ export interface PaymentTerm {
 
   /**
    * Payment term status.
+   *
+   * - `active`: the term is available for assignment to customers and invoices.
+   * - `inactive`: the term is retained for historical records but cannot be
+   *   assigned.
    */
   status: 'active' | 'inactive';
 
@@ -858,7 +901,11 @@ export interface Priority {
   id: string;
 
   /**
-   * Machine-readable code.
+   * Machine-readable code identifying the priority level.
+   *
+   * - `low`: lowest urgency; worked after normal and high.
+   * - `normal`: default urgency for most orders and picks.
+   * - `high`: highest urgency; worked ahead of normal and low.
    */
   code: 'low' | 'normal' | 'high';
 
@@ -969,12 +1016,16 @@ export interface ServiceLevel {
   created_at: string;
 
   /**
-   * Customer portal visibility.
+   * Whether this service level is shown to customers in the customer portal.
+   *
+   * - `visible`: customers can see and select this service level.
+   * - `hidden`: the service level is concealed from the customer portal.
    */
   customer_portal_visibility: 'visible' | 'hidden';
 
   /**
-   * Default service level for the carrier.
+   * Whether this is the carrier's default service level, pre-selected when the
+   * carrier is chosen.
    */
   is_default: boolean;
 
@@ -994,7 +1045,10 @@ export interface ServiceLevel {
   owner: APIKeysAPI.Owner | null;
 
   /**
-   * Service level token.
+   * Carrier-specific code identifying this service level (e.g. `fedex_ground`,
+   * `ups_next_day_air`).
+   *
+   * Values are carrier-defined, so any non-empty string is accepted.
    */
   service_level_token: string;
 
@@ -1049,7 +1103,13 @@ export interface ShippingTerm {
   owner: APIKeysAPI.Owner | null;
 
   /**
-   * Shipping term type.
+   * Freight pricing model applied by this shipping term.
+   *
+   * - `free_freight`: no shipping cost to the buyer.
+   * - `flat_rate_freight`: a fixed shipping cost regardless of order details (see
+   *   `flat_rate`).
+   * - `carrier_rate_freight`: shipping cost is determined by the carrier's quoted
+   *   rate.
    */
   type: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
 

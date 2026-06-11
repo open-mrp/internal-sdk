@@ -305,12 +305,21 @@ export interface RateShopRequest {
  */
 export interface RateShopResult {
   /**
-   * Exemption type, if applicable.
+   * Why a special freight outcome was applied to these options, if any.
+   *
+   * - `freight_exempt`: the order is exempt from freight; no options are returned.
+   * - `minimum_order_met`: the free-shipping minimum order value was reached, so
+   *   eligible options are rated at zero.
+   * - `flat_rate`: a flat shipping rate was applied to the options (see
+   *   `flat_rate`).
+   * - `none`: standard carrier rates apply with no exemption.
    */
   exemption_type: string | null;
 
   /**
-   * Flat rate amount, if applicable.
+   * Flat shipping amount applied to the options.
+   *
+   * Set only when `exemption_type` is `flat_rate`.
    */
   flat_rate: number | null;
 

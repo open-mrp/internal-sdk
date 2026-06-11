@@ -76,6 +76,9 @@ export interface EmailLog {
 
   /**
    * Email send status.
+   *
+   * - `pending`: the email is queued and has not been sent yet.
+   * - `sent`: the email has been handed off for delivery.
    */
   send_status: 'sent' | 'pending';
 

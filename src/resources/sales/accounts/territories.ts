@@ -185,7 +185,9 @@ export interface Territory {
   created_at: string;
 
   /**
-   * End of ZIP code range.
+   * Inclusive end of the ZIP code range this territory covers within the state.
+   *
+   * Optional; `null` when the territory spans the entire state.
    */
   end_zipcode: number | null;
 
@@ -200,13 +202,17 @@ export interface Territory {
   product_line: AccountPricesAPI.ProductLine | null;
 
   /**
-   * Account user with role and department. Profile fields (name, email, username,
-   * image URL) live on the expandable user sub-resource.
+   * Account user with role and department.
+   *
+   * Profile fields (name, email, username, image URL) live on the expandable user
+   * sub-resource.
    */
   sales_rep: AccountUsersAPI.AccountUser | null;
 
   /**
-   * Start of ZIP code range.
+   * Inclusive start of the ZIP code range this territory covers within the state.
+   *
+   * Optional; `null` when the territory spans the entire state.
    */
   start_zipcode: number | null;
 

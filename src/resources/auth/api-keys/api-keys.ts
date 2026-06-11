@@ -268,6 +268,10 @@ export interface Address {
 
   /**
    * Address type.
+   *
+   * - `standard`: a normal shipping or billing address.
+   * - `drop_ship`: an address an order is shipped to directly, typically a third
+   *   party or end customer rather than the account itself.
    */
   type: 'standard' | 'drop_ship';
 
@@ -292,12 +296,16 @@ export interface APIKey {
   created_at: string;
 
   /**
-   * Expiration timestamp.
+   * When the key expires and stops authenticating.
+   *
+   * `null` if the key never expires.
    */
   expires_at: string | null;
 
   /**
-   * Last used timestamp.
+   * When the key was last used to authenticate a request.
+   *
+   * `null` if it has never been used.
    */
   last_used_at: string | null;
 
@@ -317,7 +325,9 @@ export interface APIKey {
   redacted_value: string;
 
   /**
-   * Revocation timestamp.
+   * When the key was revoked.
+   *
+   * `null` if the key has not been revoked.
    */
   revoked_at: string | null;
 
@@ -362,7 +372,9 @@ export interface CreatedAPIKey {
   api_key_info: APIKey;
 
   /**
-   * Full secret value. Returned once and cannot be retrieved later. Learn more about
+   * Full secret value.
+   *
+   * Returned once and cannot be retrieved later. Learn more about
    * [managing your API keys](https://docs.augno.com/api/managing-api-keys).
    */
   api_key_secret: string;
@@ -453,8 +465,12 @@ export interface Owner {
   object: 'owner';
 
   /**
-   * The owner type: "system" for platform defaults, "account" for account-owned
-   * resources.
+   * Owner type, identifying where the resource came from.
+   *
+   * - `system`: a platform-provided default shared across all accounts; not
+   *   editable.
+   * - `account`: created and owned by a specific account; the `account` field
+   *   identifies which.
    */
   type: 'system' | 'account';
 }
@@ -524,6 +540,13 @@ export interface Role {
    * The role's type is sometimes used to gate special behaviors in the frontend and
    * to restrict some actions to only certain types of roles. For example, only roles
    * with the type `admin` can create and manage API keys.
+   *
+   * - `admin`: full administrative access, including managing API keys.
+   * - `user`: a custom role tailored to a specific need (its permissions are defined
+   *   explicitly).
+   * - `scanner`: a role for scanning-station operators.
+   * - `sales_rep`: a role for sales representatives.
+   * - `agent`: a role assigned to an automated agent rather than a person.
    */
   type: 'admin' | 'user' | 'scanner' | 'sales_rep' | 'agent';
 

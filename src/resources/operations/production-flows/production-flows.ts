@@ -116,7 +116,7 @@ export interface ProductionFlowConsumption {
   created_at: string;
 
   /**
-   * Consumption instructions.
+   * Instructions for how this material is consumed.
    */
   instructions: string | null;
 

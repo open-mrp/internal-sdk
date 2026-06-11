@@ -145,13 +145,15 @@ export interface AgentDefinition {
   id: string;
 
   /**
-   * Category code.
+   * Category grouping for the agent (e.g. `order_processing`), used to organize
+   * agents in the UI.
    */
   category_code: string;
 
   /**
-   * Agent-level configuration controlling LLM behavior. Separate from
-   * AgentDefinitionTool.Config, which configures individual tools.
+   * Agent-level configuration controlling LLM behavior.
+   *
+   * Separate from AgentDefinitionTool.Config, which configures individual tools.
    */
   config: AgentDefinitionConfig | null;
 
@@ -162,6 +164,9 @@ export interface AgentDefinition {
 
   /**
    * Agent definition type.
+   *
+   * - `system`: provided by Augno; cannot be edited or deleted.
+   * - `custom`: created by a user in this account.
    */
   definition_type: 'system' | 'custom';
 
@@ -172,6 +177,8 @@ export interface AgentDefinition {
 
   /**
    * Whether the current user can edit this agent definition.
+   *
+   * Always `false` for `system` definitions.
    */
   is_editable: boolean;
 
@@ -196,7 +203,10 @@ export interface AgentDefinition {
   slug: string;
 
   /**
-   * Per-account activation status.
+   * Whether this agent is enabled for the current account.
+   *
+   * - `active`: enabled and able to run for this account.
+   * - `inactive`: disabled for this account; will not run.
    */
   status: 'active' | 'inactive';
 
@@ -206,7 +216,13 @@ export interface AgentDefinition {
   tools: ListAgentDefinitionTool | null;
 
   /**
-   * How this agent is triggered.
+   * How runs of this agent are initiated.
+   *
+   * - `scheduled`: runs on a cron schedule (see
+   *   `config.trigger_config.cron_schedule`).
+   * - `event`: runs in response to platform events (see
+   *   `config.trigger_config.event_filters`).
+   * - `manual`: runs only when explicitly invoked.
    */
   trigger_type: 'scheduled' | 'manual' | 'event';
 
@@ -217,8 +233,9 @@ export interface AgentDefinition {
 }
 
 /**
- * Agent-level configuration controlling LLM behavior. Separate from
- * AgentDefinitionTool.Config, which configures individual tools.
+ * Agent-level configuration controlling LLM behavior.
+ *
+ * Separate from AgentDefinitionTool.Config, which configures individual tools.
  */
 export interface AgentDefinitionConfig {
   /**
@@ -232,7 +249,9 @@ export interface AgentDefinitionConfig {
   object: 'agent_definition_config';
 
   /**
-   * LLM provider name (e.g. "anthropic", "openai"). Inferred from model if omitted.
+   * LLM provider name (e.g. "anthropic", "openai").
+   *
+   * Inferred from model if omitted.
    */
   provider: string | null;
 
@@ -247,15 +266,18 @@ export interface AgentDefinitionConfig {
   temperature: number | null;
 
   /**
-   * Trigger-type-specific configuration. For "scheduled": CronSchedule is populated.
-   * For "event": EventFilters is populated. For "manual": all fields are empty.
+   * Trigger-type-specific configuration.
+   *
+   * For "scheduled": CronSchedule is populated. For "event": EventFilters is
+   * populated. For "manual": all fields are empty.
    */
   trigger_config: TriggerConfig | null;
 }
 
 /**
- * Tool attached to an agent definition. Pairs an AvailableTool with agent-specific
- * config values.
+ * Tool attached to an agent definition.
+ *
+ * Pairs an AvailableTool with agent-specific config values.
  */
 export interface AgentDefinitionTool {
   /**
@@ -264,9 +286,10 @@ export interface AgentDefinitionTool {
   id: string;
 
   /**
-   * Instance-specific configuration for this tool. Must conform to the tool's
-   * config_schema. Encoded as a JSON value (object, array, string, number, boolean,
-   * or null), not a JSON-encoded string.
+   * Instance-specific configuration for this tool.
+   *
+   * Must conform to the tool's config_schema. Encoded as a JSON value (object,
+   * array, string, number, boolean, or null), not a JSON-encoded string.
    */
   config: unknown | null;
 
@@ -432,8 +455,10 @@ export interface ToolInput {
 }
 
 /**
- * Trigger-type-specific configuration. For "scheduled": CronSchedule is populated.
- * For "event": EventFilters is populated. For "manual": all fields are empty.
+ * Trigger-type-specific configuration.
+ *
+ * For "scheduled": CronSchedule is populated. For "event": EventFilters is
+ * populated. For "manual": all fields are empty.
  */
 export interface TriggerConfig {
   /**

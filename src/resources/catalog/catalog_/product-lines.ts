@@ -50,7 +50,8 @@ export class ProductLines extends APIResource {
 }
 
 /**
- * Attribute of a product in the catalog.
+ * Attribute of a product in the catalog: a single value of a property, e.g. `Red`
+ * for the `Color` property.
  */
 export interface CatalogAttribute {
   /**
@@ -59,7 +60,9 @@ export interface CatalogAttribute {
   id: string;
 
   /**
-   * Attribute value.
+   * The attribute's value, e.g. `Red`.
+   *
+   * This is the specific value the product takes for its `property`.
    */
   name: string;
 
@@ -69,7 +72,10 @@ export interface CatalogAttribute {
   object: 'catalog_attribute';
 
   /**
-   * Property associated with an item category.
+   * Property associated with an item category, e.g. `Color`.
+   *
+   * A property defines a dimension along which products in a category vary; its
+   * possible values are represented as catalog attributes.
    */
   property: CatalogProperty | null;
 }
@@ -84,7 +90,7 @@ export interface CatalogCategory {
   id: string;
 
   /**
-   * Name.
+   * Display name of the category.
    */
   name: string;
 
@@ -106,6 +112,9 @@ export interface CatalogCategory {
 
 /**
  * Product in the catalog.
+ *
+ * A catalog product is identified by its underlying `item` rather than a product
+ * ID of its own.
  */
 export interface CatalogProduct {
   /**
@@ -114,7 +123,7 @@ export interface CatalogProduct {
   attributes: ListCatalogAttribute | null;
 
   /**
-   * Description.
+   * Human-readable description of the product, carried over from the item.
    */
   description: string;
 
@@ -131,6 +140,9 @@ export interface CatalogProduct {
 
 /**
  * Product line available in the catalog.
+ *
+ * A product line is the top-level grouping of the catalog; browse its products by
+ * passing this product line's ID to the list-catalog-products endpoint.
  */
 export interface CatalogProductLine {
   /**
@@ -139,7 +151,7 @@ export interface CatalogProductLine {
   id: string;
 
   /**
-   * Name.
+   * Display name of the product line.
    */
   name: string;
 
@@ -150,7 +162,10 @@ export interface CatalogProductLine {
 }
 
 /**
- * Property associated with an item category.
+ * Property associated with an item category, e.g. `Color`.
+ *
+ * A property defines a dimension along which products in a category vary; its
+ * possible values are represented as catalog attributes.
  */
 export interface CatalogProperty {
   /**
@@ -159,7 +174,7 @@ export interface CatalogProperty {
   id: string;
 
   /**
-   * Name.
+   * Display name of the property, e.g. `Color`.
    */
   name: string;
 

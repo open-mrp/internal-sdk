@@ -250,7 +250,11 @@ export interface ProductLine {
   id: string;
 
   /**
-   * Commission policy of products in this product line.
+   * Default commission policy for products in this product line.
+   *
+   * - `commission_exempt`: no commission applies to these products.
+   * - `commission_applied`: commission applies to these products, unless overridden
+   *   elsewhere.
    */
   commission_policy: 'commission_applied' | 'commission_exempt';
 
@@ -265,7 +269,11 @@ export interface ProductLine {
   description: string | null;
 
   /**
-   * Freight policy for all items in this product line.
+   * Default freight policy for products in this product line.
+   *
+   * - `free_freight`: these products do not incur a freight charge.
+   * - `billed_freight`: freight is billed for these products, unless overridden
+   *   elsewhere.
    */
   freight_policy: 'free_freight' | 'billed_freight';
 

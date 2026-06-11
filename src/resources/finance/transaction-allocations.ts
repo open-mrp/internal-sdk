@@ -85,9 +85,11 @@ export interface AllocationEntry {
   created_at: string;
 
   /**
-   * Minimal customer sub-resource for allocation entries. It carries its own
-   * allocation_customer discriminator (not customer) because allocation list entries
-   * do not carry a customer id, so it is not a resolvable customer reference.
+   * Minimal customer sub-resource for allocation entries.
+   *
+   * It carries its own allocation_customer discriminator (not customer) because
+   * allocation list entries do not carry a customer id, so it is not a resolvable
+   * customer reference.
    */
   customer: FinanceAPI.AllocationCustomer | null;
 
@@ -127,12 +129,17 @@ export interface AllocationTransaction {
   id: string;
 
   /**
-   * Adjustment type, if applicable.
+   * Adjustment category code.
+   *
+   * Typically populated when `type` is `adjustment`; null for other types.
    */
   adjustment_type: string | null;
 
   /**
-   * Transaction method (e.g. "check", "wire").
+   * Payment method code (e.g. `check`, `ach`).
+   *
+   * Typically present only on payment transactions and null for credit memos,
+   * adjustments, and rebates.
    */
   method: string | null;
 
@@ -142,7 +149,8 @@ export interface AllocationTransaction {
   object: 'transaction';
 
   /**
-   * Transaction type (e.g. "payment", "credit").
+   * Transaction type code: one of `payment`, `credit_memo`, `adjustment`, or
+   * `rebate`.
    */
   type: string;
 }

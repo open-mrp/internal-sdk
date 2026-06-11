@@ -247,7 +247,9 @@ export interface RegistrationSession {
   account: RegistrationSessionAccount | null;
 
   /**
-   * Timestamp when registration was completed. Null if still in progress.
+   * Timestamp when registration was completed.
+   *
+   * Null if still in progress.
    */
   completed_at: string | null;
 
@@ -262,27 +264,44 @@ export interface RegistrationSession {
   object: 'registration_session';
 
   /**
-   * Whether payment has been completed.
+   * Whether payment has been completed for this registration.
+   *
+   * Set to `true` once the `payment` step succeeds; `false` for free plans that
+   * require no payment.
    */
   payment_completed: boolean;
 
   /**
-   * Pricing plan code.
+   * Code of the pricing plan selected for this registration, e.g. `free`, `starter`,
+   * or `pro`.
    */
   plan_code: string;
 
   /**
-   * Current registration step.
+   * Current step in the registration flow.
+   *
+   * Steps advance in this order:
+   *
+   * - `verification`: the user is verifying their email address.
+   * - `user_details`: the user is providing their personal details (name, etc.).
+   * - `account_details`: the user is providing their account/company details.
+   * - `review`: the user is reviewing their registration details before payment.
+   * - `payment`: the user is providing their payment details.
+   * - `completed`: registration has finished and the account is active.
    */
   step: 'verification' | 'user_details' | 'account_details' | 'review' | 'payment' | 'completed';
 
   /**
-   * Stripe checkout session ID.
+   * ID of the Stripe Checkout session used to collect payment.
+   *
+   * `null` until checkout is started.
    */
   stripe_checkout_session_id: string | null;
 
   /**
-   * Stripe customer ID.
+   * ID of the Stripe customer created for this registration.
+   *
+   * `null` until billing is set up.
    */
   stripe_customer_id: string | null;
 
