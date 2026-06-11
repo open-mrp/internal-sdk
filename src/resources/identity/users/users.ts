@@ -57,7 +57,7 @@ export class Users extends APIResource {
  */
 export interface UpdateUserRequest {
   /**
-   * Email verification timestamp. Set to null to mark as unverified.
+   * Timestamp recording when the user's email address was verified.
    */
   email_verified?: string;
 
@@ -74,7 +74,7 @@ export interface UpdateUserRequest {
 
 export interface UserUpdateParams {
   /**
-   * Email verification timestamp. Set to null to mark as unverified.
+   * Timestamp recording when the user's email address was verified.
    */
   email_verified?: string;
 

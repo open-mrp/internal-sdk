@@ -11,7 +11,8 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Marks an agent alert as acknowledged.
+   * Marks an agent alert as acknowledged, recording the acknowledging actor and
+   * timestamp.
    *
    * @example
    * ```ts

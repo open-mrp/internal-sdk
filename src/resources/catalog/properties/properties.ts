@@ -112,7 +112,7 @@ export class Properties extends APIResource {
  */
 export interface CreatePropertyRequest {
   /**
-   * Name.
+   * Display name of the property, such as `Color` or `Size`.
    */
   name: string;
 }
@@ -122,7 +122,7 @@ export interface CreatePropertyRequest {
  */
 export interface UpdatePropertyRequest {
   /**
-   * Name.
+   * Display name of the property, such as `Color` or `Size`.
    */
   name?: string;
 }
@@ -131,7 +131,7 @@ export interface PropertyDeleteResponse {}
 
 export interface PropertyCreateParams {
   /**
-   * Body param: Name.
+   * Body param: Display name of the property, such as `Color` or `Size`.
    */
   name: string;
 
@@ -158,14 +158,18 @@ export interface PropertyUpdateParams {
   include?: Array<'attributes'>;
 
   /**
-   * Body param: Name.
+   * Body param: Display name of the property, such as `Color` or `Size`.
    */
   name?: string;
 }
 
 export interface PropertyListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -176,12 +180,14 @@ export interface PropertyListParams {
   include?: Array<'attributes'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

@@ -11,6 +11,10 @@ export class Actions extends APIResource {
   /**
    * Sends a password reset email to the user.
    *
+   * Always returns an accepted response, whether or not the identifier matches a
+   * known user, so it does not reveal which identifiers exist. Reset links expire 15
+   * minutes after they are issued.
+   *
    * @example
    * ```ts
    * const response =
@@ -49,7 +53,7 @@ export class Actions extends APIResource {
  */
 export interface RequestPasswordResetRequest {
   /**
-   * Username or email of the account to reset.
+   * Username or email of the user whose password should be reset.
    */
   identifier: string;
 
@@ -64,7 +68,7 @@ export interface RequestPasswordResetRequest {
  */
 export interface ResetPasswordRequest {
   /**
-   * Password reset token.
+   * Password reset token from the password reset email.
    */
   token: string;
 
@@ -80,7 +84,7 @@ export interface ActionResetResponse {}
 
 export interface ActionRequestResetParams {
   /**
-   * Username or email of the account to reset.
+   * Username or email of the user whose password should be reset.
    */
   identifier: string;
 
@@ -92,7 +96,7 @@ export interface ActionRequestResetParams {
 
 export interface ActionResetParams {
   /**
-   * Password reset token.
+   * Password reset token from the password reset email.
    */
   token: string;
 

@@ -11,7 +11,10 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Deletes multiple purchase orders.
+   * Deletes multiple purchase orders in a single request.
+   *
+   * If any of the orders is in `fulfilled` status the request fails and no orders
+   * are deleted.
    *
    * @example
    * ```ts
@@ -28,9 +31,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Changes the status of a purchase order. Supported actions: issue (draft to
-   * issued), unissue (issued to draft), close (issued to closed), open (closed to
-   * issued).
+   * Moves a purchase order through its lifecycle.
+   *
+   * Supported actions: `issue` (`estimate` to `issued`), `unissue` (`issued` back to
+   * `estimate`), `close` (`issued` to `fulfilled`), and `open` (`fulfilled` back to
+   * `issued`). Each action is only valid from the status noted; otherwise the
+   * request fails validation.
    *
    * @example
    * ```ts
@@ -60,7 +66,7 @@ export class Actions extends APIResource {
  */
 export interface BulkDeletePurchaseOrdersRequest {
   /**
-   * Purchase order IDs.
+   * IDs of the purchase orders to delete.
    */
   purchase_order_ids: Array<string>;
 }
@@ -70,12 +76,25 @@ export interface BulkDeletePurchaseOrdersRequest {
  */
 export interface ChangePurchaseOrderStatusRequest {
   /**
-   * Whether to send a notification email.
+   * Whether to email the purchase order to the order's contacts.
+   *
+   * Only applies to the `issue` action. When `true`, the purchase order submission
+   * email is sent to the order's email contacts and `acknowledgment_status` is set
+   * to `sent`.
    */
   send_email: boolean;
 
   /**
-   * Status change action (e.g., "issue", "unissue", "close", "open").
+   * The lifecycle transition to apply.
+   *
+   * - `issue`: move an `estimate` order to `issued`. Creates the order's receiving
+   *   order with a line for each order line.
+   * - `unissue`: move an `issued` order back to `estimate`. Deletes the receiving
+   *   order.
+   * - `close`: move an `issued` order to `fulfilled`. Marks the receiving order
+   *   complete.
+   * - `open`: move a `fulfilled` order back to `issued`. Re-opens the receiving
+   *   order.
    */
   status_change: string;
 }
@@ -84,19 +103,32 @@ export interface ActionBulkDeleteResponse {}
 
 export interface ActionBulkDeleteParams {
   /**
-   * Purchase order IDs.
+   * IDs of the purchase orders to delete.
    */
   purchase_order_ids: Array<string>;
 }
 
 export interface ActionChangeStatusParams {
   /**
-   * Body param: Whether to send a notification email.
+   * Body param: Whether to email the purchase order to the order's contacts.
+   *
+   * Only applies to the `issue` action. When `true`, the purchase order submission
+   * email is sent to the order's email contacts and `acknowledgment_status` is set
+   * to `sent`.
    */
   send_email: boolean;
 
   /**
-   * Body param: Status change action (e.g., "issue", "unissue", "close", "open").
+   * Body param: The lifecycle transition to apply.
+   *
+   * - `issue`: move an `estimate` order to `issued`. Creates the order's receiving
+   *   order with a line for each order line.
+   * - `unissue`: move an `issued` order back to `estimate`. Deletes the receiving
+   *   order.
+   * - `close`: move an `issued` order to `fulfilled`. Marks the receiving order
+   *   complete.
+   * - `open`: move a `fulfilled` order back to `issued`. Re-opens the receiving
+   *   order.
    */
   status_change: string;
 

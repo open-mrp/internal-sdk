@@ -11,7 +11,9 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Initiates the OAuth flow for a Shippo-managed carrier and returns an OAuth URL.
+   * Initiates the OAuth authorization flow for a Shippo-managed carrier and returns
+   * the URL to redirect the user to.
+   *
    * Not available in sandbox mode.
    *
    * @example
@@ -38,8 +40,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Syncs carrier options from Shippo service levels, adding new and removing stale
-   * ones. Not available in sandbox mode.
+   * Re-syncs a carrier's service levels from Shippo.
+   *
+   * Service levels newly offered by the carrier are added (initially hidden from the
+   * customer portal) and previously synced ones no longer offered are removed;
+   * manually created service levels are untouched. Only available for Shippo-managed
+   * carriers; not available in sandbox mode.
    *
    * @example
    * ```ts

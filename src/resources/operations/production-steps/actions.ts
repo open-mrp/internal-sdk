@@ -9,7 +9,12 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Creates multiple production steps in a single request.
+   * Creates or updates multiple production steps in a single request.
+   *
+   * Rows are matched to existing steps by name: matches are updated in place
+   * (replacing their production outputs and consumptions) and the rest are created.
+   * Each row succeeds or fails independently; failures are reported per row in the
+   * response instead of failing the whole request.
    *
    * @example
    * ```ts
@@ -47,7 +52,7 @@ export class Actions extends APIResource {
  */
 export interface BulkCreateConsumptionInput {
   /**
-   * Consumption quantity measure.
+   * Quantity consumed, in the item's base unit.
    */
   measure: number;
 
@@ -67,7 +72,7 @@ export interface BulkCreateConsumptionInput {
  */
 export interface BulkCreateProductionOutputInput {
   /**
-   * Production quantity measure.
+   * Quantity produced, in the item's base unit.
    */
   measure: number;
 
@@ -82,7 +87,7 @@ export interface BulkCreateProductionOutputInput {
  */
 export interface BulkCreateProductionStepInput {
   /**
-   * Consumptions.
+   * Materials consumed by the step, resolved by SKU.
    */
   consumptions: Array<BulkCreateConsumptionInput>;
 
@@ -92,12 +97,17 @@ export interface BulkCreateProductionStepInput {
   labor_rate: number;
 
   /**
-   * Labor time value.
+   * Labor time required per unit of output.
+   *
+   * Stored as `labor_time_unit` per one base unit of the first production output.
    */
   labor_time: number;
 
   /**
-   * Display name.
+   * Display name of the production step.
+   *
+   * Used to match existing steps: if a step with this name already exists in the
+   * account, that step is updated in place instead of creating a new one.
    */
   name: string;
 
@@ -107,27 +117,38 @@ export interface BulkCreateProductionStepInput {
   overhead_rate: number;
 
   /**
-   * Production outputs. At least one is required.
+   * Items produced by the step, resolved by SKU.
+   *
+   * At least one is required.
    */
   productions: Array<BulkCreateProductionOutputInput>;
 
   /**
-   * Allowances factor (default: 0).
+   * Allowance correction factor applied to labor time in cost calculations.
+   *
+   * Defaults to `0`.
    */
   allowances?: number;
 
   /**
-   * Labor time unit abbreviation (default: "hr"). One of: hr, minute, second, day.
+   * Labor time unit abbreviation.
+   *
+   * Accepted values (case-insensitive): `hr`, `minute`, `min`, `second`, `sec`,
+   * `day`. Defaults to `hr`.
    */
   labor_time_unit?: string;
 
   /**
-   * Leveling factor (default: 0).
+   * Leveling correction factor applied to labor time in cost calculations.
+   *
+   * Defaults to `0`.
    */
   leveling_factor?: number;
 
   /**
-   * Scanning station name, resolved by name.
+   * Name of an existing scanning station to assign to the step.
+   *
+   * Resolved by exact name; rows referencing an unknown station are skipped.
    */
   station?: string;
 }
@@ -168,7 +189,7 @@ export interface BulkCreateProductionStepResult {
  */
 export interface BulkCreateProductionStepsRequest {
   /**
-   * Production steps to create.
+   * Production steps to create or update.
    */
   steps: Array<BulkCreateProductionStepInput>;
 }
@@ -191,7 +212,7 @@ export interface BulkCreateProductionStepsResponse {
 
 export interface ActionBulkCreateParams {
   /**
-   * Production steps to create.
+   * Production steps to create or update.
    */
   steps: Array<BulkCreateProductionStepInput>;
 }

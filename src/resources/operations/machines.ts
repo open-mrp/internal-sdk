@@ -11,7 +11,9 @@ import { path } from '../../internal/utils/path';
  */
 export class Machines extends APIResource {
   /**
-   * Creates a machine and associates it with a department.
+   * Creates a machine and assigns it to a department.
+   *
+   * Returns a conflict error if a machine with the same name already exists.
    *
    * @example
    * ```ts
@@ -48,6 +50,9 @@ export class Machines extends APIResource {
   /**
    * Partially updates a machine.
    *
+   * Only the fields provided in the request are changed. Returns a conflict error if
+   * the new name is already in use by another machine.
+   *
    * @example
    * ```ts
    * const machine = await client.operations.machines.update(
@@ -66,7 +71,7 @@ export class Machines extends APIResource {
   }
 
   /**
-   * Returns a paginated list of machines for the target account.
+   * Returns a paginated list of machines in your account.
    *
    * @example
    * ```ts
@@ -100,22 +105,28 @@ export class Machines extends APIResource {
  */
 export interface CreateMachineRequest {
   /**
-   * Department ID.
+   * ID of the department this machine belongs to.
+   *
+   * Must reference a department in your account.
    */
   department_id: string;
 
   /**
-   * Display name.
+   * Display name of the machine.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name: string;
 
   /**
-   * Serial number.
+   * Serial number of the machine.
+   *
+   * Maximum 255 characters.
    */
   serial_number: string;
 
   /**
-   * Notes.
+   * Free-form notes about the machine.
    */
   notes?: string;
 }
@@ -125,17 +136,21 @@ export interface CreateMachineRequest {
  */
 export interface UpdateMachineRequest {
   /**
-   * Display name.
+   * Display name of the machine.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name?: string;
 
   /**
-   * Notes.
+   * Free-form notes about the machine.
    */
   notes?: string;
 
   /**
-   * Serial number.
+   * Serial number of the machine.
+   *
+   * Maximum 255 characters.
    */
   serial_number?: string;
 }
@@ -144,17 +159,23 @@ export interface MachineDeleteResponse {}
 
 export interface MachineCreateParams {
   /**
-   * Body param: Department ID.
+   * Body param: ID of the department this machine belongs to.
+   *
+   * Must reference a department in your account.
    */
   department_id: string;
 
   /**
-   * Body param: Display name.
+   * Body param: Display name of the machine.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name: string;
 
   /**
-   * Body param: Serial number.
+   * Body param: Serial number of the machine.
+   *
+   * Maximum 255 characters.
    */
   serial_number: string;
 
@@ -165,7 +186,7 @@ export interface MachineCreateParams {
   include?: Array<'department'>;
 
   /**
-   * Body param: Notes.
+   * Body param: Free-form notes about the machine.
    */
   notes?: string;
 }
@@ -186,34 +207,44 @@ export interface MachineUpdateParams {
   include?: Array<'department'>;
 
   /**
-   * Body param: Display name.
+   * Body param: Display name of the machine.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name?: string;
 
   /**
-   * Body param: Notes.
+   * Body param: Free-form notes about the machine.
    */
   notes?: string;
 
   /**
-   * Body param: Serial number.
+   * Body param: Serial number of the machine.
+   *
+   * Maximum 255 characters.
    */
   serial_number?: string;
 }
 
 export interface MachineListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

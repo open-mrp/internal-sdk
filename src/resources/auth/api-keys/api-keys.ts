@@ -68,7 +68,9 @@ export class APIKeys extends APIResource {
   /**
    * Revokes an [API key](https://docs.augno.com/api/api-keys).
    *
-   * Revoked API keys will be unable to be used to authenticate requests.
+   * Revocation takes effect immediately and cannot be undone; revoked keys can no
+   * longer be used to authenticate requests. To replace a key without losing access,
+   * use Rotate API Key instead.
    *
    * @example
    * ```ts
@@ -83,7 +85,7 @@ export class APIKeys extends APIResource {
 }
 
 /**
- * Account with optional branding and portal sub-resources.
+ * A customer account, including its branding and customer portal sub-resources.
  */
 export interface Account {
   /**
@@ -102,12 +104,14 @@ export interface Account {
   created_at: string;
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   default_billing_address: Address | null;
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   default_shipping_address: Address | null;
 
@@ -217,7 +221,9 @@ export interface AccountPortal {
   object: 'account_portal';
 
   /**
-   * Portal slug.
+   * URL slug that identifies the account's customer portal.
+   *
+   * Unique across all accounts.
    */
   slug: string;
 
@@ -228,7 +234,8 @@ export interface AccountPortal {
 }
 
 /**
- * Address with associated geolocation.
+ * A saved address that can be used for billing and shipping on sales orders,
+ * invoices, and shipments.
  */
 export interface Address {
   /**
@@ -247,7 +254,7 @@ export interface Address {
   email: string | null;
 
   /**
-   * Geolocation sub-resource.
+   * The street-level location details of an address.
    */
   geolocation: Geolocation | null;
 
@@ -282,7 +289,7 @@ export interface Address {
 }
 
 /**
- * API key resource.
+ * An API key used to authenticate requests to the Augno API.
  */
 export interface APIKey {
   /**
@@ -305,7 +312,8 @@ export interface APIKey {
   /**
    * When the key was last used to authenticate a request.
    *
-   * `null` if it has never been used.
+   * Updated at most once every 24 hours, so it may lag the key's most recent use.
+   * `null` if the key has never been used.
    */
   last_used_at: string | null;
 
@@ -321,18 +329,24 @@ export interface APIKey {
 
   /**
    * Redacted key value safe for display.
+   *
+   * The key's prefix followed by its last four characters, e.g.
+   * `aug_sk_prod_****hjt4`.
    */
   redacted_value: string;
 
   /**
-   * When the key was revoked.
+   * When the key's revocation takes effect.
    *
-   * `null` if the key has not been revoked.
+   * A future timestamp means revocation was scheduled (for example, during rotation)
+   * and the key continues to authenticate requests until that time. `null` if the
+   * key has not been revoked.
    */
   revoked_at: string | null;
 
   /**
-   * Role resource.
+   * A named set of permissions that can be assigned to users to control what they
+   * can access.
    */
   role: Role | null;
 
@@ -352,12 +366,16 @@ export interface CreateAPIKeyRequest {
   name: string;
 
   /**
-   * Role ID assigned to the API key.
+   * ID of the role to assign to the API key.
+   *
+   * The role determines the permissions of requests authenticated with the key.
    */
   role_id: string;
 
   /**
-   * Expiration timestamp. If not set, the key does not expire.
+   * When the key expires and stops authenticating requests.
+   *
+   * If omitted, the key never expires.
    */
   expires_at?: string;
 }
@@ -367,7 +385,7 @@ export interface CreateAPIKeyRequest {
  */
 export interface CreatedAPIKey {
   /**
-   * API key resource.
+   * An API key used to authenticate requests to the Augno API.
    */
   api_key_info: APIKey;
 
@@ -386,7 +404,7 @@ export interface CreatedAPIKey {
 }
 
 /**
- * Geolocation sub-resource.
+ * The street-level location details of an address.
  */
 export interface Geolocation {
   /**
@@ -455,7 +473,7 @@ export interface ListAPIKey {
  */
 export interface Owner {
   /**
-   * Account with optional branding and portal sub-resources.
+   * A customer account, including its branding and customer portal sub-resources.
    */
   account: Account | null;
 
@@ -490,18 +508,23 @@ export interface PageInfo {
   has_prev_page: boolean;
 
   /**
-   * URL to fetch the next page, `null` if no more pages.
+   * Relative URL that fetches the next page of results.
+   *
+   * Absent once the last page has been reached.
    */
   next_page_url: string | null;
 
   /**
-   * URL to fetch the previous page, `null` if on the first page.
+   * Relative URL that fetches the previous page of results.
+   *
+   * Absent while on the first page.
    */
   previous_page_url: string | null;
 }
 
 /**
- * Role resource.
+ * A named set of permissions that can be assigned to users to control what they
+ * can access.
  */
 export interface Role {
   /**
@@ -515,7 +538,7 @@ export interface Role {
   created_at: string;
 
   /**
-   * Display name.
+   * Display name, unique within the account.
    */
   name: string;
 
@@ -530,20 +553,21 @@ export interface Role {
   owner: Owner | null;
 
   /**
-   * Permissions in `{domain}:{action}` format.
+   * Permissions granted by this role, in `{domain}:{action}` format, such as
+   * `customers:read`.
    */
   permissions: Array<string> | null;
 
   /**
-   * Role type code.
+   * The kind of role.
    *
-   * The role's type is sometimes used to gate special behaviors in the frontend and
-   * to restrict some actions to only certain types of roles. For example, only roles
-   * with the type `admin` can create and manage API keys.
+   * The role's type is sometimes used to gate special behaviors and to restrict some
+   * actions to only certain types of roles. For example, only roles with the type
+   * `admin` can create and manage API keys.
    *
    * - `admin`: full administrative access, including managing API keys.
    * - `user`: a custom role tailored to a specific need (its permissions are defined
-   *   explicitly).
+   *   explicitly). Roles created through the API always have this type.
    * - `scanner`: a role for scanning-station operators.
    * - `sales_rep`: a role for sales representatives.
    * - `agent`: a role assigned to an automated agent rather than a person.
@@ -565,7 +589,9 @@ export interface APIKeyCreateParams {
   name: string;
 
   /**
-   * Body param: Role ID assigned to the API key.
+   * Body param: ID of the role to assign to the API key.
+   *
+   * The role determines the permissions of requests authenticated with the key.
    */
   role_id: string;
 
@@ -576,7 +602,9 @@ export interface APIKeyCreateParams {
   include?: Array<'role' | 'role.permissions'>;
 
   /**
-   * Body param: Expiration timestamp. If not set, the key does not expire.
+   * Body param: When the key expires and stops authenticating requests.
+   *
+   * If omitted, the key never expires.
    */
   expires_at?: string;
 }
@@ -591,7 +619,11 @@ export interface APIKeyRetrieveParams {
 
 export interface APIKeyListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -602,17 +634,26 @@ export interface APIKeyListParams {
   include?: Array<'role' | 'role.permissions'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
    * API key statuses to filter by.
+   *
+   * - `active`: the key can be used to authenticate requests.
+   * - `expired`: the key passed its expiration time and can no longer authenticate
+   *   requests.
+   * - `revoked`: the key was revoked and can no longer authenticate requests.
+   *
+   * When omitted, keys of every status are returned.
    */
   statuses?: Array<'active' | 'expired' | 'revoked'>;
 }

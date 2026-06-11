@@ -66,6 +66,8 @@ export class ServiceLevels extends APIResource {
   /**
    * Partially updates a service level.
    *
+   * System-owned service levels cannot be updated.
+   *
    * @example
    * ```ts
    * const serviceLevel =
@@ -111,8 +113,10 @@ export class ServiceLevels extends APIResource {
   }
 
   /**
-   * Permanently deletes a service level. Fails if the service level is a default
-   * (system-synced) level.
+   * Permanently deletes a service level.
+   *
+   * System-owned service levels and the carrier's default service level cannot be
+   * deleted; unset `is_default` first to delete a default.
    *
    * @example
    * ```ts
@@ -138,23 +142,33 @@ export class ServiceLevels extends APIResource {
  */
 export interface CreateServiceLevelRequest {
   /**
-   * Service level code.
+   * Carrier-specific code identifying this service level (e.g. `fedex_ground`).
+   *
+   * Must be unique among the carrier's service levels.
    */
   code: string;
 
   /**
-   * Default service levels are the default-selected service level for that carrier.
+   * Whether this becomes the carrier's default service level, pre-selected when the
+   * carrier is chosen.
+   *
+   * Each carrier has at most one default; setting this to `true` clears the
+   * carrier's existing default.
    */
   is_default: boolean;
 
   /**
-   * Display name.
+   * Human-readable name for the service level, shown to customers at checkout when
+   * the service level is visible.
    */
   name: string;
 
   /**
-   * Whether this service level will be available for customers to select in the
-   * customer portal.
+   * Service level visibility in the customer portal.
+   *
+   * A `visible` service level can be selected by your customers at checkout; a
+   * `hidden` one is not offered there. New service levels are visible unless set to
+   * `hidden`.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 }
@@ -164,7 +178,9 @@ export interface CreateServiceLevelRequest {
  */
 export interface UpdateServiceLevelRequest {
   /**
-   * Service level code.
+   * Carrier-specific code identifying this service level (e.g. `fedex_ground`).
+   *
+   * Must be unique among the carrier's service levels.
    */
   code?: string;
 
@@ -175,12 +191,17 @@ export interface UpdateServiceLevelRequest {
   customer_portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Default service levels are the default-selected service level for that carrier.
+   * Whether this is the carrier's default service level, pre-selected when the
+   * carrier is chosen.
+   *
+   * Each carrier has at most one default; setting this to `true` clears the
+   * carrier's existing default.
    */
   is_default?: boolean;
 
   /**
-   * Display name.
+   * Human-readable name for the service level, shown to customers at checkout when
+   * the service level is visible.
    */
   name?: string;
 }
@@ -189,18 +210,25 @@ export interface ServiceLevelDeleteResponse {}
 
 export interface ServiceLevelCreateParams {
   /**
-   * Body param: Service level code.
+   * Body param: Carrier-specific code identifying this service level (e.g.
+   * `fedex_ground`).
+   *
+   * Must be unique among the carrier's service levels.
    */
   code: string;
 
   /**
-   * Body param: Default service levels are the default-selected service level for
-   * that carrier.
+   * Body param: Whether this becomes the carrier's default service level,
+   * pre-selected when the carrier is chosen.
+   *
+   * Each carrier has at most one default; setting this to `true` clears the
+   * carrier's existing default.
    */
   is_default: boolean;
 
   /**
-   * Body param: Display name.
+   * Body param: Human-readable name for the service level, shown to customers at
+   * checkout when the service level is visible.
    */
   name: string;
 
@@ -211,8 +239,11 @@ export interface ServiceLevelCreateParams {
   include?: Array<'owner' | 'owner.account'>;
 
   /**
-   * Body param: Whether this service level will be available for customers to select
-   * in the customer portal.
+   * Body param: Service level visibility in the customer portal.
+   *
+   * A `visible` service level can be selected by your customers at checkout; a
+   * `hidden` one is not offered there. New service levels are visible unless set to
+   * `hidden`.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 }
@@ -243,7 +274,10 @@ export interface ServiceLevelUpdateParams {
   include?: Array<'owner' | 'owner.account'>;
 
   /**
-   * Body param: Service level code.
+   * Body param: Carrier-specific code identifying this service level (e.g.
+   * `fedex_ground`).
+   *
+   * Must be unique among the carrier's service levels.
    */
   code?: string;
 
@@ -254,20 +288,28 @@ export interface ServiceLevelUpdateParams {
   customer_portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Body param: Default service levels are the default-selected service level for
-   * that carrier.
+   * Body param: Whether this is the carrier's default service level, pre-selected
+   * when the carrier is chosen.
+   *
+   * Each carrier has at most one default; setting this to `true` clears the
+   * carrier's existing default.
    */
   is_default?: boolean;
 
   /**
-   * Body param: Display name.
+   * Body param: Human-readable name for the service level, shown to customers at
+   * checkout when the service level is visible.
    */
   name?: string;
 }
 
 export interface ServiceLevelListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -278,12 +320,14 @@ export interface ServiceLevelListParams {
   include?: Array<'owner' | 'owner.account'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

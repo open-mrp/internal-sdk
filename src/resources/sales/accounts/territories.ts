@@ -13,7 +13,7 @@ import { path } from '../../../internal/utils/path';
  */
 export class Territories extends APIResource {
   /**
-   * Creates a territory.
+   * Creates a territory that assigns a sales rep to a state or ZIP code range.
    *
    * @example
    * ```ts
@@ -125,27 +125,31 @@ export class Territories extends APIResource {
  */
 export interface CreateTerritoryRequest {
   /**
-   * Sales rep (account user) ID.
+   * ID of the account user (sales rep) to assign to this territory.
    */
   sales_rep_id: string;
 
   /**
-   * State this territory covers.
+   * State this territory covers (e.g. `NY`).
    */
   state: string;
 
   /**
-   * End of ZIP code range (501-99999).
+   * Inclusive end of the ZIP code range this territory covers (`501`-`99999`).
    */
   end_zipcode?: number;
 
   /**
-   * Product line ID.
+   * ID of the product line to scope this territory to.
+   *
+   * Omit to have the territory apply regardless of product line.
    */
   product_line_id?: string;
 
   /**
-   * Start of ZIP code range (501-99999).
+   * Inclusive start of the ZIP code range this territory covers (`501`-`99999`).
+   *
+   * Omit both ZIP code fields to cover the entire state.
    */
   start_zipcode?: number;
 }
@@ -171,7 +175,12 @@ export interface ListTerritory {
 }
 
 /**
- * Sales rep territory assignment.
+ * A geographic sales region that assigns a sales rep to a state or ZIP code range.
+ *
+ * When a sales order is created without an explicit sales rep, territories are
+ * used to auto-assign one from the order's ship-to address: the customer's default
+ * sales rep takes precedence, then a territory matching the ship-to ZIP code, then
+ * a territory covering the entire ship-to state.
  */
 export interface Territory {
   /**
@@ -187,7 +196,7 @@ export interface Territory {
   /**
    * Inclusive end of the ZIP code range this territory covers within the state.
    *
-   * Optional; `null` when the territory spans the entire state.
+   * Unset when the territory spans the entire state rather than a ZIP code range.
    */
   end_zipcode: number | null;
 
@@ -198,26 +207,30 @@ export interface Territory {
 
   /**
    * Product line resource.
+   *
+   * A product line groups related products in your catalog and carries the default
+   * commission policy, freight policy, and unit group for those products.
    */
   product_line: AccountPricesAPI.ProductLine | null;
 
   /**
-   * Account user with role and department.
+   * A user's membership in an account, carrying the account-specific status, role,
+   * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable user
-   * sub-resource.
+   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * sub-resource, which is shared across every account the user belongs to.
    */
   sales_rep: AccountUsersAPI.AccountUser | null;
 
   /**
    * Inclusive start of the ZIP code range this territory covers within the state.
    *
-   * Optional; `null` when the territory spans the entire state.
+   * Unset when the territory spans the entire state rather than a ZIP code range.
    */
   start_zipcode: number | null;
 
   /**
-   * State this territory covers.
+   * State this territory covers (e.g. `NY`).
    */
   state: string;
 
@@ -232,42 +245,46 @@ export interface Territory {
  */
 export interface UpdateTerritoryRequest {
   /**
-   * Set to true to remove the end ZIP code.
+   * Set to `true` to remove the end ZIP code.
    */
   clear_end_zipcode?: boolean;
 
   /**
-   * Set to true to remove the product line.
+   * Set to `true` to remove the product line, making the territory apply regardless
+   * of product line.
    */
   clear_product_line?: boolean;
 
   /**
-   * Set to true to remove the start ZIP code.
+   * Set to `true` to remove the start ZIP code.
+   *
+   * Clearing the start ZIP code also clears the end ZIP code, so the territory
+   * covers the entire state.
    */
   clear_start_zipcode?: boolean;
 
   /**
-   * End of ZIP code range (501-99999).
+   * Inclusive end of the ZIP code range this territory covers (`501`-`99999`).
    */
   end_zipcode?: number;
 
   /**
-   * Product line ID.
+   * ID of the product line to scope this territory to.
    */
   product_line_id?: string;
 
   /**
-   * Sales rep (account user) ID.
+   * ID of the account user (sales rep) to assign to this territory.
    */
   sales_rep_id?: string;
 
   /**
-   * Start of ZIP code range (501-99999).
+   * Inclusive start of the ZIP code range this territory covers (`501`-`99999`).
    */
   start_zipcode?: number;
 
   /**
-   * State this territory covers.
+   * State this territory covers (e.g. `NY`).
    */
   state?: string;
 }
@@ -276,12 +293,12 @@ export interface TerritoryDeleteResponse {}
 
 export interface TerritoryCreateParams {
   /**
-   * Body param: Sales rep (account user) ID.
+   * Body param: ID of the account user (sales rep) to assign to this territory.
    */
   sales_rep_id: string;
 
   /**
-   * Body param: State this territory covers.
+   * Body param: State this territory covers (e.g. `NY`).
    */
   state: string;
 
@@ -292,17 +309,23 @@ export interface TerritoryCreateParams {
   include?: Array<'sales_rep' | 'sales_rep.user' | 'product_line'>;
 
   /**
-   * Body param: End of ZIP code range (501-99999).
+   * Body param: Inclusive end of the ZIP code range this territory covers
+   * (`501`-`99999`).
    */
   end_zipcode?: number;
 
   /**
-   * Body param: Product line ID.
+   * Body param: ID of the product line to scope this territory to.
+   *
+   * Omit to have the territory apply regardless of product line.
    */
   product_line_id?: string;
 
   /**
-   * Body param: Start of ZIP code range (501-99999).
+   * Body param: Inclusive start of the ZIP code range this territory covers
+   * (`501`-`99999`).
+   *
+   * Omit both ZIP code fields to cover the entire state.
    */
   start_zipcode?: number;
 }
@@ -333,49 +356,59 @@ export interface TerritoryUpdateParams {
   include?: Array<'sales_rep' | 'sales_rep.user' | 'product_line'>;
 
   /**
-   * Body param: Set to true to remove the end ZIP code.
+   * Body param: Set to `true` to remove the end ZIP code.
    */
   clear_end_zipcode?: boolean;
 
   /**
-   * Body param: Set to true to remove the product line.
+   * Body param: Set to `true` to remove the product line, making the territory apply
+   * regardless of product line.
    */
   clear_product_line?: boolean;
 
   /**
-   * Body param: Set to true to remove the start ZIP code.
+   * Body param: Set to `true` to remove the start ZIP code.
+   *
+   * Clearing the start ZIP code also clears the end ZIP code, so the territory
+   * covers the entire state.
    */
   clear_start_zipcode?: boolean;
 
   /**
-   * Body param: End of ZIP code range (501-99999).
+   * Body param: Inclusive end of the ZIP code range this territory covers
+   * (`501`-`99999`).
    */
   end_zipcode?: number;
 
   /**
-   * Body param: Product line ID.
+   * Body param: ID of the product line to scope this territory to.
    */
   product_line_id?: string;
 
   /**
-   * Body param: Sales rep (account user) ID.
+   * Body param: ID of the account user (sales rep) to assign to this territory.
    */
   sales_rep_id?: string;
 
   /**
-   * Body param: Start of ZIP code range (501-99999).
+   * Body param: Inclusive start of the ZIP code range this territory covers
+   * (`501`-`99999`).
    */
   start_zipcode?: number;
 
   /**
-   * Body param: State this territory covers.
+   * Body param: State this territory covers (e.g. `NY`).
    */
   state?: string;
 }
 
 export interface TerritoryListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -386,12 +419,14 @@ export interface TerritoryListParams {
   include?: Array<'sales_rep' | 'sales_rep.user' | 'product_line'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

@@ -62,8 +62,9 @@ export class ProductTypes extends APIResource {
   }
 
   /**
-   * Returns a paginated list of product types. Product types are global and not
-   * scoped to a specific account.
+   * Returns a paginated list of product types.
+   *
+   * Product types are global and not scoped to a specific account.
    *
    * @example
    * ```ts
@@ -99,12 +100,18 @@ export class ProductTypes extends APIResource {
  */
 export interface CreateProductTypeRequest {
   /**
-   * Unique code.
+   * Stable machine-readable code for the product type.
+   *
+   * Must be unique across product types. Products reference their product type by
+   * this code, and the code can be used in place of the ID when retrieving a product
+   * type.
    */
   code: string;
 
   /**
-   * Display name.
+   * Human-readable name of the product type.
+   *
+   * Must be unique across product types.
    */
   name: string;
 }
@@ -130,7 +137,7 @@ export interface ListProductType {
 }
 
 /**
- * ProductType resource.
+ * ProductType classifies how a product behaves on orders and invoices.
  */
 export interface ProductType {
   /**
@@ -147,6 +154,9 @@ export interface ProductType {
    * - `credit`: a credit applied against an order or invoice.
    * - `return`: a returned product (RMA).
    * - `tax`: a tax line.
+   *
+   * Products reference their product type by this code, and the code can be used in
+   * place of the ID when retrieving a product type.
    */
   code: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
 
@@ -156,7 +166,7 @@ export interface ProductType {
   created_at: string;
 
   /**
-   * Display name.
+   * Human-readable name of the product type, unique across product types.
    */
   name: string;
 
@@ -176,12 +186,16 @@ export interface ProductType {
  */
 export interface UpdateProductTypeRequest {
   /**
-   * Unique code.
+   * New machine-readable code.
+   *
+   * Must be unique across product types.
    */
   code?: string;
 
   /**
-   * Display name.
+   * New human-readable name.
+   *
+   * Must be unique across product types.
    */
   name?: string;
 }
@@ -190,41 +204,57 @@ export interface ProductTypeDeleteResponse {}
 
 export interface ProductTypeCreateParams {
   /**
-   * Unique code.
+   * Stable machine-readable code for the product type.
+   *
+   * Must be unique across product types. Products reference their product type by
+   * this code, and the code can be used in place of the ID when retrieving a product
+   * type.
    */
   code: string;
 
   /**
-   * Display name.
+   * Human-readable name of the product type.
+   *
+   * Must be unique across product types.
    */
   name: string;
 }
 
 export interface ProductTypeUpdateParams {
   /**
-   * Unique code.
+   * New machine-readable code.
+   *
+   * Must be unique across product types.
    */
   code?: string;
 
   /**
-   * Display name.
+   * New human-readable name.
+   *
+   * Must be unique across product types.
    */
   name?: string;
 }
 
 export interface ProductTypeListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

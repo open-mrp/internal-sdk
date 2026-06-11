@@ -176,12 +176,15 @@ export interface AddressRetrieveDetailsParams {
 
 export interface AddressRetrieveSuggestionsParams {
   /**
-   * Autocomplete input text.
+   * Partial address text to generate suggestions for.
    */
   input: string;
 
   /**
-   * Session token for grouping autocomplete requests.
+   * Opaque token that groups a series of related autocomplete requests into a single
+   * session.
+   *
+   * Reuse the same token for each keystroke of one address entry.
    */
   session_token?: string;
 }

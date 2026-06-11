@@ -29,7 +29,7 @@ export class RequestLogs extends APIResource {
   }
 
   /**
-   * Returns a paginated list of request logs.
+   * Returns a paginated list of request logs for the current account.
    *
    * @example
    * ```ts
@@ -54,16 +54,17 @@ export interface Actor {
   id: string;
 
   /**
-   * Human-readable handle.
+   * Human-readable handle identifying the actor.
    *
-   * - `email` for users
-   * - `redacted_value` for API keys
-   * - `slug` for agents
+   * - For `user` actors: the user's email address.
+   * - For `api_key` actors: the redacted key value.
+   *
+   * Agent actors carry no handle.
    */
   handle: string | null;
 
   /**
-   * Display name.
+   * The actor's display name.
    */
   name: string | null;
 
@@ -73,7 +74,8 @@ export interface Actor {
   object: 'actor';
 
   /**
-   * Role resource.
+   * A named set of permissions that can be assigned to users to control what they
+   * can access.
    */
   role: APIKeysAPI.Role | null;
 
@@ -108,7 +110,7 @@ export interface ListRequestLog {
 }
 
 /**
- * RequestLog is an API request log entry.
+ * A log of a single API request, capturing its route, outcome, latency, and actor.
  */
 export interface RequestLog {
   /**
@@ -117,7 +119,7 @@ export interface RequestLog {
   id: string;
 
   /**
-   * Account with optional branding and portal sub-resources.
+   * A customer account, including its branding and customer portal sub-resources.
    */
   account: APIKeysAPI.Account | null;
 
@@ -144,14 +146,14 @@ export interface RequestLog {
   /**
    * Machine-readable API error code.
    *
-   * Populated only for failed requests; `null` on success.
+   * Populated only for failed requests.
    */
   error_code: string | null;
 
   /**
    * Human-readable error message.
    *
-   * Populated only for failed requests; `null` on success.
+   * Populated only for failed requests.
    */
   error_message: string | null;
 
@@ -178,10 +180,12 @@ export interface RequestLog {
   method: string;
 
   /**
-   * _Normalized_ route template.
+   * The route template the request matched, with path parameters left as
+   * placeholders.
    *
-   * For example `PATCH /v1/sales/customers/{id}` is the normalized route for a
-   * request route `PUT /v1/sales/customers/ac_...`.
+   * For example `/v1/sales/customers/{id}` is the normalized route for the request
+   * path `/v1/sales/customers/ac_...`. Falls back to the raw path when the request
+   * did not match a registered route.
    */
   normalized_route: string;
 
@@ -224,11 +228,7 @@ export interface RequestLog {
   response_body: unknown | null;
 
   /**
-   * HTTP status code.
-   *
-   * Exception to the `status` naming convention: this is a numeric HTTP response
-   * code (200/404/…), not a domain lifecycle status enum, so the `_code` suffix is
-   * meaningful.
+   * HTTP response status code (e.g. `200`, `404`).
    */
   status_code: number;
 
@@ -270,8 +270,8 @@ export interface RequestLogListParams {
   /**
    * Filter by the actor identifier.
    *
-   * This is the `user.id` when `identity_type`=`user` and an `api_key.id` when
-   * `identity_type`=`api_key`.
+   * Matches the log's `actor.id`: a user ID for `user` actors or an API key ID for
+   * `api_key` actors.
    */
   actor_ids?: Array<string>;
 
@@ -281,7 +281,11 @@ export interface RequestLogListParams {
   actor_types?: Array<'user' | 'api_key' | 'agent'>;
 
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -329,7 +333,9 @@ export interface RequestLogListParams {
   >;
 
   /**
-   * Filter by the request host. Typically, `api.augno.com`.
+   * Filter by the request host.
+   *
+   * Typically `api.augno.com`.
    */
   hosts?: Array<string>;
 
@@ -345,7 +351,7 @@ export interface RequestLogListParams {
   include?: Array<'account' | 'actor' | 'actor.role'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
@@ -355,20 +361,23 @@ export interface RequestLogListParams {
   methods?: Array<'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS'>;
 
   /**
-   * Filter by the minimum latency in microseconds.
+   * Restricts results to requests that took at least this many microseconds.
    */
   min_latency_us?: number;
 
   /**
    * Filter by the _normalized_ route template.
    *
-   * For example `PATCH /v1/sales/customers/{id}` is the normalized route for a
-   * request route `PUT /v1/sales/customers/ac_...`.
+   * For example `/v1/sales/customers/{id}` matches every request to that route
+   * regardless of the specific customer ID. Parameter names inside `{}` are ignored
+   * when matching, so `{customer_id}` and `{id}` are equivalent.
    */
   normalized_routes?: Array<string>;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
@@ -378,9 +387,11 @@ export interface RequestLogListParams {
   start_date?: string;
 
   /**
-   * Filter by the HTTP status class: 1–5 for 1xx–5xx. Combined with `status_codes`
-   * using OR — e.g. status_codes=401 and status_code_classes=5 matches 401 and any
-   * 5xx.
+   * Filter by the HTTP status class, expressed as the leading digit: `1`–`5` for
+   * 1xx–5xx.
+   *
+   * Combined with `status_codes` using OR — e.g. `status_codes=401` and
+   * `status_code_classes=5` matches 401 responses and any 5xx response.
    */
   status_code_classes?: Array<number>;
 

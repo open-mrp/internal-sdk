@@ -13,6 +13,9 @@ export class Actions extends APIResource {
   /**
    * Marks a pick line as picked.
    *
+   * Sets the line's picked quantity to the quantity still outstanding on its sales
+   * order line. Has no effect on a line that has already been packed.
+   *
    * @example
    * ```ts
    * const pickLine =
@@ -29,6 +32,9 @@ export class Actions extends APIResource {
 
   /**
    * Voids a pick line.
+   *
+   * Resets the line's picked quantity to zero. Fails if the line has already been
+   * packed.
    *
    * @example
    * ```ts

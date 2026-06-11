@@ -11,7 +11,8 @@ import { path } from '../../../internal/utils/path';
  */
 export class Units extends APIResource {
   /**
-   * Creates an associated unit within a unit group.
+   * Adds a unit to a unit group. If the unit is already in the group, its existing
+   * association is updated with the provided settings instead.
    *
    * @example
    * ```ts
@@ -112,7 +113,7 @@ export class Units extends APIResource {
   }
 
   /**
-   * Deletes an associated unit from a unit group.
+   * Removes a unit from a unit group. The unit itself is not deleted.
    *
    * @example
    * ```ts
@@ -129,52 +130,59 @@ export class Units extends APIResource {
 }
 
 /**
- * CreateUnitGroupUnitRequest is a request to create an associated unit within a
- * unit group.
+ * Request to add a unit to a unit group.
  */
 export interface CreateUnitGroupUnitRequest {
   /**
-   * Unit ID.
+   * ID of the unit to associate with the group.
+   *
+   * The unit's dimension must match the group's `type`.
    */
   unit_id: string;
 
   /**
-   * Customer portal visibility.
+   * Whether the unit is shown to customers in the customer portal.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Fixed discount amount.
+   * Flat amount subtracted from the unit's price when an order is placed in this
+   * unit.
    */
   discount_fixed?: number;
 
   /**
-   * Discount percentage.
+   * Percentage discount applied to the unit's price when an order is placed in this
+   * unit (e.g. `10` is a 10% discount).
    */
   discount_percentage?: number;
 }
 
 /**
- * UpdateUnitGroupUnitRequest is a request to update an associated unit.
+ * Request to partially update an associated unit within a unit group.
  */
 export interface UpdateUnitGroupUnitRequest {
   /**
-   * Customer portal visibility.
+   * Whether the unit is shown to customers in the customer portal.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Fixed discount amount.
+   * Flat amount subtracted from the unit's price when an order is placed in this
+   * unit.
    */
   discount_fixed?: number;
 
   /**
-   * Discount percentage.
+   * Percentage discount applied to the unit's price when an order is placed in this
+   * unit (e.g. `10` is a 10% discount).
    */
   discount_percentage?: number;
 
   /**
-   * Unit ID.
+   * ID of the unit this association refers to.
+   *
+   * The unit's dimension must match the group's `type`.
    */
   unit_id?: string;
 }
@@ -183,7 +191,9 @@ export interface UnitDeleteResponse {}
 
 export interface UnitCreateParams {
   /**
-   * Body param: Unit ID.
+   * Body param: ID of the unit to associate with the group.
+   *
+   * The unit's dimension must match the group's `type`.
    */
   unit_id: string;
 
@@ -194,17 +204,19 @@ export interface UnitCreateParams {
   include?: Array<'unit'>;
 
   /**
-   * Body param: Customer portal visibility.
+   * Body param: Whether the unit is shown to customers in the customer portal.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Body param: Fixed discount amount.
+   * Body param: Flat amount subtracted from the unit's price when an order is placed
+   * in this unit.
    */
   discount_fixed?: number;
 
   /**
-   * Body param: Discount percentage.
+   * Body param: Percentage discount applied to the unit's price when an order is
+   * placed in this unit (e.g. `10` is a 10% discount).
    */
   discount_percentage?: number;
 }
@@ -235,22 +247,26 @@ export interface UnitUpdateParams {
   include?: Array<'unit'>;
 
   /**
-   * Body param: Customer portal visibility.
+   * Body param: Whether the unit is shown to customers in the customer portal.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Body param: Fixed discount amount.
+   * Body param: Flat amount subtracted from the unit's price when an order is placed
+   * in this unit.
    */
   discount_fixed?: number;
 
   /**
-   * Body param: Discount percentage.
+   * Body param: Percentage discount applied to the unit's price when an order is
+   * placed in this unit (e.g. `10` is a 10% discount).
    */
   discount_percentage?: number;
 
   /**
-   * Body param: Unit ID.
+   * Body param: ID of the unit this association refers to.
+   *
+   * The unit's dimension must match the group's `type`.
    */
   unit_id?: string;
 }

@@ -96,7 +96,10 @@ export class Shipments extends APIResource {
   }
 
   /**
-   * Deletes a shipment. Fails if already shipped.
+   * Deletes a shipment along with its lines and shipping cases.
+   *
+   * Deleting a shipment also unpacks the associated pick lines and reopens the pick
+   * for the shipment's order so the items can be repacked.
    *
    * @example
    * ```ts
@@ -135,12 +138,12 @@ export interface ListShipment {
  */
 export interface UpdateShipmentRequest {
   /**
-   * Carrier ID.
+   * ID of the carrier to set on the shipment's freight.
    */
   carrier_id?: string;
 
   /**
-   * Master tracking number.
+   * Carrier master tracking number covering the shipment as a whole.
    */
   master_tracking_number?: string;
 
@@ -150,12 +153,12 @@ export interface UpdateShipmentRequest {
   note?: string;
 
   /**
-   * Shipment number.
+   * Human-readable shipment number.
    */
   number?: string;
 
   /**
-   * Service level ID.
+   * ID of the carrier service level to set on the shipment's freight.
    */
   service_level_id?: string;
 }
@@ -200,12 +203,12 @@ export interface ShipmentUpdateParams {
   >;
 
   /**
-   * Body param: Carrier ID.
+   * Body param: ID of the carrier to set on the shipment's freight.
    */
   carrier_id?: string;
 
   /**
-   * Body param: Master tracking number.
+   * Body param: Carrier master tracking number covering the shipment as a whole.
    */
   master_tracking_number?: string;
 
@@ -215,34 +218,38 @@ export interface ShipmentUpdateParams {
   note?: string;
 
   /**
-   * Body param: Shipment number.
+   * Body param: Human-readable shipment number.
    */
   number?: string;
 
   /**
-   * Body param: Service level ID.
+   * Body param: ID of the carrier service level to set on the shipment's freight.
    */
   service_level_id?: string;
 }
 
 export interface ShipmentListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Filter by customer group IDs.
+   * Only include shipments whose customer belongs to any of these customer groups.
    */
   customer_group_ids?: Array<string>;
 
   /**
-   * Filter by customer IDs.
+   * Only include shipments for any of these customers.
    */
   customer_ids?: Array<string>;
 
   /**
-   * Filter by end date (inclusive).
+   * Only include shipments created on or before this date (`YYYY-MM-DD`).
    */
   end_date?: string;
 
@@ -253,37 +260,40 @@ export interface ShipmentListParams {
   include?: Array<'customer' | 'sales_order' | 'lines'>;
 
   /**
-   * Filter by item IDs.
+   * Only include shipments containing at least one line for any of these items.
    */
   item_ids?: Array<string>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Filter by product line IDs.
+   * Only include shipments containing at least one line whose product belongs to any
+   * of these product lines.
    */
   product_line_ids?: Array<string>;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by sales rep IDs.
+   * Only include shipments whose customer is assigned to any of these sales reps.
    */
   sales_rep_ids?: Array<string>;
 
   /**
-   * Filter by start date (inclusive).
+   * Only include shipments created on or after this date (`YYYY-MM-DD`).
    */
   start_date?: string;
 
   /**
-   * Filter by shipment status.
+   * Filter by shipment status (`packed` or `shipped`).
    */
   status?: string;
 }

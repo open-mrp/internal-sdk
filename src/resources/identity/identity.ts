@@ -114,7 +114,11 @@ export class Identity extends APIResource {
   }
 
   /**
-   * Returns a public account by portal slug. Unauthenticated.
+   * Returns a minimal public profile for the account that owns the given portal
+   * slug.
+   *
+   * This endpoint does not require authentication; it is intended for customer
+   * portal branding lookups.
    *
    * @example
    * ```ts
@@ -168,7 +172,8 @@ export interface ListPermissionGroup {
 }
 
 /**
- * Permission within a permission group.
+ * An individual permission that can be granted to a role, identified by a code in
+ * `{domain}:{action}` format.
  */
 export interface Permission {
   /**
@@ -187,9 +192,7 @@ export interface Permission {
   created_at: string;
 
   /**
-   * Description of what this permission controls.
-   *
-   * `null` when not set.
+   * Human-readable description of what this permission controls.
    */
   description: string | null;
 
@@ -224,7 +227,7 @@ export interface PermissionGroup {
   id: string;
 
   /**
-   * Permission group code.
+   * Unique code identifying the permission group, such as `customers`.
    */
   code: string;
 
@@ -235,8 +238,6 @@ export interface PermissionGroup {
 
   /**
    * Free-form description of the permission group.
-   *
-   * `null` when not set.
    */
   description: string | null;
 
@@ -276,7 +277,8 @@ export interface PublicAccount {
   id: string;
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   default_billing_address: APIKeysAPI.Address | null;
 
@@ -308,7 +310,11 @@ export interface PublicAccount {
 
 export interface IdentityRetrievePermissionGroupsParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -319,12 +325,14 @@ export interface IdentityRetrievePermissionGroupsParams {
   include?: Array<'owner'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }
