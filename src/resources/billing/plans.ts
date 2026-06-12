@@ -38,8 +38,11 @@ export class Plans extends APIResource {
   }
 
   /**
-   * Switches the account to a different pricing plan, handling free-to-paid,
-   * paid-to-free, and paid-to-paid scenarios.
+   * Switches the account to a different pricing plan.
+   *
+   * Handles free-to-paid, paid-to-free, and paid-to-paid changes. Switches that owe
+   * a prorated amount are charged immediately; use Preview Plan Change to see the
+   * cost first.
    *
    * @example
    * ```ts
@@ -148,6 +151,8 @@ export interface PlanChangeProration {
 
   /**
    * Whether the amounts are locally estimated rather than calculated by Stripe.
+   *
+   * When `true`, the amounts are approximations and the final charge may differ.
    */
   is_estimate: boolean;
 
@@ -162,7 +167,9 @@ export interface PlanChangeProration {
   monthly_bill_amount: number;
 
   /**
-   * Net amount in cents.
+   * Net amount due in cents for the plan change, after proration.
+   *
+   * A negative value indicates a credit to the account.
    */
   net_amount: number;
 
@@ -177,7 +184,8 @@ export interface PlanChangeProration {
  */
 export interface PlanLimit {
   /**
-   * Resource key this limit applies to (e.g., "sandboxes", "seats", "invoices").
+   * Resource key this limit applies to (e.g., `seats_maximum`, `sandboxes_maximum`,
+   * `invoices_maximum`, `batches_maximum`).
    */
   key: string;
 
@@ -247,11 +255,7 @@ export interface PricingPlan {
   object: 'pricing_plan';
 
   /**
-   * Plan tier code.
-   *
-   * - `free`: the no-cost entry tier.
-   * - `starter`: the paid entry tier for small teams.
-   * - `pro`: the higher tier with expanded limits and support.
+   * Tier of this pricing plan.
    */
   plan_type: 'free' | 'starter' | 'pro';
 
@@ -269,7 +273,10 @@ export interface PricingPlan {
   price_per_seat: number;
 
   /**
-   * Minimum seats required for this plan.
+   * Minimum number of seats billed on this plan.
+   *
+   * When the account has fewer users than this minimum, the monthly bill is still
+   * calculated using this seat count. Null means no minimum.
    */
   seat_minimum: number | null;
 }
@@ -279,7 +286,10 @@ export interface PricingPlan {
  */
 export interface SwitchPlanResponse {
   /**
-   * Billing intent ID, if a billing intent was created.
+   * ID of the billing intent committed for the switch.
+   *
+   * Set to the committed billing intent ID for paid plan changes. Null for switches
+   * to the free plan, where no intent is surfaced.
    */
   intent_id: string | null;
 
@@ -296,17 +306,23 @@ export interface SwitchPlanResponse {
 
 export interface PlanListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

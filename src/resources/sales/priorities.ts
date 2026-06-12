@@ -75,7 +75,11 @@ export interface PriorityRetrieveParams {
 
 export interface PriorityListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -86,12 +90,14 @@ export interface PriorityListParams {
   include?: Array<'owner'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

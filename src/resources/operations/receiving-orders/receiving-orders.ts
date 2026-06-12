@@ -46,6 +46,9 @@ export class ReceivingOrders extends APIResource {
   /**
    * Returns a paginated list of receiving orders for the current account.
    *
+   * Only open (incomplete) orders are returned by default; pass `status` to change
+   * this.
+   *
    * @example
    * ```ts
    * const listReceivingOrder =
@@ -90,12 +93,16 @@ export interface ReceivingOrderRetrieveParams {
 
 export interface ReceivingOrderListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Filter by end date (inclusive).
+   * Only return orders created on or before this date (`YYYY-MM-DD`, inclusive).
    */
   end_date?: string;
 
@@ -106,32 +113,40 @@ export interface ReceivingOrderListParams {
   include?: Array<'supplier' | 'purchase_order' | 'lines' | 'lines.order_line'>;
 
   /**
-   * Filter by item IDs present in receiving order lines.
+   * Filter to orders that have at least one line for any of the given item IDs.
    */
   item_ids?: Array<string>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by start date (inclusive).
+   * Only return orders created on or after this date (`YYYY-MM-DD`, inclusive).
    */
   start_date?: string;
 
   /**
-   * Filter by status.
+   * Filter by completion status.
+   *
+   * Only open orders are returned when this is omitted.
+   *
+   * An order is `open` while any line is still unstocked and `completed` once every
+   * line is stocked; `all` returns both.
    */
   status?: string;
 
   /**
-   * Filter by supplier account IDs.
+   * Filter to orders whose originating purchase order was placed with any of the
+   * given supplier account IDs.
    */
   supplier_ids?: Array<string>;
 }

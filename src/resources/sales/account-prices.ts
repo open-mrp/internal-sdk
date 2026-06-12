@@ -13,8 +13,10 @@ import { path } from '../../internal/utils/path';
  */
 export class AccountPrices extends APIResource {
   /**
-   * Creates an account price for a recipient customer account. Account prices
-   * override all other pricing rules.
+   * Creates a customer-specific price for a product line.
+   *
+   * When an order line matches the price's product line and constraints, the account
+   * price overrides standard pricing for the recipient customer.
    *
    * @example
    * ```ts
@@ -56,7 +58,9 @@ export class AccountPrices extends APIResource {
   }
 
   /**
-   * Partially updates an account price. If category_ids or attribute_ids are
+   * Partially updates an account price.
+   *
+   * Only the provided fields are changed. If `category_ids` or `attribute_ids` are
    * provided, they replace the existing set entirely.
    *
    * @example
@@ -94,8 +98,11 @@ export class AccountPrices extends APIResource {
   }
 
   /**
-   * Deletes an account price. Associated category constraints, attribute
-   * constraints, and the rate record are also removed.
+   * Deletes an account price.
+   *
+   * Associated category constraints, attribute constraints, and the rate record are
+   * also removed. Deletion is permanent; further requests against the deleted ID
+   * return an error.
    *
    * @example
    * ```ts
@@ -111,7 +118,11 @@ export class AccountPrices extends APIResource {
 }
 
 /**
- * Customer-specific price for a product line.
+ * A customer-specific price for a product line.
+ *
+ * When an order line matches an account price's product line and constraints, the
+ * account price replaces the standard product line pricing for the recipient
+ * customer.
  */
 export interface AccountPrice {
   /**
@@ -141,16 +152,21 @@ export interface AccountPrice {
 
   /**
    * Product line resource.
+   *
+   * A product line groups related products in your catalog and carries the default
+   * commission policy, freight policy, and unit group for those products.
    */
   product_line: ProductLine | null;
 
   /**
-   * Rate resource.
+   * Value expressed as a ratio of two units, such as a price per kilogram or a
+   * throughput per hour.
    */
   rate: AccountUsersAPI.Rate | null;
 
   /**
-   * Customer account.
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
    */
   recipient_account: CustomersAPI.Customer | null;
 
@@ -166,11 +182,15 @@ export interface AccountPrice {
 export interface CreateAccountPriceRequest {
   /**
    * Attribute IDs to constrain this price to.
+   *
+   * When set, the price applies only to items that have every listed attribute.
    */
   attribute_ids: Array<string>;
 
   /**
    * Item category IDs to constrain this price to.
+   *
+   * When empty, the price is not restricted by item category.
    */
   category_ids: Array<string>;
 
@@ -180,12 +200,12 @@ export interface CreateAccountPriceRequest {
   product_line_id: string;
 
   /**
-   * Rate denominator unit ID.
+   * ID of the unit for the rate's denominator — the quantity unit being priced.
    */
   rate_denominator_unit_id: string;
 
   /**
-   * Rate numerator unit ID.
+   * ID of the unit for the rate's numerator, typically a currency unit.
    */
   rate_numerator_unit_id: string;
 
@@ -242,6 +262,9 @@ export interface ListItemCategory {
 
 /**
  * Product line resource.
+ *
+ * A product line groups related products in your catalog and carries the default
+ * commission policy, freight policy, and unit group for those products.
  */
 export interface ProductLine {
   /**
@@ -264,7 +287,7 @@ export interface ProductLine {
   created_at: string;
 
   /**
-   * Description.
+   * Free-form description of the product line.
    */
   description: string | null;
 
@@ -278,12 +301,12 @@ export interface ProductLine {
   freight_policy: 'free_freight' | 'billed_freight';
 
   /**
-   * Display name.
+   * Display name of the product line.
    */
   name: string;
 
   /**
-   * Notes.
+   * Free-form notes about the product line.
    */
   notes: string | null;
 
@@ -298,7 +321,8 @@ export interface ProductLine {
   owner: APIKeysAPI.Owner | null;
 
   /**
-   * UnitGroup is a unit group resource.
+   * Named collection of units sharing one dimension, defining which units products
+   * can be ordered in along with per-unit discounts and customer portal visibility.
    */
   unit_group: AccountUsersAPI.UnitGroup | null;
 
@@ -313,12 +337,18 @@ export interface ProductLine {
  */
 export interface UpdateAccountPriceRequest {
   /**
-   * Attribute IDs to constrain this price to. Replaces existing attributes.
+   * Attribute IDs to constrain this price to.
+   *
+   * When provided, replaces the existing set of attributes entirely; an empty list
+   * removes all attribute constraints.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Item category IDs to constrain this price to. Replaces existing categories.
+   * Item category IDs to constrain this price to.
+   *
+   * When provided, replaces the existing set of categories entirely; an empty list
+   * removes all category constraints.
    */
   category_ids?: Array<string>;
 
@@ -328,12 +358,12 @@ export interface UpdateAccountPriceRequest {
   product_line_id?: string;
 
   /**
-   * Rate denominator unit ID.
+   * ID of the unit for the rate's denominator — the quantity unit being priced.
    */
   rate_denominator_unit_id?: string;
 
   /**
-   * Rate numerator unit ID.
+   * ID of the unit for the rate's numerator, typically a currency unit.
    */
   rate_numerator_unit_id?: string;
 
@@ -343,7 +373,7 @@ export interface UpdateAccountPriceRequest {
   rate_value?: string;
 
   /**
-   * Recipient account ID.
+   * Recipient customer account ID.
    */
   recipient_account_id?: string;
 }
@@ -353,11 +383,15 @@ export interface AccountPriceDeleteResponse {}
 export interface AccountPriceCreateParams {
   /**
    * Body param: Attribute IDs to constrain this price to.
+   *
+   * When set, the price applies only to items that have every listed attribute.
    */
   attribute_ids: Array<string>;
 
   /**
    * Body param: Item category IDs to constrain this price to.
+   *
+   * When empty, the price is not restricted by item category.
    */
   category_ids: Array<string>;
 
@@ -367,12 +401,13 @@ export interface AccountPriceCreateParams {
   product_line_id: string;
 
   /**
-   * Body param: Rate denominator unit ID.
+   * Body param: ID of the unit for the rate's denominator — the quantity unit being
+   * priced.
    */
   rate_denominator_unit_id: string;
 
   /**
-   * Body param: Rate numerator unit ID.
+   * Body param: ID of the unit for the rate's numerator, typically a currency unit.
    */
   rate_numerator_unit_id: string;
 
@@ -409,14 +444,18 @@ export interface AccountPriceUpdateParams {
   include?: Array<'recipient_account' | 'product_line' | 'categories' | 'attributes'>;
 
   /**
-   * Body param: Attribute IDs to constrain this price to. Replaces existing
-   * attributes.
+   * Body param: Attribute IDs to constrain this price to.
+   *
+   * When provided, replaces the existing set of attributes entirely; an empty list
+   * removes all attribute constraints.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Body param: Item category IDs to constrain this price to. Replaces existing
-   * categories.
+   * Body param: Item category IDs to constrain this price to.
+   *
+   * When provided, replaces the existing set of categories entirely; an empty list
+   * removes all category constraints.
    */
   category_ids?: Array<string>;
 
@@ -426,12 +465,13 @@ export interface AccountPriceUpdateParams {
   product_line_id?: string;
 
   /**
-   * Body param: Rate denominator unit ID.
+   * Body param: ID of the unit for the rate's denominator — the quantity unit being
+   * priced.
    */
   rate_denominator_unit_id?: string;
 
   /**
-   * Body param: Rate numerator unit ID.
+   * Body param: ID of the unit for the rate's numerator, typically a currency unit.
    */
   rate_numerator_unit_id?: string;
 
@@ -441,29 +481,35 @@ export interface AccountPriceUpdateParams {
   rate_value?: string;
 
   /**
-   * Body param: Recipient account ID.
+   * Body param: Recipient customer account ID.
    */
   recipient_account_id?: string;
 }
 
 export interface AccountPriceListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Recipient account ID filter.
+   * Filters results to prices whose recipient is this customer account.
    */
   recipient_account_id?: string;
 }

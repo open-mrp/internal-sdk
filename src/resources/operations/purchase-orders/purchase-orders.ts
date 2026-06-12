@@ -37,6 +37,10 @@ export class PurchaseOrders extends APIResource {
   /**
    * Creates a purchase order.
    *
+   * The order number is assigned automatically and the order starts in `estimate`
+   * status. Bill-to and ship-to addresses are created from the inline address
+   * fields, and any provided lines and email contacts are created with the order.
+   *
    * @example
    * ```ts
    * const purchaseOrder =
@@ -144,6 +148,8 @@ export class PurchaseOrders extends APIResource {
   /**
    * Deletes a purchase order and all its related records.
    *
+   * Orders in `fulfilled` status cannot be deleted.
+   *
    * @example
    * ```ts
    * const purchaseOrder =
@@ -175,66 +181,74 @@ export class PurchaseOrders extends APIResource {
 
 /**
  * OrderLineInput represents the shared fields for creating an order line item.
+ *
  * Used as an embedded struct in purchase order and sales order line inputs.
  */
 export interface CreatePurchaseOrderLineInput {
   /**
-   * The product ID.
+   * ID of the product being ordered.
    */
   product_id: string;
 
   /**
-   * The product SKU.
+   * The product SKU recorded on the line.
+   *
+   * Stored on the line itself, so it stays stable even if the product's SKU changes
+   * later.
    */
   product_sku: string;
 
   /**
-   * The quantity unit ID.
+   * ID of the unit of measure for the quantity.
    */
   quantity_unit_id: string;
 
   /**
-   * The quantity value.
+   * Quantity ordered, as a decimal string.
    */
   quantity_value: string;
 
   /**
-   * The unit price denominator unit ID.
+   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
    */
   unit_price_denominator_unit_id: string;
 
   /**
-   * The unit price numerator unit ID.
+   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_price_numerator_unit_id: string;
 
   /**
-   * The unit price value.
+   * Price charged per unit, as a decimal string.
    */
   unit_price_value: string;
 
   /**
-   * The item ID.
+   * ID of the inventory item to tie the line to.
+   *
+   * Lines tied to an item have inventory reserved for them when the order is issued.
    */
   item_id?: string;
 
   /**
-   * The product description.
+   * The product description recorded on the line.
    */
   product_description?: string;
 
   /**
-   * The unit cost denominator unit ID.
+   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
    */
   unit_cost_denominator_unit_id?: string;
 
   /**
-   * The unit cost numerator unit ID.
+   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_cost_numerator_unit_id?: string;
 
   /**
-   * The unit cost value.
+   * Internal cost per unit, as a decimal string.
    */
   unit_cost_value?: string;
 }
@@ -249,17 +263,17 @@ export interface CreatePurchaseOrderRequest {
   lines: Array<CreatePurchaseOrderLineInput>;
 
   /**
-   * Priority code.
+   * Priority level for fulfilling the order (`low`, `normal`, or `high`).
    */
   priority_code: string;
 
   /**
-   * Supplier account ID.
+   * ID of the supplier account to place the order with.
    */
   supplier_account_id: string;
 
   /**
-   * Bill-to country.
+   * Bill-to country as a two-letter code.
    */
   bill_to_country?: string;
 
@@ -294,22 +308,25 @@ export interface CreatePurchaseOrderRequest {
   bill_to_street_line_2?: string;
 
   /**
-   * Carrier billing account number.
+   * Carrier account number to bill when the billing type is `third_party`.
    */
   carrier_billing_account?: string;
 
   /**
-   * Carrier billing type.
+   * Which party the carrier bills for freight (`sender` or `third_party`).
    */
   carrier_billing_type?: string;
 
   /**
-   * Carrier ID.
+   * ID of the carrier for the order's freight.
    */
   carrier_id?: string;
 
   /**
-   * Account user IDs for email contacts.
+   * IDs of account users to add as email contacts on the order.
+   *
+   * Contacts receive the purchase order email when the order is issued with
+   * `send_email`.
    */
   contact_account_user_ids?: Array<string>;
 
@@ -324,17 +341,17 @@ export interface CreatePurchaseOrderRequest {
   payment_term_id?: string;
 
   /**
-   * Promised delivery date.
+   * Promised delivery date in `YYYY-MM-DD` format.
    */
   promised_at?: string;
 
   /**
-   * Service level ID.
+   * ID of the carrier service level for the order's freight.
    */
   service_level_id?: string;
 
   /**
-   * Ship-to country.
+   * Ship-to country as a two-letter code.
    */
   ship_to_country?: string;
 
@@ -399,12 +416,15 @@ export interface ListPurchaseOrder {
  */
 export interface UpdatePurchaseOrderRequest {
   /**
-   * Billing address ID.
+   * ID of an existing address to use as the bill-to address.
    */
   billing_address_id?: string;
 
   /**
-   * Account user IDs for email contacts. Replaces existing contacts.
+   * IDs of account users to set as the order's email contacts.
+   *
+   * Replaces the full set of existing contacts; omit the field to leave contacts
+   * unchanged.
    */
   contact_account_user_ids?: Array<string>;
 
@@ -414,22 +434,26 @@ export interface UpdatePurchaseOrderRequest {
   note?: string;
 
   /**
-   * Purchase order number.
+   * New purchase order number.
+   *
+   * Must be unique within the account.
    */
   number?: string;
 
   /**
-   * Priority code.
+   * Priority level for fulfilling the order (`low`, `normal`, or `high`).
    */
   priority_code?: string;
 
   /**
-   * Promised delivery date.
+   * Promised delivery date in `YYYY-MM-DD` format.
+   *
+   * Returned as `scheduled_at` on the purchase order resource.
    */
   promised_at?: string;
 
   /**
-   * Shipping address ID.
+   * ID of an existing address to use as the ship-to address.
    */
   shipping_address_id?: string;
 }
@@ -443,12 +467,13 @@ export interface PurchaseOrderCreateParams {
   lines: Array<CreatePurchaseOrderLineInput>;
 
   /**
-   * Body param: Priority code.
+   * Body param: Priority level for fulfilling the order (`low`, `normal`, or
+   * `high`).
    */
   priority_code: string;
 
   /**
-   * Body param: Supplier account ID.
+   * Body param: ID of the supplier account to place the order with.
    */
   supplier_account_id: string;
 
@@ -469,7 +494,7 @@ export interface PurchaseOrderCreateParams {
   >;
 
   /**
-   * Body param: Bill-to country.
+   * Body param: Bill-to country as a two-letter code.
    */
   bill_to_country?: string;
 
@@ -504,22 +529,27 @@ export interface PurchaseOrderCreateParams {
   bill_to_street_line_2?: string;
 
   /**
-   * Body param: Carrier billing account number.
+   * Body param: Carrier account number to bill when the billing type is
+   * `third_party`.
    */
   carrier_billing_account?: string;
 
   /**
-   * Body param: Carrier billing type.
+   * Body param: Which party the carrier bills for freight (`sender` or
+   * `third_party`).
    */
   carrier_billing_type?: string;
 
   /**
-   * Body param: Carrier ID.
+   * Body param: ID of the carrier for the order's freight.
    */
   carrier_id?: string;
 
   /**
-   * Body param: Account user IDs for email contacts.
+   * Body param: IDs of account users to add as email contacts on the order.
+   *
+   * Contacts receive the purchase order email when the order is issued with
+   * `send_email`.
    */
   contact_account_user_ids?: Array<string>;
 
@@ -534,17 +564,17 @@ export interface PurchaseOrderCreateParams {
   payment_term_id?: string;
 
   /**
-   * Body param: Promised delivery date.
+   * Body param: Promised delivery date in `YYYY-MM-DD` format.
    */
   promised_at?: string;
 
   /**
-   * Body param: Service level ID.
+   * Body param: ID of the carrier service level for the order's freight.
    */
   service_level_id?: string;
 
   /**
-   * Body param: Ship-to country.
+   * Body param: Ship-to country as a two-letter code.
    */
   ship_to_country?: string;
 
@@ -620,12 +650,15 @@ export interface PurchaseOrderUpdateParams {
   >;
 
   /**
-   * Body param: Billing address ID.
+   * Body param: ID of an existing address to use as the bill-to address.
    */
   billing_address_id?: string;
 
   /**
-   * Body param: Account user IDs for email contacts. Replaces existing contacts.
+   * Body param: IDs of account users to set as the order's email contacts.
+   *
+   * Replaces the full set of existing contacts; omit the field to leave contacts
+   * unchanged.
    */
   contact_account_user_ids?: Array<string>;
 
@@ -635,34 +668,43 @@ export interface PurchaseOrderUpdateParams {
   note?: string;
 
   /**
-   * Body param: Purchase order number.
+   * Body param: New purchase order number.
+   *
+   * Must be unique within the account.
    */
   number?: string;
 
   /**
-   * Body param: Priority code.
+   * Body param: Priority level for fulfilling the order (`low`, `normal`, or
+   * `high`).
    */
   priority_code?: string;
 
   /**
-   * Body param: Promised delivery date.
+   * Body param: Promised delivery date in `YYYY-MM-DD` format.
+   *
+   * Returned as `scheduled_at` on the purchase order resource.
    */
   promised_at?: string;
 
   /**
-   * Body param: Shipping address ID.
+   * Body param: ID of an existing address to use as the ship-to address.
    */
   shipping_address_id?: string;
 }
 
 export interface PurchaseOrderListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Filter by end date (inclusive).
+   * Filter to orders created on or before this date (inclusive).
    */
   end_date?: string;
 
@@ -673,49 +715,57 @@ export interface PurchaseOrderListParams {
   include?: Array<'supplier' | 'lines'>;
 
   /**
-   * Filter by item IDs.
+   * Filter to orders with at least one line referencing any of these items.
    */
   item_ids?: Array<string>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by start date (inclusive).
+   * Filter to orders created on or after this date (inclusive).
    */
   start_date?: string;
 
   /**
-   * Filter by status codes.
+   * Filter to orders with any of these statuses (`estimate`, `issued`, `fulfilled`).
    */
   status_codes?: Array<string>;
 
   /**
-   * Filter by supplier IDs.
+   * Filter to orders placed with any of these suppliers.
    */
   supplier_ids?: Array<string>;
 }
 
 export interface PurchaseOrderRetrieveStatusesParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

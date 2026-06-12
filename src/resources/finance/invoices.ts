@@ -89,7 +89,7 @@ export interface AllocationInvoice {
 }
 
 /**
- * Invoice resource.
+ * An invoice billing a customer for goods shipped against a sales order.
  */
 export interface Invoice {
   /**
@@ -98,7 +98,7 @@ export interface Invoice {
   id: string;
 
   /**
-   * Whether the customer accepts invoice emails.
+   * Whether the billed customer is configured to receive invoices by email.
    */
   accepts_invoice_emails: boolean;
 
@@ -108,7 +108,8 @@ export interface Invoice {
   allocations: ListInvoiceAllocation | null;
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   billing_address: APIKeysAPI.Address | null;
 
@@ -118,27 +119,28 @@ export interface Invoice {
   created_at: string;
 
   /**
-   * Customer account.
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
    */
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Whether the customer is EDI enabled.
+   * Whether the billed customer is configured to exchange documents via EDI.
    */
   customer_is_edi_enabled: boolean;
 
   /**
-   * Whether the invoice has been sent.
+   * Whether the invoice has been sent to the customer.
    */
   has_been_sent: boolean;
 
   /**
-   * Whether the invoice has been sent via EDI.
+   * Whether the invoice has been transmitted to the customer via EDI.
    */
   is_edi_sent: boolean;
 
   /**
-   * Number of line items.
+   * Number of line items on the invoice.
    */
   line_count: number;
 
@@ -168,31 +170,28 @@ export interface Invoice {
   order: SalesOrdersAPI.SalesOrder | null;
 
   /**
-   * Payment status of the invoice, derived from the allocations applied to it.
+   * Payment status of the invoice, derived from its paid-in-full and overpaid flags
+   * rather than computed directly from allocations.
    *
-   * - `unpaid`: no payment has been received.
-   * - `partially_paid`: some but not all of the invoiced amount has been paid.
-   * - `paid`: paid in full.
-   * - `overpaid`: allocations exceed the invoiced amount.
+   * - `overpaid`: the applied allocations exceed the invoiced amount.
+   * - `partially_paid`: reserved for a future signal and not currently emitted.
    */
   payment_status: 'unpaid' | 'partially_paid' | 'paid' | 'overpaid';
 
   /**
-   * Payment term resource.
+   * A payment term describing when payment is due (e.g. `Net 30`), assignable to
+   * customers, sales orders, purchase orders, and invoices.
    */
   payment_term: CustomersAPI.PaymentTerm | null;
 
   /**
-   * Customer priority code carried onto the invoice.
-   *
-   * - `low`
-   * - `normal`
-   * - `high`
+   * Priority level carried onto the invoice from the order it bills.
    */
   priority: 'low' | 'normal' | 'high';
 
   /**
-   * Full shipment resource.
+   * A shipment of packed goods fulfilling a sales order, from packing through
+   * dispatch.
    */
   shipment: Shipment | null;
 
@@ -208,7 +207,12 @@ export interface Invoice {
 }
 
 /**
- * Transaction allocation against an invoice.
+ * A portion of a transaction applied against an invoice.
+ *
+ * Allocations connect transactions (payments, rebates, adjustments, and credit
+ * memos) to the invoices they pay down. The invoice's paid-in-full / overpaid
+ * state (and thus `payment_status`) is tracked separately and is not recomputed
+ * from these allocations.
  */
 export interface InvoiceAllocation {
   /**
@@ -237,7 +241,8 @@ export interface InvoiceAllocation {
   object: 'invoice_allocation';
 
   /**
-   * Full transaction resource.
+   * A financial transaction recorded against a customer, such as a payment, credit
+   * memo, adjustment, or rebate.
    */
   transaction: TransactionDetail | null;
 
@@ -282,7 +287,8 @@ export interface InvoiceLine {
   quantity: AccountUsersAPI.Quantity | null;
 
   /**
-   * Rate resource.
+   * Value expressed as a ratio of two units, such as a price per kilogram or a
+   * throughput per hour.
    */
   unit_price: AccountUsersAPI.Rate | null;
 
@@ -453,7 +459,8 @@ export interface ListTransactionAllocation {
 }
 
 /**
- * Pick is a full pick resource.
+ * A warehouse picking task for a sales order, tracking the quantities to pull from
+ * inventory and pack for shipment.
  */
 export interface Pick {
   /**
@@ -467,7 +474,8 @@ export interface Pick {
   created_at: string;
 
   /**
-   * Customer account.
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
    */
   customer: CustomersAPI.Customer | null;
 
@@ -479,7 +487,9 @@ export interface Pick {
   /**
    * Timestamp when the pick was finished.
    *
-   * `null` while the pick is still in progress.
+   * Unset while the pick is still in progress. Set automatically when packing leaves
+   * no unpacked lines with a remaining quantity to pick, and cleared when the pick
+   * is voided; it can also be set or cleared directly via Update Pick.
    */
   finished_at: string | null;
 
@@ -499,11 +509,8 @@ export interface Pick {
   object: 'pick';
 
   /**
-   * Pick priority code, used to order picks for fulfillment.
-   *
-   * - `low`: low priority.
-   * - `normal`: normal priority.
-   * - `high`: high priority.
+   * Priority used to order picks for fulfillment, inherited from the associated
+   * sales order.
    */
   priority: 'low' | 'normal' | 'high';
 
@@ -519,7 +526,8 @@ export interface Pick {
 }
 
 /**
- * PickLine is a pick line resource.
+ * A single line on a pick, tracking the quantity picked against one sales order
+ * line.
  */
 export interface PickLine {
   /**
@@ -545,7 +553,8 @@ export interface PickLine {
   /**
    * Timestamp when the line was packed.
    *
-   * `null` until the line has been packed.
+   * Unset until the line has been packed. Once packed, a line can no longer be
+   * picked or voided.
    */
   packed_at: string | null;
 
@@ -566,7 +575,8 @@ export interface PickLine {
 }
 
 /**
- * Full shipment resource.
+ * A shipment of packed goods fulfilling a sales order, from packing through
+ * dispatch.
  */
 export interface Shipment {
   /**
@@ -585,7 +595,8 @@ export interface Shipment {
   created_at: string;
 
   /**
-   * Customer account.
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
    */
   customer: CustomersAPI.Customer | null;
 
@@ -601,7 +612,7 @@ export interface Shipment {
   freight: SalesOrdersAPI.Freight | null;
 
   /**
-   * Invoice resource.
+   * An invoice billing a customer for goods shipped against a sales order.
    */
   invoice: Invoice | null;
 
@@ -611,7 +622,9 @@ export interface Shipment {
   lines: ListShipmentLine | null;
 
   /**
-   * Master tracking number.
+   * Carrier master tracking number covering the shipment as a whole.
+   *
+   * Individual shipping cases carry their own per-case tracking numbers.
    */
   master_tracking_number: string | null;
 
@@ -621,7 +634,7 @@ export interface Shipment {
   note: string | null;
 
   /**
-   * Shipment number.
+   * Human-readable shipment number.
    */
   number: string;
 
@@ -631,7 +644,8 @@ export interface Shipment {
   object: 'shipment';
 
   /**
-   * Pick is a full pick resource.
+   * A warehouse picking task for a sales order, tracking the quantities to pull from
+   * inventory and pack for shipment.
    */
   pick: Pick | null;
 
@@ -641,20 +655,24 @@ export interface Shipment {
   sales_order: SalesOrdersAPI.SalesOrder | null;
 
   /**
-   * Timestamp when shipped.
+   * Timestamp when the shipment was shipped.
+   *
+   * Null until the shipment is shipped; cleared again if the shipment is voided.
    */
   shipped_at: string | null;
 
   /**
-   * Account user with role and department.
+   * A user's membership in an account, carrying the account-specific status, role,
+   * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable user
-   * sub-resource.
+   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * sub-resource, which is shared across every account the user belongs to.
    */
   shipped_by: AccountUsersAPI.AccountUser | null;
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   shipping_address: APIKeysAPI.Address | null;
 
@@ -678,7 +696,8 @@ export interface Shipment {
 }
 
 /**
- * Shipment line resource.
+ * A shipment line recording the quantity of a sales order line included in a
+ * shipment.
  */
 export interface ShipmentLine {
   /**
@@ -718,7 +737,7 @@ export interface ShipmentLine {
 }
 
 /**
- * Shipping case resource in shipment detail views.
+ * A physical case (package) in a shipment, as shown in shipment detail views.
  */
 export interface ShippingCaseDetail {
   /**
@@ -727,7 +746,11 @@ export interface ShippingCaseDetail {
   id: string;
 
   /**
-   * Carrier resource.
+   * A shipping carrier configured for fulfilling orders.
+   *
+   * Carriers with a Shippo-supported `code` (`fedex`, `ups`, `usps`) are connected
+   * through Shippo for live rating and label purchase; other carriers represent
+   * self-managed shipping methods such as will call or local delivery.
    */
   carrier: CustomersAPI.Carrier | null;
 
@@ -762,22 +785,26 @@ export interface ShippingCaseDetail {
   shipped_at: string | null;
 
   /**
-   * Shipping label URL.
+   * URL of the printable shipping label for this case.
    */
   shipping_label_url: string | null;
 
   /**
-   * Shippo transaction ID.
+   * ID of the Shippo transaction for this case's shipping label, when the label was
+   * purchased through the Shippo integration.
    */
   shippo_transaction_id: string | null;
 
   /**
-   * Serial Shipping Container Code.
+   * Serial Shipping Container Code (SSCC) identifying this case.
+   *
+   * Assigned automatically when the shipment is shipped if the case does not already
+   * have one.
    */
   sscc: string | null;
 
   /**
-   * Carrier tracking number.
+   * Carrier tracking number for this case.
    */
   tracking_number: string | null;
 
@@ -788,7 +815,7 @@ export interface ShippingCaseDetail {
 }
 
 /**
- * Allocation of a transaction against an invoice.
+ * A portion of a transaction's amount applied to a specific invoice.
  */
 export interface TransactionAllocation {
   /**
@@ -812,7 +839,7 @@ export interface TransactionAllocation {
   invoice: AllocationInvoice | null;
 
   /**
-   * Note.
+   * Note attached to this allocation.
    */
   note: string | null;
 
@@ -822,7 +849,8 @@ export interface TransactionAllocation {
   object: 'transaction_allocation';
 
   /**
-   * Full transaction resource.
+   * A financial transaction recorded against a customer, such as a payment, credit
+   * memo, adjustment, or rebate.
    */
   transaction: TransactionDetail | null;
 
@@ -833,7 +861,8 @@ export interface TransactionAllocation {
 }
 
 /**
- * Full transaction resource.
+ * A financial transaction recorded against a customer, such as a payment, credit
+ * memo, adjustment, or rebate.
  */
 export interface TransactionDetail {
   /**
@@ -842,7 +871,10 @@ export interface TransactionDetail {
   id: string;
 
   /**
-   * Adjustment type resource.
+   * A category of financial adjustment, such as a discount, fee, or write-off.
+   *
+   * Adjustment types classify adjustment transactions recorded against customer
+   * invoices.
    */
   adjustment_type: FinanceAPI.AdjustmentType | null;
 
@@ -867,24 +899,30 @@ export interface TransactionDetail {
   created_at: string;
 
   /**
-   * Customer account.
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
    */
   customer: CustomersAPI.Customer | null;
 
   /**
    * Whether the full transaction amount has been allocated against invoices.
    *
-   * When `false`, some of the amount remains as an open (unapplied) balance.
+   * When `false`, some of the amount remains as an open (unapplied) balance and the
+   * transaction appears in the open credits list. This flag is set explicitly (see
+   * Update Transaction); it is not recomputed automatically when allocations change.
    */
   is_fully_allocated: boolean;
 
   /**
-   * Note.
+   * Free-form note attached to the transaction.
    */
   note: string | null;
 
   /**
-   * Transaction number.
+   * Human-readable transaction number.
+   *
+   * Generated automatically as a per-account sequence when the transaction is
+   * created. It can be changed later, but must remain unique within the account.
    */
   number: string;
 
@@ -894,10 +932,11 @@ export interface TransactionDetail {
   object: 'transaction';
 
   /**
-   * Account user with role and department.
+   * A user's membership in an account, carrying the account-specific status, role,
+   * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable user
-   * sub-resource.
+   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * sub-resource, which is shared across every account the user belongs to.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 
@@ -910,12 +949,12 @@ export interface TransactionDetail {
   stripe_payment_id: string | null;
 
   /**
-   * Transaction method resource.
+   * The payment method used to make a transaction, such as cash or check.
    */
   transaction_method: FinanceAPI.TransactionMethod | null;
 
   /**
-   * Transaction type resource.
+   * The category of a financial transaction, such as a payment or credit memo.
    */
   transaction_type: FinanceAPI.TransactionType | null;
 
@@ -930,7 +969,7 @@ export interface TransactionDetail {
  */
 export interface UpdateInvoiceRequest {
   /**
-   * Whether the invoice has been sent.
+   * Whether the invoice has been sent to the customer.
    */
   has_been_sent?: boolean;
 
@@ -941,6 +980,10 @@ export interface UpdateInvoiceRequest {
 
   /**
    * Whether the invoice has been paid in full.
+   *
+   * Setting this to `true` marks the invoice as paid regardless of recorded
+   * allocations, which updates the invoice's `payment_status` and removes it from
+   * receivables listings.
    */
   is_paid_in_full?: boolean;
 
@@ -970,7 +1013,7 @@ export interface InvoiceUpdateParams {
   >;
 
   /**
-   * Body param: Whether the invoice has been sent.
+   * Body param: Whether the invoice has been sent to the customer.
    */
   has_been_sent?: boolean;
 
@@ -981,6 +1024,10 @@ export interface InvoiceUpdateParams {
 
   /**
    * Body param: Whether the invoice has been paid in full.
+   *
+   * Setting this to `true` marks the invoice as paid regardless of recorded
+   * allocations, which updates the invoice's `payment_status` and removes it from
+   * receivables listings.
    */
   is_paid_in_full?: boolean;
 
@@ -992,7 +1039,11 @@ export interface InvoiceUpdateParams {
 
 export interface InvoiceListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -1007,7 +1058,7 @@ export interface InvoiceListParams {
   customer_ids?: Array<string>;
 
   /**
-   * Filter by end date (inclusive).
+   * Only return invoices created before this date (`YYYY-MM-DD`).
    */
   end_date?: string;
 
@@ -1023,7 +1074,7 @@ export interface InvoiceListParams {
   item_ids?: Array<string>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
@@ -1033,7 +1084,9 @@ export interface InvoiceListParams {
   product_line_ids?: Array<string>;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
@@ -1043,12 +1096,17 @@ export interface InvoiceListParams {
   sales_rep_ids?: Array<string>;
 
   /**
-   * Filter by start date (inclusive).
+   * Only return invoices created on or after this date (`YYYY-MM-DD`).
    */
   start_date?: string;
 
   /**
-   * Filter by status: all, paid, unpaid, or overpaid.
+   * Filter invoices by payment status.
+   *
+   * - `all`: no payment-status filtering (same as omitting the parameter).
+   * - `paid`: only invoices paid in full.
+   * - `unpaid`: only invoices that are neither paid in full nor overpaid.
+   * - `overpaid`: only invoices whose allocations exceed the invoiced amount.
    */
   status?: string;
 }

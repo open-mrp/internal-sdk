@@ -32,7 +32,10 @@ export class Batches extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Deletes a batch by ID.
+   * Deletes a batch by ID and returns the deleted batch.
+   *
+   * After deletion, the batch's production run (if any) is closed automatically once
+   * all of its batches are scanned or deleted.
    *
    * @example
    * ```ts
@@ -46,7 +49,12 @@ export class Batches extends APIResource {
   }
 
   /**
-   * Returns possible next production steps for a batch at a given scanning station.
+   * Returns the production steps a batch can be advanced to from a given scanning
+   * station.
+   *
+   * The batch's flow is traversed forward and the child steps of each reachable
+   * batch's current step are collected; only steps assigned to the given scanning
+   * station are returned.
    *
    * @example
    * ```ts
@@ -72,6 +80,10 @@ export class Batches extends APIResource {
    * Returns the remaining quantity available to split from the specified batches at
    * a given production step.
    *
+   * The remaining quantity is the step's expected output for the source batches
+   * minus the quantities already split off into output batches, expressed in the
+   * step's produced unit.
+   *
    * @example
    * ```ts
    * const quantity =
@@ -89,8 +101,11 @@ export class Batches extends APIResource {
   }
 
   /**
-   * Returns the production flow graph for a batch, including all input and output
-   * batch relationships.
+   * Returns the full production flow graph containing a batch.
+   *
+   * The flow is every batch connected to the given batch through input/output
+   * relationships, in both directions, returned as nodes with their input and output
+   * edges.
    *
    * @example
    * ```ts
@@ -106,7 +121,11 @@ export class Batches extends APIResource {
 }
 
 /**
- * Production batch.
+ * A quantity of an item tracked as it moves through production.
+ *
+ * Batches are created by production runs and advanced through production steps by
+ * scanning them at scanning stations — initializing, moving, merging, or splitting
+ * them. Input and output references link batches into a production flow graph.
  */
 export interface Batch {
   /**
@@ -125,7 +144,8 @@ export interface Batch {
   created_at: string;
 
   /**
-   * Department resource.
+   * A functional area of a production operation, such as fabrication or packaging,
+   * that groups scanning stations and machines.
    */
   department: AccountUsersAPI.Department | null;
 
@@ -160,12 +180,13 @@ export interface Batch {
   output_batches: ListBatchReference | null;
 
   /**
-   * Production run sub-resource.
+   * Minimal reference to the production run a batch was created under.
    */
   production_run: ProductionRun | null;
 
   /**
-   * Production step with all nested data.
+   * A single stage of work in an item's production flow, with its output, material
+   * inputs, cost rates, and graph connections.
    */
   production_step: AccountUsersAPI.ProductionStep | null;
 
@@ -181,7 +202,8 @@ export interface Batch {
   scanned_at: string | null;
 
   /**
-   * Scanning station resource.
+   * A station on the production floor where operators scan batches to perform a
+   * batch operation, such as initializing or moving a batch.
    */
   scanning_station: AccountUsersAPI.ScanningStation | null;
 
@@ -206,7 +228,11 @@ export interface Batch {
  */
 export interface BatchFlowNode {
   /**
-   * Production batch.
+   * A quantity of an item tracked as it moves through production.
+   *
+   * Batches are created by production runs and advanced through production steps by
+   * scanning them at scanning stations — initializing, moving, merging, or splitting
+   * them. Input and output references link batches into a production flow graph.
    */
   batch: Batch;
 
@@ -286,7 +312,8 @@ export interface GetRemainingQuantityToSplitRequest {
   batch_ids: Array<string>;
 
   /**
-   * Production step ID to check against.
+   * The production step the split would be performed at; its configuration
+   * determines the expected output quantity and unit.
    */
   production_step_id: string;
 }
@@ -372,7 +399,7 @@ export interface ListScanningProductionStepInfo {
 }
 
 /**
- * Production run sub-resource.
+ * Minimal reference to the production run a batch was created under.
  */
 export interface ProductionRun {
   /**
@@ -401,12 +428,15 @@ export interface ScanningProductionStepInfo {
   id: string;
 
   /**
-   * Whether this step supports multi-part batches.
+   * Whether the step combines multiple distinct part items.
+   *
+   * Multi-part steps require one batch per part to be supplied together when moving,
+   * merging, or splitting into the step.
    */
   is_multi_part: boolean;
 
   /**
-   * Display name.
+   * Production step name.
    */
   name: string;
 
@@ -430,7 +460,8 @@ export interface BatchRemainingQuantitiesParams {
   batch_ids: Array<string>;
 
   /**
-   * Production step ID to check against.
+   * The production step the split would be performed at; its configuration
+   * determines the expected output quantity and unit.
    */
   production_step_id: string;
 }

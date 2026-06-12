@@ -24,6 +24,9 @@ export class ProductionRuns extends APIResource {
   /**
    * Creates a production run.
    *
+   * The run number is assigned automatically as the next sequential number for the
+   * account.
+   *
    * @example
    * ```ts
    * const productionRunDetail =
@@ -57,7 +60,9 @@ export class ProductionRuns extends APIResource {
   }
 
   /**
-   * Partially updates a production run. Fails if the run is completed.
+   * Partially updates a production run.
+   *
+   * Fails if the run has been completed.
    *
    * @example
    * ```ts
@@ -101,7 +106,10 @@ export class ProductionRuns extends APIResource {
   }
 
   /**
-   * Deletes a production run and its associated batches and order links.
+   * Deletes a production run.
+   *
+   * All batches recorded against the run are deleted, linked orders are detached
+   * from the run, and reserved inventory for those orders is released.
    *
    * @example
    * ```ts
@@ -121,7 +129,10 @@ export class ProductionRuns extends APIResource {
  */
 export interface CreateProductionRunRequest {
   /**
-   * Responsible user ID.
+   * ID of the account user accountable for executing the run.
+   *
+   * Accepts either an account user ID or a user ID; it is resolved and stored as the
+   * account user.
    */
   responsible_user_id: string;
 }
@@ -161,9 +172,11 @@ export interface ProductionRunDetail {
   batch_count: number;
 
   /**
-   * Time the run was marked complete, or `null` if still in progress.
+   * Time the run was marked complete.
    *
-   * Once set, new batches can no longer be added to the run.
+   * Set automatically once every batch in the run has been scanned or deleted, and
+   * unset while the run is still in progress. Once set, the run can no longer be
+   * updated and new batches can no longer be added.
    */
   completed_at: string | null;
 
@@ -174,6 +187,9 @@ export interface ProductionRunDetail {
 
   /**
    * Production run number, unique per account.
+   *
+   * Assigned automatically at creation as the next sequential number for the
+   * account; can be changed via update.
    */
   number: string;
 
@@ -183,15 +199,19 @@ export interface ProductionRunDetail {
   object: 'production_run';
 
   /**
-   * Account user with role and department.
+   * A user's membership in an account, carrying the account-specific status, role,
+   * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable user
-   * sub-resource.
+   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * sub-resource, which is shared across every account the user belongs to.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 
   /**
-   * Time the run started production, or `null` if it has not started yet.
+   * Time the run started production.
+   *
+   * Set automatically when the first batch in the run is scanned, and unset until
+   * then.
    */
   started_at: string | null;
 
@@ -216,9 +236,11 @@ export interface ProductionRunSummary {
   batch_count: number;
 
   /**
-   * Time the run was marked complete, or `null` if still in progress.
+   * Time the run was marked complete.
    *
-   * Once set, new batches can no longer be added to the run.
+   * Set automatically once every batch in the run has been scanned or deleted, and
+   * unset while the run is still in progress. Once set, the run can no longer be
+   * updated and new batches can no longer be added.
    */
   completed_at: string | null;
 
@@ -229,6 +251,9 @@ export interface ProductionRunSummary {
 
   /**
    * Production run number, unique per account.
+   *
+   * Assigned automatically at creation as the next sequential number for the
+   * account; can be changed via update.
    */
   number: string;
 
@@ -238,15 +263,19 @@ export interface ProductionRunSummary {
   object: 'production_run';
 
   /**
-   * Account user with role and department.
+   * A user's membership in an account, carrying the account-specific status, role,
+   * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable user
-   * sub-resource.
+   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * sub-resource, which is shared across every account the user belongs to.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 
   /**
-   * Time the run started production, or `null` if it has not started yet.
+   * Time the run started production.
+   *
+   * Set automatically when the first batch in the run is scanned, and unset until
+   * then.
    */
   started_at: string | null;
 
@@ -261,12 +290,17 @@ export interface ProductionRunSummary {
  */
 export interface UpdateProductionRunRequest {
   /**
-   * Production run number.
+   * New production run number.
+   *
+   * Must be unique within the account.
    */
   number?: string;
 
   /**
-   * Responsible user ID.
+   * ID of the account user accountable for executing the run.
+   *
+   * Accepts either an account user ID or a user ID; it is resolved and stored as the
+   * account user.
    */
   responsible_user_id?: string;
 }
@@ -275,7 +309,10 @@ export interface ProductionRunDeleteResponse {}
 
 export interface ProductionRunCreateParams {
   /**
-   * Body param: Responsible user ID.
+   * Body param: ID of the account user accountable for executing the run.
+   *
+   * Accepts either an account user ID or a user ID; it is resolved and stored as the
+   * account user.
    */
   responsible_user_id: string;
 
@@ -302,24 +339,34 @@ export interface ProductionRunUpdateParams {
   include?: Array<'responsible_user' | 'responsible_user.user'>;
 
   /**
-   * Body param: Production run number.
+   * Body param: New production run number.
+   *
+   * Must be unique within the account.
    */
   number?: string;
 
   /**
-   * Body param: Responsible user ID.
+   * Body param: ID of the account user accountable for executing the run.
+   *
+   * Accepts either an account user ID or a user ID; it is resolved and stored as the
+   * account user.
    */
   responsible_user_id?: string;
 }
 
 export interface ProductionRunListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Filter by end date (inclusive).
+   * Only return runs created on or before this date (inclusive), formatted as
+   * `YYYY-MM-DD`.
    */
   end_date?: string;
 
@@ -330,32 +377,38 @@ export interface ProductionRunListParams {
   include?: Array<'responsible_user' | 'responsible_user.user'>;
 
   /**
-   * Filter by item IDs (batches containing these items).
+   * Only return runs containing at least one batch that produces any of these items.
    */
   item_ids?: Array<string>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Filter by machine IDs (batches using these machines).
+   * Only return runs containing at least one batch that used any of these machines.
    */
   machine_ids?: Array<string>;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by start date (inclusive).
+   * Only return runs created on or after this date (inclusive), formatted as
+   * `YYYY-MM-DD`.
    */
   start_date?: string;
 
   /**
-   * Filter by status: "open" or "closed".
+   * Filter by run status.
+   *
+   * - `open`: runs that have not been completed.
+   * - `closed`: runs that have been completed.
    */
   status?: string;
 }

@@ -11,8 +11,11 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Returns a sandbox API key for documentation. Reuses an existing valid key or
-   * creates one if none exists.
+   * Returns the sandbox API key used to try requests from the API documentation.
+   *
+   * Reuses the existing documentation key if it is still valid, rotates it if it has
+   * expired, and creates one if none exists. If the key was explicitly revoked,
+   * returns an error instead of regenerating it.
    *
    * @example
    * ```ts

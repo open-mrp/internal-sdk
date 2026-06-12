@@ -14,7 +14,7 @@ import { path } from '../../internal/utils/path';
  */
 export class Deliveries extends APIResource {
   /**
-   * Returns a delivery by ID, including all delivery lines.
+   * Returns a delivery by ID.
    *
    * @example
    * ```ts
@@ -50,7 +50,10 @@ export class Deliveries extends APIResource {
 }
 
 /**
- * Delivery with line items.
+ * A delivery of goods received against a purchase order.
+ *
+ * Each delivery records the items received and whether the delivery was accepted
+ * or rejected.
  */
 export interface Delivery {
   /**
@@ -59,7 +62,7 @@ export interface Delivery {
   id: string;
 
   /**
-   * Accepted timestamp.
+   * When the delivery was accepted, or null if it was rejected.
    */
   accepted_at: string | null;
 
@@ -74,7 +77,7 @@ export interface Delivery {
   lines: ListDeliveryLine | null;
 
   /**
-   * Delivery number.
+   * Human-readable delivery number.
    */
   number: string;
 
@@ -84,17 +87,20 @@ export interface Delivery {
   object: 'delivery';
 
   /**
-   * Full purchase order resource.
+   * An order placed with a supplier to purchase materials or products.
+   *
+   * The list endpoint returns this same type as the retrieve endpoint, with the same
+   * fields available.
    */
   purchase_order: PurchaseOrder | null;
 
   /**
-   * Rejected timestamp.
+   * When the delivery was rejected, or null if it was accepted.
    */
   rejected_at: string | null;
 
   /**
-   * Delivery status.
+   * Whether the delivery was accepted or rejected on receipt.
    *
    * - `accepted`: the delivery was received and accepted (`accepted_at` is set).
    * - `rejected`: the delivery was refused (`rejected_at` is set).
@@ -117,7 +123,7 @@ export interface DeliveryLine {
   id: string;
 
   /**
-   * Accepted timestamp.
+   * When this line was accepted.
    */
   accepted_at: string | null;
 
@@ -132,12 +138,14 @@ export interface DeliveryLine {
   item: AccountUsersAPI.Item | null;
 
   /**
-   * Location resource.
+   * A physical storage location, such as a warehouse, aisle, or bin, arranged in a
+   * parent-child hierarchy.
    */
   location: AccountUsersAPI.Location | null;
 
   /**
-   * Lot sub-resource.
+   * An inventory lot — a batch of an item received together and tracked under a
+   * single lot number.
    */
   lot: Lot | null;
 
@@ -152,12 +160,13 @@ export interface DeliveryLine {
   quantity: AccountUsersAPI.Quantity | null;
 
   /**
-   * Rejected timestamp.
+   * When this line was rejected.
    */
   rejected_at: string | null;
 
   /**
-   * Rate resource.
+   * Value expressed as a ratio of two units, such as a price per kilogram or a
+   * throughput per hour.
    */
   unit_cost: AccountUsersAPI.Rate | null;
 
@@ -168,7 +177,7 @@ export interface DeliveryLine {
 }
 
 /**
- * Email contact sub-resource.
+ * A contact that receives email communications for an order.
  */
 export interface EmailContact {
   /**
@@ -177,10 +186,11 @@ export interface EmailContact {
   id: string;
 
   /**
-   * Account user with role and department.
+   * A user's membership in an account, carrying the account-specific status, role,
+   * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable user
-   * sub-resource.
+   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * sub-resource, which is shared across every account the user belongs to.
    */
   account_user: AccountUsersAPI.AccountUser | null;
 
@@ -291,7 +301,8 @@ export interface ListReceivingOrderLine {
 }
 
 /**
- * Lot sub-resource.
+ * An inventory lot — a batch of an item received together and tracked under a
+ * single lot number.
  */
 export interface Lot {
   /**
@@ -300,7 +311,7 @@ export interface Lot {
   id: string;
 
   /**
-   * Lot number.
+   * Lot number identifying the batch.
    */
   lot_number: string;
 
@@ -311,7 +322,10 @@ export interface Lot {
 }
 
 /**
- * Full purchase order resource.
+ * An order placed with a supplier to purchase materials or products.
+ *
+ * The list endpoint returns this same type as the retrieve endpoint, with the same
+ * fields available.
  */
 export interface PurchaseOrder {
   /**
@@ -320,15 +334,16 @@ export interface PurchaseOrder {
   id: string;
 
   /**
-   * Whether an acknowledgment has been sent to the supplier.
+   * Whether the order acknowledgment email has been sent to the supplier.
    *
-   * - `not_sent`: no acknowledgment has been sent.
-   * - `sent`: the acknowledgment has been sent.
+   * Advances to `sent` when the order is issued with the `send_email` option;
+   * otherwise stays `not_sent`.
    */
   acknowledgment_status: 'not_sent' | 'sent';
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   bill_to_address: APIKeysAPI.Address | null;
 
@@ -368,7 +383,7 @@ export interface PurchaseOrder {
   issued_at: string | null;
 
   /**
-   * Total number of lines on the order, independent of whether `lines` is expanded.
+   * Total number of lines on the order.
    */
   line_count: number;
 
@@ -383,7 +398,10 @@ export interface PurchaseOrder {
   note: string | null;
 
   /**
-   * Purchase order number.
+   * Human-readable identifier for the order.
+   *
+   * Assigned automatically from a per-account sequence at creation; can be changed
+   * via update but must stay unique within the account.
    */
   number: string;
 
@@ -393,40 +411,44 @@ export interface PurchaseOrder {
   object: 'purchase_order';
 
   /**
-   * Payment term resource.
+   * A payment term describing when payment is due (e.g. `Net 30`), assignable to
+   * customers, sales orders, purchase orders, and invoices.
    */
   payment_term: CustomersAPI.PaymentTerm | null;
 
   /**
-   * Priority level for fulfilling the order.
-   *
-   * - `low`
-   * - `normal`
-   * - `high`
+   * Priority level for fulfilling the order, relative to other open orders.
    */
   priority: 'low' | 'normal' | 'high';
 
   /**
-   * Receiving order resource.
+   * A receiving order tracks inbound inventory against an issued purchase order.
    *
-   * The list endpoint returns this same type with only base fields populated;
-   * expandable references (purchase_order, supplier, lines) are populated via
-   * include[]=.
+   * One receiving order is created automatically when a purchase order is issued,
+   * with one line per purchase order line. As goods arrive, line quantities are
+   * received and then stocked into inventory; the order is marked complete once
+   * every line is stocked.
+   *
+   * The list endpoint returns this same type as the retrieve endpoint, with the same
+   * fields available.
    */
   receiving_order: ReceivingOrder | null;
 
   /**
    * Promised or scheduled date for the order, if one has been set.
+   *
+   * Set via the `promised_at` request field.
    */
   scheduled_at: string | null;
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   ship_to_address: APIKeysAPI.Address | null;
 
   /**
-   * ShippingTerm resource.
+   * A shipping term defining how freight charges are calculated for an order.
    */
   shipping_term: CustomersAPI.ShippingTerm | null;
 
@@ -440,7 +462,7 @@ export interface PurchaseOrder {
   status: 'estimate' | 'issued' | 'fulfilled';
 
   /**
-   * Supplier sub-resource.
+   * The supplier (selling account) an order is placed with.
    */
   supplier: Supplier | null;
 
@@ -451,7 +473,7 @@ export interface PurchaseOrder {
 }
 
 /**
- * Full purchase order line resource.
+ * A single line item on a purchase order.
  */
 export interface PurchaseOrderLine {
   /**
@@ -500,12 +522,14 @@ export interface PurchaseOrderLine {
   quantity_received: AccountUsersAPI.Quantity | null;
 
   /**
-   * Rate resource.
+   * Value expressed as a ratio of two units, such as a price per kilogram or a
+   * throughput per hour.
    */
   unit_cost: AccountUsersAPI.Rate | null;
 
   /**
-   * Rate resource.
+   * Value expressed as a ratio of two units, such as a price per kilogram or a
+   * throughput per hour.
    */
   unit_price: AccountUsersAPI.Rate | null;
 
@@ -516,11 +540,15 @@ export interface PurchaseOrderLine {
 }
 
 /**
- * Receiving order resource.
+ * A receiving order tracks inbound inventory against an issued purchase order.
  *
- * The list endpoint returns this same type with only base fields populated;
- * expandable references (purchase_order, supplier, lines) are populated via
- * include[]=.
+ * One receiving order is created automatically when a purchase order is issued,
+ * with one line per purchase order line. As goods arrive, line quantities are
+ * received and then stocked into inventory; the order is marked complete once
+ * every line is stocked.
+ *
+ * The list endpoint returns this same type as the retrieve endpoint, with the same
+ * fields available.
  */
 export interface ReceivingOrder {
   /**
@@ -531,8 +559,6 @@ export interface ReceivingOrder {
   /**
    * Timestamp when the receiving order was completed, set automatically once all of
    * its lines have been stocked.
-   *
-   * `null` while any line remains unstocked.
    */
   completed_at: string | null;
 
@@ -563,7 +589,9 @@ export interface ReceivingOrder {
   lines: ListReceivingOrderLine | null;
 
   /**
-   * Note on the receiving order.
+   * Free-text note carried over from the originating purchase order.
+   *
+   * Present only on the retrieve response; it is not returned in list results.
    */
   note: string | null;
 
@@ -582,12 +610,15 @@ export interface ReceivingOrder {
   object: 'receiving_order';
 
   /**
-   * Full purchase order resource.
+   * An order placed with a supplier to purchase materials or products.
+   *
+   * The list endpoint returns this same type as the retrieve endpoint, with the same
+   * fields available.
    */
   purchase_order: PurchaseOrder | null;
 
   /**
-   * Supplier sub-resource.
+   * The supplier (selling account) an order is placed with.
    */
   supplier: Supplier | null;
 
@@ -599,6 +630,11 @@ export interface ReceivingOrder {
 
 /**
  * Line item in a receiving order.
+ *
+ * One line is created per purchase order line when the purchase order is issued,
+ * with its quantity initialized to the full ordered quantity. When a line is
+ * stocked short of the ordered quantity, a new line is created automatically for
+ * the remainder.
  */
 export interface ReceivingOrderLine {
   /**
@@ -639,8 +675,7 @@ export interface ReceivingOrderLine {
   /**
    * Timestamp when the received quantity was stocked into inventory.
    *
-   * `null` until the line is stocked; once set, the line counts toward the order's
-   * `completion_percentage`.
+   * Once set, the line counts toward the order's `completion_percentage`.
    */
   stocked_at: string | null;
 
@@ -651,7 +686,7 @@ export interface ReceivingOrderLine {
 }
 
 /**
- * Supplier sub-resource.
+ * The supplier (selling account) an order is placed with.
  */
 export interface Supplier {
   /**
@@ -660,12 +695,12 @@ export interface Supplier {
   id: string;
 
   /**
-   * Display name.
+   * Name of the supplier account.
    */
   name: string;
 
   /**
-   * Supplier number.
+   * Human-facing supplier code, unique per account (e.g. `SUP-001`).
    */
   number: string;
 
@@ -685,12 +720,16 @@ export interface DeliveryRetrieveParams {
 
 export interface DeliveryListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Filter by end date (inclusive).
+   * Only include deliveries created on or before this date (`YYYY-MM-DD`).
    */
   end_date?: string;
 
@@ -701,32 +740,40 @@ export interface DeliveryListParams {
   include?: Array<'purchase_order' | 'purchase_order.supplier' | 'lines'>;
 
   /**
-   * Filter by item IDs present in delivery lines.
+   * Filter to deliveries with at least one line for any of the given item IDs.
    */
   item_ids?: Array<string>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by start date (inclusive).
+   * Only include deliveries created on or after this date (`YYYY-MM-DD`).
    */
   start_date?: string;
 
   /**
-   * Filter by status: all, accepted, or rejected. Defaults to accepted.
+   * Filter by delivery status.
+   *
+   * When omitted, only accepted deliveries are returned; rejected deliveries are
+   * hidden unless you opt in.
+   *
+   * - `all`: deliveries of any status, including rejected.
    */
   status?: string;
 
   /**
-   * Filter by supplier account IDs.
+   * Filter to deliveries whose purchase order is with any of the given supplier
+   * account IDs.
    */
   supplier_ids?: Array<string>;
 }

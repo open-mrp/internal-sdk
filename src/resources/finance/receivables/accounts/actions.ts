@@ -11,7 +11,8 @@ import { path } from '../../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Exports all receivable entries for a specific customer account as a CSV file.
+   * Exports all outstanding receivable entries for a specific customer account as a
+   * CSV file.
    *
    * @example
    * ```ts
@@ -35,7 +36,11 @@ export class Actions extends APIResource {
 
 export interface ActionExportParams {
   /**
-   * Cutoff date for the receivables snapshot.
+   * Compute receivable balances as of this timestamp.
+   *
+   * Only invoices created before the cutoff are included, and only allocations made
+   * before the cutoff are subtracted from each remaining balance. When omitted,
+   * current balances are returned.
    */
   cutoff_date?: string;
 }

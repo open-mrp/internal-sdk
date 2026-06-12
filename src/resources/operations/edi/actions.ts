@@ -10,8 +10,9 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Triggers an EDI pull-orders operation, pulling orders from FTP and processing
-   * invoices via Stedi.
+   * Triggers the target account's EDI pull-orders operation.
+   *
+   * Returns a confirmation message.
    *
    * @example
    * ```ts
@@ -24,8 +25,9 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Resubmits an invoice via EDI. Fails if the invoice does not exist or EDI is not
-   * enabled on the account.
+   * Triggers an EDI resubmission request for an invoice.
+   *
+   * Returns a confirmation message.
    *
    * @example
    * ```ts
@@ -48,14 +50,14 @@ export class Actions extends APIResource {
  */
 export interface ResubmitEdiInvoiceRequest {
   /**
-   * Invoice ID.
+   * ID of the invoice to resubmit.
    */
   invoice_id: string;
 }
 
 export interface ActionResubmitInvoiceParams {
   /**
-   * Invoice ID.
+   * ID of the invoice to resubmit.
    */
   invoice_id: string;
 }
