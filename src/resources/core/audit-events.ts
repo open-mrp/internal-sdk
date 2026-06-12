@@ -73,6 +73,11 @@ export interface AuditEvent {
   id: string;
 
   /**
+   * A customer account, including its branding and customer portal sub-resources.
+   */
+  account: APIKeysAPI.Account | null;
+
+  /**
    * Mutation type.
    *
    * - `create`: the resource was created.
@@ -648,10 +653,18 @@ export interface AuditEventRetrieveParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'actor' | 'changes' | 'metadata' | 'request'>;
+  include?: Array<'account' | 'actor' | 'changes' | 'metadata' | 'request'>;
 }
 
 export interface AuditEventListParams {
+  /**
+   * Filter by the target account the mutation was performed against.
+   *
+   * Narrows results to audit events whose `account` is one of the given account IDs
+   * — for example a specific customer's or supplier's account.
+   */
+  account_ids?: Array<string>;
+
   /**
    * Filter by the mutation type recorded on the event.
    */
@@ -683,7 +696,7 @@ export interface AuditEventListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'actor' | 'changes' | 'metadata' | 'request'>;
+  include?: Array<'account' | 'actor' | 'changes' | 'metadata' | 'request'>;
 
   /**
    * Maximum number of results to return in a single page.

@@ -510,14 +510,14 @@ export interface PageInfo {
   /**
    * Relative URL that fetches the next page of results.
    *
-   * Absent once the last page has been reached.
+   * `null` when the last page has been reached.
    */
   next_page_url: string | null;
 
   /**
    * Relative URL that fetches the previous page of results.
    *
-   * Absent while on the first page.
+   * `null` while on the first page.
    */
   previous_page_url: string | null;
 }

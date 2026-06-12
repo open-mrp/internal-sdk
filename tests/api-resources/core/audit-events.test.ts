@@ -24,7 +24,7 @@ describe('resource auditEvents', () => {
     await expect(
       client.core.auditEvents.retrieve(
         'ae_01b1c07dc3085bbd84111edcbd',
-        { include: ['actor'] },
+        { include: ['account'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
@@ -46,11 +46,12 @@ describe('resource auditEvents', () => {
     await expect(
       client.core.auditEvents.list(
         {
+          account_ids: ['string'],
           actions: ['create'],
           actor_ids: ['string'],
           cursor: 'cursor',
           end_date: '2019-12-27T18:11:19.117Z',
-          include: ['actor'],
+          include: ['account'],
           limit: 0,
           q: 'q',
           resource_ids: ['string'],
