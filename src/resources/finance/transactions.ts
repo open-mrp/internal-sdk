@@ -101,7 +101,8 @@ export class Transactions extends APIResource {
   }
 
   /**
-   * Deletes a transaction and cascades deletion to allocations.
+   * Deletes a transaction along with all of its invoice allocations, and returns the
+   * deleted transaction.
    *
    * @example
    * ```ts
@@ -126,37 +127,49 @@ export class Transactions extends APIResource {
  */
 export interface CreateTransactionRequest {
   /**
-   * Transaction amount as a decimal string.
+   * Transaction amount as a decimal string, in US dollars.
    */
   amount: string;
 
   /**
-   * Customer ID.
+   * ID of the customer the transaction is recorded against.
    */
   customer_id: string;
 
   /**
    * Transaction type code.
+   *
+   * - `payment`: money received from the customer.
+   * - `credit_memo`: a credit issued to the customer.
+   * - `adjustment`: a manual correction (also provide `adjustment_type`).
+   * - `rebate`: a rebate granted to the customer.
    */
   type: string;
 
   /**
-   * Adjustment type code.
+   * Adjustment type code (see List Adjustment Types for available values).
+   *
+   * Typically provided when `type` is `adjustment`.
    */
   adjustment_type?: string;
 
   /**
-   * Transaction method code.
+   * Payment method code: one of `cash`, `check`, `credit_card`, `gift_card`, or
+   * `ach`.
+   *
+   * Typically provided for payment transactions.
    */
   method?: string;
 
   /**
-   * Note.
+   * Free-form note attached to the transaction.
    */
   note?: string;
 
   /**
-   * Responsible user ID.
+   * ID of the account user responsible for the transaction.
+   *
+   * When omitted, the account user making the request is recorded as responsible.
    */
   responsible_user_id?: string;
 }
@@ -191,7 +204,10 @@ export interface TransactionSummary {
   id: string;
 
   /**
-   * Adjustment type resource.
+   * A category of financial adjustment, such as a discount, fee, or write-off.
+   *
+   * Adjustment types classify adjustment transactions recorded against customer
+   * invoices.
    */
   adjustment_type: FinanceAPI.AdjustmentType | null;
 
@@ -211,19 +227,22 @@ export interface TransactionSummary {
   created_at: string;
 
   /**
-   * Customer account.
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
    */
   customer: CustomersAPI.Customer | null;
 
   /**
    * Whether the full transaction amount has been allocated against invoices.
    *
-   * When `false`, some of the amount remains as an open (unapplied) balance.
+   * When `false`, some of the amount remains as an open (unapplied) balance and the
+   * transaction appears in the open credits list. This flag is set explicitly (see
+   * Update Transaction); it is not recomputed automatically when allocations change.
    */
   is_fully_allocated: boolean;
 
   /**
-   * Transaction number.
+   * Human-readable transaction number, unique within the account.
    */
   number: string;
 
@@ -233,12 +252,12 @@ export interface TransactionSummary {
   object: 'transaction_summary';
 
   /**
-   * Transaction method resource.
+   * The payment method used to make a transaction, such as cash or check.
    */
   transaction_method: FinanceAPI.TransactionMethod | null;
 
   /**
-   * Transaction type resource.
+   * The category of a financial transaction, such as a payment or credit memo.
    */
   transaction_type: FinanceAPI.TransactionType | null;
 
@@ -254,68 +273,86 @@ export interface TransactionSummary {
 export interface UpdateTransactionRequest {
   /**
    * Set to true to clear the adjustment type.
+   *
+   * Takes precedence over `adjustment_type` if both are provided.
    */
   clear_adjustment_type: boolean;
 
   /**
    * Set to true to clear the responsible user.
+   *
+   * Takes precedence over `responsible_user_id` if both are provided.
    */
   clear_responsible_user: boolean;
 
   /**
    * Set to true to clear the transaction method.
+   *
+   * Takes precedence over `method` if both are provided.
    */
   clear_transaction_method: boolean;
 
   /**
-   * Adjustment type code.
+   * Adjustment type code (see List Adjustment Types for available values).
    */
   adjustment_type?: string;
 
   /**
-   * Amount as a decimal string.
+   * New transaction amount as a decimal string, in US dollars.
    */
   amount?: string;
 
   /**
-   * Allocation status.
+   * Whether the full transaction amount has been allocated against invoices.
+   *
+   * This flag is set explicitly here; it is not recomputed automatically when
+   * allocations change.
    */
   is_fully_allocated?: boolean;
 
   /**
-   * Transaction method code.
+   * Payment method code: one of `cash`, `check`, `credit_card`, `gift_card`, or
+   * `ach`.
    */
   method?: string;
 
   /**
-   * Note.
+   * Free-form note attached to the transaction.
    */
   note?: string;
 
   /**
-   * Transaction number.
+   * New transaction number.
+   *
+   * Must be unique within the account; the request fails with a conflict error if
+   * another transaction already uses it.
    */
   number?: string;
 
   /**
-   * Responsible user ID.
+   * ID of the account user responsible for the transaction.
    */
   responsible_user_id?: string;
 }
 
 export interface TransactionCreateParams {
   /**
-   * Body param: Transaction amount as a decimal string.
+   * Body param: Transaction amount as a decimal string, in US dollars.
    */
   amount: string;
 
   /**
-   * Body param: Customer ID.
+   * Body param: ID of the customer the transaction is recorded against.
    */
   customer_id: string;
 
   /**
    * Body param: Transaction type code.
+   *
+   * - `payment`: money received from the customer.
+   * - `credit_memo`: a credit issued to the customer.
+   * - `adjustment`: a manual correction (also provide `adjustment_type`).
+   * - `rebate`: a rebate granted to the customer.
    */
   type: string;
 
@@ -326,22 +363,30 @@ export interface TransactionCreateParams {
   include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
 
   /**
-   * Body param: Adjustment type code.
+   * Body param: Adjustment type code (see List Adjustment Types for available
+   * values).
+   *
+   * Typically provided when `type` is `adjustment`.
    */
   adjustment_type?: string;
 
   /**
-   * Body param: Transaction method code.
+   * Body param: Payment method code: one of `cash`, `check`, `credit_card`,
+   * `gift_card`, or `ach`.
+   *
+   * Typically provided for payment transactions.
    */
   method?: string;
 
   /**
-   * Body param: Note.
+   * Body param: Free-form note attached to the transaction.
    */
   note?: string;
 
   /**
-   * Body param: Responsible user ID.
+   * Body param: ID of the account user responsible for the transaction.
+   *
+   * When omitted, the account user making the request is recorded as responsible.
    */
   responsible_user_id?: string;
 }
@@ -357,16 +402,22 @@ export interface TransactionRetrieveParams {
 export interface TransactionUpdateParams {
   /**
    * Body param: Set to true to clear the adjustment type.
+   *
+   * Takes precedence over `adjustment_type` if both are provided.
    */
   clear_adjustment_type: boolean;
 
   /**
    * Body param: Set to true to clear the responsible user.
+   *
+   * Takes precedence over `responsible_user_id` if both are provided.
    */
   clear_responsible_user: boolean;
 
   /**
    * Body param: Set to true to clear the transaction method.
+   *
+   * Takes precedence over `method` if both are provided.
    */
   clear_transaction_method: boolean;
 
@@ -377,37 +428,46 @@ export interface TransactionUpdateParams {
   include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
 
   /**
-   * Body param: Adjustment type code.
+   * Body param: Adjustment type code (see List Adjustment Types for available
+   * values).
    */
   adjustment_type?: string;
 
   /**
-   * Body param: Amount as a decimal string.
+   * Body param: New transaction amount as a decimal string, in US dollars.
    */
   amount?: string;
 
   /**
-   * Body param: Allocation status.
+   * Body param: Whether the full transaction amount has been allocated against
+   * invoices.
+   *
+   * This flag is set explicitly here; it is not recomputed automatically when
+   * allocations change.
    */
   is_fully_allocated?: boolean;
 
   /**
-   * Body param: Transaction method code.
+   * Body param: Payment method code: one of `cash`, `check`, `credit_card`,
+   * `gift_card`, or `ach`.
    */
   method?: string;
 
   /**
-   * Body param: Note.
+   * Body param: Free-form note attached to the transaction.
    */
   note?: string;
 
   /**
-   * Body param: Transaction number.
+   * Body param: New transaction number.
+   *
+   * Must be unique within the account; the request fails with a conflict error if
+   * another transaction already uses it.
    */
   number?: string;
 
   /**
-   * Body param: Responsible user ID.
+   * Body param: ID of the account user responsible for the transaction.
    */
   responsible_user_id?: string;
 }
@@ -419,7 +479,11 @@ export interface TransactionListParams {
   adjustment_types?: Array<string>;
 
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -434,7 +498,7 @@ export interface TransactionListParams {
   customer_ids?: Array<string>;
 
   /**
-   * Filter by end date (inclusive).
+   * Only include transactions created before this date (`YYYY-MM-DD`).
    */
   end_date?: string;
 
@@ -445,32 +509,37 @@ export interface TransactionListParams {
   include?: Array<'customer'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Filter by transaction method codes.
+   * Filter by payment method codes (`cash`, `check`, `credit_card`, `gift_card`,
+   * `ach`).
    */
   methods?: Array<string>;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by start date (inclusive).
+   * Only include transactions created on or after this date (`YYYY-MM-DD`).
    */
   start_date?: string;
 
   /**
-   * Filter by allocation status (allocated, unallocated, partially_allocated).
+   * Filter by allocation status: `allocated` (fully allocated against invoices) or
+   * `unallocated` (has an open balance).
    */
   status?: string;
 
   /**
-   * Filter by transaction type codes.
+   * Filter by transaction type codes (`payment`, `credit_memo`, `adjustment`,
+   * `rebate`).
    */
   types?: Array<string>;
 }

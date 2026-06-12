@@ -15,7 +15,8 @@ export class Accounts extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Returns a paginated list of receivable entries for a specific customer account.
+   * Returns a paginated list of outstanding receivable entries for a specific
+   * customer account.
    *
    * @example
    * ```ts
@@ -36,22 +37,32 @@ export class Accounts extends APIResource {
 
 export interface AccountRetrieveParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Cutoff date for the receivables snapshot.
+   * Compute receivable balances as of this timestamp.
+   *
+   * Only invoices created before the cutoff are included, and only allocations made
+   * before the cutoff are subtracted from each remaining balance. When omitted,
+   * current balances are returned.
    */
   cutoff_date?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

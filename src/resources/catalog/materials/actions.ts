@@ -43,7 +43,7 @@ export interface ActionExportParams {
   end_date?: string;
 
   /**
-   * Optional search query.
+   * Free-text search query matched against materials.
    */
   q?: string;
 

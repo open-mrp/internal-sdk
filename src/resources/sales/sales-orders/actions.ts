@@ -11,7 +11,10 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Deletes multiple sales orders in a single operation.
+   * Deletes multiple sales orders in a single atomic operation.
+   *
+   * Fulfilled orders cannot be deleted; if any requested order fails this check, no
+   * orders are deleted.
    *
    * @example
    * ```ts
@@ -26,7 +29,9 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Closes a sales order, transitioning it from issued to fulfilled.
+   * Closes a sales order, transitioning it from `issued` to `fulfilled`.
+   *
+   * Sets the order's completion timestamp and marks its pick as finished.
    *
    * @example
    * ```ts
@@ -48,6 +53,10 @@ export class Actions extends APIResource {
   /**
    * Creates a production run from a sales order.
    *
+   * Creates a batch for each of the order's item-backed lines, reserves the material
+   * inventory required to produce them, and links the run to the order. An order can
+   * have at most one production run.
+   *
    * @example
    * ```ts
    * const createProductionRunResponse =
@@ -61,7 +70,10 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Issues a sales order, transitioning it from estimate to issued.
+   * Issues a sales order, transitioning it from `estimate` to `issued`.
+   *
+   * Issuing commits the order for fulfillment: a pick is created for the order's
+   * sale lines and inventory is reserved for each line tied to an inventory item.
    *
    * @example
    * ```ts
@@ -81,7 +93,9 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Reopens a sales order, transitioning it from fulfilled back to issued.
+   * Reopens a sales order, transitioning it from `fulfilled` back to `issued`.
+   *
+   * Clears the order's completion timestamp and marks its pick as unfinished.
    *
    * @example
    * ```ts
@@ -97,7 +111,10 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Unissues a sales order, transitioning it from issued back to estimate.
+   * Unissues a sales order, transitioning it from `issued` back to `estimate`.
+   *
+   * Deletes the order's pick and releases any inventory reserved when the order was
+   * issued.
    *
    * @example
    * ```ts
@@ -122,7 +139,7 @@ export class Actions extends APIResource {
  */
 export interface BulkDeleteSalesOrdersRequest {
   /**
-   * Sales order IDs.
+   * IDs of the sales orders to delete.
    */
   sales_order_ids: Array<string>;
 }
@@ -133,6 +150,9 @@ export interface BulkDeleteSalesOrdersRequest {
 export interface CloseSalesOrderRequest {
   /**
    * Whether to notify the customer.
+   *
+   * Reserved for future use; no notification email is currently sent for this
+   * action.
    */
   notify_customer: boolean;
 }
@@ -172,7 +192,10 @@ export interface CreateProductionRunResponseRef {
  */
 export interface IssueSalesOrderRequest {
   /**
-   * Whether to notify the customer (e.g. send an order acknowledgement email).
+   * Whether to notify the customer.
+   *
+   * When `true`, the order acknowledgement email is sent to the contacts configured
+   * on the order and the order's `acknowledgment_status` is set to `sent`.
    */
   notify_customer: boolean;
 }
@@ -183,6 +206,9 @@ export interface IssueSalesOrderRequest {
 export interface OpenSalesOrderRequest {
   /**
    * Whether to notify the customer.
+   *
+   * Reserved for future use; no notification email is currently sent for this
+   * action.
    */
   notify_customer: boolean;
 }
@@ -193,6 +219,9 @@ export interface OpenSalesOrderRequest {
 export interface UnissueSalesOrderRequest {
   /**
    * Whether to notify the customer.
+   *
+   * Reserved for future use; no notification email is currently sent for this
+   * action.
    */
   notify_customer: boolean;
 }
@@ -201,7 +230,7 @@ export interface ActionBulkDeleteResponse {}
 
 export interface ActionBulkDeleteParams {
   /**
-   * Sales order IDs.
+   * IDs of the sales orders to delete.
    */
   sales_order_ids: Array<string>;
 }
@@ -209,13 +238,19 @@ export interface ActionBulkDeleteParams {
 export interface ActionCloseParams {
   /**
    * Whether to notify the customer.
+   *
+   * Reserved for future use; no notification email is currently sent for this
+   * action.
    */
   notify_customer: boolean;
 }
 
 export interface ActionIssueParams {
   /**
-   * Whether to notify the customer (e.g. send an order acknowledgement email).
+   * Whether to notify the customer.
+   *
+   * When `true`, the order acknowledgement email is sent to the contacts configured
+   * on the order and the order's `acknowledgment_status` is set to `sent`.
    */
   notify_customer: boolean;
 }
@@ -223,6 +258,9 @@ export interface ActionIssueParams {
 export interface ActionOpenParams {
   /**
    * Whether to notify the customer.
+   *
+   * Reserved for future use; no notification email is currently sent for this
+   * action.
    */
   notify_customer: boolean;
 }
@@ -230,6 +268,9 @@ export interface ActionOpenParams {
 export interface ActionUnissueParams {
   /**
    * Whether to notify the customer.
+   *
+   * Reserved for future use; no notification email is currently sent for this
+   * action.
    */
   notify_customer: boolean;
 }

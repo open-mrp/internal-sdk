@@ -15,9 +15,12 @@ export class Integrations extends APIResource {
   stripe: StripeAPI.Stripe = new StripeAPI.Stripe(this._client);
 
   /**
-   * Creates an account integration, or updates an existing one with the same
-   * integration code. Credentials are encrypted at rest and never returned in API
-   * responses.
+   * Creates an account integration, or updates the name and credentials of an
+   * existing one with the same integration code.
+   *
+   * Credentials are validated for the provider, encrypted at rest, and never
+   * returned in API responses. An account can have at most one integration per
+   * integration code.
    *
    * @example
    * ```ts
@@ -36,6 +39,10 @@ export class Integrations extends APIResource {
 
   /**
    * Updates an account integration's name and active status.
+   *
+   * Omitted fields are left unchanged. Credentials cannot be changed with this
+   * endpoint; to rotate credentials, call Create Account Integration again with the
+   * same integration code.
    *
    * @example
    * ```ts
@@ -102,6 +109,10 @@ export interface AccountIntegration {
 
   /**
    * Whether the integration is active.
+   *
+   * Integrations are created active. Deactivating an integration keeps its stored
+   * credentials but stops it from being used (for example, the Stripe publishable
+   * key cannot be retrieved while the Stripe integration is inactive).
    */
   is_active: boolean;
 
@@ -134,12 +145,24 @@ export interface AccountIntegration {
  */
 export interface CreateAccountIntegrationRequest {
   /**
-   * Credentials JSON string containing provider-specific keys.
+   * JSON string containing the provider's credentials.
+   *
+   * Required keys depend on the provider:
+   *
+   * - `stripe`: `privateKey` (`sk_...`), `publishableKey` (`pk_...`), and
+   *   `webhookSecret` (`whsec_...`).
+   * - `shippo`: `apiKey` (`shippo_live_...` or `shippo_test_...`).
+   *
+   * Sandbox accounts must use test keys and production accounts must use live keys;
+   * credentials that do not match are rejected.
    */
   credentials: string;
 
   /**
    * Integration provider code.
+   *
+   * - `stripe`: Stripe payment processing.
+   * - `shippo`: Shippo shipping and label generation.
    */
   integration_code: 'stripe' | 'shippo';
 
@@ -175,6 +198,9 @@ export interface ListAccountIntegration {
 export interface UpdateAccountIntegrationRequest {
   /**
    * Whether the integration is active.
+   *
+   * Set to `false` to deactivate the integration without deleting its stored
+   * credentials.
    */
   is_active?: boolean;
 
@@ -186,12 +212,24 @@ export interface UpdateAccountIntegrationRequest {
 
 export interface IntegrationCreateParams {
   /**
-   * Credentials JSON string containing provider-specific keys.
+   * JSON string containing the provider's credentials.
+   *
+   * Required keys depend on the provider:
+   *
+   * - `stripe`: `privateKey` (`sk_...`), `publishableKey` (`pk_...`), and
+   *   `webhookSecret` (`whsec_...`).
+   * - `shippo`: `apiKey` (`shippo_live_...` or `shippo_test_...`).
+   *
+   * Sandbox accounts must use test keys and production accounts must use live keys;
+   * credentials that do not match are rejected.
    */
   credentials: string;
 
   /**
    * Integration provider code.
+   *
+   * - `stripe`: Stripe payment processing.
+   * - `shippo`: Shippo shipping and label generation.
    */
   integration_code: 'stripe' | 'shippo';
 
@@ -204,6 +242,9 @@ export interface IntegrationCreateParams {
 export interface IntegrationUpdateParams {
   /**
    * Whether the integration is active.
+   *
+   * Set to `false` to deactivate the integration without deleting its stored
+   * credentials.
    */
   is_active?: boolean;
 
@@ -215,17 +256,23 @@ export interface IntegrationUpdateParams {
 
 export interface IntegrationListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

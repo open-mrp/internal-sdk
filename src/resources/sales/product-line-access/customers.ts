@@ -13,7 +13,11 @@ import { path } from '../../../internal/utils/path';
  */
 export class Customers extends APIResource {
   /**
-   * Creates product line access for a customer.
+   * Grants a customer direct access to a set of product lines.
+   *
+   * Each customer can have at most one access record; fails with a conflict error if
+   * one already exists. Use Update Customer Product Line Access to change an
+   * existing record.
    *
    * @example
    * ```ts
@@ -29,7 +33,7 @@ export class Customers extends APIResource {
   }
 
   /**
-   * Returns the product line access for a customer.
+   * Returns a customer's direct product line access record.
    *
    * @example
    * ```ts
@@ -44,7 +48,7 @@ export class Customers extends APIResource {
   }
 
   /**
-   * Replaces all product line access for a customer.
+   * Replaces a customer's direct product line access with the provided set.
    *
    * @example
    * ```ts
@@ -83,7 +87,10 @@ export class Customers extends APIResource {
   }
 
   /**
-   * Removes all product line access for a customer.
+   * Removes a customer's direct product line access record.
+   *
+   * Access the customer inherits through its type group or pricing groups is not
+   * affected.
    *
    * @example
    * ```ts
@@ -103,18 +110,22 @@ export class Customers extends APIResource {
  */
 export interface CreateCustomerProductLineAccessRequest {
   /**
-   * Customer ID.
+   * ID of the customer to grant product line access to.
    */
   customer_id: string;
 
   /**
-   * Product line IDs to grant access to.
+   * IDs of the product lines the customer can access.
    */
   product_line_ids: Array<string>;
 }
 
 /**
- * Product lines accessible to a customer.
+ * The product lines directly accessible to a customer.
+ *
+ * Determines which product lines (and their products) the customer can browse and
+ * order. Direct access granted here combines with any access the customer inherits
+ * through its type group or pricing groups.
  */
 export interface CustomerProductLineAccess {
   /**
@@ -123,7 +134,8 @@ export interface CustomerProductLineAccess {
   created_at: string;
 
   /**
-   * Customer account.
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
    */
   customer: CustomersAPI.Customer | null;
 
@@ -168,7 +180,10 @@ export interface ListCustomerProductLineAccess {
  */
 export interface UpdateCustomerProductLineAccessRequest {
   /**
-   * Product line IDs to grant access to.
+   * The full set of product line IDs the customer can access.
+   *
+   * Replaces all existing direct product line access. Omitting this field or sending
+   * an empty list removes all direct access.
    */
   product_line_ids?: Array<string>;
 }
@@ -177,36 +192,45 @@ export interface CustomerDeleteResponse {}
 
 export interface CustomerCreateParams {
   /**
-   * Customer ID.
+   * ID of the customer to grant product line access to.
    */
   customer_id: string;
 
   /**
-   * Product line IDs to grant access to.
+   * IDs of the product lines the customer can access.
    */
   product_line_ids: Array<string>;
 }
 
 export interface CustomerUpdateParams {
   /**
-   * Product line IDs to grant access to.
+   * The full set of product line IDs the customer can access.
+   *
+   * Replaces all existing direct product line access. Omitting this field or sending
+   * an empty list removes all direct access.
    */
   product_line_ids?: Array<string>;
 }
 
 export interface CustomerListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

@@ -116,6 +116,9 @@ export class AI extends APIResource {
 
 /**
  * Daily agent token usage record.
+ *
+ * One record exists per account per day, aggregating LLM token consumption, cost,
+ * and run count across all agent runs that day.
  */
 export interface AgentTokenUsage {
   /**
@@ -129,12 +132,12 @@ export interface AgentTokenUsage {
   created_at: string;
 
   /**
-   * Date of usage (YYYY-MM-DD).
+   * Date of usage (`YYYY-MM-DD`).
    */
   date: string;
 
   /**
-   * Total input tokens consumed.
+   * Total input tokens consumed on this date.
    */
   input_tokens: number;
 
@@ -144,17 +147,17 @@ export interface AgentTokenUsage {
   object: 'agent_token_usage';
 
   /**
-   * Total output tokens consumed.
+   * Total output tokens consumed on this date.
    */
   output_tokens: number;
 
   /**
-   * Number of agent runs.
+   * Number of agent runs on this date.
    */
   run_count: number;
 
   /**
-   * Total cost in USD.
+   * Total cost in USD for this date.
    */
   total_cost: number;
 
@@ -292,7 +295,7 @@ export interface ToolGroup {
   id: string;
 
   /**
-   * Description.
+   * Description of what the tools in this group do.
    */
   description: string | null;
 
@@ -302,7 +305,7 @@ export interface ToolGroup {
   icon: string;
 
   /**
-   * Display name.
+   * Human-readable group name (e.g. `Product Tools`).
    */
   name: string;
 
@@ -329,7 +332,11 @@ export interface ToolGroup {
 
 export interface AIRetrieveToolGroupsParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -340,29 +347,37 @@ export interface AIRetrieveToolGroupsParams {
   include?: Array<'tools'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }
 
 export interface AIRetrieveToolsParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }
@@ -374,12 +389,12 @@ export interface AIRetrieveUsageParams {
   cursor?: string;
 
   /**
-   * Number of days of usage history to return. Defaults to 30.
+   * Number of days of usage history to return, counting back from today.
    */
   days?: number;
 
   /**
-   * Maximum number of records to return per page. Defaults to 100.
+   * Maximum number of records to return per page.
    */
   limit?: number;
 }

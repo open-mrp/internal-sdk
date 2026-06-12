@@ -43,7 +43,11 @@ export class ProductionSteps extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Creates a production step with production output, rates, and consumptions.
+   * Creates a production step with its production output, cost rates, and
+   * consumptions.
+   *
+   * The step is automatically connected into the production flow graph based on the
+   * items it produces and consumes.
    *
    * @example
    * ```ts
@@ -154,6 +158,9 @@ export class ProductionSteps extends APIResource {
   /**
    * Deletes a production step and its associated data.
    *
+   * The step's connections in the production flow graph are removed as part of the
+   * deletion.
+   *
    * @example
    * ```ts
    * const productionStep =
@@ -187,12 +194,12 @@ export interface CreateConsumptionInput {
   quantity_value: string;
 
   /**
-   * Waste quantity unit ID.
+   * Unit ID for `waste_quantity_value`.
    */
   waste_quantity_unit_id: string;
 
   /**
-   * Waste quantity value as a decimal string.
+   * Quantity expected to be lost as scrap or waste, as a decimal string.
    */
   waste_quantity_value: string;
 
@@ -227,12 +234,13 @@ export interface CreateProductionInput {
  */
 export interface CreateProductionStepRequest {
   /**
-   * Allowances as a decimal string.
+   * Allowance correction factor applied to labor time in cost calculations, as a
+   * decimal string.
    */
   allowances: string;
 
   /**
-   * Consumptions.
+   * Materials consumed by the step.
    */
   consumptions: Array<CreateConsumptionInput>;
 
@@ -247,12 +255,13 @@ export interface CreateProductionStepRequest {
   labor_time: CreateRateInput;
 
   /**
-   * Leveling factor as a decimal string.
+   * Leveling correction factor applied to labor time in cost calculations, as a
+   * decimal string.
    */
   leveling_factor: string;
 
   /**
-   * Display name.
+   * Display name of the step.
    */
   name: string;
 
@@ -272,7 +281,7 @@ export interface CreateProductionStepRequest {
   department_id?: string;
 
   /**
-   * Notes.
+   * Free-form notes about the step.
    */
   notes?: string;
 
@@ -307,17 +316,21 @@ export interface CreateRateInput {
  */
 export interface UpdateProductionStepRequest {
   /**
-   * Allowances as a decimal string.
+   * Allowance correction factor applied to labor time in cost calculations, as a
+   * decimal string.
    */
   allowances?: string;
 
   /**
-   * Leveling factor as a decimal string.
+   * Leveling correction factor applied to labor time in cost calculations, as a
+   * decimal string.
    */
   leveling_factor?: string;
 
   /**
-   * Display name.
+   * New display name.
+   *
+   * Must be unique within the account.
    */
   name?: string;
 
@@ -331,12 +344,13 @@ export interface ProductionStepDeleteResponse {}
 
 export interface ProductionStepCreateParams {
   /**
-   * Allowances as a decimal string.
+   * Allowance correction factor applied to labor time in cost calculations, as a
+   * decimal string.
    */
   allowances: string;
 
   /**
-   * Consumptions.
+   * Materials consumed by the step.
    */
   consumptions: Array<CreateConsumptionInput>;
 
@@ -351,12 +365,13 @@ export interface ProductionStepCreateParams {
   labor_time: CreateRateInput;
 
   /**
-   * Leveling factor as a decimal string.
+   * Leveling correction factor applied to labor time in cost calculations, as a
+   * decimal string.
    */
   leveling_factor: string;
 
   /**
-   * Display name.
+   * Display name of the step.
    */
   name: string;
 
@@ -376,7 +391,7 @@ export interface ProductionStepCreateParams {
   department_id?: string;
 
   /**
-   * Notes.
+   * Free-form notes about the step.
    */
   notes?: string;
 
@@ -408,17 +423,21 @@ export interface ProductionStepRetrieveParams {
 
 export interface ProductionStepUpdateParams {
   /**
-   * Allowances as a decimal string.
+   * Allowance correction factor applied to labor time in cost calculations, as a
+   * decimal string.
    */
   allowances?: string;
 
   /**
-   * Leveling factor as a decimal string.
+   * Leveling correction factor applied to labor time in cost calculations, as a
+   * decimal string.
    */
   leveling_factor?: string;
 
   /**
-   * Display name.
+   * New display name.
+   *
+   * Must be unique within the account.
    */
   name?: string;
 
@@ -430,12 +449,16 @@ export interface ProductionStepUpdateParams {
 
 export interface ProductionStepListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Filter by end date.
+   * Only return steps created on or before this timestamp (inclusive).
    */
   end_date?: string;
 
@@ -458,42 +481,44 @@ export interface ProductionStepListParams {
   >;
 
   /**
-   * Filter by input step IDs.
+   * Only return steps that are directly fed by any of these upstream steps.
    */
   input_step_ids?: Array<string>;
 
   /**
-   * Filter by produced item IDs.
+   * Only return steps that produce or consume any of these items.
    */
   item_ids?: Array<string>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Filter by machine IDs.
+   * Only return steps with any of these machines assigned.
    */
   machine_ids?: Array<string>;
 
   /**
-   * Filter by output step IDs.
+   * Only return steps that feed directly into any of these downstream steps.
    */
   output_step_ids?: Array<string>;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by scanning station IDs.
+   * Only return steps assigned to any of these scanning stations.
    */
   scanning_station_ids?: Array<string>;
 
   /**
-   * Filter by start date.
+   * Only return steps created on or after this timestamp (inclusive).
    */
   start_date?: string;
 }

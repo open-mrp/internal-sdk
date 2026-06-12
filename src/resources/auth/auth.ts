@@ -83,6 +83,7 @@ export class Auth extends APIResource {
 
   /**
    * Rotates the password for a scanner-role account user backing a scanning station.
+   *
    * Requires the caller's current password for verification.
    *
    * @example
@@ -115,8 +116,12 @@ export class Auth extends APIResource {
   }
 
   /**
-   * Registers a user on the customer portal. Returns the user object and sets access
-   * and refresh tokens in cookies.
+   * Registers a user on the customer portal.
+   *
+   * Returns the new user object and sets access and refresh tokens in cookies. If
+   * the email is already registered, the request fails with a generic validation
+   * error (so existing emails are not revealed) and an "already registered" email
+   * containing a magic login link is sent to the existing user instead.
    *
    * @example
    * ```ts
@@ -179,7 +184,10 @@ export interface UpdateScannerPasswordRequest {
 }
 
 /**
- * User resource.
+ * A user's global profile, shared across every account they belong to.
+ *
+ * Account-specific settings (status, role, department) live on the account user
+ * resource that links the user to each account.
  */
 export interface User {
   /**
@@ -194,29 +202,21 @@ export interface User {
 
   /**
    * Email address.
-   *
-   * `null` if the user has no email on record.
    */
   email: string | null;
 
   /**
    * When the user verified their email address.
-   *
-   * `null` if the email is unverified.
    */
   email_verified_at: string | null;
 
   /**
    * URL of the user's profile image.
-   *
-   * `null` if no image has been uploaded.
    */
   image_url: string | null;
 
   /**
    * User's full display name.
-   *
-   * `null` if not set.
    */
   name: string | null;
 
@@ -232,8 +232,6 @@ export interface User {
 
   /**
    * Username.
-   *
-   * `null` if the user has no username.
    */
   username: string | null;
 }

@@ -11,7 +11,7 @@ import { path } from '../../internal/utils/path';
  */
 export class DcLocations extends APIResource {
   /**
-   * Creates a DC location.
+   * Creates a distribution-center (DC) location for a customer.
    *
    * @example
    * ```ts
@@ -44,6 +44,8 @@ export class DcLocations extends APIResource {
   /**
    * Partially updates a DC location.
    *
+   * Omitted fields are left unchanged.
+   *
    * @example
    * ```ts
    * const dcLocation =
@@ -62,7 +64,7 @@ export class DcLocations extends APIResource {
   }
 
   /**
-   * Returns a paginated list of DC locations for the current account.
+   * Returns a paginated list of DC locations for the target account.
    *
    * @example
    * ```ts
@@ -98,18 +100,20 @@ export class DcLocations extends APIResource {
  */
 export interface CreateDcLocationRequest {
   /**
-   * Customer account ID.
+   * ID of the customer account this DC location belongs to.
    */
   customer_id: string;
 
   /**
-   * Location description.
+   * Free-form description identifying the distribution-center location, such as a
+   * warehouse name and bay (for example, `Warehouse A - Bay 3`).
    */
   location: string;
 }
 
 /**
- * DC location resource.
+ * A distribution-center (DC) location belonging to a customer, used when
+ * processing orders received via EDI.
  */
 export interface DcLocation {
   /**
@@ -123,7 +127,7 @@ export interface DcLocation {
   created_at: string;
 
   /**
-   * Customer sub-resource on a DC location.
+   * Identifying details of the customer a DC location belongs to.
    */
   customer: DcLocationCustomer | null;
 
@@ -145,7 +149,7 @@ export interface DcLocation {
 }
 
 /**
- * Customer sub-resource on a DC location.
+ * Identifying details of the customer a DC location belongs to.
  */
 export interface DcLocationCustomer {
   /**
@@ -154,7 +158,7 @@ export interface DcLocationCustomer {
   id: string;
 
   /**
-   * Display name.
+   * Display name of the customer.
    */
   name: string;
 
@@ -189,12 +193,13 @@ export interface ListDcLocation {
  */
 export interface UpdateDcLocationRequest {
   /**
-   * Customer account ID.
+   * ID of the customer account to reassign this DC location to.
    */
   customer_id?: string;
 
   /**
-   * Location description.
+   * Free-form description identifying the distribution-center location, such as a
+   * warehouse name and bay (for example, `Warehouse B - Bay 1`).
    */
   location?: string;
 }
@@ -203,41 +208,49 @@ export interface DcLocationDeleteResponse {}
 
 export interface DcLocationCreateParams {
   /**
-   * Customer account ID.
+   * ID of the customer account this DC location belongs to.
    */
   customer_id: string;
 
   /**
-   * Location description.
+   * Free-form description identifying the distribution-center location, such as a
+   * warehouse name and bay (for example, `Warehouse A - Bay 3`).
    */
   location: string;
 }
 
 export interface DcLocationUpdateParams {
   /**
-   * Customer account ID.
+   * ID of the customer account to reassign this DC location to.
    */
   customer_id?: string;
 
   /**
-   * Location description.
+   * Free-form description identifying the distribution-center location, such as a
+   * warehouse name and bay (for example, `Warehouse B - Bay 1`).
    */
   location?: string;
 }
 
 export interface DcLocationListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

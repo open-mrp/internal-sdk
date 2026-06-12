@@ -12,6 +12,9 @@ export class Photo extends APIResource {
   /**
    * Uploads a profile photo for a user.
    *
+   * The photo replaces any existing one, and the user's `image_url` is updated to
+   * serve the new photo.
+   *
    * @example
    * ```ts
    * const userPhotoUploadResult =
@@ -25,7 +28,9 @@ export class Photo extends APIResource {
   }
 
   /**
-   * Returns a presigned URL for the user's profile photo. Expires after one hour.
+   * Returns a presigned URL for the user's profile photo.
+   *
+   * The URL expires one hour after it is issued.
    *
    * @example
    * ```ts
@@ -49,7 +54,7 @@ export interface UserPhotoUploadResult {
   object: 'user_photo_upload_result';
 
   /**
-   * Upload success status.
+   * Whether the photo was uploaded successfully.
    */
   success: boolean;
 }
@@ -64,7 +69,9 @@ export interface UserPhotoURL {
   object: 'user_photo_url';
 
   /**
-   * Presigned URL for the profile photo, or null if no photo exists.
+   * Presigned URL for the profile photo.
+   *
+   * The URL is valid for one hour after it is issued.
    */
   url: string | null;
 }

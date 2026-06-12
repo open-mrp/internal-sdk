@@ -13,8 +13,13 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Estimates a shipping rate for a given carrier, carrier option, addresses, and
-   * parcels.
+   * Estimates the shipping rate for a specific carrier and service level.
+   *
+   * Freight rules are applied before live rating: freight-exempt product lines or
+   * customers, free-freight shipping terms, and a met free-shipping minimum order
+   * value all return `0`, and a flat-rate shipping term returns its flat rate. Live
+   * rates require the Shippo integration; carriers without live rating configured
+   * return `0`.
    *
    * @example
    * ```ts
@@ -54,8 +59,15 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Compares shipping rates across all available carriers and options for the given
-   * addresses and parcels.
+   * Compares shipping rates across all of the account's carriers and service levels
+   * for the given addresses and parcels.
+   *
+   * Returns options sorted by rate ascending, after applying the account's freight
+   * rules: freight-exempt product lines or customers and free-freight shipping terms
+   * return no options, a flat-rate shipping term replaces carrier rates with the
+   * flat rate, and a met free-shipping minimum order value zeroes the rate on
+   * eligible options. Live carrier rates require the Shippo integration; carriers
+   * without live rating configured are returned with a rate of `0`.
    *
    * @example
    * ```ts
@@ -93,8 +105,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Marks a shipment as shipped and optionally sends a shipping notification email
-   * to the customer.
+   * Marks a shipment as shipped.
+   *
+   * Sets the shipment status to `shipped`, records `shipped_at` and the acting user
+   * as `shipped_by`, marks all shipping cases as shipped, and assigns an SSCC to any
+   * case that does not already have one. Fails with a conflict error if the shipment
+   * has already been shipped.
    *
    * @example
    * ```ts
@@ -115,7 +131,13 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Voids a shipment, cancelling it and returning its lines to the sales order.
+   * Voids a shipped shipment, returning it to the `packed` status.
+   *
+   * Only shipments in the `shipped` status can be voided; otherwise a conflict error
+   * is returned. Voiding clears `shipped_at` and `shipped_by`, clears tracking and
+   * label details from the shipment's shipping cases, deletes the invoice created
+   * for the shipment if one exists, and marks the associated sales order as
+   * unfulfilled.
    *
    * @example
    * ```ts
@@ -135,12 +157,13 @@ export class Actions extends APIResource {
  */
 export interface EstimateRateRequest {
   /**
-   * Carrier ID.
+   * ID of the carrier to rate.
    */
   carrier_id: string;
 
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   from_address: CustomersAPI.AddressInput;
 
@@ -150,27 +173,35 @@ export interface EstimateRateRequest {
   parcels: Array<ParcelInput>;
 
   /**
-   * Service level ID.
+   * ID of the carrier service level to rate.
    */
   service_level_id: string;
 
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   to_address: CustomersAPI.AddressInput;
 
   /**
-   * Customer ID.
+   * ID of the customer the shipment is for, used to apply the customer's freight
+   * policy and default shipping term.
+   *
+   * A freight-exempt customer or a free-freight shipping term yields a rate of `0`;
+   * a flat-rate shipping term returns the flat rate.
    */
   customer_id?: string;
 
   /**
-   * Total order value.
+   * Total value of the order, used to evaluate the free-shipping minimum order value
+   * on the customer's shipping term.
    */
   order_total?: number;
 
   /**
-   * Product line IDs.
+   * Product lines of the items being shipped, used to apply freight exemptions.
+   *
+   * If any listed product line is freight exempt, the estimated rate is `0`.
    */
   product_line_ids?: Array<string>;
 }
@@ -185,7 +216,12 @@ export interface EstimateRateResult {
   object: 'estimate_rate_result';
 
   /**
-   * Estimated rate amount.
+   * Estimated shipping rate.
+   *
+   * `0` when freight is exempt (a freight-exempt product line or customer, or a
+   * free-freight shipping term), when the free-shipping minimum order value is met,
+   * or when the carrier is not configured for live rating. When the customer's
+   * shipping term has a flat rate, the flat rate is returned.
    */
   rate: number;
 }
@@ -211,41 +247,45 @@ export interface ListRateShopOption {
 }
 
 /**
- * Parcel for rate estimation.
+ * A parcel's weight and dimensions for shipping rate calculations.
  */
 export interface ParcelInput {
   /**
-   * Height.
+   * Parcel height in inches.
    */
   height: number;
 
   /**
-   * Length.
+   * Parcel length in inches.
    */
   length: number;
 
   /**
-   * Weight.
+   * Parcel weight in pounds.
    */
   weight: number;
 
   /**
-   * Width.
+   * Parcel width in inches.
    */
   width: number;
 }
 
 /**
- * Rate shop option.
+ * A single carrier and service level option returned by rate shopping.
  */
 export interface RateShopOption {
   /**
-   * Carrier resource.
+   * A shipping carrier configured for fulfilling orders.
+   *
+   * Carriers with a Shippo-supported `code` (`fedex`, `ups`, `usps`) are connected
+   * through Shippo for live rating and label purchase; other carriers represent
+   * self-managed shipping methods such as will call or local delivery.
    */
   carrier: CustomersAPI.Carrier | null;
 
   /**
-   * Estimated delivery days.
+   * Estimated number of days until delivery, when the carrier provides an estimate.
    */
   estimated_days: number | null;
 
@@ -255,7 +295,10 @@ export interface RateShopOption {
   object: 'rate_shop_option';
 
   /**
-   * Rate amount.
+   * Quoted shipping rate for this carrier and service level.
+   *
+   * `0` when the carrier is not configured for live rating, or when a free-shipping
+   * rule (such as a met minimum order value) applies to this option.
    */
   rate: number;
 
@@ -270,7 +313,8 @@ export interface RateShopOption {
  */
 export interface RateShopRequest {
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   from_address: CustomersAPI.AddressInput;
 
@@ -280,22 +324,32 @@ export interface RateShopRequest {
   parcels: Array<ParcelInput>;
 
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   to_address: CustomersAPI.AddressInput;
 
   /**
-   * Customer ID.
+   * ID of the customer the shipment is for, used to apply the customer's freight
+   * policy and default shipping term.
+   *
+   * A freight-exempt customer or a free-freight shipping term returns no options
+   * with `exemption_type` set to `freight_exempt`; a flat-rate shipping term
+   * replaces carrier rates with the flat rate.
    */
   customer_id?: string;
 
   /**
-   * Total order value.
+   * Total value of the order, used to evaluate the free-shipping minimum order value
+   * on the customer's shipping term.
    */
   order_total?: number;
 
   /**
-   * Product line IDs.
+   * Product lines of the items being shipped, used to apply freight exemptions.
+   *
+   * If any listed product line is freight exempt, no options are returned and
+   * `exemption_type` is `freight_exempt`.
    */
   product_line_ids?: Array<string>;
 }
@@ -346,12 +400,13 @@ export interface ShipShipmentRequest {
 
 export interface ActionEstimateRateParams {
   /**
-   * Carrier ID.
+   * ID of the carrier to rate.
    */
   carrier_id: string;
 
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   from_address: CustomersAPI.AddressInput;
 
@@ -361,34 +416,43 @@ export interface ActionEstimateRateParams {
   parcels: Array<ParcelInput>;
 
   /**
-   * Service level ID.
+   * ID of the carrier service level to rate.
    */
   service_level_id: string;
 
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   to_address: CustomersAPI.AddressInput;
 
   /**
-   * Customer ID.
+   * ID of the customer the shipment is for, used to apply the customer's freight
+   * policy and default shipping term.
+   *
+   * A freight-exempt customer or a free-freight shipping term yields a rate of `0`;
+   * a flat-rate shipping term returns the flat rate.
    */
   customer_id?: string;
 
   /**
-   * Total order value.
+   * Total value of the order, used to evaluate the free-shipping minimum order value
+   * on the customer's shipping term.
    */
   order_total?: number;
 
   /**
-   * Product line IDs.
+   * Product lines of the items being shipped, used to apply freight exemptions.
+   *
+   * If any listed product line is freight exempt, the estimated rate is `0`.
    */
   product_line_ids?: Array<string>;
 }
 
 export interface ActionRateShopParams {
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   from_address: CustomersAPI.AddressInput;
 
@@ -398,22 +462,32 @@ export interface ActionRateShopParams {
   parcels: Array<ParcelInput>;
 
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   to_address: CustomersAPI.AddressInput;
 
   /**
-   * Customer ID.
+   * ID of the customer the shipment is for, used to apply the customer's freight
+   * policy and default shipping term.
+   *
+   * A freight-exempt customer or a free-freight shipping term returns no options
+   * with `exemption_type` set to `freight_exempt`; a flat-rate shipping term
+   * replaces carrier rates with the flat rate.
    */
   customer_id?: string;
 
   /**
-   * Total order value.
+   * Total value of the order, used to evaluate the free-shipping minimum order value
+   * on the customer's shipping term.
    */
   order_total?: number;
 
   /**
-   * Product line IDs.
+   * Product lines of the items being shipped, used to apply freight exemptions.
+   *
+   * If any listed product line is freight exempt, no options are returned and
+   * `exemption_type` is `freight_exempt`.
    */
   product_line_ids?: Array<string>;
 }

@@ -785,12 +785,13 @@ export interface AnalyzeOeeResponse {
  */
 export interface AnalyzeOpenBatchesRequest {
   /**
-   * Item IDs to filter by.
+   * Restrict the summaries to batches of these items; omit to include all items.
    */
   item_ids: Array<string>;
 
   /**
-   * Product line IDs to filter by.
+   * Restrict the summaries to batches whose item belongs to these product lines;
+   * omit to include all product lines.
    */
   product_line_ids: Array<string>;
 }
@@ -1774,7 +1775,7 @@ export interface OeeDepartment {
 }
 
 /**
- * Aggregated summary of open batches.
+ * Aggregated open-batch quantity for one item at one scanning station.
  */
 export interface OpenBatchSummary {
   /**
@@ -1784,7 +1785,7 @@ export interface OpenBatchSummary {
   count: string;
 
   /**
-   * Department name.
+   * Name of the department the scanning station belongs to.
    */
   department_name: string;
 
@@ -1799,7 +1800,8 @@ export interface OpenBatchSummary {
   object: 'open_batch_summary';
 
   /**
-   * Scanning station resource.
+   * A station on the production floor where operators scan batches to perform a
+   * batch operation, such as initializing or moving a batch.
    */
   scanning_station: AccountUsersAPI.ScanningStation | null;
 
@@ -2499,12 +2501,13 @@ export interface AnalyticsUpdateOeeParams {
 
 export interface AnalyticsUpdateOpenBatchesParams {
   /**
-   * Item IDs to filter by.
+   * Restrict the summaries to batches of these items; omit to include all items.
    */
   item_ids: Array<string>;
 
   /**
-   * Product line IDs to filter by.
+   * Restrict the summaries to batches whose item belongs to these product lines;
+   * omit to include all product lines.
    */
   product_line_ids: Array<string>;
 }

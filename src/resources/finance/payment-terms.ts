@@ -14,6 +14,8 @@ export class PaymentTerms extends APIResource {
   /**
    * Creates a payment term.
    *
+   * The new term is owned by your account and starts with status `active`.
+   *
    * @example
    * ```ts
    * const paymentTerm =
@@ -47,7 +49,10 @@ export class PaymentTerms extends APIResource {
   }
 
   /**
-   * Partially updates a payment term. Default payment terms cannot be updated.
+   * Partially updates a payment term.
+   *
+   * Only payment terms created by your account can be updated; system-owned default
+   * terms cannot be.
    *
    * @example
    * ```ts
@@ -72,8 +77,10 @@ export class PaymentTerms extends APIResource {
   }
 
   /**
-   * Returns a paginated list of payment terms. Includes both account-specific and
-   * system default payment terms.
+   * Returns a paginated list of payment terms.
+   *
+   * The list includes both payment terms created by your account and Augno-provided
+   * system defaults.
    *
    * @example
    * ```ts
@@ -89,7 +96,10 @@ export class PaymentTerms extends APIResource {
   }
 
   /**
-   * Deletes a payment term. Default payment terms cannot be deleted.
+   * Deletes a payment term.
+   *
+   * Only payment terms created by your account can be deleted; system-owned default
+   * terms cannot be.
    *
    * @example
    * ```ts
@@ -109,7 +119,10 @@ export class PaymentTerms extends APIResource {
  */
 export interface CreatePaymentTermRequest {
   /**
-   * Display name (e.g. "Net 30").
+   * Display name (e.g. `Net 30`).
+   *
+   * Must be unique among the payment terms visible to your account, including system
+   * defaults.
    */
   name: string;
 }
@@ -139,7 +152,10 @@ export interface ListPaymentTerm {
  */
 export interface UpdatePaymentTermRequest {
   /**
-   * Display name.
+   * New display name for the payment term.
+   *
+   * Must be unique among the payment terms visible to your account, including system
+   * defaults.
    */
   name?: string;
 }
@@ -148,7 +164,10 @@ export interface PaymentTermDeleteResponse {}
 
 export interface PaymentTermCreateParams {
   /**
-   * Body param: Display name (e.g. "Net 30").
+   * Body param: Display name (e.g. `Net 30`).
+   *
+   * Must be unique among the payment terms visible to your account, including system
+   * defaults.
    */
   name: string;
 
@@ -175,14 +194,21 @@ export interface PaymentTermUpdateParams {
   include?: Array<'owner' | 'owner.account'>;
 
   /**
-   * Body param: Display name.
+   * Body param: New display name for the payment term.
+   *
+   * Must be unique among the payment terms visible to your account, including system
+   * defaults.
    */
   name?: string;
 }
 
 export interface PaymentTermListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -193,12 +219,14 @@ export interface PaymentTermListParams {
   include?: Array<'owner' | 'owner.account'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

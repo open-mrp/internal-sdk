@@ -15,7 +15,7 @@ export class Lines extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Partially updates a pick line's quantity value.
+   * Updates a pick line's picked quantity.
    *
    * @example
    * ```ts
@@ -39,7 +39,9 @@ export class Lines extends APIResource {
  */
 export interface UpdatePickLineRequest {
   /**
-   * Quantity value to set for this line.
+   * New picked quantity for the line, as a decimal string.
+   *
+   * Interpreted in the line's existing quantity unit.
    */
   quantity_value?: string;
 }
@@ -51,7 +53,9 @@ export interface LineUpdateParams {
   pick_id: string;
 
   /**
-   * Body param: Quantity value to set for this line.
+   * Body param: New picked quantity for the line, as a decimal string.
+   *
+   * Interpreted in the line's existing quantity unit.
    */
   quantity_value?: string;
 }

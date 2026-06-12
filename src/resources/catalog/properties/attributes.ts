@@ -104,6 +104,9 @@ export class Attributes extends APIResource {
   /**
    * Deletes an attribute from a property.
    *
+   * Remaining attributes in the property are shifted so their sort orders stay
+   * contiguous.
+   *
    * @example
    * ```ts
    * const attribute =
@@ -128,17 +131,28 @@ export class Attributes extends APIResource {
  */
 export interface CreateAttributeRequest {
   /**
-   * Attribute value.
+   * The selectable value this attribute represents, such as `Red`.
+   *
+   * Must be unique across all attributes in the account, not just within the
+   * property. Leading and trailing whitespace is trimmed.
    */
   value: string;
 
   /**
-   * Color code. Randomly assigned if not provided.
+   * Swatch color used to display this attribute in the UI.
+   *
+   * When omitted, one of the nine named colors (everything except `default`) is
+   * assigned at random.
    */
   color?: 'blue' | 'brown' | 'default' | 'gray' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'yellow';
 
   /**
-   * Display order. Defaults to last position if not provided.
+   * Position of the new attribute relative to its siblings within the property,
+   * starting at `1`.
+   *
+   * Must be at most the property's current attribute count plus one; siblings at or
+   * after this position are shifted one position later. Defaults to the last
+   * position if not provided.
    */
   sort_order?: number;
 }
@@ -148,17 +162,24 @@ export interface CreateAttributeRequest {
  */
 export interface UpdateAttributeRequest {
   /**
-   * Color code.
+   * Swatch color used to display this attribute in the UI.
    */
   color?: 'blue' | 'brown' | 'default' | 'gray' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'yellow';
 
   /**
-   * Display order. Must be a positive integer.
+   * New position of this attribute relative to its siblings within the property,
+   * starting at `1`.
+   *
+   * Must be at most the property's current attribute count; the attributes between
+   * the old and new positions shift to make room.
    */
   sort_order?: number;
 
   /**
-   * Attribute value.
+   * The selectable value this attribute represents, such as `Red`.
+   *
+   * Must be non-blank and unique across all attributes in the account, not just
+   * within the property.
    */
   value?: string;
 }
@@ -167,17 +188,28 @@ export interface AttributeDeleteResponse {}
 
 export interface AttributeCreateParams {
   /**
-   * Attribute value.
+   * The selectable value this attribute represents, such as `Red`.
+   *
+   * Must be unique across all attributes in the account, not just within the
+   * property. Leading and trailing whitespace is trimmed.
    */
   value: string;
 
   /**
-   * Color code. Randomly assigned if not provided.
+   * Swatch color used to display this attribute in the UI.
+   *
+   * When omitted, one of the nine named colors (everything except `default`) is
+   * assigned at random.
    */
   color?: 'blue' | 'brown' | 'default' | 'gray' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'yellow';
 
   /**
-   * Display order. Defaults to last position if not provided.
+   * Position of the new attribute relative to its siblings within the property,
+   * starting at `1`.
+   *
+   * Must be at most the property's current attribute count plus one; siblings at or
+   * after this position are shifted one position later. Defaults to the last
+   * position if not provided.
    */
   sort_order?: number;
 }
@@ -196,34 +228,47 @@ export interface AttributeUpdateParams {
   property_id: string;
 
   /**
-   * Body param: Color code.
+   * Body param: Swatch color used to display this attribute in the UI.
    */
   color?: 'blue' | 'brown' | 'default' | 'gray' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'yellow';
 
   /**
-   * Body param: Display order. Must be a positive integer.
+   * Body param: New position of this attribute relative to its siblings within the
+   * property, starting at `1`.
+   *
+   * Must be at most the property's current attribute count; the attributes between
+   * the old and new positions shift to make room.
    */
   sort_order?: number;
 
   /**
-   * Body param: Attribute value.
+   * Body param: The selectable value this attribute represents, such as `Red`.
+   *
+   * Must be non-blank and unique across all attributes in the account, not just
+   * within the property.
    */
   value?: string;
 }
 
 export interface AttributeListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

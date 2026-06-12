@@ -46,7 +46,8 @@ export class EmailLogs extends APIResource {
 }
 
 /**
- * Email log entry.
+ * A record of an email sent on the account's behalf, such as an invoice or a user
+ * invitation.
  */
 export interface EmailLog {
   /**
@@ -60,7 +61,7 @@ export interface EmailLog {
   created_at: string;
 
   /**
-   * Filename of any attachment.
+   * Filename of the attached document.
    */
   filename: string | null;
 
@@ -128,7 +129,11 @@ export interface EmailLogRetrieveParams {
 
 export interface EmailLogListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -139,12 +144,14 @@ export interface EmailLogListParams {
   include?: Array<'sent_by'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

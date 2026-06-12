@@ -9,8 +9,10 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Deletes multiple suppliers and their associated account relations, addresses,
-   * and account users.
+   * Deletes multiple suppliers in a single atomic operation.
+   *
+   * Each supplier's saved addresses and any users belonging to it are deleted along
+   * with it. If any supplier ID is not found, no suppliers are deleted.
    *
    * @example
    * ```ts

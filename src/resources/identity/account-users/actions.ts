@@ -10,7 +10,11 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Activates a disabled or removed account user.
+   * Activates a disabled or removed account user, restoring their access to the
+   * target account.
+   *
+   * Reactivation consumes a seat, so the request fails if the account is at its seat
+   * limit. Activating an already-active user is a no-op.
    *
    * @example
    * ```ts
@@ -25,8 +29,11 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Disables an account user. Disabled users will not be able to access the target
-   * account.
+   * Disables (locks) an account user.
+   *
+   * Disabled users cannot access the target account and their active sessions are
+   * revoked. Admin users cannot be disabled, you cannot disable yourself, and
+   * removed users must be activated before they can be disabled.
    *
    * @example
    * ```ts
@@ -42,6 +49,9 @@ export class Actions extends APIResource {
 
   /**
    * Removes a user from the target account.
+   *
+   * Removal is a soft delete: removed users are excluded from listings unless
+   * requested via `removed_scope`, and can be restored with the activate action.
    *
    * @example
    * ```ts

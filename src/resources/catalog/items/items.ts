@@ -77,8 +77,11 @@ export class Items extends APIResource {
   }
 
   /**
-   * Changes the category of an item. When the category changes, the item's rate
-   * units are updated to the new category's base unit.
+   * Moves an item to a different category.
+   *
+   * The item's rate units (unit value, unit cost, burn rate) and any related
+   * order-point, consumption, and production quantity units are updated to the new
+   * category's base unit. Re-assigning the item's current category is a no-op.
    *
    * @example
    * ```ts
@@ -101,8 +104,12 @@ export class Items extends APIResource {
   }
 
   /**
-   * Returns the production cost breakdown for an item, including direct material,
-   * direct labor, overhead, and total costs.
+   * Returns the per-unit production cost breakdown for an item, including direct
+   * material, direct labor, overhead, and total costs.
+   *
+   * Costs are computed from the production flow that produces the item; items not
+   * produced by any production flow return a not-found error. As a side effect, the
+   * item's `unit_cost` rate is refreshed to the computed total.
    *
    * @example
    * ```ts
@@ -116,7 +123,8 @@ export class Items extends APIResource {
   }
 
   /**
-   * Returns historical trend data for an item for the specified metric.
+   * Returns historical trend data for an item as a time-ordered series of data
+   * points.
    *
    * @example
    * ```ts
@@ -137,16 +145,17 @@ export class Items extends APIResource {
 }
 
 /**
- * ItemCosts is the cost breakdown for an item.
+ * ItemCosts is the per-unit production cost breakdown for an item, computed from
+ * the production flow that produces it.
  */
 export interface ItemCosts {
   /**
-   * Direct labor cost.
+   * Labor cost to produce one unit of the item.
    */
   direct_labor_cost: string;
 
   /**
-   * Direct material cost.
+   * Cost of materials consumed to produce one unit of the item.
    */
   direct_material_cost: string;
 
@@ -156,12 +165,12 @@ export interface ItemCosts {
   object: 'item';
 
   /**
-   * Overhead cost.
+   * Overhead cost allocated to one unit of the item.
    */
   overhead_cost: string;
 
   /**
-   * Total cost.
+   * Total cost to produce one unit of the item (material + labor + overhead).
    */
   total_cost: string;
 
@@ -186,7 +195,7 @@ export interface ItemTrendPoint {
   occurred_at: string;
 
   /**
-   * Value at this date.
+   * Recorded value of the trend metric at `occurred_at`.
    */
   value: string;
 }
@@ -206,7 +215,9 @@ export interface ItemTrends {
   points: ListItemTrendPoint | null;
 
   /**
-   * Requested trend type.
+   * The trend type that was requested.
+   *
+   * Currently the only supported value is `inventory`.
    */
   trend_type: string;
 }
@@ -282,7 +293,11 @@ export interface ItemListParams {
   category_ids?: Array<string>;
 
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -315,7 +330,7 @@ export interface ItemListParams {
   >;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
@@ -326,7 +341,9 @@ export interface ItemListParams {
   product_line_ids?: Array<string>;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
@@ -336,7 +353,11 @@ export interface ItemListParams {
   start_date?: string;
 
   /**
-   * Which subassemblies to include when listing (default: all).
+   * Restricts results based on where the item is produced in its production flow.
+   *
+   * - `all`: no restriction.
+   * - `initial_only`: only items produced by an initial production step, i.e. a step
+   *   with no upstream steps feeding into it.
    */
   subassembly_filter?: 'all' | 'initial_only';
 
@@ -346,7 +367,7 @@ export interface ItemListParams {
   supplier_id?: string;
 
   /**
-   * Filter by item type codes.
+   * Filter to items of these types (`product`, `material`, `part`).
    */
   types?: Array<string>;
 }
@@ -377,7 +398,11 @@ export interface ItemChangeCategoryParams {
 
 export interface ItemRetrieveTrendsParams {
   /**
-   * Trend type (e.g. "on_hand", "cost").
+   * The trend metric to fetch.
+   *
+   * Currently the only supported value is `inventory`, which returns the item's
+   * inventory-level measurements from the last 30 days. Unsupported values are
+   * rejected with a validation error.
    */
   trend_type: string;
 }

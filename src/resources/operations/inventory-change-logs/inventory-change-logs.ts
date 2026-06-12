@@ -36,7 +36,7 @@ export class InventoryChangeLogs extends APIResource {
   }
 
   /**
-   * Returns a paginated list of inventory change logs for the target account.
+   * Returns a paginated list of inventory change logs, newest first.
    *
    * @example
    * ```ts
@@ -53,7 +53,12 @@ export class InventoryChangeLogs extends APIResource {
 }
 
 /**
- * InventoryChangeLog is an inventory change log entry.
+ * InventoryChangeLog is a record of a single change to an item's on-hand
+ * inventory.
+ *
+ * Every inventory movement — production scans, manual user adjustments, and
+ * automatic system actions — produces one entry, forming an audit trail of how
+ * on-hand quantities changed over time.
  */
 export interface InventoryChangeLog {
   /**
@@ -93,12 +98,16 @@ export interface InventoryChangeLog {
   quantity: AccountUsersAPI.Quantity | null;
 
   /**
-   * Scanning station resource.
+   * A station on the production floor where operators scan batches to perform a
+   * batch operation, such as initializing or moving a batch.
    */
   responsible_scanning_station: AccountUsersAPI.ScanningStation | null;
 
   /**
-   * User resource.
+   * A user's global profile, shared across every account they belong to.
+   *
+   * Account-specific settings (status, role, department) live on the account user
+   * resource that links the user to each account.
    */
   responsible_user: AuthAPI.User | null;
 
@@ -140,22 +149,26 @@ export interface InventoryChangeLogRetrieveParams {
 
 export interface InventoryChangeLogListParams {
   /**
-   * Filter by action type codes.
+   * Filter by the action that produced the change.
    */
   action_type_codes?: Array<string>;
 
   /**
-   * Filter by responsible user IDs.
+   * Filter by the user responsible for the change.
    */
   changed_by_user_ids?: Array<string>;
 
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Filter change logs created on or before this date.
+   * Restricts results to change logs created on or before this timestamp.
    */
   end_date?: string;
 
@@ -173,17 +186,19 @@ export interface InventoryChangeLogListParams {
   item_ids?: Array<string>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter change logs created on or after this date.
+   * Restricts results to change logs created on or after this timestamp.
    */
   start_date?: string;
 }

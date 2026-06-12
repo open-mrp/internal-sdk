@@ -45,7 +45,7 @@ export interface ValidateAddressRequest {
   city: string;
 
   /**
-   * Country name or code.
+   * Country name or two-letter country code (for example `United States` or `US`).
    */
   country: string;
 
@@ -77,8 +77,8 @@ export interface ValidatedAddress {
   /**
    * Formatted, single-line address as standardized by the validation service.
    *
-   * `null` when the service did not return a formatted address (this can occur
-   * regardless of `status`).
+   * The validation service may omit this regardless of `status`, so it can be absent
+   * even for a `valid` address.
    */
   formatted_address: string | null;
 
@@ -88,18 +88,16 @@ export interface ValidatedAddress {
   object: 'validated_address';
 
   /**
-   * Address validation status.
-   *
-   * - `valid`: the address was validated successfully.
-   * - `invalid`: the address could not be validated; see `validation_messages` for
-   *   the issues found.
+   * Whether the address could be validated.
    */
   status: 'valid' | 'invalid';
 
   /**
    * Human-readable messages describing issues found during validation.
    *
-   * Empty when no issues were reported.
+   * May be non-empty even when `status` is `valid`, for example when components were
+   * inferred or replaced with standardized values. Empty when no issues were
+   * reported.
    */
   validation_messages: Array<string>;
 }
@@ -116,7 +114,7 @@ export interface ActionValidateParams {
   city: string;
 
   /**
-   * Country name or code.
+   * Country name or two-letter country code (for example `United States` or `US`).
    */
   country: string;
 

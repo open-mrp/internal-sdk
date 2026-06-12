@@ -13,6 +13,9 @@ export class Lines extends APIResource {
   /**
    * Creates a line item on a purchase order.
    *
+   * If the order has already been issued, a matching receiving order line is created
+   * as well.
+   *
    * @example
    * ```ts
    * const purchaseOrderLine =
@@ -45,6 +48,9 @@ export class Lines extends APIResource {
   /**
    * Partially updates a purchase order line item.
    *
+   * If the order has already been issued, the receiving order is updated to reflect
+   * the remaining quantity to receive.
+   *
    * @example
    * ```ts
    * const purchaseOrderLine =
@@ -75,6 +81,8 @@ export class Lines extends APIResource {
   /**
    * Deletes a purchase order line item and its related records.
    *
+   * Any receiving order lines created for this line are deleted as well.
+   *
    * @example
    * ```ts
    * const line =
@@ -92,66 +100,74 @@ export class Lines extends APIResource {
 
 /**
  * OrderLineInput represents the shared fields for creating an order line item.
+ *
  * Used as an embedded struct in purchase order and sales order line inputs.
  */
 export interface CreatePurchaseOrderLineRequest {
   /**
-   * The product ID.
+   * ID of the product being ordered.
    */
   product_id: string;
 
   /**
-   * The product SKU.
+   * The product SKU recorded on the line.
+   *
+   * Stored on the line itself, so it stays stable even if the product's SKU changes
+   * later.
    */
   product_sku: string;
 
   /**
-   * The quantity unit ID.
+   * ID of the unit of measure for the quantity.
    */
   quantity_unit_id: string;
 
   /**
-   * The quantity value.
+   * Quantity ordered, as a decimal string.
    */
   quantity_value: string;
 
   /**
-   * The unit price denominator unit ID.
+   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
    */
   unit_price_denominator_unit_id: string;
 
   /**
-   * The unit price numerator unit ID.
+   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_price_numerator_unit_id: string;
 
   /**
-   * The unit price value.
+   * Price charged per unit, as a decimal string.
    */
   unit_price_value: string;
 
   /**
-   * The item ID.
+   * ID of the inventory item to tie the line to.
+   *
+   * Lines tied to an item have inventory reserved for them when the order is issued.
    */
   item_id?: string;
 
   /**
-   * The product description.
+   * The product description recorded on the line.
    */
   product_description?: string;
 
   /**
-   * The unit cost denominator unit ID.
+   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
    */
   unit_cost_denominator_unit_id?: string;
 
   /**
-   * The unit cost numerator unit ID.
+   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_cost_numerator_unit_id?: string;
 
   /**
-   * The unit cost value.
+   * Internal cost per unit, as a decimal string.
    */
   unit_cost_value?: string;
 }
@@ -161,12 +177,12 @@ export interface CreatePurchaseOrderLineRequest {
  */
 export interface UpdatePurchaseOrderLineRequest {
   /**
-   * Item ID.
+   * ID of the catalog item to link this line to.
    */
   item_id?: string;
 
   /**
-   * Product description.
+   * Free-text description of the ordered product.
    */
   product_description?: string;
 
@@ -176,47 +192,47 @@ export interface UpdatePurchaseOrderLineRequest {
   product_id?: string;
 
   /**
-   * Product SKU.
+   * SKU of the ordered product.
    */
   product_sku?: string;
 
   /**
-   * Quantity unit ID.
+   * ID of the unit the quantity is measured in.
    */
   quantity_unit_id?: string;
 
   /**
-   * Quantity value.
+   * Quantity ordered, as a decimal string.
    */
   quantity_value?: string;
 
   /**
-   * Unit cost denominator unit ID.
+   * ID of the unit cost's denominator unit (the unit the cost is per).
    */
   unit_cost_denominator_unit_id?: string;
 
   /**
-   * Unit cost numerator unit ID.
+   * ID of the unit cost's numerator unit (e.g. a currency unit).
    */
   unit_cost_numerator_unit_id?: string;
 
   /**
-   * Unit cost value.
+   * Recorded cost per unit, as a decimal string.
    */
   unit_cost_value?: string;
 
   /**
-   * Unit price denominator unit ID.
+   * ID of the unit price's denominator unit (the unit the price is per).
    */
   unit_price_denominator_unit_id?: string;
 
   /**
-   * Unit price numerator unit ID.
+   * ID of the unit price's numerator unit (e.g. a currency unit).
    */
   unit_price_numerator_unit_id?: string;
 
   /**
-   * Unit price value.
+   * Purchase price per unit, as a decimal string.
    */
   unit_price_value?: string;
 }
@@ -225,62 +241,69 @@ export interface LineDeleteResponse {}
 
 export interface LineCreateParams {
   /**
-   * The product ID.
+   * ID of the product being ordered.
    */
   product_id: string;
 
   /**
-   * The product SKU.
+   * The product SKU recorded on the line.
+   *
+   * Stored on the line itself, so it stays stable even if the product's SKU changes
+   * later.
    */
   product_sku: string;
 
   /**
-   * The quantity unit ID.
+   * ID of the unit of measure for the quantity.
    */
   quantity_unit_id: string;
 
   /**
-   * The quantity value.
+   * Quantity ordered, as a decimal string.
    */
   quantity_value: string;
 
   /**
-   * The unit price denominator unit ID.
+   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
    */
   unit_price_denominator_unit_id: string;
 
   /**
-   * The unit price numerator unit ID.
+   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_price_numerator_unit_id: string;
 
   /**
-   * The unit price value.
+   * Price charged per unit, as a decimal string.
    */
   unit_price_value: string;
 
   /**
-   * The item ID.
+   * ID of the inventory item to tie the line to.
+   *
+   * Lines tied to an item have inventory reserved for them when the order is issued.
    */
   item_id?: string;
 
   /**
-   * The product description.
+   * The product description recorded on the line.
    */
   product_description?: string;
 
   /**
-   * The unit cost denominator unit ID.
+   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
    */
   unit_cost_denominator_unit_id?: string;
 
   /**
-   * The unit cost numerator unit ID.
+   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_cost_numerator_unit_id?: string;
 
   /**
-   * The unit cost value.
+   * Internal cost per unit, as a decimal string.
    */
   unit_cost_value?: string;
 }
@@ -292,12 +315,12 @@ export interface LineUpdateParams {
   id: string;
 
   /**
-   * Body param: Item ID.
+   * Body param: ID of the catalog item to link this line to.
    */
   item_id?: string;
 
   /**
-   * Body param: Product description.
+   * Body param: Free-text description of the ordered product.
    */
   product_description?: string;
 
@@ -307,47 +330,47 @@ export interface LineUpdateParams {
   product_id?: string;
 
   /**
-   * Body param: Product SKU.
+   * Body param: SKU of the ordered product.
    */
   product_sku?: string;
 
   /**
-   * Body param: Quantity unit ID.
+   * Body param: ID of the unit the quantity is measured in.
    */
   quantity_unit_id?: string;
 
   /**
-   * Body param: Quantity value.
+   * Body param: Quantity ordered, as a decimal string.
    */
   quantity_value?: string;
 
   /**
-   * Body param: Unit cost denominator unit ID.
+   * Body param: ID of the unit cost's denominator unit (the unit the cost is per).
    */
   unit_cost_denominator_unit_id?: string;
 
   /**
-   * Body param: Unit cost numerator unit ID.
+   * Body param: ID of the unit cost's numerator unit (e.g. a currency unit).
    */
   unit_cost_numerator_unit_id?: string;
 
   /**
-   * Body param: Unit cost value.
+   * Body param: Recorded cost per unit, as a decimal string.
    */
   unit_cost_value?: string;
 
   /**
-   * Body param: Unit price denominator unit ID.
+   * Body param: ID of the unit price's denominator unit (the unit the price is per).
    */
   unit_price_denominator_unit_id?: string;
 
   /**
-   * Body param: Unit price numerator unit ID.
+   * Body param: ID of the unit price's numerator unit (e.g. a currency unit).
    */
   unit_price_numerator_unit_id?: string;
 
   /**
-   * Body param: Unit price value.
+   * Body param: Purchase price per unit, as a decimal string.
    */
   unit_price_value?: string;
 }
