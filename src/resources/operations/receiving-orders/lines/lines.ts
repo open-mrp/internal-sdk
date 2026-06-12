@@ -15,7 +15,10 @@ export class Lines extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Partially updates a receiving order line's quantity value.
+   * Updates the received quantity on a receiving order line.
+   *
+   * Use this to record the quantity actually received — for example a partial
+   * delivery — before stocking the order.
    *
    * @example
    * ```ts
@@ -47,7 +50,9 @@ export class Lines extends APIResource {
  */
 export interface UpdateReceivingOrderLineRequest {
   /**
-   * Quantity value to set for this line.
+   * New received quantity for the line, as a decimal string.
+   *
+   * When omitted, the line is returned unchanged.
    */
   quantity_value?: string;
 }
@@ -59,7 +64,9 @@ export interface LineUpdateParams {
   receiving_order_id: string;
 
   /**
-   * Body param: Quantity value to set for this line.
+   * Body param: New received quantity for the line, as a decimal string.
+   *
+   * When omitted, the line is returned unchanged.
    */
   quantity_value?: string;
 }

@@ -11,6 +11,10 @@ export class SpendingCap extends APIResource {
   /**
    * Sets or removes the monthly agent spending cap for the account.
    *
+   * When estimated agent spend reaches the cap, new agent runs are blocked and
+   * in-progress runs are stopped until the cap is raised, removed, or the next
+   * billing month begins.
+   *
    * @example
    * ```ts
    * const spendingCapResponse =
@@ -27,8 +31,8 @@ export class SpendingCap extends APIResource {
   }
 
   /**
-   * Returns the monthly agent spending cap for the account. Null cap_cents means no
-   * cap.
+   * Returns the monthly agent spending cap for the account. A null `cap_cents` means
+   * no cap is set.
    *
    * @example
    * ```ts
@@ -46,8 +50,10 @@ export class SpendingCap extends APIResource {
  */
 export interface SetSpendingCapRequest {
   /**
-   * Monthly spending cap in cents. Null removes the cap; omitting the field leaves
-   * the current cap unchanged.
+   * Monthly agent spending cap in cents.
+   *
+   * Set to `null` to remove the cap; omit the field to leave the current cap
+   * unchanged.
    */
   cap_cents?: number | null;
 }
@@ -71,8 +77,10 @@ export interface SpendingCapResponse {
 
 export interface SpendingCapUpdateParams {
   /**
-   * Monthly spending cap in cents. Null removes the cap; omitting the field leaves
-   * the current cap unchanged.
+   * Monthly agent spending cap in cents.
+   *
+   * Set to `null` to remove the cap; omit the field to leave the current cap
+   * unchanged.
    */
   cap_cents?: number | null;
 }

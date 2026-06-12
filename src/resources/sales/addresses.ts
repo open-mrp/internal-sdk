@@ -11,7 +11,7 @@ import { path } from '../../internal/utils/path';
  */
 export class Addresses extends APIResource {
   /**
-   * Creates an address for the targeted account.
+   * Creates an address.
    *
    * @example
    * ```ts
@@ -46,6 +46,9 @@ export class Addresses extends APIResource {
   /**
    * Partially updates an address.
    *
+   * Changing a street, locality, state, postal code, or country field may replace
+   * the address's geolocation, so the geolocation `id` in the response can change.
+   *
    * @example
    * ```ts
    * const address = await client.sales.addresses.update(
@@ -75,8 +78,10 @@ export class Addresses extends APIResource {
   }
 
   /**
-   * Deletes an address. Fails if the address is in use as a billing or shipping
-   * address on a sales order, invoice, or shipment, or as a default account address.
+   * Deletes an address.
+   *
+   * Deletion fails if the address is in use as a billing or shipping address on a
+   * sales order, invoice, or shipment, or as a default account address.
    *
    * @example
    * ```ts
@@ -112,6 +117,8 @@ export interface ListAddress {
 
 /**
  * Request to partially update an address.
+ *
+ * Omitted fields are left unchanged.
  */
 export interface UpdateAddressRequest {
   /**
@@ -121,6 +128,8 @@ export interface UpdateAddressRequest {
 
   /**
    * Email address associated with the address.
+   *
+   * Send `null` to clear.
    */
   email?: string | null;
 
@@ -136,6 +145,8 @@ export interface UpdateAddressRequest {
 
   /**
    * Phone number associated with the address.
+   *
+   * Send `null` to clear.
    */
   phone?: string | null;
 
@@ -156,11 +167,17 @@ export interface UpdateAddressRequest {
 
   /**
    * Second line of the street address.
+   *
+   * Send `null` to clear.
    */
   street_line_2?: string | null;
 
   /**
    * Address type.
+   *
+   * - `standard`: a normal shipping or billing address.
+   * - `drop_ship`: an address an order is shipped to directly, typically a third
+   *   party or end customer rather than the account itself.
    */
   type?: 'standard' | 'drop_ship';
 }
@@ -215,6 +232,10 @@ export interface AddressCreateParams {
 
   /**
    * Address type.
+   *
+   * - `standard`: a normal shipping or billing address.
+   * - `drop_ship`: an address an order is shipped to directly, typically a third
+   *   party or end customer rather than the account itself.
    */
   type?: 'standard' | 'drop_ship';
 }
@@ -227,6 +248,8 @@ export interface AddressUpdateParams {
 
   /**
    * Email address associated with the address.
+   *
+   * Send `null` to clear.
    */
   email?: string | null;
 
@@ -242,6 +265,8 @@ export interface AddressUpdateParams {
 
   /**
    * Phone number associated with the address.
+   *
+   * Send `null` to clear.
    */
   phone?: string | null;
 
@@ -262,33 +287,45 @@ export interface AddressUpdateParams {
 
   /**
    * Second line of the street address.
+   *
+   * Send `null` to clear.
    */
   street_line_2?: string | null;
 
   /**
    * Address type.
+   *
+   * - `standard`: a normal shipping or billing address.
+   * - `drop_ship`: an address an order is shipped to directly, typically a third
+   *   party or end customer rather than the account itself.
    */
   type?: 'standard' | 'drop_ship';
 }
 
 export interface AddressListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by address type.
+   * Filter results to a single address type (`standard` or `drop_ship`).
    */
   type?: 'standard' | 'drop_ship';
 }

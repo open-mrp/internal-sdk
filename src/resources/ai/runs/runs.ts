@@ -16,7 +16,10 @@ export class Runs extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Triggers an agent run for the specified agent definition.
+   * Starts a new run of the specified agent.
+   *
+   * The run is created in the `pending` status and executed asynchronously; poll
+   * Retrieve Agent Run to follow its progress.
    *
    * @example
    * ```ts
@@ -87,19 +90,27 @@ export interface ListAgentRun {
  */
 export interface TriggerRunRequest {
   /**
-   * Agent definition ID.
+   * ID of the agent definition to run.
+   *
+   * The agent must be active for the account; triggering an inactive agent returns a
+   * validation error.
    */
   agent_definition_id: string;
 
   /**
-   * Input text for the agent.
+   * Instruction text passed to the agent at the start of the run.
+   *
+   * Recorded on the run as `{"message": <input>}` in its `input` field.
    */
   input?: string;
 }
 
 export interface RunCreateParams {
   /**
-   * Body param: Agent definition ID.
+   * Body param: ID of the agent definition to run.
+   *
+   * The agent must be active for the account; triggering an inactive agent returns a
+   * validation error.
    */
   agent_definition_id: string;
 
@@ -110,7 +121,9 @@ export interface RunCreateParams {
   include?: Array<'actions' | 'definition' | 'definition.config' | 'definition.tools' | 'definition.role'>;
 
   /**
-   * Body param: Input text for the agent.
+   * Body param: Instruction text passed to the agent at the start of the run.
+   *
+   * Recorded on the run as `{"message": <input>}` in its `input` field.
    */
   input?: string;
 }
@@ -127,12 +140,16 @@ export interface RunRetrieveParams {
 
 export interface RunListParams {
   /**
-   * Agent definition ID filter.
+   * Filter to runs of a specific agent definition.
    */
   agent_definition_id?: string;
 
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -143,17 +160,19 @@ export interface RunListParams {
   include?: Array<'definition' | 'actions' | 'definition.config' | 'definition.tools' | 'definition.role'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Run status filter (e.g. "running", "completed", "failed").
+   * Filter to runs with this status (e.g. `running`, `completed`, `failed`).
    */
   status?: string;
 }

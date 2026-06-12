@@ -31,6 +31,9 @@ export class Accounts extends APIResource {
   /**
    * Partially updates an account's name, branding, and portal settings.
    *
+   * Only the fields provided in the request are changed. You can only update the
+   * account you are acting in.
+   *
    * @example
    * ```ts
    * const account = await client.identity.accounts.update(
@@ -49,7 +52,10 @@ export class Accounts extends APIResource {
   }
 
   /**
-   * Returns a presigned URL for the account's logo. Expires after one hour.
+   * Returns a presigned download URL for the account's logo.
+   *
+   * The URL expires one hour after it is generated, so fetch the logo promptly
+   * rather than caching it.
    *
    * @example
    * ```ts
@@ -64,7 +70,11 @@ export class Accounts extends APIResource {
   }
 
   /**
-   * Uploads an account logo. Send as raw binary body.
+   * Uploads an account logo.
+   *
+   * Send the image as the raw request body, not as multipart form data. The uploaded
+   * image replaces any existing logo and can be retrieved via the Get Account Logo
+   * URL endpoint. You can only upload a logo for the account you are acting in.
    *
    * @example
    * ```ts
@@ -89,9 +99,10 @@ export interface AccountLogoURL {
   object: 'account_logo_url';
 
   /**
-   * Presigned URL.
+   * Presigned URL for downloading the account's logo.
    *
-   * Null if no logo exists.
+   * The URL expires one hour after it is generated, so fetch the logo promptly
+   * rather than caching this URL.
    */
   url: string | null;
 }
@@ -141,7 +152,10 @@ export interface UpdateAccountRequest {
   phone_number?: string;
 
   /**
-   * Portal slug.
+   * URL slug for the account's customer portal.
+   *
+   * The slug is unique across all accounts; updating to one that is already taken
+   * returns a conflict error.
    */
   slug?: string;
 
@@ -202,7 +216,10 @@ export interface AccountUpdateParams {
   phone_number?: string;
 
   /**
-   * Body param: Portal slug.
+   * Body param: URL slug for the account's customer portal.
+   *
+   * The slug is unique across all accounts; updating to one that is already taken
+   * returns a conflict error.
    */
   slug?: string;
 

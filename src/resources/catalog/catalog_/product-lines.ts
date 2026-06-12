@@ -12,8 +12,9 @@ import { path } from '../../../internal/utils/path';
  */
 export class ProductLines extends APIResource {
   /**
-   * Returns a paginated list of product lines available in the catalog. Customers
-   * only see product lines they have access to.
+   * Returns a paginated list of product lines available in the catalog.
+   *
+   * Customers only see product lines they have access to.
    *
    * @example
    * ```ts
@@ -29,8 +30,11 @@ export class ProductLines extends APIResource {
   }
 
   /**
-   * Returns a paginated list of products in a specific product line, grouped by item
-   * category.
+   * Returns the products in a product line, grouped by item category.
+   *
+   * Each category lists the properties its products vary along and the products
+   * themselves. Customers only see products they have access to. Pagination applies
+   * to categories, not to the products within them.
    *
    * @example
    * ```ts
@@ -286,34 +290,46 @@ export interface ListCatalogProperty {
 
 export interface ProductLineListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }
 
 export interface ProductLineRetrieveProductsParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

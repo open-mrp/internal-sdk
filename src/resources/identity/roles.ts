@@ -11,7 +11,8 @@ import { path } from '../../internal/utils/path';
  */
 export class Roles extends APIResource {
   /**
-   * Creates a new role with the specified permissions.
+   * Creates a custom role with the specified permissions. Roles created through the
+   * API always have type `user`.
    *
    * @example
    * ```ts
@@ -32,7 +33,7 @@ export class Roles extends APIResource {
   }
 
   /**
-   * Returns a role by ID, including its structured permissions.
+   * Returns a role by ID, including its permissions.
    *
    * @example
    * ```ts
@@ -87,7 +88,8 @@ export class Roles extends APIResource {
   }
 
   /**
-   * Deletes a role and its associated permissions. Global roles cannot be deleted.
+   * Deletes a role and its associated permissions. Global roles and roles currently
+   * assigned to one or more users cannot be deleted.
    *
    * @example
    * ```ts
@@ -106,12 +108,15 @@ export class Roles extends APIResource {
  */
 export interface CreateRoleRequest {
   /**
-   * Display name.
+   * Display name for the role, unique within the account.
    */
   name: string;
 
   /**
-   * Permissions to attach in `<domain>:<action>` format.
+   * Permissions to grant, in `{domain}:{action}` format, such as `customers:read`.
+   *
+   * The action must be one of `create`, `read`, `update`, or `delete`. Omit to
+   * create a role with no permissions.
    */
   permissions: Array<string>;
 }
@@ -141,13 +146,17 @@ export interface ListRole {
  */
 export interface UpdateRoleRequest {
   /**
-   * Display name.
+   * New display name for the role, unique within the account. Omit to leave
+   * unchanged.
    */
   name?: string;
 
   /**
-   * Permissions in `<domain>:<action>` format. Replaces all existing permissions;
-   * omit to leave unchanged.
+   * Full replacement set of permissions, in `{domain}:{action}` format, such as
+   * `customers:read`.
+   *
+   * Replaces all existing permissions on the role. Pass an empty array to remove all
+   * permissions, or omit to leave them unchanged.
    */
   permissions?: Array<string>;
 }
@@ -156,12 +165,16 @@ export interface RoleDeleteResponse {}
 
 export interface RoleCreateParams {
   /**
-   * Body param: Display name.
+   * Body param: Display name for the role, unique within the account.
    */
   name: string;
 
   /**
-   * Body param: Permissions to attach in `<domain>:<action>` format.
+   * Body param: Permissions to grant, in `{domain}:{action}` format, such as
+   * `customers:read`.
+   *
+   * The action must be one of `create`, `read`, `update`, or `delete`. Omit to
+   * create a role with no permissions.
    */
   permissions: Array<string>;
 
@@ -188,20 +201,28 @@ export interface RoleUpdateParams {
   include?: Array<'owner' | 'owner.account' | 'permissions'>;
 
   /**
-   * Body param: Display name.
+   * Body param: New display name for the role, unique within the account. Omit to
+   * leave unchanged.
    */
   name?: string;
 
   /**
-   * Body param: Permissions in `<domain>:<action>` format. Replaces all existing
-   * permissions; omit to leave unchanged.
+   * Body param: Full replacement set of permissions, in `{domain}:{action}` format,
+   * such as `customers:read`.
+   *
+   * Replaces all existing permissions on the role. Pass an empty array to remove all
+   * permissions, or omit to leave them unchanged.
    */
   permissions?: Array<string>;
 }
 
 export interface RoleListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -212,17 +233,19 @@ export interface RoleListParams {
   include?: Array<'owner' | 'owner.account' | 'permissions'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by role types.
+   * Filter results to roles whose type matches any of the given values.
    */
   types?: Array<'admin' | 'user' | 'scanner' | 'sales_rep' | 'agent'>;
 }

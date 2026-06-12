@@ -15,7 +15,10 @@ import { path } from '../../internal/utils/path';
  */
 export class VolumeDiscounts extends APIResource {
   /**
-   * Creates a volume discount for the target account.
+   * Creates a volume discount with its tiers and scoping associations.
+   *
+   * The discount name must be unique within the account; creating a discount with an
+   * existing name returns a conflict error.
    *
    * @example
    * ```ts
@@ -57,8 +60,12 @@ export class VolumeDiscounts extends APIResource {
   }
 
   /**
-   * Partially updates a volume discount. Tiers use upsert semantics and relations
-   * are replaced when the corresponding has\_\* flag is true.
+   * Partially updates a volume discount.
+   *
+   * The tier and association lists are only applied when their corresponding `has_*`
+   * flag is `true`, in which case they replace the existing set entirely. Tiers use
+   * upsert semantics: tiers with an `id` are updated, tiers without one are created,
+   * and existing tiers omitted from the list are deleted.
    *
    * @example
    * ```ts
@@ -106,7 +113,9 @@ export class VolumeDiscounts extends APIResource {
   }
 
   /**
-   * Deletes a volume discount and all associated tiers and relations.
+   * Deletes a volume discount along with its tiers and scoping associations.
+   *
+   * Deletion is permanent; further requests against the deleted ID return an error.
    *
    * @example
    * ```ts
@@ -127,6 +136,8 @@ export class VolumeDiscounts extends APIResource {
 export interface CreateVolumeDiscountRequest {
   /**
    * Display name.
+   *
+   * Must be unique within the account.
    */
   name: string;
 
@@ -136,27 +147,36 @@ export interface CreateVolumeDiscountRequest {
   tiers: Array<CreateVolumeDiscountTierInput>;
 
   /**
-   * Attribute IDs to associate.
+   * Attribute IDs to scope the discount to.
+   *
+   * When set, an item qualifies only if it has every listed attribute.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Item category IDs to associate.
+   * Item category IDs to scope the discount to.
+   *
+   * When empty, all categories qualify.
    */
   category_ids?: Array<string>;
 
   /**
-   * Account group IDs to associate as customer groups.
+   * Account group IDs to scope the discount to specific customer groups.
+   *
+   * When empty, all customers qualify.
    */
   customer_group_ids?: Array<string>;
 
   /**
-   * Product line IDs to associate.
+   * Product line IDs to scope the discount to.
+   *
+   * When empty, all product lines qualify.
    */
   product_line_ids?: Array<string>;
 
   /**
-   * Unit IDs to associate as acceptable units.
+   * IDs of the units that ordered quantities are measured in when evaluating tier
+   * thresholds.
    */
   unit_ids?: Array<string>;
 }
@@ -166,7 +186,8 @@ export interface CreateVolumeDiscountRequest {
  */
 export interface CreateVolumeDiscountTierInput {
   /**
-   * Discount percentage as a decimal string.
+   * Percentage taken off the price once the threshold is met, as a decimal string
+   * (e.g. `5` for 5%).
    */
   discount_percentage: string;
 
@@ -176,7 +197,8 @@ export interface CreateVolumeDiscountTierInput {
   name: string;
 
   /**
-   * Quantity threshold as a decimal string.
+   * Minimum ordered quantity at which this tier's discount begins to apply, as a
+   * decimal string.
    */
   threshold: string;
 
@@ -251,67 +273,91 @@ export interface ListVolumeDiscountTier {
  */
 export interface UpdateVolumeDiscountRequest {
   /**
-   * Whether to replace attributes.
+   * Whether to apply the `attribute_ids` field; when `false`, it is ignored.
    */
   has_attributes: boolean;
 
   /**
-   * Whether to replace categories.
+   * Whether to apply the `category_ids` field; when `false`, it is ignored.
    */
   has_categories: boolean;
 
   /**
-   * Whether to replace customer groups.
+   * Whether to apply the `customer_group_ids` field; when `false`, it is ignored.
    */
   has_customer_groups: boolean;
 
   /**
-   * Whether to replace product lines.
+   * Whether to apply the `product_line_ids` field; when `false`, it is ignored.
    */
   has_product_lines: boolean;
 
   /**
-   * Whether to replace tiers.
+   * Whether to apply the `tiers` field.
+   *
+   * When `true`, the discount's tiers are replaced with the contents of `tiers` (an
+   * empty list deletes all tiers). When `false`, `tiers` is ignored.
    */
   has_tiers: boolean;
 
   /**
-   * Whether to replace units.
+   * Whether to apply the `unit_ids` field; when `false`, it is ignored.
    */
   has_units: boolean;
 
   /**
    * Attribute IDs to set.
+   *
+   * Only applied when `has_attributes` is `true`, in which case they replace the
+   * existing set entirely.
    */
   attribute_ids?: Array<string>;
 
   /**
    * Item category IDs to set.
+   *
+   * Only applied when `has_categories` is `true`, in which case they replace the
+   * existing set entirely.
    */
   category_ids?: Array<string>;
 
   /**
    * Account group IDs to set as customer groups.
+   *
+   * Only applied when `has_customer_groups` is `true`, in which case they replace
+   * the existing set entirely.
    */
   customer_group_ids?: Array<string>;
 
   /**
    * Display name.
+   *
+   * Must be unique within the account.
    */
   name?: string;
 
   /**
    * Product line IDs to set.
+   *
+   * Only applied when `has_product_lines` is `true`, in which case they replace the
+   * existing set entirely.
    */
   product_line_ids?: Array<string>;
 
   /**
-   * Tiers (upsert semantics).
+   * The full set of tiers for this discount.
+   *
+   * Only applied when `has_tiers` is `true`. Tiers with an `id` are updated, tiers
+   * without an `id` are created, and existing tiers not present in the list are
+   * deleted.
    */
   tiers?: Array<UpdateVolumeDiscountTierInput>;
 
   /**
-   * Unit IDs to set as acceptable units.
+   * IDs of the units to set as acceptable units.
+   *
+   * Only applied when `has_units` is `true`, in which case they replace the existing
+   * set entirely.
    */
   unit_ids?: Array<string>;
 }
@@ -321,12 +367,15 @@ export interface UpdateVolumeDiscountRequest {
  */
 export interface UpdateVolumeDiscountTierInput {
   /**
-   * Existing tier ID. Omit for new tiers.
+   * ID of an existing tier to update.
+   *
+   * Omit to create a new tier.
    */
   id?: string;
 
   /**
-   * Discount percentage as a decimal string.
+   * Percentage taken off the price once the threshold is met, as a decimal string
+   * (e.g. `5` for 5%).
    */
   discount_percentage?: string;
 
@@ -341,13 +390,19 @@ export interface UpdateVolumeDiscountTierInput {
   parent_tier_id?: string;
 
   /**
-   * Quantity threshold as a decimal string.
+   * Minimum ordered quantity at which this tier's discount begins to apply, as a
+   * decimal string.
    */
   threshold?: string;
 }
 
 /**
- * Volume discount with tiered pricing.
+ * A quantity-based discount with tiered percentage rates.
+ *
+ * A volume discount reduces the price once the ordered quantity reaches a tier's
+ * threshold. The customer group, product line, category, attribute, and acceptable
+ * unit associations scope which orders qualify; an empty association list means no
+ * restriction on that dimension.
  */
 export interface VolumeDiscount {
   /**
@@ -382,6 +437,8 @@ export interface VolumeDiscount {
 
   /**
    * Display name.
+   *
+   * Must be unique within the account.
    */
   name: string;
 
@@ -454,6 +511,8 @@ export interface VolumeDiscountDeleteResponse {}
 export interface VolumeDiscountCreateParams {
   /**
    * Display name.
+   *
+   * Must be unique within the account.
    */
   name: string;
 
@@ -463,27 +522,36 @@ export interface VolumeDiscountCreateParams {
   tiers: Array<CreateVolumeDiscountTierInput>;
 
   /**
-   * Attribute IDs to associate.
+   * Attribute IDs to scope the discount to.
+   *
+   * When set, an item qualifies only if it has every listed attribute.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Item category IDs to associate.
+   * Item category IDs to scope the discount to.
+   *
+   * When empty, all categories qualify.
    */
   category_ids?: Array<string>;
 
   /**
-   * Account group IDs to associate as customer groups.
+   * Account group IDs to scope the discount to specific customer groups.
+   *
+   * When empty, all customers qualify.
    */
   customer_group_ids?: Array<string>;
 
   /**
-   * Product line IDs to associate.
+   * Product line IDs to scope the discount to.
+   *
+   * When empty, all product lines qualify.
    */
   product_line_ids?: Array<string>;
 
   /**
-   * Unit IDs to associate as acceptable units.
+   * IDs of the units that ordered quantities are measured in when evaluating tier
+   * thresholds.
    */
   unit_ids?: Array<string>;
 }
@@ -498,84 +566,114 @@ export interface VolumeDiscountRetrieveParams {
 
 export interface VolumeDiscountUpdateParams {
   /**
-   * Whether to replace attributes.
+   * Whether to apply the `attribute_ids` field; when `false`, it is ignored.
    */
   has_attributes: boolean;
 
   /**
-   * Whether to replace categories.
+   * Whether to apply the `category_ids` field; when `false`, it is ignored.
    */
   has_categories: boolean;
 
   /**
-   * Whether to replace customer groups.
+   * Whether to apply the `customer_group_ids` field; when `false`, it is ignored.
    */
   has_customer_groups: boolean;
 
   /**
-   * Whether to replace product lines.
+   * Whether to apply the `product_line_ids` field; when `false`, it is ignored.
    */
   has_product_lines: boolean;
 
   /**
-   * Whether to replace tiers.
+   * Whether to apply the `tiers` field.
+   *
+   * When `true`, the discount's tiers are replaced with the contents of `tiers` (an
+   * empty list deletes all tiers). When `false`, `tiers` is ignored.
    */
   has_tiers: boolean;
 
   /**
-   * Whether to replace units.
+   * Whether to apply the `unit_ids` field; when `false`, it is ignored.
    */
   has_units: boolean;
 
   /**
    * Attribute IDs to set.
+   *
+   * Only applied when `has_attributes` is `true`, in which case they replace the
+   * existing set entirely.
    */
   attribute_ids?: Array<string>;
 
   /**
    * Item category IDs to set.
+   *
+   * Only applied when `has_categories` is `true`, in which case they replace the
+   * existing set entirely.
    */
   category_ids?: Array<string>;
 
   /**
    * Account group IDs to set as customer groups.
+   *
+   * Only applied when `has_customer_groups` is `true`, in which case they replace
+   * the existing set entirely.
    */
   customer_group_ids?: Array<string>;
 
   /**
    * Display name.
+   *
+   * Must be unique within the account.
    */
   name?: string;
 
   /**
    * Product line IDs to set.
+   *
+   * Only applied when `has_product_lines` is `true`, in which case they replace the
+   * existing set entirely.
    */
   product_line_ids?: Array<string>;
 
   /**
-   * Tiers (upsert semantics).
+   * The full set of tiers for this discount.
+   *
+   * Only applied when `has_tiers` is `true`. Tiers with an `id` are updated, tiers
+   * without an `id` are created, and existing tiers not present in the list are
+   * deleted.
    */
   tiers?: Array<UpdateVolumeDiscountTierInput>;
 
   /**
-   * Unit IDs to set as acceptable units.
+   * IDs of the units to set as acceptable units.
+   *
+   * Only applied when `has_units` is `true`, in which case they replace the existing
+   * set entirely.
    */
   unit_ids?: Array<string>;
 }
 
 export interface VolumeDiscountListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

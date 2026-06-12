@@ -9,8 +9,8 @@ import { RequestOptions } from '../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Checks whether a record number already exists for the given type (invoice
-   * number, order number, or customer PO number).
+   * Checks whether a record number already exists on the account for the given type
+   * (invoice number, sales order number, or customer PO number).
    *
    * @example
    * ```ts
@@ -29,8 +29,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Emails a record (invoice, sales order, or purchase order) to the configured
-   * recipients as a PDF attachment.
+   * Emails a record (invoice, sales order, or purchase order) to its configured
+   * recipients and marks the record as sent.
+   *
+   * Delivery is asynchronous: the endpoint returns `202 Accepted` once the email is
+   * queued. If the record has no configured recipients, the request succeeds without
+   * sending an email.
    *
    * @example
    * ```ts
@@ -87,17 +91,24 @@ export class Actions extends APIResource {
  */
 export interface CheckDuplicateRequest {
   /**
-   * Record number to check.
+   * The record number to check for an existing match.
    */
   record_number: string;
 
   /**
-   * Duplicate check type: invoice_number, order_number, or customer_po_number.
+   * The kind of record number to check.
+   *
+   * - `invoice_number`: checks invoice numbers.
+   * - `order_number`: checks sales order numbers.
+   * - `customer_po_number`: checks customer PO numbers on sales orders; requires
+   *   `customer_id`.
    */
   type: string;
 
   /**
-   * Customer ID, required for customer_po_number checks.
+   * ID of the customer to scope the check to.
+   *
+   * Required when `type` is `customer_po_number`; ignored for other types.
    */
   customer_id?: string;
 }
@@ -107,12 +118,15 @@ export interface CheckDuplicateRequest {
  */
 export interface CheckDuplicateResult {
   /**
-   * Whether the record number is a duplicate.
+   * Whether a record with the given number already exists on the account.
    */
   is_duplicate: boolean;
 
   /**
-   * Human-readable message if the record is a duplicate.
+   * Human-readable message describing the duplicate.
+   *
+   * Populated only when `is_duplicate` is `true`; names the type and value that
+   * already exists.
    */
   message: string | null;
 
@@ -127,18 +141,25 @@ export interface CheckDuplicateResult {
  */
 export interface EmailRecordRequest {
   /**
-   * Record ID.
+   * ID of the record to email.
    */
   id: string;
 
   /**
-   * Record type: invoice, sales_order, or purchase_order.
+   * The type of record to email.
+   *
+   * - `invoice`: emails the invoice to the invoice's email recipients.
+   * - `sales_order`: sends an order acknowledgement to the order's acknowledgement
+   *   recipients.
+   * - `purchase_order`: sends the purchase order submission to the order's
+   *   submission recipients.
    */
   type: string;
 }
 
 /**
- * Message resource.
+ * A human-readable confirmation returned by operations that do not produce a
+ * resource.
  */
 export interface MessageResource {
   /**
@@ -206,29 +227,42 @@ export interface ActionEmailRecordResponse {}
 
 export interface ActionCheckDuplicatesParams {
   /**
-   * Record number to check.
+   * The record number to check for an existing match.
    */
   record_number: string;
 
   /**
-   * Duplicate check type: invoice_number, order_number, or customer_po_number.
+   * The kind of record number to check.
+   *
+   * - `invoice_number`: checks invoice numbers.
+   * - `order_number`: checks sales order numbers.
+   * - `customer_po_number`: checks customer PO numbers on sales orders; requires
+   *   `customer_id`.
    */
   type: string;
 
   /**
-   * Customer ID, required for customer_po_number checks.
+   * ID of the customer to scope the check to.
+   *
+   * Required when `type` is `customer_po_number`; ignored for other types.
    */
   customer_id?: string;
 }
 
 export interface ActionEmailRecordParams {
   /**
-   * Record ID.
+   * ID of the record to email.
    */
   id: string;
 
   /**
-   * Record type: invoice, sales_order, or purchase_order.
+   * The type of record to email.
+   *
+   * - `invoice`: emails the invoice to the invoice's email recipients.
+   * - `sales_order`: sends an order acknowledgement to the order's acknowledgement
+   *   recipients.
+   * - `purchase_order`: sends the purchase order submission to the order's
+   *   submission recipients.
    */
   type: string;
 }

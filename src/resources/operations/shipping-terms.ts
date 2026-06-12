@@ -48,8 +48,9 @@ export class ShippingTerms extends APIResource {
   }
 
   /**
-   * Partially updates an account-owned shipping term. Default shipping terms cannot
-   * be updated.
+   * Partially updates an account-owned shipping term.
+   *
+   * System-provided default shipping terms cannot be updated.
    *
    * @example
    * ```ts
@@ -91,8 +92,9 @@ export class ShippingTerms extends APIResource {
   }
 
   /**
-   * Deletes an account-owned shipping term. Default shipping terms cannot be
-   * deleted.
+   * Deletes an account-owned shipping term.
+   *
+   * System-provided default shipping terms cannot be deleted.
    *
    * @example
    * ```ts
@@ -112,29 +114,35 @@ export class ShippingTerms extends APIResource {
  */
 export interface CreateShippingTermRequest {
   /**
-   * Display name.
+   * Human-readable name for the shipping term, used to identify it when assigning
+   * shipping terms to customers and orders.
    */
   name: string;
 
   /**
-   * Shipping term type.
+   * Freight pricing model applied by this shipping term.
+   *
+   * - `free_freight`: no shipping cost to the buyer.
+   * - `flat_rate_freight`: a fixed shipping cost regardless of order details (see
+   *   `flat_rate`).
+   * - `carrier_rate_freight`: shipping cost is determined by the carrier's quoted
+   *   rate.
    */
   type: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
 
   /**
-   * QuantityInput represents a value with an associated unit for create/update
-   * requests.
+   * A value with an associated unit, used in create and update requests.
    */
   flat_rate?: CustomersAPI.QuantityInput;
 
   /**
-   * Service level IDs that qualify for free shipping.
+   * IDs of service levels that ship for free under this term (typically once
+   * `minimum_order_value` is met).
    */
   free_shipping_service_level_ids?: Array<string>;
 
   /**
-   * QuantityInput represents a value with an associated unit for create/update
-   * requests.
+   * A value with an associated unit, used in create and update requests.
    */
   minimum_order_value?: CustomersAPI.QuantityInput;
 }
@@ -160,36 +168,45 @@ export interface ListShippingTerm {
 }
 
 /**
- * Request to partially update a shipping term. All fields are optional. Absent
- * fields are left unchanged. Send an explicit JSON null for flat_rate,
- * minimum_order_value, or free_shipping_service_level_ids to clear the existing
- * value.
+ * Request to partially update a shipping term.
+ *
+ * All fields are optional and absent fields are left unchanged. Send an explicit
+ * JSON `null` for `flat_rate`, `minimum_order_value`, or
+ * `free_shipping_service_level_ids` to clear the existing value.
  */
 export interface UpdateShippingTermRequest {
   /**
-   * QuantityInput represents a value with an associated unit for create/update
-   * requests.
+   * A value with an associated unit, used in create and update requests.
    */
   flat_rate?: CustomersAPI.QuantityInput | null;
 
   /**
-   * Service level IDs that qualify for free shipping. Send null to clear.
+   * IDs of service levels that ship for free under this term (typically once
+   * `minimum_order_value` is met).
+   *
+   * Replaces the existing list. Send `null` to clear.
    */
   free_shipping_service_level_ids?: Array<string> | null;
 
   /**
-   * QuantityInput represents a value with an associated unit for create/update
-   * requests.
+   * A value with an associated unit, used in create and update requests.
    */
   minimum_order_value?: CustomersAPI.QuantityInput | null;
 
   /**
-   * Display name.
+   * Human-readable name for the shipping term, used to identify it when assigning
+   * shipping terms to customers and orders.
    */
   name?: string;
 
   /**
-   * Shipping term type.
+   * Freight pricing model applied by this shipping term.
+   *
+   * - `free_freight`: no shipping cost to the buyer.
+   * - `flat_rate_freight`: a fixed shipping cost regardless of order details (see
+   *   `flat_rate`).
+   * - `carrier_rate_freight`: shipping cost is determined by the carrier's quoted
+   *   rate.
    */
   type?: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
 }
@@ -198,12 +215,19 @@ export interface ShippingTermDeleteResponse {}
 
 export interface ShippingTermCreateParams {
   /**
-   * Body param: Display name.
+   * Body param: Human-readable name for the shipping term, used to identify it when
+   * assigning shipping terms to customers and orders.
    */
   name: string;
 
   /**
-   * Body param: Shipping term type.
+   * Body param: Freight pricing model applied by this shipping term.
+   *
+   * - `free_freight`: no shipping cost to the buyer.
+   * - `flat_rate_freight`: a fixed shipping cost regardless of order details (see
+   *   `flat_rate`).
+   * - `carrier_rate_freight`: shipping cost is determined by the carrier's quoted
+   *   rate.
    */
   type: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
 
@@ -216,19 +240,18 @@ export interface ShippingTermCreateParams {
   >;
 
   /**
-   * Body param: QuantityInput represents a value with an associated unit for
-   * create/update requests.
+   * Body param: A value with an associated unit, used in create and update requests.
    */
   flat_rate?: CustomersAPI.QuantityInput;
 
   /**
-   * Body param: Service level IDs that qualify for free shipping.
+   * Body param: IDs of service levels that ship for free under this term (typically
+   * once `minimum_order_value` is met).
    */
   free_shipping_service_level_ids?: Array<string>;
 
   /**
-   * Body param: QuantityInput represents a value with an associated unit for
-   * create/update requests.
+   * Body param: A value with an associated unit, used in create and update requests.
    */
   minimum_order_value?: CustomersAPI.QuantityInput;
 }
@@ -253,37 +276,48 @@ export interface ShippingTermUpdateParams {
   >;
 
   /**
-   * Body param: QuantityInput represents a value with an associated unit for
-   * create/update requests.
+   * Body param: A value with an associated unit, used in create and update requests.
    */
   flat_rate?: CustomersAPI.QuantityInput | null;
 
   /**
-   * Body param: Service level IDs that qualify for free shipping. Send null to
-   * clear.
+   * Body param: IDs of service levels that ship for free under this term (typically
+   * once `minimum_order_value` is met).
+   *
+   * Replaces the existing list. Send `null` to clear.
    */
   free_shipping_service_level_ids?: Array<string> | null;
 
   /**
-   * Body param: QuantityInput represents a value with an associated unit for
-   * create/update requests.
+   * Body param: A value with an associated unit, used in create and update requests.
    */
   minimum_order_value?: CustomersAPI.QuantityInput | null;
 
   /**
-   * Body param: Display name.
+   * Body param: Human-readable name for the shipping term, used to identify it when
+   * assigning shipping terms to customers and orders.
    */
   name?: string;
 
   /**
-   * Body param: Shipping term type.
+   * Body param: Freight pricing model applied by this shipping term.
+   *
+   * - `free_freight`: no shipping cost to the buyer.
+   * - `flat_rate_freight`: a fixed shipping cost regardless of order details (see
+   *   `flat_rate`).
+   * - `carrier_rate_freight`: shipping cost is determined by the carrier's quoted
+   *   rate.
    */
   type?: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
 }
 
 export interface ShippingTermListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -296,12 +330,14 @@ export interface ShippingTermListParams {
   >;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

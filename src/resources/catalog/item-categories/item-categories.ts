@@ -43,8 +43,9 @@ export class ItemCategories extends APIResource {
   }
 
   /**
-   * Returns an item category by ID. Includes account-specific and global system
-   * categories.
+   * Returns an item category by ID.
+   *
+   * Both account-owned categories and global system categories can be retrieved.
    *
    * @example
    * ```ts
@@ -63,8 +64,10 @@ export class ItemCategories extends APIResource {
   }
 
   /**
-   * Partially updates an account-owned item category. Default system categories
-   * cannot be updated.
+   * Partially updates an account-owned item category.
+   *
+   * Only the fields provided in the request body are changed. Default system
+   * categories cannot be updated.
    *
    * @example
    * ```ts
@@ -106,8 +109,9 @@ export class ItemCategories extends APIResource {
   }
 
   /**
-   * Deletes an account-owned item category. Default system categories cannot be
-   * deleted.
+   * Deletes an account-owned item category.
+   *
+   * Default system categories cannot be deleted.
    *
    * @example
    * ```ts
@@ -122,8 +126,11 @@ export class ItemCategories extends APIResource {
   }
 
   /**
-   * Changes the unit group associated with an item category. All items in the
-   * category are updated to use the new base unit asynchronously.
+   * Changes the unit group associated with an item category.
+   *
+   * The new unit group must have the same unit type as the current one — for
+   * example, a category measured in `mass` units can only switch to another `mass`
+   * unit group. Default system categories cannot be modified.
    *
    * @example
    * ```ts
@@ -149,18 +156,26 @@ export class ItemCategories extends APIResource {
  */
 export interface CreateItemCategoryRequest {
   /**
-   * Display name.
+   * Display name of the item category.
    */
   name: string;
 
   /**
-   * Item category type. Material categories are used to group materials, while
-   * product categories are used to group products and parts.
+   * What kind of items this category groups.
+   *
+   * - `material_category`: groups raw materials and components (items of type
+   *   `material`).
+   * - `product_category`: groups finished products and parts (items of type
+   *   `product` or `part`).
    */
   type: 'material_category' | 'product_category';
 
   /**
-   * Unit group ID.
+   * ID of the unit group that determines the units of measure available to items in
+   * this category.
+   *
+   * After creation, the unit group can only be replaced by another unit group of the
+   * same unit type via the Change Item Category Unit Group endpoint.
    */
   unit_group_id: string;
 }
@@ -170,12 +185,12 @@ export interface CreateItemCategoryRequest {
  */
 export interface UpdateItemCategoryRequest {
   /**
-   * Display name.
+   * Display name of the item category.
    */
   name?: string;
 
   /**
-   * Notes.
+   * Free-form notes about the item category.
    */
   notes?: string;
 }
@@ -186,18 +201,26 @@ export interface ItemCategoryChangeUnitGroupResponse {}
 
 export interface ItemCategoryCreateParams {
   /**
-   * Body param: Display name.
+   * Body param: Display name of the item category.
    */
   name: string;
 
   /**
-   * Body param: Item category type. Material categories are used to group materials,
-   * while product categories are used to group products and parts.
+   * Body param: What kind of items this category groups.
+   *
+   * - `material_category`: groups raw materials and components (items of type
+   *   `material`).
+   * - `product_category`: groups finished products and parts (items of type
+   *   `product` or `part`).
    */
   type: 'material_category' | 'product_category';
 
   /**
-   * Body param: Unit group ID.
+   * Body param: ID of the unit group that determines the units of measure available
+   * to items in this category.
+   *
+   * After creation, the unit group can only be replaced by another unit group of the
+   * same unit type via the Change Item Category Unit Group endpoint.
    */
   unit_group_id: string;
 
@@ -248,19 +271,23 @@ export interface ItemCategoryUpdateParams {
   >;
 
   /**
-   * Body param: Display name.
+   * Body param: Display name of the item category.
    */
   name?: string;
 
   /**
-   * Body param: Notes.
+   * Body param: Free-form notes about the item category.
    */
   notes?: string;
 }
 
 export interface ItemCategoryListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -279,12 +306,14 @@ export interface ItemCategoryListParams {
   >;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 

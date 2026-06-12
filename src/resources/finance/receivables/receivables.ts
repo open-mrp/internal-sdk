@@ -16,7 +16,8 @@ export class Receivables extends APIResource {
   accounts: AccountsAPI.Accounts = new AccountsAPI.Accounts(this._client);
 
   /**
-   * Returns a paginated list of receivable entries for the current account.
+   * Returns a paginated list of outstanding receivable entries for the current
+   * account.
    *
    * @example
    * ```ts
@@ -53,16 +54,20 @@ export interface ListReceivableEntry {
 }
 
 /**
- * Outstanding receivable tied to an invoice.
+ * An outstanding balance owed on an invoice.
+ *
+ * Receivable entries are derived from invoices that have not been paid in full;
+ * one entry is returned per open invoice.
  */
 export interface ReceivableEntry {
   /**
-   * Customer account.
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
    */
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Invoice resource.
+   * An invoice billing a customer for goods shipped against a sales order.
    */
   invoice: InvoicesAPI.Invoice | null;
 
@@ -82,34 +87,48 @@ export interface ReceivableEntry {
   object: 'receivable_entry';
 
   /**
-   * Purchase order number, if any.
+   * Customer's purchase order number from the underlying sales order, if any.
    */
   po_number: string | null;
 
   /**
-   * Remaining balance on the invoice.
+   * Remaining unpaid balance on the invoice, as a decimal string.
+   *
+   * Calculated as the invoiced total minus all transaction allocations applied to
+   * the invoice. When a `cutoff_date` is supplied to the listing endpoint, only
+   * allocations made before that date are subtracted.
    */
   remaining_balance: string;
 }
 
 export interface ReceivableListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Cutoff date for the receivables snapshot.
+   * Compute receivable balances as of this timestamp.
+   *
+   * Only invoices created before the cutoff are included, and only allocations made
+   * before the cutoff are subtracted from each remaining balance. When omitted,
+   * current balances are returned.
    */
   cutoff_date?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

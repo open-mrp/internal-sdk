@@ -17,6 +17,9 @@ export class OrderDiscounts extends APIResource {
   /**
    * Creates an order discount.
    *
+   * The discount code must be unique within the account; creating a discount with an
+   * existing code returns a conflict error.
+   *
    * @example
    * ```ts
    * const orderDiscount =
@@ -49,6 +52,9 @@ export class OrderDiscounts extends APIResource {
 
   /**
    * Partially updates an order discount.
+   *
+   * Only the provided fields are changed. Changing `code` to one already used by
+   * another discount returns a conflict error.
    *
    * @example
    * ```ts
@@ -84,7 +90,9 @@ export class OrderDiscounts extends APIResource {
   }
 
   /**
-   * Deletes an order discount by ID.
+   * Deletes an order discount and returns the deleted resource.
+   *
+   * Deletion is permanent; further requests against the deleted ID return an error.
    *
    * @example
    * ```ts
@@ -104,12 +112,17 @@ export class OrderDiscounts extends APIResource {
  */
 export interface CreateOrderDiscountRequest {
   /**
-   * Discount code.
+   * The code entered to apply this discount to an order.
+   *
+   * Must be unique within the account.
    */
   code: string;
 
   /**
-   * Discount type: "percentage" or "amount".
+   * How the discount is calculated.
+   *
+   * - `percentage`: the discount is a percent off, taken from `percentage`.
+   * - `amount`: the discount is a fixed amount off, taken from `amount`.
    */
   discount_type: string;
 
@@ -119,13 +132,16 @@ export interface CreateOrderDiscountRequest {
   name: string;
 
   /**
-   * Fixed amount as a decimal string. Required when discount_type is "amount".
+   * Fixed amount off as a decimal string.
+   *
+   * Used when `discount_type` is `amount`; otherwise `0`.
    */
   amount?: string;
 
   /**
-   * Percentage value as a decimal string. Required when discount_type is
-   * "percentage".
+   * Percent off as a decimal string (e.g. `10` for 10%).
+   *
+   * Used when `discount_type` is `percentage`; otherwise `0`.
    */
   percentage?: string;
 }
@@ -151,7 +167,10 @@ export interface ListOrderDiscount {
 }
 
 /**
- * Order discount resource.
+ * A discount code that can be applied to a sales order.
+ *
+ * An order discount reduces the order total by either a percentage or a fixed
+ * amount, depending on `discount_type`.
  */
 export interface OrderDiscount {
   /**
@@ -167,7 +186,9 @@ export interface OrderDiscount {
   amount: string;
 
   /**
-   * Discount code.
+   * The code entered to apply this discount to an order.
+   *
+   * Must be unique within the account.
    */
   code: string;
 
@@ -218,17 +239,24 @@ export interface OrderDiscount {
  */
 export interface UpdateOrderDiscountRequest {
   /**
-   * Fixed amount as a decimal string.
+   * Fixed amount off as a decimal string.
+   *
+   * Used when `discount_type` is `amount`.
    */
   amount?: string;
 
   /**
-   * Discount code.
+   * The code entered to apply this discount to an order.
+   *
+   * Must be unique within the account.
    */
   code?: string;
 
   /**
-   * Discount type: "percentage" or "amount".
+   * How the discount is calculated.
+   *
+   * - `percentage`: the discount is a percent off, taken from `percentage`.
+   * - `amount`: the discount is a fixed amount off, taken from `amount`.
    */
   discount_type?: string;
 
@@ -238,19 +266,26 @@ export interface UpdateOrderDiscountRequest {
   name?: string;
 
   /**
-   * Percentage value as a decimal string.
+   * Percent off as a decimal string (e.g. `10` for 10%).
+   *
+   * Used when `discount_type` is `percentage`.
    */
   percentage?: string;
 }
 
 export interface OrderDiscountCreateParams {
   /**
-   * Discount code.
+   * The code entered to apply this discount to an order.
+   *
+   * Must be unique within the account.
    */
   code: string;
 
   /**
-   * Discount type: "percentage" or "amount".
+   * How the discount is calculated.
+   *
+   * - `percentage`: the discount is a percent off, taken from `percentage`.
+   * - `amount`: the discount is a fixed amount off, taken from `amount`.
    */
   discount_type: string;
 
@@ -260,30 +295,40 @@ export interface OrderDiscountCreateParams {
   name: string;
 
   /**
-   * Fixed amount as a decimal string. Required when discount_type is "amount".
+   * Fixed amount off as a decimal string.
+   *
+   * Used when `discount_type` is `amount`; otherwise `0`.
    */
   amount?: string;
 
   /**
-   * Percentage value as a decimal string. Required when discount_type is
-   * "percentage".
+   * Percent off as a decimal string (e.g. `10` for 10%).
+   *
+   * Used when `discount_type` is `percentage`; otherwise `0`.
    */
   percentage?: string;
 }
 
 export interface OrderDiscountUpdateParams {
   /**
-   * Fixed amount as a decimal string.
+   * Fixed amount off as a decimal string.
+   *
+   * Used when `discount_type` is `amount`.
    */
   amount?: string;
 
   /**
-   * Discount code.
+   * The code entered to apply this discount to an order.
+   *
+   * Must be unique within the account.
    */
   code?: string;
 
   /**
-   * Discount type: "percentage" or "amount".
+   * How the discount is calculated.
+   *
+   * - `percentage`: the discount is a percent off, taken from `percentage`.
+   * - `amount`: the discount is a fixed amount off, taken from `amount`.
    */
   discount_type?: string;
 
@@ -293,24 +338,32 @@ export interface OrderDiscountUpdateParams {
   name?: string;
 
   /**
-   * Percentage value as a decimal string.
+   * Percent off as a decimal string (e.g. `10` for 10%).
+   *
+   * Used when `discount_type` is `percentage`.
    */
   percentage?: string;
 }
 
 export interface OrderDiscountListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

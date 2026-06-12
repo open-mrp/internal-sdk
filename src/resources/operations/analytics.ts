@@ -11,8 +11,8 @@ import { RequestOptions } from '../../internal/request-options';
  */
 export class Analytics extends APIResource {
   /**
-   * Returns aggregated summaries of open batches, optionally filtered by item IDs or
-   * product line IDs.
+   * Returns aggregated quantities of open (unclosed) batches, grouped by department,
+   * item, and scanning station.
    *
    * @example
    * ```ts
@@ -53,12 +53,13 @@ export interface ListOpenBatchSummary {
 
 export interface AnalyticsUpdateOpenBatchesParams {
   /**
-   * Item IDs to filter by.
+   * Restrict the summaries to batches of these items; omit to include all items.
    */
   item_ids: Array<string>;
 
   /**
-   * Product line IDs to filter by.
+   * Restrict the summaries to batches whose item belongs to these product lines;
+   * omit to include all product lines.
    */
   product_line_ids: Array<string>;
 }

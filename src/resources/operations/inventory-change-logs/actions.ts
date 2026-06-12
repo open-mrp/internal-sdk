@@ -12,6 +12,9 @@ export class Actions extends APIResource {
   /**
    * Exports inventory change logs matching the provided filters as an Excel file.
    *
+   * Unlike the list endpoint, results are not paginated — every matching change log
+   * is included in the download.
+   *
    * @example
    * ```ts
    * const fileDownload =
@@ -28,17 +31,17 @@ export class Actions extends APIResource {
 
 export interface ActionExportParams {
   /**
-   * Filter by action type codes.
+   * Filter by the action that produced the change.
    */
   action_type_codes?: Array<string>;
 
   /**
-   * Filter by responsible user IDs.
+   * Filter by the user responsible for the change.
    */
   changed_by_user_ids?: Array<string>;
 
   /**
-   * Filter change logs created on or before this date.
+   * Restricts results to change logs created on or before this timestamp.
    */
   end_date?: string;
 
@@ -48,7 +51,7 @@ export interface ActionExportParams {
   item_ids?: Array<string>;
 
   /**
-   * Filter change logs created on or after this date.
+   * Restricts results to change logs created on or after this timestamp.
    */
   start_date?: string;
 }
