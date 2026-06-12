@@ -11,7 +11,10 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Cancels a running or pending agent run.
+   * Cancels a pending or running agent run.
+   *
+   * Only runs in the `pending` or `running` status can be cancelled; cancelling a
+   * run in any other status returns a validation error.
    *
    * @example
    * ```ts
@@ -30,7 +33,9 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Continues an agent run awaiting input with a user message.
+   * Resumes a paused agent run with a user message and any tool approvals.
+   *
+   * The run must be in the `awaiting_input` or `awaiting_approval` status.
    *
    * @example
    * ```ts
@@ -59,16 +64,23 @@ export class Actions extends APIResource {
 }
 
 /**
- * Request to continue an agent run awaiting input.
+ * Request to resume a paused agent run.
  */
 export interface ContinueRunRequest {
   /**
-   * Tool slugs to allow for the rest of the run without further approval.
+   * Slugs of tools to allow for the rest of the run.
+   *
+   * Allowed tools execute without pausing for review; slugs accumulate across
+   * continue requests for the life of the run.
    */
   allowed_tool_slugs: Array<string>;
 
   /**
-   * Tool slugs to approve individually. If empty, all pending tools are approved.
+   * Slugs of tools whose pending calls should be approved.
+   *
+   * When empty, all pending tool calls are approved. Approvals are one-time: later
+   * calls to the same tool pause for review again unless the slug is also in
+   * `allowed_tool_slugs`.
    */
   approved_tool_slugs: Array<string>;
 
@@ -88,14 +100,19 @@ export interface ActionCancelParams {
 
 export interface ActionContinueParams {
   /**
-   * Body param: Tool slugs to allow for the rest of the run without further
-   * approval.
+   * Body param: Slugs of tools to allow for the rest of the run.
+   *
+   * Allowed tools execute without pausing for review; slugs accumulate across
+   * continue requests for the life of the run.
    */
   allowed_tool_slugs: Array<string>;
 
   /**
-   * Body param: Tool slugs to approve individually. If empty, all pending tools are
-   * approved.
+   * Body param: Slugs of tools whose pending calls should be approved.
+   *
+   * When empty, all pending tool calls are approved. Approvals are one-time: later
+   * calls to the same tool pause for review again unless the slug is also in
+   * `allowed_tool_slugs`.
    */
   approved_tool_slugs: Array<string>;
 

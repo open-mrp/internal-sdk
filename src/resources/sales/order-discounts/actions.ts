@@ -10,8 +10,12 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Finds an order discount by code, optionally scoped to a buyer account or sales
-   * order.
+   * Looks up an order discount by its code.
+   *
+   * When `buyer_account_id` is provided (or the caller is a customer user), the
+   * lookup also verifies the buyer has not already used the discount on another
+   * order, returning a not-found error if they have. Pass `sales_order_id` to
+   * exclude an existing order from that check.
    *
    * @example
    * ```ts
@@ -34,34 +38,46 @@ export class Actions extends APIResource {
  */
 export interface FindOrderDiscountByCodeRequest {
   /**
-   * Discount code.
+   * The discount code to look up.
    */
   code: string;
 
   /**
-   * Buyer account ID to scope the lookup.
+   * Buyer account ID to check for prior usage.
+   *
+   * When set, the lookup returns a not-found error if this buyer has already used
+   * the discount on another order.
    */
   buyer_account_id?: string;
 
   /**
-   * Sales order ID to scope the lookup.
+   * Sales order ID to exclude from the prior-usage check.
+   *
+   * Set this when re-validating a code on an existing order so the order's own usage
+   * does not count against the buyer.
    */
   sales_order_id?: string;
 }
 
 export interface ActionFindByCodeParams {
   /**
-   * Discount code.
+   * The discount code to look up.
    */
   code: string;
 
   /**
-   * Buyer account ID to scope the lookup.
+   * Buyer account ID to check for prior usage.
+   *
+   * When set, the lookup returns a not-found error if this buyer has already used
+   * the discount on another order.
    */
   buyer_account_id?: string;
 
   /**
-   * Sales order ID to scope the lookup.
+   * Sales order ID to exclude from the prior-usage check.
+   *
+   * Set this when re-validating a code on an existing order so the order's own usage
+   * does not count against the buyer.
    */
   sales_order_id?: string;
 }

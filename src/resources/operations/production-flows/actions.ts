@@ -9,8 +9,12 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Connects two production steps in the production flow DAG. The source step
-   * becomes an upstream dependency of the target step.
+   * Connects two production steps in the production flow DAG.
+   *
+   * The source step becomes an upstream dependency of the target step; connecting an
+   * already-connected pair has no effect. Connections are also maintained
+   * automatically from item relationships, so manual connections may be rebuilt when
+   * a step's produced or consumed items change.
    *
    * @example
    * ```ts

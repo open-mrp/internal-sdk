@@ -22,8 +22,10 @@ export class RegistrationSessions extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Creates a registration session. Returns the existing session ID if an active
-   * session already exists for that email.
+   * Starts a self-serve registration session and sends a verification email.
+   *
+   * If an active session already exists for the email, the existing session's ID is
+   * returned instead of creating a new one.
    *
    * @example
    * ```ts
@@ -99,8 +101,11 @@ export class RegistrationSessions extends APIResource {
   }
 
   /**
-   * Completes the registration flow by provisioning accounts, roles, and
-   * permissions. Requires payment to be confirmed first.
+   * Completes a registration session by provisioning the new account with its roles
+   * and permissions.
+   *
+   * Requires a user to have been created for the session, and, for paid plans,
+   * payment to be confirmed first. Returns the ID of the newly created account.
    *
    * @example
    * ```ts
@@ -115,9 +120,11 @@ export class RegistrationSessions extends APIResource {
   }
 
   /**
-   * Creates or associates a user with a registration session. If the session email
-   * matches an existing user, that user is associated; otherwise a new user is
-   * created.
+   * Creates the user for a registration session.
+   *
+   * If the session's email matches an existing user, that user is associated with
+   * the session instead of creating a new one. Advances the session to the
+   * `account_details` step.
    *
    * @example
    * ```ts
@@ -142,7 +149,7 @@ export class RegistrationSessions extends APIResource {
  */
 export interface CompleteRegistrationResponse {
   /**
-   * Account ID.
+   * ID of the newly created account.
    */
   id: string;
 
@@ -157,12 +164,17 @@ export interface CompleteRegistrationResponse {
  */
 export interface CreateRegistrationSessionRequest {
   /**
-   * Email address.
+   * Email address of the registering user.
+   *
+   * A verification email is sent to this address to start the registration.
    */
   email: string;
 
   /**
-   * Plan code.
+   * Code of the pricing plan to register for.
+   *
+   * Free plans skip the payment step; paid plans require a payment method to be
+   * collected and confirmed before the registration can complete.
    */
   plan_code: 'free' | 'starter' | 'pro';
 }
@@ -172,7 +184,10 @@ export interface CreateRegistrationSessionRequest {
  */
 export interface CreateSessionResponse {
   /**
-   * Session ID.
+   * ID of the registration session.
+   *
+   * If an active session already existed for the email, this is the existing
+   * session's ID rather than a new one.
    */
   id: string;
 
@@ -187,12 +202,15 @@ export interface CreateSessionResponse {
  */
 export interface CreateUserRequest {
   /**
-   * Display name.
+   * The user's display name.
    */
   name: string;
 
   /**
-   * Password.
+   * Password for the new user.
+   *
+   * Must be 8–72 characters and contain at least one lowercase letter, one uppercase
+   * letter, one digit, and one special character.
    */
   password: string;
 }
@@ -202,7 +220,10 @@ export interface CreateUserRequest {
  */
 export interface CreateUserResponse {
   /**
-   * User ID.
+   * ID of the user associated with the session.
+   *
+   * This is either the newly created user or, if the session's email matched an
+   * existing user, that existing user.
    */
   id: string;
 
@@ -233,7 +254,10 @@ export interface ListRegistrationSession {
 }
 
 /**
- * Registration session.
+ * An in-progress self-serve registration.
+ *
+ * A session tracks a new customer's progress through email verification, user and
+ * account setup, payment, and final account provisioning.
  */
 export interface RegistrationSession {
   /**
@@ -248,8 +272,6 @@ export interface RegistrationSession {
 
   /**
    * Timestamp when registration was completed.
-   *
-   * Null if still in progress.
    */
   completed_at: string | null;
 
@@ -272,8 +294,7 @@ export interface RegistrationSession {
   payment_completed: boolean;
 
   /**
-   * Code of the pricing plan selected for this registration, e.g. `free`, `starter`,
-   * or `pro`.
+   * Code of the pricing plan selected for this registration.
    */
   plan_code: string;
 
@@ -292,16 +313,19 @@ export interface RegistrationSession {
   step: 'verification' | 'user_details' | 'account_details' | 'review' | 'payment' | 'completed';
 
   /**
-   * ID of the Stripe Checkout session used to collect payment.
+   * ID of the Stripe Setup Intent created to collect the payment method.
    *
-   * `null` until checkout is started.
+   * Despite the field name, this holds the Setup Intent ID created by **Setup
+   * Registration Billing**, which **Confirm Registration Payment** verifies against
+   * its `setup_intent_id`. It is populated once billing setup runs.
    */
   stripe_checkout_session_id: string | null;
 
   /**
    * ID of the Stripe customer created for this registration.
    *
-   * `null` until billing is set up.
+   * Populated when **Setup Registration Billing** runs; absent for free plans, which
+   * never set up billing.
    */
   stripe_customer_id: string | null;
 
@@ -321,7 +345,9 @@ export interface RegistrationSession {
  */
 export interface RegistrationSessionAccount {
   /**
-   * Account ID, null until account is created.
+   * ID of the account record.
+   *
+   * Populated only after the registration completes and the account is provisioned.
    */
   id: string | null;
 
@@ -331,7 +357,7 @@ export interface RegistrationSessionAccount {
   billing_address: RegistrationSessionAddress;
 
   /**
-   * Display name.
+   * Display name of the account being created.
    */
   name: string;
 
@@ -346,7 +372,11 @@ export interface RegistrationSessionAccount {
  */
 export interface RegistrationSessionAddress {
   /**
-   * Address ID, null until address is created.
+   * ID of the address record.
+   *
+   * Populated only after the registration completes and the address is persisted;
+   * while the session is in progress the address fields hold the entered values
+   * without an ID.
    */
   id: string | null;
 
@@ -391,7 +421,9 @@ export interface RegistrationSessionAddress {
  */
 export interface RegistrationSessionUser {
   /**
-   * User ID, null until user is created.
+   * ID of the user record.
+   *
+   * Populated once the user is created during the `user_details` step.
    */
   id: string | null;
 
@@ -401,12 +433,17 @@ export interface RegistrationSessionUser {
   email: string;
 
   /**
-   * Timestamp when email was verified, null if pending.
+   * Timestamp when the user's email address was verified.
+   *
+   * Set once the `verification` step completes; until then the email is still
+   * pending verification.
    */
   email_verified_at: string | null;
 
   /**
-   * Display name.
+   * The user's display name.
+   *
+   * Provided by the registrant during the `user_details` step.
    */
   name: string | null;
 
@@ -431,7 +468,7 @@ export interface UpdateSessionDataRequest {
   billing_address_city?: string;
 
   /**
-   * Billing address country.
+   * Billing address country as a two-letter country code.
    */
   billing_address_country?: string;
 
@@ -472,18 +509,26 @@ export interface UpdateSessionRequest {
 
   /**
    * Step to advance the session to.
+   *
+   * Must be later than the session's current step; moving backwards is rejected. See
+   * the session resource's `step` field for the step order.
    */
   step?: 'verification' | 'user_details' | 'account_details' | 'review' | 'payment' | 'completed';
 }
 
 export interface RegistrationSessionCreateParams {
   /**
-   * Email address.
+   * Email address of the registering user.
+   *
+   * A verification email is sent to this address to start the registration.
    */
   email: string;
 
   /**
-   * Plan code.
+   * Code of the pricing plan to register for.
+   *
+   * Free plans skip the payment step; paid plans require a payment method to be
+   * collected and confirmed before the registration can complete.
    */
   plan_code: 'free' | 'starter' | 'pro';
 }
@@ -496,35 +541,47 @@ export interface RegistrationSessionUpdateParams {
 
   /**
    * Step to advance the session to.
+   *
+   * Must be later than the session's current step; moving backwards is rejected. See
+   * the session resource's `step` field for the step order.
    */
   step?: 'verification' | 'user_details' | 'account_details' | 'review' | 'payment' | 'completed';
 }
 
 export interface RegistrationSessionListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }
 
 export interface RegistrationSessionUsersParams {
   /**
-   * Display name.
+   * The user's display name.
    */
   name: string;
 
   /**
-   * Password.
+   * Password for the new user.
+   *
+   * Must be 8–72 characters and contain at least one lowercase letter, one uppercase
+   * letter, one digit, and one special character.
    */
   password: string;
 }

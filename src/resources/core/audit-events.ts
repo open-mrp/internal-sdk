@@ -47,6 +47,9 @@ export class AuditEvents extends APIResource {
   /**
    * Returns the full set of resource types that may appear on audit events.
    *
+   * Values are plain strings, suitable for the `resource_types` filter when listing
+   * audit events.
+   *
    * @example
    * ```ts
    * const listObjectType =
@@ -118,7 +121,7 @@ export interface AuditEvent {
   occurred_at: string;
 
   /**
-   * RequestLog is an API request log entry.
+   * A log of a single API request, capturing its route, outcome, latency, and actor.
    */
   request: RequestLogsAPI.RequestLog | null;
 
@@ -355,7 +358,7 @@ export interface AuditFieldChange {
   /**
    * New value as a JSON fragment.
    *
-   * Null for deletion events. Encoded as a JSON value (object, array, string,
+   * `null` for deletion events. Encoded as a JSON value (object, array, string,
    * number, boolean, or null), not a JSON-encoded string.
    */
   new_value: unknown | null;
@@ -368,7 +371,7 @@ export interface AuditFieldChange {
   /**
    * Previous value as a JSON fragment.
    *
-   * Null for creation events. Encoded as a JSON value (object, array, string,
+   * `null` for creation events. Encoded as a JSON value (object, array, string,
    * number, boolean, or null), not a JSON-encoded string.
    */
   old_value: unknown | null;
@@ -650,20 +653,24 @@ export interface AuditEventRetrieveParams {
 
 export interface AuditEventListParams {
   /**
-   * Filter by the audit actions.
+   * Filter by the mutation type recorded on the event.
    */
   actions?: Array<'create' | 'update' | 'delete' | 'restore' | 'archive'>;
 
   /**
    * Filter by the actor identifier.
    *
-   * Will be `user.id` when `identity_type`=`user` or an `api_key.id` when
-   * `identity_type`=`api_key`.
+   * Matches the event's `actor.id`: a user ID for `user` actors or an API key ID for
+   * `api_key` actors.
    */
   actor_ids?: Array<string>;
 
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -679,12 +686,14 @@ export interface AuditEventListParams {
   include?: Array<'actor' | 'changes' | 'metadata' | 'request'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
@@ -695,6 +704,9 @@ export interface AuditEventListParams {
 
   /**
    * Filter by the resource type of the audited entity.
+   *
+   * The full set of valid values is available from the List Audit Event Resource
+   * Types endpoint.
    */
   resource_types?: Array<
     | 'account'

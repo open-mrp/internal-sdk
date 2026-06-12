@@ -125,17 +125,17 @@ export class Lines extends APIResource {
  */
 export interface CreateShipmentLineRequest {
   /**
-   * Quantity unit ID.
+   * ID of the unit of measure for `quantity_value`.
    */
   quantity_unit_id: string;
 
   /**
-   * Quantity value.
+   * Quantity shipped, as a decimal string.
    */
   quantity_value: string;
 
   /**
-   * Sales order line ID.
+   * ID of the sales order line this shipment line fulfills.
    */
   sales_order_line_id: string;
 }
@@ -145,12 +145,12 @@ export interface CreateShipmentLineRequest {
  */
 export interface UpdateShipmentLineRequest {
   /**
-   * Quantity unit ID.
+   * ID of the unit of measure for `quantity_value`.
    */
   quantity_unit_id?: string;
 
   /**
-   * Quantity value.
+   * Quantity shipped, as a decimal string.
    */
   quantity_value?: string;
 }
@@ -159,17 +159,17 @@ export interface LineDeleteResponse {}
 
 export interface LineCreateParams {
   /**
-   * Quantity unit ID.
+   * ID of the unit of measure for `quantity_value`.
    */
   quantity_unit_id: string;
 
   /**
-   * Quantity value.
+   * Quantity shipped, as a decimal string.
    */
   quantity_value: string;
 
   /**
-   * Sales order line ID.
+   * ID of the sales order line this shipment line fulfills.
    */
   sales_order_line_id: string;
 }
@@ -188,29 +188,35 @@ export interface LineUpdateParams {
   shipment_id: string;
 
   /**
-   * Body param: Quantity unit ID.
+   * Body param: ID of the unit of measure for `quantity_value`.
    */
   quantity_unit_id?: string;
 
   /**
-   * Body param: Quantity value.
+   * Body param: Quantity shipped, as a decimal string.
    */
   quantity_value?: string;
 }
 
 export interface LineListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

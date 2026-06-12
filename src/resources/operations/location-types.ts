@@ -64,11 +64,11 @@ export interface ListLocationType {
 }
 
 /**
- * LocationType resource.
+ * A level in the storage location hierarchy, such as a building or a bin.
  */
 export interface LocationType {
   /**
-   * Location ID.
+   * Location type ID.
    */
   id: string;
 
@@ -91,7 +91,7 @@ export interface LocationType {
   created_at: string;
 
   /**
-   * Display name.
+   * Display name of the location type.
    */
   name: string;
 
@@ -108,17 +108,23 @@ export interface LocationType {
 
 export interface LocationTypeListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

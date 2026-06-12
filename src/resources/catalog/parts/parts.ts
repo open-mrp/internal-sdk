@@ -19,6 +19,9 @@ export class Parts extends APIResource {
   /**
    * Creates a part with the specified SKU and category.
    *
+   * Inventory tracking for the new part starts at a zero on-hand quantity in the
+   * category's base unit.
+   *
    * @example
    * ```ts
    * const part = await client.catalog.parts.create({
@@ -52,7 +55,9 @@ export class Parts extends APIResource {
   }
 
   /**
-   * Partially updates a part. Fields not provided retain their current values.
+   * Partially updates a part.
+   *
+   * Fields not provided retain their current values.
    *
    * @example
    * ```ts
@@ -87,7 +92,11 @@ export class Parts extends APIResource {
   }
 
   /**
-   * Deletes a part. Sets the deleted_at timestamp rather than removing the record.
+   * Deletes a part.
+   *
+   * This is a soft delete: the part is marked deleted and no longer returned by
+   * other endpoints, but the record is retained. Deleting an already-deleted part
+   * returns an error.
    *
    * @example
    * ```ts
@@ -106,37 +115,45 @@ export class Parts extends APIResource {
  */
 export interface CreatePartRequest {
   /**
-   * Category ID.
+   * ID of the item category to place the part in.
+   *
+   * The category's unit group determines the base unit used for the part's rates
+   * (`unit_value`, `unit_cost`, `burn_rate`).
    */
   category_id: string;
 
   /**
-   * SKU.
+   * Stock keeping unit code for the part.
+   *
+   * Must be unique within the account; creating a part with a SKU already used by
+   * another item fails with a conflict error.
    */
   sku: string;
 
   /**
-   * Attribute IDs to connect to the part at creation time.
+   * IDs of existing attributes to link to the part at creation time.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Description.
+   * Free-form description of the part.
    */
   description?: string;
 
   /**
-   * Notes.
+   * Free-form notes about the part.
    */
   notes?: string;
 
   /**
-   * RateInput represents the input for creating or updating a rate.
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
   unit_cost?: LinesAPI.RateInput;
 
   /**
-   * RateInput represents the input for creating or updating a rate.
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
   unit_price?: LinesAPI.RateInput;
 }
@@ -162,7 +179,10 @@ export interface ListPart {
 }
 
 /**
- * Part resource.
+ * A part in the account's catalog: a component used in production.
+ *
+ * Part-level data such as the SKU, description, category, pricing, and attributes
+ * lives on the underlying `item`.
  */
 export interface Part {
   /**
@@ -196,29 +216,42 @@ export interface Part {
  */
 export interface UpdatePartRequest {
   /**
-   * Description.
+   * New description for the part.
+   *
+   * Set to a string to replace the current description, or `null` to clear it.
    */
   description?: string | null;
 
   /**
-   * Notes.
+   * New notes for the part.
+   *
+   * Set to a string to replace the current notes, or `null` to clear them.
    */
   notes?: string | null;
 
   /**
-   * SKU.
+   * New stock keeping unit code for the part.
+   *
+   * Must remain unique within the account; a conflict error is returned if another
+   * item already uses it.
    */
   sku?: string;
 }
 
 export interface PartCreateParams {
   /**
-   * Body param: Category ID.
+   * Body param: ID of the item category to place the part in.
+   *
+   * The category's unit group determines the base unit used for the part's rates
+   * (`unit_value`, `unit_cost`, `burn_rate`).
    */
   category_id: string;
 
   /**
-   * Body param: SKU.
+   * Body param: Stock keeping unit code for the part.
+   *
+   * Must be unique within the account; creating a part with a SKU already used by
+   * another item fails with a conflict error.
    */
   sku: string;
 
@@ -231,27 +264,29 @@ export interface PartCreateParams {
   >;
 
   /**
-   * Body param: Attribute IDs to connect to the part at creation time.
+   * Body param: IDs of existing attributes to link to the part at creation time.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Body param: Description.
+   * Body param: Free-form description of the part.
    */
   description?: string;
 
   /**
-   * Body param: Notes.
+   * Body param: Free-form notes about the part.
    */
   notes?: string;
 
   /**
-   * Body param: RateInput represents the input for creating or updating a rate.
+   * Body param: A rate value with its numerator and denominator units, used in
+   * create and update requests.
    */
   unit_cost?: LinesAPI.RateInput;
 
   /**
-   * Body param: RateInput represents the input for creating or updating a rate.
+   * Body param: A rate value with its numerator and denominator units, used in
+   * create and update requests.
    */
   unit_price?: LinesAPI.RateInput;
 }
@@ -283,17 +318,24 @@ export interface PartUpdateParams {
   >;
 
   /**
-   * Body param: Description.
+   * Body param: New description for the part.
+   *
+   * Set to a string to replace the current description, or `null` to clear it.
    */
   description?: string | null;
 
   /**
-   * Body param: Notes.
+   * Body param: New notes for the part.
+   *
+   * Set to a string to replace the current notes, or `null` to clear them.
    */
   notes?: string | null;
 
   /**
-   * Body param: SKU.
+   * Body param: New stock keeping unit code for the part.
+   *
+   * Must remain unique within the account; a conflict error is returned if another
+   * item already uses it.
    */
   sku?: string;
 }
@@ -310,7 +352,11 @@ export interface PartListParams {
   category_ids?: Array<string>;
 
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -335,12 +381,14 @@ export interface PartListParams {
   >;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 

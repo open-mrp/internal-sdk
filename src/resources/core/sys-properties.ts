@@ -61,8 +61,12 @@ export class SysProperties extends APIResource {
   }
 
   /**
-   * Returns the next available counter value for a system property type,
-   * initializing it if it does not exist for the account.
+   * Returns the next available counter value for a system property type.
+   *
+   * Initializes the counter at `1` if it does not yet exist for the account. If the
+   * current value is already used by an existing record (for example, a transaction
+   * with that number), the counter is incremented before the value is returned. The
+   * `sscc_count` counter is returned as-is, without a duplicate check.
    *
    * @example
    * ```ts
@@ -118,7 +122,7 @@ export interface SysProperty {
   object: 'sys_property';
 
   /**
-   * System property type.
+   * The kind of counter a system property tracks.
    */
   type: SysPropertyType | null;
 
@@ -134,7 +138,7 @@ export interface SysProperty {
 }
 
 /**
- * System property type.
+ * The kind of counter a system property tracks.
  */
 export interface SysPropertyType {
   /**
@@ -144,12 +148,12 @@ export interface SysPropertyType {
 
   /**
    * Machine-readable code identifying which counter this is, such as
-   * `transaction_number`.
+   * `transaction_number` or `purchase_order_number`.
    */
   code: string;
 
   /**
-   * Display name.
+   * Human-readable name of the counter, such as `Transaction Number`.
    */
   name: string;
 
@@ -160,7 +164,7 @@ export interface SysPropertyType {
 }
 
 /**
- * System property value response.
+ * The current value of a system property counter.
  */
 export interface SysPropertyValue {
   /**
@@ -179,31 +183,39 @@ export interface SysPropertyValue {
  */
 export interface UpdateSysPropertyRequest {
   /**
-   * Counter value.
+   * The new counter value, such as the next transaction or document number to
+   * assign.
    */
   value?: number;
 }
 
 export interface SysPropertyUpdateParams {
   /**
-   * Counter value.
+   * The new counter value, such as the next transaction or document number to
+   * assign.
    */
   value?: number;
 }
 
 export interface SysPropertyListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

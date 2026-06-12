@@ -38,7 +38,10 @@ export class EdiRuns extends APIResource {
 }
 
 /**
- * EDI run resource.
+ * A record of a single EDI processing run.
+ *
+ * EDI runs are created automatically by the platform's EDI processing and are
+ * read-only through the API.
  */
 export interface EdiRun {
   /**
@@ -94,22 +97,31 @@ export interface ListEdiRun {
 
 export interface EdiRunListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Success status filter.
+   * Filters runs by outcome.
+   *
+   * Pass `true` to return only successful runs or `false` to return only failed
+   * runs. Omit to return runs regardless of outcome.
    */
   has_succeeded?: boolean;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

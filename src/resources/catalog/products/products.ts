@@ -23,7 +23,11 @@ export class Products extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Creates a product.
+   * Creates a product and its backing inventory item.
+   *
+   * The new item starts with zero on-hand inventory, and its pricing defaults to
+   * zero rates in the category's base unit unless `unit_price` or `unit_cost` is
+   * provided.
    *
    * @example
    * ```ts
@@ -138,17 +142,31 @@ export class Products extends APIResource {
  */
 export interface CreateProductRequest {
   /**
-   * Category ID.
+   * ID of the item category for the product's item.
+   *
+   * The category's unit group determines the default units used for the product's
+   * pricing rates and inventory tracking.
    */
   category_id: string;
 
   /**
-   * SKU.
+   * Stock keeping unit code for the product's item.
+   *
+   * Must be unique within the account; creation fails with a conflict error if
+   * another item already uses it.
    */
   sku: string;
 
   /**
-   * Product type code.
+   * Product type code, which determines how the product behaves on orders and
+   * invoices.
+   *
+   * - `sale`: a standard sellable product.
+   * - `service`: a non-physical service line, such as labor or installation.
+   * - `shipping`: a shipping charge applied to an order.
+   * - `credit`: a credit applied against an order or invoice.
+   * - `return`: a returned product (RMA).
+   * - `tax`: a tax line.
    */
   type: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
 
@@ -168,22 +186,31 @@ export interface CreateProductRequest {
   notes?: string;
 
   /**
-   * Whether visible in the customer portal.
+   * Whether the product is shown to buyers in the customer portal.
+   *
+   * - `visible`: buyers can see and order the product in the portal.
+   * - `hidden`: the product is concealed from the portal but remains usable
+   *   internally.
+   *
+   * When omitted, the product is created hidden, so it must be set to `visible`
+   * before buyers can see it.
    */
   portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Product line ID.
+   * ID of the product line to assign the product to.
    */
   product_line_id?: string;
 
   /**
-   * RateInput represents the input for creating or updating a rate.
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
   unit_cost?: LinesAPI.RateInput;
 
   /**
-   * RateInput represents the input for creating or updating a rate.
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
   unit_price?: LinesAPI.RateInput;
 }
@@ -214,43 +241,69 @@ export interface ListProduct {
 export interface UpdateProductRequest {
   /**
    * Description.
+   *
+   * Send `null` to clear.
    */
   description?: string | null;
 
   /**
    * Notes.
+   *
+   * Send `null` to clear.
    */
   notes?: string | null;
 
   /**
-   * Whether visible in the customer portal.
+   * Whether the product is shown to buyers in the customer portal.
+   *
+   * - `visible`: buyers can see and order the product in the portal.
+   * - `hidden`: the product is concealed from the portal but remains usable
+   *   internally.
    */
   portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * SKU.
+   * New stock keeping unit code for the product's item.
+   *
+   * Must be unique within the account; the update fails with a conflict error if
+   * another item already uses it.
    */
   sku?: string;
 
   /**
-   * RateInput represents the input for creating or updating a rate.
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
   unit_price?: LinesAPI.RateInput;
 }
 
 export interface ProductCreateParams {
   /**
-   * Body param: Category ID.
+   * Body param: ID of the item category for the product's item.
+   *
+   * The category's unit group determines the default units used for the product's
+   * pricing rates and inventory tracking.
    */
   category_id: string;
 
   /**
-   * Body param: SKU.
+   * Body param: Stock keeping unit code for the product's item.
+   *
+   * Must be unique within the account; creation fails with a conflict error if
+   * another item already uses it.
    */
   sku: string;
 
   /**
-   * Body param: Product type code.
+   * Body param: Product type code, which determines how the product behaves on
+   * orders and invoices.
+   *
+   * - `sale`: a standard sellable product.
+   * - `service`: a non-physical service line, such as labor or installation.
+   * - `shipping`: a shipping charge applied to an order.
+   * - `credit`: a credit applied against an order or invoice.
+   * - `return`: a returned product (RMA).
+   * - `tax`: a tax line.
    */
   type: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
 
@@ -293,22 +346,31 @@ export interface ProductCreateParams {
   notes?: string;
 
   /**
-   * Body param: Whether visible in the customer portal.
+   * Body param: Whether the product is shown to buyers in the customer portal.
+   *
+   * - `visible`: buyers can see and order the product in the portal.
+   * - `hidden`: the product is concealed from the portal but remains usable
+   *   internally.
+   *
+   * When omitted, the product is created hidden, so it must be set to `visible`
+   * before buyers can see it.
    */
   portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Body param: Product line ID.
+   * Body param: ID of the product line to assign the product to.
    */
   product_line_id?: string;
 
   /**
-   * Body param: RateInput represents the input for creating or updating a rate.
+   * Body param: A rate value with its numerator and denominator units, used in
+   * create and update requests.
    */
   unit_cost?: LinesAPI.RateInput;
 
   /**
-   * Body param: RateInput represents the input for creating or updating a rate.
+   * Body param: A rate value with its numerator and denominator units, used in
+   * create and update requests.
    */
   unit_price?: LinesAPI.RateInput;
 }
@@ -364,26 +426,38 @@ export interface ProductUpdateParams {
 
   /**
    * Body param: Description.
+   *
+   * Send `null` to clear.
    */
   description?: string | null;
 
   /**
    * Body param: Notes.
+   *
+   * Send `null` to clear.
    */
   notes?: string | null;
 
   /**
-   * Body param: Whether visible in the customer portal.
+   * Body param: Whether the product is shown to buyers in the customer portal.
+   *
+   * - `visible`: buyers can see and order the product in the portal.
+   * - `hidden`: the product is concealed from the portal but remains usable
+   *   internally.
    */
   portal_visibility?: 'visible' | 'hidden';
 
   /**
-   * Body param: SKU.
+   * Body param: New stock keeping unit code for the product's item.
+   *
+   * Must be unique within the account; the update fails with a conflict error if
+   * another item already uses it.
    */
   sku?: string;
 
   /**
-   * Body param: RateInput represents the input for creating or updating a rate.
+   * Body param: A rate value with its numerator and denominator units, used in
+   * create and update requests.
    */
   unit_price?: LinesAPI.RateInput;
 }
@@ -400,7 +474,11 @@ export interface ProductListParams {
   category_ids?: Array<string>;
 
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -438,7 +516,7 @@ export interface ProductListParams {
   >;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
@@ -453,7 +531,9 @@ export interface ProductListParams {
   product_line_ids?: Array<string>;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 

@@ -10,8 +10,11 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Sends a receivables report for a specific customer account to the provided email
-   * addresses.
+   * Emails a statement of account for a specific customer to the provided
+   * recipients.
+   *
+   * The email carries an Excel attachment listing the customer's outstanding
+   * receivables and open credits.
    *
    * @example
    * ```ts
@@ -35,11 +38,11 @@ export class Actions extends APIResource {
 }
 
 /**
- * Request to email receivable entries for a specific customer.
+ * Request to email a statement of account for a specific customer.
  */
 export interface EmailReceivablesForCustomerRequest {
   /**
-   * Email addresses to send the receivables report to.
+   * Email addresses to send the statement of account to.
    */
   recipient_emails: Array<string>;
 }
@@ -48,7 +51,7 @@ export interface ActionEmailReceivablesResponse {}
 
 export interface ActionEmailReceivablesParams {
   /**
-   * Email addresses to send the receivables report to.
+   * Email addresses to send the statement of account to.
    */
   recipient_emails: Array<string>;
 }

@@ -74,6 +74,9 @@ export class ShippingCases extends APIResource {
   /**
    * Returns a presigned URL for the shipping case's label image.
    *
+   * The returned URL expires one hour after it is issued, and is null when no label
+   * has been generated for the case.
+   *
    * @example
    * ```ts
    * const shippingCaseLabelURL =
@@ -88,7 +91,10 @@ export class ShippingCases extends APIResource {
 }
 
 /**
- * Physical shipping case within a shipment.
+ * A physical case packed within a shipment.
+ *
+ * Each case carries its own SSCC, carrier tracking number, shipping label, and
+ * freight cost and weight.
  */
 export interface ShippingCase {
   /**
@@ -97,7 +103,11 @@ export interface ShippingCase {
   id: string;
 
   /**
-   * Carrier resource.
+   * A shipping carrier configured for fulfilling orders.
+   *
+   * Carriers with a Shippo-supported `code` (`fedex`, `ups`, `usps`) are connected
+   * through Shippo for live rating and label purchase; other carriers represent
+   * self-managed shipping methods such as will call or local delivery.
    */
   carrier: CustomersAPI.Carrier | null;
 
@@ -127,17 +137,20 @@ export interface ShippingCase {
   object: 'shipping_case';
 
   /**
-   * Full shipment resource.
+   * A shipment of packed goods fulfilling a sales order, from packing through
+   * dispatch.
    */
   shipment: InvoicesAPI.Shipment | null;
 
   /**
-   * Shipped timestamp.
+   * When the case shipped.
    */
   shipped_at: string | null;
 
   /**
    * Serial Shipping Container Code.
+   *
+   * A GS1 SSCC-18 identifier assigned automatically when the shipment ships.
    */
   sscc: string | null;
 
@@ -153,7 +166,7 @@ export interface ShippingCase {
 }
 
 /**
- * Shipping case label URL.
+ * Presigned link to a shipping case's label image.
  */
 export interface ShippingCaseLabelURL {
   /**
@@ -162,7 +175,9 @@ export interface ShippingCaseLabelURL {
   object: 'shipping_case_label_url';
 
   /**
-   * Presigned label URL, or null if no label exists.
+   * Presigned link to the shipping case's label image.
+   *
+   * The URL expires one hour after it is issued.
    */
   url: string | null;
 }
@@ -172,27 +187,27 @@ export interface ShippingCaseLabelURL {
  */
 export interface UpdateShippingCaseRequest {
   /**
-   * Freight amount unit ID.
+   * ID of the unit for the case's freight cost.
    */
   freight_amount_unit_id?: string;
 
   /**
-   * Freight amount value.
+   * New value for the case's freight cost, as a decimal string.
    */
   freight_amount_value?: string;
 
   /**
-   * Freight weight unit ID.
+   * ID of the unit for the case's freight weight.
    */
   freight_weight_unit_id?: string;
 
   /**
-   * Freight weight value.
+   * New value for the case's freight weight, as a decimal string.
    */
   freight_weight_value?: string;
 
   /**
-   * Tracking number.
+   * Carrier tracking number to set on the case.
    */
   tracking_number?: string;
 }
@@ -215,27 +230,27 @@ export interface ShippingCaseUpdateParams {
   include?: Array<'carrier' | 'shipment' | 'freight_amount.unit' | 'freight_weight.unit'>;
 
   /**
-   * Body param: Freight amount unit ID.
+   * Body param: ID of the unit for the case's freight cost.
    */
   freight_amount_unit_id?: string;
 
   /**
-   * Body param: Freight amount value.
+   * Body param: New value for the case's freight cost, as a decimal string.
    */
   freight_amount_value?: string;
 
   /**
-   * Body param: Freight weight unit ID.
+   * Body param: ID of the unit for the case's freight weight.
    */
   freight_weight_unit_id?: string;
 
   /**
-   * Body param: Freight weight value.
+   * Body param: New value for the case's freight weight, as a decimal string.
    */
   freight_weight_value?: string;
 
   /**
-   * Body param: Tracking number.
+   * Body param: Carrier tracking number to set on the case.
    */
   tracking_number?: string;
 }

@@ -36,6 +36,10 @@ export class SalesTargets extends APIResource {
   /**
    * Creates or updates a sales target by ID.
    *
+   * If no target with the given ID exists, one is created with the supplied dates,
+   * amount, and unit. If it already exists, only the amount value is updated — the
+   * dates and unit are left unchanged.
+   *
    * @example
    * ```ts
    * const salesTarget =
@@ -64,7 +68,10 @@ export class SalesTargets extends APIResource {
   }
 
   /**
-   * Returns a paginated list of sales targets for an account user.
+   * Returns the sales targets for an account user.
+   *
+   * This endpoint does not support cursor pagination; passing a `cursor` returns a
+   * validation error.
    *
    * @example
    * ```ts
@@ -88,22 +95,22 @@ export class SalesTargets extends APIResource {
  */
 export interface CreateSalesTargetRequest {
   /**
-   * Amount unit ID.
+   * ID of the unit the amount is denominated in (typically a currency unit).
    */
   amount_unit_id: string;
 
   /**
-   * Target amount value (decimal string).
+   * Goal amount for the period, as a decimal string (e.g. `50000.00`).
    */
   amount_value: string;
 
   /**
-   * End date.
+   * End of the period the target applies to.
    */
   end_date: string;
 
   /**
-   * Start date.
+   * Start of the period the target applies to (inclusive).
    */
   start_date: string;
 }
@@ -129,7 +136,7 @@ export interface ListSalesTarget {
 }
 
 /**
- * Sales target for an account user.
+ * A revenue goal assigned to a sales rep for a specific time period.
  */
 export interface SalesTarget {
   /**
@@ -158,7 +165,10 @@ export interface SalesTarget {
   object: 'sales_target';
 
   /**
-   * User resource.
+   * A user's global profile, shared across every account they belong to.
+   *
+   * Account-specific settings (status, role, department) live on the account user
+   * resource that links the user to each account.
    */
   sales_rep: AuthAPI.User | null;
 
@@ -178,88 +188,113 @@ export interface SalesTarget {
  */
 export interface UpsertSalesTargetRequest {
   /**
-   * Amount unit ID.
+   * ID of the unit the amount is denominated in (typically a currency unit).
+   *
+   * Only applied when creating a new target; the unit on an existing target is not
+   * changed.
    */
   amount_unit_id: string;
 
   /**
-   * Target amount value (decimal string).
+   * Goal amount for the period, as a decimal string (e.g. `75000.00`).
    */
   amount_value: string;
 
   /**
-   * End date.
+   * End of the period the target applies to.
+   *
+   * Only applied when creating a new target; the dates on an existing target are not
+   * changed.
    */
   end_date: string;
 
   /**
-   * Start date.
+   * Start of the period the target applies to (inclusive).
+   *
+   * Only applied when creating a new target; the dates on an existing target are not
+   * changed.
    */
   start_date: string;
 }
 
 export interface SalesTargetCreateParams {
   /**
-   * Amount unit ID.
+   * ID of the unit the amount is denominated in (typically a currency unit).
    */
   amount_unit_id: string;
 
   /**
-   * Target amount value (decimal string).
+   * Goal amount for the period, as a decimal string (e.g. `50000.00`).
    */
   amount_value: string;
 
   /**
-   * End date.
+   * End of the period the target applies to.
    */
   end_date: string;
 
   /**
-   * Start date.
+   * Start of the period the target applies to (inclusive).
    */
   start_date: string;
 }
 
 export interface SalesTargetUpdateParams {
   /**
-   * Path param: Sales rep user ID.
+   * Path param: ID of the account user (sales rep) the target is for.
    */
   id: string;
 
   /**
-   * Body param: Amount unit ID.
+   * Body param: ID of the unit the amount is denominated in (typically a currency
+   * unit).
+   *
+   * Only applied when creating a new target; the unit on an existing target is not
+   * changed.
    */
   amount_unit_id: string;
 
   /**
-   * Body param: Target amount value (decimal string).
+   * Body param: Goal amount for the period, as a decimal string (e.g. `75000.00`).
    */
   amount_value: string;
 
   /**
-   * Body param: End date.
+   * Body param: End of the period the target applies to.
+   *
+   * Only applied when creating a new target; the dates on an existing target are not
+   * changed.
    */
   end_date: string;
 
   /**
-   * Body param: Start date.
+   * Body param: Start of the period the target applies to (inclusive).
+   *
+   * Only applied when creating a new target; the dates on an existing target are not
+   * changed.
    */
   start_date: string;
 }
 
 export interface SalesTargetListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }

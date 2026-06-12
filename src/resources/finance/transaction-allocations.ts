@@ -50,7 +50,11 @@ export class TransactionAllocations extends APIResource {
   }
 
   /**
-   * Deletes a transaction allocation.
+   * Deletes a transaction allocation, making the allocated amount available again as
+   * open credit.
+   *
+   * The parent transaction's `is_fully_allocated` flag is not recomputed
+   * automatically; update the transaction separately if needed.
    *
    * @example
    * ```ts
@@ -66,7 +70,8 @@ export class TransactionAllocations extends APIResource {
 }
 
 /**
- * Transaction allocation entry in list views.
+ * An application of part of a transaction's amount against a specific invoice, as
+ * returned in list views.
  */
 export interface AllocationEntry {
   /**
@@ -85,11 +90,11 @@ export interface AllocationEntry {
   created_at: string;
 
   /**
-   * Minimal customer sub-resource for allocation entries.
+   * Minimal customer sub-resource for allocation entries and open-credit entries.
    *
-   * It carries its own allocation_customer discriminator (not customer) because
-   * allocation list entries do not carry a customer id, so it is not a resolvable
-   * customer reference.
+   * It carries its own allocation_customer discriminator (not customer) because the
+   * customer id is not always present (allocation list entries omit it), so it is
+   * not a guaranteed-resolvable customer reference.
    */
   customer: FinanceAPI.AllocationCustomer | null;
 
@@ -180,7 +185,10 @@ export interface ListAllocationEntry {
  */
 export interface UpdateTransactionAllocationRequest {
   /**
-   * Allocation amount as a decimal string.
+   * New allocated amount as a decimal string, in US dollars.
+   *
+   * Changing the amount does not recompute the parent transaction's
+   * `is_fully_allocated` flag; update the transaction separately if needed.
    */
   amount?: string;
 }
@@ -189,39 +197,49 @@ export interface TransactionAllocationDeleteResponse {}
 
 export interface TransactionAllocationUpdateParams {
   /**
-   * Allocation amount as a decimal string.
+   * New allocated amount as a decimal string, in US dollars.
+   *
+   * Changing the amount does not recompute the parent transaction's
+   * `is_fully_allocated` flag; update the transaction separately if needed.
    */
   amount?: string;
 }
 
 export interface TransactionAllocationListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * Filter by end date (exclusive, YYYY-MM-DD).
+   * Only include allocations created before this date (`YYYY-MM-DD`).
    */
   end_date?: string;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Filter by start date (inclusive, YYYY-MM-DD).
+   * Only include allocations created on or after this date (`YYYY-MM-DD`).
    */
   start_date?: string;
 
   /**
-   * Filter by transaction type code (e.g. "payment", "credit").
+   * Filter by the underlying transaction's type code (`payment`, `credit_memo`,
+   * `adjustment`, or `rebate`).
    */
   transaction_type?: string;
 }

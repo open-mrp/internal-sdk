@@ -9,7 +9,8 @@ import { RequestOptions } from '../../internal/request-options';
  */
 export class Accounts extends APIResource {
   /**
-   * Ensures a Stripe billing customer exists for the account.
+   * Ensures a Stripe billing customer exists for the account, creating one if
+   * necessary.
    *
    * @example
    * ```ts
@@ -119,6 +120,9 @@ export interface AgentTokenDetail {
 
   /**
    * Estimated cost in dollars for the current billing period.
+   *
+   * This is a rough estimate for display purposes; the actual billed amount is
+   * calculated by the billing provider and may differ.
    */
   current_period_cost: number;
 
@@ -143,7 +147,7 @@ export interface AgentTokenDetail {
   output_tokens: number;
 
   /**
-   * Cost per million tokens for overage usage.
+   * Cost in dollars per million tokens for usage beyond the available token balance.
    */
   overage_cost_per_million_tokens: number;
 
@@ -168,7 +172,10 @@ export interface EnsureBillingCustomerResponse {
   billing_profile_id: string | null;
 
   /**
-   * Whether a Stripe customer was created.
+   * Whether a new Stripe customer was created by this call.
+   *
+   * `false` means the account already had a Stripe customer, which was returned
+   * instead.
    */
   created: boolean;
 
@@ -188,7 +195,14 @@ export interface EnsureBillingCustomerResponse {
  */
 export interface SubscriptionInfo {
   /**
-   * Collection status (e.g., "current", "paused").
+   * Payment collection status of the subscription.
+   *
+   * Typically one of:
+   *
+   * - `current`: payments are being collected normally.
+   * - `paused`: payment collection is temporarily suspended.
+   * - `awaiting_customer_action`: a payment requires action from the customer (e.g.,
+   *   updating a payment method).
    */
   collection_status: string;
 
@@ -198,7 +212,13 @@ export interface SubscriptionInfo {
   object: 'subscription_info';
 
   /**
-   * Servicing status of the subscription (e.g., "active", "canceled").
+   * Whether the subscription is actively being serviced.
+   *
+   * Typically one of:
+   *
+   * - `active`: the subscription is in good standing.
+   * - `paused`: servicing is temporarily suspended.
+   * - `canceled`: the subscription has been canceled.
    */
   servicing_status: string;
 }

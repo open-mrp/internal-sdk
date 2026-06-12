@@ -79,8 +79,10 @@ export class Suppliers extends APIResource {
   }
 
   /**
-   * Partially updates a supplier. Set update_note to true to update the note field,
-   * including clearing it.
+   * Partially updates a supplier.
+   *
+   * Only provided fields are changed. To update or clear the note, set `update_note`
+   * to `true`.
    *
    * @example
    * ```ts
@@ -116,8 +118,10 @@ export class Suppliers extends APIResource {
   }
 
   /**
-   * Deletes a supplier and its associated account relations, addresses, and account
-   * users.
+   * Deletes a supplier.
+   *
+   * The supplier's saved addresses and any users belonging to the supplier are
+   * deleted along with it. Returns the deleted supplier.
    *
    * @example
    * ```ts
@@ -137,27 +141,32 @@ export class Suppliers extends APIResource {
  */
 export interface CreateSupplierRequest {
   /**
-   * Display name.
+   * The supplier's name, as shown in the dashboard and on documents.
    */
   name: string;
 
   /**
-   * Supplier number. Must be unique per account.
+   * Human-facing supplier code, such as `SUP-001`.
+   *
+   * Must be unique per account; creating a supplier with a number already in use
+   * returns a conflict error.
    */
   number: string;
 
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   bill_to_address?: CustomersAPI.AddressInput;
 
   /**
-   * Supplier notes.
+   * Free-form notes about the supplier.
    */
   note?: string;
 
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   ship_to_address?: CustomersAPI.AddressInput;
 }
@@ -193,7 +202,8 @@ export interface SupplierDetail {
   id: string;
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   bill_to_address: APIKeysAPI.Address | null;
 
@@ -208,7 +218,7 @@ export interface SupplierDetail {
   material_count: number;
 
   /**
-   * Display name.
+   * The supplier's name, as shown in the dashboard and on documents.
    */
   name: string;
 
@@ -228,7 +238,8 @@ export interface SupplierDetail {
   object: 'supplier';
 
   /**
-   * Address with associated geolocation.
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
    */
   ship_to_address: APIKeysAPI.Address | null;
 
@@ -258,7 +269,7 @@ export interface SupplierSummary {
   material_count: number;
 
   /**
-   * Display name.
+   * The supplier's name, as shown in the dashboard and on documents.
    */
   name: string;
 
@@ -278,59 +289,72 @@ export interface SupplierSummary {
  */
 export interface UpdateSupplierRequest {
   /**
-   * Whether to update the note field. Allows clearing to null.
+   * Whether to apply the `note` field.
+   *
+   * When `true`, the note is set to the provided `note` value, or cleared to null if
+   * `note` is omitted. When `false` (the default), the note is left unchanged.
    */
   update_note: boolean;
 
   /**
-   * Bill-to address ID.
+   * ID of an existing address to set as the supplier's default billing address.
    */
   bill_to_address_id?: string;
 
   /**
-   * Display name.
+   * The supplier's name, as shown in the dashboard and on documents.
    */
   name?: string;
 
   /**
-   * Note value. Set update_note to true to apply.
+   * New value for the supplier's note.
+   *
+   * Ignored unless `update_note` is `true`.
    */
   note?: string;
 
   /**
-   * Supplier number.
+   * Human-facing supplier code, such as `SUP-001`.
+   *
+   * Must be unique per account; updating to a number already used by another
+   * supplier returns a conflict error.
    */
   number?: string;
 
   /**
-   * Ship-to address ID.
+   * ID of an existing address to set as the supplier's default shipping address.
    */
   ship_to_address_id?: string;
 }
 
 export interface SupplierCreateParams {
   /**
-   * Display name.
+   * The supplier's name, as shown in the dashboard and on documents.
    */
   name: string;
 
   /**
-   * Supplier number. Must be unique per account.
+   * Human-facing supplier code, such as `SUP-001`.
+   *
+   * Must be unique per account; creating a supplier with a number already in use
+   * returns a conflict error.
    */
   number: string;
 
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   bill_to_address?: CustomersAPI.AddressInput;
 
   /**
-   * Supplier notes.
+   * Free-form notes about the supplier.
    */
   note?: string;
 
   /**
-   * Request to create an address.
+   * Address details used to create an address, either directly or inline on another
+   * resource.
    */
   ship_to_address?: CustomersAPI.AddressInput;
 }
@@ -345,64 +369,81 @@ export interface SupplierRetrieveParams {
 
 export interface SupplierUpdateParams {
   /**
-   * Whether to update the note field. Allows clearing to null.
+   * Whether to apply the `note` field.
+   *
+   * When `true`, the note is set to the provided `note` value, or cleared to null if
+   * `note` is omitted. When `false` (the default), the note is left unchanged.
    */
   update_note: boolean;
 
   /**
-   * Bill-to address ID.
+   * ID of an existing address to set as the supplier's default billing address.
    */
   bill_to_address_id?: string;
 
   /**
-   * Display name.
+   * The supplier's name, as shown in the dashboard and on documents.
    */
   name?: string;
 
   /**
-   * Note value. Set update_note to true to apply.
+   * New value for the supplier's note.
+   *
+   * Ignored unless `update_note` is `true`.
    */
   note?: string;
 
   /**
-   * Supplier number.
+   * Human-facing supplier code, such as `SUP-001`.
+   *
+   * Must be unique per account; updating to a number already used by another
+   * supplier returns a conflict error.
    */
   number?: string;
 
   /**
-   * Ship-to address ID.
+   * ID of an existing address to set as the supplier's default shipping address.
    */
   ship_to_address_id?: string;
 }
 
 export interface SupplierListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
   /**
-   * End date filter (created before).
+   * Only return suppliers created at or before this timestamp.
    */
   end_date?: string;
 
   /**
-   * Item IDs filter. Returns suppliers with materials for these items.
+   * Filter by item IDs.
+   *
+   * Returns only suppliers that provide at least one material linked to any of the
+   * given items.
    */
   item_ids?: Array<string>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 
   /**
-   * Start date filter (created after).
+   * Only return suppliers created at or after this timestamp.
    */
   start_date?: string;
 }

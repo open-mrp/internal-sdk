@@ -100,86 +100,96 @@ export class Lines extends APIResource {
 
 /**
  * OrderLineInput represents the shared fields for creating an order line item.
+ *
  * Used as an embedded struct in purchase order and sales order line inputs.
  */
 export interface CreateSalesOrderLineRequest {
   /**
-   * The product ID.
+   * ID of the product being ordered.
    */
   product_id: string;
 
   /**
-   * The product SKU.
+   * The product SKU recorded on the line.
+   *
+   * Stored on the line itself, so it stays stable even if the product's SKU changes
+   * later.
    */
   product_sku: string;
 
   /**
-   * The quantity unit ID.
+   * ID of the unit of measure for the quantity.
    */
   quantity_unit_id: string;
 
   /**
-   * The quantity value.
+   * Quantity ordered, as a decimal string.
    */
   quantity_value: string;
 
   /**
-   * The unit price denominator unit ID.
+   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
    */
   unit_price_denominator_unit_id: string;
 
   /**
-   * The unit price numerator unit ID.
+   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_price_numerator_unit_id: string;
 
   /**
-   * The unit price value.
+   * Price charged per unit, as a decimal string.
    */
   unit_price_value: string;
 
   /**
-   * The item ID.
+   * ID of the inventory item to tie the line to.
+   *
+   * Lines tied to an item have inventory reserved for them when the order is issued.
    */
   item_id?: string;
 
   /**
-   * The product description.
+   * The product description recorded on the line.
    */
   product_description?: string;
 
   /**
-   * The unit cost denominator unit ID.
+   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
    */
   unit_cost_denominator_unit_id?: string;
 
   /**
-   * The unit cost numerator unit ID.
+   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
+   * unit).
    */
   unit_cost_numerator_unit_id?: string;
 
   /**
-   * The unit cost value.
+   * Internal cost per unit, as a decimal string.
    */
   unit_cost_value?: string;
 }
 
 /**
- * RateInput represents the input for creating or updating a rate.
+ * A rate value with its numerator and denominator units, used in create and update
+ * requests.
  */
 export interface RateInput {
   /**
-   * Denominator unit ID.
+   * ID of the unit for the rate's denominator (the per-unit basis).
    */
   denominator_unit_id: string;
 
   /**
-   * Numerator unit ID.
+   * ID of the unit for the rate's numerator (e.g. the currency of a price).
    */
   numerator_unit_id: string;
 
   /**
-   * Decimal value of the rate.
+   * Decimal value of the rate, expressed as the amount of the numerator unit per one
+   * denominator unit.
    */
   value: string;
 }
@@ -204,18 +214,19 @@ export interface UpdateSalesOrderLineRequest {
   product_sku?: string;
 
   /**
-   * QuantityInput represents a value with an associated unit for create/update
-   * requests.
+   * A value with an associated unit, used in create and update requests.
    */
   quantity?: CustomersAPI.QuantityInput;
 
   /**
-   * RateInput represents the input for creating or updating a rate.
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
   unit_cost?: RateInput;
 
   /**
-   * RateInput represents the input for creating or updating a rate.
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
   unit_price?: RateInput;
 }
@@ -224,37 +235,42 @@ export interface LineDeleteResponse {}
 
 export interface LineCreateParams {
   /**
-   * Body param: The product ID.
+   * Body param: ID of the product being ordered.
    */
   product_id: string;
 
   /**
-   * Body param: The product SKU.
+   * Body param: The product SKU recorded on the line.
+   *
+   * Stored on the line itself, so it stays stable even if the product's SKU changes
+   * later.
    */
   product_sku: string;
 
   /**
-   * Body param: The quantity unit ID.
+   * Body param: ID of the unit of measure for the quantity.
    */
   quantity_unit_id: string;
 
   /**
-   * Body param: The quantity value.
+   * Body param: Quantity ordered, as a decimal string.
    */
   quantity_value: string;
 
   /**
-   * Body param: The unit price denominator unit ID.
+   * Body param: Unit ID for the unit price's denominator (the unit being sold, e.g.
+   * `each`).
    */
   unit_price_denominator_unit_id: string;
 
   /**
-   * Body param: The unit price numerator unit ID.
+   * Body param: Unit ID for the unit price's numerator (the unit being charged, e.g.
+   * a currency unit).
    */
   unit_price_numerator_unit_id: string;
 
   /**
-   * Body param: The unit price value.
+   * Body param: Price charged per unit, as a decimal string.
    */
   unit_price_value: string;
 
@@ -265,27 +281,31 @@ export interface LineCreateParams {
   include?: Array<'product' | 'quantity_ordered' | 'unit_price' | 'unit_cost' | 'totals'>;
 
   /**
-   * Body param: The item ID.
+   * Body param: ID of the inventory item to tie the line to.
+   *
+   * Lines tied to an item have inventory reserved for them when the order is issued.
    */
   item_id?: string;
 
   /**
-   * Body param: The product description.
+   * Body param: The product description recorded on the line.
    */
   product_description?: string;
 
   /**
-   * Body param: The unit cost denominator unit ID.
+   * Body param: Unit ID for the unit cost's denominator (the unit being costed, e.g.
+   * `each`).
    */
   unit_cost_denominator_unit_id?: string;
 
   /**
-   * Body param: The unit cost numerator unit ID.
+   * Body param: Unit ID for the unit cost's numerator (the unit being charged, e.g.
+   * a currency unit).
    */
   unit_cost_numerator_unit_id?: string;
 
   /**
-   * Body param: The unit cost value.
+   * Body param: Internal cost per unit, as a decimal string.
    */
   unit_cost_value?: string;
 }
@@ -318,18 +338,19 @@ export interface LineUpdateParams {
   product_sku?: string;
 
   /**
-   * Body param: QuantityInput represents a value with an associated unit for
-   * create/update requests.
+   * Body param: A value with an associated unit, used in create and update requests.
    */
   quantity?: CustomersAPI.QuantityInput;
 
   /**
-   * Body param: RateInput represents the input for creating or updating a rate.
+   * Body param: A rate value with its numerator and denominator units, used in
+   * create and update requests.
    */
   unit_cost?: RateInput;
 
   /**
-   * Body param: RateInput represents the input for creating or updating a rate.
+   * Body param: A rate value with its numerator and denominator units, used in
+   * create and update requests.
    */
   unit_price?: RateInput;
 }

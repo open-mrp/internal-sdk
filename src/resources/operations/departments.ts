@@ -12,7 +12,9 @@ import { path } from '../../internal/utils/path';
  */
 export class Departments extends APIResource {
   /**
-   * Creates a department.
+   * Creates a department, optionally assigning scanning stations and machines to it.
+   *
+   * Returns a conflict error if a department with the same name already exists.
    *
    * @example
    * ```ts
@@ -51,8 +53,11 @@ export class Departments extends APIResource {
   }
 
   /**
-   * Partially updates a department. Adding scanning stations or machines is additive
-   * and does not remove existing ones.
+   * Partially updates a department.
+   *
+   * Only the fields provided in the request are changed. Assigning scanning stations
+   * or machines is additive and does not remove existing ones. Returns a conflict
+   * error if the new name is already in use by another department.
    *
    * @example
    * ```ts
@@ -77,7 +82,7 @@ export class Departments extends APIResource {
   }
 
   /**
-   * Returns a paginated list of departments.
+   * Returns a paginated list of departments in your account.
    *
    * @example
    * ```ts
@@ -93,8 +98,9 @@ export class Departments extends APIResource {
   }
 
   /**
-   * Deletes a department. Fails if the department still has associated scanning
-   * stations or machines.
+   * Deletes a department.
+   *
+   * Scanning stations and machines assigned to the department are not deleted.
    *
    * @example
    * ```ts
@@ -114,27 +120,35 @@ export class Departments extends APIResource {
  */
 export interface CreateDepartmentRequest {
   /**
-   * Display name.
+   * Display name of the department.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name: string;
 
   /**
-   * Storage location ID.
+   * ID of the location where this department operates.
    */
   location_id?: string;
 
   /**
-   * Machine IDs to connect.
+   * IDs of machines to assign to this department.
+   *
+   * A machine belongs to one department at a time, so listed machines are moved out
+   * of their current department.
    */
   machine_ids?: Array<string>;
 
   /**
-   * Notes about the department.
+   * Free-form notes about the department.
    */
   notes?: string;
 
   /**
-   * Scanning station IDs to connect.
+   * IDs of scanning stations to assign to this department.
+   *
+   * A scanning station belongs to one department at a time, so listed stations are
+   * moved out of their current department.
    */
   scanning_station_ids?: Array<string>;
 }
@@ -144,27 +158,35 @@ export interface CreateDepartmentRequest {
  */
 export interface UpdateDepartmentRequest {
   /**
-   * Storage location ID.
+   * ID of the location where this department operates.
    */
   location_id?: string;
 
   /**
-   * Machine IDs to connect (additive).
+   * IDs of machines to assign to this department.
+   *
+   * Assignment is additive: listed machines are moved into this department and
+   * machines already in the department are unaffected.
    */
   machine_ids?: Array<string>;
 
   /**
-   * Display name.
+   * Display name of the department.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name?: string;
 
   /**
-   * Notes about the department.
+   * Free-form notes about the department.
    */
   notes?: string;
 
   /**
-   * Scanning station IDs to connect (additive).
+   * IDs of scanning stations to assign to this department.
+   *
+   * Assignment is additive: listed stations are moved into this department and
+   * stations already in the department are unaffected.
    */
   scanning_station_ids?: Array<string>;
 }
@@ -173,7 +195,9 @@ export interface DepartmentDeleteResponse {}
 
 export interface DepartmentCreateParams {
   /**
-   * Body param: Display name.
+   * Body param: Display name of the department.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name: string;
 
@@ -184,22 +208,28 @@ export interface DepartmentCreateParams {
   include?: Array<'location' | 'scanning_stations' | 'machines'>;
 
   /**
-   * Body param: Storage location ID.
+   * Body param: ID of the location where this department operates.
    */
   location_id?: string;
 
   /**
-   * Body param: Machine IDs to connect.
+   * Body param: IDs of machines to assign to this department.
+   *
+   * A machine belongs to one department at a time, so listed machines are moved out
+   * of their current department.
    */
   machine_ids?: Array<string>;
 
   /**
-   * Body param: Notes about the department.
+   * Body param: Free-form notes about the department.
    */
   notes?: string;
 
   /**
-   * Body param: Scanning station IDs to connect.
+   * Body param: IDs of scanning stations to assign to this department.
+   *
+   * A scanning station belongs to one department at a time, so listed stations are
+   * moved out of their current department.
    */
   scanning_station_ids?: Array<string>;
 }
@@ -220,34 +250,46 @@ export interface DepartmentUpdateParams {
   include?: Array<'location' | 'scanning_stations' | 'machines'>;
 
   /**
-   * Body param: Storage location ID.
+   * Body param: ID of the location where this department operates.
    */
   location_id?: string;
 
   /**
-   * Body param: Machine IDs to connect (additive).
+   * Body param: IDs of machines to assign to this department.
+   *
+   * Assignment is additive: listed machines are moved into this department and
+   * machines already in the department are unaffected.
    */
   machine_ids?: Array<string>;
 
   /**
-   * Body param: Display name.
+   * Body param: Display name of the department.
+   *
+   * Must be unique within your account; maximum 255 characters.
    */
   name?: string;
 
   /**
-   * Body param: Notes about the department.
+   * Body param: Free-form notes about the department.
    */
   notes?: string;
 
   /**
-   * Body param: Scanning station IDs to connect (additive).
+   * Body param: IDs of scanning stations to assign to this department.
+   *
+   * Assignment is additive: listed stations are moved into this department and
+   * stations already in the department are unaffected.
    */
   scanning_station_ids?: Array<string>;
 }
 
 export interface DepartmentListParams {
   /**
-   * Cursor token used to retrieve the next or previous page of results.
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
    */
   cursor?: string;
 
@@ -258,12 +300,14 @@ export interface DepartmentListParams {
   include?: Array<'location' | 'scanning_stations' | 'machines'>;
 
   /**
-   * Maximum number of results per page (default: 100, max: 1000).
+   * Maximum number of results to return in a single page.
    */
   limit?: number;
 
   /**
-   * Search query used to filter results.
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
 }
