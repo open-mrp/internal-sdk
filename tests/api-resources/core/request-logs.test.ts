@@ -46,7 +46,7 @@ describe('resource requestLogs', () => {
     await expect(
       client.core.requestLogs.list(
         {
-          account_ids: ['string'],
+          actor_account_ids: ['string'],
           actor_ids: ['string'],
           actor_types: ['user'],
           cursor: 'cursor',
@@ -63,6 +63,7 @@ describe('resource requestLogs', () => {
           start_date: '2019-12-27T18:11:19.117Z',
           status_code_classes: [0],
           status_codes: [0],
+          target_account_ids: ['string'],
         },
         { path: '/_stainless_unknown_path' },
       ),

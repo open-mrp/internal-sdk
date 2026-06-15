@@ -46,8 +46,8 @@ describe('resource auditEvents', () => {
     await expect(
       client.core.auditEvents.list(
         {
-          account_ids: ['string'],
           actions: ['create'],
+          actor_account_ids: ['string'],
           actor_ids: ['string'],
           cursor: 'cursor',
           end_date: '2019-12-27T18:11:19.117Z',
@@ -57,6 +57,7 @@ describe('resource auditEvents', () => {
           resource_ids: ['string'],
           resource_types: ['account'],
           start_date: '2019-12-27T18:11:19.117Z',
+          target_account_ids: ['string'],
         },
         { path: '/_stainless_unknown_path' },
       ),

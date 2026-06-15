@@ -658,17 +658,19 @@ export interface AuditEventRetrieveParams {
 
 export interface AuditEventListParams {
   /**
-   * Filter by the target account the mutation was performed against.
-   *
-   * Narrows results to audit events whose `account` is one of the given account IDs
-   * — for example a specific customer's or supplier's account.
-   */
-  account_ids?: Array<string>;
-
-  /**
    * Filter by the mutation type recorded on the event.
    */
   actions?: Array<'create' | 'update' | 'delete' | 'restore' | 'archive'>;
+
+  /**
+   * Filter by the _acting_ account: the account that performed the mutation.
+   *
+   * Results are always scoped to events where your account is either the acting
+   * account or the target account; this narrows that set to specific acting accounts
+   * — for example a specific customer's account that mutated a resource on your
+   * account.
+   */
+  actor_account_ids?: Array<string>;
 
   /**
    * Filter by the actor identifier.
@@ -933,6 +935,16 @@ export interface AuditEventListParams {
    * Restricts results to audit events on or after this timestamp.
    */
   start_date?: string;
+
+  /**
+   * Filter by the _target_ account the mutation was performed against (the event's
+   * `account`).
+   *
+   * Results are always scoped to events where your account is either the acting
+   * account or the target account; this narrows that set to specific target accounts
+   * — for example a specific customer's or supplier's account.
+   */
+  target_account_ids?: Array<string>;
 }
 
 export declare namespace AuditEvents {
