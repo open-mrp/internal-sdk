@@ -114,6 +114,7 @@ export {
   type CheckoutSalesOrderResponse,
   type CreateSalesOrderLineInput,
   type CreateSalesOrderRequest,
+  type CreatedBy,
   type Freight,
   type ListRecord,
   type ListSalesOrder,

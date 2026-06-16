@@ -487,6 +487,32 @@ export interface CreateSalesOrderRequest {
 }
 
 /**
+ * CreatedBy describes who created a resource and their relationship to the account
+ * that owns it. Resolved from the resource's create audit event when the
+ * `created_by` field is included.
+ */
+export interface CreatedBy {
+  /**
+   * Reference to an actor (user, API key, or agent).
+   */
+  actor: RequestLogsAPI.Actor | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'created_by';
+
+  /**
+   * The creator's relationship to the account that owns the resource.
+   *
+   * - `internal`: created by a user of the owning account.
+   * - `customer`: created by a customer of the owning account.
+   * - `system`: created automatically with no human actor (e.g. an EDI import).
+   */
+  relation: 'internal' | 'customer' | 'system';
+}
+
+/**
  * Freight describes the carrier selection and freight billing for a record.
  *
  * It is a generic, reusable sub-resource shared by anything that carries shipping
@@ -850,6 +876,13 @@ export interface SalesOrder {
    * Creation timestamp.
    */
   created_at: string;
+
+  /**
+   * CreatedBy describes who created a resource and their relationship to the account
+   * that owns it. Resolved from the resource's create audit event when the
+   * `created_by` field is included.
+   */
+  created_by: CreatedBy | null;
 
   /**
    * A business you sell to, with its contact details, default fulfillment settings,
@@ -1510,6 +1543,7 @@ export interface SalesOrderRetrieveParams {
   include?: Array<
     | 'customer'
     | 'sales_rep'
+    | 'created_by'
     | 'bill_to_address'
     | 'ship_to_address'
     | 'freight'
@@ -1714,6 +1748,7 @@ export interface SalesOrderListParams {
   include?: Array<
     | 'customer'
     | 'sales_rep'
+    | 'created_by'
     | 'bill_to_address'
     | 'ship_to_address'
     | 'freight'
@@ -1829,6 +1864,7 @@ export declare namespace SalesOrders {
     type CheckoutSalesOrderResponse as CheckoutSalesOrderResponse,
     type CreateSalesOrderLineInput as CreateSalesOrderLineInput,
     type CreateSalesOrderRequest as CreateSalesOrderRequest,
+    type CreatedBy as CreatedBy,
     type Freight as Freight,
     type ListRecord as ListRecord,
     type ListSalesOrder as ListSalesOrder,

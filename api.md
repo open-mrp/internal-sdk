@@ -849,6 +849,7 @@ Types:
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CheckoutSalesOrderResponse</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CreateSalesOrderLineInput</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CreateSalesOrderRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CreatedBy</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">Freight</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListRecord</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrder</a></code>

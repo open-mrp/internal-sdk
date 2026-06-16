@@ -1563,6 +1563,7 @@ export interface Entity {
     | 'rate_shop_option'
     | 'rate_shop_result'
     | 'owner'
+    | 'created_by'
     | 'message'
     | 'account_photo_upload_result'
     | 'user_photo_upload_result'
