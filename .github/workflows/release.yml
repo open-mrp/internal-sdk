@@ -1,0 +1,76 @@
+name: Release
+
+# Self-hosted release orchestration for @augno/internal-sdk.
+#
+# stlc generates release-please-config.json + .release-please-manifest.json but
+# does NOT generate the workflow that opens the release PR / publishes (see
+# api/docs/stlc-sdk-codegen.md). The committed Changesets release.yml that used
+# to fill that gap was removed in the v0.23.2 regen (the same one that migrated
+# the public typescript-sdk to release-please), and the newer Stainless TS
+# edition dropped the Changesets tooling entirely (@changesets/cli, scripts/
+# release). This restores automation on the release-please model the package is
+# now scaffolded for.
+#
+# Unlike the public SDKs, internal-sdk publishes to GitHub Packages, not npmjs,
+# so we do NOT use the generated bin/publish-npm / publish-npm.yml (which target
+# registry.npmjs.org). Publishing runs in the same job as the release so it
+# works with the default GITHUB_TOKEN (no cross-workflow trigger, no PAT needed).
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+
+jobs:
+  release:
+    if: github.repository == 'augno/internal-sdk'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || github.token }}
+
+      # The steps below only run on the push that merges the release PR, i.e.
+      # when release-please has cut a new version. They publish to GitHub
+      # Packages (npm.pkg.github.com), keeping consumers (dashboard, public-docs)
+      # unchanged.
+      - uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        if: ${{ steps.release.outputs.release_created }}
+
+      - uses: actions/setup-node@v4
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@augno'
+
+      - run: pnpm install --frozen-lockfile
+        if: ${{ steps.release.outputs.release_created }}
+
+      - run: pnpm run build
+        if: ${{ steps.release.outputs.release_created }}
+
+      # Publish from dist/ (matches bin/publish-npm) so the root package.json
+      # prepublishOnly guard does not fire.
+      - name: Publish to GitHub Packages
+        if: ${{ steps.release.outputs.release_created }}
+        run: cd dist && pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
