@@ -149,12 +149,10 @@ Types:
 - <code><a href="./src/resources/identity/identity.ts">ListPermissionGroup</a></code>
 - <code><a href="./src/resources/identity/identity.ts">Permission</a></code>
 - <code><a href="./src/resources/identity/identity.ts">PermissionGroup</a></code>
-- <code><a href="./src/resources/identity/identity.ts">PublicAccount</a></code>
 
 Methods:
 
 - <code title="get /v1/identity/permission-groups">client.identity.<a href="./src/resources/identity/identity.ts">retrievePermissionGroups</a>({ ...params }) -> ListPermissionGroup</code>
-- <code title="get /v1/identity/portal-branding/{slug}">client.identity.<a href="./src/resources/identity/identity.ts">retrievePortalBranding</a>(slug) -> PublicAccount</code>
 
 ## Me
 
@@ -279,34 +277,6 @@ Methods:
 - <code title="get /v1/identity/accounts/{id}/logo">client.identity.accounts.<a href="./src/resources/identity/accounts.ts">retrieveLogo</a>(id) -> AccountLogoURL</code>
 - <code title="put /v1/identity/accounts/{id}/photo">client.identity.accounts.<a href="./src/resources/identity/accounts.ts">updatePhoto</a>(id) -> AccountPhotoUploadResult</code>
 
-## Integrations
-
-Types:
-
-- <code><a href="./src/resources/identity/integrations/integrations.ts">AccountIntegration</a></code>
-- <code><a href="./src/resources/identity/integrations/integrations.ts">CreateAccountIntegrationRequest</a></code>
-- <code><a href="./src/resources/identity/integrations/integrations.ts">ListAccountIntegration</a></code>
-- <code><a href="./src/resources/identity/integrations/integrations.ts">UpdateAccountIntegrationRequest</a></code>
-
-Methods:
-
-- <code title="post /v1/identity/integrations">client.identity.integrations.<a href="./src/resources/identity/integrations/integrations.ts">create</a>({ ...params }) -> AccountIntegration</code>
-- <code title="put /v1/identity/integrations/{id}">client.identity.integrations.<a href="./src/resources/identity/integrations/integrations.ts">update</a>(id, { ...params }) -> AccountIntegration</code>
-- <code title="get /v1/identity/integrations">client.identity.integrations.<a href="./src/resources/identity/integrations/integrations.ts">list</a>({ ...params }) -> ListAccountIntegration</code>
-- <code title="delete /v1/identity/integrations/{id}">client.identity.integrations.<a href="./src/resources/identity/integrations/integrations.ts">delete</a>(id) -> AccountIntegration</code>
-
-### Stripe
-
-Types:
-
-- <code><a href="./src/resources/identity/integrations/stripe.ts">StripePublishableKey</a></code>
-- <code><a href="./src/resources/identity/integrations/stripe.ts">StripeStatus</a></code>
-
-Methods:
-
-- <code title="get /v1/identity/integrations/stripe/publishable-key">client.identity.integrations.stripe.<a href="./src/resources/identity/integrations/stripe.ts">retrievePublishableKey</a>() -> StripePublishableKey</code>
-- <code title="get /v1/identity/integrations/stripe/status">client.identity.integrations.stripe.<a href="./src/resources/identity/integrations/stripe.ts">retrieveStatus</a>() -> StripeStatus</code>
-
 ## ChildAccounts
 
 Types:
@@ -384,23 +354,6 @@ Methods:
 - <code title="get /v1/core/audit-events/{id}">client.core.auditEvents.<a href="./src/resources/core/audit-events.ts">retrieve</a>(id, { ...params }) -> AuditEvent</code>
 - <code title="get /v1/core/audit-events">client.core.auditEvents.<a href="./src/resources/core/audit-events.ts">list</a>({ ...params }) -> ListAuditEvent</code>
 - <code title="get /v1/core/audit-events/resource-types">client.core.auditEvents.<a href="./src/resources/core/audit-events.ts">retrieveResourceTypes</a>() -> ListObjectType</code>
-
-## SysProperties
-
-Types:
-
-- <code><a href="./src/resources/core/sys-properties.ts">ListSysProperty</a></code>
-- <code><a href="./src/resources/core/sys-properties.ts">SysProperty</a></code>
-- <code><a href="./src/resources/core/sys-properties.ts">SysPropertyType</a></code>
-- <code><a href="./src/resources/core/sys-properties.ts">SysPropertyValue</a></code>
-- <code><a href="./src/resources/core/sys-properties.ts">UpdateSysPropertyRequest</a></code>
-
-Methods:
-
-- <code title="get /v1/core/sys-properties/{id}">client.core.sysProperties.<a href="./src/resources/core/sys-properties.ts">retrieve</a>(id) -> SysProperty</code>
-- <code title="patch /v1/core/sys-properties/{id}">client.core.sysProperties.<a href="./src/resources/core/sys-properties.ts">update</a>(id, { ...params }) -> SysProperty</code>
-- <code title="get /v1/core/sys-properties">client.core.sysProperties.<a href="./src/resources/core/sys-properties.ts">list</a>({ ...params }) -> ListSysProperty</code>
-- <code title="get /v1/core/sys-properties/{type_code}/latest-value">client.core.sysProperties.<a href="./src/resources/core/sys-properties.ts">retrieveLatestValue</a>(typeCode) -> SysPropertyValue</code>
 
 ## Addresses
 
@@ -855,6 +808,7 @@ Types:
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrder</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrderLine</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrderStatus</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">OrderContact</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">Product</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">QuoteSalesOrderLineInput</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">QuoteSalesOrderPricesRequest</a></code>
@@ -961,6 +915,61 @@ Methods:
 - <code title="patch /v1/sales/accounts/{account_id}/territories/{id}">client.sales.accounts.territories.<a href="./src/resources/sales/accounts/territories.ts">update</a>(id, { ...params }) -> Territory</code>
 - <code title="get /v1/sales/accounts/{account_id}/territories">client.sales.accounts.territories.<a href="./src/resources/sales/accounts/territories.ts">list</a>(accountID, { ...params }) -> ListTerritory</code>
 - <code title="delete /v1/sales/accounts/{account_id}/territories/{id}">client.sales.accounts.territories.<a href="./src/resources/sales/accounts/territories.ts">delete</a>(id, { ...params }) -> TerritoryDeleteResponse</code>
+
+# Settings
+
+Types:
+
+- <code><a href="./src/resources/settings/settings.ts">PublicAccount</a></code>
+
+Methods:
+
+- <code title="get /v1/settings/branding/{slug}">client.settings.<a href="./src/resources/settings/settings.ts">retrieveBranding</a>(slug) -> PublicAccount</code>
+
+## Properties
+
+Types:
+
+- <code><a href="./src/resources/settings/properties.ts">ListSysProperty</a></code>
+- <code><a href="./src/resources/settings/properties.ts">SysProperty</a></code>
+- <code><a href="./src/resources/settings/properties.ts">SysPropertyType</a></code>
+- <code><a href="./src/resources/settings/properties.ts">SysPropertyValue</a></code>
+- <code><a href="./src/resources/settings/properties.ts">UpdateSysPropertyRequest</a></code>
+
+Methods:
+
+- <code title="get /v1/settings/properties/{id}">client.settings.properties.<a href="./src/resources/settings/properties.ts">retrieve</a>(id) -> SysProperty</code>
+- <code title="patch /v1/settings/properties/{id}">client.settings.properties.<a href="./src/resources/settings/properties.ts">update</a>(id, { ...params }) -> SysProperty</code>
+- <code title="get /v1/settings/properties">client.settings.properties.<a href="./src/resources/settings/properties.ts">list</a>({ ...params }) -> ListSysProperty</code>
+- <code title="get /v1/settings/properties/{type_code}/latest-value">client.settings.properties.<a href="./src/resources/settings/properties.ts">retrieveLatestValue</a>(typeCode) -> SysPropertyValue</code>
+
+## Integrations
+
+Types:
+
+- <code><a href="./src/resources/settings/integrations/integrations.ts">AccountIntegration</a></code>
+- <code><a href="./src/resources/settings/integrations/integrations.ts">CreateAccountIntegrationRequest</a></code>
+- <code><a href="./src/resources/settings/integrations/integrations.ts">ListAccountIntegration</a></code>
+- <code><a href="./src/resources/settings/integrations/integrations.ts">UpdateAccountIntegrationRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/settings/integrations">client.settings.integrations.<a href="./src/resources/settings/integrations/integrations.ts">create</a>({ ...params }) -> AccountIntegration</code>
+- <code title="put /v1/settings/integrations/{id}">client.settings.integrations.<a href="./src/resources/settings/integrations/integrations.ts">update</a>(id, { ...params }) -> AccountIntegration</code>
+- <code title="get /v1/settings/integrations">client.settings.integrations.<a href="./src/resources/settings/integrations/integrations.ts">list</a>({ ...params }) -> ListAccountIntegration</code>
+- <code title="delete /v1/settings/integrations/{id}">client.settings.integrations.<a href="./src/resources/settings/integrations/integrations.ts">delete</a>(id) -> AccountIntegration</code>
+
+### Stripe
+
+Types:
+
+- <code><a href="./src/resources/settings/integrations/stripe.ts">StripePublishableKey</a></code>
+- <code><a href="./src/resources/settings/integrations/stripe.ts">StripeStatus</a></code>
+
+Methods:
+
+- <code title="get /v1/settings/integrations/stripe/publishable-key">client.settings.integrations.stripe.<a href="./src/resources/settings/integrations/stripe.ts">retrievePublishableKey</a>() -> StripePublishableKey</code>
+- <code title="get /v1/settings/integrations/stripe/status">client.settings.integrations.stripe.<a href="./src/resources/settings/integrations/stripe.ts">retrieveStatus</a>() -> StripeStatus</code>
 
 # Catalog
 

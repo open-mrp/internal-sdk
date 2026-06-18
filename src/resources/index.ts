@@ -51,7 +51,6 @@ export {
   type ListPermissionGroup,
   type Permission,
   type PermissionGroup,
-  type PublicAccount,
   type IdentityRetrievePermissionGroupsParams,
 } from './identity/identity';
 export {
@@ -70,4 +69,5 @@ export {
   type CreateCheckoutSessionRequest,
   type SaleCheckoutSessionsParams,
 } from './sales/sales';
+export { Settings, type PublicAccount } from './settings/settings';
 export { Webhooks, type WebhookResponse, type WebhookStripeParams } from './webhooks';

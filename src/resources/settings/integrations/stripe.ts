@@ -17,11 +17,11 @@ export class Stripe extends APIResource {
    * @example
    * ```ts
    * const stripePublishableKey =
-   *   await client.identity.integrations.stripe.retrievePublishableKey();
+   *   await client.settings.integrations.stripe.retrievePublishableKey();
    * ```
    */
   retrievePublishableKey(options?: RequestOptions): APIPromise<StripePublishableKey> {
-    return this._client.get('/v1/identity/integrations/stripe/publishable-key', options);
+    return this._client.get('/v1/settings/integrations/stripe/publishable-key', options);
   }
 
   /**
@@ -30,11 +30,11 @@ export class Stripe extends APIResource {
    * @example
    * ```ts
    * const stripeStatus =
-   *   await client.identity.integrations.stripe.retrieveStatus();
+   *   await client.settings.integrations.stripe.retrieveStatus();
    * ```
    */
   retrieveStatus(options?: RequestOptions): APIPromise<StripeStatus> {
-    return this._client.get('/v1/identity/integrations/stripe/status', options);
+    return this._client.get('/v1/settings/integrations/stripe/status', options);
   }
 }
 

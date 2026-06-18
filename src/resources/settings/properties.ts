@@ -9,20 +9,20 @@ import { path } from '../../internal/utils/path';
 /**
  * List and manage system properties (auto-incrementing counters).
  */
-export class SysProperties extends APIResource {
+export class Properties extends APIResource {
   /**
    * Returns a system property by ID.
    *
    * @example
    * ```ts
    * const sysProperty =
-   *   await client.core.sysProperties.retrieve(
+   *   await client.settings.properties.retrieve(
    *     'sypp_01d8fd3a8b1a8e4c41be55ab5a',
    *   );
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<SysProperty> {
-    return this._client.get(path`/v1/core/sys-properties/${id}`, options);
+    return this._client.get(path`/v1/settings/properties/${id}`, options);
   }
 
   /**
@@ -30,7 +30,7 @@ export class SysProperties extends APIResource {
    *
    * @example
    * ```ts
-   * const sysProperty = await client.core.sysProperties.update(
+   * const sysProperty = await client.settings.properties.update(
    *   'sypp_01d8fd3a8b1a8e4c41be55ab5a',
    *   { value: 30 },
    * );
@@ -38,10 +38,10 @@ export class SysProperties extends APIResource {
    */
   update(
     id: string,
-    body: SysPropertyUpdateParams | null | undefined = {},
+    body: PropertyUpdateParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<SysProperty> {
-    return this._client.patch(path`/v1/core/sys-properties/${id}`, { body, ...options });
+    return this._client.patch(path`/v1/settings/properties/${id}`, { body, ...options });
   }
 
   /**
@@ -50,14 +50,14 @@ export class SysProperties extends APIResource {
    * @example
    * ```ts
    * const listSysProperty =
-   *   await client.core.sysProperties.list();
+   *   await client.settings.properties.list();
    * ```
    */
   list(
-    query: SysPropertyListParams | null | undefined = {},
+    query: PropertyListParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<ListSysProperty> {
-    return this._client.get('/v1/core/sys-properties', { query, ...options });
+    return this._client.get('/v1/settings/properties', { query, ...options });
   }
 
   /**
@@ -71,13 +71,13 @@ export class SysProperties extends APIResource {
    * @example
    * ```ts
    * const sysPropertyValue =
-   *   await client.core.sysProperties.retrieveLatestValue(
+   *   await client.settings.properties.retrieveLatestValue(
    *     'example',
    *   );
    * ```
    */
   retrieveLatestValue(typeCode: string, options?: RequestOptions): APIPromise<SysPropertyValue> {
-    return this._client.get(path`/v1/core/sys-properties/${typeCode}/latest-value`, options);
+    return this._client.get(path`/v1/settings/properties/${typeCode}/latest-value`, options);
   }
 }
 
@@ -189,7 +189,7 @@ export interface UpdateSysPropertyRequest {
   value?: number;
 }
 
-export interface SysPropertyUpdateParams {
+export interface PropertyUpdateParams {
   /**
    * The new counter value, such as the next transaction or document number to
    * assign.
@@ -197,7 +197,7 @@ export interface SysPropertyUpdateParams {
   value?: number;
 }
 
-export interface SysPropertyListParams {
+export interface PropertyListParams {
   /**
    * Opaque cursor token identifying where the page of results starts.
    *
@@ -220,14 +220,14 @@ export interface SysPropertyListParams {
   q?: string;
 }
 
-export declare namespace SysProperties {
+export declare namespace Properties {
   export {
     type ListSysProperty as ListSysProperty,
     type SysProperty as SysProperty,
     type SysPropertyType as SysPropertyType,
     type SysPropertyValue as SysPropertyValue,
     type UpdateSysPropertyRequest as UpdateSysPropertyRequest,
-    type SysPropertyUpdateParams as SysPropertyUpdateParams,
-    type SysPropertyListParams as SysPropertyListParams,
+    type PropertyUpdateParams as PropertyUpdateParams,
+    type PropertyListParams as PropertyListParams,
   };
 }

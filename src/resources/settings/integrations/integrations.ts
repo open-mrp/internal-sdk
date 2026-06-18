@@ -25,7 +25,7 @@ export class Integrations extends APIResource {
    * @example
    * ```ts
    * const accountIntegration =
-   *   await client.identity.integrations.create({
+   *   await client.settings.integrations.create({
    *     credentials:
    *       '{"private_key":"sk_test_...","publishable_key":"pk_test_...","webhook_secret":"whsec_..."}',
    *     name: 'My Stripe Integration',
@@ -34,7 +34,7 @@ export class Integrations extends APIResource {
    * ```
    */
   create(body: IntegrationCreateParams, options?: RequestOptions): APIPromise<AccountIntegration> {
-    return this._client.post('/v1/identity/integrations', { body, ...options });
+    return this._client.post('/v1/settings/integrations', { body, ...options });
   }
 
   /**
@@ -47,7 +47,7 @@ export class Integrations extends APIResource {
    * @example
    * ```ts
    * const accountIntegration =
-   *   await client.identity.integrations.update(
+   *   await client.settings.integrations.update(
    *     'acig_0177772eae113431f64d473124',
    *     { name: 'Updated Stripe Integration' },
    *   );
@@ -58,7 +58,7 @@ export class Integrations extends APIResource {
     body: IntegrationUpdateParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<AccountIntegration> {
-    return this._client.put(path`/v1/identity/integrations/${id}`, { body, ...options });
+    return this._client.put(path`/v1/settings/integrations/${id}`, { body, ...options });
   }
 
   /**
@@ -67,14 +67,14 @@ export class Integrations extends APIResource {
    * @example
    * ```ts
    * const listAccountIntegration =
-   *   await client.identity.integrations.list();
+   *   await client.settings.integrations.list();
    * ```
    */
   list(
     query: IntegrationListParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<ListAccountIntegration> {
-    return this._client.get('/v1/identity/integrations', { query, ...options });
+    return this._client.get('/v1/settings/integrations', { query, ...options });
   }
 
   /**
@@ -83,13 +83,13 @@ export class Integrations extends APIResource {
    * @example
    * ```ts
    * const accountIntegration =
-   *   await client.identity.integrations.delete(
+   *   await client.settings.integrations.delete(
    *     'acig_0177772eae113431f64d473124',
    *   );
    * ```
    */
   delete(id: string, options?: RequestOptions): APIPromise<AccountIntegration> {
-    return this._client.delete(path`/v1/identity/integrations/${id}`, options);
+    return this._client.delete(path`/v1/settings/integrations/${id}`, options);
   }
 }
 

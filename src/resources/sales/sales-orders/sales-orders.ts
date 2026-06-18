@@ -578,6 +578,26 @@ export interface ListSalesOrderStatus {
 }
 
 /**
+ * OrderContact groups a sales order's email recipients by notification purpose.
+ */
+export interface OrderContact {
+  /**
+   * Email addresses that receive order acknowledgements for this order.
+   */
+  acknowledgement: Array<string>;
+
+  /**
+   * Email addresses that receive invoices for this order.
+   */
+  invoice: Array<string>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'order_contact';
+}
+
+/**
  * Product pairs an inventory item with how it is sold: its product type, optional
  * product line, and customer portal visibility.
  */
@@ -821,6 +841,11 @@ export interface SalesOrder {
    * When the order was fulfilled and closed.
    */
   completed_at: string | null;
+
+  /**
+   * OrderContact groups a sales order's email recipients by notification purpose.
+   */
+  contacts: OrderContact | null;
 
   /**
    * Creation timestamp.
@@ -1338,6 +1363,7 @@ export interface SalesOrderCreateParams {
     | 'shipping_term'
     | 'order_discount'
     | 'totals'
+    | 'contacts'
     | 'related.pick'
     | 'related.production_run'
     | 'related.shipments'
@@ -1443,6 +1469,7 @@ export interface SalesOrderRetrieveParams {
     | 'shipping_term'
     | 'order_discount'
     | 'totals'
+    | 'contacts'
     | 'related.pick'
     | 'related.production_run'
     | 'related.shipments'
@@ -1472,6 +1499,7 @@ export interface SalesOrderUpdateParams {
     | 'shipping_term'
     | 'order_discount'
     | 'totals'
+    | 'contacts'
     | 'related.pick'
     | 'related.production_run'
     | 'related.shipments'
@@ -1648,6 +1676,7 @@ export interface SalesOrderListParams {
     | 'shipping_term'
     | 'order_discount'
     | 'totals'
+    | 'contacts'
     | 'related.pick'
     | 'related.production_run'
     | 'related.shipments'
@@ -1774,6 +1803,7 @@ export declare namespace SalesOrders {
     type ListSalesOrder as ListSalesOrder,
     type ListSalesOrderLine as ListSalesOrderLine,
     type ListSalesOrderStatus as ListSalesOrderStatus,
+    type OrderContact as OrderContact,
     type Product as Product,
     type QuoteSalesOrderLineInput as QuoteSalesOrderLineInput,
     type QuoteSalesOrderPricesRequest as QuoteSalesOrderPricesRequest,

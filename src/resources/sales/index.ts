@@ -120,6 +120,7 @@ export {
   type ListSalesOrder,
   type ListSalesOrderLine,
   type ListSalesOrderStatus,
+  type OrderContact,
   type Product,
   type QuoteSalesOrderLineInput,
   type QuoteSalesOrderPricesRequest,

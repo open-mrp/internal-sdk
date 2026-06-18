@@ -69,31 +69,21 @@ import {
   UnitGroupUnit,
   UpdateAccountUserRequest,
 } from './account-users/account-users';
-import * as IntegrationsAPI from './integrations/integrations';
-import {
-  AccountIntegration,
-  CreateAccountIntegrationRequest,
-  IntegrationCreateParams,
-  IntegrationListParams,
-  IntegrationUpdateParams,
-  Integrations,
-  ListAccountIntegration,
-  UpdateAccountIntegrationRequest,
-} from './integrations/integrations';
 import * as MeAPI from './me/me';
 import { Me } from './me/me';
 import * as UsersAPI from './users/users';
 import { UpdateUserRequest, UserUpdateParams, Users } from './users/users';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
-import { path } from '../../internal/utils/path';
 
+/**
+ * List permission groups and their permissions.
+ */
 export class Identity extends APIResource {
   me: MeAPI.Me = new MeAPI.Me(this._client);
   accountUsers: AccountUsersAPI.AccountUsers = new AccountUsersAPI.AccountUsers(this._client);
   users: UsersAPI.Users = new UsersAPI.Users(this._client);
   accounts: AccountsAPI.Accounts = new AccountsAPI.Accounts(this._client);
-  integrations: IntegrationsAPI.Integrations = new IntegrationsAPI.Integrations(this._client);
   childAccounts: ChildAccountsAPI.ChildAccounts = new ChildAccountsAPI.ChildAccounts(this._client);
   roles: RolesAPI.Roles = new RolesAPI.Roles(this._client);
 
@@ -111,23 +101,6 @@ export class Identity extends APIResource {
     options?: RequestOptions,
   ): APIPromise<ListPermissionGroup> {
     return this._client.get('/v1/identity/permission-groups', { query, ...options });
-  }
-
-  /**
-   * Returns a minimal public profile for the account that owns the given portal
-   * slug.
-   *
-   * This endpoint does not require authentication; it is intended for customer
-   * portal branding lookups.
-   *
-   * @example
-   * ```ts
-   * const publicAccount =
-   *   await client.identity.retrievePortalBranding('acme');
-   * ```
-   */
-  retrievePortalBranding(slug: string, options?: RequestOptions): APIPromise<PublicAccount> {
-    return this._client.get(path`/v1/identity/portal-branding/${slug}`, options);
   }
 }
 
@@ -267,47 +240,6 @@ export interface PermissionGroup {
   updated_at: string;
 }
 
-/**
- * Minimal account representation for unauthenticated slug lookups.
- */
-export interface PublicAccount {
-  /**
-   * Account ID.
-   */
-  id: string;
-
-  /**
-   * A saved address that can be used for billing and shipping on sales orders,
-   * invoices, and shipments.
-   */
-  default_billing_address: APIKeysAPI.Address | null;
-
-  /**
-   * Logo URL.
-   */
-  logo_url: string | null;
-
-  /**
-   * Display name.
-   */
-  name: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'public_account';
-
-  /**
-   * Portal slug.
-   */
-  slug: string;
-
-  /**
-   * Support email address.
-   */
-  support_email: string | null;
-}
-
 export interface IdentityRetrievePermissionGroupsParams {
   /**
    * Opaque cursor token identifying where the page of results starts.
@@ -341,7 +273,6 @@ Identity.Me = Me;
 Identity.AccountUsers = AccountUsers;
 Identity.Users = Users;
 Identity.Accounts = Accounts;
-Identity.Integrations = Integrations;
 Identity.ChildAccounts = ChildAccounts;
 Identity.Roles = Roles;
 
@@ -351,7 +282,6 @@ export declare namespace Identity {
     type ListPermissionGroup as ListPermissionGroup,
     type Permission as Permission,
     type PermissionGroup as PermissionGroup,
-    type PublicAccount as PublicAccount,
     type IdentityRetrievePermissionGroupsParams as IdentityRetrievePermissionGroupsParams,
   };
 
@@ -408,17 +338,6 @@ export declare namespace Identity {
     type UpdateAccountRequest as UpdateAccountRequest,
     type AccountRetrieveParams as AccountRetrieveParams,
     type AccountUpdateParams as AccountUpdateParams,
-  };
-
-  export {
-    Integrations as Integrations,
-    type AccountIntegration as AccountIntegration,
-    type CreateAccountIntegrationRequest as CreateAccountIntegrationRequest,
-    type ListAccountIntegration as ListAccountIntegration,
-    type UpdateAccountIntegrationRequest as UpdateAccountIntegrationRequest,
-    type IntegrationCreateParams as IntegrationCreateParams,
-    type IntegrationUpdateParams as IntegrationUpdateParams,
-    type IntegrationListParams as IntegrationListParams,
   };
 
   export {

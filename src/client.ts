@@ -69,7 +69,6 @@ import {
   ListPermissionGroup,
   Permission,
   PermissionGroup,
-  PublicAccount,
 } from './resources/identity/identity';
 import {
   InventoryItem,
@@ -87,6 +86,7 @@ import {
   SaleCheckoutSessionsParams,
   Sales,
 } from './resources/sales/sales';
+import { PublicAccount, Settings } from './resources/settings/settings';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -835,6 +835,9 @@ export class Augno {
    * User authentication and token lifecycle operations, including login, registration, password management, and token refresh.
    */
   auth: API.Auth = new API.Auth(this);
+  /**
+   * List permission groups and their permissions.
+   */
   identity: API.Identity = new API.Identity(this);
   core: API.Core = new API.Core(this);
   /**
@@ -845,6 +848,10 @@ export class Augno {
    * Create customer checkout sessions.
    */
   sales: API.Sales = new API.Sales(this);
+  /**
+   * Manage account details, branding, portal, and logo.
+   */
+  settings: API.Settings = new API.Settings(this);
   catalog: API.Catalog = new API.Catalog(this);
   ai: API.AI = new API.AI(this);
   /**
@@ -861,6 +868,7 @@ Augno.Identity = Identity;
 Augno.Core = Core;
 Augno.Billing = Billing;
 Augno.Sales = Sales;
+Augno.Settings = Settings;
 Augno.Catalog = Catalog;
 Augno.AI = AI;
 Augno.Webhooks = Webhooks;
@@ -890,7 +898,6 @@ export declare namespace Augno {
     type ListPermissionGroup as ListPermissionGroup,
     type Permission as Permission,
     type PermissionGroup as PermissionGroup,
-    type PublicAccount as PublicAccount,
     type IdentityRetrievePermissionGroupsParams as IdentityRetrievePermissionGroupsParams,
   };
 
@@ -904,6 +911,8 @@ export declare namespace Augno {
     type CreateCheckoutSessionRequest as CreateCheckoutSessionRequest,
     type SaleCheckoutSessionsParams as SaleCheckoutSessionsParams,
   };
+
+  export { Settings as Settings, type PublicAccount as PublicAccount };
 
   export { Catalog as Catalog };
 

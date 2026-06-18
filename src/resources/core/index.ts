@@ -129,13 +129,3 @@ export {
   type SandboxRetrieveParams,
   type SandboxListParams,
 } from './sandboxes';
-export {
-  SysProperties,
-  type ListSysProperty,
-  type SysProperty,
-  type SysPropertyType,
-  type SysPropertyValue,
-  type UpdateSysPropertyRequest,
-  type SysPropertyUpdateParams,
-  type SysPropertyListParams,
-} from './sys-properties';

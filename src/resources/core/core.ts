@@ -120,17 +120,6 @@ import {
   SandboxRetrieveParams,
   Sandboxes,
 } from './sandboxes';
-import * as SysPropertiesAPI from './sys-properties';
-import {
-  ListSysProperty,
-  SysProperties,
-  SysProperty,
-  SysPropertyListParams,
-  SysPropertyType,
-  SysPropertyUpdateParams,
-  SysPropertyValue,
-  UpdateSysPropertyRequest,
-} from './sys-properties';
 import * as AddressesAPI from './addresses/addresses';
 import {
   AddressComponents,
@@ -146,7 +135,6 @@ export class Core extends APIResource {
   sandboxes: SandboxesAPI.Sandboxes = new SandboxesAPI.Sandboxes(this._client);
   requestLogs: RequestLogsAPI.RequestLogs = new RequestLogsAPI.RequestLogs(this._client);
   auditEvents: AuditEventsAPI.AuditEvents = new AuditEventsAPI.AuditEvents(this._client);
-  sysProperties: SysPropertiesAPI.SysProperties = new SysPropertiesAPI.SysProperties(this._client);
   addresses: AddressesAPI.Addresses = new AddressesAPI.Addresses(this._client);
   emailLogs: EmailLogsAPI.EmailLogs = new EmailLogsAPI.EmailLogs(this._client);
   analytics: AnalyticsAPI.Analytics = new AnalyticsAPI.Analytics(this._client);
@@ -156,7 +144,6 @@ export class Core extends APIResource {
 Core.Sandboxes = Sandboxes;
 Core.RequestLogs = RequestLogs;
 Core.AuditEvents = AuditEvents;
-Core.SysProperties = SysProperties;
 Core.Addresses = Addresses;
 Core.EmailLogs = EmailLogs;
 Core.Analytics = Analytics;
@@ -192,17 +179,6 @@ export declare namespace Core {
     type ListObjectType as ListObjectType,
     type AuditEventRetrieveParams as AuditEventRetrieveParams,
     type AuditEventListParams as AuditEventListParams,
-  };
-
-  export {
-    SysProperties as SysProperties,
-    type ListSysProperty as ListSysProperty,
-    type SysProperty as SysProperty,
-    type SysPropertyType as SysPropertyType,
-    type SysPropertyValue as SysPropertyValue,
-    type UpdateSysPropertyRequest as UpdateSysPropertyRequest,
-    type SysPropertyUpdateParams as SysPropertyUpdateParams,
-    type SysPropertyListParams as SysPropertyListParams,
   };
 
   export {

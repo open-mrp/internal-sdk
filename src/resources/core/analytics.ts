@@ -1379,6 +1379,7 @@ export interface Entity {
     | 'freight'
     | 'sales_order_totals'
     | 'sales_order_related'
+    | 'order_contact'
     | 'user'
     | 'address'
     | 'api_key'

@@ -58,19 +58,8 @@ export {
   type ListPermissionGroup,
   type Permission,
   type PermissionGroup,
-  type PublicAccount,
   type IdentityRetrievePermissionGroupsParams,
 } from './identity';
-export {
-  Integrations,
-  type AccountIntegration,
-  type CreateAccountIntegrationRequest,
-  type ListAccountIntegration,
-  type UpdateAccountIntegrationRequest,
-  type IntegrationCreateParams,
-  type IntegrationUpdateParams,
-  type IntegrationListParams,
-} from './integrations/index';
 export { Me } from './me/index';
 export {
   Roles,

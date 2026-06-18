@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource stripe', () => {
   test('retrievePublishableKey', async () => {
-    const responsePromise = client.identity.integrations.stripe.retrievePublishableKey();
+    const responsePromise = client.settings.integrations.stripe.retrievePublishableKey();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource stripe', () => {
   });
 
   test('retrieveStatus', async () => {
-    const responsePromise = client.identity.integrations.stripe.retrieveStatus();
+    const responsePromise = client.settings.integrations.stripe.retrieveStatus();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
