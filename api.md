@@ -855,8 +855,12 @@ Types:
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrder</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrderLine</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrderStatus</a></code>
-- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">OrderLineInput</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">Product</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">QuoteSalesOrderLineInput</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">QuoteSalesOrderPricesRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">QuoteSalesOrderPricesResponse</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">QuotedSalesOrderLine</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">RateInput</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">Record</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrder</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderEmailContactInput</a></code>
@@ -875,6 +879,7 @@ Methods:
 - <code title="get /v1/sales/sales-orders">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">list</a>({ ...params }) -> ListSalesOrder</code>
 - <code title="delete /v1/sales/sales-orders/{id}">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">delete</a>(id) -> SalesOrderDeleteResponse</code>
 - <code title="post /v1/sales/sales-orders/{id}/checkout">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">checkout</a>(id, { ...params }) -> CheckoutSalesOrderResponse</code>
+- <code title="post /v1/sales/sales-orders/price-quote">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">priceQuote</a>({ ...params }) -> QuoteSalesOrderPricesResponse</code>
 - <code title="get /v1/sales/sales-orders/statuses">client.sales.salesOrders.<a href="./src/resources/sales/sales-orders/sales-orders.ts">retrieveStatuses</a>({ ...params }) -> ListSalesOrderStatus</code>
 
 ### Actions
@@ -904,7 +909,7 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/sales/sales-orders/lines.ts">CreateSalesOrderLineRequest</a></code>
-- <code><a href="./src/resources/sales/sales-orders/lines.ts">RateInput</a></code>
+- <code><a href="./src/resources/sales/sales-orders/lines.ts">OrderLineInput</a></code>
 - <code><a href="./src/resources/sales/sales-orders/lines.ts">UpdateSalesOrderLineRequest</a></code>
 - <code><a href="./src/resources/sales/sales-orders/lines.ts">LineDeleteResponse</a></code>
 

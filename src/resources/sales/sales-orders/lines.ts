@@ -173,25 +173,77 @@ export interface CreateSalesOrderLineRequest {
 }
 
 /**
- * A rate value with its numerator and denominator units, used in create and update
- * requests.
+ * OrderLineInput represents the shared fields for creating an order line item.
+ *
+ * Used as an embedded struct in purchase order and sales order line inputs.
  */
-export interface RateInput {
+export interface OrderLineInput {
   /**
-   * ID of the unit for the rate's denominator (the per-unit basis).
+   * ID of the product being ordered.
    */
-  denominator_unit_id: string;
+  product_id: string;
 
   /**
-   * ID of the unit for the rate's numerator (e.g. the currency of a price).
+   * The product SKU recorded on the line.
+   *
+   * Stored on the line itself, so it stays stable even if the product's SKU changes
+   * later.
    */
-  numerator_unit_id: string;
+  product_sku: string;
 
   /**
-   * Decimal value of the rate, expressed as the amount of the numerator unit per one
-   * denominator unit.
+   * ID of the unit of measure for the quantity.
    */
-  value: string;
+  quantity_unit_id: string;
+
+  /**
+   * Quantity ordered, as a decimal string.
+   */
+  quantity_value: string;
+
+  /**
+   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
+   */
+  unit_price_denominator_unit_id: string;
+
+  /**
+   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
+   * unit).
+   */
+  unit_price_numerator_unit_id: string;
+
+  /**
+   * Price charged per unit, as a decimal string.
+   */
+  unit_price_value: string;
+
+  /**
+   * ID of the inventory item to tie the line to.
+   *
+   * Lines tied to an item have inventory reserved for them when the order is issued.
+   */
+  item_id?: string;
+
+  /**
+   * The product description recorded on the line.
+   */
+  product_description?: string;
+
+  /**
+   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
+   */
+  unit_cost_denominator_unit_id?: string;
+
+  /**
+   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
+   * unit).
+   */
+  unit_cost_numerator_unit_id?: string;
+
+  /**
+   * Internal cost per unit, as a decimal string.
+   */
+  unit_cost_value?: string;
 }
 
 /**
@@ -222,13 +274,13 @@ export interface UpdateSalesOrderLineRequest {
    * A rate value with its numerator and denominator units, used in create and update
    * requests.
    */
-  unit_cost?: RateInput;
+  unit_cost?: SalesOrdersAPI.RateInput;
 
   /**
    * A rate value with its numerator and denominator units, used in create and update
    * requests.
    */
-  unit_price?: RateInput;
+  unit_price?: SalesOrdersAPI.RateInput;
 }
 
 export interface LineDeleteResponse {}
@@ -346,13 +398,13 @@ export interface LineUpdateParams {
    * Body param: A rate value with its numerator and denominator units, used in
    * create and update requests.
    */
-  unit_cost?: RateInput;
+  unit_cost?: SalesOrdersAPI.RateInput;
 
   /**
    * Body param: A rate value with its numerator and denominator units, used in
    * create and update requests.
    */
-  unit_price?: RateInput;
+  unit_price?: SalesOrdersAPI.RateInput;
 }
 
 export interface LineDeleteParams {
@@ -365,7 +417,7 @@ export interface LineDeleteParams {
 export declare namespace Lines {
   export {
     type CreateSalesOrderLineRequest as CreateSalesOrderLineRequest,
-    type RateInput as RateInput,
+    type OrderLineInput as OrderLineInput,
     type UpdateSalesOrderLineRequest as UpdateSalesOrderLineRequest,
     type LineDeleteResponse as LineDeleteResponse,
     type LineCreateParams as LineCreateParams,

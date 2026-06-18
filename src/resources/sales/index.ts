@@ -120,8 +120,12 @@ export {
   type ListSalesOrder,
   type ListSalesOrderLine,
   type ListSalesOrderStatus,
-  type OrderLineInput,
   type Product,
+  type QuoteSalesOrderLineInput,
+  type QuoteSalesOrderPricesRequest,
+  type QuoteSalesOrderPricesResponse,
+  type QuotedSalesOrderLine,
+  type RateInput,
   type Record,
   type SalesOrder,
   type SalesOrderEmailContactInput,
@@ -136,6 +140,7 @@ export {
   type SalesOrderUpdateParams,
   type SalesOrderListParams,
   type SalesOrderCheckoutParams,
+  type SalesOrderPriceQuoteParams,
   type SalesOrderRetrieveStatusesParams,
 } from './sales-orders/index';
 export {

@@ -32,7 +32,7 @@ import {
   LineDeleteResponse,
   LineUpdateParams,
   Lines,
-  RateInput,
+  OrderLineInput,
   UpdateSalesOrderLineRequest,
 } from './lines';
 import { APIPromise } from '../../../core/api-promise';
@@ -53,31 +53,22 @@ export class SalesOrders extends APIResource {
    * @example
    * ```ts
    * const salesOrder = await client.sales.salesOrders.create({
+   *   bill_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
    *   buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
    *   lines: [
    *     {
    *       product_id: 'pd_013c29ab3f1518d0004094c316',
-   *       product_sku: 'WIDGET-001',
-   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *       quantity_value: '10',
-   *       unit_price_denominator_unit_id:
-   *         'un_01966263f74a5a0cae356000a1',
-   *       unit_price_numerator_unit_id:
-   *         'un_01966263f74a5a0cae356000a1',
-   *       unit_price_value: '25.00',
+   *       quantity: {
+   *         value: '10',
+   *         unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       },
    *     },
    *   ],
    *   priority_code: 'normal',
-   *   sales_order_type_code: 'sales_order',
+   *   ship_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
    *   carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
    *   note: 'Rush order for trade show',
    *   service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
-   *   ship_to_country: 'US',
-   *   ship_to_locality: 'San Francisco',
-   *   ship_to_name: 'Acme Inc.',
-   *   ship_to_postal_code: '94105',
-   *   ship_to_state: 'CA',
-   *   ship_to_street_line_1: '123 Main Street',
    * });
    * ```
    */
@@ -192,6 +183,38 @@ export class SalesOrders extends APIResource {
   }
 
   /**
+   * Calculates the unit price for each line without creating an order.
+   *
+   * Use this to display prices to users as they build an order. Prices are computed
+   * server-side from the product's list price, contracted account prices, and
+   * applicable discounts — the same logic used when an order is created. Internal
+   * price overrides are not accepted here; the calculated price is always returned.
+   *
+   * @example
+   * ```ts
+   * const quoteSalesOrderPricesResponse =
+   *   await client.sales.salesOrders.priceQuote({
+   *     buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+   *     lines: [
+   *       {
+   *         product_id: 'pd_013c29ab3f1518d0004094c316',
+   *         quantity: {
+   *           value: '10',
+   *           unit_id: 'un_01966263f74a5a0cae356000a1',
+   *         },
+   *       },
+   *     ],
+   *   });
+   * ```
+   */
+  priceQuote(
+    body: SalesOrderPriceQuoteParams,
+    options?: RequestOptions,
+  ): APIPromise<QuoteSalesOrderPricesResponse> {
+    return this._client.post('/v1/sales/sales-orders/price-quote', { body, ...options });
+  }
+
+  /**
    * Returns a paginated list of sales order statuses.
    *
    * @example
@@ -246,9 +269,11 @@ export interface CheckoutSalesOrderResponse {
 }
 
 /**
- * OrderLineInput represents the shared fields for creating an order line item.
+ * Line item input for a create sales order request.
  *
- * Used as an embedded struct in purchase order and sales order line inputs.
+ * The item, unit cost, and (unless an internal user supplies a `unit_price`
+ * override) the unit price are resolved server-side from the product. The quantity
+ * unit must belong to the product's unit group.
  */
 export interface CreateSalesOrderLineInput {
   /**
@@ -257,72 +282,43 @@ export interface CreateSalesOrderLineInput {
   product_id: string;
 
   /**
-   * The product SKU recorded on the line.
-   *
-   * Stored on the line itself, so it stays stable even if the product's SKU changes
-   * later.
+   * A value with an associated unit, used in create and update requests.
    */
-  product_sku: string;
+  quantity: CustomersAPI.QuantityInput;
 
   /**
-   * ID of the unit of measure for the quantity.
+   * EDI line item ID.
    */
-  quantity_unit_id: string;
+  edi_line_item_id?: string;
 
   /**
-   * Quantity ordered, as a decimal string.
-   */
-  quantity_value: string;
-
-  /**
-   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
-   */
-  unit_price_denominator_unit_id: string;
-
-  /**
-   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
-   * unit).
-   */
-  unit_price_numerator_unit_id: string;
-
-  /**
-   * Price charged per unit, as a decimal string.
-   */
-  unit_price_value: string;
-
-  /**
-   * ID of the inventory item to tie the line to.
-   *
-   * Lines tied to an item have inventory reserved for them when the order is issued.
-   */
-  item_id?: string;
-
-  /**
-   * The product description recorded on the line.
+   * Description recorded on the line. Defaults to the product's description when
+   * omitted.
    */
   product_description?: string;
 
   /**
-   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
+   * SKU recorded on the line. Defaults to the product's SKU when omitted.
    */
-  unit_cost_denominator_unit_id?: string;
+  product_sku?: string;
 
   /**
-   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
-   * unit).
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
-  unit_cost_numerator_unit_id?: string;
-
-  /**
-   * Internal cost per unit, as a decimal string.
-   */
-  unit_cost_value?: string;
+  unit_price?: RateInput;
 }
 
 /**
  * Request to create a sales order.
  */
 export interface CreateSalesOrderRequest {
+  /**
+   * Bill-to address ID. Must reference an existing address on the order's owner or
+   * buyer account.
+   */
+  bill_to_address_id: string;
+
   /**
    * ID of the customer account the order is for.
    */
@@ -339,49 +335,15 @@ export interface CreateSalesOrderRequest {
   priority_code: string;
 
   /**
-   * Sales order type code.
+   * Ship-to address ID. Must reference an existing address on the order's owner or
+   * buyer account.
    */
-  sales_order_type_code: string;
+  ship_to_address_id: string;
 
   /**
    * Account users who should receive order acknowledgement emails.
    */
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
-
-  /**
-   * Bill-to country, as a two-letter ISO code.
-   */
-  bill_to_country?: string;
-
-  /**
-   * Bill-to locality/city.
-   */
-  bill_to_locality?: string;
-
-  /**
-   * Bill-to address name.
-   */
-  bill_to_name?: string;
-
-  /**
-   * Bill-to postal code.
-   */
-  bill_to_postal_code?: string;
-
-  /**
-   * Bill-to state/province.
-   */
-  bill_to_state?: string;
-
-  /**
-   * Bill-to street line 1.
-   */
-  bill_to_street_line_1?: string;
-
-  /**
-   * Bill-to street line 2.
-   */
-  bill_to_street_line_2?: string;
 
   /**
    * Carrier billing account number.
@@ -432,6 +394,11 @@ export interface CreateSalesOrderRequest {
   payment_term_id?: string;
 
   /**
+   * Promised delivery date.
+   */
+  promised_at?: string;
+
+  /**
    * Sales rep ID.
    *
    * When omitted, a rep is assigned automatically: the customer's default sales rep
@@ -444,41 +411,6 @@ export interface CreateSalesOrderRequest {
    * Service level ID.
    */
   service_level_id?: string;
-
-  /**
-   * Ship-to country, as a two-letter ISO code.
-   */
-  ship_to_country?: string;
-
-  /**
-   * Ship-to locality/city.
-   */
-  ship_to_locality?: string;
-
-  /**
-   * Ship-to address name.
-   */
-  ship_to_name?: string;
-
-  /**
-   * Ship-to postal code.
-   */
-  ship_to_postal_code?: string;
-
-  /**
-   * Ship-to state/province.
-   */
-  ship_to_state?: string;
-
-  /**
-   * Ship-to street line 1.
-   */
-  ship_to_street_line_1?: string;
-
-  /**
-   * Ship-to street line 2.
-   */
-  ship_to_street_line_2?: string;
 
   /**
    * Shipping term ID.
@@ -646,80 +578,6 @@ export interface ListSalesOrderStatus {
 }
 
 /**
- * OrderLineInput represents the shared fields for creating an order line item.
- *
- * Used as an embedded struct in purchase order and sales order line inputs.
- */
-export interface OrderLineInput {
-  /**
-   * ID of the product being ordered.
-   */
-  product_id: string;
-
-  /**
-   * The product SKU recorded on the line.
-   *
-   * Stored on the line itself, so it stays stable even if the product's SKU changes
-   * later.
-   */
-  product_sku: string;
-
-  /**
-   * ID of the unit of measure for the quantity.
-   */
-  quantity_unit_id: string;
-
-  /**
-   * Quantity ordered, as a decimal string.
-   */
-  quantity_value: string;
-
-  /**
-   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
-   */
-  unit_price_denominator_unit_id: string;
-
-  /**
-   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
-   * unit).
-   */
-  unit_price_numerator_unit_id: string;
-
-  /**
-   * Price charged per unit, as a decimal string.
-   */
-  unit_price_value: string;
-
-  /**
-   * ID of the inventory item to tie the line to.
-   *
-   * Lines tied to an item have inventory reserved for them when the order is issued.
-   */
-  item_id?: string;
-
-  /**
-   * The product description recorded on the line.
-   */
-  product_description?: string;
-
-  /**
-   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
-   */
-  unit_cost_denominator_unit_id?: string;
-
-  /**
-   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
-   * unit).
-   */
-  unit_cost_numerator_unit_id?: string;
-
-  /**
-   * Internal cost per unit, as a decimal string.
-   */
-  unit_cost_value?: string;
-}
-
-/**
  * Product pairs an inventory item with how it is sold: its product type, optional
  * product line, and customer portal visibility.
  */
@@ -778,6 +636,98 @@ export interface Product {
    * Last updated timestamp.
    */
   updated_at: string;
+}
+
+/**
+ * A line to price in a quote request.
+ */
+export interface QuoteSalesOrderLineInput {
+  /**
+   * ID of the product to price.
+   */
+  product_id: string;
+
+  /**
+   * A value with an associated unit, used in create and update requests.
+   */
+  quantity: CustomersAPI.QuantityInput;
+}
+
+/**
+ * Request to quote sales-order line prices without creating an order.
+ */
+export interface QuoteSalesOrderPricesRequest {
+  /**
+   * ID of the customer account the prices are for.
+   */
+  buyer_account_id: string;
+
+  /**
+   * Lines to price.
+   */
+  lines: Array<QuoteSalesOrderLineInput>;
+}
+
+/**
+ * Quoted unit prices for the requested lines, in request order.
+ */
+export interface QuoteSalesOrderPricesResponse {
+  /**
+   * Priced lines, in the same order as the request.
+   */
+  lines: Array<QuotedSalesOrderLine>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'sales_order_price_quote';
+}
+
+/**
+ * One priced line in a quote response.
+ */
+export interface QuotedSalesOrderLine {
+  /**
+   * ID of the product priced.
+   */
+  product_id: string;
+
+  /**
+   * Unit ID for the unit price's denominator (the unit being sold).
+   */
+  unit_price_denominator_unit_id: string;
+
+  /**
+   * Unit ID for the unit price's numerator (the currency).
+   */
+  unit_price_numerator_unit_id: string;
+
+  /**
+   * Calculated unit price, as a decimal string.
+   */
+  unit_price_value: string;
+}
+
+/**
+ * A rate value with its numerator and denominator units, used in create and update
+ * requests.
+ */
+export interface RateInput {
+  /**
+   * ID of the unit for the rate's denominator (the per-unit basis).
+   */
+  denominator_unit_id: string;
+
+  /**
+   * ID of the unit for the rate's numerator (e.g. the currency of a price).
+   */
+  numerator_unit_id: string;
+
+  /**
+   * Decimal value of the rate, expressed as the amount of the numerator unit per one
+   * denominator unit.
+   */
+  value: string;
 }
 
 /**
@@ -985,8 +935,8 @@ export interface SalesOrder {
   /**
    * SalesOrderRelated groups the records related to a sales order.
    *
-   * The members are individually expandable (e.g. include[]=related.pick); the group
-   * itself is always present.
+   * The members are individually expandable (e.g. include[]=related.pick). The group
+   * is null unless at least one of its members is expanded.
    */
   related: SalesOrderRelated | null;
 
@@ -1116,8 +1066,8 @@ export interface SalesOrderLine {
 /**
  * SalesOrderRelated groups the records related to a sales order.
  *
- * The members are individually expandable (e.g. include[]=related.pick); the group
- * itself is always present.
+ * The members are individually expandable (e.g. include[]=related.pick). The group
+ * is null unless at least one of its members is expanded.
  */
 export interface SalesOrderRelated {
   /**
@@ -1348,6 +1298,12 @@ export interface SalesOrderDeleteResponse {}
 
 export interface SalesOrderCreateParams {
   /**
+   * Body param: Bill-to address ID. Must reference an existing address on the
+   * order's owner or buyer account.
+   */
+  bill_to_address_id: string;
+
+  /**
    * Body param: ID of the customer account the order is for.
    */
   buyer_account_id: string;
@@ -1363,9 +1319,10 @@ export interface SalesOrderCreateParams {
   priority_code: string;
 
   /**
-   * Body param: Sales order type code.
+   * Body param: Ship-to address ID. Must reference an existing address on the
+   * order's owner or buyer account.
    */
-  sales_order_type_code: string;
+  ship_to_address_id: string;
 
   /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
@@ -1396,41 +1353,6 @@ export interface SalesOrderCreateParams {
    * Body param: Account users who should receive order acknowledgement emails.
    */
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
-
-  /**
-   * Body param: Bill-to country, as a two-letter ISO code.
-   */
-  bill_to_country?: string;
-
-  /**
-   * Body param: Bill-to locality/city.
-   */
-  bill_to_locality?: string;
-
-  /**
-   * Body param: Bill-to address name.
-   */
-  bill_to_name?: string;
-
-  /**
-   * Body param: Bill-to postal code.
-   */
-  bill_to_postal_code?: string;
-
-  /**
-   * Body param: Bill-to state/province.
-   */
-  bill_to_state?: string;
-
-  /**
-   * Body param: Bill-to street line 1.
-   */
-  bill_to_street_line_1?: string;
-
-  /**
-   * Body param: Bill-to street line 2.
-   */
-  bill_to_street_line_2?: string;
 
   /**
    * Body param: Carrier billing account number.
@@ -1481,6 +1403,11 @@ export interface SalesOrderCreateParams {
   payment_term_id?: string;
 
   /**
+   * Body param: Promised delivery date.
+   */
+  promised_at?: string;
+
+  /**
    * Body param: Sales rep ID.
    *
    * When omitted, a rep is assigned automatically: the customer's default sales rep
@@ -1493,41 +1420,6 @@ export interface SalesOrderCreateParams {
    * Body param: Service level ID.
    */
   service_level_id?: string;
-
-  /**
-   * Body param: Ship-to country, as a two-letter ISO code.
-   */
-  ship_to_country?: string;
-
-  /**
-   * Body param: Ship-to locality/city.
-   */
-  ship_to_locality?: string;
-
-  /**
-   * Body param: Ship-to address name.
-   */
-  ship_to_name?: string;
-
-  /**
-   * Body param: Ship-to postal code.
-   */
-  ship_to_postal_code?: string;
-
-  /**
-   * Body param: Ship-to state/province.
-   */
-  ship_to_state?: string;
-
-  /**
-   * Body param: Ship-to street line 1.
-   */
-  ship_to_street_line_1?: string;
-
-  /**
-   * Body param: Ship-to street line 2.
-   */
-  ship_to_street_line_2?: string;
 
   /**
    * Body param: Shipping term ID.
@@ -1826,6 +1718,18 @@ export interface SalesOrderCheckoutParams {
   success_url?: string;
 }
 
+export interface SalesOrderPriceQuoteParams {
+  /**
+   * ID of the customer account the prices are for.
+   */
+  buyer_account_id: string;
+
+  /**
+   * Lines to price.
+   */
+  lines: Array<QuoteSalesOrderLineInput>;
+}
+
 export interface SalesOrderRetrieveStatusesParams {
   /**
    * Opaque cursor token identifying where the page of results starts.
@@ -1870,8 +1774,12 @@ export declare namespace SalesOrders {
     type ListSalesOrder as ListSalesOrder,
     type ListSalesOrderLine as ListSalesOrderLine,
     type ListSalesOrderStatus as ListSalesOrderStatus,
-    type OrderLineInput as OrderLineInput,
     type Product as Product,
+    type QuoteSalesOrderLineInput as QuoteSalesOrderLineInput,
+    type QuoteSalesOrderPricesRequest as QuoteSalesOrderPricesRequest,
+    type QuoteSalesOrderPricesResponse as QuoteSalesOrderPricesResponse,
+    type QuotedSalesOrderLine as QuotedSalesOrderLine,
+    type RateInput as RateInput,
     type Record as Record,
     type SalesOrder as SalesOrder,
     type SalesOrderEmailContactInput as SalesOrderEmailContactInput,
@@ -1886,6 +1794,7 @@ export declare namespace SalesOrders {
     type SalesOrderUpdateParams as SalesOrderUpdateParams,
     type SalesOrderListParams as SalesOrderListParams,
     type SalesOrderCheckoutParams as SalesOrderCheckoutParams,
+    type SalesOrderPriceQuoteParams as SalesOrderPriceQuoteParams,
     type SalesOrderRetrieveStatusesParams as SalesOrderRetrieveStatusesParams,
   };
 
@@ -1909,7 +1818,7 @@ export declare namespace SalesOrders {
   export {
     Lines as Lines,
     type CreateSalesOrderLineRequest as CreateSalesOrderLineRequest,
-    type RateInput as RateInput,
+    type OrderLineInput as OrderLineInput,
     type UpdateSalesOrderLineRequest as UpdateSalesOrderLineRequest,
     type LineDeleteResponse as LineDeleteResponse,
     type LineCreateParams as LineCreateParams,

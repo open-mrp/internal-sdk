@@ -27,9 +27,9 @@ export class Integrations extends APIResource {
    * const accountIntegration =
    *   await client.identity.integrations.create({
    *     credentials:
-   *       '{"privateKey":"sk_test_...","publishableKey":"pk_test_...","webhookSecret":"whsec_..."}',
-   *     integration_code: 'stripe',
+   *       '{"private_key":"sk_test_...","publishable_key":"pk_test_...","webhook_secret":"whsec_..."}',
    *     name: 'My Stripe Integration',
+   *     provider: 'stripe',
    *   });
    * ```
    */
@@ -48,7 +48,7 @@ export class Integrations extends APIResource {
    * ```ts
    * const accountIntegration =
    *   await client.identity.integrations.update(
-   *     'ai_0177772eae113431f64d473124',
+   *     'acig_0177772eae113431f64d473124',
    *     { name: 'Updated Stripe Integration' },
    *   );
    * ```
@@ -84,7 +84,7 @@ export class Integrations extends APIResource {
    * ```ts
    * const accountIntegration =
    *   await client.identity.integrations.delete(
-   *     'ai_0177772eae113431f64d473124',
+   *     'acig_0177772eae113431f64d473124',
    *   );
    * ```
    */
@@ -108,15 +108,6 @@ export interface AccountIntegration {
   created_at: string;
 
   /**
-   * Whether the integration is active.
-   *
-   * Integrations are created active. Deactivating an integration keeps its stored
-   * credentials but stops it from being used (for example, the Stripe publishable
-   * key cannot be retrieved while the Stripe integration is inactive).
-   */
-  is_active: boolean;
-
-  /**
    * Display name of the integration.
    */
   name: string;
@@ -131,8 +122,18 @@ export interface AccountIntegration {
    *
    * - `stripe`: Stripe payment processing.
    * - `shippo`: Shippo shipping and label generation.
+   * - `hubspot`: HubSpot CRM.
    */
-  provider: 'stripe' | 'shippo';
+  provider: 'stripe' | 'shippo' | 'hubspot';
+
+  /**
+   * Lifecycle status of the integration.
+   *
+   * Integrations are created `active`. Setting an integration to `inactive` keeps
+   * its stored credentials but stops it from being used (for example, the Stripe
+   * publishable key cannot be retrieved while the Stripe integration is inactive).
+   */
+  status: 'active' | 'inactive';
 
   /**
    * Last updated timestamp.
@@ -149,9 +150,10 @@ export interface CreateAccountIntegrationRequest {
    *
    * Required keys depend on the provider:
    *
-   * - `stripe`: `privateKey` (`sk_...`), `publishableKey` (`pk_...`), and
-   *   `webhookSecret` (`whsec_...`).
-   * - `shippo`: `apiKey` (`shippo_live_...` or `shippo_test_...`).
+   * - `stripe`: `private_key` (`sk_...`), `publishable_key` (`pk_...`), and
+   *   `webhook_secret` (`whsec_...`).
+   * - `shippo`: `api_key` (`shippo_live_...` or `shippo_test_...`).
+   * - `hubspot`: `access_token` (`pat-...`).
    *
    * Sandbox accounts must use test keys and production accounts must use live keys;
    * credentials that do not match are rejected.
@@ -159,17 +161,18 @@ export interface CreateAccountIntegrationRequest {
   credentials: string;
 
   /**
+   * Display name of the integration.
+   */
+  name: string;
+
+  /**
    * Integration provider code.
    *
    * - `stripe`: Stripe payment processing.
    * - `shippo`: Shippo shipping and label generation.
+   * - `hubspot`: HubSpot CRM.
    */
-  integration_code: 'stripe' | 'shippo';
-
-  /**
-   * Display name of the integration.
-   */
-  name: string;
+  provider: 'stripe' | 'shippo' | 'hubspot';
 }
 
 /**
@@ -197,17 +200,17 @@ export interface ListAccountIntegration {
  */
 export interface UpdateAccountIntegrationRequest {
   /**
-   * Whether the integration is active.
-   *
-   * Set to `false` to deactivate the integration without deleting its stored
-   * credentials.
-   */
-  is_active?: boolean;
-
-  /**
    * Display name of the integration.
    */
   name?: string;
+
+  /**
+   * Lifecycle status of the integration.
+   *
+   * Set to `inactive` to deactivate the integration without deleting its stored
+   * credentials.
+   */
+  status?: 'active' | 'inactive';
 }
 
 export interface IntegrationCreateParams {
@@ -216,9 +219,10 @@ export interface IntegrationCreateParams {
    *
    * Required keys depend on the provider:
    *
-   * - `stripe`: `privateKey` (`sk_...`), `publishableKey` (`pk_...`), and
-   *   `webhookSecret` (`whsec_...`).
-   * - `shippo`: `apiKey` (`shippo_live_...` or `shippo_test_...`).
+   * - `stripe`: `private_key` (`sk_...`), `publishable_key` (`pk_...`), and
+   *   `webhook_secret` (`whsec_...`).
+   * - `shippo`: `api_key` (`shippo_live_...` or `shippo_test_...`).
+   * - `hubspot`: `access_token` (`pat-...`).
    *
    * Sandbox accounts must use test keys and production accounts must use live keys;
    * credentials that do not match are rejected.
@@ -226,32 +230,33 @@ export interface IntegrationCreateParams {
   credentials: string;
 
   /**
+   * Display name of the integration.
+   */
+  name: string;
+
+  /**
    * Integration provider code.
    *
    * - `stripe`: Stripe payment processing.
    * - `shippo`: Shippo shipping and label generation.
+   * - `hubspot`: HubSpot CRM.
    */
-  integration_code: 'stripe' | 'shippo';
-
-  /**
-   * Display name of the integration.
-   */
-  name: string;
+  provider: 'stripe' | 'shippo' | 'hubspot';
 }
 
 export interface IntegrationUpdateParams {
   /**
-   * Whether the integration is active.
-   *
-   * Set to `false` to deactivate the integration without deleting its stored
-   * credentials.
-   */
-  is_active?: boolean;
-
-  /**
    * Display name of the integration.
    */
   name?: string;
+
+  /**
+   * Lifecycle status of the integration.
+   *
+   * Set to `inactive` to deactivate the integration without deleting its stored
+   * credentials.
+   */
+  status?: 'active' | 'inactive';
 }
 
 export interface IntegrationListParams {

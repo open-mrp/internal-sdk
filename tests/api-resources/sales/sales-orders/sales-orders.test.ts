@@ -10,20 +10,16 @@ const client = new Augno({
 describe('resource salesOrders', () => {
   test('create: only required params', async () => {
     const responsePromise = client.sales.salesOrders.create({
+      bill_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
       buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
       lines: [
         {
           product_id: 'pd_013c29ab3f1518d0004094c316',
-          product_sku: 'WIDGET-001',
-          quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-          quantity_value: '10',
-          unit_price_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-          unit_price_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-          unit_price_value: '25.00',
+          quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
         },
       ],
       priority_code: 'normal',
-      sales_order_type_code: 'sales_order',
+      ship_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -36,34 +32,26 @@ describe('resource salesOrders', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.sales.salesOrders.create({
+      bill_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
       buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
       lines: [
         {
           product_id: 'pd_013c29ab3f1518d0004094c316',
-          product_sku: 'WIDGET-001',
-          quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-          quantity_value: '10',
-          unit_price_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-          unit_price_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-          unit_price_value: '25.00',
-          item_id: 'item_id',
+          quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
+          edi_line_item_id: 'edi_line_item_id',
           product_description: 'product_description',
-          unit_cost_denominator_unit_id: 'unit_cost_denominator_unit_id',
-          unit_cost_numerator_unit_id: 'unit_cost_numerator_unit_id',
-          unit_cost_value: 'unit_cost_value',
+          product_sku: 'product_sku',
+          unit_price: {
+            denominator_unit_id: 'denominator_unit_id',
+            numerator_unit_id: 'numerator_unit_id',
+            value: 'value',
+          },
         },
       ],
       priority_code: 'normal',
-      sales_order_type_code: 'sales_order',
+      ship_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
       include: ['customer'],
       acknowledgement_email_contacts: [{ account_user_id: 'account_user_id' }],
-      bill_to_country: 'bill_to_country',
-      bill_to_locality: 'bill_to_locality',
-      bill_to_name: 'bill_to_name',
-      bill_to_postal_code: 'bill_to_postal_code',
-      bill_to_state: 'bill_to_state',
-      bill_to_street_line_1: 'bill_to_street_line_1',
-      bill_to_street_line_2: 'bill_to_street_line_2',
       carrier_billing_account_number: 'carrier_billing_account_number',
       carrier_billing_type: 'sender',
       carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
@@ -72,15 +60,9 @@ describe('resource salesOrders', () => {
       note: 'Rush order for trade show',
       order_discount_id: 'order_discount_id',
       payment_term_id: 'payment_term_id',
+      promised_at: '2019-12-27T18:11:19.117Z',
       sales_rep_id: 'sales_rep_id',
       service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
-      ship_to_country: 'US',
-      ship_to_locality: 'San Francisco',
-      ship_to_name: 'Acme Inc.',
-      ship_to_postal_code: '94105',
-      ship_to_state: 'CA',
-      ship_to_street_line_1: '123 Main Street',
-      ship_to_street_line_2: 'ship_to_street_line_2',
       shipping_term_id: 'shipping_term_id',
     });
   });
@@ -214,6 +196,37 @@ describe('resource salesOrders', () => {
       email: 'operations@acme.example.com',
       cancel_url: 'https://dashboard.example.com/checkout/cancel',
       success_url: 'https://dashboard.example.com/checkout/success',
+    });
+  });
+
+  test('priceQuote: only required params', async () => {
+    const responsePromise = client.sales.salesOrders.priceQuote({
+      buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      lines: [
+        {
+          product_id: 'pd_013c29ab3f1518d0004094c316',
+          quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
+        },
+      ],
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('priceQuote: required and optional params', async () => {
+    const response = await client.sales.salesOrders.priceQuote({
+      buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      lines: [
+        {
+          product_id: 'pd_013c29ab3f1518d0004094c316',
+          quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
+        },
+      ],
     });
   });
 

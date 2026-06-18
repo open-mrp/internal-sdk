@@ -10,9 +10,10 @@ const client = new Augno({
 describe('resource integrations', () => {
   test('create: only required params', async () => {
     const responsePromise = client.identity.integrations.create({
-      credentials: '{"privateKey":"sk_test_...","publishableKey":"pk_test_...","webhookSecret":"whsec_..."}',
-      integration_code: 'stripe',
+      credentials:
+        '{"private_key":"sk_test_...","publishable_key":"pk_test_...","webhook_secret":"whsec_..."}',
       name: 'My Stripe Integration',
+      provider: 'stripe',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -25,14 +26,15 @@ describe('resource integrations', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.identity.integrations.create({
-      credentials: '{"privateKey":"sk_test_...","publishableKey":"pk_test_...","webhookSecret":"whsec_..."}',
-      integration_code: 'stripe',
+      credentials:
+        '{"private_key":"sk_test_...","publishable_key":"pk_test_...","webhook_secret":"whsec_..."}',
       name: 'My Stripe Integration',
+      provider: 'stripe',
     });
   });
 
   test('update', async () => {
-    const responsePromise = client.identity.integrations.update('ai_0177772eae113431f64d473124');
+    const responsePromise = client.identity.integrations.update('acig_0177772eae113431f64d473124');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -46,8 +48,8 @@ describe('resource integrations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.identity.integrations.update(
-        'ai_0177772eae113431f64d473124',
-        { is_active: false, name: 'Updated Stripe Integration' },
+        'acig_0177772eae113431f64d473124',
+        { name: 'Updated Stripe Integration', status: 'active' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
@@ -79,7 +81,7 @@ describe('resource integrations', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.identity.integrations.delete('ai_0177772eae113431f64d473124');
+    const responsePromise = client.identity.integrations.delete('acig_0177772eae113431f64d473124');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

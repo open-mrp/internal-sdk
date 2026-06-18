@@ -344,7 +344,8 @@ export interface AuditEvent {
     | 'invoice_allocation_entry'
     | 'allocation_customer'
     | 'checkout_sales_order_response'
-    | 'create_production_run_response';
+    | 'create_production_run_response'
+    | 'sales_order_price_quote';
 
   /**
    * Originating client IP address.
@@ -637,6 +638,7 @@ export interface ListObjectType {
     | 'allocation_customer'
     | 'checkout_sales_order_response'
     | 'create_production_run_response'
+    | 'sales_order_price_quote'
   >;
 
   /**
@@ -932,6 +934,7 @@ export interface AuditEventListParams {
     | 'allocation_customer'
     | 'checkout_sales_order_response'
     | 'create_production_run_response'
+    | 'sales_order_price_quote'
   >;
 
   /**

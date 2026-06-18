@@ -59,17 +59,17 @@ export interface StripePublishableKey {
  */
 export interface StripeStatus {
   /**
-   * Whether a Stripe integration is configured.
-   *
-   * `true` if the account has a Stripe integration on file, regardless of whether
-   * the integration is currently active.
-   */
-  has_stripe_integration: boolean;
-
-  /**
    * Resource type identifier.
    */
   object: 'stripe_status';
+
+  /**
+   * Whether a Stripe integration is configured.
+   *
+   * `connected` if the account has a Stripe integration on file, regardless of
+   * whether the integration is currently active.
+   */
+  status: 'connected' | 'not_connected';
 }
 
 export declare namespace Stripe {

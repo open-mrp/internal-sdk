@@ -10,7 +10,6 @@ import {
   ValidateProductsRequest,
   ValidateProductsResponse,
 } from './actions';
-import * as LinesAPI from '../../sales/sales-orders/lines';
 import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
@@ -206,13 +205,13 @@ export interface CreateProductRequest {
    * A rate value with its numerator and denominator units, used in create and update
    * requests.
    */
-  unit_cost?: LinesAPI.RateInput;
+  unit_cost?: SalesOrdersAPI.RateInput;
 
   /**
    * A rate value with its numerator and denominator units, used in create and update
    * requests.
    */
-  unit_price?: LinesAPI.RateInput;
+  unit_price?: SalesOrdersAPI.RateInput;
 }
 
 /**
@@ -274,7 +273,7 @@ export interface UpdateProductRequest {
    * A rate value with its numerator and denominator units, used in create and update
    * requests.
    */
-  unit_price?: LinesAPI.RateInput;
+  unit_price?: SalesOrdersAPI.RateInput;
 }
 
 export interface ProductCreateParams {
@@ -366,13 +365,13 @@ export interface ProductCreateParams {
    * Body param: A rate value with its numerator and denominator units, used in
    * create and update requests.
    */
-  unit_cost?: LinesAPI.RateInput;
+  unit_cost?: SalesOrdersAPI.RateInput;
 
   /**
    * Body param: A rate value with its numerator and denominator units, used in
    * create and update requests.
    */
-  unit_price?: LinesAPI.RateInput;
+  unit_price?: SalesOrdersAPI.RateInput;
 }
 
 export interface ProductRetrieveParams {
@@ -459,7 +458,7 @@ export interface ProductUpdateParams {
    * Body param: A rate value with its numerator and denominator units, used in
    * create and update requests.
    */
-  unit_price?: LinesAPI.RateInput;
+  unit_price?: SalesOrdersAPI.RateInput;
 }
 
 export interface ProductListParams {
