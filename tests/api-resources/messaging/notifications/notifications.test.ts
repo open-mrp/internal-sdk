@@ -10,14 +10,8 @@ const client = new Augno({
 describe('resource notifications', () => {
   test('create: only required params', async () => {
     const responsePromise = client.messaging.notifications.create({
-      body: null,
       category: 'order.updated',
-      link_resource_id: null,
-      link_resource_type: null,
-      priority: null,
       target: { id: 'acus_01ea9983ddb41dacc44ecf997c', type: 'account_user' },
-      template_key: null,
-      template_params: null,
       title: 'Order updated',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -31,15 +25,15 @@ describe('resource notifications', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.messaging.notifications.create({
-      body: null,
       category: 'order.updated',
-      link_resource_id: null,
-      link_resource_type: null,
-      priority: null,
       target: { id: 'acus_01ea9983ddb41dacc44ecf997c', type: 'account_user' },
-      template_key: null,
-      template_params: null,
       title: 'Order updated',
+      body: 'body',
+      link_resource_id: 'link_resource_id',
+      link_resource_type: 'account',
+      priority: 'low',
+      template_key: 'template_key',
+      template_params: {},
     });
   });
 

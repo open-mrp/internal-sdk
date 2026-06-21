@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as NotificationsAPI from './notifications';
 import * as AnalyticsAPI from '../../core/analytics';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as ActionsAPI from './actions';
@@ -25,17 +26,11 @@ export class Notifications extends APIResource {
    * ```ts
    * const notificationSendResult =
    *   await client.messaging.notifications.create({
-   *     body: null,
    *     category: 'order.updated',
-   *     link_resource_id: null,
-   *     link_resource_type: null,
-   *     priority: null,
    *     target: {
    *       type: 'account_user',
    *       id: 'acus_01ea9983ddb41dacc44ecf997c',
    *     },
-   *     template_key: null,
-   *     template_params: null,
    *     title: 'Order updated',
    *   });
    * ```
@@ -306,9 +301,9 @@ export interface NotificationUnreadCount {
  */
 export interface NotificationUnreadSummary {
   /**
-   * Per-account unread tallies.
+   * List represents a paginated list of resources.
    */
-  accounts: Array<NotificationUnreadSummaryAccount>;
+  accounts: NotificationUnreadSummary.Accounts | null;
 
   /**
    * Resource type identifier.
@@ -319,6 +314,28 @@ export interface NotificationUnreadSummary {
    * Combined unread total across all of the caller's accounts.
    */
   total: number;
+}
+
+export namespace NotificationUnreadSummary {
+  /**
+   * List represents a paginated list of resources.
+   */
+  export interface Accounts {
+    /**
+     * Resources in this page.
+     */
+    data: Array<NotificationsAPI.NotificationUnreadSummaryAccount>;
+
+    /**
+     * Resource type identifier.
+     */
+    object: 'list';
+
+    /**
+     * PageInfo contains URL-based pagination metadata.
+     */
+    page_info: APIKeysAPI.PageInfo;
+  }
 }
 
 /**
@@ -332,6 +349,11 @@ export interface NotificationUnreadSummaryAccount {
   account: AnalyticsAPI.Entity | null;
 
   /**
+   * Resource type identifier.
+   */
+  object: 'notification_unread_summary_account';
+
+  /**
    * Number of unread items (notifications + announcements) in this account.
    */
   unread: number;
@@ -343,12 +365,7 @@ export interface NotificationUnreadSummaryAccount {
  */
 export interface SendNotificationRequest {
   /**
-   * Optional preview/body text.
-   */
-  body: string | null;
-
-  /**
-   * Category of the notification (e.g. "order.updated", "system.broadcast").
+   * Category of the notification.
    */
   category:
     | 'chat.message'
@@ -359,14 +376,38 @@ export interface SendNotificationRequest {
     | 'system.broadcast';
 
   /**
-   * Optional typed link target ID.
+   * NotificationTargetInput selects what a notification send is aimed at — a
+   * polymorphic target (like an actor reference) carrying a type and the id it
+   * refers to. Modeling the target as a typed reference rather than a single id (or
+   * a broadcast flag) lets new target kinds be added without a breaking change.
+   *
+   * Supported types:
+   *
+   * - `account_user`: `id` is an account_user id; delivers a per-user notification.
+   * - `account`: `id` is an account id; broadcasts an announcement to every user in
+   *   the account.
    */
-  link_resource_id: string | null;
+  target: NotificationTargetInput;
 
   /**
-   * Optional typed link target type (e.g. `sales_order`).
+   * Human-readable title.
    */
-  link_resource_type:
+  title: string;
+
+  /**
+   * Optional preview/body text.
+   */
+  body?: string;
+
+  /**
+   * Optional typed link target ID.
+   */
+  link_resource_id?: string;
+
+  /**
+   * Optional typed link target type.
+   */
+  link_resource_type?:
     | 'account'
     | 'actor'
     | 'entity'
@@ -411,6 +452,8 @@ export interface SendNotificationRequest {
     | 'announcement'
     | 'conversation'
     | 'conversation_participant'
+    | 'chat_message'
+    | 'notification_unread_summary_account'
     | 'messaging_block'
     | 'sender_identity'
     | 'notification_preference'
@@ -595,45 +638,25 @@ export interface SendNotificationRequest {
     | 'hubspot_sync_job'
     | 'hubspot_sync_report'
     | 'hubspot_company_review'
-    | 'hubspot_company_candidate'
-    | null;
+    | 'hubspot_company_candidate';
 
   /**
    * Optional delivery priority.
    *
    * Defaults to `normal`.
    */
-  priority: 'low' | 'normal' | 'high' | 'urgent' | null;
-
-  /**
-   * NotificationTargetInput selects what a notification send is aimed at — a
-   * polymorphic target (like an actor reference) carrying a type and the id it
-   * refers to. Modeling the target as a typed reference rather than a single id (or
-   * a broadcast flag) lets new target kinds be added without a breaking change.
-   *
-   * Supported types:
-   *
-   * - `account_user`: `id` is an account_user id; delivers a per-user notification.
-   * - `account`: `id` is an account id; broadcasts an announcement to every user in
-   *   the account.
-   */
-  target: NotificationTargetInput | null;
+  priority?: 'low' | 'normal' | 'high' | 'urgent';
 
   /**
    * Optional i18n template key for client-side localization.
    */
-  template_key: string | null;
+  template_key?: string;
 
   /**
    * Optional parameters for the i18n template, as JSON. Encoded as a JSON value
    * (object, array, string, number, boolean, or null), not a JSON-encoded string.
    */
-  template_params: unknown | null;
-
-  /**
-   * Human-readable title.
-   */
-  title: string;
+  template_params?: unknown | null;
 }
 
 /**
@@ -667,12 +690,7 @@ export interface Sender {
 
 export interface NotificationCreateParams {
   /**
-   * Optional preview/body text.
-   */
-  body: string | null;
-
-  /**
-   * Category of the notification (e.g. "order.updated", "system.broadcast").
+   * Category of the notification.
    */
   category:
     | 'chat.message'
@@ -683,14 +701,38 @@ export interface NotificationCreateParams {
     | 'system.broadcast';
 
   /**
-   * Optional typed link target ID.
+   * NotificationTargetInput selects what a notification send is aimed at — a
+   * polymorphic target (like an actor reference) carrying a type and the id it
+   * refers to. Modeling the target as a typed reference rather than a single id (or
+   * a broadcast flag) lets new target kinds be added without a breaking change.
+   *
+   * Supported types:
+   *
+   * - `account_user`: `id` is an account_user id; delivers a per-user notification.
+   * - `account`: `id` is an account id; broadcasts an announcement to every user in
+   *   the account.
    */
-  link_resource_id: string | null;
+  target: NotificationTargetInput;
 
   /**
-   * Optional typed link target type (e.g. `sales_order`).
+   * Human-readable title.
    */
-  link_resource_type:
+  title: string;
+
+  /**
+   * Optional preview/body text.
+   */
+  body?: string;
+
+  /**
+   * Optional typed link target ID.
+   */
+  link_resource_id?: string;
+
+  /**
+   * Optional typed link target type.
+   */
+  link_resource_type?:
     | 'account'
     | 'actor'
     | 'entity'
@@ -735,6 +777,8 @@ export interface NotificationCreateParams {
     | 'announcement'
     | 'conversation'
     | 'conversation_participant'
+    | 'chat_message'
+    | 'notification_unread_summary_account'
     | 'messaging_block'
     | 'sender_identity'
     | 'notification_preference'
@@ -919,45 +963,25 @@ export interface NotificationCreateParams {
     | 'hubspot_sync_job'
     | 'hubspot_sync_report'
     | 'hubspot_company_review'
-    | 'hubspot_company_candidate'
-    | null;
+    | 'hubspot_company_candidate';
 
   /**
    * Optional delivery priority.
    *
    * Defaults to `normal`.
    */
-  priority: 'low' | 'normal' | 'high' | 'urgent' | null;
-
-  /**
-   * NotificationTargetInput selects what a notification send is aimed at — a
-   * polymorphic target (like an actor reference) carrying a type and the id it
-   * refers to. Modeling the target as a typed reference rather than a single id (or
-   * a broadcast flag) lets new target kinds be added without a breaking change.
-   *
-   * Supported types:
-   *
-   * - `account_user`: `id` is an account_user id; delivers a per-user notification.
-   * - `account`: `id` is an account id; broadcasts an announcement to every user in
-   *   the account.
-   */
-  target: NotificationTargetInput | null;
+  priority?: 'low' | 'normal' | 'high' | 'urgent';
 
   /**
    * Optional i18n template key for client-side localization.
    */
-  template_key: string | null;
+  template_key?: string;
 
   /**
    * Optional parameters for the i18n template, as JSON. Encoded as a JSON value
    * (object, array, string, number, boolean, or null), not a JSON-encoded string.
    */
-  template_params: unknown | null;
-
-  /**
-   * Human-readable title.
-   */
-  title: string;
+  template_params?: unknown | null;
 }
 
 export interface NotificationListParams {
