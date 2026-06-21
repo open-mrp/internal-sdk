@@ -15,6 +15,8 @@ export class Territories extends APIResource {
   /**
    * Creates a territory that assigns a sales rep to a state or ZIP code range.
    *
+   * This endpoint requires the permission: `sales_rep_territories:create`.
+   *
    * @example
    * ```ts
    * const territory =
@@ -41,6 +43,8 @@ export class Territories extends APIResource {
   /**
    * Returns a territory by ID.
    *
+   * This endpoint requires the permission: `sales_rep_territories:read`.
+   *
    * @example
    * ```ts
    * const territory =
@@ -57,6 +61,8 @@ export class Territories extends APIResource {
 
   /**
    * Partially updates a territory.
+   *
+   * This endpoint requires the permission: `sales_rep_territories:update`.
    *
    * @example
    * ```ts
@@ -82,6 +88,8 @@ export class Territories extends APIResource {
   /**
    * Returns a paginated list of territories.
    *
+   * This endpoint requires the permission: `sales_rep_territories:read`.
+   *
    * @example
    * ```ts
    * const listTerritory =
@@ -100,6 +108,8 @@ export class Territories extends APIResource {
 
   /**
    * Deletes a territory.
+   *
+   * This endpoint requires the permission: `sales_rep_territories:delete`.
    *
    * @example
    * ```ts

@@ -14,6 +14,8 @@ export class Analytics extends APIResource {
    * Returns aggregated quantities of open (unclosed) batches, grouped by department,
    * item, and scanning station.
    *
+   * This endpoint requires the permission: `batches:read`.
+   *
    * @example
    * ```ts
    * const listOpenBatchSummary =

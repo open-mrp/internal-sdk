@@ -4,6 +4,8 @@ import { APIResource } from '../../../core/resource';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as StripeAPI from './stripe';
 import { Stripe, StripePublishableKey, StripeStatus } from './stripe';
+import * as HubspotAPI from './hubspot/hubspot';
+import { Hubspot } from './hubspot/hubspot';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -13,6 +15,7 @@ import { path } from '../../../internal/utils/path';
  */
 export class Integrations extends APIResource {
   stripe: StripeAPI.Stripe = new StripeAPI.Stripe(this._client);
+  hubspot: HubspotAPI.Hubspot = new HubspotAPI.Hubspot(this._client);
 
   /**
    * Creates an account integration, or updates the name and credentials of an
@@ -21,6 +24,8 @@ export class Integrations extends APIResource {
    * Credentials are validated for the provider, encrypted at rest, and never
    * returned in API responses. An account can have at most one integration per
    * integration code.
+   *
+   * This endpoint requires the `admin` role type.
    *
    * @example
    * ```ts
@@ -44,6 +49,8 @@ export class Integrations extends APIResource {
    * endpoint; to rotate credentials, call Create Account Integration again with the
    * same integration code.
    *
+   * This endpoint requires the `admin` role type.
+   *
    * @example
    * ```ts
    * const accountIntegration =
@@ -64,6 +71,8 @@ export class Integrations extends APIResource {
   /**
    * Returns a paginated list of account integrations for the target account.
    *
+   * This endpoint requires the `admin` role type.
+   *
    * @example
    * ```ts
    * const listAccountIntegration =
@@ -79,6 +88,8 @@ export class Integrations extends APIResource {
 
   /**
    * Deletes an account integration and returns the deleted resource.
+   *
+   * This endpoint requires the `admin` role type.
    *
    * @example
    * ```ts
@@ -283,6 +294,7 @@ export interface IntegrationListParams {
 }
 
 Integrations.Stripe = Stripe;
+Integrations.Hubspot = Hubspot;
 
 export declare namespace Integrations {
   export {
@@ -300,4 +312,6 @@ export declare namespace Integrations {
     type StripePublishableKey as StripePublishableKey,
     type StripeStatus as StripeStatus,
   };
+
+  export { Hubspot as Hubspot };
 }

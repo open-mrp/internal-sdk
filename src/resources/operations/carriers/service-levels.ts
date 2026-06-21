@@ -13,6 +13,8 @@ export class ServiceLevels extends APIResource {
   /**
    * Creates a service level for a carrier.
    *
+   * This endpoint requires the permission: `carriers:create`.
+   *
    * @example
    * ```ts
    * const serviceLevel =
@@ -42,6 +44,9 @@ export class ServiceLevels extends APIResource {
   /**
    * Returns a service level by ID.
    *
+   * This endpoint requires the permissions: `carriers:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const serviceLevel =
@@ -67,6 +72,8 @@ export class ServiceLevels extends APIResource {
    * Partially updates a service level.
    *
    * System-owned service levels cannot be updated.
+   *
+   * This endpoint requires the permission: `carriers:update`.
    *
    * @example
    * ```ts
@@ -96,6 +103,9 @@ export class ServiceLevels extends APIResource {
   /**
    * Returns a paginated list of service levels for a carrier.
    *
+   * This endpoint requires the permissions: `carriers:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listServiceLevel =
@@ -117,6 +127,8 @@ export class ServiceLevels extends APIResource {
    *
    * System-owned service levels and the carrier's default service level cannot be
    * deleted; unset `is_default` first to delete a default.
+   *
+   * This endpoint requires the permission: `carriers:delete`.
    *
    * @example
    * ```ts

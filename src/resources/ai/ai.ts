@@ -68,7 +68,23 @@ export class AI extends APIResource {
   memories: MemoriesAPI.Memories = new MemoriesAPI.Memories(this._client);
 
   /**
+   * Returns the LLM models that can be selected in an agent's configuration.
+   *
+   * This endpoint requires the permission: `agents:read`.
+   *
+   * @example
+   * ```ts
+   * const listModel = await client.ai.retrieveModels();
+   * ```
+   */
+  retrieveModels(options?: RequestOptions): APIPromise<ListModel> {
+    return this._client.get('/v1/ai/models', options);
+  }
+
+  /**
    * Returns a paginated list of tool groups.
+   *
+   * This endpoint requires the permission: `agents:read`.
    *
    * @example
    * ```ts
@@ -85,6 +101,8 @@ export class AI extends APIResource {
   /**
    * Returns a paginated list of tools that can be assigned to agents.
    *
+   * This endpoint requires the permission: `agents:read`.
+   *
    * @example
    * ```ts
    * const listAvailableTool = await client.ai.retrieveTools();
@@ -100,6 +118,8 @@ export class AI extends APIResource {
   /**
    * Returns a paginated list of daily agent token usage records for the current
    * account.
+   *
+   * This endpoint requires the permission: `agents:read`.
    *
    * @example
    * ```ts
@@ -172,11 +192,6 @@ export interface AgentTokenUsage {
  */
 export interface AvailableTool {
   /**
-   * Tool ID.
-   */
-  id: string;
-
-  /**
    * Category grouping for the tool (e.g. `built_in`).
    */
   category: string;
@@ -223,6 +238,18 @@ export interface AvailableTool {
    * `products:read`).
    */
   required_permissions: Array<string>;
+
+  /**
+   * Role type the caller must have for this tool, when the operation is gated by
+   * role rather than a permission (e.g. `admin`). Null when there is no role-type
+   * requirement.
+   */
+  required_role_type: string | null;
+
+  /**
+   * A stable identifier used when attaching the tool to an agent.
+   */
+  slug: string;
 }
 
 /**
@@ -268,6 +295,26 @@ export interface ListAvailableTool {
 /**
  * List represents a paginated list of resources.
  */
+export interface ListModel {
+  /**
+   * Resources in this page.
+   */
+  data: Array<Model>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
 export interface ListToolGroup {
   /**
    * Resources in this page.
@@ -283,6 +330,39 @@ export interface ListToolGroup {
    * PageInfo contains URL-based pagination metadata.
    */
   page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * LLM model that agents can be configured to use.
+ */
+export interface Model {
+  /**
+   * Stable code used to select this model in an agent's configuration (e.g.
+   * `gpt-4o`).
+   */
+  code:
+    | 'claude-opus-4.8'
+    | 'claude-sonnet-4.6'
+    | 'claude-sonnet-4'
+    | 'claude-haiku-4.5'
+    | 'gpt-5.5'
+    | 'gpt-4o'
+    | 'gpt-4o-mini';
+
+  /**
+   * Human-readable display name (e.g. `GPT-4o`).
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'model';
+
+  /**
+   * Company that provides the model (e.g. `OpenAI`).
+   */
+  provider: string;
 }
 
 /**
@@ -410,7 +490,9 @@ export declare namespace AI {
     type AvailableTool as AvailableTool,
     type ListAgentTokenUsage as ListAgentTokenUsage,
     type ListAvailableTool as ListAvailableTool,
+    type ListModel as ListModel,
     type ListToolGroup as ListToolGroup,
+    type Model as Model,
     type ToolGroup as ToolGroup,
     type AIRetrieveToolGroupsParams as AIRetrieveToolGroupsParams,
     type AIRetrieveToolsParams as AIRetrieveToolsParams,

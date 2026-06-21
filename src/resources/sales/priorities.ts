@@ -14,6 +14,8 @@ export class Priorities extends APIResource {
   /**
    * Returns a priority by ID or code.
    *
+   * This endpoint requires the permission: `priorities:read`.
+   *
    * @example
    * ```ts
    * const priority = await client.sales.priorities.retrieve(
@@ -31,6 +33,8 @@ export class Priorities extends APIResource {
 
   /**
    * Returns a paginated list of priorities.
+   *
+   * This endpoint requires the permission: `priorities:read`.
    *
    * @example
    * ```ts

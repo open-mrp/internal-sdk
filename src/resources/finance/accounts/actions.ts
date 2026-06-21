@@ -16,6 +16,8 @@ export class Actions extends APIResource {
    * The email carries an Excel attachment listing the customer's outstanding
    * receivables and open credits.
    *
+   * This endpoint requires the permission: `customers:read`.
+   *
    * @example
    * ```ts
    * const response =

@@ -20,6 +20,8 @@ export class Alerts extends APIResource {
   /**
    * Returns an agent alert by ID.
    *
+   * This endpoint requires the permission: `agents:read`.
+   *
    * @example
    * ```ts
    * const agentAlert = await client.ai.alerts.retrieve(
@@ -37,6 +39,8 @@ export class Alerts extends APIResource {
 
   /**
    * Returns a paginated list of agent alerts for the current account.
+   *
+   * This endpoint requires the permission: `agents:read`.
    *
    * @example
    * ```ts
@@ -88,8 +92,8 @@ export interface AgentAction {
   /**
    * Arguments passed to the tool, as JSON.
    *
-   * Shape depends on `tool_slug`. Encoded as a JSON value (object, array, string,
-   * number, boolean, or null), not a JSON-encoded string.
+   * Shape depends on `tool`. Encoded as a JSON value (object, array, string, number,
+   * boolean, or null), not a JSON-encoded string.
    */
   input: unknown | null;
 
@@ -107,8 +111,8 @@ export interface AgentAction {
    * Result returned by the tool, as JSON.
    *
    * Recorded when the tool runs, so it is present even while the action is still
-   * `pending_review` or `auto_approved`; the shape depends on `tool_slug`, and it is
-   * `{}` when the tool returned no output. Encoded as a JSON value (object, array,
+   * `pending_review` or `auto_approved`; the shape depends on `tool`, and it is `{}`
+   * when the tool returned no output. Encoded as a JSON value (object, array,
    * string, number, boolean, or null), not a JSON-encoded string.
    */
   output: unknown | null;
@@ -146,25 +150,21 @@ export interface AgentAction {
   status: 'pending_review' | 'auto_approved' | 'approved' | 'rejected' | 'executed' | 'failed';
 
   /**
-   * Slug of the tool the agent invoked for this action.
+   * The tool the agent invoked for this action.
    *
    * - `save_memory`: store an observation about a customer or product.
    * - `update_memory`: update an existing memory entry.
    * - `delete_memory`: delete a memory entry.
    * - `create_alert`: raise an alert that requires human attention.
-   * - `search_products`: search for products by keyword.
-   * - `list_products`: list all products in the account catalog.
    * - `lookup_customer`: look up a customer by email.
    * - `create_artifact`: create an artifact such as a report, document, or data
    *   export.
    * - `read_doc`: read Augno documentation pages.
    * - `fetch_url`: fetch content from a public URL.
    */
-  tool_slug:
+  tool:
     | 'save_memory'
     | 'create_alert'
-    | 'search_products'
-    | 'list_products'
     | 'lookup_customer'
     | 'create_artifact'
     | 'update_memory'

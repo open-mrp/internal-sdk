@@ -14,6 +14,8 @@ export class Units extends APIResource {
    * Adds a unit to a unit group. If the unit is already in the group, its existing
    * association is updated with the provided settings instead.
    *
+   * This endpoint requires the permission: `unit_groups:update`.
+   *
    * @example
    * ```ts
    * const unitGroupUnit =
@@ -43,6 +45,8 @@ export class Units extends APIResource {
   /**
    * Returns an associated unit within a unit group by ID.
    *
+   * This endpoint requires the permission: `unit_groups:read`.
+   *
    * @example
    * ```ts
    * const unitGroupUnit =
@@ -66,6 +70,8 @@ export class Units extends APIResource {
 
   /**
    * Partially updates an associated unit within a unit group.
+   *
+   * This endpoint requires the permission: `unit_groups:update`.
    *
    * @example
    * ```ts
@@ -96,6 +102,8 @@ export class Units extends APIResource {
   /**
    * Returns a list of associated units within a unit group.
    *
+   * This endpoint requires the permission: `unit_groups:read`.
+   *
    * @example
    * ```ts
    * const listUnitGroupUnit =
@@ -114,6 +122,8 @@ export class Units extends APIResource {
 
   /**
    * Removes a unit from a unit group. The unit itself is not deleted.
+   *
+   * This endpoint requires the permission: `unit_groups:delete`.
    *
    * @example
    * ```ts

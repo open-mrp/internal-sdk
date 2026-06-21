@@ -16,6 +16,9 @@ export class Actions extends APIResource {
    * Reactivation consumes a seat, so the request fails if the account is at its seat
    * limit. Activating an already-active user is a no-op.
    *
+   * This endpoint requires the permissions: `team:update`, `customers:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const response =
@@ -35,6 +38,9 @@ export class Actions extends APIResource {
    * revoked. Admin users cannot be disabled, you cannot disable yourself, and
    * removed users must be activated before they can be disabled.
    *
+   * This endpoint requires the permissions: `team:update`, `customers:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const response =
@@ -52,6 +58,9 @@ export class Actions extends APIResource {
    *
    * Removal is a soft delete: removed users are excluded from listings unless
    * requested via `removed_scope`, and can be restored with the activate action.
+   *
+   * This endpoint requires the permissions: `team:delete`, `customers:update`,
+   * `suppliers:update`.
    *
    * @example
    * ```ts

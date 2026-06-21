@@ -19,6 +19,8 @@ export class Customers extends APIResource {
    * one already exists. Use Update Customer Product Line Access to change an
    * existing record.
    *
+   * This endpoint requires the permission: `relevant_products:create`.
+   *
    * @example
    * ```ts
    * const customerProductLineAccess =
@@ -35,6 +37,8 @@ export class Customers extends APIResource {
   /**
    * Returns a customer's direct product line access record.
    *
+   * This endpoint requires the permission: `relevant_products:read`.
+   *
    * @example
    * ```ts
    * const customerProductLineAccess =
@@ -49,6 +53,8 @@ export class Customers extends APIResource {
 
   /**
    * Replaces a customer's direct product line access with the provided set.
+   *
+   * This endpoint requires the permission: `relevant_products:update`.
    *
    * @example
    * ```ts
@@ -73,6 +79,8 @@ export class Customers extends APIResource {
   /**
    * Returns a paginated list of product line access records grouped by customer.
    *
+   * This endpoint requires the permission: `relevant_products:read`.
+   *
    * @example
    * ```ts
    * const listCustomerProductLineAccess =
@@ -91,6 +99,8 @@ export class Customers extends APIResource {
    *
    * Access the customer inherits through its type group or pricing groups is not
    * affected.
+   *
+   * This endpoint requires the permission: `relevant_products:delete`.
    *
    * @example
    * ```ts

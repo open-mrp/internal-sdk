@@ -13,6 +13,8 @@ export class Analytics extends APIResource {
    * Returns weeks-of-sales metrics per product line, including on-hand quantity,
    * average weekly sales, and weeks of inventory remaining.
    *
+   * This endpoint requires the permission: `inventory:read`.
+   *
    * @example
    * ```ts
    * const analyzeWeeksOfSalesResponse =
@@ -29,6 +31,8 @@ export class Analytics extends APIResource {
   /**
    * Returns delivery performance statistics over a date range, including on-time
    * rates, average delivery times, and time-to-first-shipment metrics.
+   *
+   * This endpoint requires the permission: `invoices:read`.
    *
    * @example
    * ```ts
@@ -56,6 +60,8 @@ export class Analytics extends APIResource {
    * Returns demand forecasts for items, including historical data and projected
    * demand with confidence bounds.
    *
+   * This endpoint requires the permission: `invoices:read`.
+   *
    * @example
    * ```ts
    * const analyzeDemandForecastResponse =
@@ -78,6 +84,8 @@ export class Analytics extends APIResource {
    * Returns inventory receipt summaries including remaining quantities, costs, and
    * values.
    *
+   * This endpoint requires the permission: `materials:read`.
+   *
    * @example
    * ```ts
    * const analyzeInventoryReceiptsResponse =
@@ -98,6 +106,8 @@ export class Analytics extends APIResource {
   /**
    * Returns a single manufacturing analytics metric for a specified date range and
    * type.
+   *
+   * This endpoint requires the permission: `invoices:read`.
    *
    * @example
    * ```ts
@@ -120,6 +130,8 @@ export class Analytics extends APIResource {
    * Returns manufacturing metrics for a current period compared against a comparison
    * period, including production, costs per unit, margin, quality, and labor
    * efficiency.
+   *
+   * This endpoint requires the permission: `invoices:read`.
    *
    * @example
    * ```ts
@@ -147,6 +159,8 @@ export class Analytics extends APIResource {
    * Returns material inventory and demand analytics per material, including
    * quantities, unit groups, and supplier information.
    *
+   * This endpoint requires the permission: `materials:read`.
+   *
    * @example
    * ```ts
    * const analyzeMaterialsResponse =
@@ -166,6 +180,8 @@ export class Analytics extends APIResource {
   /**
    * Returns time series data of new customer acquisitions over a specified date
    * range.
+   *
+   * This endpoint requires the permission: `customers:read`.
    *
    * @example
    * ```ts
@@ -189,6 +205,8 @@ export class Analytics extends APIResource {
    * Returns Overall Equipment Effectiveness (OEE) metrics by department, including
    * good units, waste units, and estimated runtime hours.
    *
+   * This endpoint requires the permission: `invoices:read`.
+   *
    * @example
    * ```ts
    * const analyzeOeeResponse =
@@ -205,6 +223,8 @@ export class Analytics extends APIResource {
 
   /**
    * Returns open batch summaries grouped by scanning station.
+   *
+   * This endpoint requires the permission: `batches:read`.
    *
    * @example
    * ```ts
@@ -224,6 +244,8 @@ export class Analytics extends APIResource {
 
   /**
    * Returns detailed order entry records.
+   *
+   * This endpoint requires the permission: `sales_orders:read`.
    *
    * @example
    * ```ts
@@ -245,6 +267,8 @@ export class Analytics extends APIResource {
 
   /**
    * Returns aggregated production cost breakdowns by department and category.
+   *
+   * This endpoint requires the permission: `batches:read`.
    *
    * @example
    * ```ts
@@ -269,6 +293,8 @@ export class Analytics extends APIResource {
   /**
    * Returns yearly order totals broken down by quarter.
    *
+   * This endpoint requires the permission: `invoices:read`.
+   *
    * @example
    * ```ts
    * const analyzeQuarterlyOrdersResponse =
@@ -290,6 +316,8 @@ export class Analytics extends APIResource {
 
   /**
    * Returns detailed sales entry records over a specified date range.
+   *
+   * This endpoint requires the permission: `invoices:read`.
    *
    * @example
    * ```ts
@@ -1408,7 +1436,26 @@ export interface Entity {
     | 'agent_token_usage'
     | 'agent_memory'
     | 'agent_alert'
+    | 'notification'
+    | 'notification_unread_count'
+    | 'notification_send_result'
+    | 'notification_unread_summary'
+    | 'sender'
+    | 'announcement'
+    | 'conversation'
+    | 'conversation_participant'
+    | 'chat_message'
+    | 'notification_unread_summary_account'
+    | 'messaging_block'
+    | 'sender_identity'
+    | 'notification_preference'
+    | 'message_attachment'
+    | 'attachment_upload_target'
+    | 'scheduled_message'
+    | 'messaging_contact'
+    | 'message_report'
     | 'tool_group'
+    | 'model'
     | 'payment_term'
     | 'shipping_term'
     | 'quantity'
@@ -1579,7 +1626,11 @@ export interface Entity {
     | 'allocation_customer'
     | 'checkout_sales_order_response'
     | 'create_production_run_response'
-    | 'sales_order_price_quote';
+    | 'sales_order_price_quote'
+    | 'hubspot_sync_job'
+    | 'hubspot_sync_report'
+    | 'hubspot_company_review'
+    | 'hubspot_company_candidate';
 }
 
 /**

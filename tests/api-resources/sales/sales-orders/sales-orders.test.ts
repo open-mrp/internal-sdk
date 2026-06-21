@@ -38,7 +38,6 @@ describe('resource salesOrders', () => {
         {
           product_id: 'pd_013c29ab3f1518d0004094c316',
           quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
-          edi_line_item_id: 'edi_line_item_id',
           product_description: 'product_description',
           product_sku: 'product_sku',
           unit_price: {
@@ -152,7 +151,6 @@ describe('resource salesOrders', () => {
           customer_group_ids: ['string'],
           customer_ids: ['string'],
           end_date: 'end_date',
-          exclude_internal_orders: true,
           include: ['customer'],
           item_ids: ['string'],
           limit: 0,

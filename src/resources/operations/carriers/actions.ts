@@ -16,6 +16,8 @@ export class Actions extends APIResource {
    *
    * Not available in sandbox mode.
    *
+   * This endpoint requires the permission: `carriers:update`.
+   *
    * @example
    * ```ts
    * const oauthResponse =
@@ -46,6 +48,8 @@ export class Actions extends APIResource {
    * customer portal) and previously synced ones no longer offered are removed;
    * manually created service levels are untouched. Only available for Shippo-managed
    * carriers; not available in sandbox mode.
+   *
+   * This endpoint requires the permission: `carriers:update`.
    *
    * @example
    * ```ts
