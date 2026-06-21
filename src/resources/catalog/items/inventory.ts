@@ -18,6 +18,8 @@ export class Inventory extends APIResource {
    * exactly `quantity_change`. The change is recorded in the item's inventory audit
    * trail as a user correction.
    *
+   * This endpoint requires the permission: `items:update`.
+   *
    * @example
    * ```ts
    * const inventory =
@@ -44,6 +46,8 @@ export class Inventory extends APIResource {
   /**
    * Returns inventory quantities for an item, including on-hand, reserved,
    * available-to-promise, and short amounts.
+   *
+   * This endpoint requires the permission: `items:read`.
    *
    * @example
    * ```ts

@@ -17,6 +17,8 @@ export class Agents extends APIResource {
    * The new agent has `definition_type` `custom` and is immediately `active` for the
    * account.
    *
+   * This endpoint requires the permission: `agents:create`.
+   *
    * @example
    * ```ts
    * const agentDefinition = await client.ai.agents.create({
@@ -25,7 +27,6 @@ export class Agents extends APIResource {
    *     system_prompt:
    *       'You are an order processing agent. Parse incoming emails and create draft orders.',
    *     model: 'claude-sonnet-4',
-   *     provider: 'anthropic',
    *     temperature: 0.2,
    *     trigger_config: { event_filters: ['email.received'] },
    *   },
@@ -37,7 +38,7 @@ export class Agents extends APIResource {
    *   role_id: 'rl_01c16d2eb637c0d1f3a372937c',
    *   tools: [
    *     {
-   *       tool_id: 'tdef_01f0c4d04780ace864e6cc3a74',
+   *       tool: 'lookup_customer',
    *       sort_order: 1,
    *       require_review: true,
    *     },
@@ -52,6 +53,8 @@ export class Agents extends APIResource {
 
   /**
    * Returns an agent definition by ID.
+   *
+   * This endpoint requires the permission: `agents:read`.
    *
    * @example
    * ```ts
@@ -74,6 +77,8 @@ export class Agents extends APIResource {
    * Only the fields provided in the request are changed. System agents cannot be
    * modified.
    *
+   * This endpoint requires the permission: `agents:update`.
+   *
    * @example
    * ```ts
    * const agentDefinition = await client.ai.agents.update(
@@ -94,6 +99,8 @@ export class Agents extends APIResource {
   /**
    * Returns a paginated list of agent definitions for the current account.
    *
+   * This endpoint requires the permission: `agents:read`.
+   *
    * @example
    * ```ts
    * const listAgentDefinition = await client.ai.agents.list();
@@ -112,6 +119,8 @@ export class Agents extends APIResource {
    * The agent is soft-deleted and can no longer be run or modified. System agents
    * cannot be deleted.
    *
+   * This endpoint requires the permission: `agents:delete`.
+   *
    * @example
    * ```ts
    * const agent = await client.ai.agents.delete(
@@ -129,6 +138,8 @@ export class Agents extends APIResource {
    * Sets the account-level status without modifying the underlying agent definition,
    * so it works for both `system` and `custom` agents. Returns the updated agent
    * definition.
+   *
+   * This endpoint requires the permission: `agents:update`.
    *
    * @example
    * ```ts
@@ -259,21 +270,23 @@ export interface AgentDefinition {
  */
 export interface AgentDefinitionConfig {
   /**
-   * LLM model identifier (e.g. `claude-sonnet-4`).
+   * The model the agent runs on (e.g. `claude-sonnet-4`). Available models can be
+   * discovered with the List Models endpoint (`GET /v1/ai/models`).
    */
-  model: string | null;
+  model:
+    | 'claude-opus-4.8'
+    | 'claude-sonnet-4.6'
+    | 'claude-sonnet-4'
+    | 'claude-haiku-4.5'
+    | 'gpt-5.5'
+    | 'gpt-4o'
+    | 'gpt-4o-mini'
+    | null;
 
   /**
    * Resource type identifier.
    */
   object: 'agent_definition_config';
-
-  /**
-   * LLM provider name (e.g. `anthropic`, `openai`).
-   *
-   * Inferred from `model` if omitted.
-   */
-  provider: string | null;
 
   /**
    * System prompt / instructions for the agent.
@@ -346,16 +359,17 @@ export interface AgentDefinitionTool {
  */
 export interface ConfigInput {
   /**
-   * LLM model identifier (e.g. `claude-sonnet-4`).
+   * The model the agent runs on (e.g. `claude-sonnet-4`). Available models can be
+   * discovered with the List Models endpoint (`GET /v1/ai/models`).
    */
-  model?: string;
-
-  /**
-   * LLM provider name (e.g. `anthropic`, `openai`).
-   *
-   * Inferred from `model` if omitted.
-   */
-  provider?: string;
+  model?:
+    | 'claude-opus-4.8'
+    | 'claude-sonnet-4.6'
+    | 'claude-sonnet-4'
+    | 'claude-haiku-4.5'
+    | 'gpt-5.5'
+    | 'gpt-4o'
+    | 'gpt-4o-mini';
 
   /**
    * System prompt / instructions for the agent.
@@ -476,12 +490,20 @@ export interface ListAgentDefinitionTool {
  */
 export interface ToolInput {
   /**
-   * ID of the tool to attach.
+   * The tool to attach.
    *
-   * Available tool IDs can be discovered with the List Tools endpoint
+   * Available tools can be discovered with the List Tools endpoint
    * (`GET /v1/ai/tools`).
    */
-  tool_id: string;
+  tool:
+    | 'save_memory'
+    | 'create_alert'
+    | 'lookup_customer'
+    | 'create_artifact'
+    | 'update_memory'
+    | 'delete_memory'
+    | 'read_doc'
+    | 'fetch_url';
 
   /**
    * JSON-encoded configuration for this tool instance.

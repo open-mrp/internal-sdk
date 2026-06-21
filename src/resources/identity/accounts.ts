@@ -13,6 +13,8 @@ export class Accounts extends APIResource {
   /**
    * Returns an account by ID.
    *
+   * This endpoint requires the permission: `self:read`.
+   *
    * @example
    * ```ts
    * const account = await client.identity.accounts.retrieve(
@@ -33,6 +35,8 @@ export class Accounts extends APIResource {
    *
    * Only the fields provided in the request are changed. You can only update the
    * account you are acting in.
+   *
+   * This endpoint requires the permission: `self:update`.
    *
    * @example
    * ```ts
@@ -75,6 +79,8 @@ export class Accounts extends APIResource {
    * Send the image as the raw request body, not as multipart form data. The uploaded
    * image replaces any existing logo and can be retrieved via the Get Account Logo
    * URL endpoint. You can only upload a logo for the account you are acting in.
+   *
+   * This endpoint requires the permission: `self:update`.
    *
    * @example
    * ```ts

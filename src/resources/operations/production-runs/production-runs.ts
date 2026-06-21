@@ -27,6 +27,8 @@ export class ProductionRuns extends APIResource {
    * The run number is assigned automatically as the next sequential number for the
    * account.
    *
+   * This endpoint requires the permission: `production_runs:create`.
+   *
    * @example
    * ```ts
    * const productionRunDetail =
@@ -42,6 +44,8 @@ export class ProductionRuns extends APIResource {
 
   /**
    * Returns a production run by ID.
+   *
+   * This endpoint requires the permission: `production_runs:read`.
    *
    * @example
    * ```ts
@@ -63,6 +67,8 @@ export class ProductionRuns extends APIResource {
    * Partially updates a production run.
    *
    * Fails if the run has been completed.
+   *
+   * This endpoint requires the permission: `production_runs:update`.
    *
    * @example
    * ```ts
@@ -92,6 +98,8 @@ export class ProductionRuns extends APIResource {
   /**
    * Returns a paginated list of production runs.
    *
+   * This endpoint requires the permission: `production_runs:read`.
+   *
    * @example
    * ```ts
    * const listProductionRunSummary =
@@ -110,6 +118,8 @@ export class ProductionRuns extends APIResource {
    *
    * All batches recorded against the run are deleted, linked orders are detached
    * from the run, and reserved inventory for those orders is released.
+   *
+   * This endpoint requires the permission: `production_runs:delete`.
    *
    * @example
    * ```ts

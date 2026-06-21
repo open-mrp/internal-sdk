@@ -15,6 +15,8 @@ export class Batches extends APIResource {
    *
    * Fails if the run has been completed.
    *
+   * This endpoint requires the permission: `production_runs:update`.
+   *
    * @example
    * ```ts
    * const listBatch =
@@ -44,6 +46,8 @@ export class Batches extends APIResource {
 
   /**
    * Returns a paginated list of batches associated with a production run.
+   *
+   * This endpoint requires the permission: `production_runs:read`.
    *
    * @example
    * ```ts

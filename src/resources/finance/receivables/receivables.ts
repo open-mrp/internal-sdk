@@ -19,6 +19,8 @@ export class Receivables extends APIResource {
    * Returns a paginated list of outstanding receivable entries for the current
    * account.
    *
+   * This endpoint requires the permission: `invoices:read`.
+   *
    * @example
    * ```ts
    * const listReceivableEntry =

@@ -19,6 +19,8 @@ export class InventoryChangeLogs extends APIResource {
   /**
    * Returns an inventory change log by ID.
    *
+   * This endpoint requires the permission: `inventory_logs:read`.
+   *
    * @example
    * ```ts
    * const inventoryChangeLog =
@@ -37,6 +39,8 @@ export class InventoryChangeLogs extends APIResource {
 
   /**
    * Returns a paginated list of inventory change logs, newest first.
+   *
+   * This endpoint requires the permission: `inventory_logs:read`.
    *
    * @example
    * ```ts

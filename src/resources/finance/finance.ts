@@ -128,6 +128,8 @@ export class Finance extends APIResource {
    * Returns a paginated list of transactions that are not fully allocated against
    * invoices, with the remaining balance available to apply.
    *
+   * This endpoint requires the permission: `settlements:read`.
+   *
    * @example
    * ```ts
    * const listOpenCreditEntry =

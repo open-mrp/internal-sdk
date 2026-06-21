@@ -14,6 +14,8 @@ export class Actions extends APIResource {
    * Marks an agent alert as acknowledged, recording the acknowledging actor and
    * timestamp.
    *
+   * This endpoint requires the permission: `agents:update`.
+   *
    * @example
    * ```ts
    * const agentAlert =

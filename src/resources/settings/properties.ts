@@ -13,6 +13,8 @@ export class Properties extends APIResource {
   /**
    * Returns a system property by ID.
    *
+   * This endpoint requires the permission: `system_properties:read`.
+   *
    * @example
    * ```ts
    * const sysProperty =
@@ -27,6 +29,8 @@ export class Properties extends APIResource {
 
   /**
    * Partially updates the value of a system property.
+   *
+   * This endpoint requires the permission: `system_properties:update`.
    *
    * @example
    * ```ts
@@ -46,6 +50,8 @@ export class Properties extends APIResource {
 
   /**
    * Returns a paginated list of system properties for the current account.
+   *
+   * This endpoint requires the permission: `system_properties:read`.
    *
    * @example
    * ```ts
@@ -67,6 +73,8 @@ export class Properties extends APIResource {
    * current value is already used by an existing record (for example, a transaction
    * with that number), the counter is incremented before the value is returned. The
    * `sscc_count` counter is returned as-is, without a duplicate check.
+   *
+   * This endpoint requires the permission: `system_properties:update`.
    *
    * @example
    * ```ts

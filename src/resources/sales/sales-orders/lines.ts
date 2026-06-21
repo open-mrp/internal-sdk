@@ -14,6 +14,9 @@ export class Lines extends APIResource {
   /**
    * Creates a line item on a sales order.
    *
+   * This endpoint requires the permissions: `customers:update`, `suppliers:update`,
+   * `sales_orders:update`.
+   *
    * @example
    * ```ts
    * const salesOrderLine =
@@ -50,6 +53,9 @@ export class Lines extends APIResource {
   /**
    * Partially updates a sales order line item.
    *
+   * This endpoint requires the permissions: `customers:update`, `suppliers:update`,
+   * `sales_orders:update`.
+   *
    * @example
    * ```ts
    * const salesOrderLine =
@@ -83,6 +89,9 @@ export class Lines extends APIResource {
 
   /**
    * Deletes a sales order line and related records.
+   *
+   * This endpoint requires the permissions: `customers:update`, `suppliers:update`,
+   * `sales_orders:update`.
    *
    * @example
    * ```ts

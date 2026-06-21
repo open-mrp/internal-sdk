@@ -37,6 +37,8 @@ export class Batches extends APIResource {
    * After deletion, the batch's production run (if any) is closed automatically once
    * all of its batches are scanned or deleted.
    *
+   * This endpoint requires the permission: `batches:delete`.
+   *
    * @example
    * ```ts
    * const batch = await client.operations.batches.delete(
@@ -55,6 +57,8 @@ export class Batches extends APIResource {
    * The batch's flow is traversed forward and the child steps of each reachable
    * batch's current step are collected; only steps assigned to the given scanning
    * station are returned.
+   *
+   * This endpoint requires the permission: `batches:read`.
    *
    * @example
    * ```ts
@@ -84,6 +88,8 @@ export class Batches extends APIResource {
    * minus the quantities already split off into output batches, expressed in the
    * step's produced unit.
    *
+   * This endpoint requires the permission: `batches:read`.
+   *
    * @example
    * ```ts
    * const quantity =
@@ -106,6 +112,8 @@ export class Batches extends APIResource {
    * The flow is every batch connected to the given batch through input/output
    * relationships, in both directions, returned as nodes with their input and output
    * edges.
+   *
+   * This endpoint requires the permission: `batches:read`.
    *
    * @example
    * ```ts

@@ -12,6 +12,9 @@ export class Actions extends APIResource {
    * Checks whether a record number already exists on the account for the given type
    * (invoice number, sales order number, or customer PO number).
    *
+   * This endpoint requires the permissions: `invoices:read`, `sales_orders:read`,
+   * `customers:read`, `suppliers:read`.
+   *
    * @example
    * ```ts
    * const checkDuplicateResult =
@@ -35,6 +38,9 @@ export class Actions extends APIResource {
    * Delivery is asynchronous: the endpoint returns `202 Accepted` once the email is
    * queued. If the record has no configured recipients, the request succeeds without
    * sending an email.
+   *
+   * This endpoint requires the permissions: `invoices:read`, `sales_orders:read`,
+   * `purchase_orders:read`.
    *
    * @example
    * ```ts

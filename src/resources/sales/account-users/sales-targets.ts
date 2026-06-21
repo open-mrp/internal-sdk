@@ -15,6 +15,8 @@ export class SalesTargets extends APIResource {
   /**
    * Creates a sales target for an account user.
    *
+   * This endpoint requires the permission: `sales_targets:create`.
+   *
    * @example
    * ```ts
    * const salesTarget =
@@ -39,6 +41,8 @@ export class SalesTargets extends APIResource {
    * If no target with the given ID exists, one is created with the supplied dates,
    * amount, and unit. If it already exists, only the amount value is updated — the
    * dates and unit are left unchanged.
+   *
+   * This endpoint requires the permission: `sales_targets:update`.
    *
    * @example
    * ```ts
@@ -72,6 +76,8 @@ export class SalesTargets extends APIResource {
    *
    * This endpoint does not support cursor pagination; passing a `cursor` returns a
    * validation error.
+   *
+   * This endpoint requires the permission: `sales_targets:read`.
    *
    * @example
    * ```ts

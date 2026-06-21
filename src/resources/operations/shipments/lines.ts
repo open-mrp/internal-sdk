@@ -13,6 +13,8 @@ export class Lines extends APIResource {
   /**
    * Creates a line on a shipment.
    *
+   * This endpoint requires the permission: `shipments:create`.
+   *
    * @example
    * ```ts
    * const shipmentLine =
@@ -38,6 +40,9 @@ export class Lines extends APIResource {
   /**
    * Returns a shipment line by ID.
    *
+   * This endpoint requires the permissions: `shipments:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const shipmentLine =
@@ -58,6 +63,8 @@ export class Lines extends APIResource {
 
   /**
    * Partially updates a shipment line.
+   *
+   * This endpoint requires the permission: `shipments:update`.
    *
    * @example
    * ```ts
@@ -87,6 +94,9 @@ export class Lines extends APIResource {
   /**
    * Returns a paginated list of lines for the specified shipment.
    *
+   * This endpoint requires the permissions: `shipments:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listShipmentLine =
@@ -105,6 +115,8 @@ export class Lines extends APIResource {
 
   /**
    * Deletes a line from a shipment.
+   *
+   * This endpoint requires the permission: `shipments:delete`.
    *
    * @example
    * ```ts
