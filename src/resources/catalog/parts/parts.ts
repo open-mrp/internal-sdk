@@ -1,0 +1,431 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+import { APIResource } from '../../../core/resource';
+import * as APIKeysAPI from '../../auth/api-keys/api-keys';
+import * as ActionsAPI from './actions';
+import { ActionExportParams, Actions } from './actions';
+import * as AccountUsersAPI from '../../identity/account-users/account-users';
+import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
+import { APIPromise } from '../../../core/api-promise';
+import { RequestOptions } from '../../../internal/request-options';
+import { path } from '../../../internal/utils/path';
+
+/**
+ * List and manage parts.
+ */
+export class Parts extends APIResource {
+  actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
+
+  /**
+   * Creates a part with the specified SKU and category.
+   *
+   * Inventory tracking for the new part starts at a zero on-hand quantity in the
+   * category's base unit.
+   *
+   * This endpoint requires the permissions: `parts:create`, `customers:update`,
+   * `suppliers:update`.
+   *
+   * @example
+   * ```ts
+   * const part = await client.catalog.parts.create({
+   *   category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
+   *   sku: 'BRG-6204-2RS',
+   *   description: 'Deep groove ball bearing, 20x47x14mm',
+   * });
+   * ```
+   */
+  create(params: PartCreateParams, options?: RequestOptions): APIPromise<Part> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/catalog/parts', { query: { include }, body, ...options });
+  }
+
+  /**
+   * Returns a part by ID.
+   *
+   * This endpoint requires the permissions: `parts:read`, `customers:read`,
+   * `suppliers:read`.
+   *
+   * @example
+   * ```ts
+   * const part = await client.catalog.parts.retrieve(
+   *   'pt_018d7bab53e864351f4c693a21',
+   * );
+   * ```
+   */
+  retrieve(
+    id: string,
+    query: PartRetrieveParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Part> {
+    return this._client.get(path`/v1/catalog/parts/${id}`, { query, ...options });
+  }
+
+  /**
+   * Partially updates a part.
+   *
+   * Fields not provided retain their current values.
+   *
+   * This endpoint requires the permissions: `parts:update`, `customers:update`,
+   * `suppliers:update`.
+   *
+   * @example
+   * ```ts
+   * const part = await client.catalog.parts.update(
+   *   'pt_018d7bab53e864351f4c693a21',
+   *   {
+   *     description: 'Deep groove ball bearing, 20x47x14mm',
+   *     sku: 'BRG-6204-2RS',
+   *   },
+   * );
+   * ```
+   */
+  update(
+    id: string,
+    params: PartUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Part> {
+    const { include, ...body } = params ?? {};
+    return this._client.patch(path`/v1/catalog/parts/${id}`, { query: { include }, body, ...options });
+  }
+
+  /**
+   * Returns a paginated list of parts for the current account.
+   *
+   * This endpoint requires the permissions: `parts:read`, `customers:read`,
+   * `suppliers:read`.
+   *
+   * @example
+   * ```ts
+   * const listPart = await client.catalog.parts.list();
+   * ```
+   */
+  list(query: PartListParams | null | undefined = {}, options?: RequestOptions): APIPromise<ListPart> {
+    return this._client.get('/v1/catalog/parts', { query, ...options });
+  }
+
+  /**
+   * Deletes a part.
+   *
+   * This is a soft delete: the part is marked deleted and no longer returned by
+   * other endpoints, but the record is retained. Deleting an already-deleted part
+   * returns an error.
+   *
+   * This endpoint requires the permissions: `parts:delete`, `customers:update`,
+   * `suppliers:update`.
+   *
+   * @example
+   * ```ts
+   * const part = await client.catalog.parts.delete(
+   *   'pt_018d7bab53e864351f4c693a21',
+   * );
+   * ```
+   */
+  delete(id: string, options?: RequestOptions): APIPromise<Part> {
+    return this._client.delete(path`/v1/catalog/parts/${id}`, options);
+  }
+}
+
+/**
+ * Request to create a part.
+ */
+export interface CreatePartRequest {
+  /**
+   * ID of the item category to place the part in.
+   *
+   * The category's unit group determines the base unit used for the part's rates
+   * (`unit_value`, `unit_cost`, `burn_rate`).
+   */
+  category_id: string;
+
+  /**
+   * Stock keeping unit code for the part.
+   *
+   * Must be unique within the account; creating a part with a SKU already used by
+   * another item fails with a conflict error.
+   */
+  sku: string;
+
+  /**
+   * IDs of existing attributes to link to the part at creation time.
+   */
+  attribute_ids?: Array<string>;
+
+  /**
+   * Free-form description of the part.
+   */
+  description?: string;
+
+  /**
+   * Free-form notes about the part.
+   */
+  notes?: string;
+
+  /**
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
+   */
+  unit_cost?: SalesOrdersAPI.RateInput;
+
+  /**
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
+   */
+  unit_price?: SalesOrdersAPI.RateInput;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListPart {
+  /**
+   * Resources in this page.
+   */
+  data: Array<Part>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A part in the account's catalog: a component used in production.
+ *
+ * Part-level data such as the SKU, description, category, pricing, and attributes
+ * lives on the underlying `item`.
+ */
+export interface Part {
+  /**
+   * Part ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Item is an inventory item (product, material, or part).
+   */
+  item: AccountUsersAPI.Item | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'part';
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Request to partially update a part.
+ */
+export interface UpdatePartRequest {
+  /**
+   * New description for the part.
+   *
+   * Set to a string to replace the current description, or `null` to clear it.
+   */
+  description?: string | null;
+
+  /**
+   * New notes for the part.
+   *
+   * Set to a string to replace the current notes, or `null` to clear them.
+   */
+  notes?: string | null;
+
+  /**
+   * New stock keeping unit code for the part.
+   *
+   * Must remain unique within the account; a conflict error is returned if another
+   * item already uses it.
+   */
+  sku?: string;
+}
+
+export interface PartCreateParams {
+  /**
+   * Body param: ID of the item category to place the part in.
+   *
+   * The category's unit group determines the base unit used for the part's rates
+   * (`unit_value`, `unit_cost`, `burn_rate`).
+   */
+  category_id: string;
+
+  /**
+   * Body param: Stock keeping unit code for the part.
+   *
+   * Must be unique within the account; creating a part with a SKU already used by
+   * another item fails with a conflict error.
+   */
+  sku: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    'item' | 'item.category' | 'item.unit_value' | 'item.unit_cost' | 'item.burn_rate' | 'item.attributes'
+  >;
+
+  /**
+   * Body param: IDs of existing attributes to link to the part at creation time.
+   */
+  attribute_ids?: Array<string>;
+
+  /**
+   * Body param: Free-form description of the part.
+   */
+  description?: string;
+
+  /**
+   * Body param: Free-form notes about the part.
+   */
+  notes?: string;
+
+  /**
+   * Body param: A rate value with its numerator and denominator units, used in
+   * create and update requests.
+   */
+  unit_cost?: SalesOrdersAPI.RateInput;
+
+  /**
+   * Body param: A rate value with its numerator and denominator units, used in
+   * create and update requests.
+   */
+  unit_price?: SalesOrdersAPI.RateInput;
+}
+
+export interface PartRetrieveParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<
+    | 'item'
+    | 'item.category'
+    | 'item.category.properties'
+    | 'item.category.unit_group'
+    | 'item.unit_value'
+    | 'item.unit_cost'
+    | 'item.burn_rate'
+    | 'item.attributes'
+  >;
+}
+
+export interface PartUpdateParams {
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    'item' | 'item.category' | 'item.unit_value' | 'item.unit_cost' | 'item.burn_rate' | 'item.attributes'
+  >;
+
+  /**
+   * Body param: New description for the part.
+   *
+   * Set to a string to replace the current description, or `null` to clear it.
+   */
+  description?: string | null;
+
+  /**
+   * Body param: New notes for the part.
+   *
+   * Set to a string to replace the current notes, or `null` to clear them.
+   */
+  notes?: string | null;
+
+  /**
+   * Body param: New stock keeping unit code for the part.
+   *
+   * Must remain unique within the account; a conflict error is returned if another
+   * item already uses it.
+   */
+  sku?: string;
+}
+
+export interface PartListParams {
+  /**
+   * Filter by attribute IDs.
+   */
+  attribute_ids?: Array<string>;
+
+  /**
+   * Filter by category IDs.
+   */
+  category_ids?: Array<string>;
+
+  /**
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
+   */
+  cursor?: string;
+
+  /**
+   * Filter parts created on or before this date.
+   */
+  end_date?: string;
+
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<
+    | 'item'
+    | 'item.category'
+    | 'item.category.properties'
+    | 'item.category.unit_group'
+    | 'item.unit_value'
+    | 'item.unit_cost'
+    | 'item.burn_rate'
+    | 'item.attributes'
+  >;
+
+  /**
+   * Maximum number of results to return in a single page.
+   */
+  limit?: number;
+
+  /**
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
+   */
+  q?: string;
+
+  /**
+   * Filter parts created on or after this date.
+   */
+  start_date?: string;
+}
+
+Parts.Actions = Actions;
+
+export declare namespace Parts {
+  export {
+    type CreatePartRequest as CreatePartRequest,
+    type ListPart as ListPart,
+    type Part as Part,
+    type UpdatePartRequest as UpdatePartRequest,
+    type PartCreateParams as PartCreateParams,
+    type PartRetrieveParams as PartRetrieveParams,
+    type PartUpdateParams as PartUpdateParams,
+    type PartListParams as PartListParams,
+  };
+
+  export { Actions as Actions, type ActionExportParams as ActionExportParams };
+}

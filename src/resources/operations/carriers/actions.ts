@@ -1,0 +1,132 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+import { APIResource } from '../../../core/resource';
+import * as CustomersAPI from '../../sales/customers/customers';
+import { APIPromise } from '../../../core/api-promise';
+import { RequestOptions } from '../../../internal/request-options';
+import { path } from '../../../internal/utils/path';
+
+/**
+ * List and manage carriers and their Shippo integrations.
+ */
+export class Actions extends APIResource {
+  /**
+   * Initiates the OAuth authorization flow for a Shippo-managed carrier and returns
+   * the URL to redirect the user to.
+   *
+   * Not available in sandbox mode.
+   *
+   * This endpoint requires the permission: `carriers:update`.
+   *
+   * @example
+   * ```ts
+   * const oauthResponse =
+   *   await client.operations.carriers.actions.initiateOAuth(
+   *     'cr_01784fd54c9ba197bb4e42f0e6',
+   *     {
+   *       redirect_uri:
+   *         'https://app.example.com/carriers/oauth/callback',
+   *     },
+   *   );
+   * ```
+   */
+  initiateOAuth(
+    id: string,
+    body: ActionInitiateOAuthParams,
+    options?: RequestOptions,
+  ): APIPromise<OAuthResponse> {
+    return this._client.post(path`/v1/operations/carriers/${id}/actions/initiate-oauth`, {
+      body,
+      ...options,
+    });
+  }
+
+  /**
+   * Re-syncs a carrier's service levels from Shippo.
+   *
+   * Service levels newly offered by the carrier are added (initially hidden from the
+   * customer portal) and previously synced ones no longer offered are removed;
+   * manually created service levels are untouched. Only available for Shippo-managed
+   * carriers; not available in sandbox mode.
+   *
+   * This endpoint requires the permission: `carriers:update`.
+   *
+   * @example
+   * ```ts
+   * const carrier =
+   *   await client.operations.carriers.actions.syncOptions(
+   *     'cr_01784fd54c9ba197bb4e42f0e6',
+   *   );
+   * ```
+   */
+  syncOptions(
+    id: string,
+    params: ActionSyncOptionsParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<CustomersAPI.Carrier> {
+    const { include } = params ?? {};
+    return this._client.post(path`/v1/operations/carriers/${id}/actions/sync-options`, {
+      query: { include },
+      ...options,
+    });
+  }
+}
+
+/**
+ * Request to initiate carrier OAuth.
+ */
+export interface InitiateOAuthRequest {
+  /**
+   * Redirect URI after OAuth completes.
+   */
+  redirect_uri: string;
+
+  /**
+   * Opaque state value passed through the OAuth flow.
+   */
+  state?: string;
+}
+
+/**
+ * Response from initiating carrier OAuth.
+ */
+export interface OAuthResponse {
+  /**
+   * OAuth URL to redirect the user to.
+   */
+  oauth_url: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'oauth_response';
+}
+
+export interface ActionInitiateOAuthParams {
+  /**
+   * Redirect URI after OAuth completes.
+   */
+  redirect_uri: string;
+
+  /**
+   * Opaque state value passed through the OAuth flow.
+   */
+  state?: string;
+}
+
+export interface ActionSyncOptionsParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'owner' | 'owner.account' | 'service_levels'>;
+}
+
+export declare namespace Actions {
+  export {
+    type InitiateOAuthRequest as InitiateOAuthRequest,
+    type OAuthResponse as OAuthResponse,
+    type ActionInitiateOAuthParams as ActionInitiateOAuthParams,
+    type ActionSyncOptionsParams as ActionSyncOptionsParams,
+  };
+}
