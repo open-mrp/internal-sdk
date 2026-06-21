@@ -1444,6 +1444,8 @@ export interface Entity {
     | 'announcement'
     | 'conversation'
     | 'conversation_participant'
+    | 'chat_message'
+    | 'notification_unread_summary_account'
     | 'messaging_block'
     | 'sender_identity'
     | 'notification_preference'
