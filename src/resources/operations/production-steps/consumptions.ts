@@ -17,6 +17,8 @@ export class Consumptions extends APIResource {
    * produces the consumed item, the two steps are linked upstream/downstream
    * automatically.
    *
+   * This endpoint requires the permission: `production_steps:create`.
+   *
    * @example
    * ```ts
    * const consumption =
@@ -51,6 +53,8 @@ export class Consumptions extends APIResource {
   /**
    * Returns a consumption by ID within a production step.
    *
+   * This endpoint requires the permission: `production_steps:read`.
+   *
    * @example
    * ```ts
    * const consumption =
@@ -78,6 +82,8 @@ export class Consumptions extends APIResource {
    * Partially updates a consumption within a production step.
    *
    * Omitted fields are left unchanged.
+   *
+   * This endpoint requires the permission: `production_steps:update`.
    *
    * @example
    * ```ts
@@ -109,6 +115,8 @@ export class Consumptions extends APIResource {
    *
    * Any production-flow connections established through this consumption are
    * disconnected. Returns the deleted consumption.
+   *
+   * This endpoint requires the permission: `production_steps:delete`.
    *
    * @example
    * ```ts

@@ -13,6 +13,8 @@ export class Productions extends APIResource {
   /**
    * Returns a production output by ID within a production step.
    *
+   * This endpoint requires the permission: `production_steps:read`.
+   *
    * @example
    * ```ts
    * const productionOutput =
@@ -38,6 +40,8 @@ export class Productions extends APIResource {
 
   /**
    * Partially updates a production output within a production step.
+   *
+   * This endpoint requires the permission: `production_steps:update`.
    *
    * @example
    * ```ts

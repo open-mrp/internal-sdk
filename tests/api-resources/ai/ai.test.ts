@@ -8,6 +8,17 @@ const client = new Augno({
 });
 
 describe('resource ai', () => {
+  test('retrieveModels', async () => {
+    const responsePromise = client.ai.retrieveModels();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
   test('retrieveToolGroups', async () => {
     const responsePromise = client.ai.retrieveToolGroups();
     const rawResponse = await responsePromise.asResponse();

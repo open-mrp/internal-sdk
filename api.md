@@ -971,6 +971,53 @@ Methods:
 - <code title="get /v1/settings/integrations/stripe/publishable-key">client.settings.integrations.stripe.<a href="./src/resources/settings/integrations/stripe.ts">retrievePublishableKey</a>() -> StripePublishableKey</code>
 - <code title="get /v1/settings/integrations/stripe/status">client.settings.integrations.stripe.<a href="./src/resources/settings/integrations/stripe.ts">retrieveStatus</a>() -> StripeStatus</code>
 
+### Hubspot
+
+#### Sync
+
+Types:
+
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">HubspotSyncJob</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">HubspotSyncReport</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">StartHubspotSyncRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/settings/integrations/hubspot/sync">client.settings.integrations.hubspot.sync.<a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">create</a>({ ...params }) -> HubspotSyncJob</code>
+- <code title="get /v1/settings/integrations/hubspot/sync/{id}">client.settings.integrations.hubspot.sync.<a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">retrieve</a>(id) -> HubspotSyncJob</code>
+- <code title="get /v1/settings/integrations/hubspot/sync/current">client.settings.integrations.hubspot.sync.<a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">retrieveCurrent</a>() -> HubspotSyncJob</code>
+
+##### CompanyReviews
+
+Types:
+
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">HubspotCompanyCandidate</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">HubspotCompanyReview</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">ListHubspotCompanyCandidate</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">ListHubspotCompanyReview</a></code>
+
+Methods:
+
+- <code title="post /v1/settings/integrations/hubspot/sync/{id}/company-reviews/{review_id}">client.settings.integrations.hubspot.sync.companyReviews.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">create</a>(reviewID, { ...params }) -> HubspotCompanyReview</code>
+- <code title="get /v1/settings/integrations/hubspot/sync/{id}/company-reviews">client.settings.integrations.hubspot.sync.companyReviews.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">list</a>(id, { ...params }) -> ListHubspotCompanyReview</code>
+
+###### Actions
+
+Types:
+
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">LinkHubspotCompanyReviewRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/settings/integrations/hubspot/sync/{id}/company-reviews/{review_id}/actions/link">client.settings.integrations.hubspot.sync.companyReviews.actions.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">link</a>(reviewID, { ...params }) -> HubspotCompanyReview</code>
+- <code title="post /v1/settings/integrations/hubspot/sync/{id}/company-reviews/{review_id}/actions/skip">client.settings.integrations.hubspot.sync.companyReviews.actions.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">skip</a>(reviewID, { ...params }) -> HubspotCompanyReview</code>
+
+##### Actions
+
+Methods:
+
+- <code title="post /v1/settings/integrations/hubspot/sync/{id}/actions/execute">client.settings.integrations.hubspot.sync.actions.<a href="./src/resources/settings/integrations/hubspot/sync/actions.ts">execute</a>(id) -> HubspotSyncJob</code>
+
 # Catalog
 
 ## Units
@@ -1299,11 +1346,14 @@ Types:
 - <code><a href="./src/resources/ai/ai.ts">AvailableTool</a></code>
 - <code><a href="./src/resources/ai/ai.ts">ListAgentTokenUsage</a></code>
 - <code><a href="./src/resources/ai/ai.ts">ListAvailableTool</a></code>
+- <code><a href="./src/resources/ai/ai.ts">ListModel</a></code>
 - <code><a href="./src/resources/ai/ai.ts">ListToolGroup</a></code>
+- <code><a href="./src/resources/ai/ai.ts">Model</a></code>
 - <code><a href="./src/resources/ai/ai.ts">ToolGroup</a></code>
 
 Methods:
 
+- <code title="get /v1/ai/models">client.ai.<a href="./src/resources/ai/ai.ts">retrieveModels</a>() -> ListModel</code>
 - <code title="get /v1/ai/tool-groups">client.ai.<a href="./src/resources/ai/ai.ts">retrieveToolGroups</a>({ ...params }) -> ListToolGroup</code>
 - <code title="get /v1/ai/tools">client.ai.<a href="./src/resources/ai/ai.ts">retrieveTools</a>({ ...params }) -> ListAvailableTool</code>
 - <code title="get /v1/ai/usage">client.ai.<a href="./src/resources/ai/ai.ts">retrieveUsage</a>({ ...params }) -> ListAgentTokenUsage</code>
@@ -1399,6 +1449,59 @@ Methods:
 - <code title="patch /v1/ai/memories/{id}">client.ai.memories.<a href="./src/resources/ai/memories.ts">update</a>(id, { ...params }) -> AgentMemory</code>
 - <code title="get /v1/ai/memories">client.ai.memories.<a href="./src/resources/ai/memories.ts">list</a>({ ...params }) -> ListAgentMemory</code>
 - <code title="delete /v1/ai/memories/{id}">client.ai.memories.<a href="./src/resources/ai/memories.ts">delete</a>(id) -> MemoryDeleteResponse</code>
+
+# Messaging
+
+## Notifications
+
+Types:
+
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">ListNotification</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">Notification</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">NotificationSendResult</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">NotificationTargetInput</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">NotificationUnreadCount</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">NotificationUnreadSummary</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">NotificationUnreadSummaryAccount</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">SendNotificationRequest</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">Sender</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/notifications">client.messaging.notifications.<a href="./src/resources/messaging/notifications/notifications.ts">create</a>({ ...params }) -> NotificationSendResult</code>
+- <code title="get /v1/messaging/notifications/{id}">client.messaging.notifications.<a href="./src/resources/messaging/notifications/notifications.ts">retrieve</a>(id) -> Notification</code>
+- <code title="get /v1/messaging/notifications">client.messaging.notifications.<a href="./src/resources/messaging/notifications/notifications.ts">list</a>({ ...params }) -> ListNotification</code>
+- <code title="get /v1/messaging/notifications/unread-count">client.messaging.notifications.<a href="./src/resources/messaging/notifications/notifications.ts">retrieveUnreadCount</a>() -> NotificationUnreadCount</code>
+- <code title="get /v1/messaging/notifications/unread-summary">client.messaging.notifications.<a href="./src/resources/messaging/notifications/notifications.ts">retrieveUnreadSummary</a>() -> NotificationUnreadSummary</code>
+
+### Actions
+
+Methods:
+
+- <code title="post /v1/messaging/notifications/{id}/actions/dismiss">client.messaging.notifications.actions.<a href="./src/resources/messaging/notifications/actions.ts">dismiss</a>(id) -> Notification</code>
+- <code title="post /v1/messaging/notifications/actions/mark-all-seen">client.messaging.notifications.actions.<a href="./src/resources/messaging/notifications/actions.ts">markAllSeen</a>() -> NotificationUnreadCount</code>
+- <code title="post /v1/messaging/notifications/{id}/actions/read">client.messaging.notifications.actions.<a href="./src/resources/messaging/notifications/actions.ts">read</a>(id) -> Notification</code>
+- <code title="post /v1/messaging/notifications/{id}/actions/seen">client.messaging.notifications.actions.<a href="./src/resources/messaging/notifications/actions.ts">seen</a>(id) -> Notification</code>
+
+## Announcements
+
+Types:
+
+- <code><a href="./src/resources/messaging/announcements/announcements.ts">Announcement</a></code>
+- <code><a href="./src/resources/messaging/announcements/announcements.ts">ListAnnouncement</a></code>
+
+Methods:
+
+- <code title="get /v1/messaging/announcements/{id}">client.messaging.announcements.<a href="./src/resources/messaging/announcements/announcements.ts">retrieve</a>(id) -> Announcement</code>
+- <code title="get /v1/messaging/announcements">client.messaging.announcements.<a href="./src/resources/messaging/announcements/announcements.ts">list</a>({ ...params }) -> ListAnnouncement</code>
+
+### Actions
+
+Methods:
+
+- <code title="post /v1/messaging/announcements/{id}/actions/dismiss">client.messaging.announcements.actions.<a href="./src/resources/messaging/announcements/actions.ts">dismiss</a>(id) -> Announcement</code>
+- <code title="post /v1/messaging/announcements/{id}/actions/read">client.messaging.announcements.actions.<a href="./src/resources/messaging/announcements/actions.ts">read</a>(id) -> Announcement</code>
+- <code title="post /v1/messaging/announcements/{id}/actions/seen">client.messaging.announcements.actions.<a href="./src/resources/messaging/announcements/actions.ts">seen</a>(id) -> Announcement</code>
 
 # Webhooks
 

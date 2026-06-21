@@ -21,6 +21,8 @@ export class Picks extends APIResource {
   /**
    * Returns a pick by ID.
    *
+   * This endpoint requires the permission: `picks:read`.
+   *
    * @example
    * ```ts
    * const pick = await client.operations.picks.retrieve(
@@ -38,6 +40,8 @@ export class Picks extends APIResource {
 
   /**
    * Partially updates a pick's metadata.
+   *
+   * This endpoint requires the permission: `picks:update`.
    *
    * @example
    * ```ts
@@ -59,6 +63,9 @@ export class Picks extends APIResource {
   /**
    * Returns a paginated list of picks.
    *
+   * This endpoint requires the permissions: `picks:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listPick = await client.operations.picks.list();
@@ -73,6 +80,8 @@ export class Picks extends APIResource {
    *
    * Shipments are matched through the pick's sales order, so the list covers every
    * shipment created for that order.
+   *
+   * This endpoint requires the permission: `picks:read`.
    *
    * @example
    * ```ts

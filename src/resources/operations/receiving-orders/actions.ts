@@ -19,6 +19,8 @@ export class Actions extends APIResource {
    * outstanding are left unchanged. This does not add inventory — use Stock
    * Receiving Order to put the received quantities away.
    *
+   * This endpoint requires the permission: `receiving_orders:update`.
+   *
    * @example
    * ```ts
    * const receivingOrder =
@@ -43,6 +45,8 @@ export class Actions extends APIResource {
    * If a line was received short of its ordered quantity, a new unstocked line is
    * created automatically for the remainder. Once every line is stocked, the order
    * is marked complete and the originating purchase order is marked fulfilled.
+   *
+   * This endpoint requires the permission: `receiving_orders:update`.
    *
    * @example
    * ```ts
@@ -81,6 +85,8 @@ export class Actions extends APIResource {
    * extra lines created for short receipts are removed (leaving one line per
    * purchase order line), and the order returns to open. The receiving order itself
    * is not deleted.
+   *
+   * This endpoint requires the permission: `receiving_orders:update`.
    *
    * @example
    * ```ts

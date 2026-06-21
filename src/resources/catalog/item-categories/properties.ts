@@ -17,6 +17,8 @@ export class Properties extends APIResource {
    * name duplicates one already in the category returns a conflict error. Default
    * system categories cannot be modified.
    *
+   * This endpoint requires the permission: `item_categories:update`.
+   *
    * @example
    * ```ts
    * const property =
@@ -39,6 +41,8 @@ export class Properties extends APIResource {
    * Removes a property from an item category.
    *
    * Default system categories cannot be modified.
+   *
+   * This endpoint requires the permission: `item_categories:update`.
    *
    * @example
    * ```ts

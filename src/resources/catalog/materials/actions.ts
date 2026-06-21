@@ -12,6 +12,9 @@ export class Actions extends APIResource {
   /**
    * Exports all matching materials as an Excel file.
    *
+   * This endpoint requires the permissions: `materials:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const fileDownload =

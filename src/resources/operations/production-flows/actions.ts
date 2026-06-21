@@ -16,6 +16,8 @@ export class Actions extends APIResource {
    * automatically from item relationships, so manual connections may be rebuilt when
    * a step's produced or consumed items change.
    *
+   * This endpoint requires the permission: `production_steps:update`.
+   *
    * @example
    * ```ts
    * const response =

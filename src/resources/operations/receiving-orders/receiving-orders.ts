@@ -27,6 +27,8 @@ export class ReceivingOrders extends APIResource {
   /**
    * Returns a receiving order by ID.
    *
+   * This endpoint requires the permission: `receiving_orders:read`.
+   *
    * @example
    * ```ts
    * const receivingOrder =
@@ -48,6 +50,8 @@ export class ReceivingOrders extends APIResource {
    *
    * Only open (incomplete) orders are returned by default; pass `status` to change
    * this.
+   *
+   * This endpoint requires the permission: `receiving_orders:read`.
    *
    * @example
    * ```ts

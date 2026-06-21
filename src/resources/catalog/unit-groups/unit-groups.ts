@@ -28,6 +28,8 @@ export class UnitGroups extends APIResource {
   /**
    * Creates a unit group with optional associated units.
    *
+   * This endpoint requires the permission: `unit_groups:create`.
+   *
    * @example
    * ```ts
    * const unitGroup = await client.catalog.unitGroups.create({
@@ -53,6 +55,8 @@ export class UnitGroups extends APIResource {
   /**
    * Returns a unit group by ID.
    *
+   * This endpoint requires the permission: `unit_groups:read`.
+   *
    * @example
    * ```ts
    * const unitGroup = await client.catalog.unitGroups.retrieve(
@@ -70,6 +74,8 @@ export class UnitGroups extends APIResource {
 
   /**
    * Partially updates a unit group. System unit groups cannot be updated.
+   *
+   * This endpoint requires the permission: `unit_groups:update`.
    *
    * @example
    * ```ts
@@ -94,6 +100,8 @@ export class UnitGroups extends APIResource {
   /**
    * Returns a paginated list of unit groups, including system unit groups.
    *
+   * This endpoint requires the permission: `unit_groups:read`.
+   *
    * @example
    * ```ts
    * const listUnitGroup =
@@ -110,6 +118,8 @@ export class UnitGroups extends APIResource {
   /**
    * Deletes a unit group and all associated unit conversions. System unit groups
    * cannot be deleted.
+   *
+   * This endpoint requires the permission: `unit_groups:delete`.
    *
    * @example
    * ```ts

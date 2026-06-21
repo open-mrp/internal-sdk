@@ -17,6 +17,8 @@ export class Lines extends APIResource {
   /**
    * Updates a pick line's picked quantity.
    *
+   * This endpoint requires the permission: `picks:update`.
+   *
    * @example
    * ```ts
    * const pickLine = await client.operations.picks.lines.update(

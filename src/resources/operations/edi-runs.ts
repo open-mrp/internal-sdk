@@ -13,6 +13,8 @@ export class EdiRuns extends APIResource {
   /**
    * Returns an EDI run by ID.
    *
+   * This endpoint requires the permission: `edi_runs:read`.
+   *
    * @example
    * ```ts
    * const ediRun = await client.operations.ediRuns.retrieve(
@@ -26,6 +28,8 @@ export class EdiRuns extends APIResource {
 
   /**
    * Returns a paginated list of EDI runs for the target account.
+   *
+   * This endpoint requires the permission: `edi_runs:read`.
    *
    * @example
    * ```ts

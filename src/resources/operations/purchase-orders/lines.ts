@@ -16,6 +16,9 @@ export class Lines extends APIResource {
    * If the order has already been issued, a matching receiving order line is created
    * as well.
    *
+   * This endpoint requires the permissions: `purchase_orders:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const purchaseOrderLine =
@@ -51,6 +54,9 @@ export class Lines extends APIResource {
    * If the order has already been issued, the receiving order is updated to reflect
    * the remaining quantity to receive.
    *
+   * This endpoint requires the permissions: `purchase_orders:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const purchaseOrderLine =
@@ -82,6 +88,9 @@ export class Lines extends APIResource {
    * Deletes a purchase order line item and its related records.
    *
    * Any receiving order lines created for this line are deleted as well.
+   *
+   * This endpoint requires the permissions: `purchase_orders:update`,
+   * `suppliers:update`.
    *
    * @example
    * ```ts

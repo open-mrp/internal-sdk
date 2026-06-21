@@ -27,6 +27,8 @@ export class Plans extends APIResource {
    * Returns a proration preview for switching the account to a different pricing
    * plan.
    *
+   * This endpoint requires the `admin` role type.
+   *
    * @example
    * ```ts
    * const planChangeProration =
@@ -43,6 +45,8 @@ export class Plans extends APIResource {
    * Handles free-to-paid, paid-to-free, and paid-to-paid changes. Switches that owe
    * a prorated amount are charged immediately; use Preview Plan Change to see the
    * cost first.
+   *
+   * This endpoint requires the `admin` role type.
    *
    * @example
    * ```ts

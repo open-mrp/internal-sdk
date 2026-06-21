@@ -16,6 +16,8 @@ export class Actions extends APIResource {
    * Fulfilled orders cannot be deleted; if any requested order fails this check, no
    * orders are deleted.
    *
+   * This endpoint requires the permission: `sales_orders:delete`.
+   *
    * @example
    * ```ts
    * const response =
@@ -32,6 +34,8 @@ export class Actions extends APIResource {
    * Closes a sales order, transitioning it from `issued` to `fulfilled`.
    *
    * Sets the order's completion timestamp and marks its pick as finished.
+   *
+   * This endpoint requires the permission: `sales_orders:update`.
    *
    * @example
    * ```ts
@@ -57,6 +61,8 @@ export class Actions extends APIResource {
    * inventory required to produce them, and links the run to the order. An order can
    * have at most one production run.
    *
+   * This endpoint requires the permission: `production_runs:create`.
+   *
    * @example
    * ```ts
    * const createProductionRunResponse =
@@ -74,6 +80,8 @@ export class Actions extends APIResource {
    *
    * Issuing commits the order for fulfillment: a pick is created for the order's
    * sale lines and inventory is reserved for each line tied to an inventory item.
+   *
+   * This endpoint requires the permission: `sales_orders:update`.
    *
    * @example
    * ```ts
@@ -97,6 +105,8 @@ export class Actions extends APIResource {
    *
    * Clears the order's completion timestamp and marks its pick as unfinished.
    *
+   * This endpoint requires the permission: `sales_orders:update`.
+   *
    * @example
    * ```ts
    * const salesOrder =
@@ -115,6 +125,8 @@ export class Actions extends APIResource {
    *
    * Deletes the order's pick and releases any inventory reserved when the order was
    * issued.
+   *
+   * This endpoint requires the permission: `sales_orders:update`.
    *
    * @example
    * ```ts

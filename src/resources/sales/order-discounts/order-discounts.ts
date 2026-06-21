@@ -20,6 +20,8 @@ export class OrderDiscounts extends APIResource {
    * The discount code must be unique within the account; creating a discount with an
    * existing code returns a conflict error.
    *
+   * This endpoint requires the permission: `discounts:create`.
+   *
    * @example
    * ```ts
    * const orderDiscount =
@@ -38,6 +40,8 @@ export class OrderDiscounts extends APIResource {
   /**
    * Returns an order discount by ID.
    *
+   * This endpoint requires the permission: `discounts:read`.
+   *
    * @example
    * ```ts
    * const orderDiscount =
@@ -55,6 +59,8 @@ export class OrderDiscounts extends APIResource {
    *
    * Only the provided fields are changed. Changing `code` to one already used by
    * another discount returns a conflict error.
+   *
+   * This endpoint requires the permission: `discounts:update`.
    *
    * @example
    * ```ts
@@ -76,6 +82,9 @@ export class OrderDiscounts extends APIResource {
   /**
    * Returns a paginated list of order discounts for the current account.
    *
+   * This endpoint requires the permissions: `discounts:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listOrderDiscount =
@@ -93,6 +102,8 @@ export class OrderDiscounts extends APIResource {
    * Deletes an order discount and returns the deleted resource.
    *
    * Deletion is permanent; further requests against the deleted ID return an error.
+   *
+   * This endpoint requires the permission: `discounts:delete`.
    *
    * @example
    * ```ts

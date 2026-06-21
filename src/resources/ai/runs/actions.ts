@@ -16,6 +16,8 @@ export class Actions extends APIResource {
    * Only runs in the `pending` or `running` status can be cancelled; cancelling a
    * run in any other status returns a validation error.
    *
+   * This endpoint requires the permission: `agent_runs:update`.
+   *
    * @example
    * ```ts
    * const agentRun = await client.ai.runs.actions.cancel(
@@ -36,6 +38,8 @@ export class Actions extends APIResource {
    * Resumes a paused agent run with a user message and any tool approvals.
    *
    * The run must be in the `awaiting_input` or `awaiting_approval` status.
+   *
+   * This endpoint requires the permission: `agent_runs:update`.
    *
    * @example
    * ```ts

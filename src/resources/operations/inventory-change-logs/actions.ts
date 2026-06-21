@@ -15,6 +15,8 @@ export class Actions extends APIResource {
    * Unlike the list endpoint, results are not paginated — every matching change log
    * is included in the download.
    *
+   * This endpoint requires the permission: `inventory_logs:read`.
+   *
    * @example
    * ```ts
    * const fileDownload =

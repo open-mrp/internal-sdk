@@ -19,6 +19,8 @@ export class Actions extends APIResource {
    * The pick is marked finished once no unpacked line still has a quantity left to
    * pick.
    *
+   * This endpoint requires the permission: `picks:update`.
+   *
    * @example
    * ```ts
    * const packPickResponse =
@@ -38,6 +40,8 @@ export class Actions extends APIResource {
    * Sets each unpacked line's picked quantity to the quantity still outstanding on
    * its sales order line. Lines that have already been packed are unaffected.
    *
+   * This endpoint requires the permission: `picks:update`.
+   *
    * @example
    * ```ts
    * const pick = await client.operations.picks.actions.pick(
@@ -55,6 +59,8 @@ export class Actions extends APIResource {
    * Resets the picked quantity on every unpacked line to zero and clears the pick's
    * `finished_at` timestamp. Fails if a shipment has already been created for the
    * pick's sales order.
+   *
+   * This endpoint requires the permission: `picks:update`.
    *
    * @example
    * ```ts

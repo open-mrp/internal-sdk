@@ -16,6 +16,8 @@ export class Actions extends APIResource {
    * Fails with a conflict error if any sales orders still reference any of the
    * customers; if any customer cannot be deleted, none are.
    *
+   * This endpoint requires the permission: `customers:delete`.
+   *
    * @example
    * ```ts
    * const response =
@@ -35,6 +37,8 @@ export class Actions extends APIResource {
    * from the source customers are reassigned to the target; price groups, product
    * line access, addresses, and users are consolidated without duplicates; the
    * source customers are then deleted.
+   *
+   * This endpoint requires the permissions: `customers:update`, `customers:delete`.
    *
    * @example
    * ```ts
