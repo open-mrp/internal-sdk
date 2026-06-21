@@ -291,6 +291,8 @@ export class Operations extends APIResource {
    * Every item in the account appears once; items with no recorded inventory report
    * a zero quantity.
    *
+   * This endpoint requires the permission: `items:read`.
+   *
    * @example
    * ```ts
    * const listInventoryItem =
@@ -306,6 +308,9 @@ export class Operations extends APIResource {
 
   /**
    * Partially updates a quantity.
+   *
+   * This endpoint requires the permissions: `items:update`,
+   * `production_steps:update`.
    *
    * @example
    * ```ts
@@ -333,6 +338,9 @@ export class Operations extends APIResource {
 
   /**
    * Partially updates a rate.
+   *
+   * This endpoint requires the permissions: `items:update`,
+   * `production_steps:update`.
    *
    * @example
    * ```ts

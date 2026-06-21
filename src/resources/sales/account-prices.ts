@@ -18,6 +18,8 @@ export class AccountPrices extends APIResource {
    * When an order line matches the price's product line and constraints, the account
    * price overrides standard pricing for the recipient customer.
    *
+   * This endpoint requires the permission: `discounts:create`.
+   *
    * @example
    * ```ts
    * const accountPrice =
@@ -41,6 +43,9 @@ export class AccountPrices extends APIResource {
   /**
    * Returns an account price by ID.
    *
+   * This endpoint requires the permissions: `discounts:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const accountPrice =
@@ -63,6 +68,8 @@ export class AccountPrices extends APIResource {
    * Only the provided fields are changed. If `category_ids` or `attribute_ids` are
    * provided, they replace the existing set entirely.
    *
+   * This endpoint requires the permission: `discounts:update`.
+   *
    * @example
    * ```ts
    * const accountPrice =
@@ -84,6 +91,9 @@ export class AccountPrices extends APIResource {
   /**
    * Returns a paginated list of account prices for the current account.
    *
+   * This endpoint requires the permissions: `discounts:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listAccountPrice =
@@ -103,6 +113,8 @@ export class AccountPrices extends APIResource {
    * Associated category constraints, attribute constraints, and the rate record are
    * also removed. Deletion is permanent; further requests against the deleted ID
    * return an error.
+   *
+   * This endpoint requires the permission: `discounts:delete`.
    *
    * @example
    * ```ts

@@ -44,6 +44,8 @@ export class Shipments extends APIResource {
   /**
    * Returns a shipment by ID.
    *
+   * This endpoint requires the permission: `shipments:read`.
+   *
    * @example
    * ```ts
    * const shipment = await client.operations.shipments.retrieve(
@@ -61,6 +63,8 @@ export class Shipments extends APIResource {
 
   /**
    * Partially updates a shipment.
+   *
+   * This endpoint requires the permission: `shipments:update`.
    *
    * @example
    * ```ts
@@ -82,6 +86,8 @@ export class Shipments extends APIResource {
   /**
    * Returns a paginated list of shipments.
    *
+   * This endpoint requires the permission: `shipments:read`.
+   *
    * @example
    * ```ts
    * const listShipment =
@@ -100,6 +106,8 @@ export class Shipments extends APIResource {
    *
    * Deleting a shipment also unpacks the associated pick lines and reopens the pick
    * for the shipment's order so the items can be repacked.
+   *
+   * This endpoint requires the permission: `shipments:update`.
    *
    * @example
    * ```ts

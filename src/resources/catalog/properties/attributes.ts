@@ -13,6 +13,8 @@ export class Attributes extends APIResource {
   /**
    * Creates an attribute under a property.
    *
+   * This endpoint requires the permission: `properties:create`.
+   *
    * @example
    * ```ts
    * const attribute =
@@ -37,6 +39,8 @@ export class Attributes extends APIResource {
   /**
    * Returns an attribute by ID within a property.
    *
+   * This endpoint requires the permission: `properties:read`.
+   *
    * @example
    * ```ts
    * const attribute =
@@ -57,6 +61,8 @@ export class Attributes extends APIResource {
 
   /**
    * Partially updates an attribute.
+   *
+   * This endpoint requires the permission: `properties:update`.
    *
    * @example
    * ```ts
@@ -85,6 +91,8 @@ export class Attributes extends APIResource {
   /**
    * Returns a paginated list of attributes for a property.
    *
+   * This endpoint requires the permission: `properties:read`.
+   *
    * @example
    * ```ts
    * const listAttribute =
@@ -106,6 +114,8 @@ export class Attributes extends APIResource {
    *
    * Remaining attributes in the property are shifted so their sort orders stay
    * contiguous.
+   *
+   * This endpoint requires the permission: `properties:delete`.
    *
    * @example
    * ```ts

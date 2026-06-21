@@ -15,6 +15,8 @@ export class ShippingCases extends APIResource {
   /**
    * Returns a shipping case by ID.
    *
+   * This endpoint requires the permission: `shipments:read`.
+   *
    * @example
    * ```ts
    * const shippingCase =
@@ -33,6 +35,8 @@ export class ShippingCases extends APIResource {
 
   /**
    * Partially updates a shipping case's tracking number and freight quantities.
+   *
+   * This endpoint requires the permission: `shipments:update`.
    *
    * @example
    * ```ts
@@ -59,6 +63,8 @@ export class ShippingCases extends APIResource {
   /**
    * Permanently deletes a shipping case.
    *
+   * This endpoint requires the permission: `shipments:delete`.
+   *
    * @example
    * ```ts
    * const shippingCase =
@@ -76,6 +82,8 @@ export class ShippingCases extends APIResource {
    *
    * The returned URL expires one hour after it is issued, and is null when no label
    * has been generated for the case.
+   *
+   * This endpoint requires the permission: `shipments:read`.
    *
    * @example
    * ```ts

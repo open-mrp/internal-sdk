@@ -21,6 +21,8 @@ export class Runs extends APIResource {
    * The run is created in the `pending` status and executed asynchronously; poll
    * Retrieve Agent Run to follow its progress.
    *
+   * This endpoint requires the permission: `agent_runs:create`.
+   *
    * @example
    * ```ts
    * const agentRun = await client.ai.runs.create({
@@ -36,6 +38,8 @@ export class Runs extends APIResource {
 
   /**
    * Returns an agent run by ID.
+   *
+   * This endpoint requires the permission: `agent_runs:read`.
    *
    * @example
    * ```ts
@@ -54,6 +58,8 @@ export class Runs extends APIResource {
 
   /**
    * Returns a paginated list of agent runs for the current account.
+   *
+   * This endpoint requires the permission: `agent_runs:read`.
    *
    * @example
    * ```ts

@@ -14,6 +14,8 @@ export class Actions extends APIResource {
    *
    * Returns a confirmation message.
    *
+   * This endpoint requires the permission: `sales_orders:update`.
+   *
    * @example
    * ```ts
    * const messageResource =
@@ -28,6 +30,8 @@ export class Actions extends APIResource {
    * Triggers an EDI resubmission request for an invoice.
    *
    * Returns a confirmation message.
+   *
+   * This endpoint requires the permission: `invoices:update`.
    *
    * @example
    * ```ts

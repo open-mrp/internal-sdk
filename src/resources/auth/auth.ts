@@ -86,6 +86,8 @@ export class Auth extends APIResource {
    *
    * Requires the caller's current password for verification.
    *
+   * This endpoint requires the permission: `team:update`.
+   *
    * @example
    * ```ts
    * const response = await client.auth.scannerPasswords({

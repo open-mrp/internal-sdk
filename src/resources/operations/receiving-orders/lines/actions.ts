@@ -19,6 +19,8 @@ export class Actions extends APIResource {
    * returned unchanged. This does not add inventory — use Stock Receiving Order to
    * put the received quantity away.
    *
+   * This endpoint requires the permission: `receiving_orders:update`.
+   *
    * @example
    * ```ts
    * const receivingOrderLine =
@@ -47,6 +49,8 @@ export class Actions extends APIResource {
    *
    * The line's received quantity is reset to `0` and its stocked state is cleared.
    * The line itself is not deleted.
+   *
+   * This endpoint requires the permission: `receiving_orders:update`.
    *
    * @example
    * ```ts

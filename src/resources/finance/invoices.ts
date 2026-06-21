@@ -17,6 +17,9 @@ export class Invoices extends APIResource {
   /**
    * Returns an invoice by ID.
    *
+   * This endpoint requires the permissions: `invoices:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const invoice = await client.finance.invoices.retrieve(
@@ -34,6 +37,9 @@ export class Invoices extends APIResource {
 
   /**
    * Partially updates an invoice.
+   *
+   * This endpoint requires the permissions: `invoices:update`, `customers:update`,
+   * `suppliers:update`.
    *
    * @example
    * ```ts
@@ -57,6 +63,9 @@ export class Invoices extends APIResource {
 
   /**
    * Returns a paginated list of invoices for the current account.
+   *
+   * This endpoint requires the permissions: `invoices:read`, `customers:read`,
+   * `suppliers:read`.
    *
    * @example
    * ```ts

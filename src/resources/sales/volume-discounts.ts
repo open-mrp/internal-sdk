@@ -20,6 +20,8 @@ export class VolumeDiscounts extends APIResource {
    * The discount name must be unique within the account; creating a discount with an
    * existing name returns a conflict error.
    *
+   * This endpoint requires the permission: `discounts:create`.
+   *
    * @example
    * ```ts
    * const volumeDiscount =
@@ -42,6 +44,9 @@ export class VolumeDiscounts extends APIResource {
 
   /**
    * Returns a volume discount by ID.
+   *
+   * This endpoint requires the permissions: `discounts:read`, `customers:read`,
+   * `suppliers:read`.
    *
    * @example
    * ```ts
@@ -66,6 +71,8 @@ export class VolumeDiscounts extends APIResource {
    * flag is `true`, in which case they replace the existing set entirely. Tiers use
    * upsert semantics: tiers with an `id` are updated, tiers without one are created,
    * and existing tiers omitted from the list are deleted.
+   *
+   * This endpoint requires the permission: `discounts:update`.
    *
    * @example
    * ```ts
@@ -99,6 +106,9 @@ export class VolumeDiscounts extends APIResource {
   /**
    * Returns a paginated list of volume discounts for the target account.
    *
+   * This endpoint requires the permissions: `discounts:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listVolumeDiscount =
@@ -116,6 +126,8 @@ export class VolumeDiscounts extends APIResource {
    * Deletes a volume discount along with its tiers and scoping associations.
    *
    * Deletion is permanent; further requests against the deleted ID return an error.
+   *
+   * This endpoint requires the permission: `discounts:delete`.
    *
    * @example
    * ```ts
