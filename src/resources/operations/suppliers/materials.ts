@@ -15,6 +15,8 @@ export class Materials extends APIResource {
    * Links a material to a supplier, recording the supplier's part number and
    * description for it.
    *
+   * This endpoint requires the permission: `suppliers:create`.
+   *
    * @example
    * ```ts
    * const supplierMaterial =
@@ -38,6 +40,8 @@ export class Materials extends APIResource {
 
   /**
    * Returns the supplier material link for the given supplier and material.
+   *
+   * This endpoint requires the permission: `suppliers:read`.
    *
    * @example
    * ```ts
@@ -65,6 +69,8 @@ export class Materials extends APIResource {
    *
    * Fields not provided retain their current values.
    *
+   * This endpoint requires the permission: `suppliers:update`.
+   *
    * @example
    * ```ts
    * const supplierMaterial =
@@ -88,6 +94,8 @@ export class Materials extends APIResource {
   /**
    * Returns a paginated list of materials linked to the given supplier.
    *
+   * This endpoint requires the permission: `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listSupplierMaterial =
@@ -108,6 +116,8 @@ export class Materials extends APIResource {
    * Deletes a supplier material link.
    *
    * Removing the link does not affect the underlying material or supplier.
+   *
+   * This endpoint requires the permission: `suppliers:update`.
    *
    * @example
    * ```ts

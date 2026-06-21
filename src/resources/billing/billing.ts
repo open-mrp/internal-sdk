@@ -49,6 +49,8 @@ export class Billing extends APIResource {
    * Creates a Stripe billing portal session and returns a redirect URL for managing
    * subscriptions.
    *
+   * This endpoint requires the `admin` role type.
+   *
    * @example
    * ```ts
    * const billingPortalSessionResponse =

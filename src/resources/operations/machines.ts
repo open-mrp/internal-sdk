@@ -15,6 +15,8 @@ export class Machines extends APIResource {
    *
    * Returns a conflict error if a machine with the same name already exists.
    *
+   * This endpoint requires the permission: `machines:create`.
+   *
    * @example
    * ```ts
    * const machine = await client.operations.machines.create({
@@ -31,6 +33,8 @@ export class Machines extends APIResource {
 
   /**
    * Returns a machine by ID.
+   *
+   * This endpoint requires the permission: `machines:read`.
    *
    * @example
    * ```ts
@@ -53,6 +57,8 @@ export class Machines extends APIResource {
    * Only the fields provided in the request are changed. Returns a conflict error if
    * the new name is already in use by another machine.
    *
+   * This endpoint requires the permission: `machines:update`.
+   *
    * @example
    * ```ts
    * const machine = await client.operations.machines.update(
@@ -73,6 +79,8 @@ export class Machines extends APIResource {
   /**
    * Returns a paginated list of machines in your account.
    *
+   * This endpoint requires the permission: `machines:read`.
+   *
    * @example
    * ```ts
    * const listMachine = await client.operations.machines.list();
@@ -87,6 +95,8 @@ export class Machines extends APIResource {
 
   /**
    * Deletes a machine.
+   *
+   * This endpoint requires the permission: `machines:delete`.
    *
    * @example
    * ```ts

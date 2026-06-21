@@ -20,6 +20,8 @@ export class Lines extends APIResource {
    * Use this to record the quantity actually received — for example a partial
    * delivery — before stocking the order.
    *
+   * This endpoint requires the permission: `receiving_orders:update`.
+   *
    * @example
    * ```ts
    * const receivingOrderLine =

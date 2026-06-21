@@ -16,6 +16,8 @@ export class ScanningStations extends APIResource {
    * Returns a conflict error if a scanning station with the same name already
    * exists.
    *
+   * This endpoint requires the permission: `scanners:create`.
+   *
    * @example
    * ```ts
    * const scanningStation =
@@ -40,6 +42,8 @@ export class ScanningStations extends APIResource {
   /**
    * Returns a scanning station by ID.
    *
+   * This endpoint requires the permission: `scanners:read`.
+   *
    * @example
    * ```ts
    * const scanningStation =
@@ -61,6 +65,8 @@ export class ScanningStations extends APIResource {
    *
    * Only the fields provided in the request are changed. Returns a conflict error if
    * the new name is already in use by another scanning station.
+   *
+   * This endpoint requires the permission: `scanners:update`.
    *
    * @example
    * ```ts
@@ -87,6 +93,8 @@ export class ScanningStations extends APIResource {
   /**
    * Returns a paginated list of scanning stations in your account.
    *
+   * This endpoint requires the permission: `scanners:read`.
+   *
    * @example
    * ```ts
    * const listScanningStation =
@@ -102,6 +110,8 @@ export class ScanningStations extends APIResource {
 
   /**
    * Deletes a scanning station.
+   *
+   * This endpoint requires the permission: `scanners:delete`.
    *
    * @example
    * ```ts
@@ -124,6 +134,8 @@ export class ScanningStations extends APIResource {
    * determined depends on the station's type: initialize stations derive it from the
    * station and the batch's item, while move, split, and merge stations use
    * `production_step_id`.
+   *
+   * This endpoint requires the permission: `batches:read`.
    *
    * @example
    * ```ts
@@ -153,6 +165,8 @@ export class ScanningStations extends APIResource {
   /**
    * Returns a paginated list of batches for a given scanning station.
    *
+   * This endpoint requires the permission: `batches:read`.
+   *
    * @example
    * ```ts
    * const listBatch =
@@ -175,6 +189,8 @@ export class ScanningStations extends APIResource {
    * Every production step whose name contains the provided value is connected. A
    * production step can be connected to at most one scanning station, so matching
    * steps are moved from any station they were previously connected to.
+   *
+   * This endpoint requires the permission: `scanners:update`.
    *
    * @example
    * ```ts

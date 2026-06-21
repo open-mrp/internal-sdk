@@ -13,6 +13,9 @@ export class Actions extends APIResource {
    * Looks up units by abbreviation and returns the matches keyed by the original map
    * keys; keys with no matching unit are omitted from the response.
    *
+   * This endpoint requires the permissions: `units:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const validateUnitsResponse =

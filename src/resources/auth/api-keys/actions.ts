@@ -44,6 +44,8 @@ export class Actions extends APIResource {
    * [recommendations](https://docs.augno.com/api/managing-api-keys) on how you can
    * manage your API keys.
    *
+   * This endpoint requires the `admin` role type.
+   *
    * @example
    * ```ts
    * const createdAPIKey =

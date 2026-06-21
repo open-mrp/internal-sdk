@@ -17,6 +17,8 @@ export class Actions extends APIResource {
    * order, returning a not-found error if they have. Pass `sales_order_id` to
    * exclude an existing order from that check.
    *
+   * This endpoint requires the permission: `discounts:read`.
+   *
    * @example
    * ```ts
    * const orderDiscount =

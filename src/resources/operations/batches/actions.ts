@@ -16,6 +16,8 @@ export class Actions extends APIResource {
    * the batches exist. After deletion, any production run whose batches are now all
    * scanned or deleted is closed automatically.
    *
+   * This endpoint requires the permission: `batches:delete`.
+   *
    * @example
    * ```ts
    * const response =
@@ -30,6 +32,8 @@ export class Actions extends APIResource {
 
   /**
    * Closes a batch so it can no longer be scanned or advanced through production.
+   *
+   * This endpoint requires the permission: `batches:delete`.
    *
    * @example
    * ```ts
@@ -52,6 +56,8 @@ export class Actions extends APIResource {
    * production run is started, and the run is closed once all of its batches are
    * scanned or deleted.
    *
+   * This endpoint requires the permission: `batches:create`.
+   *
    * @example
    * ```ts
    * const batch =
@@ -72,6 +78,8 @@ export class Actions extends APIResource {
    * step's configuration, the source batches are linked as inputs and closed, and
    * the step's material consumption is executed asynchronously. Returns the newly
    * created batch.
+   *
+   * This endpoint requires the permission: `batches:create`.
    *
    * @example
    * ```ts
@@ -96,6 +104,8 @@ export class Actions extends APIResource {
    * the step's material consumption is executed asynchronously. Returns the newly
    * created batch.
    *
+   * This endpoint requires the permission: `batches:create`.
+   *
    * @example
    * ```ts
    * const batch = await client.operations.batches.actions.move({
@@ -116,6 +126,8 @@ export class Actions extends APIResource {
    * A new batch carrying the firsts quantity is created at the production step, with
    * any seconds and waste recorded on it; the source batches are linked as inputs.
    * Returns the newly created batch.
+   *
+   * This endpoint requires the permission: `batches:create`.
    *
    * @example
    * ```ts

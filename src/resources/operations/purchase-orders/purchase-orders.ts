@@ -41,6 +41,8 @@ export class PurchaseOrders extends APIResource {
    * status. Bill-to and ship-to addresses are created from the inline address
    * fields, and any provided lines and email contacts are created with the order.
    *
+   * This endpoint requires the permission: `purchase_orders:create`.
+   *
    * @example
    * ```ts
    * const purchaseOrder =
@@ -83,6 +85,8 @@ export class PurchaseOrders extends APIResource {
   /**
    * Returns a purchase order by ID.
    *
+   * This endpoint requires the permission: `purchase_orders:read`.
+   *
    * @example
    * ```ts
    * const purchaseOrder =
@@ -101,6 +105,8 @@ export class PurchaseOrders extends APIResource {
 
   /**
    * Partially updates a purchase order.
+   *
+   * This endpoint requires the permission: `purchase_orders:update`.
    *
    * @example
    * ```ts
@@ -132,6 +138,8 @@ export class PurchaseOrders extends APIResource {
   /**
    * Returns a paginated list of purchase orders for the current account.
    *
+   * This endpoint requires the permission: `purchase_orders:read`.
+   *
    * @example
    * ```ts
    * const listPurchaseOrder =
@@ -149,6 +157,8 @@ export class PurchaseOrders extends APIResource {
    * Deletes a purchase order and all its related records.
    *
    * Orders in `fulfilled` status cannot be deleted.
+   *
+   * This endpoint requires the permission: `purchase_orders:delete`.
    *
    * @example
    * ```ts

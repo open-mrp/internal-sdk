@@ -15,6 +15,8 @@ export class Photo extends APIResource {
    * The photo replaces any existing one, and the user's `image_url` is updated to
    * serve the new photo.
    *
+   * This endpoint requires the permission: `team:update`.
+   *
    * @example
    * ```ts
    * const userPhotoUploadResult =

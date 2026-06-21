@@ -11,6 +11,8 @@ export class Actions extends APIResource {
   /**
    * Submits an enterprise plan inquiry to the sales team.
    *
+   * This endpoint requires the `admin` role type.
+   *
    * @example
    * ```ts
    * const enterpriseInquiry =

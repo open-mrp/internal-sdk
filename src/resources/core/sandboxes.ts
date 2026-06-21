@@ -17,6 +17,8 @@ export class Sandboxes extends APIResource {
    * available immediately after the sandbox is created. Sandboxes cannot be created
    * while acting in a sandbox.
    *
+   * This endpoint requires the permission: `sandboxes:create`.
+   *
    * @example
    * ```ts
    * const sandbox = await client.core.sandboxes.create({
@@ -32,6 +34,8 @@ export class Sandboxes extends APIResource {
 
   /**
    * Returns a sandbox by ID.
+   *
+   * This endpoint requires the permission: `sandboxes:read`.
    *
    * @example
    * ```ts
@@ -51,6 +55,8 @@ export class Sandboxes extends APIResource {
   /**
    * Returns a paginated list of sandboxes.
    *
+   * This endpoint requires the permission: `sandboxes:read`.
+   *
    * @example
    * ```ts
    * const listSandbox = await client.core.sandboxes.list();
@@ -65,6 +71,8 @@ export class Sandboxes extends APIResource {
    *
    * The sandbox's data is purged asynchronously, so it may persist briefly after
    * this call returns.
+   *
+   * This endpoint requires the permission: `sandboxes:delete`.
    *
    * @example
    * ```ts

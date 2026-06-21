@@ -13,6 +13,8 @@ export class RequestLogs extends APIResource {
   /**
    * Returns a request log by ID.
    *
+   * This endpoint requires the permission: `request_logs:read`.
+   *
    * @example
    * ```ts
    * const requestLog = await client.core.requestLogs.retrieve(
@@ -30,6 +32,8 @@ export class RequestLogs extends APIResource {
 
   /**
    * Returns a paginated list of request logs for the current account.
+   *
+   * This endpoint requires the permission: `request_logs:read`.
    *
    * @example
    * ```ts
