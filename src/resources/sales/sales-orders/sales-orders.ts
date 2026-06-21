@@ -50,6 +50,8 @@ export class SalesOrders extends APIResource {
    * when none is provided. A shipping line is always added to the order, plus a
    * discount line when an order discount is supplied.
    *
+   * This endpoint requires the permission: `sales_orders:create`.
+   *
    * @example
    * ```ts
    * const salesOrder = await client.sales.salesOrders.create({
@@ -80,6 +82,9 @@ export class SalesOrders extends APIResource {
   /**
    * Returns a sales order by ID.
    *
+   * This endpoint requires the permissions: `customers:read`, `suppliers:read`,
+   * `sales_orders:read`.
+   *
    * @example
    * ```ts
    * const salesOrder = await client.sales.salesOrders.retrieve(
@@ -97,6 +102,8 @@ export class SalesOrders extends APIResource {
 
   /**
    * Partially updates a sales order.
+   *
+   * This endpoint requires the permission: `sales_orders:update`.
    *
    * @example
    * ```ts
@@ -123,6 +130,9 @@ export class SalesOrders extends APIResource {
   /**
    * Returns a paginated list of sales orders for the current account.
    *
+   * This endpoint requires the permissions: `sales_orders:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listSalesOrder =
@@ -141,6 +151,8 @@ export class SalesOrders extends APIResource {
    *
    * Fulfilled orders cannot be deleted.
    *
+   * This endpoint requires the permission: `sales_orders:delete`.
+   *
    * @example
    * ```ts
    * const salesOrder = await client.sales.salesOrders.delete(
@@ -158,6 +170,8 @@ export class SalesOrders extends APIResource {
    * Requires an active Stripe integration on the account. The checkout is built from
    * the order's lines, and the checkout link is emailed to the provided address.
    * Fails with a conflict if the order already has a payment.
+   *
+   * This endpoint requires the permission: `sales_orders:update`.
    *
    * @example
    * ```ts
@@ -189,6 +203,8 @@ export class SalesOrders extends APIResource {
    * server-side from the product's list price, contracted account prices, and
    * applicable discounts — the same logic used when an order is created. Internal
    * price overrides are not accepted here; the calculated price is always returned.
+   *
+   * This endpoint requires the permission: `sales_orders:read`.
    *
    * @example
    * ```ts
@@ -285,11 +301,6 @@ export interface CreateSalesOrderLineInput {
    * A value with an associated unit, used in create and update requests.
    */
   quantity: CustomersAPI.QuantityInput;
-
-  /**
-   * EDI line item ID.
-   */
-  edi_line_item_id?: string;
 
   /**
    * Description recorded on the line. Defaults to the product's description when
@@ -1652,14 +1663,6 @@ export interface SalesOrderListParams {
    * Latest order creation date to include, in `YYYY-MM-DD` format (inclusive).
    */
   end_date?: string;
-
-  /**
-   * Whether to exclude internal orders.
-   *
-   * When `true`, omits orders the account placed with itself (the buyer is the same
-   * account that owns the order).
-   */
-  exclude_internal_orders?: boolean;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as

@@ -6,7 +6,9 @@ export {
   type AvailableTool,
   type ListAgentTokenUsage,
   type ListAvailableTool,
+  type ListModel,
   type ListToolGroup,
+  type Model,
   type ToolGroup,
   type AIRetrieveToolGroupsParams,
   type AIRetrieveToolsParams,
@@ -53,6 +55,7 @@ export {
   type PermissionGroup,
   type IdentityRetrievePermissionGroupsParams,
 } from './identity/identity';
+export { Messaging } from './messaging/messaging';
 export {
   Operations,
   type InventoryItem,

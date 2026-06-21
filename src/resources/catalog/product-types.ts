@@ -13,6 +13,8 @@ export class ProductTypes extends APIResource {
   /**
    * Creates a product type.
    *
+   * This endpoint requires the permission: `product_types:create`.
+   *
    * @example
    * ```ts
    * const productType =
@@ -29,6 +31,8 @@ export class ProductTypes extends APIResource {
   /**
    * Returns a product type by ID or code.
    *
+   * This endpoint requires the permission: `product_types:read`.
+   *
    * @example
    * ```ts
    * const productType =
@@ -43,6 +47,8 @@ export class ProductTypes extends APIResource {
 
   /**
    * Partially updates a product type.
+   *
+   * This endpoint requires the permission: `product_types:update`.
    *
    * @example
    * ```ts
@@ -66,6 +72,8 @@ export class ProductTypes extends APIResource {
    *
    * Product types are global and not scoped to a specific account.
    *
+   * This endpoint requires the permission: `product_types:read`.
+   *
    * @example
    * ```ts
    * const listProductType =
@@ -81,6 +89,8 @@ export class ProductTypes extends APIResource {
 
   /**
    * Deletes a product type.
+   *
+   * This endpoint requires the permission: `product_types:delete`.
    *
    * @example
    * ```ts

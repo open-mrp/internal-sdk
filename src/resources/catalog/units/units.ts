@@ -18,6 +18,8 @@ export class Units extends APIResource {
   /**
    * Creates an account-owned unit.
    *
+   * This endpoint requires the permission: `units:create`.
+   *
    * @example
    * ```ts
    * const unit = await client.catalog.units.create({
@@ -39,6 +41,8 @@ export class Units extends APIResource {
   /**
    * Returns a unit by ID, including both account-owned and global system units.
    *
+   * This endpoint requires the permission: `units:read`.
+   *
    * @example
    * ```ts
    * const unit = await client.catalog.units.retrieve(
@@ -56,6 +60,8 @@ export class Units extends APIResource {
 
   /**
    * Partially updates an account-owned unit; system units cannot be updated.
+   *
+   * This endpoint requires the permission: `units:update`.
    *
    * @example
    * ```ts
@@ -78,6 +84,8 @@ export class Units extends APIResource {
    * Returns a paginated list of units for the current account, including both
    * account-owned and global system units.
    *
+   * This endpoint requires the permission: `units:read`.
+   *
    * @example
    * ```ts
    * const listUnit = await client.catalog.units.list();
@@ -93,6 +101,8 @@ export class Units extends APIResource {
   /**
    * Deletes an account-owned unit. Associated unit group memberships are also
    * removed, and system units cannot be deleted.
+   *
+   * This endpoint requires the permission: `units:delete`.
    *
    * @example
    * ```ts

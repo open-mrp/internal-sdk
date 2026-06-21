@@ -18,6 +18,8 @@ export class AccountGroups extends APIResource {
    * Each account group can have at most one access record; creating one for an
    * account group that already has one returns a conflict error.
    *
+   * This endpoint requires the permission: `relevant_products:create`.
+   *
    * @example
    * ```ts
    * const accountGroupProductLineAccess =
@@ -39,6 +41,8 @@ export class AccountGroups extends APIResource {
   /**
    * Returns product line access for an account group.
    *
+   * This endpoint requires the permission: `relevant_products:read`.
+   *
    * @example
    * ```ts
    * const accountGroupProductLineAccess =
@@ -56,6 +60,8 @@ export class AccountGroups extends APIResource {
    *
    * This is a full replacement, not a merge: product lines omitted from the request
    * lose access.
+   *
+   * This endpoint requires the permission: `relevant_products:update`.
    *
    * @example
    * ```ts
@@ -80,6 +86,8 @@ export class AccountGroups extends APIResource {
   /**
    * Returns a paginated list of product line access records, one per account group.
    *
+   * This endpoint requires the permission: `relevant_products:read`.
+   *
    * @example
    * ```ts
    * const listAccountGroupProductLineAccess =
@@ -95,6 +103,8 @@ export class AccountGroups extends APIResource {
 
   /**
    * Removes all product line access for an account group.
+   *
+   * This endpoint requires the permission: `relevant_products:delete`.
    *
    * @example
    * ```ts

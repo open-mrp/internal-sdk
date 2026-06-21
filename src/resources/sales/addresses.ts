@@ -13,6 +13,9 @@ export class Addresses extends APIResource {
   /**
    * Creates an address.
    *
+   * This endpoint requires the permissions: `addresses:create`, `customers:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const address = await client.sales.addresses.create({
@@ -32,6 +35,9 @@ export class Addresses extends APIResource {
   /**
    * Retrieves an address by ID.
    *
+   * This endpoint requires the permissions: `addresses:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const address = await client.sales.addresses.retrieve(
@@ -48,6 +54,9 @@ export class Addresses extends APIResource {
    *
    * Changing a street, locality, state, postal code, or country field may replace
    * the address's geolocation, so the geolocation `id` in the response can change.
+   *
+   * This endpoint requires the permissions: `addresses:update`, `customers:update`,
+   * `suppliers:update`.
    *
    * @example
    * ```ts
@@ -68,6 +77,9 @@ export class Addresses extends APIResource {
   /**
    * Returns a paginated list of addresses.
    *
+   * This endpoint requires the permissions: `addresses:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listAddress = await client.sales.addresses.list();
@@ -82,6 +94,9 @@ export class Addresses extends APIResource {
    *
    * Deletion fails if the address is in use as a billing or shipping address on a
    * sales order, invoice, or shipment, or as a default account address.
+   *
+   * This endpoint requires the permissions: `addresses:delete`, `customers:update`,
+   * `suppliers:update`.
    *
    * @example
    * ```ts

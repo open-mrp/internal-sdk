@@ -12,6 +12,8 @@ export class Accounts extends APIResource {
    * Ensures a Stripe billing customer exists for the account, creating one if
    * necessary.
    *
+   * This endpoint requires the `admin` role type.
+   *
    * @example
    * ```ts
    * const ensureBillingCustomerResponse =
@@ -25,6 +27,8 @@ export class Accounts extends APIResource {
   /**
    * Returns resource usage for the account, including seats, invoices, batches,
    * sandboxes, and subscription details.
+   *
+   * This endpoint requires the permission: `self:read`.
    *
    * @example
    * ```ts

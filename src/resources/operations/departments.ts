@@ -16,6 +16,8 @@ export class Departments extends APIResource {
    *
    * Returns a conflict error if a department with the same name already exists.
    *
+   * This endpoint requires the permission: `departments:create`.
+   *
    * @example
    * ```ts
    * const department =
@@ -35,6 +37,8 @@ export class Departments extends APIResource {
 
   /**
    * Returns a department by ID.
+   *
+   * This endpoint requires the permission: `departments:read`.
    *
    * @example
    * ```ts
@@ -58,6 +62,8 @@ export class Departments extends APIResource {
    * Only the fields provided in the request are changed. Assigning scanning stations
    * or machines is additive and does not remove existing ones. Returns a conflict
    * error if the new name is already in use by another department.
+   *
+   * This endpoint requires the permission: `departments:update`.
    *
    * @example
    * ```ts
@@ -84,6 +90,8 @@ export class Departments extends APIResource {
   /**
    * Returns a paginated list of departments in your account.
    *
+   * This endpoint requires the permission: `departments:read`.
+   *
    * @example
    * ```ts
    * const listDepartment =
@@ -101,6 +109,8 @@ export class Departments extends APIResource {
    * Deletes a department.
    *
    * Scanning stations and machines assigned to the department are not deleted.
+   *
+   * This endpoint requires the permission: `departments:delete`.
    *
    * @example
    * ```ts

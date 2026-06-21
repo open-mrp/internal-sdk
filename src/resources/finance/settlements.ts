@@ -18,6 +18,8 @@ export class Settlements extends APIResource {
    * The settlement number is generated automatically from a per-account sequence,
    * and the allocated transactions are marked as fully allocated.
    *
+   * This endpoint requires the permission: `settlements:create`.
+   *
    * @example
    * ```ts
    * const settlement = await client.finance.settlements.create({
@@ -39,6 +41,8 @@ export class Settlements extends APIResource {
   /**
    * Returns a settlement by ID.
    *
+   * This endpoint requires the permission: `settlements:read`.
+   *
    * @example
    * ```ts
    * const settlement =
@@ -57,6 +61,8 @@ export class Settlements extends APIResource {
 
   /**
    * Partially updates a settlement's number, note, or responsible user.
+   *
+   * This endpoint requires the permission: `settlements:update`.
    *
    * @example
    * ```ts
@@ -80,6 +86,8 @@ export class Settlements extends APIResource {
   /**
    * Returns a paginated list of settlements for the current account.
    *
+   * This endpoint requires the permission: `settlements:read`.
+   *
    * @example
    * ```ts
    * const listSettlementSummary =
@@ -99,6 +107,8 @@ export class Settlements extends APIResource {
    * Affected invoices revert to an `unpaid` payment status, affected transactions
    * are no longer marked fully allocated, and adjustment transactions referenced
    * only by this settlement are removed.
+   *
+   * This endpoint requires the permission: `settlements:delete`.
    *
    * @example
    * ```ts

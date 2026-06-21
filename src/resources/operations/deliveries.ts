@@ -16,6 +16,8 @@ export class Deliveries extends APIResource {
   /**
    * Returns a delivery by ID.
    *
+   * This endpoint requires the permission: `deliveries:read`.
+   *
    * @example
    * ```ts
    * const delivery =
@@ -34,6 +36,8 @@ export class Deliveries extends APIResource {
 
   /**
    * Returns a paginated list of deliveries for the caller's account.
+   *
+   * This endpoint requires the permission: `deliveries:read`.
    *
    * @example
    * ```ts

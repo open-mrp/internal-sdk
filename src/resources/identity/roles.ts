@@ -14,6 +14,8 @@ export class Roles extends APIResource {
    * Creates a custom role with the specified permissions. Roles created through the
    * API always have type `user`.
    *
+   * This endpoint requires the permission: `roles:create`.
+   *
    * @example
    * ```ts
    * const role = await client.identity.roles.create({
@@ -35,6 +37,8 @@ export class Roles extends APIResource {
   /**
    * Returns a role by ID, including its permissions.
    *
+   * This endpoint requires the permission: `roles:read`.
+   *
    * @example
    * ```ts
    * const role = await client.identity.roles.retrieve(
@@ -53,6 +57,8 @@ export class Roles extends APIResource {
   /**
    * Partially updates a custom role's name or permissions. Provided permissions
    * replace all existing ones; global roles cannot be modified.
+   *
+   * This endpoint requires the permission: `roles:update`.
    *
    * @example
    * ```ts
@@ -78,6 +84,8 @@ export class Roles extends APIResource {
    * Returns a paginated list of roles for the target account, including global
    * roles.
    *
+   * This endpoint requires the permission: `roles:read`.
+   *
    * @example
    * ```ts
    * const listRole = await client.identity.roles.list();
@@ -90,6 +98,8 @@ export class Roles extends APIResource {
   /**
    * Deletes a role and its associated permissions. Global roles and roles currently
    * assigned to one or more users cannot be deleted.
+   *
+   * This endpoint requires the permission: `roles:delete`.
    *
    * @example
    * ```ts

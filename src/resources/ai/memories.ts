@@ -14,6 +14,8 @@ export class Memories extends APIResource {
   /**
    * Creates an agent memory.
    *
+   * This endpoint requires the permission: `agents:create`.
+   *
    * @example
    * ```ts
    * const agentMemory = await client.ai.memories.create({
@@ -32,6 +34,8 @@ export class Memories extends APIResource {
   /**
    * Returns an agent memory by ID.
    *
+   * This endpoint requires the permission: `agents:read`.
+   *
    * @example
    * ```ts
    * const agentMemory = await client.ai.memories.retrieve(
@@ -45,6 +49,8 @@ export class Memories extends APIResource {
 
   /**
    * Partially updates an agent memory.
+   *
+   * This endpoint requires the permission: `agents:update`.
    *
    * @example
    * ```ts
@@ -71,6 +77,8 @@ export class Memories extends APIResource {
    *
    * Memories whose `expires_at` has passed are excluded.
    *
+   * This endpoint requires the permission: `agents:read`.
+   *
    * @example
    * ```ts
    * const listAgentMemory = await client.ai.memories.list();
@@ -85,6 +93,8 @@ export class Memories extends APIResource {
 
   /**
    * Deletes an agent memory.
+   *
+   * This endpoint requires the permission: `agents:delete`.
    *
    * @example
    * ```ts

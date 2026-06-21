@@ -14,6 +14,8 @@ export class LocationTypes extends APIResource {
   /**
    * Returns a location type by ID or code.
    *
+   * This endpoint requires the permission: `locations:read`.
+   *
    * @example
    * ```ts
    * const locationType =
@@ -28,6 +30,8 @@ export class LocationTypes extends APIResource {
 
   /**
    * Returns a paginated list of location types.
+   *
+   * This endpoint requires the permission: `locations:read`.
    *
    * @example
    * ```ts

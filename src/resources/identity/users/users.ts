@@ -17,6 +17,8 @@ export class Users extends APIResource {
   /**
    * Returns a user by ID.
    *
+   * This endpoint requires the permission: `team:read`.
+   *
    * @example
    * ```ts
    * const user = await client.identity.users.retrieve(
@@ -30,6 +32,8 @@ export class Users extends APIResource {
 
   /**
    * Partially updates a user's profile.
+   *
+   * This endpoint requires the permission: `team:update`.
    *
    * @example
    * ```ts
