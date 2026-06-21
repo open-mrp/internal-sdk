@@ -14,6 +14,8 @@ export class Actions extends APIResource {
    * Exports all outstanding receivable entries for a specific customer account as a
    * CSV file.
    *
+   * This endpoint requires the permission: `customers:read`.
+   *
    * @example
    * ```ts
    * const fileDownload =

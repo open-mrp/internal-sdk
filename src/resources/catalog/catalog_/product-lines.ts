@@ -16,6 +16,9 @@ export class ProductLines extends APIResource {
    *
    * Customers only see product lines they have access to.
    *
+   * This endpoint requires the permissions: `products:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listCatalogProductLine =
@@ -35,6 +38,9 @@ export class ProductLines extends APIResource {
    * Each category lists the properties its products vary along and the products
    * themselves. Customers only see products they have access to. Pagination applies
    * to categories, not to the products within them.
+   *
+   * This endpoint requires the permissions: `products:read`, `customers:read`,
+   * `suppliers:read`.
    *
    * @example
    * ```ts

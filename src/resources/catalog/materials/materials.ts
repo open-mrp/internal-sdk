@@ -22,6 +22,9 @@ export class Materials extends APIResource {
    * Inventory tracking for the new material starts at a zero on-hand quantity in the
    * category's base unit.
    *
+   * This endpoint requires the permissions: `materials:create`, `customers:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const material = await client.catalog.materials.create({
@@ -37,6 +40,9 @@ export class Materials extends APIResource {
 
   /**
    * Returns a material by ID.
+   *
+   * This endpoint requires the permissions: `materials:read`, `customers:read`,
+   * `suppliers:read`.
    *
    * @example
    * ```ts
@@ -58,6 +64,9 @@ export class Materials extends APIResource {
    *
    * Fields not provided retain their current values.
    *
+   * This endpoint requires the permissions: `materials:update`, `customers:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const material = await client.catalog.materials.update(
@@ -78,6 +87,9 @@ export class Materials extends APIResource {
   /**
    * Returns a paginated list of materials.
    *
+   * This endpoint requires the permissions: `materials:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listMaterial = await client.catalog.materials.list();
@@ -96,6 +108,9 @@ export class Materials extends APIResource {
    * This is a soft delete: the material is marked deleted and no longer returned by
    * other endpoints, but the record is retained. Deleting an already-deleted
    * material returns an error.
+   *
+   * This endpoint requires the permissions: `materials:delete`, `customers:update`,
+   * `suppliers:update`.
    *
    * @example
    * ```ts

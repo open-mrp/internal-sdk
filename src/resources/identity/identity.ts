@@ -90,6 +90,8 @@ export class Identity extends APIResource {
   /**
    * Returns a paginated list of permission groups with their nested permissions.
    *
+   * This endpoint requires the permission: `permissions:read`.
+   *
    * @example
    * ```ts
    * const listPermissionGroup =

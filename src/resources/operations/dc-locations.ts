@@ -13,6 +13,8 @@ export class DcLocations extends APIResource {
   /**
    * Creates a distribution-center (DC) location for a customer.
    *
+   * This endpoint requires the permission: `edi_runs:create`.
+   *
    * @example
    * ```ts
    * const dcLocation =
@@ -28,6 +30,8 @@ export class DcLocations extends APIResource {
 
   /**
    * Returns a DC location by ID.
+   *
+   * This endpoint requires the permission: `edi_runs:read`.
    *
    * @example
    * ```ts
@@ -45,6 +49,8 @@ export class DcLocations extends APIResource {
    * Partially updates a DC location.
    *
    * Omitted fields are left unchanged.
+   *
+   * This endpoint requires the permission: `edi_runs:update`.
    *
    * @example
    * ```ts
@@ -66,6 +72,8 @@ export class DcLocations extends APIResource {
   /**
    * Returns a paginated list of DC locations for the target account.
    *
+   * This endpoint requires the permission: `edi_runs:read`.
+   *
    * @example
    * ```ts
    * const listDcLocation =
@@ -81,6 +89,8 @@ export class DcLocations extends APIResource {
 
   /**
    * Deletes a DC location.
+   *
+   * This endpoint requires the permission: `edi_runs:delete`.
    *
    * @example
    * ```ts

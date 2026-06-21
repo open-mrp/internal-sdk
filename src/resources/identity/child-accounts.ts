@@ -17,6 +17,8 @@ export class ChildAccounts extends APIResource {
    * target account succeeds without changes. Circular relationships (making an
    * account a child of its own child) are rejected with a conflict error.
    *
+   * This endpoint requires the permission: `customers:update`.
+   *
    * @example
    * ```ts
    * const childAccount =
@@ -31,6 +33,8 @@ export class ChildAccounts extends APIResource {
 
   /**
    * Returns a paginated list of child accounts for the target account.
+   *
+   * This endpoint requires the permission: `customers:read`.
    *
    * @example
    * ```ts
@@ -51,6 +55,8 @@ export class ChildAccounts extends APIResource {
    * Only the parent-child relationship is removed; the child account itself is not
    * deleted. This call is idempotent: removing an account that is not currently a
    * child succeeds without changes.
+   *
+   * This endpoint requires the permission: `customers:update`.
    *
    * @example
    * ```ts

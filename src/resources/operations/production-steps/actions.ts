@@ -16,6 +16,8 @@ export class Actions extends APIResource {
    * Each row succeeds or fails independently; failures are reported per row in the
    * response instead of failing the whole request.
    *
+   * This endpoint requires the permission: `production_steps:create`.
+   *
    * @example
    * ```ts
    * const bulkCreateProductionStepsResponse =

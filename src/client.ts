@@ -27,7 +27,9 @@ import {
   AvailableTool,
   ListAgentTokenUsage,
   ListAvailableTool,
+  ListModel,
   ListToolGroup,
+  Model,
   ToolGroup,
 } from './resources/ai/ai';
 import {
@@ -70,6 +72,7 @@ import {
   Permission,
   PermissionGroup,
 } from './resources/identity/identity';
+import { Messaging } from './resources/messaging/messaging';
 import {
   InventoryItem,
   ListInventoryItem,
@@ -512,9 +515,7 @@ export class Augno {
       throw new Errors.APIConnectionError({ cause: response });
     }
 
-    const responseInfo = `[${requestLogID}${retryLogStr}] ${req.method} ${url} ${
-      response.ok ? 'succeeded' : 'failed'
-    } with status ${response.status} in ${headersTime - startTime}ms`;
+    const responseInfo = `[${requestLogID}${retryLogStr}] ${req.method} ${url} ${response.ok ? 'succeeded' : 'failed'} with status ${response.status} in ${headersTime - startTime}ms`;
 
     if (!response.ok) {
       const shouldRetry = await this.shouldRetry(response);
@@ -854,6 +855,7 @@ export class Augno {
   settings: API.Settings = new API.Settings(this);
   catalog: API.Catalog = new API.Catalog(this);
   ai: API.AI = new API.AI(this);
+  messaging: API.Messaging = new API.Messaging(this);
   /**
    * Incoming webhook events.
    */
@@ -871,6 +873,7 @@ Augno.Sales = Sales;
 Augno.Settings = Settings;
 Augno.Catalog = Catalog;
 Augno.AI = AI;
+Augno.Messaging = Messaging;
 Augno.Webhooks = Webhooks;
 Augno.Finance = Finance;
 Augno.Operations = Operations;
@@ -922,12 +925,16 @@ export declare namespace Augno {
     type AvailableTool as AvailableTool,
     type ListAgentTokenUsage as ListAgentTokenUsage,
     type ListAvailableTool as ListAvailableTool,
+    type ListModel as ListModel,
     type ListToolGroup as ListToolGroup,
+    type Model as Model,
     type ToolGroup as ToolGroup,
     type AIRetrieveToolGroupsParams as AIRetrieveToolGroupsParams,
     type AIRetrieveToolsParams as AIRetrieveToolsParams,
     type AIRetrieveUsageParams as AIRetrieveUsageParams,
   };
+
+  export { Messaging as Messaging };
 
   export {
     Webhooks as Webhooks,

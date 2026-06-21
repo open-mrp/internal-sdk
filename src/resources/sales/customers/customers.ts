@@ -26,6 +26,8 @@ export class Customers extends APIResource {
    * If `number` is omitted, the next sequential customer number is assigned
    * automatically.
    *
+   * This endpoint requires the permission: `customers:create`.
+   *
    * @example
    * ```ts
    * const customer = await client.sales.customers.create({
@@ -64,6 +66,8 @@ export class Customers extends APIResource {
   /**
    * Returns a customer by ID.
    *
+   * This endpoint requires the permissions: `customers:read`, `suppliers:read`.
+   *
    * @example
    * ```ts
    * const customer = await client.sales.customers.retrieve(
@@ -84,6 +88,8 @@ export class Customers extends APIResource {
    *
    * Only the fields provided in the request are changed. Nullable fields can be set
    * to `null` to clear their current value.
+   *
+   * This endpoint requires the permission: `customers:update`.
    *
    * @example
    * ```ts
@@ -110,6 +116,8 @@ export class Customers extends APIResource {
   /**
    * Returns a paginated list of customers for the current account.
    *
+   * This endpoint requires the permission: `customers:read`.
+   *
    * @example
    * ```ts
    * const listCustomer = await client.sales.customers.list();
@@ -127,6 +135,8 @@ export class Customers extends APIResource {
    *
    * Fails with a conflict error if any sales orders still reference the customer;
    * delete or reassign those orders, or merge the customer into another first.
+   *
+   * This endpoint requires the permission: `customers:delete`.
    *
    * @example
    * ```ts
@@ -180,6 +190,9 @@ export class Customers extends APIResource {
    *
    * Returns up to 12 products ranked by order count, each with the unit the customer
    * most commonly orders it in.
+   *
+   * This endpoint requires the permissions: `customers:read`, `suppliers:read`,
+   * `items:read`.
    *
    * @example
    * ```ts

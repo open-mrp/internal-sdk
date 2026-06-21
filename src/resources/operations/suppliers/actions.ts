@@ -14,6 +14,8 @@ export class Actions extends APIResource {
    * Each supplier's saved addresses and any users belonging to it are deleted along
    * with it. If any supplier ID is not found, no suppliers are deleted.
    *
+   * This endpoint requires the permission: `suppliers:delete`.
+   *
    * @example
    * ```ts
    * const response =

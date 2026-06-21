@@ -21,6 +21,9 @@ export class Actions extends APIResource {
    * rates require the Shippo integration; carriers without live rating configured
    * return `0`.
    *
+   * This endpoint requires the permissions: `shipments:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const estimateRateResult =
@@ -69,6 +72,9 @@ export class Actions extends APIResource {
    * eligible options. Live carrier rates require the Shippo integration; carriers
    * without live rating configured are returned with a rate of `0`.
    *
+   * This endpoint requires the permissions: `shipments:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const rateShopResult =
@@ -112,6 +118,8 @@ export class Actions extends APIResource {
    * case that does not already have one. Fails with a conflict error if the shipment
    * has already been shipped.
    *
+   * This endpoint requires the permission: `shipments:update`.
+   *
    * @example
    * ```ts
    * const shipment =
@@ -138,6 +146,8 @@ export class Actions extends APIResource {
    * label details from the shipment's shipping cases, deletes the invoice created
    * for the shipment if one exists, and marks the associated sales order as
    * unfulfilled.
+   *
+   * This endpoint requires the permission: `shipments:update`.
    *
    * @example
    * ```ts

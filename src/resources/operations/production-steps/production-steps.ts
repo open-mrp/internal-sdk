@@ -49,6 +49,8 @@ export class ProductionSteps extends APIResource {
    * The step is automatically connected into the production flow graph based on the
    * items it produces and consumes.
    *
+   * This endpoint requires the permission: `production_steps:create`.
+   *
    * @example
    * ```ts
    * const productionStep = await client.operations.productionSteps.create({
@@ -98,6 +100,8 @@ export class ProductionSteps extends APIResource {
   /**
    * Returns a production step by ID.
    *
+   * This endpoint requires the permission: `production_steps:read`.
+   *
    * @example
    * ```ts
    * const productionStep =
@@ -116,6 +120,8 @@ export class ProductionSteps extends APIResource {
 
   /**
    * Partially updates a production step.
+   *
+   * This endpoint requires the permission: `production_steps:update`.
    *
    * @example
    * ```ts
@@ -142,6 +148,8 @@ export class ProductionSteps extends APIResource {
   /**
    * Returns a paginated list of production steps for the current account.
    *
+   * This endpoint requires the permission: `production_steps:read`.
+   *
    * @example
    * ```ts
    * const listProductionStep =
@@ -160,6 +168,8 @@ export class ProductionSteps extends APIResource {
    *
    * The step's connections in the production flow graph are removed as part of the
    * deletion.
+   *
+   * This endpoint requires the permission: `production_steps:delete`.
    *
    * @example
    * ```ts

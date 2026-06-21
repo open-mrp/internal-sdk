@@ -15,6 +15,8 @@ export class Attributes extends APIResource {
    *
    * If the attribute is already associated with the item, this is a no-op.
    *
+   * This endpoint requires the permission: `items:update`.
+   *
    * @example
    * ```ts
    * const item = await client.catalog.items.attributes.update(
@@ -37,6 +39,8 @@ export class Attributes extends APIResource {
 
   /**
    * Removes an attribute from an item.
+   *
+   * This endpoint requires the permission: `items:update`.
    *
    * @example
    * ```ts

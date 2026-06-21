@@ -49,6 +49,8 @@ export class Items extends APIResource {
   /**
    * Returns an item by ID.
    *
+   * This endpoint requires the permission: `items:read`.
+   *
    * @example
    * ```ts
    * const item = await client.catalog.items.retrieve(
@@ -67,6 +69,8 @@ export class Items extends APIResource {
   /**
    * Returns a paginated list of items.
    *
+   * This endpoint requires the permission: `items:read`.
+   *
    * @example
    * ```ts
    * const listItem = await client.catalog.items.list();
@@ -82,6 +86,8 @@ export class Items extends APIResource {
    * The item's rate units (unit value, unit cost, burn rate) and any related
    * order-point, consumption, and production quantity units are updated to the new
    * category's base unit. Re-assigning the item's current category is a no-op.
+   *
+   * This endpoint requires the permission: `items:update`.
    *
    * @example
    * ```ts
@@ -111,6 +117,8 @@ export class Items extends APIResource {
    * produced by any production flow return a not-found error. As a side effect, the
    * item's `unit_cost` rate is refreshed to the computed total.
    *
+   * This endpoint requires the permission: `items:read`.
+   *
    * @example
    * ```ts
    * const itemCosts = await client.catalog.items.retrieveCosts(
@@ -125,6 +133,8 @@ export class Items extends APIResource {
   /**
    * Returns historical trend data for an item as a time-ordered series of data
    * points.
+   *
+   * This endpoint requires the permission: `items:read`.
    *
    * @example
    * ```ts

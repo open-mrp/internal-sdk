@@ -14,6 +14,8 @@ export class RegistrationFlows extends APIResource {
    * Creates a registration flow defining the customer group, payment term, and
    * shipping term options offered during customer self-registration.
    *
+   * This endpoint requires the permission: `self:update`.
+   *
    * @example
    * ```ts
    * const registrationFlow =
@@ -32,6 +34,8 @@ export class RegistrationFlows extends APIResource {
   /**
    * Returns a registration flow by ID.
    *
+   * This endpoint requires the permission: `self:read`.
+   *
    * @example
    * ```ts
    * const registrationFlow =
@@ -46,6 +50,8 @@ export class RegistrationFlows extends APIResource {
 
   /**
    * Partially updates a registration flow.
+   *
+   * This endpoint requires the permission: `self:update`.
    *
    * @example
    * ```ts
@@ -72,6 +78,8 @@ export class RegistrationFlows extends APIResource {
   /**
    * Returns a paginated list of registration flows for the current account.
    *
+   * This endpoint requires the permission: `self:read`.
+   *
    * @example
    * ```ts
    * const listRegistrationFlow =
@@ -87,6 +95,8 @@ export class RegistrationFlows extends APIResource {
 
   /**
    * Deletes a registration flow.
+   *
+   * This endpoint requires the permission: `self:update`.
    *
    * @example
    * ```ts

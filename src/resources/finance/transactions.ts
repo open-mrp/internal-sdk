@@ -17,6 +17,8 @@ export class Transactions extends APIResource {
   /**
    * Creates a transaction with an automatically generated transaction number.
    *
+   * This endpoint requires the permission: `transactions:create`.
+   *
    * @example
    * ```ts
    * const transactionDetail =
@@ -40,6 +42,8 @@ export class Transactions extends APIResource {
   /**
    * Returns a transaction by ID.
    *
+   * This endpoint requires the permission: `transactions:read`.
+   *
    * @example
    * ```ts
    * const transactionDetail =
@@ -58,6 +62,8 @@ export class Transactions extends APIResource {
 
   /**
    * Partially updates a transaction.
+   *
+   * This endpoint requires the permission: `transactions:update`.
    *
    * @example
    * ```ts
@@ -87,6 +93,8 @@ export class Transactions extends APIResource {
   /**
    * Returns a paginated list of transactions for the current account.
    *
+   * This endpoint requires the permission: `transactions:read`.
+   *
    * @example
    * ```ts
    * const listTransactionSummary =
@@ -103,6 +111,8 @@ export class Transactions extends APIResource {
   /**
    * Deletes a transaction along with all of its invoice allocations, and returns the
    * deleted transaction.
+   *
+   * This endpoint requires the permission: `transactions:delete`.
    *
    * @example
    * ```ts

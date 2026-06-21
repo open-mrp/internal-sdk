@@ -4,14 +4,9 @@ on:
     branches:
       - main
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
-
 permissions:
   contents: write
   pull-requests: write
-  packages: write
 
 jobs:
   release-please:
@@ -23,40 +18,3 @@ jobs:
         id: release
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN || github.token }}
-
-      # Publish in the SAME job when release-please cuts a version, gated on its
-      # release_created output. This works with the built-in GITHUB_TOKEN: there is
-      # no cross-workflow `release: published` trigger (which a GITHUB_TOKEN-created
-      # release cannot fire) and no RELEASE_PLEASE_TOKEN PAT is required.
-      #
-      # internal-sdk publishes to GitHub Packages (npm.pkg.github.com), so we do NOT
-      # use the generated bin/publish-npm / publish-npm.yml (which target npmjs).
-      - uses: actions/checkout@v4
-        if: ${{ steps.release.outputs.release_created }}
-        with:
-          fetch-depth: 0
-
-      - uses: pnpm/action-setup@v4
-        if: ${{ steps.release.outputs.release_created }}
-
-      - uses: actions/setup-node@v4
-        if: ${{ steps.release.outputs.release_created }}
-        with:
-          node-version: 20
-          cache: pnpm
-          registry-url: https://npm.pkg.github.com
-          scope: '@augno'
-
-      - run: pnpm install --frozen-lockfile
-        if: ${{ steps.release.outputs.release_created }}
-
-      - run: pnpm run build
-        if: ${{ steps.release.outputs.release_created }}
-
-      # Publish from dist/ (matches the build output) so the root package.json
-      # prepublishOnly guard does not fire.
-      - name: Publish to GitHub Packages
-        if: ${{ steps.release.outputs.release_created }}
-        run: cd dist && pnpm publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

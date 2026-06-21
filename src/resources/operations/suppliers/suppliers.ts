@@ -37,6 +37,8 @@ export class Suppliers extends APIResource {
   /**
    * Creates a supplier, optionally with inline bill-to and ship-to addresses.
    *
+   * This endpoint requires the permission: `suppliers:create`.
+   *
    * @example
    * ```ts
    * const supplierDetail =
@@ -62,6 +64,8 @@ export class Suppliers extends APIResource {
   /**
    * Returns a supplier by ID.
    *
+   * This endpoint requires the permission: `suppliers:read`.
+   *
    * @example
    * ```ts
    * const supplierDetail =
@@ -84,6 +88,8 @@ export class Suppliers extends APIResource {
    * Only provided fields are changed. To update or clear the note, set `update_note`
    * to `true`.
    *
+   * This endpoint requires the permission: `suppliers:update`.
+   *
    * @example
    * ```ts
    * const supplierDetail =
@@ -104,6 +110,8 @@ export class Suppliers extends APIResource {
   /**
    * Returns a paginated list of suppliers for the current account.
    *
+   * This endpoint requires the permission: `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listSupplierSummary =
@@ -122,6 +130,8 @@ export class Suppliers extends APIResource {
    *
    * The supplier's saved addresses and any users belonging to the supplier are
    * deleted along with it. Returns the deleted supplier.
+   *
+   * This endpoint requires the permission: `suppliers:update`.
    *
    * @example
    * ```ts
