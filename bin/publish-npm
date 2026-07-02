@@ -2,7 +2,7 @@
 
 set -eux
 
-npm config set '//registry.npmjs.org/:_authToken' "$NPM_TOKEN"
+export NODE_AUTH_TOKEN="$NPM_TOKEN"
 
 pnpm build
 cd dist
