@@ -16,6 +16,8 @@ export class Actions extends APIResource {
    * Each row succeeds or fails independently; failures are reported per row in the
    * response instead of failing the whole request.
    *
+   * This endpoint requires the permission: `production_steps:create`.
+   *
    * @example
    * ```ts
    * const bulkCreateProductionStepsResponse =
@@ -126,7 +128,7 @@ export interface BulkCreateProductionStepInput {
   /**
    * Allowance correction factor applied to labor time in cost calculations.
    *
-   * Defaults to `0`.
+   * When omitted, no allowance adjustment is applied.
    */
   allowances?: number;
 
@@ -141,7 +143,7 @@ export interface BulkCreateProductionStepInput {
   /**
    * Leveling correction factor applied to labor time in cost calculations.
    *
-   * Defaults to `0`.
+   * When omitted, no leveling adjustment is applied.
    */
   leveling_factor?: number;
 

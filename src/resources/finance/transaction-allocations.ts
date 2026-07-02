@@ -13,7 +13,9 @@ import { path } from '../../internal/utils/path';
  */
 export class TransactionAllocations extends APIResource {
   /**
-   * Partially updates a transaction allocation.
+   * Updates the amount of a transaction allocation applied to its invoice.
+   *
+   * This endpoint requires the permission: `settlements:update`.
    *
    * @example
    * ```ts
@@ -36,6 +38,8 @@ export class TransactionAllocations extends APIResource {
    * Returns a paginated list of transaction allocation entries for the current
    * account.
    *
+   * This endpoint requires the permission: `settlements:read`.
+   *
    * @example
    * ```ts
    * const listAllocationEntry =
@@ -55,6 +59,8 @@ export class TransactionAllocations extends APIResource {
    *
    * The parent transaction's `is_fully_allocated` flag is not recomputed
    * automatically; update the transaction separately if needed.
+   *
+   * This endpoint requires the permission: `settlements:delete`.
    *
    * @example
    * ```ts

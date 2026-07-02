@@ -16,6 +16,8 @@ export class Deliveries extends APIResource {
   /**
    * Returns a delivery by ID.
    *
+   * This endpoint requires the permission: `deliveries:read`.
+   *
    * @example
    * ```ts
    * const delivery =
@@ -34,6 +36,8 @@ export class Deliveries extends APIResource {
 
   /**
    * Returns a paginated list of deliveries for the caller's account.
+   *
+   * This endpoint requires the permission: `deliveries:read`.
    *
    * @example
    * ```ts
@@ -368,10 +372,8 @@ export interface PurchaseOrder {
    * Freight describes the carrier selection and freight billing for a record.
    *
    * It is a generic, reusable sub-resource shared by anything that carries shipping
-   * configuration — e.g. a sales order's chosen freight, or a customer's default
-   * freight preferences. It is itself expanded via its parent (e.g.
-   * include[]=freight); when present, the full carrier and service level are
-   * included.
+   * configuration — for example a sales order's chosen freight, or a customer's
+   * default freight preferences.
    */
   freight: SalesOrdersAPI.Freight | null;
 

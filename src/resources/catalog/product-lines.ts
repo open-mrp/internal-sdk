@@ -14,6 +14,8 @@ export class ProductLines extends APIResource {
   /**
    * Creates an account-owned product line.
    *
+   * This endpoint requires the permission: `product_lines:create`.
+   *
    * @example
    * ```ts
    * const productLine =
@@ -37,6 +39,9 @@ export class ProductLines extends APIResource {
    * Returns a product line by ID, including system-owned product lines accessible to
    * the account.
    *
+   * This endpoint requires the permissions: `product_lines:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const productLine =
@@ -58,6 +63,8 @@ export class ProductLines extends APIResource {
    *
    * Only the provided fields are changed. The reserved default product lines
    * (shipping, service, credit, tax) cannot be updated.
+   *
+   * This endpoint requires the permission: `product_lines:update`.
    *
    * @example
    * ```ts
@@ -85,6 +92,9 @@ export class ProductLines extends APIResource {
    * Returns a paginated list of product lines, including account-owned and system
    * product lines.
    *
+   * This endpoint requires the permissions: `product_lines:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listProductLine =
@@ -103,6 +113,8 @@ export class ProductLines extends APIResource {
    *
    * The reserved default product lines (shipping, service, credit, tax) cannot be
    * deleted.
+   *
+   * This endpoint requires the permission: `product_lines:delete`.
    *
    * @example
    * ```ts

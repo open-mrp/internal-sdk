@@ -13,6 +13,9 @@ export class Addresses extends APIResource {
   /**
    * Creates an address.
    *
+   * This endpoint requires the permissions: `addresses:create`, `customers:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const address = await client.sales.addresses.create({
@@ -32,6 +35,9 @@ export class Addresses extends APIResource {
   /**
    * Retrieves an address by ID.
    *
+   * This endpoint requires the permissions: `addresses:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const address = await client.sales.addresses.retrieve(
@@ -48,6 +54,9 @@ export class Addresses extends APIResource {
    *
    * Changing a street, locality, state, postal code, or country field may replace
    * the address's geolocation, so the geolocation `id` in the response can change.
+   *
+   * This endpoint requires the permissions: `addresses:update`, `customers:update`,
+   * `suppliers:update`.
    *
    * @example
    * ```ts
@@ -68,6 +77,9 @@ export class Addresses extends APIResource {
   /**
    * Returns a paginated list of addresses.
    *
+   * This endpoint requires the permissions: `addresses:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listAddress = await client.sales.addresses.list();
@@ -82,6 +94,9 @@ export class Addresses extends APIResource {
    *
    * Deletion fails if the address is in use as a billing or shipping address on a
    * sales order, invoice, or shipment, or as a default account address.
+   *
+   * This endpoint requires the permissions: `addresses:delete`, `customers:update`,
+   * `suppliers:update`.
    *
    * @example
    * ```ts
@@ -173,7 +188,7 @@ export interface UpdateAddressRequest {
   street_line_2?: string | null;
 
   /**
-   * Address type.
+   * How the address is used.
    *
    * - `standard`: a normal shipping or billing address.
    * - `drop_ship`: an address an order is shipped to directly, typically a third
@@ -231,7 +246,7 @@ export interface AddressCreateParams {
   street_line_2?: string;
 
   /**
-   * Address type.
+   * How the address is used.
    *
    * - `standard`: a normal shipping or billing address.
    * - `drop_ship`: an address an order is shipped to directly, typically a third
@@ -293,7 +308,7 @@ export interface AddressUpdateParams {
   street_line_2?: string | null;
 
   /**
-   * Address type.
+   * How the address is used.
    *
    * - `standard`: a normal shipping or billing address.
    * - `drop_ship`: an address an order is shipped to directly, typically a third
@@ -325,7 +340,7 @@ export interface AddressListParams {
   q?: string;
 
   /**
-   * Filter results to a single address type (`standard` or `drop_ship`).
+   * Filter results to a single address type.
    */
   type?: 'standard' | 'drop_ship';
 }

@@ -22,6 +22,9 @@ export class Accounts extends APIResource {
    * Returns a paginated list of payment-oriented invoices for a specific customer
    * account, including invoices billed to its child accounts.
    *
+   * This endpoint requires the permissions: `invoices:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listInvoiceForPayment =
@@ -39,6 +42,8 @@ export class Accounts extends APIResource {
   /**
    * Returns a paginated list of transactions for a customer account, optionally
    * including child account transactions.
+   *
+   * This endpoint requires the permission: `transactions:read`.
    *
    * @example
    * ```ts
@@ -107,8 +112,9 @@ export interface InvoiceForPayment {
   is_paid_in_full: boolean;
 
   /**
-   * Whether the billed customer is a child of a parent account (i.e. it has a parent
-   * account). When true, `parent_account` identifies that parent.
+   * Whether the billed customer is a child of a parent account.
+   *
+   * When `true`, `parent_account` identifies that parent.
    */
   is_parent_account: boolean;
 

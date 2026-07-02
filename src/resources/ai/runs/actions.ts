@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AlertsAPI from '../alerts/alerts';
+import * as RunsAPI from './runs';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -11,10 +11,14 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Cancels a pending or running agent run.
+   * Cancels an in-progress agent run.
    *
-   * Only runs in the `pending` or `running` status can be cancelled; cancelling a
-   * run in any other status returns a validation error.
+   * A run can be cancelled while it is working or paused waiting on the user —
+   * `pending`, `running`, `awaiting_input`, or `awaiting_approval`. Cancelling a run
+   * in a terminal status (`completed`, `failed`, `cancelled`) returns a validation
+   * error.
+   *
+   * This endpoint requires the permission: `agent_runs:update`.
    *
    * @example
    * ```ts
@@ -27,7 +31,7 @@ export class Actions extends APIResource {
     id: string,
     params: ActionCancelParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<AlertsAPI.AgentRun> {
+  ): APIPromise<RunsAPI.AgentRun> {
     const { include } = params ?? {};
     return this._client.post(path`/v1/ai/runs/${id}/actions/cancel`, { query: { include }, ...options });
   }
@@ -37,29 +41,50 @@ export class Actions extends APIResource {
    *
    * The run must be in the `awaiting_input` or `awaiting_approval` status.
    *
+   * This endpoint requires the permission: `agent_runs:update`.
+   *
    * @example
    * ```ts
    * const agentRun = await client.ai.runs.actions.continue(
    *   'agrn_01502aa6da9bbdbaa595915fa4',
-   *   {
-   *     allowed_tool_slugs: [],
-   *     approved_tool_slugs: [],
-   *     message: 'Yes, proceed with creating the order.',
-   *   },
+   *   { message: 'Yes, proceed with creating the order.' },
    * );
    * ```
    */
-  continue(
-    id: string,
-    params: ActionContinueParams,
-    options?: RequestOptions,
-  ): APIPromise<AlertsAPI.AgentRun> {
+  continue(id: string, params: ActionContinueParams, options?: RequestOptions): APIPromise<RunsAPI.AgentRun> {
     const { include, ...body } = params;
     return this._client.post(path`/v1/ai/runs/${id}/actions/continue`, {
       query: { include },
       body,
       ...options,
     });
+  }
+
+  /**
+   * Retries a failed agent run by resuming its existing transcript.
+   *
+   * Only runs in the `failed` status can be retried; retrying a run in any other
+   * status returns a validation error. The run is re-attempted from where it left
+   * off — its prior reasoning and tool results are replayed, so the agent continues
+   * with full knowledge of what it already did rather than starting over. Each run
+   * can be retried a limited number of times.
+   *
+   * This endpoint requires the permission: `agent_runs:update`.
+   *
+   * @example
+   * ```ts
+   * const agentRun = await client.ai.runs.actions.retry(
+   *   'agrn_01502aa6da9bbdbaa595915fa4',
+   * );
+   * ```
+   */
+  retry(
+    id: string,
+    params: ActionRetryParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<RunsAPI.AgentRun> {
+    const { include } = params ?? {};
+    return this._client.post(path`/v1/ai/runs/${id}/actions/retry`, { query: { include }, ...options });
   }
 }
 
@@ -68,26 +93,44 @@ export class Actions extends APIResource {
  */
 export interface ContinueRunRequest {
   /**
-   * Slugs of tools to allow for the rest of the run.
-   *
-   * Allowed tools execute without pausing for review; slugs accumulate across
-   * continue requests for the life of the run.
+   * User message to send to the agent.
    */
-  allowed_tool_slugs: Array<string>;
+  message: string;
+
+  /**
+   * Tool-call IDs (the `tool_use_id` of individual blocked calls) to approve.
+   *
+   * Use this instead of `approved_tool_slugs` to approve ONE specific call when
+   * several pending calls share the same tool slug — approving by slug would approve
+   * all of them. Approvals are one-time.
+   */
+  approved_tool_call_ids?: Array<string>;
 
   /**
    * Slugs of tools whose pending calls should be approved.
    *
-   * When empty, all pending tool calls are approved. Approvals are one-time: later
-   * calls to the same tool pause for review again unless the slug is also in
-   * `allowed_tool_slugs`.
+   * When empty, all pending tool calls are approved. Approvals are always one-time:
+   * a later call to the same tool pauses for review again.
    */
-  approved_tool_slugs: Array<string>;
+  approved_tool_slugs?: Array<string>;
 
   /**
-   * User message to send to the agent.
+   * Tool-call IDs (the `tool_use_id` of individual blocked calls) to deny.
+   *
+   * Per-call counterpart of `rejected_tool_slugs`, letting you deny one specific
+   * call among several that share a slug. Each denied call is answered with a
+   * "denied by user" result and the run continues.
    */
-  message: string;
+  rejected_tool_call_ids?: Array<string>;
+
+  /**
+   * Slugs of tools whose pending calls should be denied.
+   *
+   * The run keeps going: each denied call is answered with a "denied by user" result
+   * so the agent proceeds without it, instead of cancelling the run. A single resume
+   * may both approve and reject different tools.
+   */
+  rejected_tool_slugs?: Array<string>;
 }
 
 export interface ActionCancelParams {
@@ -100,23 +143,6 @@ export interface ActionCancelParams {
 
 export interface ActionContinueParams {
   /**
-   * Body param: Slugs of tools to allow for the rest of the run.
-   *
-   * Allowed tools execute without pausing for review; slugs accumulate across
-   * continue requests for the life of the run.
-   */
-  allowed_tool_slugs: Array<string>;
-
-  /**
-   * Body param: Slugs of tools whose pending calls should be approved.
-   *
-   * When empty, all pending tool calls are approved. Approvals are one-time: later
-   * calls to the same tool pause for review again unless the slug is also in
-   * `allowed_tool_slugs`.
-   */
-  approved_tool_slugs: Array<string>;
-
-  /**
    * Body param: User message to send to the agent.
    */
   message: string;
@@ -126,6 +152,51 @@ export interface ActionContinueParams {
    * are returned as `null`.
    */
   include?: Array<'actions' | 'definition' | 'definition.config' | 'definition.tools' | 'definition.role'>;
+
+  /**
+   * Body param: Tool-call IDs (the `tool_use_id` of individual blocked calls) to
+   * approve.
+   *
+   * Use this instead of `approved_tool_slugs` to approve ONE specific call when
+   * several pending calls share the same tool slug — approving by slug would approve
+   * all of them. Approvals are one-time.
+   */
+  approved_tool_call_ids?: Array<string>;
+
+  /**
+   * Body param: Slugs of tools whose pending calls should be approved.
+   *
+   * When empty, all pending tool calls are approved. Approvals are always one-time:
+   * a later call to the same tool pauses for review again.
+   */
+  approved_tool_slugs?: Array<string>;
+
+  /**
+   * Body param: Tool-call IDs (the `tool_use_id` of individual blocked calls) to
+   * deny.
+   *
+   * Per-call counterpart of `rejected_tool_slugs`, letting you deny one specific
+   * call among several that share a slug. Each denied call is answered with a
+   * "denied by user" result and the run continues.
+   */
+  rejected_tool_call_ids?: Array<string>;
+
+  /**
+   * Body param: Slugs of tools whose pending calls should be denied.
+   *
+   * The run keeps going: each denied call is answered with a "denied by user" result
+   * so the agent proceeds without it, instead of cancelling the run. A single resume
+   * may both approve and reject different tools.
+   */
+  rejected_tool_slugs?: Array<string>;
+}
+
+export interface ActionRetryParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'actions' | 'definition' | 'definition.config' | 'definition.tools' | 'definition.role'>;
 }
 
 export declare namespace Actions {
@@ -133,5 +204,6 @@ export declare namespace Actions {
     type ContinueRunRequest as ContinueRunRequest,
     type ActionCancelParams as ActionCancelParams,
     type ActionContinueParams as ActionContinueParams,
+    type ActionRetryParams as ActionRetryParams,
   };
 }

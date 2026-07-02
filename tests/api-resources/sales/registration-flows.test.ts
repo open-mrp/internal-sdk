@@ -9,12 +9,7 @@ const client = new Augno({
 
 describe('resource registrationFlows', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.sales.registrationFlows.create({
-      customer_group_ids: ['cgrp_01abc'],
-      name: 'Wholesale Registration',
-      payment_term_ids: ['pt_01abc'],
-      shipping_term_ids: ['st_01abc'],
-    });
+    const responsePromise = client.sales.registrationFlows.create({ name: 'Wholesale Registration' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -26,8 +21,8 @@ describe('resource registrationFlows', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.sales.registrationFlows.create({
-      customer_group_ids: ['cgrp_01abc'],
       name: 'Wholesale Registration',
+      customer_group_ids: ['cgrp_01abc'],
       payment_term_ids: ['pt_01abc'],
       shipping_term_ids: ['st_01abc'],
     });

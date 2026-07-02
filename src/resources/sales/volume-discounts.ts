@@ -20,6 +20,8 @@ export class VolumeDiscounts extends APIResource {
    * The discount name must be unique within the account; creating a discount with an
    * existing name returns a conflict error.
    *
+   * This endpoint requires the permission: `discounts:create`.
+   *
    * @example
    * ```ts
    * const volumeDiscount =
@@ -42,6 +44,9 @@ export class VolumeDiscounts extends APIResource {
 
   /**
    * Returns a volume discount by ID.
+   *
+   * This endpoint requires the permissions: `discounts:read`, `customers:read`,
+   * `suppliers:read`.
    *
    * @example
    * ```ts
@@ -66,6 +71,8 @@ export class VolumeDiscounts extends APIResource {
    * flag is `true`, in which case they replace the existing set entirely. Tiers use
    * upsert semantics: tiers with an `id` are updated, tiers without one are created,
    * and existing tiers omitted from the list are deleted.
+   *
+   * This endpoint requires the permission: `discounts:update`.
    *
    * @example
    * ```ts
@@ -99,6 +106,9 @@ export class VolumeDiscounts extends APIResource {
   /**
    * Returns a paginated list of volume discounts for the target account.
    *
+   * This endpoint requires the permissions: `discounts:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listVolumeDiscount =
@@ -116,6 +126,8 @@ export class VolumeDiscounts extends APIResource {
    * Deletes a volume discount along with its tiers and scoping associations.
    *
    * Deletion is permanent; further requests against the deleted ID return an error.
+   *
+   * This endpoint requires the permission: `discounts:delete`.
    *
    * @example
    * ```ts
@@ -135,7 +147,7 @@ export class VolumeDiscounts extends APIResource {
  */
 export interface CreateVolumeDiscountRequest {
   /**
-   * Display name.
+   * Display name of the volume discount.
    *
    * Must be unique within the account.
    */
@@ -192,7 +204,7 @@ export interface CreateVolumeDiscountTierInput {
   discount_percentage: string;
 
   /**
-   * Display name.
+   * Display name of the tier.
    */
   name: string;
 
@@ -330,7 +342,7 @@ export interface UpdateVolumeDiscountRequest {
   customer_group_ids?: Array<string>;
 
   /**
-   * Display name.
+   * Display name of the volume discount.
    *
    * Must be unique within the account.
    */
@@ -380,7 +392,7 @@ export interface UpdateVolumeDiscountTierInput {
   discount_percentage?: string;
 
   /**
-   * Display name.
+   * Display name of the tier.
    */
   name?: string;
 
@@ -436,7 +448,7 @@ export interface VolumeDiscount {
   customer_groups: CustomersAPI.ListAccountGroup | null;
 
   /**
-   * Display name.
+   * Display name of the volume discount.
    *
    * Must be unique within the account.
    */
@@ -485,7 +497,7 @@ export interface VolumeDiscountTier {
   discount_percentage: string;
 
   /**
-   * Display name.
+   * Display name of the tier.
    */
   name: string;
 
@@ -510,7 +522,7 @@ export interface VolumeDiscountDeleteResponse {}
 
 export interface VolumeDiscountCreateParams {
   /**
-   * Display name.
+   * Display name of the volume discount.
    *
    * Must be unique within the account.
    */
@@ -623,7 +635,7 @@ export interface VolumeDiscountUpdateParams {
   customer_group_ids?: Array<string>;
 
   /**
-   * Display name.
+   * Display name of the volume discount.
    *
    * Must be unique within the account.
    */

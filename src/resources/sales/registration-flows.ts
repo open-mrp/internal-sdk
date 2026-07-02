@@ -14,12 +14,14 @@ export class RegistrationFlows extends APIResource {
    * Creates a registration flow defining the customer group, payment term, and
    * shipping term options offered during customer self-registration.
    *
+   * This endpoint requires the permission: `self:update`.
+   *
    * @example
    * ```ts
    * const registrationFlow =
    *   await client.sales.registrationFlows.create({
-   *     customer_group_ids: ['cgrp_01abc'],
    *     name: 'Wholesale Registration',
+   *     customer_group_ids: ['cgrp_01abc'],
    *     payment_term_ids: ['pt_01abc'],
    *     shipping_term_ids: ['st_01abc'],
    *   });
@@ -31,6 +33,8 @@ export class RegistrationFlows extends APIResource {
 
   /**
    * Returns a registration flow by ID.
+   *
+   * This endpoint requires the permission: `self:read`.
    *
    * @example
    * ```ts
@@ -46,6 +50,8 @@ export class RegistrationFlows extends APIResource {
 
   /**
    * Partially updates a registration flow.
+   *
+   * This endpoint requires the permission: `self:update`.
    *
    * @example
    * ```ts
@@ -72,6 +78,8 @@ export class RegistrationFlows extends APIResource {
   /**
    * Returns a paginated list of registration flows for the current account.
    *
+   * This endpoint requires the permission: `self:read`.
+   *
    * @example
    * ```ts
    * const listRegistrationFlow =
@@ -87,6 +95,8 @@ export class RegistrationFlows extends APIResource {
 
   /**
    * Deletes a registration flow.
+   *
+   * This endpoint requires the permission: `self:update`.
    *
    * @example
    * ```ts
@@ -121,24 +131,24 @@ export class RegistrationFlows extends APIResource {
  */
 export interface CreateRegistrationFlowRequest {
   /**
-   * IDs of the customer groups offered as options in this flow.
-   */
-  customer_group_ids: Array<string>;
-
-  /**
-   * Display name.
+   * Display name of the registration flow.
    */
   name: string;
 
   /**
+   * IDs of the customer groups offered as options in this flow.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
    * IDs of the payment terms offered as options in this flow.
    */
-  payment_term_ids: Array<string>;
+  payment_term_ids?: Array<string>;
 
   /**
    * IDs of the shipping terms offered as options in this flow.
    */
-  shipping_term_ids: Array<string>;
+  shipping_term_ids?: Array<string>;
 }
 
 /**
@@ -204,7 +214,7 @@ export interface RegistrationFlow {
   customer_group_options: ListRegistrationFlowOption | null;
 
   /**
-   * Display name.
+   * Display name of the registration flow.
    */
   name: string;
 
@@ -287,7 +297,7 @@ export interface UpdateRegistrationFlowRequest {
   customer_group_ids?: Array<string>;
 
   /**
-   * Display name.
+   * Display name of the registration flow.
    */
   name?: string;
 
@@ -310,24 +320,24 @@ export interface RegistrationFlowDeleteResponse {}
 
 export interface RegistrationFlowCreateParams {
   /**
-   * IDs of the customer groups offered as options in this flow.
-   */
-  customer_group_ids: Array<string>;
-
-  /**
-   * Display name.
+   * Display name of the registration flow.
    */
   name: string;
 
   /**
+   * IDs of the customer groups offered as options in this flow.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
    * IDs of the payment terms offered as options in this flow.
    */
-  payment_term_ids: Array<string>;
+  payment_term_ids?: Array<string>;
 
   /**
    * IDs of the shipping terms offered as options in this flow.
    */
-  shipping_term_ids: Array<string>;
+  shipping_term_ids?: Array<string>;
 }
 
 export interface RegistrationFlowUpdateParams {
@@ -364,7 +374,7 @@ export interface RegistrationFlowUpdateParams {
   customer_group_ids?: Array<string>;
 
   /**
-   * Display name.
+   * Display name of the registration flow.
    */
   name?: string;
 

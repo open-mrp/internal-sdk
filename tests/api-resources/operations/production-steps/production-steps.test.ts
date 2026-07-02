@@ -11,15 +11,6 @@ describe('resource productionSteps', () => {
   test('create: only required params', async () => {
     const responsePromise = client.operations.productionSteps.create({
       allowances: '0.05',
-      consumptions: [
-        {
-          item_id: 'it_0131e386ac683e8c29a71f6f1f',
-          quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-          quantity_value: '50',
-          waste_quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-          waste_quantity_value: '2',
-        },
-      ],
       labor_rate: {
         denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
         numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
@@ -55,16 +46,6 @@ describe('resource productionSteps', () => {
   test('create: required and optional params', async () => {
     const response = await client.operations.productionSteps.create({
       allowances: '0.05',
-      consumptions: [
-        {
-          item_id: 'it_0131e386ac683e8c29a71f6f1f',
-          quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-          quantity_value: '50',
-          waste_quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-          waste_quantity_value: '2',
-          instructions: 'instructions',
-        },
-      ],
       labor_rate: {
         denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
         numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
@@ -87,6 +68,16 @@ describe('resource productionSteps', () => {
         quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
         quantity_value: '100',
       },
+      consumptions: [
+        {
+          item_id: 'it_0131e386ac683e8c29a71f6f1f',
+          quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+          quantity_value: '50',
+          waste_quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+          waste_quantity_value: '2',
+          instructions: 'instructions',
+        },
+      ],
       department_id: 'department_id',
       notes: 'notes',
       scanning_station_id: 'scst_0129335dd6286056a97024fcc1',

@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AnalyticsAPI from '../core/analytics';
+import * as CoreAPI from '../core/core';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
@@ -13,6 +13,8 @@ import { path } from '../../internal/utils/path';
 export class Memories extends APIResource {
   /**
    * Creates an agent memory.
+   *
+   * This endpoint requires the permission: `agent_memories:create`.
    *
    * @example
    * ```ts
@@ -32,6 +34,8 @@ export class Memories extends APIResource {
   /**
    * Returns an agent memory by ID.
    *
+   * This endpoint requires the permission: `agent_memories:read`.
+   *
    * @example
    * ```ts
    * const agentMemory = await client.ai.memories.retrieve(
@@ -45,6 +49,8 @@ export class Memories extends APIResource {
 
   /**
    * Partially updates an agent memory.
+   *
+   * This endpoint requires the permission: `agent_memories:update`.
    *
    * @example
    * ```ts
@@ -71,6 +77,8 @@ export class Memories extends APIResource {
    *
    * Memories whose `expires_at` has passed are excluded.
    *
+   * This endpoint requires the permission: `agent_memories:read`.
+   *
    * @example
    * ```ts
    * const listAgentMemory = await client.ai.memories.list();
@@ -85,6 +93,8 @@ export class Memories extends APIResource {
 
   /**
    * Deletes an agent memory.
+   *
+   * This endpoint requires the permission: `agent_memories:delete`.
    *
    * @example
    * ```ts
@@ -125,7 +135,7 @@ export interface AgentMemory {
   /**
    * Entity is a polymorphic reference to any resource in the system.
    */
-  entity: AnalyticsAPI.Entity | null;
+  entity: CoreAPI.Entity | null;
 
   /**
    * When this memory expires.
@@ -165,8 +175,7 @@ export interface AgentMemory {
  */
 export interface CreateMemoryRequest {
   /**
-   * Free-form category used to group related memories (e.g. `preference`, `fact`,
-   * `instruction`).
+   * Category used to group related memories.
    */
   category: string;
 
@@ -199,8 +208,8 @@ export interface CreateMemoryRequest {
   expires_at?: string;
 
   /**
-   * Relative importance from `0` to `1`, used to prioritize which memories the agent
-   * recalls.
+   * Relative importance from `0` to `1` in increments of `0.1`, used to prioritize
+   * which memories the agent recalls.
    *
    * Higher is more important. When omitted, the memory is stored at the lowest
    * priority (`0`).
@@ -239,8 +248,7 @@ export interface ListAgentMemory {
  */
 export interface UpdateMemoryRequest {
   /**
-   * Free-form category used to group related memories (e.g. `preference`, `fact`,
-   * `instruction`).
+   * Category used to group related memories.
    */
   category?: string;
 
@@ -252,28 +260,29 @@ export interface UpdateMemoryRequest {
   /**
    * ID of the platform record this memory is scoped to.
    *
-   * Provide together with `entity_type`.
+   * Provide together with `entity_type`; send `null` to unscope the memory.
    */
-  entity_id?: string;
+  entity_id?: string | null;
 
   /**
    * Type of platform record this memory is scoped to (e.g. `customer`, `product`).
    *
-   * Provide together with `entity_id` to scope the memory to a specific record.
+   * Provide together with `entity_id` to scope the memory to a specific record; send
+   * `null` (on either entity field) to unscope the memory.
    */
-  entity_type?: string;
+  entity_type?: string | null;
 
   /**
    * Expiration timestamp in ISO 8601 format (e.g. `2026-01-02T15:04:05Z`).
    *
    * Expired memories are excluded from list results and are no longer recalled by
-   * agents.
+   * agents. Send `null` to make the memory permanent (never expires).
    */
-  expires_at?: string;
+  expires_at?: string | null;
 
   /**
-   * Relative importance from `0` to `1`, used to prioritize which memories the agent
-   * recalls.
+   * Relative importance from `0` to `1` in increments of `0.1`, used to prioritize
+   * which memories the agent recalls.
    *
    * Higher is more important.
    */
@@ -290,8 +299,7 @@ export interface MemoryDeleteResponse {}
 
 export interface MemoryCreateParams {
   /**
-   * Free-form category used to group related memories (e.g. `preference`, `fact`,
-   * `instruction`).
+   * Category used to group related memories.
    */
   category: string;
 
@@ -324,8 +332,8 @@ export interface MemoryCreateParams {
   expires_at?: string;
 
   /**
-   * Relative importance from `0` to `1`, used to prioritize which memories the agent
-   * recalls.
+   * Relative importance from `0` to `1` in increments of `0.1`, used to prioritize
+   * which memories the agent recalls.
    *
    * Higher is more important. When omitted, the memory is stored at the lowest
    * priority (`0`).
@@ -341,8 +349,7 @@ export interface MemoryCreateParams {
 
 export interface MemoryUpdateParams {
   /**
-   * Free-form category used to group related memories (e.g. `preference`, `fact`,
-   * `instruction`).
+   * Category used to group related memories.
    */
   category?: string;
 
@@ -354,28 +361,29 @@ export interface MemoryUpdateParams {
   /**
    * ID of the platform record this memory is scoped to.
    *
-   * Provide together with `entity_type`.
+   * Provide together with `entity_type`; send `null` to unscope the memory.
    */
-  entity_id?: string;
+  entity_id?: string | null;
 
   /**
    * Type of platform record this memory is scoped to (e.g. `customer`, `product`).
    *
-   * Provide together with `entity_id` to scope the memory to a specific record.
+   * Provide together with `entity_id` to scope the memory to a specific record; send
+   * `null` (on either entity field) to unscope the memory.
    */
-  entity_type?: string;
+  entity_type?: string | null;
 
   /**
    * Expiration timestamp in ISO 8601 format (e.g. `2026-01-02T15:04:05Z`).
    *
    * Expired memories are excluded from list results and are no longer recalled by
-   * agents.
+   * agents. Send `null` to make the memory permanent (never expires).
    */
-  expires_at?: string;
+  expires_at?: string | null;
 
   /**
-   * Relative importance from `0` to `1`, used to prioritize which memories the agent
-   * recalls.
+   * Relative importance from `0` to `1` in increments of `0.1`, used to prioritize
+   * which memories the agent recalls.
    *
    * Higher is more important.
    */

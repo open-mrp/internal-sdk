@@ -43,7 +43,7 @@ describe('resource runs', () => {
     await expect(
       client.ai.runs.retrieve(
         'agrn_01502aa6da9bbdbaa595915fa4',
-        { include: ['actions'] },
+        { include: ['triggered_by'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
@@ -67,7 +67,7 @@ describe('resource runs', () => {
         {
           agent_definition_id: 'agent_definition_id',
           cursor: 'cursor',
-          include: ['definition'],
+          include: ['triggered_by'],
           limit: 0,
           q: 'q',
           status: 'status',

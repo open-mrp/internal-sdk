@@ -13,6 +13,8 @@ export class Locations extends APIResource {
   /**
    * Creates a storage location, optionally placing it in the location hierarchy.
    *
+   * This endpoint requires the permission: `locations:create`.
+   *
    * @example
    * ```ts
    * const location = await client.operations.locations.create({
@@ -28,6 +30,8 @@ export class Locations extends APIResource {
 
   /**
    * Returns a location by ID.
+   *
+   * This endpoint requires the permission: `locations:read`.
    *
    * @example
    * ```ts
@@ -46,6 +50,8 @@ export class Locations extends APIResource {
 
   /**
    * Partially updates a location.
+   *
+   * This endpoint requires the permission: `locations:update`.
    *
    * @example
    * ```ts
@@ -67,6 +73,8 @@ export class Locations extends APIResource {
   /**
    * Returns a paginated list of locations in your account.
    *
+   * This endpoint requires the permission: `locations:read`.
+   *
    * @example
    * ```ts
    * const listLocation =
@@ -85,6 +93,8 @@ export class Locations extends APIResource {
    *
    * Fails if the location has child locations; remove or reassign the children
    * first.
+   *
+   * This endpoint requires the permission: `locations:delete`.
    *
    * @example
    * ```ts

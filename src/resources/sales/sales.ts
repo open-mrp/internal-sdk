@@ -82,6 +82,8 @@ import * as AccountUsersAPI from './account-users/account-users';
 import { AccountUsers } from './account-users/account-users';
 import * as AccountsAPI from './accounts/accounts';
 import { Accounts } from './accounts/accounts';
+import * as ContactsAPI from './contacts/contacts';
+import { Contacts } from './contacts/contacts';
 import * as CustomersAPI from './customers/customers';
 import {
   AccountGroup,
@@ -184,6 +186,7 @@ export class Sales extends APIResource {
   );
   accountUsers: AccountUsersAPI.AccountUsers = new AccountUsersAPI.AccountUsers(this._client);
   priorities: PrioritiesAPI.Priorities = new PrioritiesAPI.Priorities(this._client);
+  contacts: ContactsAPI.Contacts = new ContactsAPI.Contacts(this._client);
   orderDiscounts: OrderDiscountsAPI.OrderDiscounts = new OrderDiscountsAPI.OrderDiscounts(this._client);
   salesOrders: SalesOrdersAPI.SalesOrders = new SalesOrdersAPI.SalesOrders(this._client);
   volumeDiscounts: VolumeDiscountsAPI.VolumeDiscounts = new VolumeDiscountsAPI.VolumeDiscounts(this._client);
@@ -288,6 +291,7 @@ Sales.AccountStatuses = AccountStatuses;
 Sales.ProductLineAccess = ProductLineAccess;
 Sales.AccountUsers = AccountUsers;
 Sales.Priorities = Priorities;
+Sales.Contacts = Contacts;
 Sales.OrderDiscounts = OrderDiscounts;
 Sales.SalesOrders = SalesOrders;
 Sales.VolumeDiscounts = VolumeDiscounts;
@@ -399,6 +403,8 @@ export declare namespace Sales {
     type PriorityRetrieveParams as PriorityRetrieveParams,
     type PriorityListParams as PriorityListParams,
   };
+
+  export { Contacts as Contacts };
 
   export {
     OrderDiscounts as OrderDiscounts,

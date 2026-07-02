@@ -22,6 +22,9 @@ export class AccountUsers extends APIResource {
    * sent a welcome email containing a generated password. If a matching user already
    * exists, that user is added to the account instead.
    *
+   * This endpoint requires the permissions: `team:create`, `customers:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const accountUser =
@@ -51,6 +54,9 @@ export class AccountUsers extends APIResource {
   /**
    * Returns an account user by ID.
    *
+   * This endpoint requires the permissions: `team:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const accountUser =
@@ -73,6 +79,9 @@ export class AccountUsers extends APIResource {
    * Omitted fields are left unchanged. Profile fields (`name`, `email`, `username`)
    * update the underlying user, which is shared across every account the user
    * belongs to.
+   *
+   * This endpoint requires the permissions: `team:update`, `customers:update`,
+   * `suppliers:update`.
    *
    * @example
    * ```ts
@@ -102,6 +111,9 @@ export class AccountUsers extends APIResource {
 
   /**
    * Returns a paginated list of account users for the current account.
+   *
+   * This endpoint requires the permissions: `team:read`, `customers:read`,
+   * `suppliers:read`.
    *
    * @example
    * ```ts
@@ -1294,7 +1306,9 @@ export interface UnitGroup {
   created_at: string;
 
   /**
-   * Display name.
+   * Display name of the unit group.
+   *
+   * Unique within the account.
    */
   name: string;
 

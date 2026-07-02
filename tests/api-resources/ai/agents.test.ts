@@ -29,13 +29,14 @@ describe('resource agents', () => {
     const response = await client.ai.agents.create({
       category_code: 'inventory',
       config: {
-        model: 'claude-sonnet-4',
-        provider: 'anthropic',
+        endpoint_tool_review: { foo: true },
+        endpoint_tool_slugs: ['string'],
         system_prompt: 'You are an order processing agent. Parse incoming emails and create draft orders.',
         temperature: 0.2,
+        tier: 'high',
         trigger_config: {
-          event_filters: ['email.received'],
           cron_schedule: 'cron_schedule',
+          event_filters: ['email.received'],
           timezone: 'timezone',
         },
       },
@@ -47,7 +48,7 @@ describe('resource agents', () => {
       role_id: 'rl_01c16d2eb637c0d1f3a372937c',
       tools: [
         {
-          tool_id: 'tdef_01f0c4d04780ace864e6cc3a74',
+          tool: 'read_doc',
           config_json: 'config_json',
           require_review: true,
           sort_order: 1,
@@ -98,14 +99,15 @@ describe('resource agents', () => {
           include: ['config'],
           category_code: 'category_code',
           config: {
-            model: 'claude-sonnet-4',
-            provider: 'anthropic',
+            endpoint_tool_review: { foo: true },
+            endpoint_tool_slugs: ['string'],
             system_prompt:
               'You are an order processing agent. Parse incoming emails and create draft orders.',
             temperature: 0.2,
+            tier: 'high',
             trigger_config: {
-              event_filters: ['email.received'],
               cron_schedule: 'cron_schedule',
+              event_filters: ['email.received'],
               timezone: 'timezone',
             },
           },
@@ -115,7 +117,7 @@ describe('resource agents', () => {
           slug: 'slug',
           tools: [
             {
-              tool_id: 'tdef_01f0c4d04780ace864e6cc3a74',
+              tool: 'read_doc',
               config_json: 'config_json',
               require_review: true,
               sort_order: 1,

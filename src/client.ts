@@ -22,10 +22,7 @@ import {
   AI,
   AIRetrieveToolGroupsParams,
   AIRetrieveToolsParams,
-  AIRetrieveUsageParams,
-  AgentTokenUsage,
   AvailableTool,
-  ListAgentTokenUsage,
   ListAvailableTool,
   ListToolGroup,
   ToolGroup,
@@ -43,7 +40,7 @@ import {
 } from './resources/auth/auth';
 import { Billing, BillingPortalSessionResponse } from './resources/billing/billing';
 import { Catalog } from './resources/catalog/catalog';
-import { Core } from './resources/core/core';
+import { Core, CoreRetrieveSearchParams, Entity, ListEntity } from './resources/core/core';
 import {
   AdjustmentType,
   AllocationCustomer,
@@ -70,6 +67,22 @@ import {
   Permission,
   PermissionGroup,
 } from './resources/identity/identity';
+import {
+  Conversation,
+  ConversationParticipant,
+  ListActor,
+  ListConversationParticipant,
+  ListMessageAttachment,
+  ListMessagingGroupMember,
+  Message,
+  MessageAttachment,
+  Messaging,
+  MessagingGroup,
+  MessagingGroupMember,
+  MessagingRetrieveContactsParams,
+  MessagingSupportParams,
+  SupportAvailability,
+} from './resources/messaging/messaging';
 import {
   InventoryItem,
   ListInventoryItem,
@@ -839,6 +852,9 @@ export class Augno {
    * List permission groups and their permissions.
    */
   identity: API.Identity = new API.Identity(this);
+  /**
+   * Unified free-text search across resource types, returning lightweight entity references.
+   */
   core: API.Core = new API.Core(this);
   /**
    * Billing and pricing plan operations.
@@ -853,7 +869,11 @@ export class Augno {
    */
   settings: API.Settings = new API.Settings(this);
   catalog: API.Catalog = new API.Catalog(this);
+  /**
+   * List available platform tools for agent configuration.
+   */
   ai: API.AI = new API.AI(this);
+  messaging: API.Messaging = new API.Messaging(this);
   /**
    * Incoming webhook events.
    */
@@ -871,6 +891,7 @@ Augno.Sales = Sales;
 Augno.Settings = Settings;
 Augno.Catalog = Catalog;
 Augno.AI = AI;
+Augno.Messaging = Messaging;
 Augno.Webhooks = Webhooks;
 Augno.Finance = Finance;
 Augno.Operations = Operations;
@@ -901,7 +922,12 @@ export declare namespace Augno {
     type IdentityRetrievePermissionGroupsParams as IdentityRetrievePermissionGroupsParams,
   };
 
-  export { Core as Core };
+  export {
+    Core as Core,
+    type Entity as Entity,
+    type ListEntity as ListEntity,
+    type CoreRetrieveSearchParams as CoreRetrieveSearchParams,
+  };
 
   export { Billing as Billing, type BillingPortalSessionResponse as BillingPortalSessionResponse };
 
@@ -918,15 +944,29 @@ export declare namespace Augno {
 
   export {
     AI as AI,
-    type AgentTokenUsage as AgentTokenUsage,
     type AvailableTool as AvailableTool,
-    type ListAgentTokenUsage as ListAgentTokenUsage,
     type ListAvailableTool as ListAvailableTool,
     type ListToolGroup as ListToolGroup,
     type ToolGroup as ToolGroup,
     type AIRetrieveToolGroupsParams as AIRetrieveToolGroupsParams,
     type AIRetrieveToolsParams as AIRetrieveToolsParams,
-    type AIRetrieveUsageParams as AIRetrieveUsageParams,
+  };
+
+  export {
+    Messaging as Messaging,
+    type Conversation as Conversation,
+    type ConversationParticipant as ConversationParticipant,
+    type ListActor as ListActor,
+    type ListConversationParticipant as ListConversationParticipant,
+    type ListMessageAttachment as ListMessageAttachment,
+    type ListMessagingGroupMember as ListMessagingGroupMember,
+    type Message as Message,
+    type MessageAttachment as MessageAttachment,
+    type MessagingGroup as MessagingGroup,
+    type MessagingGroupMember as MessagingGroupMember,
+    type SupportAvailability as SupportAvailability,
+    type MessagingRetrieveContactsParams as MessagingRetrieveContactsParams,
+    type MessagingSupportParams as MessagingSupportParams,
   };
 
   export {

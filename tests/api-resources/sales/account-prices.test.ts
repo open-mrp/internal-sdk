@@ -10,8 +10,6 @@ const client = new Augno({
 describe('resource accountPrices', () => {
   test('create: only required params', async () => {
     const responsePromise = client.sales.accountPrices.create({
-      attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
-      category_ids: ['ic_01ae7bd7bfd21ca0ab81e1357e'],
       product_line_id: 'pl_01996357326a0d3f7b129542ea',
       rate_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
       rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
@@ -29,14 +27,14 @@ describe('resource accountPrices', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.sales.accountPrices.create({
-      attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
-      category_ids: ['ic_01ae7bd7bfd21ca0ab81e1357e'],
       product_line_id: 'pl_01996357326a0d3f7b129542ea',
       rate_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
       rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
       rate_value: '25.500000000000000000000000000000',
       recipient_account_id: 'ac_01148680966698341a9c0976db',
       include: ['recipient_account'],
+      attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
+      category_ids: ['ic_01ae7bd7bfd21ca0ab81e1357e'],
     });
   });
 

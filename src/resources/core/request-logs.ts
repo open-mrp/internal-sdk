@@ -13,6 +13,8 @@ export class RequestLogs extends APIResource {
   /**
    * Returns a request log by ID.
    *
+   * This endpoint requires the permission: `request_logs:read`.
+   *
    * @example
    * ```ts
    * const requestLog = await client.core.requestLogs.retrieve(
@@ -31,6 +33,8 @@ export class RequestLogs extends APIResource {
   /**
    * Returns a paginated list of request logs for the current account.
    *
+   * This endpoint requires the permission: `request_logs:read`.
+   *
    * @example
    * ```ts
    * const listRequestLog = await client.core.requestLogs.list();
@@ -45,13 +49,21 @@ export class RequestLogs extends APIResource {
 }
 
 /**
- * Reference to an actor (user, API key, or agent).
+ * Reference to an actor — the user, API key, agent, or group identity associated
+ * with an action.
  */
 export interface Actor {
   /**
-   * Actor ID.
+   * Unique identifier of the actor.
    */
   id: string;
+
+  /**
+   * URL of the actor's profile photo, if one is set.
+   *
+   * Only populated for `user` actors.
+   */
+  avatar_url: string | null;
 
   /**
    * Human-readable handle identifying the actor.
@@ -59,7 +71,7 @@ export interface Actor {
    * - For `user` actors: the user's email address.
    * - For `api_key` actors: the redacted key value.
    *
-   * Agent actors carry no handle.
+   * Other actor types carry no handle.
    */
   handle: string | null;
 
@@ -85,8 +97,10 @@ export interface Actor {
    * - `user`: a human user account.
    * - `api_key`: a programmatic caller authenticating with an API key.
    * - `agent`: an automated agent acting on the account's behalf.
+   * - `group`: a shared group identity, such as a "Customer Service" persona, rather
+   *   than a single individual.
    */
-  type: 'user' | 'api_key' | 'agent';
+  type: 'user' | 'api_key' | 'agent' | 'group';
 }
 
 /**
@@ -124,7 +138,8 @@ export interface RequestLog {
   account: APIKeysAPI.Account | null;
 
   /**
-   * Reference to an actor (user, API key, or agent).
+   * Reference to an actor — the user, API key, agent, or group identity associated
+   * with an action.
    */
   actor: Actor | null;
 
@@ -200,7 +215,7 @@ export interface RequestLog {
   occurred_at: string;
 
   /**
-   * Non-normalized request path.
+   * The exact path the request was made to, including path parameter values.
    */
   path: string;
 
@@ -277,7 +292,7 @@ export interface RequestLogListParams {
   /**
    * Filter by the actor type.
    */
-  actor_types?: Array<'user' | 'api_key' | 'agent'>;
+  actor_types?: Array<'user' | 'api_key' | 'agent' | 'group'>;
 
   /**
    * Opaque cursor token identifying where the page of results starts.

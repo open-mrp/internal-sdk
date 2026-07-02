@@ -49,6 +49,7 @@ describe('resource auditEvents', () => {
           actions: ['create'],
           actor_account_ids: ['string'],
           actor_ids: ['string'],
+          actor_types: ['user'],
           cursor: 'cursor',
           end_date: '2019-12-27T18:11:19.117Z',
           include: ['account'],

@@ -6,7 +6,6 @@ import {
   AccountUsageResponse,
   Accounts,
   AgentSpendInfo,
-  AgentTokenDetail,
   EnsureBillingCustomerResponse,
   SubscriptionInfo,
   UsageItem,
@@ -48,6 +47,8 @@ export class Billing extends APIResource {
   /**
    * Creates a Stripe billing portal session and returns a redirect URL for managing
    * subscriptions.
+   *
+   * This endpoint requires the `admin` role type.
    *
    * @example
    * ```ts
@@ -100,7 +101,6 @@ export declare namespace Billing {
     Accounts as Accounts,
     type AccountUsageResponse as AccountUsageResponse,
     type AgentSpendInfo as AgentSpendInfo,
-    type AgentTokenDetail as AgentTokenDetail,
     type EnsureBillingCustomerResponse as EnsureBillingCustomerResponse,
     type SubscriptionInfo as SubscriptionInfo,
     type UsageItem as UsageItem,

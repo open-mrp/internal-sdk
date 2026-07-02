@@ -31,8 +31,11 @@ export class SpendingCap extends APIResource {
   }
 
   /**
-   * Returns the monthly agent spending cap for the account. A null `cap_cents` means
-   * no cap is set.
+   * Returns the monthly agent spending cap for the account.
+   *
+   * A null `cap_cents` means no cap is set.
+   *
+   * This endpoint requires the permission: `self:read`.
    *
    * @example
    * ```ts

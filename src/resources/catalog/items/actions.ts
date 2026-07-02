@@ -17,6 +17,8 @@ export class Actions extends APIResource {
    * creating a duplicate. A failure on one item does not abort the rest of the
    * batch; check each result's status.
    *
+   * This endpoint requires the permission: `items:create`.
+   *
    * @example
    * ```ts
    * const bulkCreateItemsResponse =
@@ -44,6 +46,8 @@ export class Actions extends APIResource {
    * each item as reconciled, skipped (e.g. unknown SKU), or errored (e.g. unknown
    * unit), so a problem with one item does not fail the rest of the batch.
    *
+   * This endpoint requires the permission: `items:create`.
+   *
    * @example
    * ```ts
    * const bulkReconcileItemsResponse =
@@ -69,6 +73,8 @@ export class Actions extends APIResource {
   /**
    * Exports all items, with their on-hand inventory quantities, as an Excel file
    * (`items.xlsx`).
+   *
+   * This endpoint requires the permission: `items:read`.
    *
    * @example
    * ```ts

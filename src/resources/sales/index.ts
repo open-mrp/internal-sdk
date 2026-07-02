@@ -41,6 +41,7 @@ export {
   type AddressUpdateParams,
   type AddressListParams,
 } from './addresses';
+export { Contacts } from './contacts/index';
 export {
   Customers,
   type AccountGroup,

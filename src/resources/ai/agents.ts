@@ -17,6 +17,8 @@ export class Agents extends APIResource {
    * The new agent has `definition_type` `custom` and is immediately `active` for the
    * account.
    *
+   * This endpoint requires the permission: `agents:create`.
+   *
    * @example
    * ```ts
    * const agentDefinition = await client.ai.agents.create({
@@ -24,8 +26,7 @@ export class Agents extends APIResource {
    *   config: {
    *     system_prompt:
    *       'You are an order processing agent. Parse incoming emails and create draft orders.',
-   *     model: 'claude-sonnet-4',
-   *     provider: 'anthropic',
+   *     tier: 'high',
    *     temperature: 0.2,
    *     trigger_config: { event_filters: ['email.received'] },
    *   },
@@ -37,7 +38,7 @@ export class Agents extends APIResource {
    *   role_id: 'rl_01c16d2eb637c0d1f3a372937c',
    *   tools: [
    *     {
-   *       tool_id: 'tdef_01f0c4d04780ace864e6cc3a74',
+   *       tool: 'read_doc',
    *       sort_order: 1,
    *       require_review: true,
    *     },
@@ -52,6 +53,8 @@ export class Agents extends APIResource {
 
   /**
    * Returns an agent definition by ID.
+   *
+   * This endpoint requires the permission: `agents:read`.
    *
    * @example
    * ```ts
@@ -74,6 +77,8 @@ export class Agents extends APIResource {
    * Only the fields provided in the request are changed. System agents cannot be
    * modified.
    *
+   * This endpoint requires the permission: `agents:update`.
+   *
    * @example
    * ```ts
    * const agentDefinition = await client.ai.agents.update(
@@ -94,6 +99,8 @@ export class Agents extends APIResource {
   /**
    * Returns a paginated list of agent definitions for the current account.
    *
+   * This endpoint requires the permission: `agents:read`.
+   *
    * @example
    * ```ts
    * const listAgentDefinition = await client.ai.agents.list();
@@ -112,6 +119,8 @@ export class Agents extends APIResource {
    * The agent is soft-deleted and can no longer be run or modified. System agents
    * cannot be deleted.
    *
+   * This endpoint requires the permission: `agents:delete`.
+   *
    * @example
    * ```ts
    * const agent = await client.ai.agents.delete(
@@ -129,6 +138,8 @@ export class Agents extends APIResource {
    * Sets the account-level status without modifying the underlying agent definition,
    * so it works for both `system` and `custom` agents. Returns the updated agent
    * definition.
+   *
+   * This endpoint requires the permission: `agents:update`.
    *
    * @example
    * ```ts
@@ -195,9 +206,9 @@ export interface AgentDefinition {
   /**
    * Whether the current user can edit this agent definition.
    *
-   * Always `false` for `system` definitions.
+   * Always `read_only` for `system` definitions.
    */
-  is_editable: boolean;
+  editability: 'editable' | 'read_only';
 
   /**
    * Human-readable name of the agent.
@@ -242,8 +253,10 @@ export interface AgentDefinition {
    * - `event`: runs in response to platform events (see
    *   `config.trigger_config.event_filters`).
    * - `manual`: runs only when explicitly invoked.
+   * - `chat`: runs in response to a chat message; the run is linked to a
+   *   conversation and posts its reply back into it.
    */
-  trigger_type: 'scheduled' | 'manual' | 'event';
+  trigger_type: 'scheduled' | 'manual' | 'event' | 'chat';
 
   /**
    * Last updated timestamp.
@@ -259,21 +272,27 @@ export interface AgentDefinition {
  */
 export interface AgentDefinitionConfig {
   /**
-   * LLM model identifier (e.g. `claude-sonnet-4`).
+   * Per-endpoint-tool human-review overrides, keyed by tool slug.
+   *
+   * When an entry is `true`, the run pauses in `awaiting_approval` each time the
+   * agent calls that endpoint-tool until it is approved via the Continue Agent Run
+   * endpoint. Slugs absent from the map do not require review.
    */
-  model: string | null;
+  endpoint_tool_review: { [key: string]: boolean };
+
+  /**
+   * API-endpoint tools the agent may discover and use, by slug (e.g.
+   * `create_account_group`).
+   *
+   * These correspond to tools listed by the List Tools endpoint with category
+   * `api_endpoint`. A single entry `*` grants the entire endpoint-tool catalog.
+   */
+  endpoint_tool_slugs: Array<string>;
 
   /**
    * Resource type identifier.
    */
   object: 'agent_definition_config';
-
-  /**
-   * LLM provider name (e.g. `anthropic`, `openai`).
-   *
-   * Inferred from `model` if omitted.
-   */
-  provider: string | null;
 
   /**
    * System prompt / instructions for the agent.
@@ -284,6 +303,23 @@ export interface AgentDefinitionConfig {
    * LLM sampling temperature between 0 and 1.
    */
   temperature: number | null;
+
+  /**
+   * Intelligence and cost tier for the agent's reasoning.
+   *
+   * Selects how capable and expensive a model the agent uses without pinning a
+   * specific model; higher tiers reason better but cost more. Leaving it unset uses
+   * the default tier.
+   *
+   * - `frontier`: the most capable tier, for multi-step planning, ambiguous agent
+   *   work, and hard coding or architecture tasks.
+   * - `high`: the default tier, for normal planning, code edits, synthesis, and
+   *   customer-facing reasoning.
+   * - `balanced`: for research, summarization, classification, structured
+   *   extraction, and light tool use.
+   * - `cheap`: for simple transforms, validation, formatting, and routing.
+   */
+  tier: 'frontier' | 'high' | 'balanced' | 'cheap' | 'legacy' | null;
 
   /**
    * Trigger-type-specific configuration.
@@ -324,11 +360,11 @@ export interface AgentDefinitionTool {
   /**
    * Whether calls to this tool must be approved by a user before they execute.
    *
-   * When `true`, the run pauses in the `awaiting_approval` status each time the
+   * When `required`, the run pauses in the `awaiting_approval` status each time the
    * agent invokes this tool; approve or allow the tool via the Continue Agent Run
    * endpoint to proceed.
    */
-  require_review: boolean;
+  review_requirement: 'not_required' | 'required';
 
   /**
    * Sort order within the agent.
@@ -346,16 +382,23 @@ export interface AgentDefinitionTool {
  */
 export interface ConfigInput {
   /**
-   * LLM model identifier (e.g. `claude-sonnet-4`).
+   * Per-endpoint-tool human-review overrides, keyed by tool slug.
+   *
+   * Set a slug to `true` to require human approval before the agent may execute that
+   * endpoint-tool; the run pauses in `awaiting_approval` until approved via the
+   * Continue Agent Run endpoint. Slugs omitted from the map do not require review.
    */
-  model?: string;
+  endpoint_tool_review?: { [key: string]: boolean };
 
   /**
-   * LLM provider name (e.g. `anthropic`, `openai`).
+   * API-endpoint tools the agent may discover and use, by slug (e.g.
+   * `create_account_group`).
    *
-   * Inferred from `model` if omitted.
+   * These are the tools listed by the List Tools endpoint with category
+   * `api_endpoint`. The single entry `*` grants the entire endpoint-tool catalog.
+   * Omit or leave empty to grant none.
    */
-  provider?: string;
+  endpoint_tool_slugs?: Array<string>;
 
   /**
    * System prompt / instructions for the agent.
@@ -366,6 +409,21 @@ export interface ConfigInput {
    * LLM sampling temperature between 0 and 1.
    */
   temperature?: number;
+
+  /**
+   * Intelligence/cost tier for the agent's reasoning.
+   *
+   * Selects how capable (and how expensive) a model the agent uses, without pinning
+   * a specific model:
+   *
+   * - `frontier`: the most capable and most expensive.
+   * - `high`: for normal planning, synthesis, customer-facing reasoning.
+   * - `balanced`: for research, summarization, classification, structured
+   *   extraction, and light tool use.
+   * - `cheap`: for simple transforms, validation, formatting, keyword lookup, and
+   *   routing.
+   */
+  tier?: 'frontier' | 'high' | 'balanced' | 'cheap' | 'legacy';
 
   /**
    * Trigger-type-specific settings for agent creation/update requests.
@@ -413,7 +471,7 @@ export interface CreateAgentRequest {
    *   `config.trigger_config.event_filters` entry is required.
    * - `manual`: runs only when explicitly invoked.
    */
-  trigger_type: 'scheduled' | 'manual' | 'event';
+  trigger_type: 'scheduled' | 'manual' | 'event' | 'chat';
 
   /**
    * Description of what the agent does.
@@ -476,12 +534,12 @@ export interface ListAgentDefinitionTool {
  */
 export interface ToolInput {
   /**
-   * ID of the tool to attach.
+   * The tool to attach.
    *
-   * Available tool IDs can be discovered with the List Tools endpoint
+   * Available tools can be discovered with the List Tools endpoint
    * (`GET /v1/ai/tools`).
    */
-  tool_id: string;
+  tool: 'create_artifact' | 'read_doc' | 'fetch_url' | 'send_email' | 'draft_reply';
 
   /**
    * JSON-encoded configuration for this tool instance.
@@ -544,15 +602,15 @@ export interface TriggerConfig {
  */
 export interface TriggerConfigInput {
   /**
-   * Event types that trigger this agent (e.g.
-   * `["email.received", "order.created"]`).
-   */
-  event_filters: Array<string>;
-
-  /**
    * Cron expression for scheduled triggers (e.g. `0 9 * * *`).
    */
   cron_schedule?: string;
+
+  /**
+   * Event types that trigger this agent (e.g.
+   * `["email.received", "order.created"]`).
+   */
+  event_filters?: Array<string>;
 
   /**
    * IANA timezone for the cron schedule (e.g. `America/New_York`).
@@ -577,8 +635,10 @@ export interface UpdateAgentRequest {
 
   /**
    * Description of what the agent does.
+   *
+   * Send `null` to clear the description; omit to leave it unchanged.
    */
-  description?: string;
+  description?: string | null;
 
   /**
    * Human-readable name of the agent.
@@ -587,8 +647,10 @@ export interface UpdateAgentRequest {
 
   /**
    * ID of the role that defines the permissions the agent operates with.
+   *
+   * Send `null` to detach the role; omit to leave it unchanged.
    */
-  role_id?: string;
+  role_id?: string | null;
 
   /**
    * URL-friendly identifier for the agent.
@@ -603,13 +665,13 @@ export interface UpdateAgentRequest {
   tools?: Array<ToolInput>;
 
   /**
-   * How runs of this agent are initiated: `scheduled`, `event`, or `manual`.
+   * How runs of this agent are initiated.
    *
    * When changing the trigger type, also provide a `config` with a `trigger_config`
    * appropriate for the new type (a cron schedule for `scheduled`, at least one
    * event filter for `event`).
    */
-  trigger_type?: 'scheduled' | 'manual' | 'event';
+  trigger_type?: 'scheduled' | 'manual' | 'event' | 'chat';
 }
 
 /**
@@ -659,7 +721,7 @@ export interface AgentCreateParams {
    *   `config.trigger_config.event_filters` entry is required.
    * - `manual`: runs only when explicitly invoked.
    */
-  trigger_type: 'scheduled' | 'manual' | 'event';
+  trigger_type: 'scheduled' | 'manual' | 'event' | 'chat';
 
   /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
@@ -711,8 +773,10 @@ export interface AgentUpdateParams {
 
   /**
    * Body param: Description of what the agent does.
+   *
+   * Send `null` to clear the description; omit to leave it unchanged.
    */
-  description?: string;
+  description?: string | null;
 
   /**
    * Body param: Human-readable name of the agent.
@@ -721,8 +785,10 @@ export interface AgentUpdateParams {
 
   /**
    * Body param: ID of the role that defines the permissions the agent operates with.
+   *
+   * Send `null` to detach the role; omit to leave it unchanged.
    */
-  role_id?: string;
+  role_id?: string | null;
 
   /**
    * Body param: URL-friendly identifier for the agent.
@@ -737,14 +803,13 @@ export interface AgentUpdateParams {
   tools?: Array<ToolInput>;
 
   /**
-   * Body param: How runs of this agent are initiated: `scheduled`, `event`, or
-   * `manual`.
+   * Body param: How runs of this agent are initiated.
    *
    * When changing the trigger type, also provide a `config` with a `trigger_config`
    * appropriate for the new type (a cron schedule for `scheduled`, at least one
    * event filter for `event`).
    */
-  trigger_type?: 'scheduled' | 'manual' | 'event';
+  trigger_type?: 'scheduled' | 'manual' | 'event' | 'chat';
 }
 
 export interface AgentListParams {
@@ -791,7 +856,7 @@ export interface AgentListParams {
   /**
    * Restricts results to agents with one of the given trigger types.
    */
-  trigger_types?: Array<'scheduled' | 'manual' | 'event'>;
+  trigger_types?: Array<'scheduled' | 'manual' | 'event' | 'chat'>;
 }
 
 export interface AgentUpdateStatusParams {

@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as CoreAPI from './core';
 import * as AccountUsersAPI from '../identity/account-users/account-users';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
@@ -12,6 +13,8 @@ export class Analytics extends APIResource {
   /**
    * Returns weeks-of-sales metrics per product line, including on-hand quantity,
    * average weekly sales, and weeks of inventory remaining.
+   *
+   * This endpoint requires the permission: `inventory:read`.
    *
    * @example
    * ```ts
@@ -29,6 +32,8 @@ export class Analytics extends APIResource {
   /**
    * Returns delivery performance statistics over a date range, including on-time
    * rates, average delivery times, and time-to-first-shipment metrics.
+   *
+   * This endpoint requires the permission: `invoices:read`.
    *
    * @example
    * ```ts
@@ -56,6 +61,8 @@ export class Analytics extends APIResource {
    * Returns demand forecasts for items, including historical data and projected
    * demand with confidence bounds.
    *
+   * This endpoint requires the permission: `invoices:read`.
+   *
    * @example
    * ```ts
    * const analyzeDemandForecastResponse =
@@ -78,6 +85,8 @@ export class Analytics extends APIResource {
    * Returns inventory receipt summaries including remaining quantities, costs, and
    * values.
    *
+   * This endpoint requires the permission: `materials:read`.
+   *
    * @example
    * ```ts
    * const analyzeInventoryReceiptsResponse =
@@ -98,6 +107,8 @@ export class Analytics extends APIResource {
   /**
    * Returns a single manufacturing analytics metric for a specified date range and
    * type.
+   *
+   * This endpoint requires the permission: `invoices:read`.
    *
    * @example
    * ```ts
@@ -120,6 +131,8 @@ export class Analytics extends APIResource {
    * Returns manufacturing metrics for a current period compared against a comparison
    * period, including production, costs per unit, margin, quality, and labor
    * efficiency.
+   *
+   * This endpoint requires the permission: `invoices:read`.
    *
    * @example
    * ```ts
@@ -147,6 +160,8 @@ export class Analytics extends APIResource {
    * Returns material inventory and demand analytics per material, including
    * quantities, unit groups, and supplier information.
    *
+   * This endpoint requires the permission: `materials:read`.
+   *
    * @example
    * ```ts
    * const analyzeMaterialsResponse =
@@ -166,6 +181,8 @@ export class Analytics extends APIResource {
   /**
    * Returns time series data of new customer acquisitions over a specified date
    * range.
+   *
+   * This endpoint requires the permission: `customers:read`.
    *
    * @example
    * ```ts
@@ -189,6 +206,8 @@ export class Analytics extends APIResource {
    * Returns Overall Equipment Effectiveness (OEE) metrics by department, including
    * good units, waste units, and estimated runtime hours.
    *
+   * This endpoint requires the permission: `invoices:read`.
+   *
    * @example
    * ```ts
    * const analyzeOeeResponse =
@@ -205,6 +224,8 @@ export class Analytics extends APIResource {
 
   /**
    * Returns open batch summaries grouped by scanning station.
+   *
+   * This endpoint requires the permission: `batches:read`.
    *
    * @example
    * ```ts
@@ -224,6 +245,8 @@ export class Analytics extends APIResource {
 
   /**
    * Returns detailed order entry records.
+   *
+   * This endpoint requires the permission: `sales_orders:read`.
    *
    * @example
    * ```ts
@@ -245,6 +268,8 @@ export class Analytics extends APIResource {
 
   /**
    * Returns aggregated production cost breakdowns by department and category.
+   *
+   * This endpoint requires the permission: `batches:read`.
    *
    * @example
    * ```ts
@@ -269,6 +294,8 @@ export class Analytics extends APIResource {
   /**
    * Returns yearly order totals broken down by quarter.
    *
+   * This endpoint requires the permission: `invoices:read`.
+   *
    * @example
    * ```ts
    * const analyzeQuarterlyOrdersResponse =
@@ -290,6 +317,8 @@ export class Analytics extends APIResource {
 
   /**
    * Returns detailed sales entry records over a specified date range.
+   *
+   * This endpoint requires the permission: `invoices:read`.
    *
    * @example
    * ```ts
@@ -1339,257 +1368,13 @@ export interface DemandForecastRow {
 }
 
 /**
- * Entity is a polymorphic reference to any resource in the system.
- */
-export interface Entity {
-  /**
-   * Unique identifier for the entity.
-   */
-  id: string;
-
-  /**
-   * Secondary human-readable identifier (e.g. email address, username, redacted API
-   * key value).
-   */
-  handle: string | null;
-
-  /**
-   * Human-readable display name for the entity (e.g. a user's full name, a sales
-   * order number).
-   */
-  name: string | null;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'entity';
-
-  /**
-   * The resource kind that this entity references, as an object-type value (e.g.
-   * `user`, `account`).
-   *
-   * Unlike `object` — which is always `entity` — this names the underlying resource
-   * the `id` points to.
-   */
-  type:
-    | 'account'
-    | 'actor'
-    | 'entity'
-    | 'record'
-    | 'freight'
-    | 'sales_order_totals'
-    | 'sales_order_related'
-    | 'order_contact'
-    | 'user'
-    | 'address'
-    | 'api_key'
-    | 'created_api_key'
-    | 'refresh_token'
-    | 'list'
-    | 'sandbox'
-    | 'registration_session'
-    | 'pricing_plan'
-    | 'account_plan'
-    | 'plan_change'
-    | 'enterprise_inquiry'
-    | 'request_log'
-    | 'audit_event'
-    | 'audit_field_change'
-    | 'role'
-    | 'unit'
-    | 'account_affiliation'
-    | 'agent_definition'
-    | 'available_tool'
-    | 'agent_definition_tool'
-    | 'agent_account_status'
-    | 'agent_run'
-    | 'agent_action'
-    | 'agent_run_step'
-    | 'agent_token_usage'
-    | 'agent_memory'
-    | 'agent_alert'
-    | 'tool_group'
-    | 'payment_term'
-    | 'shipping_term'
-    | 'quantity'
-    | 'account_group'
-    | 'account_status'
-    | 'geolocation'
-    | 'account_user'
-    | 'department'
-    | 'account_integration'
-    | 'account_price'
-    | 'product_line'
-    | 'item_category'
-    | 'attribute'
-    | 'rate'
-    | 'account_group_product_line_access'
-    | 'sales_target'
-    | 'adjustment_type'
-    | 'account_branding'
-    | 'account_portal'
-    | 'account_logo_url'
-    | 'public_account'
-    | 'property'
-    | 'carrier'
-    | 'service_level'
-    | 'item'
-    | 'item_inventory'
-    | 'product'
-    | 'batch'
-    | 'batch_flow_node'
-    | 'scanning_consumption'
-    | 'open_batch_summary'
-    | 'scanning_production_step_info'
-    | 'scanning_station'
-    | 'production_step'
-    | 'production_run'
-    | 'machine'
-    | 'child_account'
-    | 'unit_group'
-    | 'unit_group_unit'
-    | 'consumption'
-    | 'customer_product_line_access'
-    | 'customer'
-    | 'frequently_ordered_product'
-    | 'priority'
-    | 'delivery'
-    | 'delivery_line'
-    | 'sales_order'
-    | 'location'
-    | 'location_type'
-    | 'lot'
-    | 'email_log'
-    | 'inventory_change_log'
-    | 'invoice'
-    | 'invoice_summary'
-    | 'invoice_line'
-    | 'invoice_allocation'
-    | 'invoice_for_payment'
-    | 'shipment'
-    | 'shipment_summary'
-    | 'shipment_line'
-    | 'shipping_case'
-    | 'shipping_case_label_url'
-    | 'settlement'
-    | 'settlement_summary'
-    | 'role_permission'
-    | 'registration_flow'
-    | 'registration_flow_option'
-    | 'transaction'
-    | 'transaction_summary'
-    | 'transaction_method'
-    | 'transaction_type'
-    | 'transaction_allocation'
-    | 'usage_item'
-    | 'agent_token_detail'
-    | 'account_usage_response'
-    | 'subscription_info'
-    | 'billing_portal_session_response'
-    | 'switch_plan_response'
-    | 'ensure_billing_customer_response'
-    | 'spending_cap_response'
-    | 'agent_spend_info'
-    | 'webhook_response'
-    | 'address_suggestion'
-    | 'address_components'
-    | 'address_details_result'
-    | 'validated_address'
-    | 'plan_limit'
-    | 'plan_change_proration'
-    | 'plan_change_line_item'
-    | 'setup_billing_response'
-    | 'confirm_payment_response'
-    | 'oauth_response'
-    | 'oauth_status_response'
-    | 'stripe_publishable_key'
-    | 'stripe_status'
-    | 'healthcheck'
-    | 'agent_definition_config'
-    | 'trigger_config'
-    | 'customer_contact_info'
-    | 'customer_freight_preferences'
-    | 'customer_defaults'
-    | 'customer_notification_preferences'
-    | 'order_discount'
-    | 'sales_order_line'
-    | 'sales_order_type'
-    | 'sales_order_status'
-    | 'material'
-    | 'supplier_material'
-    | 'part'
-    | 'permission_group'
-    | 'permission'
-    | 'pick'
-    | 'pick_line'
-    | 'product_type'
-    | 'production'
-    | 'production_flow'
-    | 'map'
-    | 'purchase_order'
-    | 'purchase_order_line'
-    | 'supplier'
-    | 'supplier_summary'
-    | 'receivable_entry'
-    | 'receiving_order'
-    | 'receiving_order_line'
-    | 'email_contact'
-    | 'allocation_entry'
-    | 'open_credit_entry'
-    | 'volume_discount'
-    | 'volume_discount_tier'
-    | 'analyze_deliveries_response'
-    | 'analyze_manufacturing_response'
-    | 'analyze_manufacturing_batch_response'
-    | 'analyze_quarterly_orders_response'
-    | 'analyze_new_customers_response'
-    | 'analyze_oee_response'
-    | 'catalog_product_line'
-    | 'catalog_category'
-    | 'catalog_product'
-    | 'catalog_property'
-    | 'catalog_attribute'
-    | 'dc_location'
-    | 'edi_run'
-    | 'inventory_item'
-    | 'analyze_weeks_of_sales_response'
-    | 'bulk_reconcile_items_response'
-    | 'sys_property'
-    | 'sys_property_type'
-    | 'sys_property_value'
-    | 'territory'
-    | 'tenancy'
-    | 'checkout_session'
-    | 'estimate_rate_result'
-    | 'rate_shop_option'
-    | 'rate_shop_result'
-    | 'owner'
-    | 'created_by'
-    | 'message'
-    | 'account_photo_upload_result'
-    | 'user_photo_upload_result'
-    | 'user_photo_url'
-    | 'batch_lot'
-    | 'check_duplicate_result'
-    | 'item_trend_point'
-    | 'pack_pick_response'
-    | 'pick_shipments_response'
-    | 'tenancy_pending_registration'
-    | 'invoice_allocation_entry'
-    | 'allocation_customer'
-    | 'checkout_sales_order_response'
-    | 'create_production_run_response'
-    | 'sales_order_price_quote';
-}
-
-/**
  * InventoryReceiptSummaryEntry represents a summary of inventory receipts.
  */
 export interface InventoryReceiptSummaryEntry {
   /**
    * Entity is a polymorphic reference to any resource in the system.
    */
-  holder_account: Entity | null;
+  holder_account: CoreAPI.Entity | null;
 
   /**
    * Value with an associated unit.
@@ -1604,7 +1389,7 @@ export interface InventoryReceiptSummaryEntry {
   /**
    * Entity is a polymorphic reference to any resource in the system.
    */
-  location: Entity | null;
+  location: CoreAPI.Entity | null;
 
   /**
    * AnalyticsLot represents a lot for analytics.
@@ -1624,7 +1409,7 @@ export interface InventoryReceiptSummaryEntry {
   /**
    * Entity is a polymorphic reference to any resource in the system.
    */
-  owner_account: Entity | null;
+  owner_account: CoreAPI.Entity | null;
 
   /**
    * Value with an associated unit.
@@ -2031,12 +1816,12 @@ export interface ProductionCostItem {
   /**
    * Entity is a polymorphic reference to any resource in the system.
    */
-  category: Entity | null;
+  category: CoreAPI.Entity | null;
 
   /**
    * Entity is a polymorphic reference to any resource in the system.
    */
-  department: Entity | null;
+  department: CoreAPI.Entity | null;
 
   /**
    * CostBreakdown represents a detailed cost breakdown with sub-quantities.
@@ -2291,7 +2076,7 @@ export interface WeeksOfSalesItem {
   /**
    * Entity is a polymorphic reference to any resource in the system.
    */
-  product_line: Entity | null;
+  product_line: CoreAPI.Entity | null;
 
   /**
    * Value with an associated unit.
@@ -2676,7 +2461,6 @@ export declare namespace Analytics {
     type DemandForecastForecastPoint as DemandForecastForecastPoint,
     type DemandForecastPoint as DemandForecastPoint,
     type DemandForecastRow as DemandForecastRow,
-    type Entity as Entity,
     type InventoryReceiptSummaryEntry as InventoryReceiptSummaryEntry,
     type ManufacturingMetrics as ManufacturingMetrics,
     type MaterialAnalyticsEntry as MaterialAnalyticsEntry,

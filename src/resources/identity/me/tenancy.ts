@@ -185,8 +185,8 @@ export interface Tenancy {
   owner_account: TenancyOwnerAccount | null;
 
   /**
-   * TenancyPendingRegistration represents an in-progress registration session for
-   * the authenticated user.
+   * An in-progress registration session, present only partway through signup before
+   * an account exists.
    */
   pending_registration: TenancyPendingRegistration | null;
 
@@ -197,7 +197,8 @@ export interface Tenancy {
 }
 
 /**
- * TenancyAccountPlan is the resolved plan for the current account.
+ * The resolved subscription plan for the current account, including its limits and
+ * features.
  */
 export interface TenancyAccountPlan {
   /**
@@ -261,9 +262,15 @@ export interface TenancyCurrentAccount {
   id: string;
 
   /**
-   * TenancyAccountPlan is the resolved plan for the current account.
+   * The resolved subscription plan for the current account, including its limits and
+   * features.
    */
   account_plan: TenancyAccountPlan | null;
+
+  /**
+   * ID of the authenticated user's membership record within this account.
+   */
+  account_user_id: string;
 
   /**
    * Internal Stripe customer ID for this account.
@@ -360,8 +367,8 @@ export interface TenancyOwnerAccount {
 }
 
 /**
- * TenancyPendingRegistration represents an in-progress registration session for
- * the authenticated user.
+ * An in-progress registration session, present only partway through signup before
+ * an account exists.
  */
 export interface TenancyPendingRegistration {
   /**

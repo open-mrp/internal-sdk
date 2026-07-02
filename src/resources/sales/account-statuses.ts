@@ -79,7 +79,7 @@ export interface AccountStatus {
   created_at: string;
 
   /**
-   * Display name.
+   * Human-readable label for the status.
    */
   name: string;
 

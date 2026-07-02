@@ -19,6 +19,8 @@ export class Actions extends APIResource {
    * outstanding are left unchanged. This does not add inventory — use Stock
    * Receiving Order to put the received quantities away.
    *
+   * This endpoint requires the permission: `receiving_orders:update`.
+   *
    * @example
    * ```ts
    * const receivingOrder =
@@ -44,6 +46,8 @@ export class Actions extends APIResource {
    * created automatically for the remainder. Once every line is stocked, the order
    * is marked complete and the originating purchase order is marked fulfilled.
    *
+   * This endpoint requires the permission: `receiving_orders:update`.
+   *
    * @example
    * ```ts
    * const receivingOrder =
@@ -68,7 +72,7 @@ export class Actions extends APIResource {
    */
   stock(
     id: string,
-    body: ActionStockParams,
+    body: ActionStockParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<DeliveriesAPI.ReceivingOrder> {
     return this._client.post(path`/v1/operations/receiving-orders/${id}/actions/stock`, { body, ...options });
@@ -81,6 +85,8 @@ export class Actions extends APIResource {
    * extra lines created for short receipts are removed (leaving one line per
    * purchase order line), and the order returns to open. The receiving order itself
    * is not deleted.
+   *
+   * This endpoint requires the permission: `receiving_orders:update`.
    *
    * @example
    * ```ts
@@ -117,17 +123,17 @@ export interface AllocationRequest {
  */
 export interface StockLineItemRequest {
   /**
+   * ID of the receiving order line being stocked.
+   */
+  receiving_order_line_id: string;
+
+  /**
    * Storage allocations for the accepted quantity.
    *
    * Each allocation creates an inventory receipt for the given quantity at the given
    * location.
    */
-  allocations: Array<AllocationRequest>;
-
-  /**
-   * ID of the receiving order line being stocked.
-   */
-  receiving_order_line_id: string;
+  allocations?: Array<AllocationRequest>;
 
   /**
    * Lot number to record for the received inventory.
@@ -156,7 +162,7 @@ export interface StockReceivingOrderRequest {
    * Lines not listed here are still marked as stocked, but produce no inventory
    * receipts.
    */
-  line_items: Array<StockLineItemRequest>;
+  line_items?: Array<StockLineItemRequest>;
 }
 
 export interface ActionStockParams {
@@ -167,7 +173,7 @@ export interface ActionStockParams {
    * Lines not listed here are still marked as stocked, but produce no inventory
    * receipts.
    */
-  line_items: Array<StockLineItemRequest>;
+  line_items?: Array<StockLineItemRequest>;
 }
 
 export declare namespace Actions {

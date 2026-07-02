@@ -14,6 +14,8 @@ export class AuditEvents extends APIResource {
   /**
    * Returns an audit event by ID.
    *
+   * This endpoint requires the permission: `audit_events:read`.
+   *
    * @example
    * ```ts
    * const auditEvent = await client.core.auditEvents.retrieve(
@@ -32,6 +34,8 @@ export class AuditEvents extends APIResource {
   /**
    * Returns a paginated list of audit events for the current account.
    *
+   * This endpoint requires the permission: `audit_events:read`.
+   *
    * @example
    * ```ts
    * const listAuditEvent = await client.core.auditEvents.list();
@@ -49,6 +53,8 @@ export class AuditEvents extends APIResource {
    *
    * Values are plain strings, suitable for the `resource_types` filter when listing
    * audit events.
+   *
+   * This endpoint requires the permission: `audit_events:read`.
    *
    * @example
    * ```ts
@@ -78,18 +84,23 @@ export interface AuditEvent {
   account: APIKeysAPI.Account | null;
 
   /**
-   * Mutation type.
+   * The type of action this event records.
    *
    * - `create`: the resource was created.
    * - `update`: one or more fields were changed.
    * - `delete`: the resource was deleted.
    * - `restore`: a previously deleted resource was restored.
    * - `archive`: the resource was archived.
+   * - `approve`: a human approved a gated action, such as allowing a review-gated
+   *   agent tool to run.
+   * - `deny`: a human denied a gated action, such as rejecting a review-gated agent
+   *   tool.
    */
-  action: 'create' | 'update' | 'delete' | 'restore' | 'archive';
+  action: 'create' | 'update' | 'delete' | 'restore' | 'archive' | 'approve' | 'deny';
 
   /**
-   * Reference to an actor (user, API key, or agent).
+   * Reference to an actor — the user, API key, agent, or group identity associated
+   * with an action.
    */
   actor: RequestLogsAPI.Actor | null;
 
@@ -174,12 +185,30 @@ export interface AuditEvent {
     | 'agent_run_step'
     | 'agent_token_usage'
     | 'agent_memory'
-    | 'agent_alert'
+    | 'notification'
+    | 'notification_unread_count'
+    | 'notification_send_result'
+    | 'notification_unread_summary'
+    | 'announcement'
+    | 'conversation'
+    | 'conversation_participant'
+    | 'chat_message'
+    | 'notification_unread_summary_account'
+    | 'messaging_block'
+    | 'notification_preference'
+    | 'message_attachment'
+    | 'attachment_upload_target'
+    | 'scheduled_message'
+    | 'messaging_contact'
+    | 'message_report'
     | 'tool_group'
+    | 'model'
     | 'payment_term'
     | 'shipping_term'
     | 'quantity'
     | 'account_group'
+    | 'support_route'
+    | 'support_availability'
     | 'account_status'
     | 'geolocation'
     | 'account_user'
@@ -227,6 +256,8 @@ export interface AuditEvent {
     | 'location_type'
     | 'lot'
     | 'email_log'
+    | 'email_domain'
+    | 'email_inbox'
     | 'inventory_change_log'
     | 'invoice'
     | 'invoice_summary'
@@ -249,7 +280,6 @@ export interface AuditEvent {
     | 'transaction_type'
     | 'transaction_allocation'
     | 'usage_item'
-    | 'agent_token_detail'
     | 'account_usage_response'
     | 'subscription_info'
     | 'billing_portal_session_response'
@@ -346,7 +376,16 @@ export interface AuditEvent {
     | 'allocation_customer'
     | 'checkout_sales_order_response'
     | 'create_production_run_response'
-    | 'sales_order_price_quote';
+    | 'sales_order_price_quote'
+    | 'hubspot_sync_job'
+    | 'hubspot_sync_report'
+    | 'hubspot_company_review'
+    | 'hubspot_company_candidate'
+    | 'contact_match'
+    | 'reply_draft'
+    | 'conversation_link'
+    | 'messaging_group'
+    | 'messaging_group_member';
 
   /**
    * Originating client IP address.
@@ -468,12 +507,30 @@ export interface ListObjectType {
     | 'agent_run_step'
     | 'agent_token_usage'
     | 'agent_memory'
-    | 'agent_alert'
+    | 'notification'
+    | 'notification_unread_count'
+    | 'notification_send_result'
+    | 'notification_unread_summary'
+    | 'announcement'
+    | 'conversation'
+    | 'conversation_participant'
+    | 'chat_message'
+    | 'notification_unread_summary_account'
+    | 'messaging_block'
+    | 'notification_preference'
+    | 'message_attachment'
+    | 'attachment_upload_target'
+    | 'scheduled_message'
+    | 'messaging_contact'
+    | 'message_report'
     | 'tool_group'
+    | 'model'
     | 'payment_term'
     | 'shipping_term'
     | 'quantity'
     | 'account_group'
+    | 'support_route'
+    | 'support_availability'
     | 'account_status'
     | 'geolocation'
     | 'account_user'
@@ -521,6 +578,8 @@ export interface ListObjectType {
     | 'location_type'
     | 'lot'
     | 'email_log'
+    | 'email_domain'
+    | 'email_inbox'
     | 'inventory_change_log'
     | 'invoice'
     | 'invoice_summary'
@@ -543,7 +602,6 @@ export interface ListObjectType {
     | 'transaction_type'
     | 'transaction_allocation'
     | 'usage_item'
-    | 'agent_token_detail'
     | 'account_usage_response'
     | 'subscription_info'
     | 'billing_portal_session_response'
@@ -641,6 +699,15 @@ export interface ListObjectType {
     | 'checkout_sales_order_response'
     | 'create_production_run_response'
     | 'sales_order_price_quote'
+    | 'hubspot_sync_job'
+    | 'hubspot_sync_report'
+    | 'hubspot_company_review'
+    | 'hubspot_company_candidate'
+    | 'contact_match'
+    | 'reply_draft'
+    | 'conversation_link'
+    | 'messaging_group'
+    | 'messaging_group_member'
   >;
 
   /**
@@ -666,7 +733,7 @@ export interface AuditEventListParams {
   /**
    * Filter by the mutation type recorded on the event.
    */
-  actions?: Array<'create' | 'update' | 'delete' | 'restore' | 'archive'>;
+  actions?: Array<'create' | 'update' | 'delete' | 'restore' | 'archive' | 'approve' | 'deny'>;
 
   /**
    * Filter by the _acting_ account: the account that performed the mutation.
@@ -685,6 +752,11 @@ export interface AuditEventListParams {
    * `api_key` actors.
    */
   actor_ids?: Array<string>;
+
+  /**
+   * Filter by the actor type.
+   */
+  actor_types?: Array<'user' | 'api_key' | 'agent' | 'group'>;
 
   /**
    * Opaque cursor token identifying where the page of results starts.
@@ -765,12 +837,30 @@ export interface AuditEventListParams {
     | 'agent_run_step'
     | 'agent_token_usage'
     | 'agent_memory'
-    | 'agent_alert'
+    | 'notification'
+    | 'notification_unread_count'
+    | 'notification_send_result'
+    | 'notification_unread_summary'
+    | 'announcement'
+    | 'conversation'
+    | 'conversation_participant'
+    | 'chat_message'
+    | 'notification_unread_summary_account'
+    | 'messaging_block'
+    | 'notification_preference'
+    | 'message_attachment'
+    | 'attachment_upload_target'
+    | 'scheduled_message'
+    | 'messaging_contact'
+    | 'message_report'
     | 'tool_group'
+    | 'model'
     | 'payment_term'
     | 'shipping_term'
     | 'quantity'
     | 'account_group'
+    | 'support_route'
+    | 'support_availability'
     | 'account_status'
     | 'geolocation'
     | 'account_user'
@@ -818,6 +908,8 @@ export interface AuditEventListParams {
     | 'location_type'
     | 'lot'
     | 'email_log'
+    | 'email_domain'
+    | 'email_inbox'
     | 'inventory_change_log'
     | 'invoice'
     | 'invoice_summary'
@@ -840,7 +932,6 @@ export interface AuditEventListParams {
     | 'transaction_type'
     | 'transaction_allocation'
     | 'usage_item'
-    | 'agent_token_detail'
     | 'account_usage_response'
     | 'subscription_info'
     | 'billing_portal_session_response'
@@ -938,6 +1029,15 @@ export interface AuditEventListParams {
     | 'checkout_sales_order_response'
     | 'create_production_run_response'
     | 'sales_order_price_quote'
+    | 'hubspot_sync_job'
+    | 'hubspot_sync_report'
+    | 'hubspot_company_review'
+    | 'hubspot_company_candidate'
+    | 'contact_match'
+    | 'reply_draft'
+    | 'conversation_link'
+    | 'messaging_group'
+    | 'messaging_group_member'
   >;
 
   /**

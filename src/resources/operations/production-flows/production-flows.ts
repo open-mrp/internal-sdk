@@ -28,6 +28,8 @@ export class ProductionFlows extends APIResource {
    * output, consumptions, and connections. The list of steps is empty if no
    * production step produces the item.
    *
+   * This endpoint requires the permission: `production_steps:read`.
+   *
    * @example
    * ```ts
    * const productionFlow =
@@ -254,7 +256,7 @@ export interface ProductionFlowStep {
   name: string;
 
   /**
-   * Notes.
+   * Free-form notes about this step.
    */
   notes: string | null;
 

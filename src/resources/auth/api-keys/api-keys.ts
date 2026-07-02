@@ -22,6 +22,8 @@ export class APIKeys extends APIResource {
    * [recommendations](https://docs.augno.com/api/managing-api-keys) on how you can
    * manage your API keys.
    *
+   * This endpoint requires the `admin` role type.
+   *
    * @example
    * ```ts
    * const createdAPIKey = await client.auth.apiKeys.create({
@@ -37,6 +39,8 @@ export class APIKeys extends APIResource {
 
   /**
    * Returns [API key](https://docs.augno.com/api/api-keys) metadata by ID.
+   *
+   * This endpoint requires the `admin` role type.
    *
    * @example
    * ```ts
@@ -56,6 +60,8 @@ export class APIKeys extends APIResource {
   /**
    * Returns a paginated list of [API keys](https://docs.augno.com/api/api-keys).
    *
+   * This endpoint requires the `admin` role type.
+   *
    * @example
    * ```ts
    * const listAPIKey = await client.auth.apiKeys.list();
@@ -71,6 +77,8 @@ export class APIKeys extends APIResource {
    * Revocation takes effect immediately and cannot be undone; revoked keys can no
    * longer be used to authenticate requests. To replace a key without losing access,
    * use Rotate API Key instead.
+   *
+   * This endpoint requires the `admin` role type.
    *
    * @example
    * ```ts
@@ -116,7 +124,7 @@ export interface Account {
   default_shipping_address: Address | null;
 
   /**
-   * Display name.
+   * The account's display name.
    */
   name: string;
 
@@ -274,7 +282,7 @@ export interface Address {
   phone: string | null;
 
   /**
-   * Address type.
+   * How the address is used.
    *
    * - `standard`: a normal shipping or billing address.
    * - `drop_ship`: an address an order is shipped to directly, typically a third
@@ -483,7 +491,7 @@ export interface Owner {
   object: 'owner';
 
   /**
-   * Owner type, identifying where the resource came from.
+   * Where this resource came from.
    *
    * - `system`: a platform-provided default shared across all accounts; not
    *   editable.

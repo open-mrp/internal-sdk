@@ -14,6 +14,8 @@ export class EmailLogs extends APIResource {
   /**
    * Returns an email log by ID.
    *
+   * This endpoint requires the permission: `email_logs:read`.
+   *
    * @example
    * ```ts
    * const emailLog = await client.core.emailLogs.retrieve(
@@ -31,6 +33,8 @@ export class EmailLogs extends APIResource {
 
   /**
    * Returns a paginated list of email logs for the current account.
+   *
+   * This endpoint requires the permission: `email_logs:read`.
    *
    * @example
    * ```ts
@@ -84,7 +88,8 @@ export interface EmailLog {
   send_status: 'sent' | 'pending';
 
   /**
-   * Reference to an actor (user, API key, or agent).
+   * Reference to an actor — the user, API key, agent, or group identity associated
+   * with an action.
    */
   sent_by: RequestLogsAPI.Actor | null;
 

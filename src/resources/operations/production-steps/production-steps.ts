@@ -49,19 +49,12 @@ export class ProductionSteps extends APIResource {
    * The step is automatically connected into the production flow graph based on the
    * items it produces and consumes.
    *
+   * This endpoint requires the permission: `production_steps:create`.
+   *
    * @example
    * ```ts
    * const productionStep = await client.operations.productionSteps.create({
    *   allowances: '0.05',
-   *   consumptions: [
-   *     {
-   *       item_id: 'it_0131e386ac683e8c29a71f6f1f',
-   *       quantity_value: '50',
-   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *       waste_quantity_value: '2',
-   *       waste_quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     },
-   *   ],
    *   labor_rate: {
    *     value: '25.00',
    *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
@@ -84,6 +77,15 @@ export class ProductionSteps extends APIResource {
    *     quantity_value: '100',
    *     quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
    *   },
+   *   consumptions: [
+   *     {
+   *       item_id: 'it_0131e386ac683e8c29a71f6f1f',
+   *       quantity_value: '50',
+   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       waste_quantity_value: '2',
+   *       waste_quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     },
+   *   ],
    *   scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
    * });
    * ```
@@ -97,6 +99,8 @@ export class ProductionSteps extends APIResource {
 
   /**
    * Returns a production step by ID.
+   *
+   * This endpoint requires the permission: `production_steps:read`.
    *
    * @example
    * ```ts
@@ -116,6 +120,8 @@ export class ProductionSteps extends APIResource {
 
   /**
    * Partially updates a production step.
+   *
+   * This endpoint requires the permission: `production_steps:update`.
    *
    * @example
    * ```ts
@@ -142,6 +148,8 @@ export class ProductionSteps extends APIResource {
   /**
    * Returns a paginated list of production steps for the current account.
    *
+   * This endpoint requires the permission: `production_steps:read`.
+   *
    * @example
    * ```ts
    * const listProductionStep =
@@ -160,6 +168,8 @@ export class ProductionSteps extends APIResource {
    *
    * The step's connections in the production flow graph are removed as part of the
    * deletion.
+   *
+   * This endpoint requires the permission: `production_steps:delete`.
    *
    * @example
    * ```ts
@@ -240,11 +250,6 @@ export interface CreateProductionStepRequest {
   allowances: string;
 
   /**
-   * Materials consumed by the step.
-   */
-  consumptions: Array<CreateConsumptionInput>;
-
-  /**
    * Rate configuration input.
    */
   labor_rate: CreateRateInput;
@@ -274,6 +279,11 @@ export interface CreateProductionStepRequest {
    * Production output input.
    */
   production: CreateProductionInput;
+
+  /**
+   * Materials consumed by the step.
+   */
+  consumptions?: Array<CreateConsumptionInput>;
 
   /**
    * Department ID.
@@ -350,11 +360,6 @@ export interface ProductionStepCreateParams {
   allowances: string;
 
   /**
-   * Materials consumed by the step.
-   */
-  consumptions: Array<CreateConsumptionInput>;
-
-  /**
    * Rate configuration input.
    */
   labor_rate: CreateRateInput;
@@ -384,6 +389,11 @@ export interface ProductionStepCreateParams {
    * Production output input.
    */
   production: CreateProductionInput;
+
+  /**
+   * Materials consumed by the step.
+   */
+  consumptions?: Array<CreateConsumptionInput>;
 
   /**
    * Department ID.

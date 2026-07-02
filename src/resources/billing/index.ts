@@ -4,7 +4,6 @@ export {
   Accounts,
   type AccountUsageResponse,
   type AgentSpendInfo,
-  type AgentTokenDetail,
   type EnsureBillingCustomerResponse,
   type SubscriptionInfo,
   type UsageItem,

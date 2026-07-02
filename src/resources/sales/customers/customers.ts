@@ -26,6 +26,8 @@ export class Customers extends APIResource {
    * If `number` is omitted, the next sequential customer number is assigned
    * automatically.
    *
+   * This endpoint requires the permission: `customers:create`.
+   *
    * @example
    * ```ts
    * const customer = await client.sales.customers.create({
@@ -64,6 +66,8 @@ export class Customers extends APIResource {
   /**
    * Returns a customer by ID.
    *
+   * This endpoint requires the permissions: `customers:read`, `suppliers:read`.
+   *
    * @example
    * ```ts
    * const customer = await client.sales.customers.retrieve(
@@ -84,6 +88,8 @@ export class Customers extends APIResource {
    *
    * Only the fields provided in the request are changed. Nullable fields can be set
    * to `null` to clear their current value.
+   *
+   * This endpoint requires the permission: `customers:update`.
    *
    * @example
    * ```ts
@@ -110,6 +116,8 @@ export class Customers extends APIResource {
   /**
    * Returns a paginated list of customers for the current account.
    *
+   * This endpoint requires the permission: `customers:read`.
+   *
    * @example
    * ```ts
    * const listCustomer = await client.sales.customers.list();
@@ -127,6 +135,8 @@ export class Customers extends APIResource {
    *
    * Fails with a conflict error if any sales orders still reference the customer;
    * delete or reassign those orders, or merge the customer into another first.
+   *
+   * This endpoint requires the permission: `customers:delete`.
    *
    * @example
    * ```ts
@@ -180,6 +190,9 @@ export class Customers extends APIResource {
    *
    * Returns up to 12 products ranked by order count, each with the unit the customer
    * most commonly orders it in.
+   *
+   * This endpoint requires the permissions: `customers:read`, `suppliers:read`,
+   * `items:read`.
    *
    * @example
    * ```ts
@@ -315,7 +328,7 @@ export interface AddressInput {
   street_line_2?: string;
 
   /**
-   * Address type.
+   * How the address is used.
    *
    * - `standard`: a normal shipping or billing address.
    * - `drop_ship`: an address an order is shipped to directly, typically a third
@@ -969,7 +982,7 @@ export interface Priority {
   created_at: string;
 
   /**
-   * Display name.
+   * Display name of the priority level.
    */
   name: string;
 
@@ -1391,6 +1404,7 @@ export interface CustomerCreateParams {
     | 'type'
     | 'parent_account'
     | 'freight_preferences.carrier'
+    | 'freight_preferences.carrier.service_levels'
     | 'freight_preferences.service_level'
     | 'defaults.payment_term'
     | 'defaults.shipping_term'
@@ -1404,6 +1418,7 @@ export interface CustomerCreateParams {
     | 'price_groups'
     | 'child_accounts'
     | 'credit_limit'
+    | 'credit_limit.unit'
   >;
 
   /**
@@ -1521,6 +1536,7 @@ export interface CustomerRetrieveParams {
     | 'type'
     | 'parent_account'
     | 'freight_preferences.carrier'
+    | 'freight_preferences.carrier.service_levels'
     | 'freight_preferences.service_level'
     | 'defaults.payment_term'
     | 'defaults.shipping_term'
@@ -1534,6 +1550,7 @@ export interface CustomerRetrieveParams {
     | 'price_groups'
     | 'child_accounts'
     | 'credit_limit'
+    | 'credit_limit.unit'
   >;
 }
 
@@ -1548,6 +1565,7 @@ export interface CustomerUpdateParams {
     | 'type'
     | 'parent_account'
     | 'freight_preferences.carrier'
+    | 'freight_preferences.carrier.service_levels'
     | 'freight_preferences.service_level'
     | 'defaults.payment_term'
     | 'defaults.shipping_term'
@@ -1561,6 +1579,7 @@ export interface CustomerUpdateParams {
     | 'price_groups'
     | 'child_accounts'
     | 'credit_limit'
+    | 'credit_limit.unit'
   >;
 
   /**
@@ -1759,6 +1778,7 @@ export interface CustomerListParams {
     | 'type'
     | 'parent_account'
     | 'freight_preferences.carrier'
+    | 'freight_preferences.carrier.service_levels'
     | 'freight_preferences.service_level'
     | 'defaults.payment_term'
     | 'defaults.shipping_term'
@@ -1772,6 +1792,7 @@ export interface CustomerListParams {
     | 'price_groups'
     | 'child_accounts'
     | 'credit_limit'
+    | 'credit_limit.unit'
   >;
 
   /**

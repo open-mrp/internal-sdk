@@ -35,22 +35,14 @@ import {
   MemoryUpdateParams,
   UpdateMemoryRequest,
 } from './memories';
-import * as AlertsAPI from './alerts/alerts';
-import {
-  AgentAction,
-  AgentAlert,
-  AgentRun,
-  AgentRunStep,
-  AlertListParams,
-  AlertRetrieveParams,
-  Alerts,
-  ListAgentAction,
-  ListAgentAlert,
-  ListAgentRunStep,
-} from './alerts/alerts';
 import * as RunsAPI from './runs/runs';
 import {
+  AgentAction,
+  AgentRun,
+  AgentRunStep,
+  ListAgentAction,
   ListAgentRun,
+  ListAgentRunStep,
   RunCreateParams,
   RunListParams,
   RunRetrieveParams,
@@ -61,14 +53,18 @@ import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * List available platform tools for agent configuration.
+ */
 export class AI extends APIResource {
   agents: AgentsAPI.Agents = new AgentsAPI.Agents(this._client);
-  alerts: AlertsAPI.Alerts = new AlertsAPI.Alerts(this._client);
   runs: RunsAPI.Runs = new RunsAPI.Runs(this._client);
   memories: MemoriesAPI.Memories = new MemoriesAPI.Memories(this._client);
 
   /**
    * Returns a paginated list of tool groups.
+   *
+   * This endpoint requires the permission: `agents:read`.
    *
    * @example
    * ```ts
@@ -85,6 +81,8 @@ export class AI extends APIResource {
   /**
    * Returns a paginated list of tools that can be assigned to agents.
    *
+   * This endpoint requires the permission: `agents:read`.
+   *
    * @example
    * ```ts
    * const listAvailableTool = await client.ai.retrieveTools();
@@ -96,86 +94,12 @@ export class AI extends APIResource {
   ): APIPromise<ListAvailableTool> {
     return this._client.get('/v1/ai/tools', { query, ...options });
   }
-
-  /**
-   * Returns a paginated list of daily agent token usage records for the current
-   * account.
-   *
-   * @example
-   * ```ts
-   * const listAgentTokenUsage = await client.ai.retrieveUsage();
-   * ```
-   */
-  retrieveUsage(
-    query: AIRetrieveUsageParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<ListAgentTokenUsage> {
-    return this._client.get('/v1/ai/usage', { query, ...options });
-  }
-}
-
-/**
- * Daily agent token usage record.
- *
- * One record exists per account per day, aggregating LLM token consumption, cost,
- * and run count across all agent runs that day.
- */
-export interface AgentTokenUsage {
-  /**
-   * Usage record ID.
-   */
-  id: string;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Date of usage (`YYYY-MM-DD`).
-   */
-  date: string;
-
-  /**
-   * Total input tokens consumed on this date.
-   */
-  input_tokens: number;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'agent_token_usage';
-
-  /**
-   * Total output tokens consumed on this date.
-   */
-  output_tokens: number;
-
-  /**
-   * Number of agent runs on this date.
-   */
-  run_count: number;
-
-  /**
-   * Total cost in USD for this date.
-   */
-  total_cost: number;
-
-  /**
-   * Last updated timestamp.
-   */
-  updated_at: string;
 }
 
 /**
  * Platform tool that can be attached to agents.
  */
 export interface AvailableTool {
-  /**
-   * Tool ID.
-   */
-  id: string;
-
   /**
    * Category grouping for the tool (e.g. `built_in`).
    */
@@ -209,6 +133,15 @@ export interface AvailableTool {
   description: string | null;
 
   /**
+   * Whether invoking this tool changes server state.
+   *
+   * True for any `api_endpoint` tool whose underlying operation is not a read
+   * (non-GET); always false for `built_in` tools. The agent-configuration UI uses
+   * this to default such tools to requiring human review.
+   */
+  mutating: boolean;
+
+  /**
    * Tool name.
    */
   name: string;
@@ -223,26 +156,17 @@ export interface AvailableTool {
    * `products:read`).
    */
   required_permissions: Array<string>;
-}
-
-/**
- * List represents a paginated list of resources.
- */
-export interface ListAgentTokenUsage {
-  /**
-   * Resources in this page.
-   */
-  data: Array<AgentTokenUsage>;
 
   /**
-   * Resource type identifier.
+   * Role type the caller must have for this tool, when the operation is gated by
+   * role rather than a permission (e.g. `admin`).
    */
-  object: 'list';
+  required_role_type: string | null;
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * A stable identifier used when attaching the tool to an agent.
    */
-  page_info: APIKeysAPI.PageInfo;
+  slug: string;
 }
 
 /**
@@ -382,39 +306,18 @@ export interface AIRetrieveToolsParams {
   q?: string;
 }
 
-export interface AIRetrieveUsageParams {
-  /**
-   * Pagination cursor from a previous response.
-   */
-  cursor?: string;
-
-  /**
-   * Number of days of usage history to return, counting back from today.
-   */
-  days?: number;
-
-  /**
-   * Maximum number of records to return per page.
-   */
-  limit?: number;
-}
-
 AI.Agents = Agents;
-AI.Alerts = Alerts;
 AI.Runs = Runs;
 AI.Memories = Memories;
 
 export declare namespace AI {
   export {
-    type AgentTokenUsage as AgentTokenUsage,
     type AvailableTool as AvailableTool,
-    type ListAgentTokenUsage as ListAgentTokenUsage,
     type ListAvailableTool as ListAvailableTool,
     type ListToolGroup as ListToolGroup,
     type ToolGroup as ToolGroup,
     type AIRetrieveToolGroupsParams as AIRetrieveToolGroupsParams,
     type AIRetrieveToolsParams as AIRetrieveToolsParams,
-    type AIRetrieveUsageParams as AIRetrieveUsageParams,
   };
 
   export {
@@ -440,21 +343,13 @@ export declare namespace AI {
   };
 
   export {
-    Alerts as Alerts,
+    Runs as Runs,
     type AgentAction as AgentAction,
-    type AgentAlert as AgentAlert,
     type AgentRun as AgentRun,
     type AgentRunStep as AgentRunStep,
     type ListAgentAction as ListAgentAction,
-    type ListAgentAlert as ListAgentAlert,
-    type ListAgentRunStep as ListAgentRunStep,
-    type AlertRetrieveParams as AlertRetrieveParams,
-    type AlertListParams as AlertListParams,
-  };
-
-  export {
-    Runs as Runs,
     type ListAgentRun as ListAgentRun,
+    type ListAgentRunStep as ListAgentRunStep,
     type TriggerRunRequest as TriggerRunRequest,
     type RunCreateParams as RunCreateParams,
     type RunRetrieveParams as RunRetrieveParams,

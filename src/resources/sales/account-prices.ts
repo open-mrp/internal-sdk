@@ -18,18 +18,20 @@ export class AccountPrices extends APIResource {
    * When an order line matches the price's product line and constraints, the account
    * price overrides standard pricing for the recipient customer.
    *
+   * This endpoint requires the permission: `discounts:create`.
+   *
    * @example
    * ```ts
    * const accountPrice =
    *   await client.sales.accountPrices.create({
-   *     attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
-   *     category_ids: ['ic_01ae7bd7bfd21ca0ab81e1357e'],
    *     product_line_id: 'pl_01996357326a0d3f7b129542ea',
    *     rate_denominator_unit_id:
    *       'un_01966263f74a5a0cae356000a1',
    *     rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
    *     rate_value: '25.500000000000000000000000000000',
    *     recipient_account_id: 'ac_01148680966698341a9c0976db',
+   *     attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
+   *     category_ids: ['ic_01ae7bd7bfd21ca0ab81e1357e'],
    *   });
    * ```
    */
@@ -40,6 +42,9 @@ export class AccountPrices extends APIResource {
 
   /**
    * Returns an account price by ID.
+   *
+   * This endpoint requires the permissions: `discounts:read`, `customers:read`,
+   * `suppliers:read`.
    *
    * @example
    * ```ts
@@ -63,6 +68,8 @@ export class AccountPrices extends APIResource {
    * Only the provided fields are changed. If `category_ids` or `attribute_ids` are
    * provided, they replace the existing set entirely.
    *
+   * This endpoint requires the permission: `discounts:update`.
+   *
    * @example
    * ```ts
    * const accountPrice =
@@ -84,6 +91,9 @@ export class AccountPrices extends APIResource {
   /**
    * Returns a paginated list of account prices for the current account.
    *
+   * This endpoint requires the permissions: `discounts:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listAccountPrice =
@@ -103,6 +113,8 @@ export class AccountPrices extends APIResource {
    * Associated category constraints, attribute constraints, and the rate record are
    * also removed. Deletion is permanent; further requests against the deleted ID
    * return an error.
+   *
+   * This endpoint requires the permission: `discounts:delete`.
    *
    * @example
    * ```ts
@@ -181,20 +193,6 @@ export interface AccountPrice {
  */
 export interface CreateAccountPriceRequest {
   /**
-   * Attribute IDs to constrain this price to.
-   *
-   * When set, the price applies only to items that have every listed attribute.
-   */
-  attribute_ids: Array<string>;
-
-  /**
-   * Item category IDs to constrain this price to.
-   *
-   * When empty, the price is not restricted by item category.
-   */
-  category_ids: Array<string>;
-
-  /**
    * Product line ID.
    */
   product_line_id: string;
@@ -218,6 +216,20 @@ export interface CreateAccountPriceRequest {
    * Recipient customer account ID.
    */
   recipient_account_id: string;
+
+  /**
+   * Attribute IDs to constrain this price to.
+   *
+   * When set, the price applies only to items that have every listed attribute.
+   */
+  attribute_ids?: Array<string>;
+
+  /**
+   * Item category IDs to constrain this price to.
+   *
+   * When empty, the price is not restricted by item category.
+   */
+  category_ids?: Array<string>;
 }
 
 /**
@@ -382,20 +394,6 @@ export interface AccountPriceDeleteResponse {}
 
 export interface AccountPriceCreateParams {
   /**
-   * Body param: Attribute IDs to constrain this price to.
-   *
-   * When set, the price applies only to items that have every listed attribute.
-   */
-  attribute_ids: Array<string>;
-
-  /**
-   * Body param: Item category IDs to constrain this price to.
-   *
-   * When empty, the price is not restricted by item category.
-   */
-  category_ids: Array<string>;
-
-  /**
    * Body param: Product line ID.
    */
   product_line_id: string;
@@ -426,6 +424,20 @@ export interface AccountPriceCreateParams {
    * are returned as `null`.
    */
   include?: Array<'recipient_account' | 'product_line' | 'categories' | 'attributes'>;
+
+  /**
+   * Body param: Attribute IDs to constrain this price to.
+   *
+   * When set, the price applies only to items that have every listed attribute.
+   */
+  attribute_ids?: Array<string>;
+
+  /**
+   * Body param: Item category IDs to constrain this price to.
+   *
+   * When empty, the price is not restricted by item category.
+   */
+  category_ids?: Array<string>;
 }
 
 export interface AccountPriceRetrieveParams {

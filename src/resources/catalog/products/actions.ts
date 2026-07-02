@@ -14,6 +14,9 @@ export class Actions extends APIResource {
   /**
    * Exports all matching products as an Excel file.
    *
+   * This endpoint requires the permissions: `items:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const fileDownload =
@@ -29,6 +32,9 @@ export class Actions extends APIResource {
 
   /**
    * Validates SKUs and returns matching products keyed by the original map keys.
+   *
+   * This endpoint requires the permissions: `items:read`, `customers:read`,
+   * `suppliers:read`.
    *
    * @example
    * ```ts

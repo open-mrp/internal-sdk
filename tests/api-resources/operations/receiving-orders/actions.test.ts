@@ -21,17 +21,9 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('stock: only required params', async () => {
+  test('stock', async () => {
     const responsePromise = client.operations.receivingOrders.actions.stock(
       'rcor_016911ec6c634a298b3dc1798e',
-      {
-        line_items: [
-          {
-            allocations: [{ quantity: '100' }],
-            receiving_order_line_id: 'rcorln_01f2aca124f3f5add7c94d5e4f',
-          },
-        ],
-      },
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -42,20 +34,24 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('stock: required and optional params', async () => {
-    const response = await client.operations.receivingOrders.actions.stock(
-      'rcor_016911ec6c634a298b3dc1798e',
-      {
-        line_items: [
-          {
-            allocations: [{ quantity: '100', location_id: 'lc_014d187d99b31926f0c74af9d8' }],
-            receiving_order_line_id: 'rcorln_01f2aca124f3f5add7c94d5e4f',
-            lot_number: 'lot_number',
-            rejected_quantity: 'rejected_quantity',
-          },
-        ],
-      },
-    );
+  test('stock: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.receivingOrders.actions.stock(
+        'rcor_016911ec6c634a298b3dc1798e',
+        {
+          line_items: [
+            {
+              receiving_order_line_id: 'rcorln_01f2aca124f3f5add7c94d5e4f',
+              allocations: [{ quantity: '100', location_id: 'lc_014d187d99b31926f0c74af9d8' }],
+              lot_number: 'lot_number',
+              rejected_quantity: 'rejected_quantity',
+            },
+          ],
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('void', async () => {

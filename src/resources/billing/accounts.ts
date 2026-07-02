@@ -12,6 +12,8 @@ export class Accounts extends APIResource {
    * Ensures a Stripe billing customer exists for the account, creating one if
    * necessary.
    *
+   * This endpoint requires the `admin` role type.
+   *
    * @example
    * ```ts
    * const ensureBillingCustomerResponse =
@@ -25,6 +27,8 @@ export class Accounts extends APIResource {
   /**
    * Returns resource usage for the account, including seats, invoices, batches,
    * sandboxes, and subscription details.
+   *
+   * This endpoint requires the permission: `self:read`.
    *
    * @example
    * ```ts
@@ -47,17 +51,12 @@ export interface AccountUsageResponse {
   agent_spend: AgentSpendInfo | null;
 
   /**
-   * Detailed agent token usage breakdown.
-   */
-  agent_token_detail: AgentTokenDetail | null;
-
-  /**
-   * Usage metric with current value and optional limit.
+   * A usage metric with its current value and any applicable limit.
    */
   batches: UsageItem;
 
   /**
-   * Usage metric with current value and optional limit.
+   * A usage metric with its current value and any applicable limit.
    */
   invoices: UsageItem;
 
@@ -67,12 +66,12 @@ export interface AccountUsageResponse {
   object: 'account_usage_response';
 
   /**
-   * Usage metric with current value and optional limit.
+   * A usage metric with its current value and any applicable limit.
    */
   sandboxes: UsageItem;
 
   /**
-   * Usage metric with current value and optional limit.
+   * A usage metric with its current value and any applicable limit.
    */
   seats: UsageItem;
 
@@ -102,64 +101,6 @@ export interface AgentSpendInfo {
    * Resource type identifier.
    */
   object: 'agent_spend_info';
-}
-
-/**
- * Detailed agent token usage breakdown.
- */
-export interface AgentTokenDetail {
-  /**
-   * Additional tokens purchased via token packs.
-   */
-  additional_tokens_purchased: number;
-
-  /**
-   * When the current billing period ends (ISO 8601).
-   */
-  billing_period_end: string;
-
-  /**
-   * Estimated cost in dollars for the current billing period.
-   *
-   * This is a rough estimate for display purposes; the actual billed amount is
-   * calculated by the billing provider and may differ.
-   */
-  current_period_cost: number;
-
-  /**
-   * Tokens included in the plan.
-   */
-  included_tokens: number;
-
-  /**
-   * Input tokens used in the current billing period.
-   */
-  input_tokens: number;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'agent_token_detail';
-
-  /**
-   * Output tokens used in the current billing period.
-   */
-  output_tokens: number;
-
-  /**
-   * Cost in dollars per million tokens for usage beyond the available token balance.
-   */
-  overage_cost_per_million_tokens: number;
-
-  /**
-   * Total tokens available (included + purchased).
-   */
-  total_available: number;
-
-  /**
-   * Tokens used in the current billing period.
-   */
-  used_tokens: number;
 }
 
 /**
@@ -224,7 +165,7 @@ export interface SubscriptionInfo {
 }
 
 /**
- * Usage metric with current value and optional limit.
+ * A usage metric with its current value and any applicable limit.
  */
 export interface UsageItem {
   /**
@@ -249,7 +190,6 @@ export declare namespace Accounts {
   export {
     type AccountUsageResponse as AccountUsageResponse,
     type AgentSpendInfo as AgentSpendInfo,
-    type AgentTokenDetail as AgentTokenDetail,
     type EnsureBillingCustomerResponse as EnsureBillingCustomerResponse,
     type SubscriptionInfo as SubscriptionInfo,
     type UsageItem as UsageItem,

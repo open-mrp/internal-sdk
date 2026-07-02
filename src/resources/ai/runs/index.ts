@@ -5,10 +5,16 @@ export {
   type ContinueRunRequest,
   type ActionCancelParams,
   type ActionContinueParams,
+  type ActionRetryParams,
 } from './actions';
 export {
   Runs,
+  type AgentAction,
+  type AgentRun,
+  type AgentRunStep,
+  type ListAgentAction,
   type ListAgentRun,
+  type ListAgentRunStep,
   type TriggerRunRequest,
   type RunCreateParams,
   type RunRetrieveParams,

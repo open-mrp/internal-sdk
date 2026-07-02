@@ -16,6 +16,8 @@ export class Actions extends APIResource {
    * If any of the orders is in `fulfilled` status the request fails and no orders
    * are deleted.
    *
+   * This endpoint requires the permission: `purchase_orders:delete`.
+   *
    * @example
    * ```ts
    * const response =
@@ -37,6 +39,8 @@ export class Actions extends APIResource {
    * `estimate`), `close` (`issued` to `fulfilled`), and `open` (`fulfilled` back to
    * `issued`). Each action is only valid from the status noted; otherwise the
    * request fails validation.
+   *
+   * This endpoint requires the permission: `purchase_orders:update`.
    *
    * @example
    * ```ts

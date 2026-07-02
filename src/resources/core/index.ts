@@ -66,7 +66,6 @@ export {
   type DemandForecastForecastPoint,
   type DemandForecastPoint,
   type DemandForecastRow,
-  type Entity,
   type InventoryReceiptSummaryEntry,
   type ManufacturingMetrics,
   type MaterialAnalyticsEntry,
@@ -103,7 +102,7 @@ export {
   type AuditEventRetrieveParams,
   type AuditEventListParams,
 } from './audit-events';
-export { Core } from './core';
+export { Core, type Entity, type ListEntity, type CoreRetrieveSearchParams } from './core';
 export {
   EmailLogs,
   type EmailLog,

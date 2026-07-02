@@ -15,7 +15,7 @@ export class Addresses extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Returns parsed address components for a Google Places ID.
+   * Returns the full parsed address for a place returned by address autocomplete.
    *
    * @example
    * ```ts
@@ -107,7 +107,7 @@ export interface AddressDetailsResult {
   address: AddressComponents | null;
 
   /**
-   * Formatted full address string.
+   * Full address formatted as a single line.
    */
   formatted_address: string;
 

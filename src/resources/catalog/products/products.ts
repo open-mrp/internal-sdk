@@ -28,6 +28,8 @@ export class Products extends APIResource {
    * zero rates in the category's base unit unless `unit_price` or `unit_cost` is
    * provided.
    *
+   * This endpoint requires the permission: `items:create`.
+   *
    * @example
    * ```ts
    * const product = await client.catalog.products.create({
@@ -44,6 +46,9 @@ export class Products extends APIResource {
 
   /**
    * Returns a product by ID.
+   *
+   * This endpoint requires the permissions: `items:read`, `customers:read`,
+   * `suppliers:read`.
    *
    * @example
    * ```ts
@@ -62,6 +67,8 @@ export class Products extends APIResource {
 
   /**
    * Partially updates a product.
+   *
+   * This endpoint requires the permission: `items:update`.
    *
    * @example
    * ```ts
@@ -83,6 +90,9 @@ export class Products extends APIResource {
   /**
    * Returns a paginated list of products for the target account.
    *
+   * This endpoint requires the permissions: `items:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listProduct = await client.catalog.products.list();
@@ -94,6 +104,8 @@ export class Products extends APIResource {
 
   /**
    * Soft-deletes a product and returns the deleted product.
+   *
+   * This endpoint requires the permission: `items:delete`.
    *
    * @example
    * ```ts
@@ -113,6 +125,8 @@ export class Products extends APIResource {
 
   /**
    * Changes the product line assignment for a product.
+   *
+   * This endpoint requires the permission: `items:update`.
    *
    * @example
    * ```ts
@@ -175,12 +189,12 @@ export interface CreateProductRequest {
   attribute_ids?: Array<string>;
 
   /**
-   * Description.
+   * Free-form description of the product.
    */
   description?: string;
 
   /**
-   * Notes.
+   * Free-form notes about the product.
    */
   notes?: string;
 
@@ -239,14 +253,14 @@ export interface ListProduct {
  */
 export interface UpdateProductRequest {
   /**
-   * Description.
+   * Free-form description of the product.
    *
    * Send `null` to clear.
    */
   description?: string | null;
 
   /**
-   * Notes.
+   * Free-form notes about the product.
    *
    * Send `null` to clear.
    */
@@ -335,12 +349,12 @@ export interface ProductCreateParams {
   attribute_ids?: Array<string>;
 
   /**
-   * Body param: Description.
+   * Body param: Free-form description of the product.
    */
   description?: string;
 
   /**
-   * Body param: Notes.
+   * Body param: Free-form notes about the product.
    */
   notes?: string;
 
@@ -424,14 +438,14 @@ export interface ProductUpdateParams {
   >;
 
   /**
-   * Body param: Description.
+   * Body param: Free-form description of the product.
    *
    * Send `null` to clear.
    */
   description?: string | null;
 
   /**
-   * Body param: Notes.
+   * Body param: Free-form notes about the product.
    *
    * Send `null` to clear.
    */

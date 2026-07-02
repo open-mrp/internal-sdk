@@ -41,6 +41,8 @@ export class Carriers extends APIResource {
    * connected through Shippo and its service levels are auto-synced, initially
    * hidden from the customer portal. Sandbox accounts skip the Shippo connection.
    *
+   * This endpoint requires the permission: `carriers:create`.
+   *
    * @example
    * ```ts
    * const carrier = await client.operations.carriers.create({
@@ -59,6 +61,9 @@ export class Carriers extends APIResource {
   /**
    * Returns a carrier by ID.
    *
+   * This endpoint requires the permissions: `carriers:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const carrier = await client.operations.carriers.retrieve(
@@ -76,6 +81,8 @@ export class Carriers extends APIResource {
 
   /**
    * Partially updates a carrier's name and portal visibility.
+   *
+   * This endpoint requires the permission: `carriers:update`.
    *
    * @example
    * ```ts
@@ -97,6 +104,9 @@ export class Carriers extends APIResource {
   /**
    * Returns a paginated list of carriers for the current account.
    *
+   * This endpoint requires the permissions: `carriers:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const listCarrier = await client.operations.carriers.list();
@@ -111,6 +121,8 @@ export class Carriers extends APIResource {
    *
    * If the carrier is connected through Shippo, its Shippo carrier account is
    * deactivated. System-owned carriers cannot be deleted.
+   *
+   * This endpoint requires the permission: `carriers:delete`.
    *
    * @example
    * ```ts
@@ -128,6 +140,8 @@ export class Carriers extends APIResource {
    *
    * The status is one of `connected`, `authorization_pending`, or `disconnected`.
    * Sandbox accounts always return `disconnected`.
+   *
+   * This endpoint requires the permission: `carriers:read`.
    *
    * @example
    * ```ts
@@ -227,9 +241,8 @@ export interface UpdateCarrierRequest {
   /**
    * Carrier visibility in the customer portal.
    *
-   * If `visible`, this carrier will be available for your customers to utilize when
-   * they go to checkout. If `hidden`, this carrier will not be an option on
-   * checkout.
+   * A `visible` carrier can be selected by your customers at checkout; a `hidden`
+   * carrier is not offered there.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 
@@ -298,9 +311,8 @@ export interface CarrierUpdateParams {
   /**
    * Body param: Carrier visibility in the customer portal.
    *
-   * If `visible`, this carrier will be available for your customers to utilize when
-   * they go to checkout. If `hidden`, this carrier will not be an option on
-   * checkout.
+   * A `visible` carrier can be selected by your customers at checkout; a `hidden`
+   * carrier is not offered there.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
 

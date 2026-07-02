@@ -14,6 +14,9 @@ export class Lines extends APIResource {
   /**
    * Creates a line item on a sales order.
    *
+   * This endpoint requires the permissions: `customers:update`, `suppliers:update`,
+   * `sales_orders:update`.
+   *
    * @example
    * ```ts
    * const salesOrderLine =
@@ -50,6 +53,9 @@ export class Lines extends APIResource {
   /**
    * Partially updates a sales order line item.
    *
+   * This endpoint requires the permissions: `customers:update`, `suppliers:update`,
+   * `sales_orders:update`.
+   *
    * @example
    * ```ts
    * const salesOrderLine =
@@ -84,6 +90,9 @@ export class Lines extends APIResource {
   /**
    * Deletes a sales order line and related records.
    *
+   * This endpoint requires the permissions: `customers:update`, `suppliers:update`,
+   * `sales_orders:update`.
+   *
    * @example
    * ```ts
    * const line = await client.sales.salesOrders.lines.delete(
@@ -99,9 +108,7 @@ export class Lines extends APIResource {
 }
 
 /**
- * OrderLineInput represents the shared fields for creating an order line item.
- *
- * Used as an embedded struct in purchase order and sales order line inputs.
+ * Shared fields for a line item on a purchase order or sales order.
  */
 export interface CreateSalesOrderLineRequest {
   /**
@@ -173,9 +180,7 @@ export interface CreateSalesOrderLineRequest {
 }
 
 /**
- * OrderLineInput represents the shared fields for creating an order line item.
- *
- * Used as an embedded struct in purchase order and sales order line inputs.
+ * Shared fields for a line item on a purchase order or sales order.
  */
 export interface OrderLineInput {
   /**

@@ -2,15 +2,12 @@
 
 export {
   AI,
-  type AgentTokenUsage,
   type AvailableTool,
-  type ListAgentTokenUsage,
   type ListAvailableTool,
   type ListToolGroup,
   type ToolGroup,
   type AIRetrieveToolGroupsParams,
   type AIRetrieveToolsParams,
-  type AIRetrieveUsageParams,
 } from './ai/ai';
 export {
   Auth,
@@ -25,7 +22,7 @@ export {
 } from './auth/auth';
 export { Billing, type BillingPortalSessionResponse } from './billing/billing';
 export { Catalog } from './catalog/catalog';
-export { Core } from './core/core';
+export { Core, type Entity, type ListEntity, type CoreRetrieveSearchParams } from './core/core';
 export {
   Finance,
   type AdjustmentType,
@@ -53,6 +50,22 @@ export {
   type PermissionGroup,
   type IdentityRetrievePermissionGroupsParams,
 } from './identity/identity';
+export {
+  Messaging,
+  type Conversation,
+  type ConversationParticipant,
+  type ListActor,
+  type ListConversationParticipant,
+  type ListMessageAttachment,
+  type ListMessagingGroupMember,
+  type Message,
+  type MessageAttachment,
+  type MessagingGroup,
+  type MessagingGroupMember,
+  type SupportAvailability,
+  type MessagingRetrieveContactsParams,
+  type MessagingSupportParams,
+} from './messaging/messaging';
 export {
   Operations,
   type InventoryItem,

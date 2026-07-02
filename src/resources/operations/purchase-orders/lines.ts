@@ -16,6 +16,9 @@ export class Lines extends APIResource {
    * If the order has already been issued, a matching receiving order line is created
    * as well.
    *
+   * This endpoint requires the permissions: `purchase_orders:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const purchaseOrderLine =
@@ -51,6 +54,9 @@ export class Lines extends APIResource {
    * If the order has already been issued, the receiving order is updated to reflect
    * the remaining quantity to receive.
    *
+   * This endpoint requires the permissions: `purchase_orders:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const purchaseOrderLine =
@@ -83,6 +89,9 @@ export class Lines extends APIResource {
    *
    * Any receiving order lines created for this line are deleted as well.
    *
+   * This endpoint requires the permissions: `purchase_orders:update`,
+   * `suppliers:update`.
+   *
    * @example
    * ```ts
    * const line =
@@ -99,9 +108,7 @@ export class Lines extends APIResource {
 }
 
 /**
- * OrderLineInput represents the shared fields for creating an order line item.
- *
- * Used as an embedded struct in purchase order and sales order line inputs.
+ * Shared fields for a line item on a purchase order or sales order.
  */
 export interface CreatePurchaseOrderLineRequest {
   /**
@@ -177,7 +184,7 @@ export interface CreatePurchaseOrderLineRequest {
  */
 export interface UpdatePurchaseOrderLineRequest {
   /**
-   * ID of the catalog item to link this line to.
+   * ID of the inventory item to tie this line to.
    */
   item_id?: string;
 
@@ -187,7 +194,7 @@ export interface UpdatePurchaseOrderLineRequest {
   product_description?: string;
 
   /**
-   * Product ID.
+   * ID of the product ordered on this line.
    */
   product_id?: string;
 
@@ -315,7 +322,7 @@ export interface LineUpdateParams {
   id: string;
 
   /**
-   * Body param: ID of the catalog item to link this line to.
+   * Body param: ID of the inventory item to tie this line to.
    */
   item_id?: string;
 
@@ -325,7 +332,7 @@ export interface LineUpdateParams {
   product_description?: string;
 
   /**
-   * Body param: Product ID.
+   * Body param: ID of the product ordered on this line.
    */
   product_id?: string;
 

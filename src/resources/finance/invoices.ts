@@ -17,6 +17,9 @@ export class Invoices extends APIResource {
   /**
    * Returns an invoice by ID.
    *
+   * This endpoint requires the permissions: `invoices:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const invoice = await client.finance.invoices.retrieve(
@@ -34,6 +37,9 @@ export class Invoices extends APIResource {
 
   /**
    * Partially updates an invoice.
+   *
+   * This endpoint requires the permissions: `invoices:update`, `customers:update`,
+   * `suppliers:update`.
    *
    * @example
    * ```ts
@@ -57,6 +63,9 @@ export class Invoices extends APIResource {
 
   /**
    * Returns a paginated list of invoices for the current account.
+   *
+   * This endpoint requires the permissions: `invoices:read`, `customers:read`,
+   * `suppliers:read`.
    *
    * @example
    * ```ts
@@ -170,8 +179,10 @@ export interface Invoice {
   order: SalesOrdersAPI.SalesOrder | null;
 
   /**
-   * Payment status of the invoice, derived from its paid-in-full and overpaid flags
-   * rather than computed directly from allocations.
+   * Payment status of the invoice.
+   *
+   * Derived from the invoice's paid-in-full and overpaid flags rather than computed
+   * directly from its allocations.
    *
    * - `overpaid`: the applied allocations exceed the invoiced amount.
    * - `partially_paid`: reserved for a future signal and not currently emitted.
@@ -499,7 +510,7 @@ export interface Pick {
   lines: ListPickLine | null;
 
   /**
-   * Pick number.
+   * Human-readable number that identifies the pick, distinct from the `id`.
    */
   number: string;
 
@@ -604,10 +615,8 @@ export interface Shipment {
    * Freight describes the carrier selection and freight billing for a record.
    *
    * It is a generic, reusable sub-resource shared by anything that carries shipping
-   * configuration — e.g. a sales order's chosen freight, or a customer's default
-   * freight preferences. It is itself expanded via its parent (e.g.
-   * include[]=freight); when present, the full carrier and service level are
-   * included.
+   * configuration — for example a sales order's chosen freight, or a customer's
+   * default freight preferences.
    */
   freight: SalesOrdersAPI.Freight | null;
 
@@ -682,7 +691,7 @@ export interface Shipment {
   shipping_cases: ListShippingCaseDetail | null;
 
   /**
-   * Shipment status code.
+   * Current status of the shipment.
    *
    * - `packed`: the shipment has been packed but not yet dispatched.
    * - `shipped`: the shipment has left the facility (`shipped_at` is set).

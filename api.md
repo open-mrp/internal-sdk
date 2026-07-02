@@ -310,6 +310,15 @@ Methods:
 
 # Core
 
+Types:
+
+- <code><a href="./src/resources/core/core.ts">Entity</a></code>
+- <code><a href="./src/resources/core/core.ts">ListEntity</a></code>
+
+Methods:
+
+- <code title="get /v1/core/search">client.core.<a href="./src/resources/core/core.ts">retrieveSearch</a>({ ...params }) -> ListEntity</code>
+
 ## Sandboxes
 
 Types:
@@ -437,7 +446,6 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastForecastPoint</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastPoint</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastRow</a></code>
-- <code><a href="./src/resources/core/analytics.ts">Entity</a></code>
 - <code><a href="./src/resources/core/analytics.ts">InventoryReceiptSummaryEntry</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ManufacturingMetrics</a></code>
 - <code><a href="./src/resources/core/analytics.ts">MaterialAnalyticsEntry</a></code>
@@ -521,7 +529,6 @@ Types:
 
 - <code><a href="./src/resources/billing/accounts.ts">AccountUsageResponse</a></code>
 - <code><a href="./src/resources/billing/accounts.ts">AgentSpendInfo</a></code>
-- <code><a href="./src/resources/billing/accounts.ts">AgentTokenDetail</a></code>
 - <code><a href="./src/resources/billing/accounts.ts">EnsureBillingCustomerResponse</a></code>
 - <code><a href="./src/resources/billing/accounts.ts">SubscriptionInfo</a></code>
 - <code><a href="./src/resources/billing/accounts.ts">UsageItem</a></code>
@@ -767,6 +774,20 @@ Methods:
 - <code title="get /v1/sales/priorities/{id}">client.sales.priorities.<a href="./src/resources/sales/priorities.ts">retrieve</a>(id, { ...params }) -> Priority</code>
 - <code title="get /v1/sales/priorities">client.sales.priorities.<a href="./src/resources/sales/priorities.ts">list</a>({ ...params }) -> ListPriority</code>
 
+## Contacts
+
+### Actions
+
+Types:
+
+- <code><a href="./src/resources/sales/contacts/actions.ts">ContactMatch</a></code>
+- <code><a href="./src/resources/sales/contacts/actions.ts">FindContactByEmailRequest</a></code>
+- <code><a href="./src/resources/sales/contacts/actions.ts">ListContactMatch</a></code>
+
+Methods:
+
+- <code title="post /v1/sales/contacts/actions/find-by-email">client.sales.contacts.actions.<a href="./src/resources/sales/contacts/actions.ts">findByEmail</a>({ ...params }) -> ListContactMatch</code>
+
 ## OrderDiscounts
 
 Types:
@@ -970,6 +991,53 @@ Methods:
 
 - <code title="get /v1/settings/integrations/stripe/publishable-key">client.settings.integrations.stripe.<a href="./src/resources/settings/integrations/stripe.ts">retrievePublishableKey</a>() -> StripePublishableKey</code>
 - <code title="get /v1/settings/integrations/stripe/status">client.settings.integrations.stripe.<a href="./src/resources/settings/integrations/stripe.ts">retrieveStatus</a>() -> StripeStatus</code>
+
+### Hubspot
+
+#### Sync
+
+Types:
+
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">HubspotSyncJob</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">HubspotSyncReport</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">StartHubspotSyncRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/settings/integrations/hubspot/sync">client.settings.integrations.hubspot.sync.<a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">create</a>({ ...params }) -> HubspotSyncJob</code>
+- <code title="get /v1/settings/integrations/hubspot/sync/{id}">client.settings.integrations.hubspot.sync.<a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">retrieve</a>(id) -> HubspotSyncJob</code>
+- <code title="get /v1/settings/integrations/hubspot/sync/current">client.settings.integrations.hubspot.sync.<a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">retrieveCurrent</a>() -> HubspotSyncJob</code>
+
+##### CompanyReviews
+
+Types:
+
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">HubspotCompanyCandidate</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">HubspotCompanyReview</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">ListHubspotCompanyCandidate</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">ListHubspotCompanyReview</a></code>
+
+Methods:
+
+- <code title="post /v1/settings/integrations/hubspot/sync/{id}/company-reviews/{review_id}">client.settings.integrations.hubspot.sync.companyReviews.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">create</a>(reviewID, { ...params }) -> HubspotCompanyReview</code>
+- <code title="get /v1/settings/integrations/hubspot/sync/{id}/company-reviews">client.settings.integrations.hubspot.sync.companyReviews.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/company-reviews.ts">list</a>(id, { ...params }) -> ListHubspotCompanyReview</code>
+
+###### Actions
+
+Types:
+
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">LinkHubspotCompanyReviewRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/settings/integrations/hubspot/sync/{id}/company-reviews/{review_id}/actions/link">client.settings.integrations.hubspot.sync.companyReviews.actions.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">link</a>(reviewID, { ...params }) -> HubspotCompanyReview</code>
+- <code title="post /v1/settings/integrations/hubspot/sync/{id}/company-reviews/{review_id}/actions/skip">client.settings.integrations.hubspot.sync.companyReviews.actions.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">skip</a>(reviewID, { ...params }) -> HubspotCompanyReview</code>
+
+##### Actions
+
+Methods:
+
+- <code title="post /v1/settings/integrations/hubspot/sync/{id}/actions/execute">client.settings.integrations.hubspot.sync.actions.<a href="./src/resources/settings/integrations/hubspot/sync/actions.ts">execute</a>(id) -> HubspotSyncJob</code>
 
 # Catalog
 
@@ -1295,9 +1363,7 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/ai/ai.ts">AgentTokenUsage</a></code>
 - <code><a href="./src/resources/ai/ai.ts">AvailableTool</a></code>
-- <code><a href="./src/resources/ai/ai.ts">ListAgentTokenUsage</a></code>
 - <code><a href="./src/resources/ai/ai.ts">ListAvailableTool</a></code>
 - <code><a href="./src/resources/ai/ai.ts">ListToolGroup</a></code>
 - <code><a href="./src/resources/ai/ai.ts">ToolGroup</a></code>
@@ -1306,7 +1372,6 @@ Methods:
 
 - <code title="get /v1/ai/tool-groups">client.ai.<a href="./src/resources/ai/ai.ts">retrieveToolGroups</a>({ ...params }) -> ListToolGroup</code>
 - <code title="get /v1/ai/tools">client.ai.<a href="./src/resources/ai/ai.ts">retrieveTools</a>({ ...params }) -> ListAvailableTool</code>
-- <code title="get /v1/ai/usage">client.ai.<a href="./src/resources/ai/ai.ts">retrieveUsage</a>({ ...params }) -> ListAgentTokenUsage</code>
 
 ## Agents
 
@@ -1335,34 +1400,16 @@ Methods:
 - <code title="delete /v1/ai/agents/{id}">client.ai.agents.<a href="./src/resources/ai/agents.ts">delete</a>(id) -> AgentDeleteResponse</code>
 - <code title="put /v1/ai/agents/{id}/status">client.ai.agents.<a href="./src/resources/ai/agents.ts">updateStatus</a>(id, { ...params }) -> AgentDefinition</code>
 
-## Alerts
-
-Types:
-
-- <code><a href="./src/resources/ai/alerts/alerts.ts">AgentAction</a></code>
-- <code><a href="./src/resources/ai/alerts/alerts.ts">AgentAlert</a></code>
-- <code><a href="./src/resources/ai/alerts/alerts.ts">AgentRun</a></code>
-- <code><a href="./src/resources/ai/alerts/alerts.ts">AgentRunStep</a></code>
-- <code><a href="./src/resources/ai/alerts/alerts.ts">ListAgentAction</a></code>
-- <code><a href="./src/resources/ai/alerts/alerts.ts">ListAgentAlert</a></code>
-- <code><a href="./src/resources/ai/alerts/alerts.ts">ListAgentRunStep</a></code>
-
-Methods:
-
-- <code title="get /v1/ai/alerts/{id}">client.ai.alerts.<a href="./src/resources/ai/alerts/alerts.ts">retrieve</a>(id, { ...params }) -> AgentAlert</code>
-- <code title="get /v1/ai/alerts">client.ai.alerts.<a href="./src/resources/ai/alerts/alerts.ts">list</a>({ ...params }) -> ListAgentAlert</code>
-
-### Actions
-
-Methods:
-
-- <code title="post /v1/ai/alerts/{id}/actions/acknowledge">client.ai.alerts.actions.<a href="./src/resources/ai/alerts/actions.ts">acknowledge</a>(id, { ...params }) -> AgentAlert</code>
-
 ## Runs
 
 Types:
 
+- <code><a href="./src/resources/ai/runs/runs.ts">AgentAction</a></code>
+- <code><a href="./src/resources/ai/runs/runs.ts">AgentRun</a></code>
+- <code><a href="./src/resources/ai/runs/runs.ts">AgentRunStep</a></code>
+- <code><a href="./src/resources/ai/runs/runs.ts">ListAgentAction</a></code>
 - <code><a href="./src/resources/ai/runs/runs.ts">ListAgentRun</a></code>
+- <code><a href="./src/resources/ai/runs/runs.ts">ListAgentRunStep</a></code>
 - <code><a href="./src/resources/ai/runs/runs.ts">TriggerRunRequest</a></code>
 
 Methods:
@@ -1381,6 +1428,7 @@ Methods:
 
 - <code title="post /v1/ai/runs/{id}/actions/cancel">client.ai.runs.actions.<a href="./src/resources/ai/runs/actions.ts">cancel</a>(id, { ...params }) -> AgentRun</code>
 - <code title="post /v1/ai/runs/{id}/actions/continue">client.ai.runs.actions.<a href="./src/resources/ai/runs/actions.ts">continue</a>(id, { ...params }) -> AgentRun</code>
+- <code title="post /v1/ai/runs/{id}/actions/retry">client.ai.runs.actions.<a href="./src/resources/ai/runs/actions.ts">retry</a>(id, { ...params }) -> AgentRun</code>
 
 ## Memories
 
@@ -1399,6 +1447,340 @@ Methods:
 - <code title="patch /v1/ai/memories/{id}">client.ai.memories.<a href="./src/resources/ai/memories.ts">update</a>(id, { ...params }) -> AgentMemory</code>
 - <code title="get /v1/ai/memories">client.ai.memories.<a href="./src/resources/ai/memories.ts">list</a>({ ...params }) -> ListAgentMemory</code>
 - <code title="delete /v1/ai/memories/{id}">client.ai.memories.<a href="./src/resources/ai/memories.ts">delete</a>(id) -> MemoryDeleteResponse</code>
+
+# Messaging
+
+Types:
+
+- <code><a href="./src/resources/messaging/messaging.ts">Conversation</a></code>
+- <code><a href="./src/resources/messaging/messaging.ts">ConversationParticipant</a></code>
+- <code><a href="./src/resources/messaging/messaging.ts">ListActor</a></code>
+- <code><a href="./src/resources/messaging/messaging.ts">ListConversationParticipant</a></code>
+- <code><a href="./src/resources/messaging/messaging.ts">ListMessageAttachment</a></code>
+- <code><a href="./src/resources/messaging/messaging.ts">ListMessagingGroupMember</a></code>
+- <code><a href="./src/resources/messaging/messaging.ts">Message</a></code>
+- <code><a href="./src/resources/messaging/messaging.ts">MessageAttachment</a></code>
+- <code><a href="./src/resources/messaging/messaging.ts">MessagingGroup</a></code>
+- <code><a href="./src/resources/messaging/messaging.ts">MessagingGroupMember</a></code>
+- <code><a href="./src/resources/messaging/messaging.ts">SupportAvailability</a></code>
+
+Methods:
+
+- <code title="get /v1/messaging/contacts">client.messaging.<a href="./src/resources/messaging/messaging.ts">retrieveContacts</a>({ ...params }) -> ListActor</code>
+- <code title="get /v1/messaging/support-availability">client.messaging.<a href="./src/resources/messaging/messaging.ts">retrieveSupportAvailability</a>() -> SupportAvailability</code>
+- <code title="post /v1/messaging/support">client.messaging.<a href="./src/resources/messaging/messaging.ts">support</a>({ ...params }) -> Conversation</code>
+
+## Notifications
+
+Types:
+
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">ListNotification</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">ListNotificationUnreadSummaryAccount</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">Notification</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">NotificationSendResult</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">NotificationTargetInput</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">NotificationUnreadCount</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">NotificationUnreadSummary</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">NotificationUnreadSummaryAccount</a></code>
+- <code><a href="./src/resources/messaging/notifications/notifications.ts">SendNotificationRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/notifications">client.messaging.notifications.<a href="./src/resources/messaging/notifications/notifications.ts">create</a>({ ...params }) -> NotificationSendResult</code>
+- <code title="get /v1/messaging/notifications/{id}">client.messaging.notifications.<a href="./src/resources/messaging/notifications/notifications.ts">retrieve</a>(id, { ...params }) -> Notification</code>
+- <code title="get /v1/messaging/notifications">client.messaging.notifications.<a href="./src/resources/messaging/notifications/notifications.ts">list</a>({ ...params }) -> ListNotification</code>
+- <code title="get /v1/messaging/notifications/unread-count">client.messaging.notifications.<a href="./src/resources/messaging/notifications/notifications.ts">retrieveUnreadCount</a>() -> NotificationUnreadCount</code>
+- <code title="get /v1/messaging/notifications/unread-summary">client.messaging.notifications.<a href="./src/resources/messaging/notifications/notifications.ts">retrieveUnreadSummary</a>() -> NotificationUnreadSummary</code>
+
+### Actions
+
+Types:
+
+- <code><a href="./src/resources/messaging/notifications/actions.ts">ActionMarkAllSeenResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/notifications/{id}/actions/dismiss">client.messaging.notifications.actions.<a href="./src/resources/messaging/notifications/actions.ts">dismiss</a>(id, { ...params }) -> Notification</code>
+- <code title="post /v1/messaging/notifications/actions/mark-all-seen">client.messaging.notifications.actions.<a href="./src/resources/messaging/notifications/actions.ts">markAllSeen</a>() -> ActionMarkAllSeenResponse</code>
+- <code title="post /v1/messaging/notifications/{id}/actions/read">client.messaging.notifications.actions.<a href="./src/resources/messaging/notifications/actions.ts">read</a>(id, { ...params }) -> Notification</code>
+- <code title="post /v1/messaging/notifications/{id}/actions/seen">client.messaging.notifications.actions.<a href="./src/resources/messaging/notifications/actions.ts">seen</a>(id, { ...params }) -> Notification</code>
+
+## Announcements
+
+Types:
+
+- <code><a href="./src/resources/messaging/announcements/announcements.ts">Announcement</a></code>
+- <code><a href="./src/resources/messaging/announcements/announcements.ts">ListAnnouncement</a></code>
+
+Methods:
+
+- <code title="get /v1/messaging/announcements/{id}">client.messaging.announcements.<a href="./src/resources/messaging/announcements/announcements.ts">retrieve</a>(id, { ...params }) -> Announcement</code>
+- <code title="get /v1/messaging/announcements">client.messaging.announcements.<a href="./src/resources/messaging/announcements/announcements.ts">list</a>({ ...params }) -> ListAnnouncement</code>
+
+### Actions
+
+Methods:
+
+- <code title="post /v1/messaging/announcements/{id}/actions/dismiss">client.messaging.announcements.actions.<a href="./src/resources/messaging/announcements/actions.ts">dismiss</a>(id, { ...params }) -> Announcement</code>
+- <code title="post /v1/messaging/announcements/{id}/actions/read">client.messaging.announcements.actions.<a href="./src/resources/messaging/announcements/actions.ts">read</a>(id, { ...params }) -> Announcement</code>
+- <code title="post /v1/messaging/announcements/{id}/actions/seen">client.messaging.announcements.actions.<a href="./src/resources/messaging/announcements/actions.ts">seen</a>(id, { ...params }) -> Announcement</code>
+
+## Conversations
+
+Types:
+
+- <code><a href="./src/resources/messaging/conversations/conversations.ts">CreateConversationRequest</a></code>
+- <code><a href="./src/resources/messaging/conversations/conversations.ts">ListConversation</a></code>
+- <code><a href="./src/resources/messaging/conversations/conversations.ts">UpdateConversationRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/conversations">client.messaging.conversations.<a href="./src/resources/messaging/conversations/conversations.ts">create</a>({ ...params }) -> Conversation</code>
+- <code title="get /v1/messaging/conversations/{id}">client.messaging.conversations.<a href="./src/resources/messaging/conversations/conversations.ts">retrieve</a>(id, { ...params }) -> Conversation</code>
+- <code title="patch /v1/messaging/conversations/{id}">client.messaging.conversations.<a href="./src/resources/messaging/conversations/conversations.ts">update</a>(id, { ...params }) -> Conversation</code>
+- <code title="get /v1/messaging/conversations">client.messaging.conversations.<a href="./src/resources/messaging/conversations/conversations.ts">list</a>({ ...params }) -> ListConversation</code>
+
+### Actions
+
+Types:
+
+- <code><a href="./src/resources/messaging/conversations/actions.ts">AssignConversationRequest</a></code>
+- <code><a href="./src/resources/messaging/conversations/actions.ts">MarkConversationReadRequest</a></code>
+- <code><a href="./src/resources/messaging/conversations/actions.ts">MuteConversationRequest</a></code>
+- <code><a href="./src/resources/messaging/conversations/actions.ts">ReportConversationRequest</a></code>
+- <code><a href="./src/resources/messaging/conversations/actions.ts">SetLegalHoldRequest</a></code>
+- <code><a href="./src/resources/messaging/conversations/actions.ts">SetWorkflowStatusRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/conversations/{id}/actions/archive">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">archive</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/assign">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">assign</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/hide">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">hide</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/leave">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">leave</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/mute">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">mute</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/read">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">read</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/redact">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">redact</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/report">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">report</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/set-legal-hold">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">setLegalHold</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/set-status">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">setStatus</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/typing">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">typing</a>(id) -> MessageResource</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/unarchive">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">unarchive</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/unhide">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">unhide</a>(id, { ...params }) -> Conversation</code>
+- <code title="post /v1/messaging/conversations/{id}/actions/unmute">client.messaging.conversations.actions.<a href="./src/resources/messaging/conversations/actions.ts">unmute</a>(id, { ...params }) -> Conversation</code>
+
+### Links
+
+Types:
+
+- <code><a href="./src/resources/messaging/conversations/links.ts">AddConversationLinkRequest</a></code>
+- <code><a href="./src/resources/messaging/conversations/links.ts">ConversationLink</a></code>
+- <code><a href="./src/resources/messaging/conversations/links.ts">ListConversationLink</a></code>
+- <code><a href="./src/resources/messaging/conversations/links.ts">LinkDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/conversations/{id}/links">client.messaging.conversations.links.<a href="./src/resources/messaging/conversations/links.ts">create</a>(id, { ...params }) -> ConversationLink</code>
+- <code title="get /v1/messaging/conversations/{id}/links">client.messaging.conversations.links.<a href="./src/resources/messaging/conversations/links.ts">list</a>(id, { ...params }) -> ListConversationLink</code>
+- <code title="delete /v1/messaging/conversations/{id}/links/{link_id}">client.messaging.conversations.links.<a href="./src/resources/messaging/conversations/links.ts">delete</a>(linkID, { ...params }) -> LinkDeleteResponse</code>
+
+### Messages
+
+Types:
+
+- <code><a href="./src/resources/messaging/conversations/messages.ts">ListMessage</a></code>
+- <code><a href="./src/resources/messaging/conversations/messages.ts">MessageAttachmentInput</a></code>
+- <code><a href="./src/resources/messaging/conversations/messages.ts">SendMessageRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/conversations/{id}/messages">client.messaging.conversations.messages.<a href="./src/resources/messaging/conversations/messages.ts">create</a>(id, { ...params }) -> Message</code>
+- <code title="get /v1/messaging/conversations/{id}/messages">client.messaging.conversations.messages.<a href="./src/resources/messaging/conversations/messages.ts">list</a>(id, { ...params }) -> ListMessage</code>
+
+### Participants
+
+Types:
+
+- <code><a href="./src/resources/messaging/conversations/participants/participants.ts">AddParticipantRequest</a></code>
+- <code><a href="./src/resources/messaging/conversations/participants/participants.ts">ParticipantDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/conversations/{id}/participants">client.messaging.conversations.participants.<a href="./src/resources/messaging/conversations/participants/participants.ts">create</a>(id, { ...params }) -> Conversation</code>
+- <code title="delete /v1/messaging/conversations/{id}/participants/{pid}">client.messaging.conversations.participants.<a href="./src/resources/messaging/conversations/participants/participants.ts">delete</a>(pid, { ...params }) -> ParticipantDeleteResponse</code>
+
+#### Actions
+
+Types:
+
+- <code><a href="./src/resources/messaging/conversations/participants/actions.ts">UpdateParticipantRoleRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/conversations/{id}/participants/{pid}/actions/set-role">client.messaging.conversations.participants.actions.<a href="./src/resources/messaging/conversations/participants/actions.ts">setRole</a>(pid, { ...params }) -> Conversation</code>
+
+### Agents
+
+Types:
+
+- <code><a href="./src/resources/messaging/conversations/agents.ts">AddAgentParticipantRequest</a></code>
+- <code><a href="./src/resources/messaging/conversations/agents.ts">AgentDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/conversations/{id}/agents">client.messaging.conversations.agents.<a href="./src/resources/messaging/conversations/agents.ts">create</a>(id, { ...params }) -> ConversationParticipant</code>
+- <code title="delete /v1/messaging/conversations/{id}/agents/{pid}">client.messaging.conversations.agents.<a href="./src/resources/messaging/conversations/agents.ts">delete</a>(pid, { ...params }) -> AgentDeleteResponse</code>
+
+### Attachments
+
+#### Actions
+
+Types:
+
+- <code><a href="./src/resources/messaging/conversations/attachments/actions.ts">AttachmentUploadTarget</a></code>
+- <code><a href="./src/resources/messaging/conversations/attachments/actions.ts">CreateAttachmentUploadURLRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/conversations/{id}/attachments/actions/upload-url">client.messaging.conversations.attachments.actions.<a href="./src/resources/messaging/conversations/attachments/actions.ts">uploadURL</a>(id, { ...params }) -> AttachmentUploadTarget</code>
+
+## Messages
+
+Types:
+
+- <code><a href="./src/resources/messaging/messages/messages.ts">UpdateDraftRequest</a></code>
+
+Methods:
+
+- <code title="patch /v1/messaging/messages/{id}">client.messaging.messages.<a href="./src/resources/messaging/messages/messages.ts">update</a>(id, { ...params }) -> Message</code>
+
+### Actions
+
+Types:
+
+- <code><a href="./src/resources/messaging/messages/actions.ts">ApproveSendDraftRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/messages/{id}/actions/approve-send">client.messaging.messages.actions.<a href="./src/resources/messaging/messages/actions.ts">approveSend</a>(id, { ...params }) -> Message</code>
+- <code title="post /v1/messaging/messages/{id}/actions/cancel">client.messaging.messages.actions.<a href="./src/resources/messaging/messages/actions.ts">cancel</a>(id, { ...params }) -> Message</code>
+- <code title="post /v1/messaging/messages/{id}/actions/reject">client.messaging.messages.actions.<a href="./src/resources/messaging/messages/actions.ts">reject</a>(id, { ...params }) -> Message</code>
+
+## Groups
+
+Types:
+
+- <code><a href="./src/resources/messaging/groups/groups.ts">CreateMessagingGroupRequest</a></code>
+- <code><a href="./src/resources/messaging/groups/groups.ts">ListMessagingGroup</a></code>
+- <code><a href="./src/resources/messaging/groups/groups.ts">UpdateMessagingGroupRequest</a></code>
+- <code><a href="./src/resources/messaging/groups/groups.ts">GroupDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/groups">client.messaging.groups.<a href="./src/resources/messaging/groups/groups.ts">create</a>({ ...params }) -> MessagingGroup</code>
+- <code title="get /v1/messaging/groups/{id}">client.messaging.groups.<a href="./src/resources/messaging/groups/groups.ts">retrieve</a>(id) -> MessagingGroup</code>
+- <code title="patch /v1/messaging/groups/{id}">client.messaging.groups.<a href="./src/resources/messaging/groups/groups.ts">update</a>(id, { ...params }) -> MessagingGroup</code>
+- <code title="get /v1/messaging/groups">client.messaging.groups.<a href="./src/resources/messaging/groups/groups.ts">list</a>() -> ListMessagingGroup</code>
+- <code title="delete /v1/messaging/groups/{id}">client.messaging.groups.<a href="./src/resources/messaging/groups/groups.ts">delete</a>(id) -> GroupDeleteResponse</code>
+
+### Members
+
+Types:
+
+- <code><a href="./src/resources/messaging/groups/members.ts">AddMessagingGroupMemberRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/groups/{id}/members">client.messaging.groups.members.<a href="./src/resources/messaging/groups/members.ts">create</a>(id, { ...params }) -> MessagingGroup</code>
+- <code title="delete /v1/messaging/groups/{id}/members/{member_id}">client.messaging.groups.members.<a href="./src/resources/messaging/groups/members.ts">delete</a>(memberID, { ...params }) -> MessagingGroup</code>
+
+## Blocks
+
+Types:
+
+- <code><a href="./src/resources/messaging/blocks.ts">BlockRequest</a></code>
+- <code><a href="./src/resources/messaging/blocks.ts">ListMessagingBlock</a></code>
+- <code><a href="./src/resources/messaging/blocks.ts">MessagingBlock</a></code>
+- <code><a href="./src/resources/messaging/blocks.ts">BlockDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/blocks">client.messaging.blocks.<a href="./src/resources/messaging/blocks.ts">create</a>({ ...params }) -> MessagingBlock</code>
+- <code title="get /v1/messaging/blocks">client.messaging.blocks.<a href="./src/resources/messaging/blocks.ts">list</a>({ ...params }) -> ListMessagingBlock</code>
+- <code title="delete /v1/messaging/blocks/{id}">client.messaging.blocks.<a href="./src/resources/messaging/blocks.ts">delete</a>(id) -> BlockDeleteResponse</code>
+
+## Preferences
+
+Types:
+
+- <code><a href="./src/resources/messaging/preferences.ts">ListNotificationPreference</a></code>
+- <code><a href="./src/resources/messaging/preferences.ts">NotificationPreference</a></code>
+- <code><a href="./src/resources/messaging/preferences.ts">UpsertNotificationPreferenceRequest</a></code>
+
+Methods:
+
+- <code title="put /v1/messaging/preferences">client.messaging.preferences.<a href="./src/resources/messaging/preferences.ts">update</a>({ ...params }) -> NotificationPreference</code>
+- <code title="get /v1/messaging/preferences">client.messaging.preferences.<a href="./src/resources/messaging/preferences.ts">list</a>() -> ListNotificationPreference</code>
+
+## EmailDomains
+
+Types:
+
+- <code><a href="./src/resources/messaging/email-domains/email-domains.ts">CreateEmailDomainRequest</a></code>
+- <code><a href="./src/resources/messaging/email-domains/email-domains.ts">EmailDomain</a></code>
+- <code><a href="./src/resources/messaging/email-domains/email-domains.ts">ListEmailDomain</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/email-domains">client.messaging.emailDomains.<a href="./src/resources/messaging/email-domains/email-domains.ts">create</a>({ ...params }) -> EmailDomain</code>
+- <code title="get /v1/messaging/email-domains/{id}">client.messaging.emailDomains.<a href="./src/resources/messaging/email-domains/email-domains.ts">retrieve</a>(id) -> EmailDomain</code>
+- <code title="get /v1/messaging/email-domains">client.messaging.emailDomains.<a href="./src/resources/messaging/email-domains/email-domains.ts">list</a>() -> ListEmailDomain</code>
+
+### Actions
+
+Methods:
+
+- <code title="post /v1/messaging/email-domains/{id}/actions/verify">client.messaging.emailDomains.actions.<a href="./src/resources/messaging/email-domains/actions.ts">verify</a>(id) -> EmailDomain</code>
+
+## EmailInboxes
+
+Types:
+
+- <code><a href="./src/resources/messaging/email-inboxes.ts">CreateEmailInboxRequest</a></code>
+- <code><a href="./src/resources/messaging/email-inboxes.ts">EmailInbox</a></code>
+- <code><a href="./src/resources/messaging/email-inboxes.ts">ListEmailInbox</a></code>
+- <code><a href="./src/resources/messaging/email-inboxes.ts">UpdateEmailInboxRequest</a></code>
+- <code><a href="./src/resources/messaging/email-inboxes.ts">EmailInboxDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/email-inboxes">client.messaging.emailInboxes.<a href="./src/resources/messaging/email-inboxes.ts">create</a>({ ...params }) -> EmailInbox</code>
+- <code title="get /v1/messaging/email-inboxes/{id}">client.messaging.emailInboxes.<a href="./src/resources/messaging/email-inboxes.ts">retrieve</a>(id, { ...params }) -> EmailInbox</code>
+- <code title="patch /v1/messaging/email-inboxes/{id}">client.messaging.emailInboxes.<a href="./src/resources/messaging/email-inboxes.ts">update</a>(id, { ...params }) -> EmailInbox</code>
+- <code title="get /v1/messaging/email-inboxes">client.messaging.emailInboxes.<a href="./src/resources/messaging/email-inboxes.ts">list</a>({ ...params }) -> ListEmailInbox</code>
+- <code title="delete /v1/messaging/email-inboxes/{id}">client.messaging.emailInboxes.<a href="./src/resources/messaging/email-inboxes.ts">delete</a>(id) -> EmailInboxDeleteResponse</code>
+
+## SupportRoutes
+
+Types:
+
+- <code><a href="./src/resources/messaging/support-routes/support-routes.ts">SupportRoute</a></code>
+
+Methods:
+
+- <code title="get /v1/messaging/support-routes">client.messaging.supportRoutes.<a href="./src/resources/messaging/support-routes/support-routes.ts">list</a>({ ...params }) -> SupportRoute</code>
+
+### Actions
+
+Types:
+
+- <code><a href="./src/resources/messaging/support-routes/actions.ts">ClearSupportRouteRequest</a></code>
+- <code><a href="./src/resources/messaging/support-routes/actions.ts">SetSupportRouteRequest</a></code>
+- <code><a href="./src/resources/messaging/support-routes/actions.ts">ActionClearResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/messaging/support-routes/actions/clear">client.messaging.supportRoutes.actions.<a href="./src/resources/messaging/support-routes/actions.ts">clear</a>({ ...params }) -> ActionClearResponse</code>
+- <code title="post /v1/messaging/support-routes/actions/set">client.messaging.supportRoutes.actions.<a href="./src/resources/messaging/support-routes/actions.ts">set</a>({ ...params }) -> SupportRoute</code>
 
 # Webhooks
 

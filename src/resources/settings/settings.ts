@@ -74,7 +74,7 @@ export interface PublicAccount {
   logo_url: string | null;
 
   /**
-   * Display name.
+   * The account's display name.
    */
   name: string;
 
