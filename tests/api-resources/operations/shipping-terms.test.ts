@@ -11,7 +11,7 @@ describe('resource shippingTerms', () => {
   test('create: only required params', async () => {
     const responsePromise = client.operations.shippingTerms.create({
       name: 'Prepaid',
-      type: 'carrier_rate_freight',
+      type: 'flat_rate_freight',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -25,11 +25,11 @@ describe('resource shippingTerms', () => {
   test('create: required and optional params', async () => {
     const response = await client.operations.shippingTerms.create({
       name: 'Prepaid',
-      type: 'carrier_rate_freight',
+      type: 'flat_rate_freight',
       include: ['owner'],
-      flat_rate: { unit_id: 'unit_id', value: 'value' },
-      free_shipping_service_level_ids: ['string'],
-      minimum_order_value: { unit_id: 'unit_id', value: 'value' },
+      flat_rate: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '15.00' },
+      free_shipping_service_level_ids: ['crop_01cfaf03f104e90ef9680e2a30'],
+      minimum_order_value: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '500.00' },
     });
   });
 
@@ -73,11 +73,11 @@ describe('resource shippingTerms', () => {
         'shtm_014341ab4bb5bf94d5b6936f86',
         {
           include: ['owner'],
-          flat_rate: { unit_id: 'unit_id', value: 'value' },
-          free_shipping_service_level_ids: ['string'],
-          minimum_order_value: { unit_id: 'unit_id', value: 'value' },
+          flat_rate: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '15.00' },
+          free_shipping_service_level_ids: ['crop_01cfaf03f104e90ef9680e2a30'],
+          minimum_order_value: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '500.00' },
           name: 'Collect',
-          type: 'free_freight',
+          type: 'flat_rate_freight',
         },
         { path: '/_stainless_unknown_path' },
       ),

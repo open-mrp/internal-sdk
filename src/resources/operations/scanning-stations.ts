@@ -28,6 +28,7 @@ export class ScanningStations extends APIResource {
    *     type: 'init_batch',
    *     label_size: '1x1',
    *     label_type: 'tag',
+   *     notes: 'Primary intake station on the receiving dock.',
    *   });
    * ```
    */
@@ -73,7 +74,13 @@ export class ScanningStations extends APIResource {
    * const scanningStation =
    *   await client.operations.scanningStations.update(
    *     'scst_0129335dd6286056a97024fcc1',
-   *     { name: 'Station B' },
+   *     {
+   *       label_size: '1x1',
+   *       label_type: 'tag',
+   *       name: 'Station B',
+   *       notes: 'Relocated to the finishing area.',
+   *       operator_requirement: 'material_check',
+   *     },
    *   );
    * ```
    */

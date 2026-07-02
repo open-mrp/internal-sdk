@@ -25,7 +25,7 @@ describe('resource members', () => {
     const response = await client.messaging.groups.members.create('cvgp_018e88072d1320808dc97abc', {
       member_type: 'user',
       account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
-      agent_config_id: 'agent_config_id',
+      agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
     });
   });
 

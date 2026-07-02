@@ -25,7 +25,7 @@ describe('resource accountUsers', () => {
       client.identity.accountUsers.create(
         {
           include: ['user'],
-          department_id: 'department_id',
+          department_id: 'dp_01791c25ab59da4704cba61874',
           email: 'jdoe@augno.com',
           name: 'John Doe',
           password: 'QgS7Z8Hhj3&1',
@@ -79,11 +79,11 @@ describe('resource accountUsers', () => {
         {
           include: ['user'],
           department_id: 'dp_01791c25ab59da4704cba61874',
-          email: 'email',
+          email: 'jdoe@augno.com',
           name: 'John Doe',
-          preferences: [{ enabled: true, notification_type: 'invoice' }],
+          preferences: [{ enabled: true, notification_type: 'order_acknowledgement' }],
           role_id: 'rl_01c16d2eb637c0d1f3a372937c',
-          username: 'username',
+          username: 'jdoe',
         },
         { path: '/_stainless_unknown_path' },
       ),

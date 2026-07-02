@@ -56,7 +56,10 @@ export class Integrations extends APIResource {
    * const accountIntegration =
    *   await client.settings.integrations.update(
    *     'acig_0177772eae113431f64d473124',
-   *     { name: 'Updated Stripe Integration' },
+   *     {
+   *       name: 'Updated Stripe Integration',
+   *       status: 'active',
+   *     },
    *   );
    * ```
    */

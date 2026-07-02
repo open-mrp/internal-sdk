@@ -30,7 +30,20 @@ export class Parts extends APIResource {
    * const part = await client.catalog.parts.create({
    *   category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
    *   sku: 'BRG-6204-2RS',
+   *   attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
    *   description: 'Deep groove ball bearing, 20x47x14mm',
+   *   notes:
+   *     'OEM-equivalent; verify shielding type before substitution.',
+   *   unit_cost: {
+   *     value: '9.40',
+   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *   },
+   *   unit_price: {
+   *     value: '14.99',
+   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *   },
    * });
    * ```
    */
@@ -74,6 +87,8 @@ export class Parts extends APIResource {
    *   'pt_018d7bab53e864351f4c693a21',
    *   {
    *     description: 'Deep groove ball bearing, 20x47x14mm',
+   *     notes:
+   *       'Superseded by low-friction variant; keep for legacy assemblies.',
    *     sku: 'BRG-6204-2RS',
    *   },
    * );

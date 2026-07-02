@@ -21,7 +21,18 @@ export class ShippingTerms extends APIResource {
    * const shippingTerm =
    *   await client.operations.shippingTerms.create({
    *     name: 'Prepaid',
-   *     type: 'carrier_rate_freight',
+   *     type: 'flat_rate_freight',
+   *     flat_rate: {
+   *       value: '15.00',
+   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     },
+   *     free_shipping_service_level_ids: [
+   *       'crop_01cfaf03f104e90ef9680e2a30',
+   *     ],
+   *     minimum_order_value: {
+   *       value: '500.00',
+   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     },
    *   });
    * ```
    */
@@ -63,7 +74,21 @@ export class ShippingTerms extends APIResource {
    * const shippingTerm =
    *   await client.operations.shippingTerms.update(
    *     'shtm_014341ab4bb5bf94d5b6936f86',
-   *     { name: 'Collect' },
+   *     {
+   *       flat_rate: {
+   *         value: '15.00',
+   *         unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       },
+   *       free_shipping_service_level_ids: [
+   *         'crop_01cfaf03f104e90ef9680e2a30',
+   *       ],
+   *       minimum_order_value: {
+   *         value: '500.00',
+   *         unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       },
+   *       name: 'Collect',
+   *       type: 'flat_rate_freight',
+   *     },
    *   );
    * ```
    */

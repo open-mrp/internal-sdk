@@ -27,10 +27,10 @@ describe('resource emailInboxes', () => {
       address: 'support@acme.com',
       email_domain_id: 'emdom_018e88072d1320808dc9aaa01',
       include: ['email_domain'],
-      agent_config_id: 'agent_config_id',
-      agent_trigger_keywords: ['string'],
-      agent_trigger_policy: 'agent_trigger_policy',
-      from_name: 'from_name',
+      agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
+      agent_trigger_keywords: ['invoice', 'refund'],
+      agent_trigger_policy: 'keyword',
+      from_name: 'Acme Support',
     });
   });
 
@@ -73,10 +73,10 @@ describe('resource emailInboxes', () => {
     const response = await client.messaging.emailInboxes.update('eminb_018e88072d1320808dc9bbb02', {
       status: 'active',
       include: ['email_domain'],
-      agent_config_id: 'agent_config_id',
-      agent_trigger_keywords: ['string'],
-      agent_trigger_policy: 'agent_trigger_policy',
-      from_name: 'from_name',
+      agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
+      agent_trigger_keywords: ['invoice', 'refund'],
+      agent_trigger_policy: 'keyword',
+      from_name: 'Acme Support',
     });
   });
 

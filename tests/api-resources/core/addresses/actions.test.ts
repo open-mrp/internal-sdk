@@ -32,7 +32,7 @@ describe('resource actions', () => {
       country: 'US',
       postal_code: '62701',
       state: 'IL',
-      address_line_2: 'address_line_2',
+      address_line_2: 'Suite 400',
     });
   });
 });

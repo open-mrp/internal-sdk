@@ -23,7 +23,7 @@ describe('resource groups', () => {
     const response = await client.messaging.groups.create({
       name: 'Operations Team',
       member_account_user_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
-      member_agent_config_ids: ['string'],
+      member_agent_config_ids: ['agdf_01b9ef28feb99e6954201aca63'],
     });
   });
 

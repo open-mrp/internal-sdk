@@ -27,7 +27,7 @@ describe('resource apiKeys', () => {
       name: 'Production API Key',
       role_id: 'rl_01c16d2eb637c0d1f3a372937c',
       include: ['role'],
-      expires_at: '2019-12-27T18:11:19.117Z',
+      expires_at: '2027-01-01T00:00:00Z',
     });
   });
 

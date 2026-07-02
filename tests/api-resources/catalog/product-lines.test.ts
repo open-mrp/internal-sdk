@@ -75,9 +75,9 @@ describe('resource productLines', () => {
         {
           include: ['owner'],
           commission_policy: 'commission_applied',
-          freight_policy: 'free_freight',
+          freight_policy: 'billed_freight',
           name: 'Updated Product Line',
-          unit_group_id: 'unit_group_id',
+          unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
         },
         { path: '/_stainless_unknown_path' },
       ),

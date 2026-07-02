@@ -41,6 +41,10 @@ export class Notifications extends APIResource {
    *       id: 'acus_01ea9983ddb41dacc44ecf997c',
    *     },
    *     title: 'Order updated',
+   *     body: 'Order #1042 was updated.',
+   *     link_resource_id: 'or_01d5034136c3ccc048abecc312',
+   *     link_resource_type: 'sales_order',
+   *     priority: 'high',
    *   });
    * ```
    */

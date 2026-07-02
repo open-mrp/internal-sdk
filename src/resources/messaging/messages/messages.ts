@@ -31,6 +31,7 @@ export class Messages extends APIResource {
    *   'mg_01h9z8q1w2e3r4t5y6u7i8mg',
    *   {
    *     body: 'Hi Joe — good news, your order ships tomorrow.',
+   *     subject: 'Re: Order #1042',
    *   },
    * );
    * ```

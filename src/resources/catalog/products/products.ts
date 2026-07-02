@@ -36,6 +36,23 @@ export class Products extends APIResource {
    *   category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
    *   sku: 'ALM-2024-1001',
    *   type: 'sale',
+   *   attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
+   *   description:
+   *     'Wireless barcode scanner with charging cradle',
+   *   notes:
+   *     'Ships with a 2-year warranty; register for extended coverage.',
+   *   portal_visibility: 'visible',
+   *   product_line_id: 'pl_01996357326a0d3f7b129542ea',
+   *   unit_cost: {
+   *     value: '112.00',
+   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *   },
+   *   unit_price: {
+   *     value: '199.00',
+   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *   },
    * });
    * ```
    */
@@ -74,7 +91,19 @@ export class Products extends APIResource {
    * ```ts
    * const product = await client.catalog.products.update(
    *   'pd_013c29ab3f1518d0004094c316',
-   *   { sku: 'SKU-002' },
+   *   {
+   *     description:
+   *       'Wireless barcode scanner with charging cradle (v2)',
+   *     notes:
+   *       'Firmware 2.1 improves Bluetooth pairing reliability.',
+   *     portal_visibility: 'visible',
+   *     sku: 'SKU-002',
+   *     unit_price: {
+   *       value: '219.00',
+   *       numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     },
+   *   },
    * );
    * ```
    */

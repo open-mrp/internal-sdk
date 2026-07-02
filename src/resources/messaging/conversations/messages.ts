@@ -30,6 +30,27 @@ export class Messages extends APIResource {
    *     {
    *       body: 'Sounds good — shipping it today.',
    *       client_message_id: 'client_msg_8c7d2f',
+   *       attachments: [
+   *         {
+   *           kind: 'file',
+   *           s3_key: 'uploads/acme/quote.pdf',
+   *           filename: 'quote.pdf',
+   *           content_type: 'application/pdf',
+   *           size_bytes: 20480,
+   *         },
+   *       ],
+   *       audience: 'customer',
+   *       cc: ['ap@acme.com'],
+   *       channel: 'email',
+   *       link_resource_id: 'or_01d5034136c3ccc048abecc312',
+   *       link_resource_type: 'sales_order',
+   *       mentions: ['acus_01ea9983ddb41dacc44ecf997c'],
+   *       mode: 'send',
+   *       reply_to_message_id: 'mg_01h9z8q1w2e3r4t5y6u7i8mg',
+   *       scheduled_at: '2026-05-10T15:00:00Z',
+   *       source_thread_message_id:
+   *         'mg_01h9z8q1w2e3r4t5y6u7i8mg',
+   *       subject: 'Re: Order #1042',
    *     },
    *   );
    * ```

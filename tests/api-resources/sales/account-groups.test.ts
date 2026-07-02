@@ -26,9 +26,9 @@ describe('resource accountGroups', () => {
     const response = await client.sales.accountGroups.create({
       name: 'Wholesale Customers',
       type: 'type_group',
-      commission_policy: 'commission_applied',
-      description: 'description',
-      freight_policy: 'free_freight',
+      commission_policy: 'commission_exempt',
+      description: 'Customers who buy in bulk at wholesale pricing.',
+      freight_policy: 'billed_freight',
     });
   });
 
@@ -60,9 +60,9 @@ describe('resource accountGroups', () => {
       client.sales.accountGroups.update(
         'acgp_018e88072d1320808dc979cfac',
         {
-          commission_policy: 'commission_applied',
-          description: 'description',
-          freight_policy: 'free_freight',
+          commission_policy: 'commission_exempt',
+          description: 'Customers who buy in bulk at wholesale pricing.',
+          freight_policy: 'billed_freight',
           name: 'Updated Wholesale Customers',
         },
         { path: '/_stainless_unknown_path' },

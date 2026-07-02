@@ -29,6 +29,7 @@ export class APIKeys extends APIResource {
    * const createdAPIKey = await client.auth.apiKeys.create({
    *   name: 'Production API Key',
    *   role_id: 'rl_01c16d2eb637c0d1f3a372937c',
+   *   expires_at: '2027-01-01T00:00:00Z',
    * });
    * ```
    */

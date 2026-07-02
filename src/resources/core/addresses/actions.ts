@@ -22,6 +22,7 @@ export class Actions extends APIResource {
    *     country: 'US',
    *     postal_code: '62701',
    *     state: 'IL',
+   *     address_line_2: 'Suite 400',
    *   });
    * ```
    */

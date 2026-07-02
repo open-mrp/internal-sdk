@@ -29,6 +29,7 @@ export class AccountUsers extends APIResource {
    * ```ts
    * const accountUser =
    *   await client.identity.accountUsers.create({
+   *     department_id: 'dp_01791c25ab59da4704cba61874',
    *     email: 'jdoe@augno.com',
    *     name: 'John Doe',
    *     password: 'QgS7Z8Hhj3&1',
@@ -90,8 +91,16 @@ export class AccountUsers extends APIResource {
    *     'acus_01ea9983ddb41dacc44ecf997c',
    *     {
    *       department_id: 'dp_01791c25ab59da4704cba61874',
+   *       email: 'jdoe@augno.com',
    *       name: 'John Doe',
+   *       preferences: [
+   *         {
+   *           notification_type: 'order_acknowledgement',
+   *           enabled: true,
+   *         },
+   *       ],
    *       role_id: 'rl_01c16d2eb637c0d1f3a372937c',
+   *       username: 'jdoe',
    *     },
    *   );
    * ```

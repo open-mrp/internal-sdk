@@ -88,7 +88,10 @@ export class Carriers extends APIResource {
    * ```ts
    * const carrier = await client.operations.carriers.update(
    *   'cr_01784fd54c9ba197bb4e42f0e6',
-   *   { name: 'FedEx Express' },
+   *   {
+   *     customer_portal_visibility: 'visible',
+   *     name: 'FedEx Express',
+   *   },
    * );
    * ```
    */

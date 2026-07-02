@@ -80,7 +80,11 @@ export class ItemCategories extends APIResource {
    * const itemCategory =
    *   await client.catalog.itemCategories.update(
    *     'ic_01ae7bd7bfd21ca0ab81e1357e',
-   *     { name: 'Electronic Components' },
+   *     {
+   *       name: 'Electronic Components',
+   *       notes:
+   *         'Covers passive and active components; excludes assemblies.',
+   *     },
    *   );
    * ```
    */

@@ -20,6 +20,8 @@ export class Locations extends APIResource {
    * const location = await client.operations.locations.create({
    *   name: 'Warehouse A',
    *   type: 'building',
+   *   child_ids: ['lc_014d187d99b31926f0c74af9d8'],
+   *   parent_id: 'lc_014d187d99b31926f0c74af9d8',
    * });
    * ```
    */
@@ -57,7 +59,12 @@ export class Locations extends APIResource {
    * ```ts
    * const location = await client.operations.locations.update(
    *   'lc_014d187d99b31926f0c74af9d8',
-   *   { name: 'Warehouse B' },
+   *   {
+   *     child_ids: ['lc_014d187d99b31926f0c74af9d8'],
+   *     name: 'Warehouse B',
+   *     parent_id: 'lc_014d187d99b31926f0c74af9d8',
+   *     type: 'section',
+   *   },
    * );
    * ```
    */

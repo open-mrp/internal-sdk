@@ -33,7 +33,7 @@ describe('resource scanningStations', () => {
       include: ['department'],
       label_size: '1x1',
       label_type: 'tag',
-      notes: 'notes',
+      notes: 'Primary intake station on the receiving dock.',
     });
   });
 
@@ -80,8 +80,8 @@ describe('resource scanningStations', () => {
           label_size: '1x1',
           label_type: 'tag',
           name: 'Station B',
-          notes: 'notes',
-          operator_requirement: 'none',
+          notes: 'Relocated to the finishing area.',
+          operator_requirement: 'material_check',
         },
         { path: '/_stainless_unknown_path' },
       ),

@@ -23,6 +23,10 @@ export class EmailInboxes extends APIResource {
    *   await client.messaging.emailInboxes.create({
    *     address: 'support@acme.com',
    *     email_domain_id: 'emdom_018e88072d1320808dc9aaa01',
+   *     agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
+   *     agent_trigger_keywords: ['invoice', 'refund'],
+   *     agent_trigger_policy: 'keyword',
+   *     from_name: 'Acme Support',
    *   });
    * ```
    */
@@ -62,7 +66,13 @@ export class EmailInboxes extends APIResource {
    * const emailInbox =
    *   await client.messaging.emailInboxes.update(
    *     'eminb_018e88072d1320808dc9bbb02',
-   *     { status: 'active' },
+   *     {
+   *       status: 'active',
+   *       agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
+   *       agent_trigger_keywords: ['invoice', 'refund'],
+   *       agent_trigger_policy: 'keyword',
+   *       from_name: 'Acme Support',
+   *     },
    *   );
    * ```
    */

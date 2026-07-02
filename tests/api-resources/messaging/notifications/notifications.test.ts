@@ -28,10 +28,10 @@ describe('resource notifications', () => {
       category: 'order.updated',
       target: { id: 'acus_01ea9983ddb41dacc44ecf997c', type: 'account_user' },
       title: 'Order updated',
-      body: 'body',
-      link_resource_id: 'link_resource_id',
-      link_resource_type: 'account',
-      priority: 'low',
+      body: 'Order #1042 was updated.',
+      link_resource_id: 'or_01d5034136c3ccc048abecc312',
+      link_resource_type: 'sales_order',
+      priority: 'high',
     });
   });
 

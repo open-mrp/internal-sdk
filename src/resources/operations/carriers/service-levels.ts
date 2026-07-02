@@ -24,6 +24,7 @@ export class ServiceLevels extends APIResource {
    *       code: 'ground',
    *       is_default: false,
    *       name: 'Ground Shipping',
+   *       customer_portal_visibility: 'visible',
    *     },
    *   );
    * ```
@@ -82,6 +83,8 @@ export class ServiceLevels extends APIResource {
    *     'crop_01cfaf03f104e90ef9680e2a30',
    *     {
    *       carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+   *       code: 'express',
+   *       customer_portal_visibility: 'visible',
    *       name: 'Express Shipping',
    *     },
    *   );

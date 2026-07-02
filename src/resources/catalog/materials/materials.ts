@@ -30,6 +30,29 @@ export class Materials extends APIResource {
    * const material = await client.catalog.materials.create({
    *   category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
    *   sku: 'MAT-001',
+   *   attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
+   *   description:
+   *     'Cold-rolled 304 stainless steel sheet, 1.5mm',
+   *   lead_time: {
+   *     value: '7.00',
+   *     unit_id: 'un_01966263f74a5a0cae356000a1',
+   *   },
+   *   notes:
+   *     'Store flat in a dry area to avoid surface oxidation.',
+   *   order_point: {
+   *     value: '100.00',
+   *     unit_id: 'un_01966263f74a5a0cae356000a1',
+   *   },
+   *   unit_cost: {
+   *     value: '8.25',
+   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *   },
+   *   unit_price: {
+   *     value: '12.50',
+   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *   },
    * });
    * ```
    */
@@ -71,7 +94,25 @@ export class Materials extends APIResource {
    * ```ts
    * const material = await client.catalog.materials.update(
    *   'ml_014613b8f7959a091d8cc0cef4',
-   *   { sku: 'MAT-001-UPDATED' },
+   *   {
+   *     description:
+   *       'Cold-rolled 304 stainless steel sheet, 2.0mm',
+   *     lead_time: {
+   *       value: '10.00',
+   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     },
+   *     notes: 'Reorder point raised after Q2 demand spike.',
+   *     order_point: {
+   *       value: '150.00',
+   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     },
+   *     sku: 'MAT-001-UPDATED',
+   *     unit_cost: {
+   *       value: '9.10',
+   *       numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     },
+   *   },
    * );
    * ```
    */

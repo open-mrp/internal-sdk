@@ -23,6 +23,10 @@ export class AccountGroups extends APIResource {
    *   await client.sales.accountGroups.create({
    *     name: 'Wholesale Customers',
    *     type: 'type_group',
+   *     commission_policy: 'commission_exempt',
+   *     description:
+   *       'Customers who buy in bulk at wholesale pricing.',
+   *     freight_policy: 'billed_freight',
    *   });
    * ```
    */
@@ -60,7 +64,13 @@ export class AccountGroups extends APIResource {
    * const accountGroup =
    *   await client.sales.accountGroups.update(
    *     'acgp_018e88072d1320808dc979cfac',
-   *     { name: 'Updated Wholesale Customers' },
+   *     {
+   *       commission_policy: 'commission_exempt',
+   *       description:
+   *         'Customers who buy in bulk at wholesale pricing.',
+   *       freight_policy: 'billed_freight',
+   *       name: 'Updated Wholesale Customers',
+   *     },
    *   );
    * ```
    */

@@ -24,8 +24,8 @@ describe('resource locations', () => {
       name: 'Warehouse A',
       type: 'building',
       include: ['parent'],
-      child_ids: ['string'],
-      parent_id: 'parent_id',
+      child_ids: ['lc_014d187d99b31926f0c74af9d8'],
+      parent_id: 'lc_014d187d99b31926f0c74af9d8',
     });
   });
 
@@ -69,10 +69,10 @@ describe('resource locations', () => {
         'lc_014d187d99b31926f0c74af9d8',
         {
           include: ['parent'],
-          child_ids: ['string'],
+          child_ids: ['lc_014d187d99b31926f0c74af9d8'],
           name: 'Warehouse B',
-          parent_id: 'parent_id',
-          type: 'building',
+          parent_id: 'lc_014d187d99b31926f0c74af9d8',
+          type: 'section',
         },
         { path: '/_stainless_unknown_path' },
       ),

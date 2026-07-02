@@ -88,10 +88,14 @@ export class Conversations extends APIResource {
    * ```ts
    * const conversation =
    *   await client.messaging.conversations.create({
-   *     type: 'direct_message',
+   *     type: 'group',
+   *     group_id: 'cvgp_018e88072d1320808dc97abc',
    *     participant_account_user_ids: [
    *       'acus_01ea9983ddb41dacc44ecf997c',
    *     ],
+   *     title: 'Order #1042 — shipping question',
+   *     topic_resource_id: 'or_01d5034136c3ccc048abecc312',
+   *     topic_resource_type: 'sales_order',
    *   });
    * ```
    */

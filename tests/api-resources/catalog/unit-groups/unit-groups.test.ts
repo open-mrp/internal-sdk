@@ -37,7 +37,7 @@ describe('resource unitGroups', () => {
           discount_percentage: 1,
         },
       ],
-      notes: 'notes',
+      notes: 'Used for raw-material weight tracking across the warehouse.',
     });
   });
 
@@ -83,15 +83,15 @@ describe('resource unitGroups', () => {
           include: ['owner'],
           associated_units: [
             {
-              unit_id: 'unit_id',
+              unit_id: 'un_01966263f74a5a0cae356000a1',
               customer_portal_visibility: 'visible',
               discount_fixed: 0,
-              discount_percentage: 0,
+              discount_percentage: 1,
             },
           ],
           base_unit_id: 'un_01966263f74a5a0cae356000a1',
           name: 'Weight Units (Updated)',
-          notes: 'notes',
+          notes: 'Added kilogram association for metric orders.',
         },
         { path: '/_stainless_unknown_path' },
       ),

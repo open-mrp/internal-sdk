@@ -41,10 +41,8 @@ export class Customers extends APIResource {
    *   },
    *   customer_type_group_id: 'acgp_018e88072d1320808dc979cfac',
    *   default_carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
-   *   default_payment_term_id:
-   *     'pytm_018694d6601ea771cd1b52e890',
-   *   default_shipping_term_id:
-   *     'shtm_014341ab4bb5bf94d5b6936f86',
+   *   default_payment_term_id: 'pytm_018694d6601ea771cd1b52e890',
+   *   default_shipping_term_id: 'shtm_014341ab4bb5bf94d5b6936f86',
    *   name: 'Acme Inc.',
    *   ship_to_address: {
    *     name: 'Acme Inc.',
@@ -54,7 +52,22 @@ export class Customers extends APIResource {
    *     postal_code: '10001',
    *     country: 'US',
    *   },
+   *   carrier_billing_account: '123456789',
+   *   carrier_billing_type: 'sender',
+   *   commission_policy: 'commission_applied',
+   *   credit_limit: { value: '10000.00', unit_id: 'un_01966263f74a5a0cae356000a1' },
+   *   customer_price_group_ids: ['acgp_018e88072d1320808dc979cfac'],
+   *   default_priority: 'normal',
+   *   default_sales_rep_id: 'acus_01ea9983ddb41dacc44ecf997c',
+   *   default_service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
+   *   edi_status: 'disabled',
+   *   email: 'orders@acme.com',
+   *   freight_policy: 'billed_freight',
    *   note: 'Key enterprise account',
+   *   number: '100042',
+   *   phone: '555-123-4567',
+   *   status: 'normal',
+   *   url: 'https://acme.com',
    * });
    * ```
    */
@@ -93,15 +106,31 @@ export class Customers extends APIResource {
    *
    * @example
    * ```ts
-   * const customer = await client.sales.customers.update(
-   *   'ac_0170df1ac58e4d24c66fc89f5f',
-   *   {
-   *     default_carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
-   *     freight_policy: 'billed_freight',
-   *     name: 'Acme Corp Updated',
-   *     note: 'Updated account notes',
-   *   },
-   * );
+   * const customer = await client.sales.customers.update('ac_0170df1ac58e4d24c66fc89f5f', {
+   *   bill_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
+   *   carrier_billing_account: '123456789',
+   *   carrier_billing_type: 'sender',
+   *   commission_policy: 'commission_applied',
+   *   credit_limit: { value: '10000.00', unit_id: 'un_01966263f74a5a0cae356000a1' },
+   *   customer_price_group_ids: ['acgp_018e88072d1320808dc979cfac'],
+   *   customer_type_group_id: 'acgp_018e88072d1320808dc979cfac',
+   *   default_carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+   *   default_payment_term_id: 'pytm_018694d6601ea771cd1b52e890',
+   *   default_priority: 'normal',
+   *   default_sales_rep_id: 'acus_01ea9983ddb41dacc44ecf997c',
+   *   default_service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
+   *   default_shipping_term_id: 'shtm_014341ab4bb5bf94d5b6936f86',
+   *   edi_status: 'disabled',
+   *   email: 'orders@acme.com',
+   *   freight_policy: 'billed_freight',
+   *   name: 'Acme Corp Updated',
+   *   note: 'Updated account notes',
+   *   number: '100042',
+   *   phone: '555-123-4567',
+   *   ship_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
+   *   status: 'normal',
+   *   url: 'https://acme.com',
+   * });
    * ```
    */
   update(

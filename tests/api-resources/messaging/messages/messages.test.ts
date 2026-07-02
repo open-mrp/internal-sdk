@@ -25,7 +25,7 @@ describe('resource messages', () => {
     const response = await client.messaging.messages.update('mg_01h9z8q1w2e3r4t5y6u7i8mg', {
       body: 'Hi Joe — good news, your order ships tomorrow.',
       include: ['sender'],
-      subject: 'subject',
+      subject: 'Re: Order #1042',
     });
   });
 });

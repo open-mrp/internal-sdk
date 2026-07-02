@@ -44,6 +44,8 @@ export class UnitGroups extends APIResource {
    *       customer_portal_visibility: 'visible',
    *     },
    *   ],
+   *   notes:
+   *     'Used for raw-material weight tracking across the warehouse.',
    * });
    * ```
    */
@@ -82,8 +84,17 @@ export class UnitGroups extends APIResource {
    * const unitGroup = await client.catalog.unitGroups.update(
    *   'ug_01aad07abb8e41fd392d2d7013',
    *   {
+   *     associated_units: [
+   *       {
+   *         unit_id: 'un_01966263f74a5a0cae356000a1',
+   *         discount_percentage: 1,
+   *         discount_fixed: 0,
+   *         customer_portal_visibility: 'visible',
+   *       },
+   *     ],
    *     base_unit_id: 'un_01966263f74a5a0cae356000a1',
    *     name: 'Weight Units (Updated)',
+   *     notes: 'Added kilogram association for metric orders.',
    *   },
    * );
    * ```

@@ -71,7 +71,12 @@ export class ProductLines extends APIResource {
    * const productLine =
    *   await client.catalog.productLines.update(
    *     'pl_01996357326a0d3f7b129542ea',
-   *     { name: 'Updated Product Line' },
+   *     {
+   *       commission_policy: 'commission_applied',
+   *       freight_policy: 'billed_freight',
+   *       name: 'Updated Product Line',
+   *       unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
+   *     },
    *   );
    * ```
    */

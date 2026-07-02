@@ -21,10 +21,14 @@ export class Addresses extends APIResource {
    * const address = await client.sales.addresses.create({
    *   country: 'US',
    *   name: 'Headquarters',
+   *   email: 'warehouse@acme.com',
    *   locality: 'Springfield',
+   *   phone: '555-123-4567',
    *   postal_code: '62701',
    *   state: 'IL',
    *   street_line_1: '123 Main St',
+   *   street_line_2: 'Suite 400',
+   *   type: 'standard',
    * });
    * ```
    */
@@ -62,7 +66,18 @@ export class Addresses extends APIResource {
    * ```ts
    * const address = await client.sales.addresses.update(
    *   'ad_012100950cfaa34aa0e0ad7258',
-   *   { name: 'Warehouse' },
+   *   {
+   *     country: 'US',
+   *     email: 'warehouse@acme.com',
+   *     locality: 'Springfield',
+   *     name: 'Warehouse',
+   *     phone: '555-123-4567',
+   *     postal_code: '62701',
+   *     state: 'IL',
+   *     street_line_1: '123 Main St',
+   *     street_line_2: 'Suite 400',
+   *     type: 'standard',
+   *   },
    * );
    * ```
    */

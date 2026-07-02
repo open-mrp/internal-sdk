@@ -74,7 +74,7 @@ describe('resource serviceLevels', () => {
       {
         carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
         include: ['owner'],
-        code: 'code',
+        code: 'express',
         customer_portal_visibility: 'visible',
         is_default: false,
         name: 'Express Shipping',
