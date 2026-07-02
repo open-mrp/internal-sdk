@@ -11,6 +11,13 @@ cd dist
 PACKAGE_NAME="$(jq -r -e '.name' ./package.json)"
 VERSION="$(jq -r -e '.version' ./package.json)"
 
+# Idempotent re-runs: releases can be published out-of-band (manual rescue publish,
+# workflow re-run after a partial failure) — a repeat publish would only 409.
+if npm view "$PACKAGE_NAME@$VERSION" version >/dev/null 2>&1; then
+  echo "$PACKAGE_NAME@$VERSION is already published; skipping"
+  exit 0
+fi
+
 # Get latest version from npm
 #
 # If the package doesn't exist, npm will return:
