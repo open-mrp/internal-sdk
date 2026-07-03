@@ -1462,6 +1462,7 @@ Types:
 - <code><a href="./src/resources/messaging/messaging.ts">MessageAttachment</a></code>
 - <code><a href="./src/resources/messaging/messaging.ts">MessagingGroup</a></code>
 - <code><a href="./src/resources/messaging/messaging.ts">MessagingGroupMember</a></code>
+- <code><a href="./src/resources/messaging/messaging.ts">ReadCursor</a></code>
 - <code><a href="./src/resources/messaging/messaging.ts">SupportAvailability</a></code>
 
 Methods:

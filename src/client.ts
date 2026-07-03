@@ -81,6 +81,7 @@ import {
   MessagingGroupMember,
   MessagingRetrieveContactsParams,
   MessagingSupportParams,
+  ReadCursor,
   SupportAvailability,
 } from './resources/messaging/messaging';
 import {
@@ -964,6 +965,7 @@ export declare namespace Augno {
     type MessageAttachment as MessageAttachment,
     type MessagingGroup as MessagingGroup,
     type MessagingGroupMember as MessagingGroupMember,
+    type ReadCursor as ReadCursor,
     type SupportAvailability as SupportAvailability,
     type MessagingRetrieveContactsParams as MessagingRetrieveContactsParams,
     type MessagingSupportParams as MessagingSupportParams,

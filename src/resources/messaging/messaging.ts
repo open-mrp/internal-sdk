@@ -349,6 +349,12 @@ export interface ConversationParticipant {
   object: 'conversation_participant';
 
   /**
+   * A participant's read position in a conversation — the basis for read receipts
+   * ("who has seen this").
+   */
+  read_cursor: ReadCursor;
+
+  /**
    * The participant's permission level in the conversation.
    *
    * - `owner`: can rename or delete the conversation and manage its members and
@@ -738,6 +744,40 @@ export interface MessagingGroupMember {
 }
 
 /**
+ * A participant's read position in a conversation — the basis for read receipts
+ * ("who has seen this").
+ */
+export interface ReadCursor {
+  /**
+   * The id of the last message the participant has read.
+   *
+   * `null` if they have not read any message yet.
+   */
+  message_id: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'read_cursor';
+
+  /**
+   * When the participant last advanced their read cursor.
+   *
+   * `null` if they have not read any message yet.
+   */
+  read_at: string | null;
+
+  /**
+   * The sequence number of the last message the participant has read in the
+   * conversation.
+   *
+   * A message is "seen" by this participant when its `sequence` is `<=` this value.
+   * `0` means they have not read any message in the conversation yet.
+   */
+  sequence: number;
+}
+
+/**
  * Whether the calling customer can currently contact support.
  *
  * `available` is true only when the vendor has configured a support route that
@@ -828,6 +868,7 @@ export declare namespace Messaging {
     type MessageAttachment as MessageAttachment,
     type MessagingGroup as MessagingGroup,
     type MessagingGroupMember as MessagingGroupMember,
+    type ReadCursor as ReadCursor,
     type SupportAvailability as SupportAvailability,
     type MessagingRetrieveContactsParams as MessagingRetrieveContactsParams,
     type MessagingSupportParams as MessagingSupportParams,

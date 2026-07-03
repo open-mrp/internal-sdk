@@ -31,6 +31,7 @@ describe('resource emailInboxes', () => {
       agent_trigger_keywords: ['invoice', 'refund'],
       agent_trigger_policy: 'keyword',
       from_name: 'Acme Support',
+      group_id: 'group_id',
     });
   });
 
@@ -77,6 +78,7 @@ describe('resource emailInboxes', () => {
       agent_trigger_keywords: ['invoice', 'refund'],
       agent_trigger_policy: 'keyword',
       from_name: 'Acme Support',
+      group_id: 'group_id',
     });
   });
 

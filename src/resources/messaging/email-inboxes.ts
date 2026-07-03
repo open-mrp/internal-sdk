@@ -162,6 +162,12 @@ export interface CreateEmailInboxRequest {
    * Display name for the `From` header of outbound mail.
    */
   from_name?: string;
+
+  /**
+   * The messaging group (roster) whose members are seated on every conversation this
+   * inbox opens.
+   */
+  group_id?: string;
 }
 
 /**
@@ -232,6 +238,16 @@ export interface EmailInbox {
    * The display name used in the `From` header of outbound mail.
    */
   from_name: string | null;
+
+  /**
+   * The messaging group (roster) whose members are added to every conversation this
+   * inbox opens.
+   *
+   * Everyone in the group — the human team plus any agents — is seated on each new
+   * email thread so they can read, edit, and approve replies alongside the bound
+   * agent. `null` when no group is set.
+   */
+  group_id: string | null;
 
   /**
    * Resource type identifier.
@@ -309,6 +325,12 @@ export interface UpdateEmailInboxRequest {
    * Display name for the `From` header of outbound mail.
    */
   from_name?: string;
+
+  /**
+   * The messaging group (roster) whose members are seated on every conversation this
+   * inbox opens.
+   */
+  group_id?: string;
 }
 
 export interface EmailInboxDeleteResponse {}
@@ -355,6 +377,12 @@ export interface EmailInboxCreateParams {
    * Body param: Display name for the `From` header of outbound mail.
    */
   from_name?: string;
+
+  /**
+   * Body param: The messaging group (roster) whose members are seated on every
+   * conversation this inbox opens.
+   */
+  group_id?: string;
 }
 
 export interface EmailInboxRetrieveParams {
@@ -403,6 +431,12 @@ export interface EmailInboxUpdateParams {
    * Body param: Display name for the `From` header of outbound mail.
    */
   from_name?: string;
+
+  /**
+   * Body param: The messaging group (roster) whose members are seated on every
+   * conversation this inbox opens.
+   */
+  group_id?: string;
 }
 
 export interface EmailInboxListParams {

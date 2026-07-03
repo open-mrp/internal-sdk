@@ -62,6 +62,7 @@ export {
   type MessageAttachment,
   type MessagingGroup,
   type MessagingGroupMember,
+  type ReadCursor,
   type SupportAvailability,
   type MessagingRetrieveContactsParams,
   type MessagingSupportParams,
