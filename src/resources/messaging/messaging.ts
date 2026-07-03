@@ -592,7 +592,10 @@ export interface Message {
   streaming_state: string | null;
 
   /**
-   * The email subject of a customer-reply `draft` on an email-bridged case.
+   * The email subject line
+   *
+   * On an email-bridged case, the original subject of an inbound email, or the
+   * subject a customer-reply `draft`/outbound message is sent with.
    */
   subject: string | null;
 
