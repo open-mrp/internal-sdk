@@ -219,6 +219,16 @@ export interface EmailInbox {
   email_domain: EmailDomainsAPI.EmailDomain | null;
 
   /**
+   * A forwarding address on an Augno-owned domain that also routes to this inbox.
+   *
+   * Use this when your domain's mail is hosted elsewhere (e.g. Google Workspace,
+   * Microsoft 365) and you cannot point its MX records at Augno: forward mail from
+   * `address` to this address instead, and it will still be threaded into a
+   * conversation. `null` when domain forwarding is not configured.
+   */
+  forwarding_address: string | null;
+
+  /**
    * The display name used in the `From` header of outbound mail.
    */
   from_name: string | null;
