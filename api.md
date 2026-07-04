@@ -1729,12 +1729,14 @@ Types:
 - <code><a href="./src/resources/messaging/email-domains/email-domains.ts">CreateEmailDomainRequest</a></code>
 - <code><a href="./src/resources/messaging/email-domains/email-domains.ts">EmailDomain</a></code>
 - <code><a href="./src/resources/messaging/email-domains/email-domains.ts">ListEmailDomain</a></code>
+- <code><a href="./src/resources/messaging/email-domains/email-domains.ts">EmailDomainDeleteResponse</a></code>
 
 Methods:
 
 - <code title="post /v1/messaging/email-domains">client.messaging.emailDomains.<a href="./src/resources/messaging/email-domains/email-domains.ts">create</a>({ ...params }) -> EmailDomain</code>
 - <code title="get /v1/messaging/email-domains/{id}">client.messaging.emailDomains.<a href="./src/resources/messaging/email-domains/email-domains.ts">retrieve</a>(id) -> EmailDomain</code>
 - <code title="get /v1/messaging/email-domains">client.messaging.emailDomains.<a href="./src/resources/messaging/email-domains/email-domains.ts">list</a>() -> ListEmailDomain</code>
+- <code title="delete /v1/messaging/email-domains/{id}">client.messaging.emailDomains.<a href="./src/resources/messaging/email-domains/email-domains.ts">delete</a>(id) -> EmailDomainDeleteResponse</code>
 
 ### Actions
 

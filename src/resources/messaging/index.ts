@@ -31,6 +31,7 @@ export {
   type CreateEmailDomainRequest,
   type EmailDomain,
   type ListEmailDomain,
+  type EmailDomainDeleteResponse,
   type EmailDomainCreateParams,
 } from './email-domains/index';
 export {

@@ -65,6 +65,26 @@ export class EmailDomains extends APIResource {
   list(options?: RequestOptions): APIPromise<ListEmailDomain> {
     return this._client.get('/v1/messaging/email-domains', options);
   }
+
+  /**
+   * Deregisters a customer-owned domain from the email bridge.
+   *
+   * The domain's SES identity is removed. The domain must have no inboxes bound to
+   * it.
+   *
+   * This endpoint requires the permission: `messaging:delete`.
+   *
+   * @example
+   * ```ts
+   * const emailDomain =
+   *   await client.messaging.emailDomains.delete(
+   *     'emdom_018e88072d1320808dc9aaa01',
+   *   );
+   * ```
+   */
+  delete(id: string, options?: RequestOptions): APIPromise<EmailDomainDeleteResponse> {
+    return this._client.delete(path`/v1/messaging/email-domains/${id}`, options);
+  }
 }
 
 /**
@@ -149,6 +169,8 @@ export interface ListEmailDomain {
   page_info: APIKeysAPI.PageInfo;
 }
 
+export interface EmailDomainDeleteResponse {}
+
 export interface EmailDomainCreateParams {
   /**
    * The fully-qualified domain name to register (e.g. `support.acme.com`).
@@ -163,6 +185,7 @@ export declare namespace EmailDomains {
     type CreateEmailDomainRequest as CreateEmailDomainRequest,
     type EmailDomain as EmailDomain,
     type ListEmailDomain as ListEmailDomain,
+    type EmailDomainDeleteResponse as EmailDomainDeleteResponse,
     type EmailDomainCreateParams as EmailDomainCreateParams,
   };
 

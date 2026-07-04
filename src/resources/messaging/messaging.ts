@@ -60,6 +60,7 @@ import {
   CreateEmailDomainRequest,
   EmailDomain,
   EmailDomainCreateParams,
+  EmailDomainDeleteResponse,
   EmailDomains,
   ListEmailDomain,
 } from './email-domains/email-domains';
@@ -951,6 +952,7 @@ export declare namespace Messaging {
     type CreateEmailDomainRequest as CreateEmailDomainRequest,
     type EmailDomain as EmailDomain,
     type ListEmailDomain as ListEmailDomain,
+    type EmailDomainDeleteResponse as EmailDomainDeleteResponse,
     type EmailDomainCreateParams as EmailDomainCreateParams,
   };
 
