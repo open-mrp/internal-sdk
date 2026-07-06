@@ -180,8 +180,10 @@ export interface ListPortalDomain {
  * `shop.acme.com`).
  *
  * After creation the domain starts in `pending`; publish the returned DNS records,
- * then poll the verify action until it flips to `verified`. Once verified, the
- * customer portal is served on the domain with TLS provisioned automatically.
+ * then poll the verify action. Once DNS is correct the domain moves to `securing`
+ * while its TLS certificate is issued — it is not yet reachable over HTTPS during
+ * this window — and finally to `verified` once the certificate is live and the
+ * portal is served on the domain.
  */
 export interface PortalDomain {
   /**
@@ -213,10 +215,12 @@ export interface PortalDomain {
    * Verification status.
    *
    * - pending domains await DNS configuration
-   * - verified domains serve the portal
+   * - securing domains have correct DNS and are waiting on TLS certificate issuance;
+   *   the portal is not yet reachable over HTTPS
+   * - verified domains serve the portal over HTTPS
    * - failed domains were rejected and cannot be used
    */
-  status: 'pending' | 'verified' | 'failed';
+  status: 'pending' | 'securing' | 'verified' | 'failed';
 
   /**
    * Last updated timestamp.
