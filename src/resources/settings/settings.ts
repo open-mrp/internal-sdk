@@ -24,15 +24,24 @@ import {
   ListAccountIntegration,
   UpdateAccountIntegrationRequest,
 } from './integrations/integrations';
+import * as PortalDomainsAPI from './portal-domains/portal-domains';
+import {
+  CreatePortalDomainRequest,
+  DNSRecord,
+  ListDNSRecord,
+  ListPortalDomain,
+  PortalDomain,
+  PortalDomainCreateParams,
+  PortalDomainDeleteResponse,
+  PortalDomains,
+} from './portal-domains/portal-domains';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
-/**
- * Manage account details, branding, portal, and logo.
- */
 export class Settings extends APIResource {
   properties: PropertiesAPI.Properties = new PropertiesAPI.Properties(this._client);
+  portalDomains: PortalDomainsAPI.PortalDomains = new PortalDomainsAPI.PortalDomains(this._client);
   integrations: IntegrationsAPI.Integrations = new IntegrationsAPI.Integrations(this._client);
 
   /**
@@ -50,6 +59,23 @@ export class Settings extends APIResource {
    */
   retrieveBranding(slug: string, options?: RequestOptions): APIPromise<PublicAccount> {
     return this._client.get(path`/v1/settings/branding/${slug}`, options);
+  }
+
+  /**
+   * Resolves a verified custom portal domain to the public profile of the account it
+   * serves.
+   *
+   * This endpoint does not require authentication; the frontend uses it to map a
+   * request host to a customer portal. Unverified or unknown domains return a 404.
+   *
+   * @example
+   * ```ts
+   * const publicAccount =
+   *   await client.settings.retrievePortalHosts('example');
+   * ```
+   */
+  retrievePortalHosts(domain: string, options?: RequestOptions): APIPromise<PublicAccount> {
+    return this._client.get(path`/v1/settings/portal-hosts/${domain}`, options);
   }
 }
 
@@ -95,6 +121,7 @@ export interface PublicAccount {
 }
 
 Settings.Properties = Properties;
+Settings.PortalDomains = PortalDomains;
 Settings.Integrations = Integrations;
 
 export declare namespace Settings {
@@ -109,6 +136,17 @@ export declare namespace Settings {
     type UpdateSysPropertyRequest as UpdateSysPropertyRequest,
     type PropertyUpdateParams as PropertyUpdateParams,
     type PropertyListParams as PropertyListParams,
+  };
+
+  export {
+    PortalDomains as PortalDomains,
+    type CreatePortalDomainRequest as CreatePortalDomainRequest,
+    type DNSRecord as DNSRecord,
+    type ListDNSRecord as ListDNSRecord,
+    type ListPortalDomain as ListPortalDomain,
+    type PortalDomain as PortalDomain,
+    type PortalDomainDeleteResponse as PortalDomainDeleteResponse,
+    type PortalDomainCreateParams as PortalDomainCreateParams,
   };
 
   export {

@@ -11,6 +11,16 @@ export {
   type IntegrationListParams,
 } from './integrations/index';
 export {
+  PortalDomains,
+  type CreatePortalDomainRequest,
+  type DNSRecord,
+  type ListDNSRecord,
+  type ListPortalDomain,
+  type PortalDomain,
+  type PortalDomainDeleteResponse,
+  type PortalDomainCreateParams,
+} from './portal-domains/index';
+export {
   Properties,
   type ListSysProperty,
   type SysProperty,

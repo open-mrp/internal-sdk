@@ -865,9 +865,6 @@ export class Augno {
    * Create customer checkout sessions.
    */
   sales: API.Sales = new API.Sales(this);
-  /**
-   * Manage account details, branding, portal, and logo.
-   */
   settings: API.Settings = new API.Settings(this);
   catalog: API.Catalog = new API.Catalog(this);
   /**
