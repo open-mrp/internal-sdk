@@ -451,7 +451,10 @@ export interface CreateConversationRequest {
     | 'reply_draft'
     | 'conversation_link'
     | 'messaging_group'
-    | 'messaging_group_member';
+    | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data';
 }
 
 /**
@@ -780,7 +783,10 @@ export interface ConversationCreateParams {
     | 'reply_draft'
     | 'conversation_link'
     | 'messaging_group'
-    | 'messaging_group_member';
+    | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data';
 }
 
 export interface ConversationRetrieveParams {
@@ -1136,7 +1142,10 @@ export interface ConversationListParams {
     | 'reply_draft'
     | 'conversation_link'
     | 'messaging_group'
-    | 'messaging_group_member';
+    | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data';
 
   /**
    * Filter by conversation type.

@@ -7,9 +7,9 @@ const client = new Augno({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource settings', () => {
-  test('retrieveBranding', async () => {
-    const responsePromise = client.settings.retrieveBranding('acme');
+describe('resource actions', () => {
+  test('abandon', async () => {
+    const responsePromise = client.sales.portalRegistrationSessions.actions.abandon('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,19 +19,8 @@ describe('resource settings', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrievePortalHosts', async () => {
-    const responsePromise = client.settings.retrievePortalHosts('example');
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrievePortalProfiles', async () => {
-    const responsePromise = client.settings.retrievePortalProfiles('acme');
+  test('complete', async () => {
+    const responsePromise = client.sales.portalRegistrationSessions.actions.complete('example');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

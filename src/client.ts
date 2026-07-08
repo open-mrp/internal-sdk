@@ -17,7 +17,6 @@ import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
 import { Healthcheck, Healthz } from './resources/healthz';
-import { WebhookResponse, WebhookStripeParams, Webhooks } from './resources/webhooks';
 import {
   AI,
   AIRetrieveToolGroupsParams,
@@ -100,7 +99,8 @@ import {
   SaleCheckoutSessionsParams,
   Sales,
 } from './resources/sales/sales';
-import { PublicAccount, Settings } from './resources/settings/settings';
+import { PortalProfile, PublicAccount, Settings } from './resources/settings/settings';
+import { Webhooks } from './resources/webhooks/webhooks';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -872,9 +872,6 @@ export class Augno {
    */
   ai: API.AI = new API.AI(this);
   messaging: API.Messaging = new API.Messaging(this);
-  /**
-   * Incoming webhook events.
-   */
   webhooks: API.Webhooks = new API.Webhooks(this);
   finance: API.Finance = new API.Finance(this);
   operations: API.Operations = new API.Operations(this);
@@ -936,7 +933,7 @@ export declare namespace Augno {
     type SaleCheckoutSessionsParams as SaleCheckoutSessionsParams,
   };
 
-  export { Settings as Settings, type PublicAccount as PublicAccount };
+  export { Settings as Settings, type PortalProfile as PortalProfile, type PublicAccount as PublicAccount };
 
   export { Catalog as Catalog };
 
@@ -968,11 +965,7 @@ export declare namespace Augno {
     type MessagingSupportParams as MessagingSupportParams,
   };
 
-  export {
-    Webhooks as Webhooks,
-    type WebhookResponse as WebhookResponse,
-    type WebhookStripeParams as WebhookStripeParams,
-  };
+  export { Webhooks as Webhooks };
 
   export {
     Finance as Finance,

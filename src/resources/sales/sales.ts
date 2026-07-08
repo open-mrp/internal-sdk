@@ -127,6 +127,17 @@ import {
   OrderDiscounts,
   UpdateOrderDiscountRequest,
 } from './order-discounts/order-discounts';
+import * as PortalRegistrationSessionsAPI from './portal-registration-sessions/portal-registration-sessions';
+import {
+  CreateOrResumePortalRegistrationSessionRequest,
+  PortalRegistrationSession,
+  PortalRegistrationSessionCreateParams,
+  PortalRegistrationSessionData,
+  PortalRegistrationSessionDataInput,
+  PortalRegistrationSessionUpdateParams,
+  PortalRegistrationSessions,
+  UpdatePortalRegistrationSessionRequest,
+} from './portal-registration-sessions/portal-registration-sessions';
 import * as ProductLineAccessAPI from './product-line-access/product-line-access';
 import { ProductLineAccess } from './product-line-access/product-line-access';
 import * as SalesOrdersAPI from './sales-orders/sales-orders';
@@ -185,6 +196,8 @@ export class Sales extends APIResource {
     this._client,
   );
   accountUsers: AccountUsersAPI.AccountUsers = new AccountUsersAPI.AccountUsers(this._client);
+  portalRegistrationSessions: PortalRegistrationSessionsAPI.PortalRegistrationSessions =
+    new PortalRegistrationSessionsAPI.PortalRegistrationSessions(this._client);
   priorities: PrioritiesAPI.Priorities = new PrioritiesAPI.Priorities(this._client);
   contacts: ContactsAPI.Contacts = new ContactsAPI.Contacts(this._client);
   orderDiscounts: OrderDiscountsAPI.OrderDiscounts = new OrderDiscountsAPI.OrderDiscounts(this._client);
@@ -290,6 +303,7 @@ Sales.Addresses = Addresses;
 Sales.AccountStatuses = AccountStatuses;
 Sales.ProductLineAccess = ProductLineAccess;
 Sales.AccountUsers = AccountUsers;
+Sales.PortalRegistrationSessions = PortalRegistrationSessions;
 Sales.Priorities = Priorities;
 Sales.Contacts = Contacts;
 Sales.OrderDiscounts = OrderDiscounts;
@@ -396,6 +410,17 @@ export declare namespace Sales {
   export { ProductLineAccess as ProductLineAccess };
 
   export { AccountUsers as AccountUsers };
+
+  export {
+    PortalRegistrationSessions as PortalRegistrationSessions,
+    type CreateOrResumePortalRegistrationSessionRequest as CreateOrResumePortalRegistrationSessionRequest,
+    type PortalRegistrationSession as PortalRegistrationSession,
+    type PortalRegistrationSessionData as PortalRegistrationSessionData,
+    type PortalRegistrationSessionDataInput as PortalRegistrationSessionDataInput,
+    type UpdatePortalRegistrationSessionRequest as UpdatePortalRegistrationSessionRequest,
+    type PortalRegistrationSessionCreateParams as PortalRegistrationSessionCreateParams,
+    type PortalRegistrationSessionUpdateParams as PortalRegistrationSessionUpdateParams,
+  };
 
   export {
     Priorities as Priorities,

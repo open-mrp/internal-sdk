@@ -76,7 +76,6 @@ describe('resource actions', () => {
 
   test('rateShop: only required params', async () => {
     const responsePromise = client.operations.shipments.actions.rateShop({
-      from_address: { country: 'US', name: 'Origin Warehouse' },
       parcels: [
         {
           height: 6,
@@ -98,18 +97,6 @@ describe('resource actions', () => {
 
   test('rateShop: required and optional params', async () => {
     const response = await client.operations.shipments.actions.rateShop({
-      from_address: {
-        country: 'US',
-        name: 'Origin Warehouse',
-        email: 'warehouse@acme.com',
-        locality: 'San Francisco',
-        phone: '555-123-4567',
-        postal_code: '94105',
-        state: 'CA',
-        street_line_1: '123 Main Street',
-        street_line_2: 'Suite 400',
-        type: 'standard',
-      },
       parcels: [
         {
           height: 6,
@@ -131,6 +118,18 @@ describe('resource actions', () => {
         type: 'standard',
       },
       customer_id: 'customer_id',
+      from_address: {
+        country: 'US',
+        name: 'Origin Warehouse',
+        email: 'warehouse@acme.com',
+        locality: 'San Francisco',
+        phone: '555-123-4567',
+        postal_code: '94105',
+        state: 'CA',
+        street_line_1: '123 Main Street',
+        street_line_2: 'Suite 400',
+        type: 'standard',
+      },
       order_total: 0,
       product_line_ids: ['string'],
     });

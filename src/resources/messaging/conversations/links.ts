@@ -330,7 +330,10 @@ export interface AddConversationLinkRequest {
     | 'reply_draft'
     | 'conversation_link'
     | 'messaging_group'
-    | 'messaging_group_member';
+    | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data';
 }
 
 /**
@@ -635,7 +638,10 @@ export interface LinkCreateParams {
     | 'reply_draft'
     | 'conversation_link'
     | 'messaging_group'
-    | 'messaging_group_member';
+    | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data';
 
   /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects

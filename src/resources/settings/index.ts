@@ -30,4 +30,4 @@ export {
   type PropertyUpdateParams,
   type PropertyListParams,
 } from './properties';
-export { Settings, type PublicAccount } from './settings';
+export { Settings, type PortalProfile, type PublicAccount } from './settings';

@@ -662,7 +662,10 @@ export interface SendNotificationRequest {
     | 'reply_draft'
     | 'conversation_link'
     | 'messaging_group'
-    | 'messaging_group_member';
+    | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data';
 
   /**
    * Delivery priority.
@@ -958,7 +961,10 @@ export interface NotificationCreateParams {
     | 'reply_draft'
     | 'conversation_link'
     | 'messaging_group'
-    | 'messaging_group_member';
+    | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data';
 
   /**
    * Delivery priority.

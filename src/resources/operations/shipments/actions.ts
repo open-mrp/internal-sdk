@@ -79,14 +79,6 @@ export class Actions extends APIResource {
    * ```ts
    * const rateShopResult =
    *   await client.operations.shipments.actions.rateShop({
-   *     from_address: {
-   *       name: 'Origin Warehouse',
-   *       street_line_1: '123 Main Street',
-   *       locality: 'San Francisco',
-   *       state: 'CA',
-   *       postal_code: '94105',
-   *       country: 'US',
-   *     },
    *     parcels: [
    *       {
    *         weight: 5,
@@ -101,6 +93,14 @@ export class Actions extends APIResource {
    *       locality: 'Los Angeles',
    *       state: 'CA',
    *       postal_code: '90001',
+   *       country: 'US',
+   *     },
+   *     from_address: {
+   *       name: 'Origin Warehouse',
+   *       street_line_1: '123 Main Street',
+   *       locality: 'San Francisco',
+   *       state: 'CA',
+   *       postal_code: '94105',
    *       country: 'US',
    *     },
    *   });
@@ -323,12 +323,6 @@ export interface RateShopOption {
  */
 export interface RateShopRequest {
   /**
-   * Address details used to create an address, either directly or inline on another
-   * resource.
-   */
-  from_address: CustomersAPI.AddressInput;
-
-  /**
    * Parcels to rate shop.
    */
   parcels: Array<ParcelInput>;
@@ -348,6 +342,12 @@ export interface RateShopRequest {
    * replaces carrier rates with the flat rate.
    */
   customer_id?: string;
+
+  /**
+   * Address details used to create an address, either directly or inline on another
+   * resource.
+   */
+  from_address?: CustomersAPI.AddressInput;
 
   /**
    * Total value of the order, used to evaluate the free-shipping minimum order value
@@ -461,12 +461,6 @@ export interface ActionEstimateRateParams {
 
 export interface ActionRateShopParams {
   /**
-   * Address details used to create an address, either directly or inline on another
-   * resource.
-   */
-  from_address: CustomersAPI.AddressInput;
-
-  /**
    * Parcels to rate shop.
    */
   parcels: Array<ParcelInput>;
@@ -486,6 +480,12 @@ export interface ActionRateShopParams {
    * replaces carrier rates with the flat rate.
    */
   customer_id?: string;
+
+  /**
+   * Address details used to create an address, either directly or inline on another
+   * resource.
+   */
+  from_address?: CustomersAPI.AddressInput;
 
   /**
    * Total value of the order, used to evaluate the free-shipping minimum order value

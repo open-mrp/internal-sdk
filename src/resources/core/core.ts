@@ -438,7 +438,10 @@ export interface Entity {
     | 'reply_draft'
     | 'conversation_link'
     | 'messaging_group'
-    | 'messaging_group_member';
+    | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data';
 }
 
 /**
@@ -737,6 +740,9 @@ export interface CoreRetrieveSearchParams {
     | 'conversation_link'
     | 'messaging_group'
     | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data'
   >;
 }
 

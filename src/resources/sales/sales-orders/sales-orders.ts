@@ -960,9 +960,13 @@ export interface SalesOrder {
   order_discount: OrderDiscountsAPI.OrderDiscount | null;
 
   /**
-   * Payment state of the order.
-   *
-   * Payment tracking is not yet wired up, so this currently always reports `unpaid`.
+   * Stripe payment intent IDs recorded against this order.
+   */
+  payment_intent_ids: Array<string>;
+
+  /**
+   * Payment state of the order, derived from settlement allocations, invoices, and
+   * Stripe payments.
    */
   payment_status: 'unpaid' | 'partially_paid' | 'paid';
 
@@ -1399,8 +1403,13 @@ export interface SalesOrderCreateParams {
     | 'lines'
     | 'lines.product'
     | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
     | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
     | 'lines.unit_cost'
+    | 'lines.unit_cost.numerator_unit'
+    | 'lines.unit_cost.denominator_unit'
     | 'lines.totals'
   >;
 
@@ -1507,8 +1516,13 @@ export interface SalesOrderRetrieveParams {
     | 'lines.product.item'
     | 'lines.product.product_line'
     | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
     | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
     | 'lines.unit_cost'
+    | 'lines.unit_cost.numerator_unit'
+    | 'lines.unit_cost.denominator_unit'
     | 'lines.totals'
   >;
 }
@@ -1535,8 +1549,13 @@ export interface SalesOrderUpdateParams {
     | 'lines'
     | 'lines.product'
     | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
     | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
     | 'lines.unit_cost'
+    | 'lines.unit_cost.numerator_unit'
+    | 'lines.unit_cost.denominator_unit'
     | 'lines.totals'
   >;
 
@@ -1706,8 +1725,13 @@ export interface SalesOrderListParams {
     | 'lines.product.item'
     | 'lines.product.product_line'
     | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
     | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
     | 'lines.unit_cost'
+    | 'lines.unit_cost.numerator_unit'
+    | 'lines.unit_cost.denominator_unit'
     | 'lines.totals'
   >;
 

@@ -83,5 +83,5 @@ export {
   type CreateCheckoutSessionRequest,
   type SaleCheckoutSessionsParams,
 } from './sales/sales';
-export { Settings, type PublicAccount } from './settings/settings';
-export { Webhooks, type WebhookResponse, type WebhookStripeParams } from './webhooks';
+export { Settings, type PortalProfile, type PublicAccount } from './settings/settings';
+export { Webhooks } from './webhooks/webhooks';

@@ -763,6 +763,29 @@ Methods:
 - <code title="put /v1/sales/account-users/{id}/sales-targets/{target_id}">client.sales.accountUsers.salesTargets.<a href="./src/resources/sales/account-users/sales-targets.ts">update</a>(targetID, { ...params }) -> SalesTarget</code>
 - <code title="get /v1/sales/account-users/{id}/sales-targets">client.sales.accountUsers.salesTargets.<a href="./src/resources/sales/account-users/sales-targets.ts">list</a>(id, { ...params }) -> ListSalesTarget</code>
 
+## PortalRegistrationSessions
+
+Types:
+
+- <code><a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">CreateOrResumePortalRegistrationSessionRequest</a></code>
+- <code><a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">PortalRegistrationSession</a></code>
+- <code><a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">PortalRegistrationSessionData</a></code>
+- <code><a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">PortalRegistrationSessionDataInput</a></code>
+- <code><a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">UpdatePortalRegistrationSessionRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/sales/portal-registration-sessions">client.sales.portalRegistrationSessions.<a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">create</a>({ ...params }) -> PortalRegistrationSession</code>
+- <code title="get /v1/sales/portal-registration-sessions/{id}">client.sales.portalRegistrationSessions.<a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">retrieve</a>(id) -> PortalRegistrationSession</code>
+- <code title="patch /v1/sales/portal-registration-sessions/{id}">client.sales.portalRegistrationSessions.<a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">update</a>(id, { ...params }) -> PortalRegistrationSession</code>
+
+### Actions
+
+Methods:
+
+- <code title="post /v1/sales/portal-registration-sessions/{id}/actions/abandon">client.sales.portalRegistrationSessions.actions.<a href="./src/resources/sales/portal-registration-sessions/actions.ts">abandon</a>(id) -> PortalRegistrationSession</code>
+- <code title="post /v1/sales/portal-registration-sessions/{id}/actions/complete">client.sales.portalRegistrationSessions.actions.<a href="./src/resources/sales/portal-registration-sessions/actions.ts">complete</a>(id) -> PortalRegistrationSession</code>
+
 ## Priorities
 
 Types:
@@ -941,12 +964,14 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/settings/settings.ts">PortalProfile</a></code>
 - <code><a href="./src/resources/settings/settings.ts">PublicAccount</a></code>
 
 Methods:
 
 - <code title="get /v1/settings/branding/{slug}">client.settings.<a href="./src/resources/settings/settings.ts">retrieveBranding</a>(slug) -> PublicAccount</code>
 - <code title="get /v1/settings/portal-hosts/{domain}">client.settings.<a href="./src/resources/settings/settings.ts">retrievePortalHosts</a>(domain) -> PublicAccount</code>
+- <code title="get /v1/settings/portal-profiles/{slug}">client.settings.<a href="./src/resources/settings/settings.ts">retrievePortalProfiles</a>(slug) -> PortalProfile</code>
 
 ## Properties
 
@@ -1812,13 +1837,16 @@ Methods:
 
 # Webhooks
 
+## Stripe
+
 Types:
 
-- <code><a href="./src/resources/webhooks.ts">WebhookResponse</a></code>
+- <code><a href="./src/resources/webhooks/stripe.ts">WebhookResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/webhooks/stripe">client.webhooks.<a href="./src/resources/webhooks.ts">stripe</a>({ ...params }) -> WebhookResponse</code>
+- <code title="post /v1/webhooks/stripe">client.webhooks.stripe.<a href="./src/resources/webhooks/stripe.ts">create</a>({ ...params }) -> WebhookResponse</code>
+- <code title="post /v1/webhooks/stripe/accounts/{account_id}">client.webhooks.stripe.<a href="./src/resources/webhooks/stripe.ts">accounts</a>(accountID, { ...params }) -> WebhookResponse</code>
 
 # Finance
 

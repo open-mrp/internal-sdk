@@ -84,6 +84,16 @@ export {
   type OrderDiscountListParams,
 } from './order-discounts/index';
 export {
+  PortalRegistrationSessions,
+  type CreateOrResumePortalRegistrationSessionRequest,
+  type PortalRegistrationSession,
+  type PortalRegistrationSessionData,
+  type PortalRegistrationSessionDataInput,
+  type UpdatePortalRegistrationSessionRequest,
+  type PortalRegistrationSessionCreateParams,
+  type PortalRegistrationSessionUpdateParams,
+} from './portal-registration-sessions/index';
+export {
   Priorities,
   type ListPriority,
   type PriorityRetrieveParams,

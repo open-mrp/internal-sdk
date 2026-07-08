@@ -77,6 +77,68 @@ export class Settings extends APIResource {
   retrievePortalHosts(domain: string, options?: RequestOptions): APIPromise<PublicAccount> {
     return this._client.get(path`/v1/settings/portal-hosts/${domain}`, options);
   }
+
+  /**
+   * Returns the seller portal profile for the given slug: the seller's identity and
+   * its public letterhead address.
+   *
+   * Unlike the public branding lookup, this endpoint requires an authenticated
+   * caller. It is used by the logged-in customer portal (e.g. order documents) where
+   * the seller's letterhead address is shown.
+   *
+   * @example
+   * ```ts
+   * const portalProfile =
+   *   await client.settings.retrievePortalProfiles('acme');
+   * ```
+   */
+  retrievePortalProfiles(slug: string, options?: RequestOptions): APIPromise<PortalProfile> {
+    return this._client.get(path`/v1/settings/portal-profiles/${slug}`, options);
+  }
+}
+
+/**
+ * PortalProfile is the authenticated seller portal profile served to logged-in
+ * customer-portal pages: the seller's identity plus its public letterhead address.
+ * Unlike PublicAccount (public, minimal, for pre-login pages), this requires
+ * authentication and includes the address inline as a plain field.
+ */
+export interface PortalProfile {
+  /**
+   * Account ID.
+   */
+  id: string;
+
+  /**
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
+   */
+  address: APIKeysAPI.Address | null;
+
+  /**
+   * Logo URL.
+   */
+  logo_url: string | null;
+
+  /**
+   * The seller's display name.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'portal_profile';
+
+  /**
+   * Portal slug.
+   */
+  slug: string;
+
+  /**
+   * Support email address.
+   */
+  support_email: string | null;
 }
 
 /**
@@ -125,7 +187,7 @@ Settings.PortalDomains = PortalDomains;
 Settings.Integrations = Integrations;
 
 export declare namespace Settings {
-  export { type PublicAccount as PublicAccount };
+  export { type PortalProfile as PortalProfile, type PublicAccount as PublicAccount };
 
   export {
     Properties as Properties,

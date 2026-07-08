@@ -454,7 +454,10 @@ export interface SendMessageRequest {
     | 'reply_draft'
     | 'conversation_link'
     | 'messaging_group'
-    | 'messaging_group_member';
+    | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data';
 
   /**
    * Account user ids explicitly @mentioned in the message.
@@ -816,7 +819,10 @@ export interface MessageCreateParams {
     | 'reply_draft'
     | 'conversation_link'
     | 'messaging_group'
-    | 'messaging_group_member';
+    | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data';
 
   /**
    * Body param: Account user ids explicitly @mentioned in the message.

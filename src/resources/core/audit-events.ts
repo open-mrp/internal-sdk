@@ -388,7 +388,10 @@ export interface AuditEvent {
     | 'reply_draft'
     | 'conversation_link'
     | 'messaging_group'
-    | 'messaging_group_member';
+    | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data';
 
   /**
    * Originating client IP address.
@@ -714,6 +717,9 @@ export interface ListObjectType {
     | 'conversation_link'
     | 'messaging_group'
     | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data'
   >;
 
   /**
@@ -1047,6 +1053,9 @@ export interface AuditEventListParams {
     | 'conversation_link'
     | 'messaging_group'
     | 'messaging_group_member'
+    | 'portal_profile'
+    | 'portal_registration_session'
+    | 'portal_registration_session_data'
   >;
 
   /**
