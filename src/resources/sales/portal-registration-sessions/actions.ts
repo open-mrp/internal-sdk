@@ -18,7 +18,7 @@ export class Actions extends APIResource {
    * ```ts
    * const portalRegistrationSession =
    *   await client.sales.portalRegistrationSessions.actions.abandon(
-   *     'example',
+   *     'porgse_017513382536fd23a343e958ef',
    *   );
    * ```
    */
@@ -38,7 +38,7 @@ export class Actions extends APIResource {
    * ```ts
    * const portalRegistrationSession =
    *   await client.sales.portalRegistrationSessions.actions.complete(
-   *     'example',
+   *     'porgse_017513382536fd23a343e958ef',
    *   );
    * ```
    */

@@ -9,7 +9,9 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('abandon', async () => {
-    const responsePromise = client.sales.portalRegistrationSessions.actions.abandon('example');
+    const responsePromise = client.sales.portalRegistrationSessions.actions.abandon(
+      'porgse_017513382536fd23a343e958ef',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +22,9 @@ describe('resource actions', () => {
   });
 
   test('complete', async () => {
-    const responsePromise = client.sales.portalRegistrationSessions.actions.complete('example');
+    const responsePromise = client.sales.portalRegistrationSessions.actions.complete(
+      'porgse_017513382536fd23a343e958ef',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

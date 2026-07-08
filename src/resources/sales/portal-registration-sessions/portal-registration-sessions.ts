@@ -44,7 +44,7 @@ export class PortalRegistrationSessions extends APIResource {
    * ```ts
    * const portalRegistrationSession =
    *   await client.sales.portalRegistrationSessions.retrieve(
-   *     'example',
+   *     'porgse_017513382536fd23a343e958ef',
    *   );
    * ```
    */
@@ -61,7 +61,7 @@ export class PortalRegistrationSessions extends APIResource {
    * ```ts
    * const portalRegistrationSession =
    *   await client.sales.portalRegistrationSessions.update(
-   *     'example',
+   *     'porgse_017513382536fd23a343e958ef',
    *     { step: 'customer_details' },
    *   );
    * ```
