@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as SalesOrdersAPI from './sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
@@ -42,16 +43,11 @@ export class Actions extends APIResource {
    * const salesOrder =
    *   await client.sales.salesOrders.actions.close(
    *     'or_01d5034136c3ccc048abecc312',
-   *     { notify_customer: false },
    *   );
    * ```
    */
-  close(
-    id: string,
-    body: ActionCloseParams,
-    options?: RequestOptions,
-  ): APIPromise<SalesOrdersAPI.SalesOrder> {
-    return this._client.put(path`/v1/sales/sales-orders/${id}/actions/close`, { body, ...options });
+  close(id: string, options?: RequestOptions): APIPromise<SalesOrdersAPI.SalesOrder> {
+    return this._client.put(path`/v1/sales/sales-orders/${id}/actions/close`, options);
   }
 
   /**
@@ -65,14 +61,22 @@ export class Actions extends APIResource {
    *
    * @example
    * ```ts
-   * const createProductionRunResponse =
+   * const productionRun =
    *   await client.sales.salesOrders.actions.createProductionRun(
    *     'or_01d5034136c3ccc048abecc312',
    *   );
    * ```
    */
-  createProductionRun(id: string, options?: RequestOptions): APIPromise<CreateProductionRunResponse> {
-    return this._client.post(path`/v1/sales/sales-orders/${id}/actions/create-production-run`, options);
+  createProductionRun(
+    id: string,
+    params: ActionCreateProductionRunParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ProductionRun> {
+    const { include } = params ?? {};
+    return this._client.post(path`/v1/sales/sales-orders/${id}/actions/create-production-run`, {
+      query: { include },
+      ...options,
+    });
   }
 
   /**
@@ -112,12 +116,37 @@ export class Actions extends APIResource {
    * const salesOrder =
    *   await client.sales.salesOrders.actions.open(
    *     'or_01d5034136c3ccc048abecc312',
-   *     { notify_customer: false },
    *   );
    * ```
    */
-  open(id: string, body: ActionOpenParams, options?: RequestOptions): APIPromise<SalesOrdersAPI.SalesOrder> {
-    return this._client.put(path`/v1/sales/sales-orders/${id}/actions/open`, { body, ...options });
+  open(id: string, options?: RequestOptions): APIPromise<SalesOrdersAPI.SalesOrder> {
+    return this._client.put(path`/v1/sales/sales-orders/${id}/actions/open`, options);
+  }
+
+  /**
+   * Re-estimates the freight (shipping) charge for an order using the latest carrier
+   * rates.
+   *
+   * Computes what the order's freight charge would be from its current ship-to
+   * address, carrier, service level, and line items — applying the same
+   * freight-exemption, flat-rate, and live carrier-rate logic used when the order is
+   * created. The order is not modified: the returned amount is a quote to review,
+   * and callers apply it by updating the order's shipping line. Use this to refresh
+   * freight after changing the address or line items, or at any time to re-price
+   * against current rates.
+   *
+   * This endpoint requires the permission: `sales_orders:read`.
+   *
+   * @example
+   * ```ts
+   * const quoteSalesOrderFreightResponse =
+   *   await client.sales.salesOrders.actions.quoteFreight(
+   *     'or_01d5034136c3ccc048abecc312',
+   *   );
+   * ```
+   */
+  quoteFreight(id: string, options?: RequestOptions): APIPromise<QuoteSalesOrderFreightResponse> {
+    return this._client.post(path`/v1/sales/sales-orders/${id}/actions/quote-freight`, options);
   }
 
   /**
@@ -133,16 +162,11 @@ export class Actions extends APIResource {
    * const salesOrder =
    *   await client.sales.salesOrders.actions.unissue(
    *     'or_01d5034136c3ccc048abecc312',
-   *     { notify_customer: false },
    *   );
    * ```
    */
-  unissue(
-    id: string,
-    body: ActionUnissueParams,
-    options?: RequestOptions,
-  ): APIPromise<SalesOrdersAPI.SalesOrder> {
-    return this._client.put(path`/v1/sales/sales-orders/${id}/actions/unissue`, { body, ...options });
+  unissue(id: string, options?: RequestOptions): APIPromise<SalesOrdersAPI.SalesOrder> {
+    return this._client.put(path`/v1/sales/sales-orders/${id}/actions/unissue`, options);
   }
 }
 
@@ -154,49 +178,6 @@ export interface BulkDeleteSalesOrdersRequest {
    * IDs of the sales orders to delete.
    */
   sales_order_ids: Array<string>;
-}
-
-/**
- * Request to close a sales order.
- */
-export interface CloseSalesOrderRequest {
-  /**
-   * Whether to notify the customer.
-   *
-   * Reserved for future use; no notification email is currently sent for this
-   * action.
-   */
-  notify_customer: boolean;
-}
-
-/**
- * Result of creating a production run.
- */
-export interface CreateProductionRunResponse {
-  /**
-   * Resource type identifier.
-   */
-  object: 'create_production_run_response';
-
-  /**
-   * Lightweight reference to a production run.
-   */
-  production_run: CreateProductionRunResponseRef;
-}
-
-/**
- * Lightweight reference to a production run.
- */
-export interface CreateProductionRunResponseRef {
-  /**
-   * Production run ID.
-   */
-  id: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'production_run';
 }
 
 /**
@@ -213,29 +194,85 @@ export interface IssueSalesOrderRequest {
 }
 
 /**
- * Request to reopen a sales order.
+ * Production run resource.
  */
-export interface OpenSalesOrderRequest {
+export interface ProductionRun {
   /**
-   * Whether to notify the customer.
-   *
-   * Reserved for future use; no notification email is currently sent for this
-   * action.
+   * Production run ID.
    */
-  notify_customer: boolean;
+  id: string;
+
+  /**
+   * Number of batches currently recorded against this run.
+   */
+  batch_count: number;
+
+  /**
+   * Time the run was marked complete.
+   *
+   * Set automatically once every batch in the run has been scanned or deleted, and
+   * unset while the run is still in progress. Once set, the run can no longer be
+   * updated and new batches can no longer be added.
+   */
+  completed_at: string | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Production run number, unique per account.
+   *
+   * Assigned automatically at creation as the next sequential number for the
+   * account; can be changed via update.
+   */
+  number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'production_run';
+
+  /**
+   * A user's membership in an account, carrying the account-specific status, role,
+   * and department.
+   *
+   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * sub-resource, which is shared across every account the user belongs to.
+   */
+  responsible_user: AccountUsersAPI.AccountUser | null;
+
+  /**
+   * Time the run started production.
+   *
+   * Set automatically when the first batch in the run is scanned, and unset until
+   * then.
+   */
+  started_at: string | null;
+
+  /**
+   * Last-updated timestamp.
+   */
+  updated_at: string;
 }
 
 /**
- * Request to unissue a sales order.
+ * The freshly estimated freight charge for a sales order.
  */
-export interface UnissueSalesOrderRequest {
+export interface QuoteSalesOrderFreightResponse {
   /**
-   * Whether to notify the customer.
-   *
-   * Reserved for future use; no notification email is currently sent for this
-   * action.
+   * Resource type identifier.
    */
-  notify_customer: boolean;
+  object: 'sales_order_freight_quote';
+
+  /**
+   * A per-unit rate on a sales-order quote.
+   *
+   * A lightweight, unpersisted variant of a rate: it carries no ID or timestamps
+   * because a quote is computed on demand and never stored.
+   */
+  unit_price: SalesOrdersAPI.SalesOrderQuoteRate | null;
 }
 
 export interface ActionBulkDeleteResponse {}
@@ -247,14 +284,12 @@ export interface ActionBulkDeleteParams {
   sales_order_ids: Array<string>;
 }
 
-export interface ActionCloseParams {
+export interface ActionCreateProductionRunParams {
   /**
-   * Whether to notify the customer.
-   *
-   * Reserved for future use; no notification email is currently sent for this
-   * action.
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
    */
-  notify_customer: boolean;
+  include?: Array<'responsible_user' | 'responsible_user.user'>;
 }
 
 export interface ActionIssueParams {
@@ -267,40 +302,15 @@ export interface ActionIssueParams {
   notify_customer: boolean;
 }
 
-export interface ActionOpenParams {
-  /**
-   * Whether to notify the customer.
-   *
-   * Reserved for future use; no notification email is currently sent for this
-   * action.
-   */
-  notify_customer: boolean;
-}
-
-export interface ActionUnissueParams {
-  /**
-   * Whether to notify the customer.
-   *
-   * Reserved for future use; no notification email is currently sent for this
-   * action.
-   */
-  notify_customer: boolean;
-}
-
 export declare namespace Actions {
   export {
     type BulkDeleteSalesOrdersRequest as BulkDeleteSalesOrdersRequest,
-    type CloseSalesOrderRequest as CloseSalesOrderRequest,
-    type CreateProductionRunResponse as CreateProductionRunResponse,
-    type CreateProductionRunResponseRef as CreateProductionRunResponseRef,
     type IssueSalesOrderRequest as IssueSalesOrderRequest,
-    type OpenSalesOrderRequest as OpenSalesOrderRequest,
-    type UnissueSalesOrderRequest as UnissueSalesOrderRequest,
+    type ProductionRun as ProductionRun,
+    type QuoteSalesOrderFreightResponse as QuoteSalesOrderFreightResponse,
     type ActionBulkDeleteResponse as ActionBulkDeleteResponse,
     type ActionBulkDeleteParams as ActionBulkDeleteParams,
-    type ActionCloseParams as ActionCloseParams,
+    type ActionCreateProductionRunParams as ActionCreateProductionRunParams,
     type ActionIssueParams as ActionIssueParams,
-    type ActionOpenParams as ActionOpenParams,
-    type ActionUnissueParams as ActionUnissueParams,
   };
 }

@@ -84,7 +84,7 @@ describe('resource operations', () => {
           numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
           object_id: 'object_id',
           object_type: 'object_type',
-          value: '25.500000000000000000000000000000',
+          value: '25.50',
         },
         { path: '/_stainless_unknown_path' },
       ),

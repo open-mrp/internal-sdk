@@ -9,7 +9,10 @@ const client = new Augno({
 
 describe('resource conversations', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.messaging.conversations.create({ type: 'group' });
+    const responsePromise = client.messaging.conversations.create({
+      participant_account_user_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+      type: 'group',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,10 +24,10 @@ describe('resource conversations', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.messaging.conversations.create({
+      participant_account_user_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
       type: 'group',
       include: ['assignee'],
       group_id: 'cvgp_018e88072d1320808dc97abc',
-      participant_account_user_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
       title: 'Order #1042 — shipping question',
       topic_resource_id: 'or_01d5034136c3ccc048abecc312',
       topic_resource_type: 'sales_order',

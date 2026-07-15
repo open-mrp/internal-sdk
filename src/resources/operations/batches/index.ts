@@ -29,7 +29,7 @@ export {
   type ListBatchLot,
   type ListBatchReference,
   type ListScanningProductionStepInfo,
-  type ProductionRun,
+  type ProductionRunReference,
   type ScanningProductionStepInfo,
   type BatchNextStepsParams,
   type BatchRemainingQuantitiesParams,

@@ -197,7 +197,8 @@ export interface Notification {
     | 'order.updated'
     | 'agent.run_completed'
     | 'agent.alert'
-    | 'system.broadcast';
+    | 'system.broadcast'
+    | 'customer.registered';
 
   /**
    * Creation timestamp.
@@ -385,7 +386,8 @@ export interface SendNotificationRequest {
     | 'order.updated'
     | 'agent.run_completed'
     | 'agent.alert'
-    | 'system.broadcast';
+    | 'system.broadcast'
+    | 'customer.registered';
 
   /**
    * NotificationTargetInput selects what a notification send is aimed at.
@@ -430,6 +432,7 @@ export interface SendNotificationRequest {
     | 'record'
     | 'freight'
     | 'sales_order_totals'
+    | 'sales_order_stage_total'
     | 'sales_order_related'
     | 'order_contact'
     | 'user'
@@ -465,6 +468,7 @@ export interface SendNotificationRequest {
     | 'notification_unread_summary'
     | 'announcement'
     | 'conversation'
+    | 'support_case'
     | 'conversation_participant'
     | 'read_cursor'
     | 'chat_message'
@@ -500,6 +504,7 @@ export interface SendNotificationRequest {
     | 'account_branding'
     | 'account_portal'
     | 'account_logo_url'
+    | 'account_favicon_url'
     | 'public_account'
     | 'property'
     | 'carrier'
@@ -585,6 +590,7 @@ export interface SendNotificationRequest {
     | 'customer_freight_preferences'
     | 'customer_defaults'
     | 'customer_notification_preferences'
+    | 'order_notification_recipient'
     | 'order_discount'
     | 'sales_order_line'
     | 'sales_order_type'
@@ -651,9 +657,11 @@ export interface SendNotificationRequest {
     | 'tenancy_pending_registration'
     | 'invoice_allocation_entry'
     | 'allocation_customer'
-    | 'checkout_sales_order_response'
-    | 'create_production_run_response'
+    | 'checkout_sales_order'
     | 'sales_order_price_quote'
+    | 'sales_order_freight_quote'
+    | 'sales_order_price_quote_line'
+    | 'sales_order_quote_rate'
     | 'hubspot_sync_job'
     | 'hubspot_sync_report'
     | 'hubspot_company_review'
@@ -665,7 +673,12 @@ export interface SendNotificationRequest {
     | 'messaging_group_member'
     | 'portal_profile'
     | 'portal_registration_session'
-    | 'portal_registration_session_data';
+    | 'portal_registration_session_data'
+    | 'pack_list'
+    | 'pack_list_party'
+    | 'pack_list_line_item'
+    | 'pack_list_back_order'
+    | 'pack_list_case';
 
   /**
    * Delivery priority.
@@ -684,7 +697,8 @@ export interface NotificationCreateParams {
     | 'order.updated'
     | 'agent.run_completed'
     | 'agent.alert'
-    | 'system.broadcast';
+    | 'system.broadcast'
+    | 'customer.registered';
 
   /**
    * NotificationTargetInput selects what a notification send is aimed at.
@@ -729,6 +743,7 @@ export interface NotificationCreateParams {
     | 'record'
     | 'freight'
     | 'sales_order_totals'
+    | 'sales_order_stage_total'
     | 'sales_order_related'
     | 'order_contact'
     | 'user'
@@ -764,6 +779,7 @@ export interface NotificationCreateParams {
     | 'notification_unread_summary'
     | 'announcement'
     | 'conversation'
+    | 'support_case'
     | 'conversation_participant'
     | 'read_cursor'
     | 'chat_message'
@@ -799,6 +815,7 @@ export interface NotificationCreateParams {
     | 'account_branding'
     | 'account_portal'
     | 'account_logo_url'
+    | 'account_favicon_url'
     | 'public_account'
     | 'property'
     | 'carrier'
@@ -884,6 +901,7 @@ export interface NotificationCreateParams {
     | 'customer_freight_preferences'
     | 'customer_defaults'
     | 'customer_notification_preferences'
+    | 'order_notification_recipient'
     | 'order_discount'
     | 'sales_order_line'
     | 'sales_order_type'
@@ -950,9 +968,11 @@ export interface NotificationCreateParams {
     | 'tenancy_pending_registration'
     | 'invoice_allocation_entry'
     | 'allocation_customer'
-    | 'checkout_sales_order_response'
-    | 'create_production_run_response'
+    | 'checkout_sales_order'
     | 'sales_order_price_quote'
+    | 'sales_order_freight_quote'
+    | 'sales_order_price_quote_line'
+    | 'sales_order_quote_rate'
     | 'hubspot_sync_job'
     | 'hubspot_sync_report'
     | 'hubspot_company_review'
@@ -964,7 +984,12 @@ export interface NotificationCreateParams {
     | 'messaging_group_member'
     | 'portal_profile'
     | 'portal_registration_session'
-    | 'portal_registration_session_data';
+    | 'portal_registration_session_data'
+    | 'pack_list'
+    | 'pack_list_party'
+    | 'pack_list_line_item'
+    | 'pack_list_back_order'
+    | 'pack_list_case';
 
   /**
    * Delivery priority.
@@ -991,7 +1016,8 @@ export interface NotificationListParams {
     | 'order.updated'
     | 'agent.run_completed'
     | 'agent.alert'
-    | 'system.broadcast';
+    | 'system.broadcast'
+    | 'customer.registered';
 
   /**
    * Opaque cursor token identifying where the page of results starts.

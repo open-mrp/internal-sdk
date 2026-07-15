@@ -130,6 +130,8 @@ import {
   Addresses,
   ListAddressSuggestion,
 } from './addresses/addresses';
+import * as RecordsAPI from './records/records';
+import { Records } from './records/records';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -144,6 +146,7 @@ export class Core extends APIResource {
   emailLogs: EmailLogsAPI.EmailLogs = new EmailLogsAPI.EmailLogs(this._client);
   analytics: AnalyticsAPI.Analytics = new AnalyticsAPI.Analytics(this._client);
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
+  records: RecordsAPI.Records = new RecordsAPI.Records(this._client);
 
   /**
    * Search returns lightweight `entity` references matching the query across the
@@ -206,6 +209,7 @@ export interface Entity {
     | 'record'
     | 'freight'
     | 'sales_order_totals'
+    | 'sales_order_stage_total'
     | 'sales_order_related'
     | 'order_contact'
     | 'user'
@@ -241,6 +245,7 @@ export interface Entity {
     | 'notification_unread_summary'
     | 'announcement'
     | 'conversation'
+    | 'support_case'
     | 'conversation_participant'
     | 'read_cursor'
     | 'chat_message'
@@ -276,6 +281,7 @@ export interface Entity {
     | 'account_branding'
     | 'account_portal'
     | 'account_logo_url'
+    | 'account_favicon_url'
     | 'public_account'
     | 'property'
     | 'carrier'
@@ -361,6 +367,7 @@ export interface Entity {
     | 'customer_freight_preferences'
     | 'customer_defaults'
     | 'customer_notification_preferences'
+    | 'order_notification_recipient'
     | 'order_discount'
     | 'sales_order_line'
     | 'sales_order_type'
@@ -427,9 +434,11 @@ export interface Entity {
     | 'tenancy_pending_registration'
     | 'invoice_allocation_entry'
     | 'allocation_customer'
-    | 'checkout_sales_order_response'
-    | 'create_production_run_response'
+    | 'checkout_sales_order'
     | 'sales_order_price_quote'
+    | 'sales_order_freight_quote'
+    | 'sales_order_price_quote_line'
+    | 'sales_order_quote_rate'
     | 'hubspot_sync_job'
     | 'hubspot_sync_report'
     | 'hubspot_company_review'
@@ -441,7 +450,12 @@ export interface Entity {
     | 'messaging_group_member'
     | 'portal_profile'
     | 'portal_registration_session'
-    | 'portal_registration_session_data';
+    | 'portal_registration_session_data'
+    | 'pack_list'
+    | 'pack_list_party'
+    | 'pack_list_line_item'
+    | 'pack_list_back_order'
+    | 'pack_list_case';
 }
 
 /**
@@ -507,6 +521,7 @@ export interface CoreRetrieveSearchParams {
     | 'record'
     | 'freight'
     | 'sales_order_totals'
+    | 'sales_order_stage_total'
     | 'sales_order_related'
     | 'order_contact'
     | 'user'
@@ -542,6 +557,7 @@ export interface CoreRetrieveSearchParams {
     | 'notification_unread_summary'
     | 'announcement'
     | 'conversation'
+    | 'support_case'
     | 'conversation_participant'
     | 'read_cursor'
     | 'chat_message'
@@ -577,6 +593,7 @@ export interface CoreRetrieveSearchParams {
     | 'account_branding'
     | 'account_portal'
     | 'account_logo_url'
+    | 'account_favicon_url'
     | 'public_account'
     | 'property'
     | 'carrier'
@@ -662,6 +679,7 @@ export interface CoreRetrieveSearchParams {
     | 'customer_freight_preferences'
     | 'customer_defaults'
     | 'customer_notification_preferences'
+    | 'order_notification_recipient'
     | 'order_discount'
     | 'sales_order_line'
     | 'sales_order_type'
@@ -728,9 +746,11 @@ export interface CoreRetrieveSearchParams {
     | 'tenancy_pending_registration'
     | 'invoice_allocation_entry'
     | 'allocation_customer'
-    | 'checkout_sales_order_response'
-    | 'create_production_run_response'
+    | 'checkout_sales_order'
     | 'sales_order_price_quote'
+    | 'sales_order_freight_quote'
+    | 'sales_order_price_quote_line'
+    | 'sales_order_quote_rate'
     | 'hubspot_sync_job'
     | 'hubspot_sync_report'
     | 'hubspot_company_review'
@@ -743,6 +763,11 @@ export interface CoreRetrieveSearchParams {
     | 'portal_profile'
     | 'portal_registration_session'
     | 'portal_registration_session_data'
+    | 'pack_list'
+    | 'pack_list_party'
+    | 'pack_list_line_item'
+    | 'pack_list_back_order'
+    | 'pack_list_case'
   >;
 }
 
@@ -753,6 +778,7 @@ Core.Addresses = Addresses;
 Core.EmailLogs = EmailLogs;
 Core.Analytics = Analytics;
 Core.Actions = Actions;
+Core.Records = Records;
 
 export declare namespace Core {
   export {
@@ -894,4 +920,6 @@ export declare namespace Core {
     type ActionRequestDemoParams as ActionRequestDemoParams,
     type ActionSubmitFeedbackParams as ActionSubmitFeedbackParams,
   };
+
+  export { Records as Records };
 }

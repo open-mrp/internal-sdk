@@ -51,6 +51,21 @@ export interface AccountUsageResponse {
   agent_spend: AgentSpendInfo | null;
 
   /**
+   * Flat base fee in cents charged each `base_fee_interval`, resolved live from
+   * Stripe.
+   *
+   * `0` when the plan is priced per seat rather than a flat base fee.
+   */
+  base_fee_cents: number;
+
+  /**
+   * Interval the base fee recurs on (e.g. `month`).
+   *
+   * Empty when there is no base fee.
+   */
+  base_fee_interval: string;
+
+  /**
    * A usage metric with its current value and any applicable limit.
    */
   batches: UsageItem;
@@ -64,6 +79,14 @@ export interface AccountUsageResponse {
    * Resource type identifier.
    */
   object: 'account_usage_response';
+
+  /**
+   * Display name of the plan the account is actually billed on, resolved live from
+   * Stripe (e.g. `Founder`).
+   *
+   * Empty when the account has no Stripe pricing plan.
+   */
+  plan_name: string;
 
   /**
    * A usage metric with its current value and any applicable limit.

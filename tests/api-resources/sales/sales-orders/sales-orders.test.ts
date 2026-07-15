@@ -116,7 +116,6 @@ describe('resource salesOrders', () => {
           customer_purchase_order_number: 'customer_purchase_order_number',
           invoice_email_contacts: [{ account_user_id: 'account_user_id' }],
           note: 'Updated shipping instructions',
-          number: 'number',
           order_discount_id: 'order_discount_id',
           payment_term_id: 'payment_term_id',
           priority_code: 'normal',
@@ -192,8 +191,6 @@ describe('resource salesOrders', () => {
   test('checkout: required and optional params', async () => {
     const response = await client.sales.salesOrders.checkout('or_01d5034136c3ccc048abecc312', {
       email: 'operations@acme.example.com',
-      cancel_url: 'https://dashboard.example.com/checkout/cancel',
-      success_url: 'https://dashboard.example.com/checkout/success',
     });
   });
 

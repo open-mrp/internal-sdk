@@ -2,6 +2,8 @@
 
 import { APIResource } from '../../../core/resource';
 import * as DeliveriesAPI from '../deliveries';
+import * as CustomersAPI from '../../sales/customers/customers';
+import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -27,13 +29,16 @@ export class Lines extends APIResource {
    *     {
    *       product_id: 'pd_013c29ab3f1518d0004094c316',
    *       product_sku: 'ALM-2024-1001',
-   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *       quantity_value: '10',
-   *       unit_price_denominator_unit_id:
-   *         'un_01966263f74a5a0cae356000a1',
-   *       unit_price_numerator_unit_id:
-   *         'un_01966263f74a5a0cae356000a1',
-   *       unit_price_value: '25.500000000000000000000000000000',
+   *       quantity: {
+   *         unit_id: 'un_01966263f74a5a0cae356000a1',
+   *         value: '10',
+   *       },
+   *       unit_price: {
+   *         denominator_unit_id:
+   *           'un_01966263f74a5a0cae356000a1',
+   *         numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *         value: '25.50',
+   *       },
    *       item_id: 'it_0131e386ac683e8c29a71f6f1f',
    *       product_description: '6061-T6 Aluminum Sheet 4x8',
    *     },
@@ -125,30 +130,15 @@ export interface CreatePurchaseOrderLineRequest {
   product_sku: string;
 
   /**
-   * ID of the unit of measure for the quantity.
+   * A value with an associated unit, used in create and update requests.
    */
-  quantity_unit_id: string;
+  quantity: CustomersAPI.QuantityInput;
 
   /**
-   * Quantity ordered, as a decimal string.
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
-  quantity_value: string;
-
-  /**
-   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
-   */
-  unit_price_denominator_unit_id: string;
-
-  /**
-   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
-   * unit).
-   */
-  unit_price_numerator_unit_id: string;
-
-  /**
-   * Price charged per unit, as a decimal string.
-   */
-  unit_price_value: string;
+  unit_price: SalesOrdersAPI.RateInput;
 
   /**
    * ID of the inventory item to tie the line to.
@@ -163,20 +153,10 @@ export interface CreatePurchaseOrderLineRequest {
   product_description?: string;
 
   /**
-   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
-  unit_cost_denominator_unit_id?: string;
-
-  /**
-   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
-   * unit).
-   */
-  unit_cost_numerator_unit_id?: string;
-
-  /**
-   * Internal cost per unit, as a decimal string.
-   */
-  unit_cost_value?: string;
+  unit_cost?: SalesOrdersAPI.RateInput;
 }
 
 /**
@@ -261,30 +241,15 @@ export interface LineCreateParams {
   product_sku: string;
 
   /**
-   * ID of the unit of measure for the quantity.
+   * A value with an associated unit, used in create and update requests.
    */
-  quantity_unit_id: string;
+  quantity: CustomersAPI.QuantityInput;
 
   /**
-   * Quantity ordered, as a decimal string.
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
-  quantity_value: string;
-
-  /**
-   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
-   */
-  unit_price_denominator_unit_id: string;
-
-  /**
-   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
-   * unit).
-   */
-  unit_price_numerator_unit_id: string;
-
-  /**
-   * Price charged per unit, as a decimal string.
-   */
-  unit_price_value: string;
+  unit_price: SalesOrdersAPI.RateInput;
 
   /**
    * ID of the inventory item to tie the line to.
@@ -299,20 +264,10 @@ export interface LineCreateParams {
   product_description?: string;
 
   /**
-   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
-  unit_cost_denominator_unit_id?: string;
-
-  /**
-   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
-   * unit).
-   */
-  unit_cost_numerator_unit_id?: string;
-
-  /**
-   * Internal cost per unit, as a decimal string.
-   */
-  unit_cost_value?: string;
+  unit_cost?: SalesOrdersAPI.RateInput;
 }
 
 export interface LineUpdateParams {

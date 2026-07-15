@@ -266,16 +266,28 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/identity/accounts.ts">AccountLogoURL</a></code>
-- <code><a href="./src/resources/identity/accounts.ts">AccountPhotoUploadResult</a></code>
-- <code><a href="./src/resources/identity/accounts.ts">UpdateAccountRequest</a></code>
+- <code><a href="./src/resources/identity/accounts/accounts.ts">AccountLogoURL</a></code>
+- <code><a href="./src/resources/identity/accounts/accounts.ts">AccountPhotoUploadResult</a></code>
+- <code><a href="./src/resources/identity/accounts/accounts.ts">UpdateAccountRequest</a></code>
 
 Methods:
 
-- <code title="get /v1/identity/accounts/{id}">client.identity.accounts.<a href="./src/resources/identity/accounts.ts">retrieve</a>(id, { ...params }) -> Account</code>
-- <code title="patch /v1/identity/accounts/{id}">client.identity.accounts.<a href="./src/resources/identity/accounts.ts">update</a>(id, { ...params }) -> Account</code>
-- <code title="get /v1/identity/accounts/{id}/logo">client.identity.accounts.<a href="./src/resources/identity/accounts.ts">retrieveLogo</a>(id) -> AccountLogoURL</code>
-- <code title="put /v1/identity/accounts/{id}/photo">client.identity.accounts.<a href="./src/resources/identity/accounts.ts">updatePhoto</a>(id) -> AccountPhotoUploadResult</code>
+- <code title="get /v1/identity/accounts/{id}">client.identity.accounts.<a href="./src/resources/identity/accounts/accounts.ts">retrieve</a>(id, { ...params }) -> Account</code>
+- <code title="patch /v1/identity/accounts/{id}">client.identity.accounts.<a href="./src/resources/identity/accounts/accounts.ts">update</a>(id, { ...params }) -> Account</code>
+- <code title="get /v1/identity/accounts/{id}/logo">client.identity.accounts.<a href="./src/resources/identity/accounts/accounts.ts">retrieveLogo</a>(id) -> AccountLogoURL</code>
+- <code title="put /v1/identity/accounts/{id}/photo">client.identity.accounts.<a href="./src/resources/identity/accounts/accounts.ts">updatePhoto</a>(id) -> AccountPhotoUploadResult</code>
+
+### Favicon
+
+Types:
+
+- <code><a href="./src/resources/identity/accounts/favicon.ts">AccountFaviconURL</a></code>
+- <code><a href="./src/resources/identity/accounts/favicon.ts">FaviconUpdateResponse</a></code>
+
+Methods:
+
+- <code title="put /v1/identity/accounts/{id}/favicon">client.identity.accounts.favicon.<a href="./src/resources/identity/accounts/favicon.ts">update</a>(id) -> FaviconUpdateResponse</code>
+- <code title="get /v1/identity/accounts/{id}/favicon">client.identity.accounts.favicon.<a href="./src/resources/identity/accounts/favicon.ts">list</a>(id) -> AccountFaviconURL</code>
 
 ## ChildAccounts
 
@@ -494,6 +506,26 @@ Methods:
 - <code title="post /v1/core/actions/request-demo">client.core.actions.<a href="./src/resources/core/actions.ts">requestDemo</a>({ ...params }) -> MessageResource</code>
 - <code title="post /v1/core/actions/submit-feedback">client.core.actions.<a href="./src/resources/core/actions.ts">submitFeedback</a>({ ...params }) -> MessageResource</code>
 
+## Records
+
+### Actions
+
+Types:
+
+- <code><a href="./src/resources/core/records/actions.ts">GenPackListRequest</a></code>
+- <code><a href="./src/resources/core/records/actions.ts">ListPackListBackOrder</a></code>
+- <code><a href="./src/resources/core/records/actions.ts">ListPackListCase</a></code>
+- <code><a href="./src/resources/core/records/actions.ts">ListPackListLineItem</a></code>
+- <code><a href="./src/resources/core/records/actions.ts">PackList</a></code>
+- <code><a href="./src/resources/core/records/actions.ts">PackListBackOrder</a></code>
+- <code><a href="./src/resources/core/records/actions.ts">PackListCase</a></code>
+- <code><a href="./src/resources/core/records/actions.ts">PackListLineItem</a></code>
+- <code><a href="./src/resources/core/records/actions.ts">PackListParty</a></code>
+
+Methods:
+
+- <code title="post /v1/core/records/actions/generate-pack-list">client.core.records.actions.<a href="./src/resources/core/records/actions.ts">generatePackList</a>({ ...params }) -> PackList</code>
+
 # Billing
 
 Types:
@@ -643,6 +675,20 @@ Methods:
 - <code title="post /v1/sales/customers/actions/bulk-delete">client.sales.customers.actions.<a href="./src/resources/sales/customers/actions.ts">bulkDelete</a>({ ...params }) -> ActionBulkDeleteResponse</code>
 - <code title="post /v1/sales/customers/{id}/actions/merge">client.sales.customers.actions.<a href="./src/resources/sales/customers/actions.ts">merge</a>(id, { ...params }) -> Customer</code>
 
+### NotificationRecipients
+
+Types:
+
+- <code><a href="./src/resources/sales/customers/notification-recipients.ts">ListOrderNotificationRecipient</a></code>
+- <code><a href="./src/resources/sales/customers/notification-recipients.ts">NotificationRecipientInput</a></code>
+- <code><a href="./src/resources/sales/customers/notification-recipients.ts">OrderNotificationRecipient</a></code>
+- <code><a href="./src/resources/sales/customers/notification-recipients.ts">UpdateNotificationRecipientsRequest</a></code>
+
+Methods:
+
+- <code title="patch /v1/sales/customers/{id}/notification-recipients">client.sales.customers.notificationRecipients.<a href="./src/resources/sales/customers/notification-recipients.ts">update</a>(id, { ...params }) -> ListOrderNotificationRecipient</code>
+- <code title="get /v1/sales/customers/{id}/notification-recipients">client.sales.customers.notificationRecipients.<a href="./src/resources/sales/customers/notification-recipients.ts">list</a>(id, { ...params }) -> ListOrderNotificationRecipient</code>
+
 ## AccountGroups
 
 Types:
@@ -768,6 +814,7 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">CreateOrResumePortalRegistrationSessionRequest</a></code>
+- <code><a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">ListPortalRegistrationSession</a></code>
 - <code><a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">PortalRegistrationSession</a></code>
 - <code><a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">PortalRegistrationSessionData</a></code>
 - <code><a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">PortalRegistrationSessionDataInput</a></code>
@@ -778,6 +825,7 @@ Methods:
 - <code title="post /v1/sales/portal-registration-sessions">client.sales.portalRegistrationSessions.<a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">create</a>({ ...params }) -> PortalRegistrationSession</code>
 - <code title="get /v1/sales/portal-registration-sessions/{id}">client.sales.portalRegistrationSessions.<a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">retrieve</a>(id) -> PortalRegistrationSession</code>
 - <code title="patch /v1/sales/portal-registration-sessions/{id}">client.sales.portalRegistrationSessions.<a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">update</a>(id, { ...params }) -> PortalRegistrationSession</code>
+- <code title="get /v1/sales/portal-registration-sessions">client.sales.portalRegistrationSessions.<a href="./src/resources/sales/portal-registration-sessions/portal-registration-sessions.ts">list</a>({ ...params }) -> ListPortalRegistrationSession</code>
 
 ### Actions
 
@@ -848,6 +896,7 @@ Types:
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CreateSalesOrderRequest</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CreatedBy</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">Freight</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListQuotedSalesOrderLine</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListRecord</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrder</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">ListSalesOrderLine</a></code>
@@ -863,7 +912,9 @@ Types:
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrder</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderEmailContactInput</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderLine</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderQuoteRate</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderRelated</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderStageTotal</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderStatus</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderTotals</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">UpdateSalesOrderRequest</a></code>
@@ -885,37 +936,45 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">BulkDeleteSalesOrdersRequest</a></code>
-- <code><a href="./src/resources/sales/sales-orders/actions.ts">CloseSalesOrderRequest</a></code>
-- <code><a href="./src/resources/sales/sales-orders/actions.ts">CreateProductionRunResponse</a></code>
-- <code><a href="./src/resources/sales/sales-orders/actions.ts">CreateProductionRunResponseRef</a></code>
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">IssueSalesOrderRequest</a></code>
-- <code><a href="./src/resources/sales/sales-orders/actions.ts">OpenSalesOrderRequest</a></code>
-- <code><a href="./src/resources/sales/sales-orders/actions.ts">UnissueSalesOrderRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/actions.ts">ProductionRun</a></code>
+- <code><a href="./src/resources/sales/sales-orders/actions.ts">QuoteSalesOrderFreightResponse</a></code>
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">ActionBulkDeleteResponse</a></code>
 
 Methods:
 
 - <code title="post /v1/sales/sales-orders/actions/bulk-delete">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">bulkDelete</a>({ ...params }) -> ActionBulkDeleteResponse</code>
-- <code title="put /v1/sales/sales-orders/{id}/actions/close">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">close</a>(id, { ...params }) -> SalesOrder</code>
-- <code title="post /v1/sales/sales-orders/{id}/actions/create-production-run">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">createProductionRun</a>(id) -> CreateProductionRunResponse</code>
+- <code title="put /v1/sales/sales-orders/{id}/actions/close">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">close</a>(id) -> SalesOrder</code>
+- <code title="post /v1/sales/sales-orders/{id}/actions/create-production-run">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">createProductionRun</a>(id, { ...params }) -> ProductionRun</code>
 - <code title="put /v1/sales/sales-orders/{id}/actions/issue">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">issue</a>(id, { ...params }) -> SalesOrder</code>
-- <code title="put /v1/sales/sales-orders/{id}/actions/open">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">open</a>(id, { ...params }) -> SalesOrder</code>
-- <code title="put /v1/sales/sales-orders/{id}/actions/unissue">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">unissue</a>(id, { ...params }) -> SalesOrder</code>
+- <code title="put /v1/sales/sales-orders/{id}/actions/open">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">open</a>(id) -> SalesOrder</code>
+- <code title="post /v1/sales/sales-orders/{id}/actions/quote-freight">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">quoteFreight</a>(id) -> QuoteSalesOrderFreightResponse</code>
+- <code title="put /v1/sales/sales-orders/{id}/actions/unissue">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">unissue</a>(id) -> SalesOrder</code>
 
 ### Lines
 
 Types:
 
-- <code><a href="./src/resources/sales/sales-orders/lines.ts">CreateSalesOrderLineRequest</a></code>
-- <code><a href="./src/resources/sales/sales-orders/lines.ts">OrderLineInput</a></code>
-- <code><a href="./src/resources/sales/sales-orders/lines.ts">UpdateSalesOrderLineRequest</a></code>
-- <code><a href="./src/resources/sales/sales-orders/lines.ts">LineDeleteResponse</a></code>
+- <code><a href="./src/resources/sales/sales-orders/lines/lines.ts">CreateSalesOrderLineRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/lines/lines.ts">UpdateSalesOrderLineRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/lines/lines.ts">LineDeleteResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/sales/sales-orders/{id}/lines">client.sales.salesOrders.lines.<a href="./src/resources/sales/sales-orders/lines.ts">create</a>(id, { ...params }) -> SalesOrderLine</code>
-- <code title="patch /v1/sales/sales-orders/{id}/lines/{line_id}">client.sales.salesOrders.lines.<a href="./src/resources/sales/sales-orders/lines.ts">update</a>(lineID, { ...params }) -> SalesOrderLine</code>
-- <code title="delete /v1/sales/sales-orders/{id}/lines/{line_id}">client.sales.salesOrders.lines.<a href="./src/resources/sales/sales-orders/lines.ts">delete</a>(lineID, { ...params }) -> LineDeleteResponse</code>
+- <code title="post /v1/sales/sales-orders/{id}/lines">client.sales.salesOrders.lines.<a href="./src/resources/sales/sales-orders/lines/lines.ts">create</a>(id, { ...params }) -> SalesOrderLine</code>
+- <code title="patch /v1/sales/sales-orders/{id}/lines/{line_id}">client.sales.salesOrders.lines.<a href="./src/resources/sales/sales-orders/lines/lines.ts">update</a>(lineID, { ...params }) -> SalesOrderLine</code>
+- <code title="delete /v1/sales/sales-orders/{id}/lines/{line_id}">client.sales.salesOrders.lines.<a href="./src/resources/sales/sales-orders/lines/lines.ts">delete</a>(lineID, { ...params }) -> LineDeleteResponse</code>
+
+#### Actions
+
+Types:
+
+- <code><a href="./src/resources/sales/sales-orders/lines/actions.ts">ReorderSalesOrderLinesRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/lines/actions.ts">ActionReorderResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/sales/sales-orders/{id}/lines/actions/reorder">client.sales.salesOrders.lines.actions.<a href="./src/resources/sales/sales-orders/lines/actions.ts">reorder</a>(id, { ...params }) -> ActionReorderResponse</code>
 
 ## VolumeDiscounts
 
@@ -2157,7 +2216,7 @@ Types:
 - <code><a href="./src/resources/operations/batches/batches.ts">ListBatchLot</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ListBatchReference</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ListScanningProductionStepInfo</a></code>
-- <code><a href="./src/resources/operations/batches/batches.ts">ProductionRun</a></code>
+- <code><a href="./src/resources/operations/batches/batches.ts">ProductionRunReference</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ScanningProductionStepInfo</a></code>
 
 Methods:
@@ -2430,18 +2489,16 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/operations/production-runs/production-runs.ts">CreateProductionRunRequest</a></code>
-- <code><a href="./src/resources/operations/production-runs/production-runs.ts">ListProductionRunSummary</a></code>
-- <code><a href="./src/resources/operations/production-runs/production-runs.ts">ProductionRunDetail</a></code>
-- <code><a href="./src/resources/operations/production-runs/production-runs.ts">ProductionRunSummary</a></code>
+- <code><a href="./src/resources/operations/production-runs/production-runs.ts">ListProductionRun</a></code>
 - <code><a href="./src/resources/operations/production-runs/production-runs.ts">UpdateProductionRunRequest</a></code>
 - <code><a href="./src/resources/operations/production-runs/production-runs.ts">ProductionRunDeleteResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/operations/production-runs">client.operations.productionRuns.<a href="./src/resources/operations/production-runs/production-runs.ts">create</a>({ ...params }) -> ProductionRunDetail</code>
-- <code title="get /v1/operations/production-runs/{id}">client.operations.productionRuns.<a href="./src/resources/operations/production-runs/production-runs.ts">retrieve</a>(id, { ...params }) -> ProductionRunDetail</code>
-- <code title="patch /v1/operations/production-runs/{id}">client.operations.productionRuns.<a href="./src/resources/operations/production-runs/production-runs.ts">update</a>(id, { ...params }) -> ProductionRunDetail</code>
-- <code title="get /v1/operations/production-runs">client.operations.productionRuns.<a href="./src/resources/operations/production-runs/production-runs.ts">list</a>({ ...params }) -> ListProductionRunSummary</code>
+- <code title="post /v1/operations/production-runs">client.operations.productionRuns.<a href="./src/resources/operations/production-runs/production-runs.ts">create</a>({ ...params }) -> ProductionRun</code>
+- <code title="get /v1/operations/production-runs/{id}">client.operations.productionRuns.<a href="./src/resources/operations/production-runs/production-runs.ts">retrieve</a>(id, { ...params }) -> ProductionRun</code>
+- <code title="patch /v1/operations/production-runs/{id}">client.operations.productionRuns.<a href="./src/resources/operations/production-runs/production-runs.ts">update</a>(id, { ...params }) -> ProductionRun</code>
+- <code title="get /v1/operations/production-runs">client.operations.productionRuns.<a href="./src/resources/operations/production-runs/production-runs.ts">list</a>({ ...params }) -> ListProductionRun</code>
 - <code title="delete /v1/operations/production-runs/{id}">client.operations.productionRuns.<a href="./src/resources/operations/production-runs/production-runs.ts">delete</a>(id) -> ProductionRunDeleteResponse</code>
 
 ### Batches
@@ -2463,6 +2520,7 @@ Types:
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">CreatePurchaseOrderLineInput</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">CreatePurchaseOrderRequest</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">ListPurchaseOrder</a></code>
+- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">OrderLineInput</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">UpdatePurchaseOrderRequest</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">PurchaseOrderDeleteResponse</a></code>
 

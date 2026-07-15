@@ -39,3 +39,12 @@ export {
   type CustomerListParams,
   type CustomerRegistrationParams,
 } from './customers';
+export {
+  NotificationRecipients,
+  type ListOrderNotificationRecipient,
+  type NotificationRecipientInput,
+  type OrderNotificationRecipient,
+  type UpdateNotificationRecipientsRequest,
+  type NotificationRecipientUpdateParams,
+  type NotificationRecipientListParams,
+} from './notification-recipients';

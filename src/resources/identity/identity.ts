@@ -1,15 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AccountsAPI from './accounts';
-import {
-  AccountLogoURL,
-  AccountPhotoUploadResult,
-  AccountRetrieveParams,
-  AccountUpdateParams,
-  Accounts,
-  UpdateAccountRequest,
-} from './accounts';
 import * as ChildAccountsAPI from './child-accounts';
 import {
   ChildAccount,
@@ -69,6 +60,15 @@ import {
   UnitGroupUnit,
   UpdateAccountUserRequest,
 } from './account-users/account-users';
+import * as AccountsAPI from './accounts/accounts';
+import {
+  AccountLogoURL,
+  AccountPhotoUploadResult,
+  AccountRetrieveParams,
+  AccountUpdateParams,
+  Accounts,
+  UpdateAccountRequest,
+} from './accounts/accounts';
 import * as MeAPI from './me/me';
 import { Me } from './me/me';
 import * as UsersAPI from './users/users';

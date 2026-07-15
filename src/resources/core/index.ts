@@ -110,6 +110,7 @@ export {
   type EmailLogRetrieveParams,
   type EmailLogListParams,
 } from './email-logs';
+export { Records } from './records/index';
 export {
   RequestLogs,
   type Actor,

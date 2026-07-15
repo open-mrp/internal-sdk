@@ -11,20 +11,15 @@ import * as ActionsAPI from './actions';
 import {
   ActionBulkDeleteParams,
   ActionBulkDeleteResponse,
-  ActionCloseParams,
+  ActionCreateProductionRunParams,
   ActionIssueParams,
-  ActionOpenParams,
-  ActionUnissueParams,
   Actions,
   BulkDeleteSalesOrdersRequest,
-  CloseSalesOrderRequest,
-  CreateProductionRunResponse,
-  CreateProductionRunResponseRef,
   IssueSalesOrderRequest,
-  OpenSalesOrderRequest,
-  UnissueSalesOrderRequest,
+  ProductionRun,
+  QuoteSalesOrderFreightResponse,
 } from './actions';
-import * as LinesAPI from './lines';
+import * as LinesAPI from './lines/lines';
 import {
   CreateSalesOrderLineRequest,
   LineCreateParams,
@@ -32,9 +27,8 @@ import {
   LineDeleteResponse,
   LineUpdateParams,
   Lines,
-  OrderLineInput,
   UpdateSalesOrderLineRequest,
-} from './lines';
+} from './lines/lines';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -187,13 +181,7 @@ export class SalesOrders extends APIResource {
    * const checkoutSalesOrderResponse =
    *   await client.sales.salesOrders.checkout(
    *     'or_01d5034136c3ccc048abecc312',
-   *     {
-   *       email: 'operations@acme.example.com',
-   *       cancel_url:
-   *         'https://dashboard.example.com/checkout/cancel',
-   *       success_url:
-   *         'https://dashboard.example.com/checkout/success',
-   *     },
+   *     { email: 'operations@acme.example.com' },
    *   );
    * ```
    */
@@ -266,16 +254,6 @@ export interface CheckoutSalesOrderRequest {
    * Also set as the customer email on the payment provider's checkout session.
    */
   email: string;
-
-  /**
-   * URL the customer is redirected to if they cancel the checkout.
-   */
-  cancel_url?: string;
-
-  /**
-   * URL the customer is redirected to after completing the checkout.
-   */
-  success_url?: string;
 }
 
 /**
@@ -290,7 +268,7 @@ export interface CheckoutSalesOrderResponse {
   /**
    * Resource type identifier.
    */
-  object: 'checkout_sales_order_response';
+  object: 'checkout_sales_order';
 }
 
 /**
@@ -526,6 +504,26 @@ export interface Freight {
 /**
  * List represents a paginated list of resources.
  */
+export interface ListQuotedSalesOrderLine {
+  /**
+   * Resources in this page.
+   */
+  data: Array<QuotedSalesOrderLine>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
 export interface ListRecord {
   /**
    * Resources in this page.
@@ -719,9 +717,9 @@ export interface QuoteSalesOrderPricesRequest {
  */
 export interface QuoteSalesOrderPricesResponse {
   /**
-   * Priced lines, in the same order as the request.
+   * List represents a paginated list of resources.
    */
-  lines: Array<QuotedSalesOrderLine>;
+  lines: ListQuotedSalesOrderLine | null;
 
   /**
    * Resource type identifier.
@@ -734,24 +732,23 @@ export interface QuoteSalesOrderPricesResponse {
  */
 export interface QuotedSalesOrderLine {
   /**
-   * ID of the product priced.
+   * Resource type identifier.
    */
-  product_id: string;
+  object: 'sales_order_price_quote_line';
 
   /**
-   * Unit ID for the unit price's denominator (the unit being sold).
+   * Product pairs an inventory item with how it is sold: its product type, optional
+   * product line, and customer portal visibility.
    */
-  unit_price_denominator_unit_id: string;
+  product: Product | null;
 
   /**
-   * Unit ID for the unit price's numerator (the currency).
+   * A per-unit rate on a sales-order quote.
+   *
+   * A lightweight, unpersisted variant of a rate: it carries no ID or timestamps
+   * because a quote is computed on demand and never stored.
    */
-  unit_price_numerator_unit_id: string;
-
-  /**
-   * Calculated unit price, as a decimal string.
-   */
-  unit_price_value: string;
+  unit_price: SalesOrderQuoteRate | null;
 }
 
 /**
@@ -1026,7 +1023,9 @@ export interface SalesOrder {
 
   /**
    * SalesOrderTotals holds the derived monetary totals for a sales order or one of
-   * its lines, following the lifecycle ordered -> packed -> invoiced.
+   * its lines, following the lifecycle ordered -> picked -> packed -> invoiced. Each
+   * downstream stage carries both its monetary amount and its completion progress
+   * against the ordered baseline.
    */
   totals: SalesOrderTotals | null;
 
@@ -1096,7 +1095,9 @@ export interface SalesOrderLine {
 
   /**
    * SalesOrderTotals holds the derived monetary totals for a sales order or one of
-   * its lines, following the lifecycle ordered -> packed -> invoiced.
+   * its lines, following the lifecycle ordered -> picked -> packed -> invoiced. Each
+   * downstream stage carries both its monetary amount and its completion progress
+   * against the ordered baseline.
    */
   totals: SalesOrderTotals | null;
 
@@ -1116,6 +1117,35 @@ export interface SalesOrderLine {
    * Last updated timestamp.
    */
   updated_at: string;
+}
+
+/**
+ * A per-unit rate on a sales-order quote.
+ *
+ * A lightweight, unpersisted variant of a rate: it carries no ID or timestamps
+ * because a quote is computed on demand and never stored.
+ */
+export interface SalesOrderQuoteRate {
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  denominator_unit: AccountUsersAPI.Unit | null;
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  numerator_unit: AccountUsersAPI.Unit | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'sales_order_quote_rate';
+
+  /**
+   * Decimal value of the rate, expressed as the amount of the numerator unit per one
+   * denominator unit.
+   */
+  value: string;
 }
 
 /**
@@ -1161,6 +1191,29 @@ export interface SalesOrderRelated {
    * List represents a paginated list of resources.
    */
   shipments: ListRecord | null;
+}
+
+/**
+ * SalesOrderStageTotal pairs a fulfillment stage's monetary amount with its
+ * completion progress.
+ */
+export interface SalesOrderStageTotal {
+  /**
+   * Amount for this stage as a decimal string (unit price x quantity at this stage).
+   */
+  amount: string;
+
+  /**
+   * Progress to completion for this stage, as a fraction between 0 and 1: quantity
+   * at this stage divided by quantity ordered. `0` when nothing has reached this
+   * stage yet.
+   */
+  completion: number;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'sales_order_stage_total';
 }
 
 /**
@@ -1210,13 +1263,16 @@ export interface SalesOrderStatus {
 
 /**
  * SalesOrderTotals holds the derived monetary totals for a sales order or one of
- * its lines, following the lifecycle ordered -> packed -> invoiced.
+ * its lines, following the lifecycle ordered -> picked -> packed -> invoiced. Each
+ * downstream stage carries both its monetary amount and its completion progress
+ * against the ordered baseline.
  */
 export interface SalesOrderTotals {
   /**
-   * Total invoiced amount as a decimal string (unit price x quantity invoiced).
+   * SalesOrderStageTotal pairs a fulfillment stage's monetary amount with its
+   * completion progress.
    */
-  invoiced: string;
+  invoiced: SalesOrderStageTotal;
 
   /**
    * Resource type identifier.
@@ -1224,14 +1280,22 @@ export interface SalesOrderTotals {
   object: 'sales_order_totals';
 
   /**
-   * Total ordered amount as a decimal string (unit price x quantity ordered).
+   * Total ordered amount as a decimal string (unit price x quantity ordered). This
+   * is the baseline the stage completions are measured against.
    */
   ordered: string;
 
   /**
-   * Total packed amount as a decimal string (unit price x quantity packed).
+   * SalesOrderStageTotal pairs a fulfillment stage's monetary amount with its
+   * completion progress.
    */
-  packed: string;
+  packed: SalesOrderStageTotal;
+
+  /**
+   * SalesOrderStageTotal pairs a fulfillment stage's monetary amount with its
+   * completion progress.
+   */
+  picked: SalesOrderStageTotal;
 }
 
 /**
@@ -1263,18 +1327,18 @@ export interface UpdateSalesOrderRequest {
   billing_address_id?: string;
 
   /**
-   * Carrier billing account number.
+   * Carrier billing account number. Send `null` to clear.
    */
-  carrier_billing_account_number?: string;
+  carrier_billing_account_number?: string | null;
 
   /**
-   * Who is billed for freight.
+   * Who is billed for freight. Send `null` to clear.
    *
    * - `sender`: the sender pays for shipping.
    * - `third_party`: a third party pays for shipping, using the carrier billing
    *   account number.
    */
-  carrier_billing_type?: 'sender' | 'third_party';
+  carrier_billing_type?: 'sender' | 'third_party' | null;
 
   /**
    * Carrier ID.
@@ -1287,9 +1351,9 @@ export interface UpdateSalesOrderRequest {
   customer_id?: string;
 
   /**
-   * Customer's purchase order number.
+   * Customer's purchase order number. Send `null` to clear.
    */
-  customer_purchase_order_number?: string;
+  customer_purchase_order_number?: string | null;
 
   /**
    * Replaces the invoice email contacts on the order.
@@ -1300,21 +1364,14 @@ export interface UpdateSalesOrderRequest {
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Order note.
+   * Order note. Send `null` to clear.
    */
-  note?: string;
+  note?: string | null;
 
   /**
-   * Order number.
-   *
-   * Must be unique within your account.
+   * Order discount ID. Send `null` to clear.
    */
-  number?: string;
-
-  /**
-   * Order discount ID.
-   */
-  order_discount_id?: string;
+  order_discount_id?: string | null;
 
   /**
    * Payment term ID.
@@ -1327,19 +1384,19 @@ export interface UpdateSalesOrderRequest {
   priority_code?: string;
 
   /**
-   * Promised delivery date.
+   * Promised delivery date. Send `null` to clear.
    */
-  promised_at?: string;
+  promised_at?: string | null;
 
   /**
-   * Sales rep ID.
+   * Sales rep ID. Send `null` to clear.
    */
-  sales_rep_id?: string;
+  sales_rep_id?: string | null;
 
   /**
-   * Service level ID.
+   * Service level ID. Send `null` to clear.
    */
-  service_level_id?: string;
+  service_level_id?: string | null;
 
   /**
    * Shipping address ID.
@@ -1592,18 +1649,18 @@ export interface SalesOrderUpdateParams {
   billing_address_id?: string;
 
   /**
-   * Body param: Carrier billing account number.
+   * Body param: Carrier billing account number. Send `null` to clear.
    */
-  carrier_billing_account_number?: string;
+  carrier_billing_account_number?: string | null;
 
   /**
-   * Body param: Who is billed for freight.
+   * Body param: Who is billed for freight. Send `null` to clear.
    *
    * - `sender`: the sender pays for shipping.
    * - `third_party`: a third party pays for shipping, using the carrier billing
    *   account number.
    */
-  carrier_billing_type?: 'sender' | 'third_party';
+  carrier_billing_type?: 'sender' | 'third_party' | null;
 
   /**
    * Body param: Carrier ID.
@@ -1616,9 +1673,9 @@ export interface SalesOrderUpdateParams {
   customer_id?: string;
 
   /**
-   * Body param: Customer's purchase order number.
+   * Body param: Customer's purchase order number. Send `null` to clear.
    */
-  customer_purchase_order_number?: string;
+  customer_purchase_order_number?: string | null;
 
   /**
    * Body param: Replaces the invoice email contacts on the order.
@@ -1629,21 +1686,14 @@ export interface SalesOrderUpdateParams {
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Body param: Order note.
+   * Body param: Order note. Send `null` to clear.
    */
-  note?: string;
+  note?: string | null;
 
   /**
-   * Body param: Order number.
-   *
-   * Must be unique within your account.
+   * Body param: Order discount ID. Send `null` to clear.
    */
-  number?: string;
-
-  /**
-   * Body param: Order discount ID.
-   */
-  order_discount_id?: string;
+  order_discount_id?: string | null;
 
   /**
    * Body param: Payment term ID.
@@ -1656,19 +1706,19 @@ export interface SalesOrderUpdateParams {
   priority_code?: string;
 
   /**
-   * Body param: Promised delivery date.
+   * Body param: Promised delivery date. Send `null` to clear.
    */
-  promised_at?: string;
+  promised_at?: string | null;
 
   /**
-   * Body param: Sales rep ID.
+   * Body param: Sales rep ID. Send `null` to clear.
    */
-  sales_rep_id?: string;
+  sales_rep_id?: string | null;
 
   /**
-   * Body param: Service level ID.
+   * Body param: Service level ID. Send `null` to clear.
    */
-  service_level_id?: string;
+  service_level_id?: string | null;
 
   /**
    * Body param: Shipping address ID.
@@ -1789,16 +1839,6 @@ export interface SalesOrderCheckoutParams {
    * Also set as the customer email on the payment provider's checkout session.
    */
   email: string;
-
-  /**
-   * URL the customer is redirected to if they cancel the checkout.
-   */
-  cancel_url?: string;
-
-  /**
-   * URL the customer is redirected to after completing the checkout.
-   */
-  success_url?: string;
 }
 
 export interface SalesOrderPriceQuoteParams {
@@ -1853,6 +1893,7 @@ export declare namespace SalesOrders {
     type CreateSalesOrderRequest as CreateSalesOrderRequest,
     type CreatedBy as CreatedBy,
     type Freight as Freight,
+    type ListQuotedSalesOrderLine as ListQuotedSalesOrderLine,
     type ListRecord as ListRecord,
     type ListSalesOrder as ListSalesOrder,
     type ListSalesOrderLine as ListSalesOrderLine,
@@ -1868,7 +1909,9 @@ export declare namespace SalesOrders {
     type SalesOrder as SalesOrder,
     type SalesOrderEmailContactInput as SalesOrderEmailContactInput,
     type SalesOrderLine as SalesOrderLine,
+    type SalesOrderQuoteRate as SalesOrderQuoteRate,
     type SalesOrderRelated as SalesOrderRelated,
+    type SalesOrderStageTotal as SalesOrderStageTotal,
     type SalesOrderStatus as SalesOrderStatus,
     type SalesOrderTotals as SalesOrderTotals,
     type UpdateSalesOrderRequest as UpdateSalesOrderRequest,
@@ -1885,24 +1928,18 @@ export declare namespace SalesOrders {
   export {
     Actions as Actions,
     type BulkDeleteSalesOrdersRequest as BulkDeleteSalesOrdersRequest,
-    type CloseSalesOrderRequest as CloseSalesOrderRequest,
-    type CreateProductionRunResponse as CreateProductionRunResponse,
-    type CreateProductionRunResponseRef as CreateProductionRunResponseRef,
     type IssueSalesOrderRequest as IssueSalesOrderRequest,
-    type OpenSalesOrderRequest as OpenSalesOrderRequest,
-    type UnissueSalesOrderRequest as UnissueSalesOrderRequest,
+    type ProductionRun as ProductionRun,
+    type QuoteSalesOrderFreightResponse as QuoteSalesOrderFreightResponse,
     type ActionBulkDeleteResponse as ActionBulkDeleteResponse,
     type ActionBulkDeleteParams as ActionBulkDeleteParams,
-    type ActionCloseParams as ActionCloseParams,
+    type ActionCreateProductionRunParams as ActionCreateProductionRunParams,
     type ActionIssueParams as ActionIssueParams,
-    type ActionOpenParams as ActionOpenParams,
-    type ActionUnissueParams as ActionUnissueParams,
   };
 
   export {
     Lines as Lines,
     type CreateSalesOrderLineRequest as CreateSalesOrderLineRequest,
-    type OrderLineInput as OrderLineInput,
     type UpdateSalesOrderLineRequest as UpdateSalesOrderLineRequest,
     type LineDeleteResponse as LineDeleteResponse,
     type LineCreateParams as LineCreateParams,

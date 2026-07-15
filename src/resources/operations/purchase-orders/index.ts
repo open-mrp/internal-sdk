@@ -22,6 +22,7 @@ export {
   type CreatePurchaseOrderLineInput,
   type CreatePurchaseOrderRequest,
   type ListPurchaseOrder,
+  type OrderLineInput,
   type UpdatePurchaseOrderRequest,
   type PurchaseOrderDeleteResponse,
   type PurchaseOrderCreateParams,

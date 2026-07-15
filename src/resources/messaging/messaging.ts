@@ -467,9 +467,22 @@ export interface Message {
   id: string;
 
   /**
+   * Machine-readable error code for a failed agent reply (e.g.
+   * `agent_spending_cap_reached`).
+   *
+   * `null` when the reply did not fail or carried no specific code.
+   */
+  agent_error_code: string | null;
+
+  /**
    * A single execution of an agent, from trigger through completion.
    */
   agent_run: RunsAPI.AgentRun | null;
+
+  /**
+   * Whether this message is an agent reply that resolved a failed run.
+   */
+  agent_run_failed: boolean;
 
   /**
    * List represents a paginated list of resources.

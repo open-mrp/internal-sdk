@@ -132,7 +132,7 @@ import {
   ListBatchLot,
   ListBatchReference,
   ListScanningProductionStepInfo,
-  ProductionRun,
+  ProductionRunReference,
   ScanningProductionStepInfo,
 } from './batches/batches';
 import * as CarriersAPI from './carriers/carriers';
@@ -183,13 +183,11 @@ import {
 import * as ProductionRunsAPI from './production-runs/production-runs';
 import {
   CreateProductionRunRequest,
-  ListProductionRunSummary,
+  ListProductionRun,
   ProductionRunCreateParams,
   ProductionRunDeleteResponse,
-  ProductionRunDetail,
   ProductionRunListParams,
   ProductionRunRetrieveParams,
-  ProductionRunSummary,
   ProductionRunUpdateParams,
   ProductionRuns,
   UpdateProductionRunRequest,
@@ -213,6 +211,7 @@ import {
   CreatePurchaseOrderLineInput,
   CreatePurchaseOrderRequest,
   ListPurchaseOrder,
+  OrderLineInput,
   PurchaseOrderCreateParams,
   PurchaseOrderDeleteResponse,
   PurchaseOrderListParams,
@@ -348,7 +347,7 @@ export class Operations extends APIResource {
    *   'ra_015aa0a9522cf222024fd21d1a',
    *   {
    *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     value: '25.500000000000000000000000000000',
+   *     value: '25.50',
    *   },
    * );
    * ```
@@ -661,7 +660,7 @@ export declare namespace Operations {
     type ListBatchLot as ListBatchLot,
     type ListBatchReference as ListBatchReference,
     type ListScanningProductionStepInfo as ListScanningProductionStepInfo,
-    type ProductionRun as ProductionRun,
+    type ProductionRunReference as ProductionRunReference,
     type ScanningProductionStepInfo as ScanningProductionStepInfo,
     type BatchNextStepsParams as BatchNextStepsParams,
     type BatchRemainingQuantitiesParams as BatchRemainingQuantitiesParams,
@@ -778,9 +777,7 @@ export declare namespace Operations {
   export {
     ProductionRuns as ProductionRuns,
     type CreateProductionRunRequest as CreateProductionRunRequest,
-    type ListProductionRunSummary as ListProductionRunSummary,
-    type ProductionRunDetail as ProductionRunDetail,
-    type ProductionRunSummary as ProductionRunSummary,
+    type ListProductionRun as ListProductionRun,
     type UpdateProductionRunRequest as UpdateProductionRunRequest,
     type ProductionRunDeleteResponse as ProductionRunDeleteResponse,
     type ProductionRunCreateParams as ProductionRunCreateParams,
@@ -794,6 +791,7 @@ export declare namespace Operations {
     type CreatePurchaseOrderLineInput as CreatePurchaseOrderLineInput,
     type CreatePurchaseOrderRequest as CreatePurchaseOrderRequest,
     type ListPurchaseOrder as ListPurchaseOrder,
+    type OrderLineInput as OrderLineInput,
     type UpdatePurchaseOrderRequest as UpdatePurchaseOrderRequest,
     type PurchaseOrderDeleteResponse as PurchaseOrderDeleteResponse,
     type PurchaseOrderCreateParams as PurchaseOrderCreateParams,

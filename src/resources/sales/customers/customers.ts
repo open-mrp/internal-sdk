@@ -12,12 +12,24 @@ import {
   BulkDeleteCustomersRequest,
   MergeCustomersRequest,
 } from './actions';
+import * as NotificationRecipientsAPI from './notification-recipients';
+import {
+  ListOrderNotificationRecipient,
+  NotificationRecipientInput,
+  NotificationRecipientListParams,
+  NotificationRecipientUpdateParams,
+  NotificationRecipients,
+  OrderNotificationRecipient,
+  UpdateNotificationRecipientsRequest,
+} from './notification-recipients';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
 
 export class Customers extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
+  notificationRecipients: NotificationRecipientsAPI.NotificationRecipients =
+    new NotificationRecipientsAPI.NotificationRecipients(this._client);
 
   /**
    * Creates a customer account with its default addresses, fulfillment settings, and
@@ -1952,6 +1964,7 @@ export interface CustomerRegistrationParams {
 }
 
 Customers.Actions = Actions;
+Customers.NotificationRecipients = NotificationRecipients;
 
 export declare namespace Customers {
   export {
@@ -1992,5 +2005,15 @@ export declare namespace Customers {
     type ActionBulkDeleteResponse as ActionBulkDeleteResponse,
     type ActionBulkDeleteParams as ActionBulkDeleteParams,
     type ActionMergeParams as ActionMergeParams,
+  };
+
+  export {
+    NotificationRecipients as NotificationRecipients,
+    type ListOrderNotificationRecipient as ListOrderNotificationRecipient,
+    type NotificationRecipientInput as NotificationRecipientInput,
+    type OrderNotificationRecipient as OrderNotificationRecipient,
+    type UpdateNotificationRecipientsRequest as UpdateNotificationRecipientsRequest,
+    type NotificationRecipientUpdateParams as NotificationRecipientUpdateParams,
+    type NotificationRecipientListParams as NotificationRecipientListParams,
   };
 }

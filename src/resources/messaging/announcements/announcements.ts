@@ -81,7 +81,8 @@ export interface Announcement {
     | 'order.updated'
     | 'agent.run_completed'
     | 'agent.alert'
-    | 'system.broadcast';
+    | 'system.broadcast'
+    | 'customer.registered';
 
   /**
    * Creation timestamp.

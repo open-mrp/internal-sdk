@@ -190,7 +190,7 @@ export interface Batch {
   /**
    * Minimal reference to the production run a batch was created under.
    */
-  production_run: ProductionRun | null;
+  production_run: ProductionRunReference | null;
 
   /**
    * A single stage of work in an item's production flow, with its output, material
@@ -409,7 +409,7 @@ export interface ListScanningProductionStepInfo {
 /**
  * Minimal reference to the production run a batch was created under.
  */
-export interface ProductionRun {
+export interface ProductionRunReference {
   /**
    * Production run ID.
    */
@@ -488,7 +488,7 @@ export declare namespace Batches {
     type ListBatchLot as ListBatchLot,
     type ListBatchReference as ListBatchReference,
     type ListScanningProductionStepInfo as ListScanningProductionStepInfo,
-    type ProductionRun as ProductionRun,
+    type ProductionRunReference as ProductionRunReference,
     type ScanningProductionStepInfo as ScanningProductionStepInfo,
     type BatchNextStepsParams as BatchNextStepsParams,
     type BatchRemainingQuantitiesParams as BatchRemainingQuantitiesParams,

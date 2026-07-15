@@ -44,7 +44,7 @@ export {
   type UpdateAccountRequest,
   type AccountRetrieveParams,
   type AccountUpdateParams,
-} from './accounts';
+} from './accounts/index';
 export {
   ChildAccounts,
   type ChildAccount,

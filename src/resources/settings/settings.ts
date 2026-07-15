@@ -116,6 +116,11 @@ export interface PortalProfile {
   address: APIKeysAPI.Address | null;
 
   /**
+   * Customer-portal favicon URL.
+   */
+  favicon_url: string | null;
+
+  /**
    * Logo URL.
    */
   logo_url: string | null;
@@ -157,6 +162,11 @@ export interface PublicAccount {
   default_billing_address: APIKeysAPI.Address | null;
 
   /**
+   * Customer-portal favicon URL.
+   */
+  favicon_url: string | null;
+
+  /**
    * Logo URL.
    */
   logo_url: string | null;
@@ -170,6 +180,12 @@ export interface PublicAccount {
    * Resource type identifier.
    */
   object: 'public_account';
+
+  /**
+   * The account's verified custom portal domain (e.g. shop.acme.com), when one is
+   * connected and verified.
+   */
+  portal_domain: string | null;
 
   /**
    * Portal slug.

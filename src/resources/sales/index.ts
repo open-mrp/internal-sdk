@@ -86,12 +86,14 @@ export {
 export {
   PortalRegistrationSessions,
   type CreateOrResumePortalRegistrationSessionRequest,
+  type ListPortalRegistrationSession,
   type PortalRegistrationSession,
   type PortalRegistrationSessionData,
   type PortalRegistrationSessionDataInput,
   type UpdatePortalRegistrationSessionRequest,
   type PortalRegistrationSessionCreateParams,
   type PortalRegistrationSessionUpdateParams,
+  type PortalRegistrationSessionListParams,
 } from './portal-registration-sessions/index';
 export {
   Priorities,
@@ -127,6 +129,7 @@ export {
   type CreateSalesOrderRequest,
   type CreatedBy,
   type Freight,
+  type ListQuotedSalesOrderLine,
   type ListRecord,
   type ListSalesOrder,
   type ListSalesOrderLine,
@@ -142,7 +145,9 @@ export {
   type SalesOrder,
   type SalesOrderEmailContactInput,
   type SalesOrderLine,
+  type SalesOrderQuoteRate,
   type SalesOrderRelated,
+  type SalesOrderStageTotal,
   type SalesOrderStatus,
   type SalesOrderTotals,
   type UpdateSalesOrderRequest,

@@ -165,6 +165,11 @@ export interface AccountBranding {
   facebook_handle: string | null;
 
   /**
+   * Customer-portal favicon URL.
+   */
+  favicon_url: string | null;
+
+  /**
    * Instagram handle.
    */
   instagram_handle: string | null;

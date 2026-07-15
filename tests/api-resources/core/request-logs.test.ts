@@ -52,6 +52,7 @@ describe('resource requestLogs', () => {
           cursor: 'cursor',
           end_date: '2019-12-27T18:11:19.117Z',
           error_codes: ['expired_token'],
+          exclude_error_codes: ['expired_token'],
           hosts: ['string'],
           idempotency_key: 'idempotency_key',
           include: ['account'],

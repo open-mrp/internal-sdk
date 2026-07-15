@@ -27,10 +27,8 @@ describe('resource actions', () => {
     });
   });
 
-  test('close: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.actions.close('or_01d5034136c3ccc048abecc312', {
-      notify_customer: false,
-    });
+  test('close', async () => {
+    const responsePromise = client.sales.salesOrders.actions.close('or_01d5034136c3ccc048abecc312');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,12 +36,6 @@ describe('resource actions', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('close: required and optional params', async () => {
-    const response = await client.sales.salesOrders.actions.close('or_01d5034136c3ccc048abecc312', {
-      notify_customer: false,
-    });
   });
 
   test('createProductionRun', async () => {
@@ -57,6 +49,17 @@ describe('resource actions', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('createProductionRun: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.sales.salesOrders.actions.createProductionRun(
+        'or_01d5034136c3ccc048abecc312',
+        { include: ['responsible_user'] },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('issue: only required params', async () => {
@@ -78,10 +81,8 @@ describe('resource actions', () => {
     });
   });
 
-  test('open: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.actions.open('or_01d5034136c3ccc048abecc312', {
-      notify_customer: false,
-    });
+  test('open', async () => {
+    const responsePromise = client.sales.salesOrders.actions.open('or_01d5034136c3ccc048abecc312');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -91,16 +92,8 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('open: required and optional params', async () => {
-    const response = await client.sales.salesOrders.actions.open('or_01d5034136c3ccc048abecc312', {
-      notify_customer: false,
-    });
-  });
-
-  test('unissue: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.actions.unissue('or_01d5034136c3ccc048abecc312', {
-      notify_customer: false,
-    });
+  test('quoteFreight', async () => {
+    const responsePromise = client.sales.salesOrders.actions.quoteFreight('or_01d5034136c3ccc048abecc312');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -110,9 +103,14 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('unissue: required and optional params', async () => {
-    const response = await client.sales.salesOrders.actions.unissue('or_01d5034136c3ccc048abecc312', {
-      notify_customer: false,
-    });
+  test('unissue', async () => {
+    const responsePromise = client.sales.salesOrders.actions.unissue('or_01d5034136c3ccc048abecc312');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

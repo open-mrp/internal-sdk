@@ -12,11 +12,12 @@ describe('resource lines', () => {
     const responsePromise = client.operations.purchaseOrders.lines.create('po_0169aa3a722b081b117ac0e44f', {
       product_id: 'pd_013c29ab3f1518d0004094c316',
       product_sku: 'ALM-2024-1001',
-      quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-      quantity_value: '10',
-      unit_price_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-      unit_price_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-      unit_price_value: '25.500000000000000000000000000000',
+      quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
+      unit_price: {
+        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        value: '25.50',
+      },
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -31,16 +32,19 @@ describe('resource lines', () => {
     const response = await client.operations.purchaseOrders.lines.create('po_0169aa3a722b081b117ac0e44f', {
       product_id: 'pd_013c29ab3f1518d0004094c316',
       product_sku: 'ALM-2024-1001',
-      quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-      quantity_value: '10',
-      unit_price_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-      unit_price_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-      unit_price_value: '25.500000000000000000000000000000',
+      quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
+      unit_price: {
+        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        value: '25.50',
+      },
       item_id: 'it_0131e386ac683e8c29a71f6f1f',
       product_description: '6061-T6 Aluminum Sheet 4x8',
-      unit_cost_denominator_unit_id: 'unit_cost_denominator_unit_id',
-      unit_cost_numerator_unit_id: 'unit_cost_numerator_unit_id',
-      unit_cost_value: 'unit_cost_value',
+      unit_cost: {
+        denominator_unit_id: 'denominator_unit_id',
+        numerator_unit_id: 'numerator_unit_id',
+        value: 'value',
+      },
     });
   });
 

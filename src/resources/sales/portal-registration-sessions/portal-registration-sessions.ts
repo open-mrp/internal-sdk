@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as ActionsAPI from './actions';
 import { Actions } from './actions';
 import { APIPromise } from '../../../core/api-promise';
@@ -73,6 +74,27 @@ export class PortalRegistrationSessions extends APIResource {
   ): APIPromise<PortalRegistrationSession> {
     return this._client.patch(path`/v1/sales/portal-registration-sessions/${id}`, { body, ...options });
   }
+
+  /**
+   * Returns the account's buyer customer-portal registration sessions, newest first,
+   * so customer service can follow up on registrations that stalled or expired
+   * before completing. Includes in-progress, completed, abandoned, and expired
+   * sessions; filter with `status`.
+   *
+   * This endpoint requires the permission: `self:read`.
+   *
+   * @example
+   * ```ts
+   * const listPortalRegistrationSession =
+   *   await client.sales.portalRegistrationSessions.list();
+   * ```
+   */
+  list(
+    query: PortalRegistrationSessionListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ListPortalRegistrationSession> {
+    return this._client.get('/v1/sales/portal-registration-sessions', { query, ...options });
+  }
 }
 
 /**
@@ -83,6 +105,26 @@ export interface CreateOrResumePortalRegistrationSessionRequest {
    * The seller's portal slug to register into.
    */
   seller_slug: string;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListPortalRegistrationSession {
+  /**
+   * Resources in this page.
+   */
+  data: Array<PortalRegistrationSession>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -144,6 +186,12 @@ export interface PortalRegistrationSession {
   session_data: PortalRegistrationSessionData | null;
 
   /**
+   * Derived lifecycle status, so customer service can spot registrations that
+   * stalled.
+   */
+  status: 'in_progress' | 'completed' | 'abandoned' | 'expired';
+
+  /**
    * The current registration step.
    */
   step: 'customer_details' | 'billing_address' | 'contact' | 'completed';
@@ -152,6 +200,11 @@ export interface PortalRegistrationSession {
    * Last updated timestamp.
    */
   updated_at: string;
+
+  /**
+   * The user who registered.
+   */
+  user_id: string;
 }
 
 /**
@@ -308,17 +361,47 @@ export interface PortalRegistrationSessionUpdateParams {
   session_data?: PortalRegistrationSessionDataInput;
 }
 
+export interface PortalRegistrationSessionListParams {
+  /**
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` or
+   * `previous_page_url` to fetch the adjacent page. Omit to start from the first
+   * page.
+   */
+  cursor?: string;
+
+  /**
+   * Maximum number of results to return in a single page.
+   */
+  limit?: number;
+
+  /**
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
+   */
+  q?: string;
+
+  /**
+   * Restrict the results to a single lifecycle status.
+   */
+  status?: string;
+}
+
 PortalRegistrationSessions.Actions = Actions;
 
 export declare namespace PortalRegistrationSessions {
   export {
     type CreateOrResumePortalRegistrationSessionRequest as CreateOrResumePortalRegistrationSessionRequest,
+    type ListPortalRegistrationSession as ListPortalRegistrationSession,
     type PortalRegistrationSession as PortalRegistrationSession,
     type PortalRegistrationSessionData as PortalRegistrationSessionData,
     type PortalRegistrationSessionDataInput as PortalRegistrationSessionDataInput,
     type UpdatePortalRegistrationSessionRequest as UpdatePortalRegistrationSessionRequest,
     type PortalRegistrationSessionCreateParams as PortalRegistrationSessionCreateParams,
     type PortalRegistrationSessionUpdateParams as PortalRegistrationSessionUpdateParams,
+    type PortalRegistrationSessionListParams as PortalRegistrationSessionListParams,
   };
 
   export { Actions as Actions };

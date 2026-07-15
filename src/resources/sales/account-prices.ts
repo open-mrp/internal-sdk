@@ -28,7 +28,7 @@ export class AccountPrices extends APIResource {
    *     rate_denominator_unit_id:
    *       'un_01966263f74a5a0cae356000a1',
    *     rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     rate_value: '25.500000000000000000000000000000',
+   *     rate_value: '25.50',
    *     recipient_account_id: 'ac_01148680966698341a9c0976db',
    *     attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
    *     category_ids: ['ic_01ae7bd7bfd21ca0ab81e1357e'],

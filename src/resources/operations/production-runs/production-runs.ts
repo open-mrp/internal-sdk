@@ -2,7 +2,6 @@
 
 import { APIResource } from '../../../core/resource';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
-import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as BatchesAPI from './batches';
 import {
   AddBatchInputRequest,
@@ -11,6 +10,7 @@ import {
   BatchListParams,
   Batches,
 } from './batches';
+import * as ActionsAPI from '../../sales/sales-orders/actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -31,13 +31,13 @@ export class ProductionRuns extends APIResource {
    *
    * @example
    * ```ts
-   * const productionRunDetail =
+   * const productionRun =
    *   await client.operations.productionRuns.create({
    *     responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
    *   });
    * ```
    */
-  create(params: ProductionRunCreateParams, options?: RequestOptions): APIPromise<ProductionRunDetail> {
+  create(params: ProductionRunCreateParams, options?: RequestOptions): APIPromise<ActionsAPI.ProductionRun> {
     const { include, ...body } = params;
     return this._client.post('/v1/operations/production-runs', { query: { include }, body, ...options });
   }
@@ -49,7 +49,7 @@ export class ProductionRuns extends APIResource {
    *
    * @example
    * ```ts
-   * const productionRunDetail =
+   * const productionRun =
    *   await client.operations.productionRuns.retrieve(
    *     'prru_0141c28081df4faac0fe726c41',
    *   );
@@ -59,7 +59,7 @@ export class ProductionRuns extends APIResource {
     id: string,
     query: ProductionRunRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ProductionRunDetail> {
+  ): APIPromise<ActionsAPI.ProductionRun> {
     return this._client.get(path`/v1/operations/production-runs/${id}`, { query, ...options });
   }
 
@@ -72,7 +72,7 @@ export class ProductionRuns extends APIResource {
    *
    * @example
    * ```ts
-   * const productionRunDetail =
+   * const productionRun =
    *   await client.operations.productionRuns.update(
    *     'prru_0141c28081df4faac0fe726c41',
    *     {
@@ -86,7 +86,7 @@ export class ProductionRuns extends APIResource {
     id: string,
     params: ProductionRunUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ProductionRunDetail> {
+  ): APIPromise<ActionsAPI.ProductionRun> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/production-runs/${id}`, {
       query: { include },
@@ -102,14 +102,14 @@ export class ProductionRuns extends APIResource {
    *
    * @example
    * ```ts
-   * const listProductionRunSummary =
+   * const listProductionRun =
    *   await client.operations.productionRuns.list();
    * ```
    */
   list(
     query: ProductionRunListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ListProductionRunSummary> {
+  ): APIPromise<ListProductionRun> {
     return this._client.get('/v1/operations/production-runs', { query, ...options });
   }
 
@@ -150,11 +150,11 @@ export interface CreateProductionRunRequest {
 /**
  * List represents a paginated list of resources.
  */
-export interface ListProductionRunSummary {
+export interface ListProductionRun {
   /**
    * Resources in this page.
    */
-  data: Array<ProductionRunSummary>;
+  data: Array<ActionsAPI.ProductionRun>;
 
   /**
    * Resource type identifier.
@@ -165,134 +165,6 @@ export interface ListProductionRunSummary {
    * PageInfo contains URL-based pagination metadata.
    */
   page_info: APIKeysAPI.PageInfo;
-}
-
-/**
- * Production run resource for single-object responses.
- */
-export interface ProductionRunDetail {
-  /**
-   * Production run ID.
-   */
-  id: string;
-
-  /**
-   * Number of batches currently recorded against this run.
-   */
-  batch_count: number;
-
-  /**
-   * Time the run was marked complete.
-   *
-   * Set automatically once every batch in the run has been scanned or deleted, and
-   * unset while the run is still in progress. Once set, the run can no longer be
-   * updated and new batches can no longer be added.
-   */
-  completed_at: string | null;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Production run number, unique per account.
-   *
-   * Assigned automatically at creation as the next sequential number for the
-   * account; can be changed via update.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'production_run';
-
-  /**
-   * A user's membership in an account, carrying the account-specific status, role,
-   * and department.
-   *
-   * Profile fields (name, email, username, image URL) live on the expandable `user`
-   * sub-resource, which is shared across every account the user belongs to.
-   */
-  responsible_user: AccountUsersAPI.AccountUser | null;
-
-  /**
-   * Time the run started production.
-   *
-   * Set automatically when the first batch in the run is scanned, and unset until
-   * then.
-   */
-  started_at: string | null;
-
-  /**
-   * Last-updated timestamp.
-   */
-  updated_at: string;
-}
-
-/**
- * Production run resource for list views.
- */
-export interface ProductionRunSummary {
-  /**
-   * Production run ID.
-   */
-  id: string;
-
-  /**
-   * Number of batches currently recorded against this run.
-   */
-  batch_count: number;
-
-  /**
-   * Time the run was marked complete.
-   *
-   * Set automatically once every batch in the run has been scanned or deleted, and
-   * unset while the run is still in progress. Once set, the run can no longer be
-   * updated and new batches can no longer be added.
-   */
-  completed_at: string | null;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Production run number, unique per account.
-   *
-   * Assigned automatically at creation as the next sequential number for the
-   * account; can be changed via update.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'production_run';
-
-  /**
-   * A user's membership in an account, carrying the account-specific status, role,
-   * and department.
-   *
-   * Profile fields (name, email, username, image URL) live on the expandable `user`
-   * sub-resource, which is shared across every account the user belongs to.
-   */
-  responsible_user: AccountUsersAPI.AccountUser | null;
-
-  /**
-   * Time the run started production.
-   *
-   * Set automatically when the first batch in the run is scanned, and unset until
-   * then.
-   */
-  started_at: string | null;
-
-  /**
-   * Last-updated timestamp.
-   */
-  updated_at: string;
 }
 
 /**
@@ -428,9 +300,7 @@ ProductionRuns.Batches = Batches;
 export declare namespace ProductionRuns {
   export {
     type CreateProductionRunRequest as CreateProductionRunRequest,
-    type ListProductionRunSummary as ListProductionRunSummary,
-    type ProductionRunDetail as ProductionRunDetail,
-    type ProductionRunSummary as ProductionRunSummary,
+    type ListProductionRun as ListProductionRun,
     type UpdateProductionRunRequest as UpdateProductionRunRequest,
     type ProductionRunDeleteResponse as ProductionRunDeleteResponse,
     type ProductionRunCreateParams as ProductionRunCreateParams,

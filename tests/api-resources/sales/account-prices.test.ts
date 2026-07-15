@@ -13,7 +13,7 @@ describe('resource accountPrices', () => {
       product_line_id: 'pl_01996357326a0d3f7b129542ea',
       rate_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
       rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-      rate_value: '25.500000000000000000000000000000',
+      rate_value: '25.50',
       recipient_account_id: 'ac_01148680966698341a9c0976db',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -30,7 +30,7 @@ describe('resource accountPrices', () => {
       product_line_id: 'pl_01996357326a0d3f7b129542ea',
       rate_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
       rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-      rate_value: '25.500000000000000000000000000000',
+      rate_value: '25.50',
       recipient_account_id: 'ac_01148680966698341a9c0976db',
       include: ['recipient_account'],
       attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],

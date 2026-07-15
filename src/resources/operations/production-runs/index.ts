@@ -10,9 +10,7 @@ export {
 export {
   ProductionRuns,
   type CreateProductionRunRequest,
-  type ListProductionRunSummary,
-  type ProductionRunDetail,
-  type ProductionRunSummary,
+  type ListProductionRun,
   type UpdateProductionRunRequest,
   type ProductionRunDeleteResponse,
   type ProductionRunCreateParams,

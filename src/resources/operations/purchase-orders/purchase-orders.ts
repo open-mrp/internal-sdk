@@ -22,6 +22,7 @@ import {
   Lines,
   UpdatePurchaseOrderLineRequest,
 } from './lines';
+import * as CustomersAPI from '../../sales/customers/customers';
 import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
@@ -45,33 +46,27 @@ export class PurchaseOrders extends APIResource {
    *
    * @example
    * ```ts
-   * const purchaseOrder =
-   *   await client.operations.purchaseOrders.create({
-   *     lines: [
-   *       {
-   *         product_id: 'pd_013c29ab3f1518d0004094c316',
-   *         product_sku: 'RAW-100',
-   *         quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *         quantity_value: '500',
-   *         unit_price_denominator_unit_id:
-   *           'un_01966263f74a5a0cae356000a1',
-   *         unit_price_numerator_unit_id:
-   *           'un_01966263f74a5a0cae356000a1',
-   *         unit_price_value: '12.50',
-   *       },
-   *     ],
-   *     priority_code: 'normal',
-   *     supplier_account_id: 'ac_0177902104bccac5fbb173cd96',
-   *     carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
-   *     note: 'Urgent restock order',
-   *     service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
-   *     ship_to_country: 'US',
-   *     ship_to_locality: 'San Francisco',
-   *     ship_to_name: 'Acme Inc.',
-   *     ship_to_postal_code: '94105',
-   *     ship_to_state: 'CA',
-   *     ship_to_street_line_1: '123 Main Street',
-   *   });
+   * const purchaseOrder = await client.operations.purchaseOrders.create({
+   *   lines: [
+   *     {
+   *       product_id: 'pd_013c29ab3f1518d0004094c316',
+   *       product_sku: 'RAW-100',
+   *       quantity: { ... },
+   *       unit_price: { ... },
+   *     },
+   *   ],
+   *   priority_code: 'normal',
+   *   supplier_account_id: 'ac_0177902104bccac5fbb173cd96',
+   *   carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+   *   note: 'Urgent restock order',
+   *   service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
+   *   ship_to_country: 'US',
+   *   ship_to_locality: 'San Francisco',
+   *   ship_to_name: 'Acme Inc.',
+   *   ship_to_postal_code: '94105',
+   *   ship_to_state: 'CA',
+   *   ship_to_street_line_1: '123 Main Street',
+   * });
    * ```
    */
   create(
@@ -207,30 +202,15 @@ export interface CreatePurchaseOrderLineInput {
   product_sku: string;
 
   /**
-   * ID of the unit of measure for the quantity.
+   * A value with an associated unit, used in create and update requests.
    */
-  quantity_unit_id: string;
+  quantity: CustomersAPI.QuantityInput;
 
   /**
-   * Quantity ordered, as a decimal string.
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
-  quantity_value: string;
-
-  /**
-   * Unit ID for the unit price's denominator (the unit being sold, e.g. `each`).
-   */
-  unit_price_denominator_unit_id: string;
-
-  /**
-   * Unit ID for the unit price's numerator (the unit being charged, e.g. a currency
-   * unit).
-   */
-  unit_price_numerator_unit_id: string;
-
-  /**
-   * Price charged per unit, as a decimal string.
-   */
-  unit_price_value: string;
+  unit_price: SalesOrdersAPI.RateInput;
 
   /**
    * ID of the inventory item to tie the line to.
@@ -245,20 +225,10 @@ export interface CreatePurchaseOrderLineInput {
   product_description?: string;
 
   /**
-   * Unit ID for the unit cost's denominator (the unit being costed, e.g. `each`).
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
    */
-  unit_cost_denominator_unit_id?: string;
-
-  /**
-   * Unit ID for the unit cost's numerator (the unit being charged, e.g. a currency
-   * unit).
-   */
-  unit_cost_numerator_unit_id?: string;
-
-  /**
-   * Internal cost per unit, as a decimal string.
-   */
-  unit_cost_value?: string;
+  unit_cost?: SalesOrdersAPI.RateInput;
 }
 
 /**
@@ -417,6 +387,53 @@ export interface ListPurchaseOrder {
    * PageInfo contains URL-based pagination metadata.
    */
   page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * Shared fields for a line item on a purchase order or sales order.
+ */
+export interface OrderLineInput {
+  /**
+   * ID of the product being ordered.
+   */
+  product_id: string;
+
+  /**
+   * The product SKU recorded on the line.
+   *
+   * Stored on the line itself, so it stays stable even if the product's SKU changes
+   * later.
+   */
+  product_sku: string;
+
+  /**
+   * A value with an associated unit, used in create and update requests.
+   */
+  quantity: CustomersAPI.QuantityInput;
+
+  /**
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
+   */
+  unit_price: SalesOrdersAPI.RateInput;
+
+  /**
+   * ID of the inventory item to tie the line to.
+   *
+   * Lines tied to an item have inventory reserved for them when the order is issued.
+   */
+  item_id?: string;
+
+  /**
+   * The product description recorded on the line.
+   */
+  product_description?: string;
+
+  /**
+   * A rate value with its numerator and denominator units, used in create and update
+   * requests.
+   */
+  unit_cost?: SalesOrdersAPI.RateInput;
 }
 
 /**
@@ -786,6 +803,7 @@ export declare namespace PurchaseOrders {
     type CreatePurchaseOrderLineInput as CreatePurchaseOrderLineInput,
     type CreatePurchaseOrderRequest as CreatePurchaseOrderRequest,
     type ListPurchaseOrder as ListPurchaseOrder,
+    type OrderLineInput as OrderLineInput,
     type UpdatePurchaseOrderRequest as UpdatePurchaseOrderRequest,
     type PurchaseOrderDeleteResponse as PurchaseOrderDeleteResponse,
     type PurchaseOrderCreateParams as PurchaseOrderCreateParams,
