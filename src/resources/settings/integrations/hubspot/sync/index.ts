@@ -13,7 +13,10 @@ export {
 export {
   Sync,
   type HubspotSyncJob,
+  type HubspotSyncRecord,
   type HubspotSyncReport,
+  type ListHubspotSyncRecord,
   type StartHubspotSyncRequest,
   type SyncCreateParams,
+  type SyncRetrieveRecordsParams,
 } from './sync';

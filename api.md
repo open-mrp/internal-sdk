@@ -1108,7 +1108,9 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">HubspotSyncJob</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">HubspotSyncRecord</a></code>
 - <code><a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">HubspotSyncReport</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">ListHubspotSyncRecord</a></code>
 - <code><a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">StartHubspotSyncRequest</a></code>
 
 Methods:
@@ -1116,6 +1118,7 @@ Methods:
 - <code title="post /v1/settings/integrations/hubspot/sync">client.settings.integrations.hubspot.sync.<a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">create</a>({ ...params }) -> HubspotSyncJob</code>
 - <code title="get /v1/settings/integrations/hubspot/sync/{id}">client.settings.integrations.hubspot.sync.<a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">retrieve</a>(id) -> HubspotSyncJob</code>
 - <code title="get /v1/settings/integrations/hubspot/sync/current">client.settings.integrations.hubspot.sync.<a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">retrieveCurrent</a>() -> HubspotSyncJob</code>
+- <code title="get /v1/settings/integrations/hubspot/sync/records">client.settings.integrations.hubspot.sync.<a href="./src/resources/settings/integrations/hubspot/sync/sync.ts">retrieveRecords</a>({ ...params }) -> ListHubspotSyncRecord</code>
 
 ##### CompanyReviews
 
@@ -1146,6 +1149,7 @@ Methods:
 
 Methods:
 
+- <code title="post /v1/settings/integrations/hubspot/sync/{id}/actions/cancel">client.settings.integrations.hubspot.sync.actions.<a href="./src/resources/settings/integrations/hubspot/sync/actions.ts">cancel</a>(id) -> HubspotSyncJob</code>
 - <code title="post /v1/settings/integrations/hubspot/sync/{id}/actions/execute">client.settings.integrations.hubspot.sync.actions.<a href="./src/resources/settings/integrations/hubspot/sync/actions.ts">execute</a>(id) -> HubspotSyncJob</code>
 
 # Catalog

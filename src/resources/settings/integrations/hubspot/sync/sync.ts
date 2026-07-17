@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../../../core/resource';
+import * as APIKeysAPI from '../../../../auth/api-keys/api-keys';
 import * as ActionsAPI from './actions';
 import { Actions } from './actions';
 import * as CompanyReviewsAPI from './company-reviews/company-reviews';
@@ -86,6 +87,28 @@ export class Sync extends APIResource {
   retrieveCurrent(options?: RequestOptions): APIPromise<HubspotSyncJob> {
     return this._client.get('/v1/settings/integrations/hubspot/sync/current', options);
   }
+
+  /**
+   * Lists what the HubSpot sync has written — each Augno record and the HubSpot
+   * object it maps to.
+   *
+   * Use this to see which customers reached HubSpot, when each was last pushed, and
+   * why any of them failed. Results are ordered by Augno record id.
+   *
+   * This endpoint requires the permission: `integrations:read`.
+   *
+   * @example
+   * ```ts
+   * const listHubspotSyncRecord =
+   *   await client.settings.integrations.hubspot.sync.retrieveRecords();
+   * ```
+   */
+  retrieveRecords(
+    query: SyncRetrieveRecordsParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ListHubspotSyncRecord> {
+    return this._client.get('/v1/settings/integrations/hubspot/sync/records', { query, ...options });
+  }
 }
 
 /**
@@ -106,11 +129,6 @@ export interface HubspotSyncJob {
    * Creation timestamp.
    */
   created_at: string;
-
-  /**
-   * Whether this run is in dry-run/preview mode.
-   */
-  dry_run: boolean;
 
   /**
    * Orders placed on or after this instant are backfilled as Closed-Won deals.
@@ -159,6 +177,68 @@ export interface HubspotSyncJob {
 }
 
 /**
+ * One Augno record that has been written to HubSpot, and where it landed.
+ */
+export interface HubspotSyncRecord {
+  /**
+   * Sync record ID.
+   */
+  id: string;
+
+  /**
+   * ID of the Augno record that was synced.
+   */
+  augno_id: string;
+
+  /**
+   * Name of the Augno record that was synced.
+   *
+   * Empty when the record has since been deleted.
+   */
+  augno_name: string;
+
+  /**
+   * The kind of Augno record that was synced.
+   */
+  augno_type: 'customer' | 'contact' | 'deal';
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * ID of the HubSpot object it maps to.
+   */
+  hubspot_id: string;
+
+  /**
+   * The kind of HubSpot object it maps to.
+   */
+  hubspot_type: 'companies' | 'contacts' | 'deals';
+
+  /**
+   * Failure detail from the last attempt to sync this record.
+   */
+  last_error: string | null;
+
+  /**
+   * When this record was last pushed to HubSpot.
+   */
+  last_synced_at: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'hubspot_sync_record';
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
  * A tally of what the execute phase would do, produced by the read-only preview
  * pass.
  */
@@ -195,6 +275,26 @@ export interface HubspotSyncReport {
 }
 
 /**
+ * List represents a paginated list of resources.
+ */
+export interface ListHubspotSyncRecord {
+  /**
+   * Resources in this page.
+   */
+  data: Array<HubspotSyncRecord>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
  * Request to start a HubSpot backfill.
  */
 export interface StartHubspotSyncRequest {
@@ -217,15 +317,38 @@ export interface SyncCreateParams {
   go_live_cutoff_at?: string;
 }
 
+export interface SyncRetrieveRecordsParams {
+  /**
+   * Restrict the results to records of this Augno type.
+   */
+  augno_type?: 'customer' | 'contact' | 'deal';
+
+  /**
+   * Opaque cursor token identifying where the page of results starts.
+   *
+   * Use the `cursor` value embedded in a previous response's `next_page_url` to
+   * fetch the next page. Omit to start from the first page.
+   */
+  cursor?: string;
+
+  /**
+   * Maximum number of results to return in a single page.
+   */
+  limit?: number;
+}
+
 Sync.CompanyReviews = CompanyReviews;
 Sync.Actions = Actions;
 
 export declare namespace Sync {
   export {
     type HubspotSyncJob as HubspotSyncJob,
+    type HubspotSyncRecord as HubspotSyncRecord,
     type HubspotSyncReport as HubspotSyncReport,
+    type ListHubspotSyncRecord as ListHubspotSyncRecord,
     type StartHubspotSyncRequest as StartHubspotSyncRequest,
     type SyncCreateParams as SyncCreateParams,
+    type SyncRetrieveRecordsParams as SyncRetrieveRecordsParams,
   };
 
   export {
