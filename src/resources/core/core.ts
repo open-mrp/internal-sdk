@@ -513,7 +513,8 @@ export interface CoreRetrieveSearchParams {
   /**
    * Filter the search to specific resource types.
    *
-   * Omit to search every supported type the caller can read.
+   * Attempting to read a type you do not have permission to read will result in a
+   * `403` error. Omit to search every supported type the caller can read.
    */
   types?: Array<
     | 'account'
