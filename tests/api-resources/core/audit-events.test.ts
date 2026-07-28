@@ -57,6 +57,8 @@ describe('resource auditEvents', () => {
           q: 'q',
           resource_ids: ['string'],
           resource_types: ['account'],
+          root_resource_id: 'root_resource_id',
+          root_resource_type: 'account',
           start_date: '2019-12-27T18:11:19.117Z',
           target_account_ids: ['string'],
         },
