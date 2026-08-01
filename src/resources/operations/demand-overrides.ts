@@ -17,9 +17,11 @@ export class DemandOverrides extends APIResource {
    * Creates a demand override.
    *
    * The scope reference is validated against the account's items or product lines,
-   * so an override can never silently match nothing. An `absolute` value replaces
-   * the forecast for the period, `delta_units` adds to it, and `delta_percent`
-   * scales it; a percent override cannot reduce demand by more than 100%.
+   * so an override can never silently match nothing. An `account`-scoped override
+   * applies to every planned item and takes no scope reference; it must be a delta,
+   * not an absolute value. An `absolute` value replaces the forecast for the period,
+   * `delta_units` adds to it, and `delta_percent` scales it; a percent override
+   * cannot reduce demand by more than 100%.
    *
    * This endpoint requires the permission: `demand_overrides:create`.
    *
@@ -155,14 +157,15 @@ export interface CreateDemandOverrideRequest {
   period_starts_at: string;
 
   /**
-   * ID of the item or product line the override targets.
+   * ID of the item or product line the override targets. Omit for an `account`-wide
+   * override, which targets every planned item.
    */
   scope_ref_id: string;
 
   /**
    * What the override targets.
    */
-  scope_type: 'item' | 'product_line';
+  scope_type: 'item' | 'product_line' | 'account';
 
   /**
    * The adjustment, interpreted according to `adjustment`.
@@ -219,8 +222,9 @@ export interface CreateDemandOverrideRequest {
  * which is a different question — an override for next quarter typically stops
  * applying once the real orders arrive.
  *
- * A product-line override is distributed across the line's items in proportion to
- * each item's baseline demand.
+ * A product-line override applies to each of the line's items; an account-wide
+ * override applies to every planned item, which is how a global growth assumption
+ * (e.g. "plan for double demand") is expressed.
  */
 export interface DemandOverride {
   /**
@@ -297,7 +301,7 @@ export interface DemandOverride {
    * What kind of resource the override targets. Mirrors `scope.type`, which is only
    * present when the scope is expanded.
    */
-  scope_type: 'item' | 'product_line';
+  scope_type: 'item' | 'product_line' | 'account';
 
   /**
    * Whether the override is applied to solves at all.
@@ -419,14 +423,15 @@ export interface DemandOverrideCreateParams {
   period_starts_at: string;
 
   /**
-   * Body param: ID of the item or product line the override targets.
+   * Body param: ID of the item or product line the override targets. Omit for an
+   * `account`-wide override, which targets every planned item.
    */
   scope_ref_id: string;
 
   /**
    * Body param: What the override targets.
    */
-  scope_type: 'item' | 'product_line';
+  scope_type: 'item' | 'product_line' | 'account';
 
   /**
    * Body param: The adjustment, interpreted according to `adjustment`.
@@ -603,7 +608,7 @@ export interface DemandOverrideListParams {
   /**
    * Only return overrides targeting these kinds of resource.
    */
-  scope_types?: Array<'item' | 'product_line'>;
+  scope_types?: Array<'item' | 'product_line' | 'account'>;
 
   /**
    * Only return overrides in these activation states.
