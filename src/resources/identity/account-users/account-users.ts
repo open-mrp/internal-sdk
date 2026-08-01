@@ -381,6 +381,12 @@ export interface Department {
   created_at: string;
 
   /**
+   * Value expressed as a ratio of two units, such as a price per kilogram or a
+   * throughput per hour.
+   */
+  labor_rate: Rate | null;
+
+  /**
    * A physical storage location, such as a warehouse, aisle, or bin, arranged in a
    * parent-child hierarchy.
    */

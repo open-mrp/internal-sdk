@@ -56,6 +56,7 @@ import {
   DepartmentCreateParams,
   DepartmentDeleteResponse,
   DepartmentListParams,
+  DepartmentRateInput,
   DepartmentRetrieveParams,
   DepartmentUpdateParams,
   Departments,
@@ -1037,8 +1038,8 @@ export interface UpdateRateRequest {
   /**
    * Type of the resource that owns this rate.
    *
-   * Determines the permission required for the update. Must be `item` or
-   * `production_step`.
+   * Determines the permission required for the update. Must be `item`,
+   * `production_step`, or `department`.
    */
   object_type?: string;
 
@@ -1154,8 +1155,8 @@ export interface OperationUpdateRatesParams {
   /**
    * Body param: Type of the resource that owns this rate.
    *
-   * Determines the permission required for the update. Must be `item` or
-   * `production_step`.
+   * Determines the permission required for the update. Must be `item`,
+   * `production_step`, or `department`.
    */
   object_type?: string;
 
@@ -1301,6 +1302,7 @@ export declare namespace Operations {
   export {
     Departments as Departments,
     type CreateDepartmentRequest as CreateDepartmentRequest,
+    type DepartmentRateInput as DepartmentRateInput,
     type UpdateDepartmentRequest as UpdateDepartmentRequest,
     type DepartmentDeleteResponse as DepartmentDeleteResponse,
     type DepartmentCreateParams as DepartmentCreateParams,

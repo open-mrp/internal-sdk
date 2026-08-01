@@ -30,8 +30,8 @@ export class DemandOverrides extends APIResource {
    * const demandOverride =
    *   await client.operations.demandOverrides.create({
    *     adjustment: 'delta_units',
-   *     period_ends_at: '2026-05-10T00:23:00Z',
-   *     period_starts_at: '2026-05-10T00:00:00Z',
+   *     period_ends_at: '2026-11-30T00:00:00Z',
+   *     period_starts_at: '2026-09-01T00:00:00Z',
    *     scope_ref_id: 'it_0131e386ac683e8c29a71f6f1f',
    *     scope_type: 'item',
    *     value: 5000,

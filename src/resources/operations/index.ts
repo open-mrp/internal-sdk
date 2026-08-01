@@ -76,6 +76,7 @@ export {
 export {
   Departments,
   type CreateDepartmentRequest,
+  type DepartmentRateInput,
   type UpdateDepartmentRequest,
   type DepartmentDeleteResponse,
   type DepartmentCreateParams,

@@ -126,7 +126,7 @@ export interface ProductionScheduleSettings {
   changeover_avg_minutes: number;
 
   /**
-   * Hourly labour rate charged to a changeover.
+   * Hourly labor rate charged to a changeover.
    */
   changeover_labor_rate: number;
 
@@ -301,7 +301,7 @@ export interface UpdateProductionScheduleSettingsRequest {
   changeover_avg_minutes: number;
 
   /**
-   * Hourly labour rate charged to a changeover.
+   * Hourly labor rate charged to a changeover.
    */
   changeover_labor_rate: number;
 
@@ -449,7 +449,7 @@ export interface ProductionScheduleSettingUpdateParams {
   changeover_avg_minutes: number;
 
   /**
-   * Hourly labour rate charged to a changeover.
+   * Hourly labor rate charged to a changeover.
    */
   changeover_labor_rate: number;
 

@@ -137,6 +137,12 @@ export interface CreateDepartmentRequest {
   name: string;
 
   /**
+   * DepartmentRateInput is a rate supplied inline when creating or updating a
+   * department.
+   */
+  labor_rate?: DepartmentRateInput;
+
+  /**
    * ID of the location where this department operates.
    */
   location_id?: string;
@@ -164,9 +170,36 @@ export interface CreateDepartmentRequest {
 }
 
 /**
+ * DepartmentRateInput is a rate supplied inline when creating or updating a
+ * department.
+ */
+export interface DepartmentRateInput {
+  /**
+   * ID of the unit in the rate's denominator (e.g. hours).
+   */
+  denominator_unit_id: string;
+
+  /**
+   * ID of the unit in the rate's numerator (a currency, e.g. dollars).
+   */
+  numerator_unit_id: string;
+
+  /**
+   * Decimal value of the rate.
+   */
+  value: string;
+}
+
+/**
  * Request to partially update a department.
  */
 export interface UpdateDepartmentRequest {
+  /**
+   * DepartmentRateInput is a rate supplied inline when creating or updating a
+   * department.
+   */
+  labor_rate?: DepartmentRateInput;
+
   /**
    * ID of the location where this department operates.
    */
@@ -218,6 +251,12 @@ export interface DepartmentCreateParams {
   include?: Array<'location' | 'scanning_stations' | 'machines'>;
 
   /**
+   * Body param: DepartmentRateInput is a rate supplied inline when creating or
+   * updating a department.
+   */
+  labor_rate?: DepartmentRateInput;
+
+  /**
    * Body param: ID of the location where this department operates.
    */
   location_id?: string;
@@ -258,6 +297,12 @@ export interface DepartmentUpdateParams {
    * are returned as `null`.
    */
   include?: Array<'location' | 'scanning_stations' | 'machines'>;
+
+  /**
+   * Body param: DepartmentRateInput is a rate supplied inline when creating or
+   * updating a department.
+   */
+  labor_rate?: DepartmentRateInput;
 
   /**
    * Body param: ID of the location where this department operates.
@@ -325,6 +370,7 @@ export interface DepartmentListParams {
 export declare namespace Departments {
   export {
     type CreateDepartmentRequest as CreateDepartmentRequest,
+    type DepartmentRateInput as DepartmentRateInput,
     type UpdateDepartmentRequest as UpdateDepartmentRequest,
     type DepartmentDeleteResponse as DepartmentDeleteResponse,
     type DepartmentCreateParams as DepartmentCreateParams,

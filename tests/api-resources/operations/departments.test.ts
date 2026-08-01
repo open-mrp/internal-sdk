@@ -23,6 +23,11 @@ describe('resource departments', () => {
     const response = await client.operations.departments.create({
       name: 'Fabrication',
       include: ['location'],
+      labor_rate: {
+        denominator_unit_id: 'denominator_unit_id',
+        numerator_unit_id: 'numerator_unit_id',
+        value: 'value',
+      },
       location_id: 'location_id',
       machine_ids: ['mc_0177d18f55a1615f783d3bf8d0'],
       notes: 'notes',
@@ -70,6 +75,11 @@ describe('resource departments', () => {
         'dp_01791c25ab59da4704cba61874',
         {
           include: ['location'],
+          labor_rate: {
+            denominator_unit_id: 'denominator_unit_id',
+            numerator_unit_id: 'numerator_unit_id',
+            value: 'value',
+          },
           location_id: 'location_id',
           machine_ids: ['string'],
           name: 'Production',

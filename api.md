@@ -2321,6 +2321,7 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/operations/departments.ts">CreateDepartmentRequest</a></code>
+- <code><a href="./src/resources/operations/departments.ts">DepartmentRateInput</a></code>
 - <code><a href="./src/resources/operations/departments.ts">UpdateDepartmentRequest</a></code>
 - <code><a href="./src/resources/operations/departments.ts">DepartmentDeleteResponse</a></code>
 
