@@ -46,7 +46,7 @@ export class ProductLines extends APIResource {
    * ```ts
    * const listCatalogCategory =
    *   await client.catalog.catalog.productLines.retrieveProducts(
-   *     'pl_01996357326a0d3f7b129542ea',
+   *     'pdln_01996357326a0d3f7b129542ea',
    *   );
    * ```
    */

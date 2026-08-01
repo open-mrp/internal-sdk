@@ -33,7 +33,7 @@ describe('resource products', () => {
       description: 'Wireless barcode scanner with charging cradle',
       notes: 'Ships with a 2-year warranty; register for extended coverage.',
       portal_visibility: 'visible',
-      product_line_id: 'pl_01996357326a0d3f7b129542ea',
+      product_line_id: 'pdln_01996357326a0d3f7b129542ea',
       unit_cost: {
         denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
         numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
@@ -158,7 +158,7 @@ describe('resource products', () => {
   });
 
   test('changeProductLine: only required params', async () => {
-    const responsePromise = client.catalog.products.changeProductLine('pl_01996357326a0d3f7b129542ea', {
+    const responsePromise = client.catalog.products.changeProductLine('pdln_01996357326a0d3f7b129542ea', {
       id: 'pd_013c29ab3f1518d0004094c316',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -171,7 +171,7 @@ describe('resource products', () => {
   });
 
   test('changeProductLine: required and optional params', async () => {
-    const response = await client.catalog.products.changeProductLine('pl_01996357326a0d3f7b129542ea', {
+    const response = await client.catalog.products.changeProductLine('pdln_01996357326a0d3f7b129542ea', {
       id: 'pd_013c29ab3f1518d0004094c316',
       include: ['product_line'],
     });

@@ -7,11 +7,12 @@ const client = new Augno({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource accountGroups', () => {
+describe('resource machineDowntimeEvents', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.create({
-      account_group_id: 'acgp_018e88072d1320808dc979cfac',
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+    const responsePromise = client.operations.machineDowntimeEvents.create({
+      machine_id: 'mc_0177d18f55a1615f783d3bf8d0',
+      reason: 'breakdown',
+      started_at: '2026-05-10T00:00:00Z',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,15 +24,23 @@ describe('resource accountGroups', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.sales.productLineAccess.accountGroups.create({
-      account_group_id: 'acgp_018e88072d1320808dc979cfac',
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+    const response = await client.operations.machineDowntimeEvents.create({
+      machine_id: 'mc_0177d18f55a1615f783d3bf8d0',
+      reason: 'breakdown',
+      started_at: '2026-05-10T00:00:00Z',
+      include: ['machine'],
+      batch_id: 'batch_id',
+      ended_at: '2019-12-27T18:11:19.117Z',
+      item_id: 'item_id',
+      note: 'note',
+      production_run_id: 'production_run_id',
+      source: 'manual',
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.retrieve(
-      'acgp_018e88072d1320808dc979cfac',
+    const responsePromise = client.operations.machineDowntimeEvents.retrieve(
+      'mcdt_0192a4c17b3e4f8a91c2d05e77',
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -42,10 +51,19 @@ describe('resource accountGroups', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.machineDowntimeEvents.retrieve(
+        'mcdt_0192a4c17b3e4f8a91c2d05e77',
+        { include: ['machine'] },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
+  });
+
   test('update', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.update(
-      'acgp_018e88072d1320808dc979cfac',
-    );
+    const responsePromise = client.operations.machineDowntimeEvents.update('mcdt_0192a4c17b3e4f8a91c2d05e77');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -58,16 +76,25 @@ describe('resource accountGroups', () => {
   test('update: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.sales.productLineAccess.accountGroups.update(
-        'acgp_018e88072d1320808dc979cfac',
-        { product_line_ids: ['pdln_01996357326a0d3f7b129542ea'] },
+      client.operations.machineDowntimeEvents.update(
+        'mcdt_0192a4c17b3e4f8a91c2d05e77',
+        {
+          include: ['machine'],
+          batch_id: 'batch_id',
+          ended_at: '2026-05-10T00:23:00Z',
+          item_id: 'item_id',
+          note: 'note',
+          production_run_id: 'production_run_id',
+          reason: 'breakdown',
+          started_at: '2019-12-27T18:11:19.117Z',
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('list', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.list();
+    const responsePromise = client.operations.machineDowntimeEvents.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -80,11 +107,18 @@ describe('resource accountGroups', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.sales.productLineAccess.accountGroups.list(
+      client.operations.machineDowntimeEvents.list(
         {
           cursor: 'cursor',
+          department_ids: ['string'],
+          end_date: 'end_date',
+          include: ['machine'],
           limit: 0,
+          machine_ids: ['string'],
+          open: true,
           q: 'q',
+          reasons: ['breakdown'],
+          start_date: 'start_date',
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -92,9 +126,7 @@ describe('resource accountGroups', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.delete(
-      'acgp_018e88072d1320808dc979cfac',
-    );
+    const responsePromise = client.operations.machineDowntimeEvents.delete('mcdt_0192a4c17b3e4f8a91c2d05e77');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

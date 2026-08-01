@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as CoreAPI from '../../core/core';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as ActionsAPI from './actions';
 import {
@@ -131,6 +132,40 @@ export class Items extends APIResource {
   }
 
   /**
+   * Returns the lot this item is made in — how many, counted in what.
+   *
+   * A lot is a doff, a pallet, a batch: the quantity production is issued in. The
+   * unit is what makes it meaningful, since 60 pairs and 60 eaches are different
+   * lots, so `quantity` should never be read without `unit`.
+   *
+   * Resolved through the same chain the production schedule uses, most specific
+   * first: a per-item override, then the item's own product line, then the product
+   * lines of the finished goods it becomes, then the account-wide default. `source`
+   * names which rule applied. Intermediate items like greige are not sold and have
+   * no product line of their own, which is why they inherit from what they become.
+   *
+   * `quantity` is `0` when nothing in the chain supplies a lot. That means the item
+   * has no lot convention, not that its lot is zero.
+   *
+   * This endpoint requires the permission: `items:read`.
+   *
+   * @example
+   * ```ts
+   * const itemLotDefault =
+   *   await client.catalog.items.retrieveLotDefault(
+   *     'it_0131e386ac683e8c29a71f6f1f',
+   *   );
+   * ```
+   */
+  retrieveLotDefault(
+    id: string,
+    query: ItemRetrieveLotDefaultParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ItemLotDefault> {
+    return this._client.get(path`/v1/catalog/items/${id}/lot-default`, { query, ...options });
+  }
+
+  /**
    * Returns historical trend data for an item as a time-ordered series of data
    * points.
    *
@@ -183,6 +218,53 @@ export interface ItemCosts {
    * Total cost to produce one unit of the item (material + labor + overhead).
    */
   total_cost: string;
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  unit: AccountUsersAPI.Unit | null;
+}
+
+/**
+ * The lot an item is made in — how many, counted in what.
+ *
+ * A lot is the quantity production is issued in: a doff, a pallet, a batch. The
+ * unit is what makes it meaningful, since 60 pairs and 60 eaches are different
+ * lots.
+ */
+export interface ItemLotDefault {
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  item: CoreAPI.Entity | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'item_lot_default';
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  product_line: CoreAPI.Entity | null;
+
+  /**
+   * Units in one lot.
+   *
+   * `0` means the item has no lot convention, not that its lot is zero.
+   */
+  quantity: number;
+
+  /**
+   * Which rule in the chain produced this lot.
+   *
+   * - `item_override`: a lot size set on the item itself.
+   * - `product_line`: the convention of the line the item sells under.
+   * - `downstream_product_line`: inherited from the finished goods this item
+   *   becomes, for intermediates that are not themselves sold.
+   * - `account_default`: the account-wide fallback.
+   */
+  source: 'item_override' | 'product_line' | 'downstream_product_line' | 'account_default' | '';
 
   /**
    * Unit of measurement used for conversions and product quantities.
@@ -406,6 +488,14 @@ export interface ItemChangeCategoryParams {
   >;
 }
 
+export interface ItemRetrieveLotDefaultParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'unit'>;
+}
+
 export interface ItemRetrieveTrendsParams {
   /**
    * The trend metric to fetch.
@@ -424,6 +514,7 @@ Items.Attributes = Attributes;
 export declare namespace Items {
   export {
     type ItemCosts as ItemCosts,
+    type ItemLotDefault as ItemLotDefault,
     type ItemTrendPoint as ItemTrendPoint,
     type ItemTrends as ItemTrends,
     type ListItem as ListItem,
@@ -431,6 +522,7 @@ export declare namespace Items {
     type ItemRetrieveParams as ItemRetrieveParams,
     type ItemListParams as ItemListParams,
     type ItemChangeCategoryParams as ItemChangeCategoryParams,
+    type ItemRetrieveLotDefaultParams as ItemRetrieveLotDefaultParams,
     type ItemRetrieveTrendsParams as ItemRetrieveTrendsParams,
   };
 

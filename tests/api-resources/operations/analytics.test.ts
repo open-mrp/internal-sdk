@@ -11,7 +11,7 @@ describe('resource analytics', () => {
   test('updateOpenBatches: only required params', async () => {
     const responsePromise = client.operations.analytics.updateOpenBatches({
       item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-      product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -25,7 +25,7 @@ describe('resource analytics', () => {
   test('updateOpenBatches: required and optional params', async () => {
     const response = await client.operations.analytics.updateOpenBatches({
       item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-      product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
     });
   });
 });

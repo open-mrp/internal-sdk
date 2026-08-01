@@ -16,6 +16,7 @@ export {
 export {
   Items,
   type ItemCosts,
+  type ItemLotDefault,
   type ItemTrendPoint,
   type ItemTrends,
   type ListItem,
@@ -23,6 +24,7 @@ export {
   type ItemRetrieveParams,
   type ItemListParams,
   type ItemChangeCategoryParams,
+  type ItemRetrieveLotDefaultParams,
   type ItemRetrieveTrendsParams,
 } from './items/index';
 export {

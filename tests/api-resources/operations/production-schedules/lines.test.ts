@@ -7,12 +7,17 @@ const client = new Augno({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource accountGroups', () => {
+describe('resource lines', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.create({
-      account_group_id: 'acgp_018e88072d1320808dc979cfac',
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
-    });
+    const responsePromise = client.operations.productionSchedules.lines.create(
+      'pnsc_0192a4c17b3e4f8a91c2d0',
+      {
+        item_id: 'it_0131e386ac683e8c29a71f6f1f',
+        machine_id: 'mc_0177d18f55a1615f783d3bf8d0',
+        quantity: 600,
+        week_index: 2,
+      },
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,15 +28,22 @@ describe('resource accountGroups', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.sales.productLineAccess.accountGroups.create({
-      account_group_id: 'acgp_018e88072d1320808dc979cfac',
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+    const response = await client.operations.productionSchedules.lines.create('pnsc_0192a4c17b3e4f8a91c2d0', {
+      item_id: 'it_0131e386ac683e8c29a71f6f1f',
+      machine_id: 'mc_0177d18f55a1615f783d3bf8d0',
+      quantity: 600,
+      week_index: 2,
+      lots: 0,
+      reason: 'machine_down',
+      reason_note: 'reason_note',
+      run_hours: 0,
     });
   });
 
-  test('retrieve', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.retrieve(
-      'acgp_018e88072d1320808dc979cfac',
+  test('update: only required params', async () => {
+    const responsePromise = client.operations.productionSchedules.lines.update(
+      'orln_0142f9b74268973450b3a76ce3',
+      { id: 'pnsc_0192a4c17b3e4f8a91c2d0' },
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -42,32 +54,26 @@ describe('resource accountGroups', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.update(
-      'acgp_018e88072d1320808dc979cfac',
+  test('update: required and optional params', async () => {
+    const response = await client.operations.productionSchedules.lines.update(
+      'orln_0142f9b74268973450b3a76ce3',
+      {
+        id: 'pnsc_0192a4c17b3e4f8a91c2d0',
+        lots: 0,
+        machine_id: 'machine_id',
+        quantity: 900,
+        reason: 'machine_down',
+        reason_note: 'reason_note',
+        run_hours: 0,
+        sequence_index: 0,
+        status: 'planned',
+        week_index: 0,
+      },
     );
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('update: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.sales.productLineAccess.accountGroups.update(
-        'acgp_018e88072d1320808dc979cfac',
-        { product_line_ids: ['pdln_01996357326a0d3f7b129542ea'] },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('list', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.list();
+    const responsePromise = client.operations.productionSchedules.lines.list('pnsc_0192a4c17b3e4f8a91c2d0');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -80,20 +86,18 @@ describe('resource accountGroups', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.sales.productLineAccess.accountGroups.list(
-        {
-          cursor: 'cursor',
-          limit: 0,
-          q: 'q',
-        },
+      client.operations.productionSchedules.lines.list(
+        'pnsc_0192a4c17b3e4f8a91c2d0',
+        { machine_ids: ['string'], week_index: 0 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.delete(
-      'acgp_018e88072d1320808dc979cfac',
+  test('delete: only required params', async () => {
+    const responsePromise = client.operations.productionSchedules.lines.delete(
+      'orln_0142f9b74268973450b3a76ce3',
+      { id: 'pnsc_0192a4c17b3e4f8a91c2d0' },
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -102,5 +106,16 @@ describe('resource accountGroups', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('delete: required and optional params', async () => {
+    const response = await client.operations.productionSchedules.lines.delete(
+      'orln_0142f9b74268973450b3a76ce3',
+      {
+        id: 'pnsc_0192a4c17b3e4f8a91c2d0',
+        reason: 'machine_down',
+        reason_note: 'reason_note',
+      },
+    );
   });
 });

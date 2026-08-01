@@ -21,7 +21,7 @@ export class Analytics extends APIResource {
    * const listOpenBatchSummary =
    *   await client.operations.analytics.updateOpenBatches({
    *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
    *   });
    * ```
    */

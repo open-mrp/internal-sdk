@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource accountPrices', () => {
   test('create: only required params', async () => {
     const responsePromise = client.sales.accountPrices.create({
-      product_line_id: 'pl_01996357326a0d3f7b129542ea',
+      product_line_id: 'pdln_01996357326a0d3f7b129542ea',
       rate_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
       rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
       rate_value: '25.50',
@@ -27,7 +27,7 @@ describe('resource accountPrices', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.sales.accountPrices.create({
-      product_line_id: 'pl_01996357326a0d3f7b129542ea',
+      product_line_id: 'pdln_01996357326a0d3f7b129542ea',
       rate_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
       rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
       rate_value: '25.50',

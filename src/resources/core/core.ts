@@ -38,6 +38,7 @@ import {
   AnalyticsUpdateProductionCostsParams,
   AnalyticsUpdateQuarterlyOrdersParams,
   AnalyticsUpdateSalesParams,
+  AnalyticsUpdateScheduleAttainmentParams,
   AnalyzeDeliveriesRequest,
   AnalyzeDeliveriesResponse,
   AnalyzeDemandForecastRequest,
@@ -64,7 +65,10 @@ import {
   AnalyzeQuarterlyOrdersResponse,
   AnalyzeSalesRequest,
   AnalyzeSalesResponse,
+  AnalyzeScheduleAttainmentRequest,
+  AnalyzeScheduleAttainmentResponse,
   AnalyzeWeeksOfSalesResponse,
+  AttainmentBucket,
   ChartData,
   Coordinate,
   CostBreakdown,
@@ -74,11 +78,19 @@ import {
   DemandForecastForecastPoint,
   DemandForecastPoint,
   DemandForecastRow,
+  FrozenAdherence,
   InventoryReceiptSummaryEntry,
+  ListAttainmentBucket,
+  ListDemandForecastRow,
+  ListFrozenAdherence,
+  ListOeeDepartment,
+  ListOeeDowntimeReason,
   ManufacturingMetrics,
   MaterialAnalyticsEntry,
   NewCustomersData,
   OeeDepartment,
+  OeeDepartmentPlannedTime,
+  OeeDowntimeReason,
   OpenBatchSummary,
   OrderEntry,
   ProductionCostItem,
@@ -287,6 +299,7 @@ export interface Entity {
     | 'carrier'
     | 'service_level'
     | 'item'
+    | 'item_lot_default'
     | 'item_inventory'
     | 'product'
     | 'batch'
@@ -298,6 +311,24 @@ export interface Entity {
     | 'production_step'
     | 'production_run'
     | 'machine'
+    | 'machine_status'
+    | 'machine_downtime_event'
+    | 'demand_override'
+    | 'demand_override_type'
+    | 'machine_downtime_reason'
+    | 'production_schedule_preview'
+    | 'production_schedule_regenerate_preview'
+    | 'production_schedule'
+    | 'production_schedule_line'
+    | 'production_schedule_deviation'
+    | 'production_schedule_derived_line'
+    | 'production_schedule_settings'
+    | 'production_schedule_resource_setting'
+    | 'schedule_deviation_type'
+    | 'production_schedule_finished_policy'
+    | 'production_schedule_week_release'
+    | 'production_schedule_week_release_preview'
+    | 'production_schedule_item_policy'
     | 'child_account'
     | 'unit_group'
     | 'unit_group_unit'
@@ -400,7 +431,9 @@ export interface Entity {
     | 'analyze_manufacturing_batch_response'
     | 'analyze_quarterly_orders_response'
     | 'analyze_new_customers_response'
+    | 'analyze_demand_forecast_response'
     | 'analyze_oee_response'
+    | 'analyze_schedule_attainment_response'
     | 'catalog_product_line'
     | 'catalog_category'
     | 'catalog_product'
@@ -601,6 +634,7 @@ export interface CoreRetrieveSearchParams {
     | 'carrier'
     | 'service_level'
     | 'item'
+    | 'item_lot_default'
     | 'item_inventory'
     | 'product'
     | 'batch'
@@ -612,6 +646,24 @@ export interface CoreRetrieveSearchParams {
     | 'production_step'
     | 'production_run'
     | 'machine'
+    | 'machine_status'
+    | 'machine_downtime_event'
+    | 'demand_override'
+    | 'demand_override_type'
+    | 'machine_downtime_reason'
+    | 'production_schedule_preview'
+    | 'production_schedule_regenerate_preview'
+    | 'production_schedule'
+    | 'production_schedule_line'
+    | 'production_schedule_deviation'
+    | 'production_schedule_derived_line'
+    | 'production_schedule_settings'
+    | 'production_schedule_resource_setting'
+    | 'schedule_deviation_type'
+    | 'production_schedule_finished_policy'
+    | 'production_schedule_week_release'
+    | 'production_schedule_week_release_preview'
+    | 'production_schedule_item_policy'
     | 'child_account'
     | 'unit_group'
     | 'unit_group_unit'
@@ -714,7 +766,9 @@ export interface CoreRetrieveSearchParams {
     | 'analyze_manufacturing_batch_response'
     | 'analyze_quarterly_orders_response'
     | 'analyze_new_customers_response'
+    | 'analyze_demand_forecast_response'
     | 'analyze_oee_response'
+    | 'analyze_schedule_attainment_response'
     | 'catalog_product_line'
     | 'catalog_category'
     | 'catalog_product'
@@ -872,7 +926,10 @@ export declare namespace Core {
     type AnalyzeQuarterlyOrdersResponse as AnalyzeQuarterlyOrdersResponse,
     type AnalyzeSalesRequest as AnalyzeSalesRequest,
     type AnalyzeSalesResponse as AnalyzeSalesResponse,
+    type AnalyzeScheduleAttainmentRequest as AnalyzeScheduleAttainmentRequest,
+    type AnalyzeScheduleAttainmentResponse as AnalyzeScheduleAttainmentResponse,
     type AnalyzeWeeksOfSalesResponse as AnalyzeWeeksOfSalesResponse,
+    type AttainmentBucket as AttainmentBucket,
     type ChartData as ChartData,
     type Coordinate as Coordinate,
     type CostBreakdown as CostBreakdown,
@@ -882,11 +939,19 @@ export declare namespace Core {
     type DemandForecastForecastPoint as DemandForecastForecastPoint,
     type DemandForecastPoint as DemandForecastPoint,
     type DemandForecastRow as DemandForecastRow,
+    type FrozenAdherence as FrozenAdherence,
     type InventoryReceiptSummaryEntry as InventoryReceiptSummaryEntry,
+    type ListAttainmentBucket as ListAttainmentBucket,
+    type ListDemandForecastRow as ListDemandForecastRow,
+    type ListFrozenAdherence as ListFrozenAdherence,
+    type ListOeeDepartment as ListOeeDepartment,
+    type ListOeeDowntimeReason as ListOeeDowntimeReason,
     type ManufacturingMetrics as ManufacturingMetrics,
     type MaterialAnalyticsEntry as MaterialAnalyticsEntry,
     type NewCustomersData as NewCustomersData,
     type OeeDepartment as OeeDepartment,
+    type OeeDepartmentPlannedTime as OeeDepartmentPlannedTime,
+    type OeeDowntimeReason as OeeDowntimeReason,
     type OpenBatchSummary as OpenBatchSummary,
     type OrderEntry as OrderEntry,
     type ProductionCostItem as ProductionCostItem,
@@ -907,6 +972,7 @@ export declare namespace Core {
     type AnalyticsUpdateProductionCostsParams as AnalyticsUpdateProductionCostsParams,
     type AnalyticsUpdateQuarterlyOrdersParams as AnalyticsUpdateQuarterlyOrdersParams,
     type AnalyticsUpdateSalesParams as AnalyticsUpdateSalesParams,
+    type AnalyticsUpdateScheduleAttainmentParams as AnalyticsUpdateScheduleAttainmentParams,
   };
 
   export {

@@ -44,6 +44,8 @@ import {
   ItemChangeCategoryParams,
   ItemCosts,
   ItemListParams,
+  ItemLotDefault,
+  ItemRetrieveLotDefaultParams,
   ItemRetrieveParams,
   ItemRetrieveTrendsParams,
   ItemTrendPoint,
@@ -191,6 +193,7 @@ export declare namespace Catalog {
   export {
     Items as Items,
     type ItemCosts as ItemCosts,
+    type ItemLotDefault as ItemLotDefault,
     type ItemTrendPoint as ItemTrendPoint,
     type ItemTrends as ItemTrends,
     type ListItem as ListItem,
@@ -198,6 +201,7 @@ export declare namespace Catalog {
     type ItemRetrieveParams as ItemRetrieveParams,
     type ItemListParams as ItemListParams,
     type ItemChangeCategoryParams as ItemChangeCategoryParams,
+    type ItemRetrieveLotDefaultParams as ItemRetrieveLotDefaultParams,
     type ItemRetrieveTrendsParams as ItemRetrieveTrendsParams,
   };
 

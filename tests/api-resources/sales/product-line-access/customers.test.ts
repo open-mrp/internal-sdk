@@ -11,7 +11,7 @@ describe('resource customers', () => {
   test('create: only required params', async () => {
     const responsePromise = client.sales.productLineAccess.customers.create({
       customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-      product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -25,7 +25,7 @@ describe('resource customers', () => {
   test('create: required and optional params', async () => {
     const response = await client.sales.productLineAccess.customers.create({
       customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-      product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
     });
   });
 
@@ -58,7 +58,7 @@ describe('resource customers', () => {
     await expect(
       client.sales.productLineAccess.customers.update(
         'ac_0170df1ac58e4d24c66fc89f5f',
-        { product_line_ids: ['pl_01996357326a0d3f7b129542ea'] },
+        { product_line_ids: ['pdln_01996357326a0d3f7b129542ea'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);

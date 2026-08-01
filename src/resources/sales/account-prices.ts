@@ -24,7 +24,7 @@ export class AccountPrices extends APIResource {
    * ```ts
    * const accountPrice =
    *   await client.sales.accountPrices.create({
-   *     product_line_id: 'pl_01996357326a0d3f7b129542ea',
+   *     product_line_id: 'pdln_01996357326a0d3f7b129542ea',
    *     rate_denominator_unit_id:
    *       'un_01966263f74a5a0cae356000a1',
    *     rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
@@ -297,6 +297,11 @@ export interface ProductLine {
    * Creation timestamp.
    */
   created_at: string;
+
+  /**
+   * Value with an associated unit.
+   */
+  default_lot: AccountUsersAPI.Quantity | null;
 
   /**
    * Free-form description of the product line.

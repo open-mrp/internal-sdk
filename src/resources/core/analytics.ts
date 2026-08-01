@@ -2,6 +2,7 @@
 
 import { APIResource } from '../../core/resource';
 import * as CoreAPI from './core';
+import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../identity/account-users/account-users';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
@@ -44,7 +45,7 @@ export class Analytics extends APIResource {
    *     customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
    *     customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
    *     override_promised_dates: true,
-   *     product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
    *     sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
    *     target_delivery_time_days: 7,
    *   });
@@ -70,7 +71,7 @@ export class Analytics extends APIResource {
    *     forecast_months: 3,
    *     history_months: 6,
    *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
    *   });
    * ```
    */
@@ -145,7 +146,7 @@ export class Analytics extends APIResource {
    *     customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
    *     customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
    *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
    *   });
    * ```
    */
@@ -203,10 +204,14 @@ export class Analytics extends APIResource {
   }
 
   /**
-   * Returns Overall Equipment Effectiveness (OEE) metrics by department, including
-   * good units, waste units, and estimated runtime hours.
+   * Returns Overall Equipment Effectiveness (OEE) metrics by department.
    *
-   * This endpoint requires the permission: `invoices:read`.
+   * Availability is measured from logged machine downtime rather than inferred, so
+   * it requires both `planned_time` for the department and downtime events in the
+   * period. Departments with `has_downtime_data` false have no availability
+   * measurement, and their ratios are returned as null rather than as 100%.
+   *
+   * This endpoint requires the permission: `machine_downtime:read`.
    *
    * @example
    * ```ts
@@ -232,7 +237,7 @@ export class Analytics extends APIResource {
    * const analyzeOpenBatchesResponse =
    *   await client.core.analytics.updateOpenBatches({
    *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
    *   });
    * ```
    */
@@ -254,7 +259,7 @@ export class Analytics extends APIResource {
    *   await client.core.analytics.updateOrders({
    *     customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
    *     customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-   *     product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
    *     sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
    *   });
    * ```
@@ -279,7 +284,7 @@ export class Analytics extends APIResource {
    *     department_ids: ['dp_01791c25ab59da4704cba61874'],
    *     end_date: '2026-05-10T00:23:00Z',
    *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
    *     start_date: '2026-05-10T00:00:00Z',
    *   });
    * ```
@@ -303,7 +308,7 @@ export class Analytics extends APIResource {
    *     customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
    *     customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
    *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
    *     sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
    *   });
    * ```
@@ -328,7 +333,7 @@ export class Analytics extends APIResource {
    *     start_date: '2026-05-10T00:00:00Z',
    *     customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
    *     customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-   *     product_line_ids: ['pl_01996357326a0d3f7b129542ea'],
+   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
    *     query: '6061',
    *     sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
    *   });
@@ -336,6 +341,42 @@ export class Analytics extends APIResource {
    */
   updateSales(body: AnalyticsUpdateSalesParams, options?: RequestOptions): APIPromise<AnalyzeSalesResponse> {
     return this._client.put('/v1/core/analytics/sales', { body, ...options });
+  }
+
+  /**
+   * Returns actual production measured against the plan that was live at the time.
+   *
+   * The baseline for each week is the schedule version published on or before that
+   * week began, so republishing mid-horizon cannot rewrite a week the floor has
+   * already worked. `baseline_schedules` names the versions used.
+   *
+   * Two ratios are returned because either alone misleads: `attainment_pct` caps
+   * each campaign at what was asked for, so over-building one SKU cannot hide a miss
+   * on another, while `output_ratio_pct` is uncapped and is what reveals
+   * over-production. Production with no matching planned campaign is reported as
+   * `unplanned_quantity` rather than discarded — that number is the clearest signal
+   * a schedule is being worked around.
+   *
+   * Every ratio is null rather than zero when nothing was planned, and
+   * `has_baseline` is false when nothing was ever published over the period.
+   *
+   * This endpoint requires the permission: `production_schedules:read`.
+   *
+   * @example
+   * ```ts
+   * const analyzeScheduleAttainmentResponse =
+   *   await client.core.analytics.updateScheduleAttainment({
+   *     end_date: '2026-05-10T00:23:00Z',
+   *     start_date: '2026-05-10T00:00:00Z',
+   *     group_by: 'week',
+   *   });
+   * ```
+   */
+  updateScheduleAttainment(
+    body: AnalyticsUpdateScheduleAttainmentParams,
+    options?: RequestOptions,
+  ): APIPromise<AnalyzeScheduleAttainmentResponse> {
+    return this._client.put('/v1/core/analytics/schedule-attainment', { body, ...options });
   }
 }
 
@@ -551,14 +592,14 @@ export interface AnalyzeDemandForecastResponse {
   current_month_fraction: number;
 
   /**
-   * The demand forecast rows.
+   * List represents a paginated list of resources.
    */
-  data: Array<DemandForecastRow>;
+  data: ListDemandForecastRow | null;
 
   /**
    * Resource type identifier.
    */
-  object: 'list';
+  object: 'analyze_demand_forecast_response';
 }
 
 /**
@@ -792,6 +833,12 @@ export interface AnalyzeOeeRequest {
    * Optional department IDs to filter by.
    */
   department_ids?: Array<string>;
+
+  /**
+   * Scheduled production time per department for the period. Availability,
+   * performance and OEE are only returned for departments this covers.
+   */
+  planned_time?: Array<OeeDepartmentPlannedTime>;
 }
 
 /**
@@ -799,9 +846,9 @@ export interface AnalyzeOeeRequest {
  */
 export interface AnalyzeOeeResponse {
   /**
-   * The OEE data by department.
+   * List represents a paginated list of resources.
    */
-  departments: Array<OeeDepartment>;
+  departments: ListOeeDepartment | null;
 
   /**
    * Resource type identifier.
@@ -1066,6 +1113,98 @@ export interface AnalyzeSalesResponse {
 }
 
 /**
+ * AnalyzeScheduleAttainmentRequest is the request to measure production against
+ * plan.
+ */
+export interface AnalyzeScheduleAttainmentRequest {
+  /**
+   * The end date for the analysis period.
+   */
+  end_date: string;
+
+  /**
+   * The start date for the analysis period.
+   */
+  start_date: string;
+
+  /**
+   * Only measure production in these departments.
+   */
+  department_ids?: Array<string>;
+
+  /**
+   * The dimension to break the results down by. Defaults to `week`.
+   */
+  group_by?: 'week' | 'machine' | 'department' | 'item';
+
+  /**
+   * Only measure production on these machines.
+   */
+  machine_ids?: Array<string>;
+}
+
+/**
+ * Actual production measured against the plan that was live at the time.
+ *
+ * The baseline for each week is the version that was published on or before that
+ * week began, so republishing mid-horizon cannot rewrite a week the floor has
+ * already worked. `baseline_schedules` names the versions used, so any number here
+ * can be traced back to the plan that produced it.
+ */
+export interface AnalyzeScheduleAttainmentResponse {
+  /**
+   * List represents a paginated list of resources.
+   */
+  baseline_schedules: CoreAPI.ListEntity | null;
+
+  /**
+   * Whether the period had a plan to measure against. When `no_baseline`, every
+   * ratio is null and the period has no plan rather than a missed one.
+   */
+  baseline_status: 'measured' | 'no_baseline';
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  buckets: ListAttainmentBucket | null;
+
+  /**
+   * End of the measured period.
+   */
+  ends_at: string;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  frozen_adherence: ListFrozenAdherence | null;
+
+  /**
+   * The dimension the breakdown is grouped by.
+   */
+  group_by: 'week' | 'machine' | 'department' | 'item';
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'analyze_schedule_attainment_response';
+
+  /**
+   * Start of the measured period.
+   */
+  starts_at: string;
+
+  /**
+   * One row of a schedule-attainment breakdown.
+   *
+   * Both ratios are reported because either alone misleads. `attainment_pct` caps
+   * each SKU at what was asked for, so over-building one easy item cannot paper over
+   * a total miss on another; `output_ratio_pct` does not cap, so it is the only one
+   * that reveals over-production.
+   */
+  totals: AttainmentBucket;
+}
+
+/**
  * AnalyzeWeeksOfSalesResponse represents the response from the weeks-of-sales
  * analytics endpoint.
  */
@@ -1084,6 +1223,82 @@ export interface AnalyzeWeeksOfSalesResponse {
    * Resource type identifier.
    */
   object: 'analyze_weeks_of_sales_response';
+}
+
+/**
+ * One row of a schedule-attainment breakdown.
+ *
+ * Both ratios are reported because either alone misleads. `attainment_pct` caps
+ * each SKU at what was asked for, so over-building one easy item cannot paper over
+ * a total miss on another; `output_ratio_pct` does not cap, so it is the only one
+ * that reveals over-production.
+ */
+export interface AttainmentBucket {
+  /**
+   * Units actually produced.
+   */
+  actual_quantity: number;
+
+  /**
+   * Share of the plan that was met. Null when nothing was planned.
+   */
+  attainment_pct: number | null;
+
+  /**
+   * Batches scanned in this bucket.
+   */
+  batch_count: number;
+
+  /**
+   * Identifies the bucket within the chosen grouping — a week start, machine ID,
+   * department ID or item ID.
+   */
+  key: string;
+
+  /**
+   * Display label for the bucket.
+   */
+  label: string;
+
+  /**
+   * Units produced that were planned for, capped per campaign at what was asked.
+   */
+  matched_quantity: number;
+
+  /**
+   * Output as a share of plan, uncapped. Null when nothing was planned.
+   */
+  output_ratio_pct: number | null;
+
+  /**
+   * Planned campaigns in this bucket.
+   */
+  planned_lines: number;
+
+  /**
+   * Units the live plan called for.
+   */
+  planned_quantity: number;
+
+  /**
+   * Machine hours the plan called for.
+   */
+  planned_run_hours: number;
+
+  /**
+   * Units produced with no matching planned campaign.
+   */
+  unplanned_quantity: number;
+
+  /**
+   * Units scrapped.
+   */
+  waste_quantity: number;
+
+  /**
+   * First day of the week, when grouping by week.
+   */
+  week_starts_at: string | null;
 }
 
 /**
@@ -1254,7 +1469,7 @@ export interface DemandForecastForecastPoint {
   /**
    * The date.
    */
-  date: string;
+  at: string;
 
   /**
    * The forecast value.
@@ -1279,7 +1494,7 @@ export interface DemandForecastPoint {
   /**
    * The date.
    */
-  date: string;
+  at: string;
 
   /**
    * The demand value.
@@ -1322,9 +1537,9 @@ export interface DemandForecastRow {
   history: Array<DemandForecastPoint>;
 
   /**
-   * The item ID.
+   * Entity is a polymorphic reference to any resource in the system.
    */
-  item_id: string;
+  item: CoreAPI.Entity | null;
 
   /**
    * The product description.
@@ -1332,9 +1547,9 @@ export interface DemandForecastRow {
   product_description: string | null;
 
   /**
-   * The product line ID.
+   * Entity is a polymorphic reference to any resource in the system.
    */
-  product_line_id: string | null;
+  product_line: CoreAPI.Entity | null;
 
   /**
    * The product SKU.
@@ -1365,6 +1580,61 @@ export interface DemandForecastRow {
    * The unit of measure.
    */
   unit: string;
+}
+
+/**
+ * How well a published commitment survived the week it covered.
+ */
+export interface FrozenAdherence {
+  /**
+   * Total absolute unit change across frozen-week deviations.
+   */
+  abs_delta_units: number;
+
+  /**
+   * Campaigns added into the frozen window after publish.
+   */
+  added_lines: number;
+
+  /**
+   * Frozen campaigns that were changed after publish.
+   */
+  deviated_lines: number;
+
+  /**
+   * Campaigns frozen at publish.
+   */
+  frozen_line_count: number;
+
+  /**
+   * Units frozen at publish.
+   */
+  frozen_planned_quantity: number;
+
+  /**
+   * Last day of the frozen window.
+   */
+  frozen_through_at: string | null;
+
+  /**
+   * Share of frozen campaigns that survived untouched. Null when nothing was frozen.
+   */
+  line_adherence_pct: number | null;
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  schedule: CoreAPI.Entity | null;
+
+  /**
+   * Share of frozen units that survived untouched. Null when nothing was frozen.
+   */
+  units_adherence_pct: number | null;
+
+  /**
+   * Version number of that schedule.
+   */
+  version: number;
 }
 
 /**
@@ -1420,6 +1690,106 @@ export interface InventoryReceiptSummaryEntry {
    * AnalyticsRate represents a rate with numerator and denominator quantities.
    */
   weighted_average_unit_cost: AnalyticsRate;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListAttainmentBucket {
+  /**
+   * Resources in this page.
+   */
+  data: Array<AttainmentBucket>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListDemandForecastRow {
+  /**
+   * Resources in this page.
+   */
+  data: Array<DemandForecastRow>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListFrozenAdherence {
+  /**
+   * Resources in this page.
+   */
+  data: Array<FrozenAdherence>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListOeeDepartment {
+  /**
+   * Resources in this page.
+   */
+  data: Array<OeeDepartment>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * List represents a paginated list of resources.
+ */
+export interface ListOeeDowntimeReason {
+  /**
+   * Resources in this page.
+   */
+  data: Array<OeeDowntimeReason>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo contains URL-based pagination metadata.
+   */
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -1532,14 +1902,40 @@ export interface NewCustomersData {
  */
 export interface OeeDepartment {
   /**
-   * The department ID.
+   * Data-quality warnings for this grouping. Empty when the numbers can be taken at
+   * face value.
    */
-  department_id: string;
+  anomalies: Array<'performance_above_capacity'>;
 
   /**
-   * The department name.
+   * Logged downtime charged against availability, in seconds.
    */
-  department_name: string;
+  availability_loss_seconds: number;
+
+  /**
+   * Run time divided by scheduled time.
+   */
+  availability_pct: number | null;
+
+  /**
+   * Time spent changing over between products, in seconds.
+   */
+  changeover_seconds: number;
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  department: CoreAPI.Entity | null;
+
+  /**
+   * List represents a paginated list of resources.
+   */
+  downtime_breakdown: ListOeeDowntimeReason | null;
+
+  /**
+   * Number of downtime events logged in the period.
+   */
+  downtime_event_count: number;
 
   /**
    * The estimated runtime in hours.
@@ -1552,14 +1948,143 @@ export interface OeeDepartment {
   good_units: number;
 
   /**
+   * The ideal time of the batch tickets in the performance sample, in seconds: what
+   * their output should have taken at each production step's ideal cycle time.
+   */
+  measured_ideal_seconds: number;
+
+  /**
+   * The actual time the sampled tickets took, in seconds, measured from the gaps
+   * between consecutive batch-ticket scans per machine, net of downtime already
+   * charged elsewhere.
+   */
+  measured_run_seconds: number;
+
+  /**
+   * Whether availability was measured from logged downtime or estimated from
+   * runtime. A department with no logged downtime computes as perfectly available,
+   * so an estimate is labelled rather than presented as a measurement.
+   */
+  measurement_status: 'measured' | 'estimated';
+
+  /**
+   * Time nobody planned to run, removed from the OEE denominator rather than counted
+   * as a loss.
+   */
+  not_scheduled_seconds: number;
+
+  /**
+   * Availability multiplied by performance multiplied by quality.
+   */
+  oee_pct: number | null;
+
+  /**
+   * How performance_pct was obtained: measured from scan intervals, or fallen back
+   * to the shift-pattern run-time estimate. Null when performance_pct is null.
+   */
+  performance_basis: 'scan_intervals' | 'run_time_estimate' | null;
+
+  /**
+   * Logged downtime charged against performance, in seconds.
+   */
+  performance_loss_seconds: number;
+
+  /**
+   * Ideal time over actual time for the sampled batch tickets (measured), or
+   * standard seconds earned divided by run time (estimated fallback).
+   */
+  performance_pct: number | null;
+
+  /**
+   * The number of batch tickets in the performance sample.
+   */
+  performance_ticket_count: number;
+
+  /**
+   * Logged downtime charged against quality, in seconds.
+   */
+  quality_loss_seconds: number;
+
+  /**
+   * Good units divided by total units produced.
+   */
+  quality_pct: number | null;
+
+  /**
+   * Scheduled time net of availability losses, in seconds.
+   */
+  run_time_seconds: number;
+
+  /**
+   * Planned time net of not-scheduled downtime, in seconds.
+   */
+  scheduled_seconds: number;
+
+  /**
    * The number of seconds units.
    */
   seconds_units: number;
 
   /**
+   * The time this output should have taken at each production step's own labor rate.
+   * This is the numerator of Performance.
+   */
+  standard_seconds_earned: number;
+
+  /**
    * The number of waste units.
    */
   waste_units: number;
+}
+
+/**
+ * OeeDepartmentPlannedTime supplies the scheduled production time for one
+ * department.
+ */
+export interface OeeDepartmentPlannedTime {
+  /**
+   * The department ID.
+   */
+  department_id: string;
+
+  /**
+   * Scheduled production hours for the period.
+   */
+  planned_hours: number;
+}
+
+/**
+ * OeeDowntimeReason represents one reason's contribution to a department's
+ * downtime.
+ */
+export interface OeeDowntimeReason {
+  /**
+   * Downtime attributed to this reason, in seconds.
+   */
+  downtime_seconds: number;
+
+  /**
+   * Number of events logged against this reason.
+   */
+  event_count: number;
+
+  /**
+   * Which OEE term this reason charges.
+   */
+  oee_bucket: 'availability' | 'performance' | 'quality' | 'not_scheduled';
+
+  /**
+   * Why the machine stopped.
+   */
+  reason:
+    | 'breakdown'
+    | 'changeover'
+    | 'material_shortage'
+    | 'no_operator'
+    | 'planned_maintenance'
+    | 'minor_stop'
+    | 'quality_hold'
+    | 'no_schedule';
 }
 
 /**
@@ -1851,7 +2376,7 @@ export interface RevenueForecastPoint {
   /**
    * The date.
    */
-  date: string;
+  at: string;
 
   /**
    * The revenue value.
@@ -2285,6 +2810,12 @@ export interface AnalyticsUpdateOeeParams {
    * Optional department IDs to filter by.
    */
   department_ids?: Array<string>;
+
+  /**
+   * Scheduled production time per department for the period. Availability,
+   * performance and OEE are only returned for departments this covers.
+   */
+  planned_time?: Array<OeeDepartmentPlannedTime>;
 }
 
 export interface AnalyticsUpdateOpenBatchesParams {
@@ -2418,6 +2949,33 @@ export interface AnalyticsUpdateSalesParams {
   sales_rep_ids?: Array<string>;
 }
 
+export interface AnalyticsUpdateScheduleAttainmentParams {
+  /**
+   * The end date for the analysis period.
+   */
+  end_date: string;
+
+  /**
+   * The start date for the analysis period.
+   */
+  start_date: string;
+
+  /**
+   * Only measure production in these departments.
+   */
+  department_ids?: Array<string>;
+
+  /**
+   * The dimension to break the results down by. Defaults to `week`.
+   */
+  group_by?: 'week' | 'machine' | 'department' | 'item';
+
+  /**
+   * Only measure production on these machines.
+   */
+  machine_ids?: Array<string>;
+}
+
 export declare namespace Analytics {
   export {
     type AnalyticsItem as AnalyticsItem,
@@ -2451,7 +3009,10 @@ export declare namespace Analytics {
     type AnalyzeQuarterlyOrdersResponse as AnalyzeQuarterlyOrdersResponse,
     type AnalyzeSalesRequest as AnalyzeSalesRequest,
     type AnalyzeSalesResponse as AnalyzeSalesResponse,
+    type AnalyzeScheduleAttainmentRequest as AnalyzeScheduleAttainmentRequest,
+    type AnalyzeScheduleAttainmentResponse as AnalyzeScheduleAttainmentResponse,
     type AnalyzeWeeksOfSalesResponse as AnalyzeWeeksOfSalesResponse,
+    type AttainmentBucket as AttainmentBucket,
     type ChartData as ChartData,
     type Coordinate as Coordinate,
     type CostBreakdown as CostBreakdown,
@@ -2461,11 +3022,19 @@ export declare namespace Analytics {
     type DemandForecastForecastPoint as DemandForecastForecastPoint,
     type DemandForecastPoint as DemandForecastPoint,
     type DemandForecastRow as DemandForecastRow,
+    type FrozenAdherence as FrozenAdherence,
     type InventoryReceiptSummaryEntry as InventoryReceiptSummaryEntry,
+    type ListAttainmentBucket as ListAttainmentBucket,
+    type ListDemandForecastRow as ListDemandForecastRow,
+    type ListFrozenAdherence as ListFrozenAdherence,
+    type ListOeeDepartment as ListOeeDepartment,
+    type ListOeeDowntimeReason as ListOeeDowntimeReason,
     type ManufacturingMetrics as ManufacturingMetrics,
     type MaterialAnalyticsEntry as MaterialAnalyticsEntry,
     type NewCustomersData as NewCustomersData,
     type OeeDepartment as OeeDepartment,
+    type OeeDepartmentPlannedTime as OeeDepartmentPlannedTime,
+    type OeeDowntimeReason as OeeDowntimeReason,
     type OpenBatchSummary as OpenBatchSummary,
     type OrderEntry as OrderEntry,
     type ProductionCostItem as ProductionCostItem,
@@ -2486,5 +3055,6 @@ export declare namespace Analytics {
     type AnalyticsUpdateProductionCostsParams as AnalyticsUpdateProductionCostsParams,
     type AnalyticsUpdateQuarterlyOrdersParams as AnalyticsUpdateQuarterlyOrdersParams,
     type AnalyticsUpdateSalesParams as AnalyticsUpdateSalesParams,
+    type AnalyticsUpdateScheduleAttainmentParams as AnalyticsUpdateScheduleAttainmentParams,
   };
 }

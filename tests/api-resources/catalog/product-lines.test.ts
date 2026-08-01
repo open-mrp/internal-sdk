@@ -31,11 +31,12 @@ describe('resource productLines', () => {
       name: 'Industrial Fasteners',
       unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
       include: ['owner'],
+      default_lot: { unit_id: 'unit_id', value: 'value' },
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.productLines.retrieve('pl_01996357326a0d3f7b129542ea');
+    const responsePromise = client.catalog.productLines.retrieve('pdln_01996357326a0d3f7b129542ea');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -49,7 +50,7 @@ describe('resource productLines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productLines.retrieve(
-        'pl_01996357326a0d3f7b129542ea',
+        'pdln_01996357326a0d3f7b129542ea',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -57,7 +58,7 @@ describe('resource productLines', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.productLines.update('pl_01996357326a0d3f7b129542ea');
+    const responsePromise = client.catalog.productLines.update('pdln_01996357326a0d3f7b129542ea');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -71,10 +72,11 @@ describe('resource productLines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productLines.update(
-        'pl_01996357326a0d3f7b129542ea',
+        'pdln_01996357326a0d3f7b129542ea',
         {
           include: ['owner'],
           commission_policy: 'commission_applied',
+          default_lot: { unit_id: 'unit_id', value: 'value' },
           freight_policy: 'billed_freight',
           name: 'Updated Product Line',
           unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
@@ -111,7 +113,7 @@ describe('resource productLines', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.productLines.delete('pl_01996357326a0d3f7b129542ea');
+    const responsePromise = client.catalog.productLines.delete('pdln_01996357326a0d3f7b129542ea');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

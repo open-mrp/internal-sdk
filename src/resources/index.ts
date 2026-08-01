@@ -69,11 +69,23 @@ export {
 } from './messaging/messaging';
 export {
   Operations,
+  type DemandOverrideType,
   type InventoryItem,
+  type ListDemandOverrideType,
   type ListInventoryItem,
+  type ListMachineDowntimeReason,
+  type ListMachineStatus,
+  type ListScheduleDeviationType,
+  type MachineCampaign,
+  type MachineDowntimeReason,
+  type MachineDowntimeReasonSummary,
+  type MachineDowntimeSummary,
+  type MachineStatus,
+  type ScheduleDeviationType,
   type UpdateQuantityRequest,
   type UpdateRateRequest,
   type OperationRetrieveInventoriesParams,
+  type OperationRetrieveMachineStatusParams,
   type OperationUpdateQuantitiesParams,
   type OperationUpdateRatesParams,
 } from './operations/operations';

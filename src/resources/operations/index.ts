@@ -62,6 +62,18 @@ export {
   type DeliveryListParams,
 } from './deliveries';
 export {
+  DemandOverrides,
+  type CreateDemandOverrideRequest,
+  type DemandOverride,
+  type ListDemandOverride,
+  type UpdateDemandOverrideRequest,
+  type DemandOverrideDeleteResponse,
+  type DemandOverrideCreateParams,
+  type DemandOverrideRetrieveParams,
+  type DemandOverrideUpdateParams,
+  type DemandOverrideListParams,
+} from './demand-overrides';
+export {
   Departments,
   type CreateDepartmentRequest,
   type UpdateDepartmentRequest,
@@ -97,6 +109,18 @@ export {
   type LocationListParams,
 } from './locations';
 export {
+  MachineDowntimeEvents,
+  type CreateMachineDowntimeEventRequest,
+  type ListMachineDowntimeEvent,
+  type MachineDowntimeEvent,
+  type UpdateMachineDowntimeEventRequest,
+  type MachineDowntimeEventDeleteResponse,
+  type MachineDowntimeEventCreateParams,
+  type MachineDowntimeEventRetrieveParams,
+  type MachineDowntimeEventUpdateParams,
+  type MachineDowntimeEventListParams,
+} from './machine-downtime-events';
+export {
   Machines,
   type CreateMachineRequest,
   type UpdateMachineRequest,
@@ -108,11 +132,23 @@ export {
 } from './machines';
 export {
   Operations,
+  type DemandOverrideType,
   type InventoryItem,
+  type ListDemandOverrideType,
   type ListInventoryItem,
+  type ListMachineDowntimeReason,
+  type ListMachineStatus,
+  type ListScheduleDeviationType,
+  type MachineCampaign,
+  type MachineDowntimeReason,
+  type MachineDowntimeReasonSummary,
+  type MachineDowntimeSummary,
+  type MachineStatus,
+  type ScheduleDeviationType,
   type UpdateQuantityRequest,
   type UpdateRateRequest,
   type OperationRetrieveInventoriesParams,
+  type OperationRetrieveMachineStatusParams,
   type OperationUpdateQuantitiesParams,
   type OperationUpdateRatesParams,
 } from './operations';
@@ -147,6 +183,39 @@ export {
   type ProductionRunUpdateParams,
   type ProductionRunListParams,
 } from './production-runs/index';
+export {
+  ProductionScheduleSettings,
+  type UpdateProductionScheduleSettingsRequest,
+  type ProductionScheduleSettingUpdateParams,
+} from './production-schedule-settings/index';
+export {
+  ProductionSchedules,
+  type GenerateProductionScheduleRequest,
+  type ListProductionSchedule,
+  type ListProductionScheduleDerivedLine,
+  type ListProductionScheduleDeviation,
+  type ListProductionScheduleFinishedPolicy,
+  type ListProductionScheduleItemPolicy,
+  type ListReleaseScheduleBatch,
+  type ListReleasedScheduleLine,
+  type ListScheduleAppliedOverride,
+  type ProductionSchedule,
+  type ProductionScheduleDerivedLine,
+  type ProductionScheduleDeviation,
+  type ProductionScheduleFinishedPolicy,
+  type ProductionScheduleItemPolicy,
+  type ReleaseScheduleBatch,
+  type ReleaseScheduleWeekPreview,
+  type ReleasedScheduleLine,
+  type ScheduleAppliedOverride,
+  type ScheduleDiagnostics,
+  type ProductionScheduleDeleteResponse,
+  type ProductionScheduleCreateParams,
+  type ProductionScheduleListParams,
+  type ProductionScheduleRetrieveDerivedLinesParams,
+  type ProductionScheduleRetrieveDeviationsParams,
+  type ProductionScheduleRetrieveWeekReleasePreviewParams,
+} from './production-schedules/index';
 export {
   ProductionSteps,
   type CreateConsumptionInput,
