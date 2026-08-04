@@ -2045,19 +2045,6 @@ export interface OeeDepartment {
   good_units: number;
 
   /**
-   * The ideal time of the batch tickets in the performance sample, in seconds: what
-   * their output should have taken at each production step's ideal cycle time.
-   */
-  measured_ideal_seconds: number;
-
-  /**
-   * The actual time the sampled tickets took, in seconds, measured from the gaps
-   * between consecutive batch-ticket scans per machine, net of downtime already
-   * charged elsewhere.
-   */
-  measured_run_seconds: number;
-
-  /**
    * Whether availability was measured from logged downtime or estimated from
    * runtime. A department with no logged downtime computes as perfectly available,
    * so an estimate is labelled rather than presented as a measurement.
@@ -2076,26 +2063,15 @@ export interface OeeDepartment {
   oee_pct: number | null;
 
   /**
-   * How performance_pct was obtained: measured from scan intervals, or fallen back
-   * to the shift-pattern run-time estimate. Null when performance_pct is null.
-   */
-  performance_basis: 'scan_intervals' | 'run_time_estimate' | null;
-
-  /**
    * Logged downtime charged against performance, in seconds.
    */
   performance_loss_seconds: number;
 
   /**
-   * Ideal time over actual time for the sampled batch tickets (measured), or
-   * standard seconds earned divided by run time (estimated fallback).
+   * Standard seconds earned divided by run time: how fast the department ran against
+   * the designed speed of its production steps.
    */
   performance_pct: number | null;
-
-  /**
-   * The number of batch tickets in the performance sample.
-   */
-  performance_ticket_count: number;
 
   /**
    * Logged downtime charged against quality, in seconds.
@@ -2123,8 +2099,9 @@ export interface OeeDepartment {
   seconds_units: number;
 
   /**
-   * The time this output should have taken at each production step's own labor rate.
-   * This is the numerator of Performance.
+   * The time this output should have taken at each production step's own labor rate:
+   * ideal cycle time multiplied by the units produced. This is the numerator of
+   * Performance.
    */
   standard_seconds_earned: number;
 
