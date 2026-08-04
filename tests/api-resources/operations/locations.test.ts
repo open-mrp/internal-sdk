@@ -24,13 +24,13 @@ describe('resource locations', () => {
       name: 'Warehouse A',
       type: 'building',
       include: ['parent'],
-      child_ids: ['lc_014d187d99b31926f0c74af9d8'],
-      parent_id: 'lc_014d187d99b31926f0c74af9d8',
+      child_ids: ['lc_yonnys0hx3ju'],
+      parent_id: 'lc_yonnys0hx3ju',
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.locations.retrieve('lc_014d187d99b31926f0c74af9d8');
+    const responsePromise = client.operations.locations.retrieve('lc_yonnys0hx3ju');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -44,7 +44,7 @@ describe('resource locations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.locations.retrieve(
-        'lc_014d187d99b31926f0c74af9d8',
+        'lc_yonnys0hx3ju',
         { include: ['parent'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -52,7 +52,7 @@ describe('resource locations', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.locations.update('lc_014d187d99b31926f0c74af9d8');
+    const responsePromise = client.operations.locations.update('lc_yonnys0hx3ju');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -66,12 +66,12 @@ describe('resource locations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.locations.update(
-        'lc_014d187d99b31926f0c74af9d8',
+        'lc_yonnys0hx3ju',
         {
           include: ['parent'],
-          child_ids: ['lc_014d187d99b31926f0c74af9d8'],
+          child_ids: ['lc_yonnys0hx3ju'],
           name: 'Warehouse B',
-          parent_id: 'lc_014d187d99b31926f0c74af9d8',
+          parent_id: 'lc_yonnys0hx3ju',
           type: 'section',
         },
         { path: '/_stainless_unknown_path' },
@@ -106,7 +106,7 @@ describe('resource locations', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.locations.delete('lc_014d187d99b31926f0c74af9d8');
+    const responsePromise = client.operations.locations.delete('lc_yonnys0hx3ju');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

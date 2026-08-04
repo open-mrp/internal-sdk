@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource favicon', () => {
   test('update', async () => {
-    const responsePromise = client.identity.accounts.favicon.update('ac_01148680966698341a9c0976db');
+    const responsePromise = client.identity.accounts.favicon.update('ac_ykxoradjoeb3');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource favicon', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.identity.accounts.favicon.list('ac_01148680966698341a9c0976db');
+    const responsePromise = client.identity.accounts.favicon.list('ac_ykxoradjoeb3');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -48,14 +48,14 @@ export class Items extends APIResource {
   attributes: AttributesAPI.Attributes = new AttributesAPI.Attributes(this._client);
 
   /**
-   * Returns an item by ID.
+   * Returns a single item by ID.
    *
    * This endpoint requires the permission: `items:read`.
    *
    * @example
    * ```ts
    * const item = await client.catalog.items.retrieve(
-   *   'it_0131e386ac683e8c29a71f6f1f',
+   *   'it_pej07ckhvu62',
    * );
    * ```
    */
@@ -68,7 +68,12 @@ export class Items extends APIResource {
   }
 
   /**
-   * Returns a paginated list of items.
+   * Returns a paginated list of items, newest first.
+   *
+   * Items backed by a non-sale product — the service, shipping, tax, credit, and
+   * return products that carry charges on orders — are left out, so this reflects
+   * the catalog you sell and stock rather than every item row. `q` matches against
+   * SKU and description, with closer SKU matches ranked first.
    *
    * This endpoint requires the permission: `items:read`.
    *
@@ -82,19 +87,23 @@ export class Items extends APIResource {
   }
 
   /**
-   * Moves an item to a different category.
+   * Moves an item to a different category and returns the updated item.
    *
    * The item's rate units (unit value, unit cost, burn rate) and any related
-   * order-point, consumption, and production quantity units are updated to the new
-   * category's base unit. Re-assigning the item's current category is a no-op.
+   * order-point, consumption, and production quantity units are switched to the new
+   * category's base unit. Only the units change — the numbers attached to them are
+   * carried over as they were, so review any figure whose meaning depends on the
+   * unit after moving between categories that count differently.
+   *
+   * Re-assigning the item's current category succeeds and changes nothing.
    *
    * This endpoint requires the permission: `items:update`.
    *
    * @example
    * ```ts
    * const item = await client.catalog.items.changeCategory(
-   *   'ic_01ae7bd7bfd21ca0ab81e1357e',
-   *   { id: 'it_0131e386ac683e8c29a71f6f1f' },
+   *   'ic_d06g9c6yc9ck',
+   *   { id: 'it_pej07ckhvu62' },
    * );
    * ```
    */
@@ -111,19 +120,24 @@ export class Items extends APIResource {
   }
 
   /**
-   * Returns the per-unit production cost breakdown for an item, including direct
-   * material, direct labor, overhead, and total costs.
+   * Returns what it costs to make one unit of an item, split into direct material,
+   * direct labor, and overhead.
    *
-   * Costs are computed from the production flow that produces the item; items not
-   * produced by any production flow return a not-found error. As a side effect, the
-   * item's `unit_cost` rate is refreshed to the computed total.
+   * The figures are recomputed on each call by walking back through every production
+   * step that feeds the step producing this item, so the answer reflects the current
+   * recipe and the current cost of everything consumed along the way. Items that no
+   * production flow produces — purchased materials, for instance — return a
+   * not-found error rather than a zero breakdown.
+   *
+   * Calling this also writes the computed total back to the item's `unit_cost`, so
+   * it is how a stale unit cost gets refreshed.
    *
    * This endpoint requires the permission: `items:read`.
    *
    * @example
    * ```ts
    * const itemCosts = await client.catalog.items.retrieveCosts(
-   *   'it_0131e386ac683e8c29a71f6f1f',
+   *   'it_pej07ckhvu62',
    * );
    * ```
    */
@@ -153,7 +167,7 @@ export class Items extends APIResource {
    * ```ts
    * const itemLotDefault =
    *   await client.catalog.items.retrieveLotDefault(
-   *     'it_0131e386ac683e8c29a71f6f1f',
+   *     'it_pej07ckhvu62',
    *   );
    * ```
    */
@@ -166,8 +180,12 @@ export class Items extends APIResource {
   }
 
   /**
-   * Returns historical trend data for an item as a time-ordered series of data
-   * points.
+   * Returns how an item's stock level has moved over the last 30 days, as a series
+   * of point-in-time measurements.
+   *
+   * Days on which nothing was logged produce no point, and days with several entries
+   * contribute only the first, so the series is sparse rather than one point per
+   * calendar day.
    *
    * This endpoint requires the permission: `items:read`.
    *
@@ -175,7 +193,7 @@ export class Items extends APIResource {
    * ```ts
    * const itemTrends =
    *   await client.catalog.items.retrieveTrends(
-   *     'it_0131e386ac683e8c29a71f6f1f',
+   *     'it_pej07ckhvu62',
    *     { trend_type: 'trend_type' },
    *   );
    * ```
@@ -190,17 +208,25 @@ export class Items extends APIResource {
 }
 
 /**
- * ItemCosts is the per-unit production cost breakdown for an item, computed from
- * the production flow that produces it.
+ * The per-unit production cost breakdown for an item, computed from the production
+ * flow that produces it.
  */
 export interface ItemCosts {
   /**
    * Labor cost to produce one unit of the item.
+   *
+   * Based on each step's labor time after its leveling factor and allowances are
+   * applied, priced at that step's labor rate.
    */
   direct_labor_cost: string;
 
   /**
-   * Cost of materials consumed to produce one unit of the item.
+   * Cost of materials consumed to produce one unit of the item, including the
+   * portion consumed as waste.
+   *
+   * Counts raw materials only. Parts and sub-products consumed along the way are not
+   * priced here; their labor, overhead, and material costs are already included
+   * through the steps that produce them.
    */
   direct_material_cost: string;
 
@@ -211,6 +237,9 @@ export interface ItemCosts {
 
   /**
    * Overhead cost allocated to one unit of the item.
+   *
+   * Applied over the same corrected labor time as `direct_labor_cost`, priced at
+   * each step's overhead rate.
    */
   overhead_cost: string;
 
@@ -263,6 +292,9 @@ export interface ItemLotDefault {
    * - `downstream_product_line`: inherited from the finished goods this item
    *   becomes, for intermediates that are not themselves sold.
    * - `account_default`: the account-wide fallback.
+   *
+   * Empty when no rule in the chain supplies a lot, which is the same case
+   * `quantity` reports as `0`.
    */
   source: 'item_override' | 'product_line' | 'downstream_product_line' | 'account_default' | '';
 
@@ -273,7 +305,7 @@ export interface ItemLotDefault {
 }
 
 /**
- * ItemTrendPoint is a single trend data point.
+ * A single measurement in an item's trend series.
  */
 export interface ItemTrendPoint {
   /**
@@ -293,7 +325,7 @@ export interface ItemTrendPoint {
 }
 
 /**
- * ItemTrends is the historical trend data for an item.
+ * Historical trend data for an item, as a time-ordered series of measurements.
  */
 export interface ItemTrends {
   /**
@@ -302,7 +334,8 @@ export interface ItemTrends {
   object: 'item';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   points: ListItemTrendPoint | null;
 
@@ -315,7 +348,8 @@ export interface ItemTrends {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListItem {
   /**
@@ -329,13 +363,20 @@ export interface ListItem {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListItemTrendPoint {
   /**
@@ -349,7 +390,13 @@ export interface ListItemTrendPoint {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -375,12 +422,12 @@ export interface ItemRetrieveParams {
 
 export interface ItemListParams {
   /**
-   * Filter by attribute IDs.
+   * Filter to items carrying any of these attributes.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Filter by category IDs.
+   * Filter to items in any of these categories.
    */
   category_ids?: Array<string>;
 
@@ -394,13 +441,16 @@ export interface ItemListParams {
   cursor?: string;
 
   /**
-   * Filter by customer account IDs (only items whose product line is accessible to
-   * any of these customers).
+   * Filter to items any of these customers are allowed to order.
+   *
+   * A customer qualifies when its relationship, its account group, or its price
+   * group grants access to the product line the item's product sits in. Items with
+   * no product line, including materials and parts, never match.
    */
   customer_ids?: Array<string>;
 
   /**
-   * Filter items created on or before this date.
+   * Filter to items created on or before this date.
    */
   end_date?: string;
 
@@ -427,8 +477,7 @@ export interface ItemListParams {
   limit?: number;
 
   /**
-   * Filter by product line IDs (only items whose product belongs to one of these
-   * lines).
+   * Filter to items whose product belongs to any of these product lines.
    */
   product_line_ids?: Array<string>;
 
@@ -440,7 +489,7 @@ export interface ItemListParams {
   q?: string;
 
   /**
-   * Filter items created on or after this date.
+   * Filter to items created on or after this date.
    */
   start_date?: string;
 
@@ -454,7 +503,10 @@ export interface ItemListParams {
   subassembly_filter?: 'all' | 'initial_only';
 
   /**
-   * Filter by supplier ID.
+   * Filter to materials this supplier account supplies to you.
+   *
+   * Only materials can have suppliers, so combining this with a `types` filter that
+   * excludes `material` returns nothing.
    */
   supplier_id?: string;
 

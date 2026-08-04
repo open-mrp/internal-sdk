@@ -34,7 +34,7 @@ describe('resource integrations', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.settings.integrations.update('acig_0177772eae113431f64d473124');
+    const responsePromise = client.settings.integrations.update('acig_5ilahyezrs63');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,7 +48,7 @@ describe('resource integrations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.settings.integrations.update(
-        'acig_0177772eae113431f64d473124',
+        'acig_5ilahyezrs63',
         { name: 'Updated Stripe Integration', status: 'active' },
         { path: '/_stainless_unknown_path' },
       ),
@@ -81,7 +81,7 @@ describe('resource integrations', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.settings.integrations.delete('acig_0177772eae113431f64d473124');
+    const responsePromise = client.settings.integrations.delete('acig_5ilahyezrs63');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -25,12 +25,12 @@ describe('resource accountUsers', () => {
       client.identity.accountUsers.create(
         {
           include: ['user'],
-          department_id: 'dp_01791c25ab59da4704cba61874',
+          department_id: 'dp_m0jayebxnkos',
           email: 'jdoe@augno.com',
           name: 'John Doe',
           password: 'QgS7Z8Hhj3&1',
           preferences: [{ enabled: true, notification_type: 'order_acknowledgement' }],
-          role_id: 'rl_01c16d2eb637c0d1f3a372937c',
+          role_id: 'rl_3xknmfqflhvb',
           username: 'jdoe',
         },
         { path: '/_stainless_unknown_path' },
@@ -39,7 +39,7 @@ describe('resource accountUsers', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.identity.accountUsers.retrieve('acus_01ea9983ddb41dacc44ecf997c');
+    const responsePromise = client.identity.accountUsers.retrieve('acus_e5zu8bde0z3h');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -53,7 +53,7 @@ describe('resource accountUsers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.identity.accountUsers.retrieve(
-        'acus_01ea9983ddb41dacc44ecf997c',
+        'acus_e5zu8bde0z3h',
         { include: ['user'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -61,7 +61,7 @@ describe('resource accountUsers', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.identity.accountUsers.update('acus_01ea9983ddb41dacc44ecf997c');
+    const responsePromise = client.identity.accountUsers.update('acus_e5zu8bde0z3h');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -75,14 +75,14 @@ describe('resource accountUsers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.identity.accountUsers.update(
-        'acus_01ea9983ddb41dacc44ecf997c',
+        'acus_e5zu8bde0z3h',
         {
           include: ['user'],
-          department_id: 'dp_01791c25ab59da4704cba61874',
+          department_id: 'dp_m0jayebxnkos',
           email: 'jdoe@augno.com',
           name: 'John Doe',
           preferences: [{ enabled: true, notification_type: 'order_acknowledgement' }],
-          role_id: 'rl_01c16d2eb637c0d1f3a372937c',
+          role_id: 'rl_3xknmfqflhvb',
           username: 'jdoe',
         },
         { path: '/_stainless_unknown_path' },

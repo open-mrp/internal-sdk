@@ -13,8 +13,10 @@ export class Actions extends APIResource {
    * Deletes multiple batches in one request.
    *
    * Batch IDs that cannot be found are skipped; the request fails only if none of
-   * the batches exist. After deletion, any production run whose batches are now all
-   * scanned or deleted is closed automatically.
+   * the batches exist. Deleting a batch also removes its links to the batches
+   * feeding into and out of it, breaking the production flow at that point, and
+   * detaches it from any machines. After deletion, any production run whose batches
+   * are now all scanned or deleted is closed automatically.
    *
    * This endpoint requires the permission: `batches:delete`.
    *
@@ -22,7 +24,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.batches.actions.bulkDelete({
-   *     batch_ids: ['bt_017313a7df2d7ac8d895809747'],
+   *     batch_ids: ['bt_fuies8j4pk45'],
    *   });
    * ```
    */
@@ -33,12 +35,18 @@ export class Actions extends APIResource {
   /**
    * Closes a batch so it can no longer be scanned or advanced through production.
    *
+   * Use this to finish a batch whose remaining quantity will not be produced, for
+   * example when the floor stops short of the planned output. Batches also close on
+   * their own when they reach the last production step, when they are moved or
+   * merged into a downstream batch, and when everything split off them accounts for
+   * their whole quantity. A closed batch cannot be reopened.
+   *
    * This endpoint requires the permission: `batches:delete`.
    *
    * @example
    * ```ts
    * const batch = await client.operations.batches.actions.close(
-   *   { batch_id: 'bt_017313a7df2d7ac8d895809747' },
+   *   { batch_id: 'bt_fuies8j4pk45' },
    * );
    * ```
    */
@@ -62,8 +70,8 @@ export class Actions extends APIResource {
    * ```ts
    * const batch =
    *   await client.operations.batches.actions.initialize({
-   *     batch_id: 'bt_017313a7df2d7ac8d895809747',
-   *     scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
+   *     batch_id: 'bt_fuies8j4pk45',
+   *     scanning_station_id: 'scst_t71bn7lq5yov',
    *   });
    * ```
    */
@@ -74,9 +82,13 @@ export class Actions extends APIResource {
   /**
    * Merges multiple batches into a single new batch at a production step.
    *
-   * A new batch is created at the target step with its quantity calculated from the
-   * step's configuration, the source batches are linked as inputs and closed, and
-   * the step's material consumption is executed asynchronously. Returns the newly
+   * The new batch is created at the target step and its quantity is scaled from how
+   * much input was supplied against the step's configured input-to-output ratio: for
+   * a single-part step the source quantities are summed, and for a multi-part step
+   * every part must work out to the same output quantity or the merge is rejected.
+   * The source batches are linked as inputs and closed, the step's material
+   * consumption runs asynchronously afterwards, and the new batch is closed
+   * immediately if the target step is the last one in the flow. Returns the newly
    * created batch.
    *
    * This endpoint requires the permission: `batches:create`.
@@ -85,9 +97,9 @@ export class Actions extends APIResource {
    * ```ts
    * const batch = await client.operations.batches.actions.merge(
    *   {
-   *     batch_ids: ['bt_017313a7df2d7ac8d895809747'],
-   *     production_step_id: 'prst_0159474175bb59f4b1990404ee',
-   *     scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
+   *     batch_ids: ['bt_fuies8j4pk45'],
+   *     production_step_id: 'prst_0ht5mkqx5a6t',
+   *     scanning_station_id: 'scst_t71bn7lq5yov',
    *   },
    * );
    * ```
@@ -99,19 +111,22 @@ export class Actions extends APIResource {
   /**
    * Advances batches to a production step by creating a new batch at that step.
    *
-   * A new batch is created with its item and quantity calculated from the target
-   * step's configuration, the source batches are linked as inputs and closed, and
-   * the step's material consumption is executed asynchronously. Returns the newly
-   * created batch.
+   * The new batch carries the item the target step produces, and its quantity is
+   * scaled from the source quantities against the step's configured input-to-output
+   * ratio; when several parts are supplied, each must work out to the same output
+   * quantity or the move is rejected. The source batches are linked as inputs and
+   * closed, the step's material consumption runs asynchronously afterwards, and the
+   * new batch is closed immediately if the target step is the last one in the flow.
+   * Returns the newly created batch.
    *
    * This endpoint requires the permission: `batches:create`.
    *
    * @example
    * ```ts
    * const batch = await client.operations.batches.actions.move({
-   *   batch_ids: ['bt_017313a7df2d7ac8d895809747'],
-   *   production_step_id: 'prst_0159474175bb59f4b1990404ee',
-   *   scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
+   *   batch_ids: ['bt_fuies8j4pk45'],
+   *   production_step_id: 'prst_0ht5mkqx5a6t',
+   *   scanning_station_id: 'scst_t71bn7lq5yov',
    * });
    * ```
    */
@@ -123,9 +138,14 @@ export class Actions extends APIResource {
    * Splits a quantity off one or more batches into a new batch, grading the output
    * as firsts, seconds, and waste.
    *
-   * A new batch carrying the firsts quantity is created at the production step, with
-   * any seconds and waste recorded on it; the source batches are linked as inputs.
-   * Returns the newly created batch.
+   * Unlike a move, the operator states how much was produced rather than letting the
+   * step's ratio decide, which is how partial output and quality grading are
+   * recorded. A new batch carrying the firsts quantity is created at the production
+   * step, with any seconds and waste recorded on it, and the source batches are
+   * linked as inputs. Only the firsts quantity is added to inventory; seconds and
+   * waste still consume input materials. The step's material consumption runs
+   * asynchronously afterwards, and the new batch is closed immediately if the step
+   * is the last one in the flow. Returns the newly created batch.
    *
    * This endpoint requires the permission: `batches:create`.
    *
@@ -133,15 +153,15 @@ export class Actions extends APIResource {
    * ```ts
    * const batch = await client.operations.batches.actions.split(
    *   {
-   *     batch_ids: ['bt_017313a7df2d7ac8d895809747'],
+   *     batch_ids: ['bt_fuies8j4pk45'],
    *     close_batch: false,
    *     firsts: {
-   *       id: 'bt_017313a7df2d7ac8d895809747',
+   *       id: 'bt_fuies8j4pk45',
    *       measure: '10.5',
-   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       unit_id: 'un_82bd37dae5po',
    *     },
-   *     production_step_id: 'prst_0159474175bb59f4b1990404ee',
-   *     scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
+   *     production_step_id: 'prst_0ht5mkqx5a6t',
+   *     scanning_station_id: 'scst_t71bn7lq5yov',
    *   },
    * );
    * ```
@@ -176,12 +196,18 @@ export interface DeleteManyBatchesRequest {
  */
 export interface InitializeBatchRequest {
   /**
-   * ID of the batch to initialize; the batch must be open and not yet scanned.
+   * ID of the batch to initialize.
+   *
+   * The batch must belong to a production run, still be open, and not have been
+   * scanned before.
    */
   batch_id: string;
 
   /**
-   * Scanning station ID.
+   * ID of the scanning station the batch is being scanned at.
+   *
+   * The station must have a production step that produces the batch's item, since
+   * that step is what the batch is attached to.
    */
   scanning_station_id: string;
 }
@@ -195,7 +221,9 @@ export interface MergeBatchesRequest {
    *
    * Duplicates are rejected. For single-part production steps all batches must be of
    * the same item; for multi-part steps supply at least one batch per part the step
-   * consumes.
+   * consumes. Each ID is resolved forward through its production flow to the batch
+   * that is actually available at the step, so an operator can scan an earlier batch
+   * in the chain.
    */
   batch_ids: Array<string>;
 
@@ -218,7 +246,9 @@ export interface MoveBatchesRequest {
    * Batch IDs to move.
    *
    * Pass a single ID to advance one batch, or multiple IDs (one per part) when the
-   * target step combines multiple parts.
+   * target step combines multiple parts. Each ID is resolved forward through its
+   * production flow to the batch that is actually available at the step, so an
+   * operator can scan an earlier batch in the chain.
    */
   batch_ids: Array<string>;
 
@@ -241,15 +271,19 @@ export interface SplitBatchRequest {
    * Batch IDs to split from.
    *
    * Pass a single ID for single-part production steps, or multiple IDs (one per
-   * part) for multi-part steps.
+   * part) for multi-part steps. Each ID is resolved forward through its production
+   * flow to the batch that is actually available at the step, so an operator can
+   * scan an earlier batch in the chain.
    */
   batch_ids: Array<string>;
 
   /**
    * Whether to close the source batches after splitting.
    *
-   * When the source batches are left open, each is still closed automatically once
-   * its quantity is fully used by splits.
+   * Set this when the operator is done with the source batch even though quantity is
+   * left over. When left open, a source batch is still closed automatically once
+   * everything split off it (firsts, seconds, and waste together) accounts for its
+   * full quantity.
    */
   close_batch: boolean;
 
@@ -284,7 +318,10 @@ export interface SplitBatchRequest {
  */
 export interface SplitQuantityInput {
   /**
-   * Identifier for this split quantity.
+   * Client-side identifier for this quantity.
+   *
+   * Useful for correlating quantities in your own UI; it is not stored and has no
+   * effect on the result.
    */
   id: string;
 
@@ -317,12 +354,18 @@ export interface ActionCloseParams {
 
 export interface ActionInitializeParams {
   /**
-   * ID of the batch to initialize; the batch must be open and not yet scanned.
+   * ID of the batch to initialize.
+   *
+   * The batch must belong to a production run, still be open, and not have been
+   * scanned before.
    */
   batch_id: string;
 
   /**
-   * Scanning station ID.
+   * ID of the scanning station the batch is being scanned at.
+   *
+   * The station must have a production step that produces the batch's item, since
+   * that step is what the batch is attached to.
    */
   scanning_station_id: string;
 }
@@ -333,7 +376,9 @@ export interface ActionMergeParams {
    *
    * Duplicates are rejected. For single-part production steps all batches must be of
    * the same item; for multi-part steps supply at least one batch per part the step
-   * consumes.
+   * consumes. Each ID is resolved forward through its production flow to the batch
+   * that is actually available at the step, so an operator can scan an earlier batch
+   * in the chain.
    */
   batch_ids: Array<string>;
 
@@ -353,7 +398,9 @@ export interface ActionMoveParams {
    * Batch IDs to move.
    *
    * Pass a single ID to advance one batch, or multiple IDs (one per part) when the
-   * target step combines multiple parts.
+   * target step combines multiple parts. Each ID is resolved forward through its
+   * production flow to the batch that is actually available at the step, so an
+   * operator can scan an earlier batch in the chain.
    */
   batch_ids: Array<string>;
 
@@ -373,15 +420,19 @@ export interface ActionSplitParams {
    * Batch IDs to split from.
    *
    * Pass a single ID for single-part production steps, or multiple IDs (one per
-   * part) for multi-part steps.
+   * part) for multi-part steps. Each ID is resolved forward through its production
+   * flow to the batch that is actually available at the step, so an operator can
+   * scan an earlier batch in the chain.
    */
   batch_ids: Array<string>;
 
   /**
    * Whether to close the source batches after splitting.
    *
-   * When the source batches are left open, each is still closed automatically once
-   * its quantity is fully used by splits.
+   * Set this when the operator is done with the source batch even though quantity is
+   * left over. When left open, a source batch is still closed automatically once
+   * everything split off it (firsts, seconds, and waste together) accounts for its
+   * full quantity.
    */
   close_batch: boolean;
 

@@ -9,10 +9,9 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('initiateOAuth: only required params', async () => {
-    const responsePromise = client.operations.carriers.actions.initiateOAuth(
-      'cr_01784fd54c9ba197bb4e42f0e6',
-      { redirect_uri: 'https://app.example.com/carriers/oauth/callback' },
-    );
+    const responsePromise = client.operations.carriers.actions.initiateOAuth('cr_tv5vfjtgu1n3', {
+      redirect_uri: 'https://app.example.com/carriers/oauth/callback',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,14 +22,14 @@ describe('resource actions', () => {
   });
 
   test('initiateOAuth: required and optional params', async () => {
-    const response = await client.operations.carriers.actions.initiateOAuth('cr_01784fd54c9ba197bb4e42f0e6', {
+    const response = await client.operations.carriers.actions.initiateOAuth('cr_tv5vfjtgu1n3', {
       redirect_uri: 'https://app.example.com/carriers/oauth/callback',
       state: 'state',
     });
   });
 
   test('syncOptions', async () => {
-    const responsePromise = client.operations.carriers.actions.syncOptions('cr_01784fd54c9ba197bb4e42f0e6');
+    const responsePromise = client.operations.carriers.actions.syncOptions('cr_tv5vfjtgu1n3');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -44,7 +43,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.carriers.actions.syncOptions(
-        'cr_01784fd54c9ba197bb4e42f0e6',
+        'cr_tv5vfjtgu1n3',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),

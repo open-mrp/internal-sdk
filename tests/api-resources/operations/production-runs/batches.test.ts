@@ -9,18 +9,15 @@ const client = new Augno({
 
 describe('resource batches', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.productionRuns.batches.create(
-      'prru_0141c28081df4faac0fe726c41',
-      {
-        batches: [
-          {
-            item_id: 'it_0131e386ac683e8c29a71f6f1f',
-            quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-            quantity_value: '100',
-          },
-        ],
-      },
-    );
+    const responsePromise = client.operations.productionRuns.batches.create('prru_sglzcyflxk59', {
+      batches: [
+        {
+          item_id: 'it_pej07ckhvu62',
+          quantity_unit_id: 'un_82bd37dae5po',
+          quantity_value: '100',
+        },
+      ],
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -31,28 +28,25 @@ describe('resource batches', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.operations.productionRuns.batches.create(
-      'prru_0141c28081df4faac0fe726c41',
-      {
-        batches: [
-          {
-            item_id: 'it_0131e386ac683e8c29a71f6f1f',
-            quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-            quantity_value: '100',
-            production_step_id: 'prst_0159474175bb59f4b1990404ee',
-            scanning_station_id: 'scanning_station_id',
-            seconds_unit_id: 'seconds_unit_id',
-            seconds_value: 'seconds_value',
-            waste_unit_id: 'waste_unit_id',
-            waste_value: 'waste_value',
-          },
-        ],
-      },
-    );
+    const response = await client.operations.productionRuns.batches.create('prru_sglzcyflxk59', {
+      batches: [
+        {
+          item_id: 'it_pej07ckhvu62',
+          quantity_unit_id: 'un_82bd37dae5po',
+          quantity_value: '100',
+          production_step_id: 'prst_0ht5mkqx5a6t',
+          scanning_station_id: 'scanning_station_id',
+          seconds_unit_id: 'seconds_unit_id',
+          seconds_value: 'seconds_value',
+          waste_unit_id: 'waste_unit_id',
+          waste_value: 'waste_value',
+        },
+      ],
+    });
   });
 
   test('list', async () => {
-    const responsePromise = client.operations.productionRuns.batches.list('prru_0141c28081df4faac0fe726c41');
+    const responsePromise = client.operations.productionRuns.batches.list('prru_sglzcyflxk59');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -66,7 +60,7 @@ describe('resource batches', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionRuns.batches.list(
-        'prru_0141c28081df4faac0fe726c41',
+        'prru_sglzcyflxk59',
         {
           cursor: 'cursor',
           limit: 0,

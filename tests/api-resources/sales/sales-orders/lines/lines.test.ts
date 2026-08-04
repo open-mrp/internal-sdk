@@ -9,10 +9,10 @@ const client = new Augno({
 
 describe('resource lines', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.lines.create('or_01d5034136c3ccc048abecc312', {
-      product_id: 'pd_013c29ab3f1518d0004094c316',
+    const responsePromise = client.sales.salesOrders.lines.create('or_9lqo07quiwyb', {
+      product_id: 'pd_07oe0r7adh2w',
       product_sku: 'WIDGET-001',
-      quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
+      quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -24,10 +24,10 @@ describe('resource lines', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.sales.salesOrders.lines.create('or_01d5034136c3ccc048abecc312', {
-      product_id: 'pd_013c29ab3f1518d0004094c316',
+    const response = await client.sales.salesOrders.lines.create('or_9lqo07quiwyb', {
+      product_id: 'pd_07oe0r7adh2w',
       product_sku: 'WIDGET-001',
-      quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
+      quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
       include: ['product'],
       product_description: 'product_description',
       unit_price: {
@@ -39,9 +39,7 @@ describe('resource lines', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.lines.update('example', {
-      id: 'or_01d5034136c3ccc048abecc312',
-    });
+    const responsePromise = client.sales.salesOrders.lines.update('example', { id: 'or_9lqo07quiwyb' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -53,28 +51,26 @@ describe('resource lines', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.sales.salesOrders.lines.update('example', {
-      id: 'or_01d5034136c3ccc048abecc312',
+      id: 'or_9lqo07quiwyb',
       include: ['product'],
       product_description: 'product_description',
       product_sku: 'product_sku',
-      quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '20' },
+      quantity: { unit_id: 'un_82bd37dae5po', value: '20' },
       unit_cost: {
         denominator_unit_id: 'denominator_unit_id',
         numerator_unit_id: 'numerator_unit_id',
         value: 'value',
       },
       unit_price: {
-        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        denominator_unit_id: 'un_82bd37dae5po',
+        numerator_unit_id: 'un_82bd37dae5po',
         value: '30.00',
       },
     });
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.lines.delete('example', {
-      id: 'or_01d5034136c3ccc048abecc312',
-    });
+    const responsePromise = client.sales.salesOrders.lines.delete('example', { id: 'or_9lqo07quiwyb' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -85,8 +81,6 @@ describe('resource lines', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.sales.salesOrders.lines.delete('example', {
-      id: 'or_01d5034136c3ccc048abecc312',
-    });
+    const response = await client.sales.salesOrders.lines.delete('example', { id: 'or_9lqo07quiwyb' });
   });
 });

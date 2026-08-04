@@ -11,8 +11,14 @@ import { path } from '../../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Mints a presigned URL for uploading a chat attachment directly to object
+   * Creates a short-lived URL for uploading a chat attachment straight to object
    * storage.
+   *
+   * Upload the file to the returned URL, then send a message in the same
+   * conversation carrying the returned key as an attachment — the file only becomes
+   * part of the conversation at that point, and an upload that is never sent is
+   * discarded automatically. You must be an active participant of the conversation
+   * to stage an upload for it.
    *
    * This endpoint requires the permission: `messaging:create`.
    *
@@ -20,7 +26,7 @@ export class Actions extends APIResource {
    * ```ts
    * const attachmentUploadTarget =
    *   await client.messaging.conversations.attachments.actions.uploadURL(
-   *     'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+   *     'cv_w35z4ck68yq7',
    *     { filename: 'diagram.png', content_type: 'image/png' },
    *   );
    * ```
@@ -42,9 +48,9 @@ export class Actions extends APIResource {
 /**
  * A presigned target for uploading a chat attachment directly to object storage.
  *
- * The client PUTs the file to `upload_url`, then references `s3_key` when sending
- * the message. Request `?include=attachment` to expand the pre-allocated
- * attachment metadata.
+ * PUT the file to `upload_url`, then send a message carrying an attachment whose
+ * `s3_key` is the key returned here. An upload that is never sent with a message
+ * is discarded automatically, so abandoning a target costs nothing.
  */
 export interface AttachmentUploadTarget {
   /**
@@ -53,7 +59,10 @@ export interface AttachmentUploadTarget {
   attachment: MessagingAPI.MessageAttachment | null;
 
   /**
-   * When the upload URL expires.
+   * When the upload URL stops working.
+   *
+   * Targets are short-lived (about fifteen minutes); request a new one if the upload
+   * has not finished by then.
    */
   expires_at: string;
 
@@ -63,12 +72,18 @@ export interface AttachmentUploadTarget {
   object: 'attachment_upload_target';
 
   /**
-   * The object-storage key to echo back when sending the message.
+   * The object-storage key identifying the uploaded file.
+   *
+   * Pass it back as an attachment's `s3_key` when sending a message. It is bound to
+   * the conversation it was minted for and cannot be attached in another one.
    */
   s3_key: string;
 
   /**
    * The presigned URL to PUT the file to.
+   *
+   * Send the file with the same content type used to mint the target, or the upload
+   * is rejected.
    */
   upload_url: string;
 }
@@ -83,7 +98,11 @@ export interface CreateAttachmentUploadURLRequest {
   filename: string;
 
   /**
-   * The MIME content type of the file (sent as the Content-Type on the upload).
+   * The MIME content type of the file.
+   *
+   * The file must then be uploaded with this same content type, or object storage
+   * rejects it. It also decides how the attachment preview returned here is
+   * classified: `image/…` becomes an inline image, anything else a file.
    */
   content_type?: string;
 }
@@ -101,8 +120,11 @@ export interface ActionUploadURLParams {
   include?: Array<'attachment' | 'attachment.resource'>;
 
   /**
-   * Body param: The MIME content type of the file (sent as the Content-Type on the
-   * upload).
+   * Body param: The MIME content type of the file.
+   *
+   * The file must then be uploaded with this same content type, or object storage
+   * rejects it. It also decides how the attachment preview returned here is
+   * classified: `image/…` becomes an inline image, anything else a file.
    */
   content_type?: string;
 }

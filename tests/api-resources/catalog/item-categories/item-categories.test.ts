@@ -12,7 +12,7 @@ describe('resource itemCategories', () => {
     const responsePromise = client.catalog.itemCategories.create({
       name: 'Electronics',
       type: 'material_category',
-      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
+      unit_group_id: 'ug_andst6m79n41',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -27,13 +27,13 @@ describe('resource itemCategories', () => {
     const response = await client.catalog.itemCategories.create({
       name: 'Electronics',
       type: 'material_category',
-      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
+      unit_group_id: 'ug_andst6m79n41',
       include: ['owner'],
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.itemCategories.retrieve('ic_01ae7bd7bfd21ca0ab81e1357e');
+    const responsePromise = client.catalog.itemCategories.retrieve('ic_d06g9c6yc9ck');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -47,7 +47,7 @@ describe('resource itemCategories', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.itemCategories.retrieve(
-        'ic_01ae7bd7bfd21ca0ab81e1357e',
+        'ic_d06g9c6yc9ck',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -55,7 +55,7 @@ describe('resource itemCategories', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.itemCategories.update('ic_01ae7bd7bfd21ca0ab81e1357e');
+    const responsePromise = client.catalog.itemCategories.update('ic_d06g9c6yc9ck');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,7 +69,7 @@ describe('resource itemCategories', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.itemCategories.update(
-        'ic_01ae7bd7bfd21ca0ab81e1357e',
+        'ic_d06g9c6yc9ck',
         {
           include: ['owner'],
           name: 'Electronic Components',
@@ -108,7 +108,7 @@ describe('resource itemCategories', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.itemCategories.delete('ic_01ae7bd7bfd21ca0ab81e1357e');
+    const responsePromise = client.catalog.itemCategories.delete('ic_d06g9c6yc9ck');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -119,8 +119,8 @@ describe('resource itemCategories', () => {
   });
 
   test('changeUnitGroup: only required params', async () => {
-    const responsePromise = client.catalog.itemCategories.changeUnitGroup('ug_01aad07abb8e41fd392d2d7013', {
-      id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
+    const responsePromise = client.catalog.itemCategories.changeUnitGroup('ug_andst6m79n41', {
+      id: 'ic_d06g9c6yc9ck',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -132,8 +132,8 @@ describe('resource itemCategories', () => {
   });
 
   test('changeUnitGroup: required and optional params', async () => {
-    const response = await client.catalog.itemCategories.changeUnitGroup('ug_01aad07abb8e41fd392d2d7013', {
-      id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
+    const response = await client.catalog.itemCategories.changeUnitGroup('ug_andst6m79n41', {
+      id: 'ic_d06g9c6yc9ck',
     });
   });
 });

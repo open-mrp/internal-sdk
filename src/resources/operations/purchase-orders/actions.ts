@@ -11,10 +11,11 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Deletes multiple purchase orders in a single request.
+   * Deletes multiple purchase orders, each along with its lines, email contacts, and
+   * receiving order.
    *
-   * If any of the orders is in `fulfilled` status the request fails and no orders
-   * are deleted.
+   * The whole request is all-or-nothing: if any ID cannot be found in your account
+   * or refers to an order in `fulfilled` status, nothing is deleted.
    *
    * This endpoint requires the permission: `purchase_orders:delete`.
    *
@@ -22,9 +23,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.purchaseOrders.actions.bulkDelete(
-   *     {
-   *       purchase_order_ids: ['po_0169aa3a722b081b117ac0e44f'],
-   *     },
+   *     { purchase_order_ids: ['po_3ov2ym1pca8m'] },
    *   );
    * ```
    */
@@ -46,7 +45,7 @@ export class Actions extends APIResource {
    * ```ts
    * const purchaseOrder =
    *   await client.operations.purchaseOrders.actions.changeStatus(
-   *     'po_0169aa3a722b081b117ac0e44f',
+   *     'po_3ov2ym1pca8m',
    *     { send_email: true, status_change: 'issue' },
    *   );
    * ```
@@ -84,7 +83,8 @@ export interface ChangePurchaseOrderStatusRequest {
    *
    * Only applies to the `issue` action. When `true`, the purchase order submission
    * email is sent to the order's email contacts and `acknowledgment_status` is set
-   * to `sent`.
+   * to `sent`. An order with no email contacts still moves to `sent` even though no
+   * email goes out.
    */
   send_email: boolean;
 
@@ -118,7 +118,8 @@ export interface ActionChangeStatusParams {
    *
    * Only applies to the `issue` action. When `true`, the purchase order submission
    * email is sent to the order's email contacts and `acknowledgment_status` is set
-   * to `sent`.
+   * to `sent`. An order with no email contacts still moves to `sent` even though no
+   * email goes out.
    */
   send_email: boolean;
 

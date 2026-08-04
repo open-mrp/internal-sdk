@@ -9,10 +9,10 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('setRole: only required params', async () => {
-    const responsePromise = client.messaging.conversations.participants.actions.setRole(
-      'cvpt_01h9z8q1w2e3r4t5y6u7cvpt',
-      { id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv', role: 'admin' },
-    );
+    const responsePromise = client.messaging.conversations.participants.actions.setRole('cvpt_be2h3ul14cts', {
+      id: 'cv_w35z4ck68yq7',
+      role: 'admin',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,13 +23,10 @@ describe('resource actions', () => {
   });
 
   test('setRole: required and optional params', async () => {
-    const response = await client.messaging.conversations.participants.actions.setRole(
-      'cvpt_01h9z8q1w2e3r4t5y6u7cvpt',
-      {
-        id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv',
-        role: 'admin',
-        include: ['participants'],
-      },
-    );
+    const response = await client.messaging.conversations.participants.actions.setRole('cvpt_be2h3ul14cts', {
+      id: 'cv_w35z4ck68yq7',
+      role: 'admin',
+      include: ['participants'],
+    });
   });
 });

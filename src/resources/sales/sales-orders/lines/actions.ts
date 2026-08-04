@@ -10,9 +10,10 @@ import { path } from '../../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Reorders the product lines on a sales order to match the supplied order. Credit
-   * and freight lines always stay at the bottom of the list regardless of the order
-   * given here.
+   * Reorders the product lines on a sales order to match the sequence supplied.
+   *
+   * The lines are renumbered from `1` in the given order. Discount and freight lines
+   * always stay at the bottom of the list regardless of the sequence given here.
    *
    * This endpoint requires the permissions: `customers:update`, `suppliers:update`,
    * `sales_orders:update`.
@@ -21,12 +22,9 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.sales.salesOrders.lines.actions.reorder(
-   *     'or_01d5034136c3ccc048abecc312',
+   *     'or_9lqo07quiwyb',
    *     {
-   *       line_ids: [
-   *         'orln_0142f9b74268973450b3a76ce3',
-   *         'orln_0142f9b74268973450b3a76ce4',
-   *       ],
+   *       line_ids: ['orln_la01fxgrwcnr', 'orln_vwp43e1rq2zb'],
    *     },
    *   );
    * ```
@@ -45,9 +43,11 @@ export class Actions extends APIResource {
  */
 export interface ReorderSalesOrderLinesRequest {
   /**
-   * The order's product-line IDs in the desired display order. Every product line on
-   * the order must be listed exactly once; credit and freight lines are kept at the
-   * bottom of the list and must not be included.
+   * The order's product-line IDs in the desired display order.
+   *
+   * Every product line on the order must be listed exactly once. The automatically
+   * generated discount and freight lines are kept at the bottom of the list and must
+   * not be included.
    */
   line_ids: Array<string>;
 }
@@ -56,9 +56,11 @@ export interface ActionReorderResponse {}
 
 export interface ActionReorderParams {
   /**
-   * The order's product-line IDs in the desired display order. Every product line on
-   * the order must be listed exactly once; credit and freight lines are kept at the
-   * bottom of the list and must not be included.
+   * The order's product-line IDs in the desired display order.
+   *
+   * Every product line on the order must be listed exactly once. The automatically
+   * generated discount and freight lines are kept at the bottom of the list and must
+   * not be included.
    */
   line_ids: Array<string>;
 }

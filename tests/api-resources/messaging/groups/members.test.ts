@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource members', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.messaging.groups.members.create('cvgp_018e88072d1320808dc97abc', {
+    const responsePromise = client.messaging.groups.members.create('cvgp_wjlypugna7s4', {
       member_type: 'user',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -22,16 +22,16 @@ describe('resource members', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.messaging.groups.members.create('cvgp_018e88072d1320808dc97abc', {
+    const response = await client.messaging.groups.members.create('cvgp_wjlypugna7s4', {
       member_type: 'user',
-      account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
-      agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
+      account_user_id: 'acus_e5zu8bde0z3h',
+      agent_config_id: 'agdf_ah7tkyfxk8jl',
     });
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.messaging.groups.members.delete('cvgppt_018e88072d1320808dc9def', {
-      id: 'cvgp_018e88072d1320808dc97abc',
+    const responsePromise = client.messaging.groups.members.delete('cvgppt_obu4df48t1xx', {
+      id: 'cvgp_wjlypugna7s4',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -43,8 +43,8 @@ describe('resource members', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.messaging.groups.members.delete('cvgppt_018e88072d1320808dc9def', {
-      id: 'cvgp_018e88072d1320808dc97abc',
+    const response = await client.messaging.groups.members.delete('cvgppt_obu4df48t1xx', {
+      id: 'cvgp_wjlypugna7s4',
     });
   });
 });

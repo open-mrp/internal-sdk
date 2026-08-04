@@ -11,8 +11,11 @@ import { path } from '../../internal/utils/path';
  */
 export class Plans extends APIResource {
   /**
-   * Returns a paginated list of available pricing plans with their limits and
-   * features.
+   * Returns the pricing plans an account can sign up for, with their limits and
+   * marketing copy.
+   *
+   * Only publicly listed plans that are currently in effect are returned, so
+   * privately negotiated and retired plans never appear here.
    *
    * @example
    * ```ts
@@ -24,8 +27,13 @@ export class Plans extends APIResource {
   }
 
   /**
-   * Returns a proration preview for switching the account to a different pricing
-   * plan.
+   * Returns what it would cost to switch the account to a different pricing plan.
+   *
+   * The preview covers the prorated amount due now and the estimated recurring
+   * monthly bill afterwards. Nothing is charged and the subscription is left
+   * unchanged. Amounts are quoted by Stripe where possible; when Stripe cannot quote
+   * the change, Augno estimates them and flags the result with `is_estimate`. A
+   * switch to the free plan always previews as zero.
    *
    * This endpoint requires the `admin` role type.
    *
@@ -40,11 +48,15 @@ export class Plans extends APIResource {
   }
 
   /**
-   * Switches the account to a different pricing plan.
+   * Switches the account to a different pricing plan, effective immediately.
    *
-   * Handles free-to-paid, paid-to-free, and paid-to-paid changes. Switches that owe
-   * a prorated amount are charged immediately; use Preview Plan Change to see the
-   * cost first.
+   * Free-to-paid, paid-to-free, and paid-to-paid changes are all handled: moving to
+   * the free plan cancels the current subscription, while moving to a paid plan
+   * subscribes the account at no fewer seats than that plan's seat minimum. A change
+   * that owes a prorated amount is charged straight away to the account's payment
+   * method on file, so use Preview Plan Change first to see the cost. Moving to a
+   * paid plan requires the account to already have a Stripe customer and billing
+   * profile.
    *
    * This endpoint requires the `admin` role type.
    *
@@ -60,7 +72,8 @@ export class Plans extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPlanChangeLineItem {
   /**
@@ -74,13 +87,20 @@ export interface ListPlanChangeLineItem {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPlanLimit {
   /**
@@ -94,13 +114,20 @@ export interface ListPlanLimit {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPricingPlan {
   /**
@@ -114,7 +141,13 @@ export interface ListPricingPlan {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -124,7 +157,10 @@ export interface ListPricingPlan {
  */
 export interface PlanChangeLineItem {
   /**
-   * Amount in cents (negative for credits).
+   * Amount in cents this line contributes to the net total.
+   *
+   * Negative amounts are credits, such as unused time already paid for on the
+   * current plan.
    */
   amount: number;
 
@@ -140,7 +176,9 @@ export interface PlanChangeLineItem {
 }
 
 /**
- * Cost preview for a plan change.
+ * Cost preview for switching to a different pricing plan.
+ *
+ * Producing a preview neither changes the subscription nor charges anything.
  */
 export interface PlanChangeProration {
   /**
@@ -154,19 +192,25 @@ export interface PlanChangeProration {
   formatted_net_amount: string;
 
   /**
-   * Whether the amounts are locally estimated rather than calculated by Stripe.
+   * Whether the amounts are locally estimated rather than quoted by Stripe.
    *
-   * When `true`, the amounts are approximations and the final charge may differ.
+   * Augno falls back to its own calculation when Stripe cannot quote the change,
+   * usually because another billing change is still in flight. The amounts are then
+   * approximations and the final charge may differ.
    */
   is_estimate: boolean;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   line_items: ListPlanChangeLineItem | null;
 
   /**
-   * Estimated monthly bill amount in cents after the change.
+   * Estimated recurring monthly bill in cents once the change takes effect.
+   *
+   * Calculated from the target plan's price and the number of users on the account,
+   * billed at no fewer seats than the plan's seat minimum.
    */
   monthly_bill_amount: number;
 
@@ -188,8 +232,13 @@ export interface PlanChangeProration {
  */
 export interface PlanLimit {
   /**
-   * Resource key this limit applies to (e.g., `seats_maximum`, `sandboxes_maximum`,
-   * `invoices_maximum`, `batches_maximum`).
+   * Resource this limit applies to.
+   *
+   * - `seats_maximum`: users that can belong to the account.
+   * - `sandboxes_maximum`: sandbox environments the account can have.
+   * - `invoices_maximum`: invoices the account can issue per billing period.
+   * - `batches_maximum`: production batches the account can create per billing
+   *   period.
    */
   key: string;
 
@@ -201,17 +250,19 @@ export interface PlanLimit {
   /**
    * Maximum allowed value.
    *
-   * Null means unlimited.
+   * Null means the plan places no limit on this resource.
    */
   value: number | null;
 }
 
 /**
- * Pricing plan available for purchase.
+ * A subscription plan an account can be billed on.
  */
 export interface PricingPlan {
   /**
    * Plan ID.
+   *
+   * Pass this value when previewing or performing a plan switch.
    */
   id: string;
 
@@ -244,7 +295,8 @@ export interface PricingPlan {
   is_highlighted: boolean;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   limits: ListPlanLimit | null;
 
@@ -286,14 +338,13 @@ export interface PricingPlan {
 }
 
 /**
- * Result of initiating a plan switch.
+ * Result of a plan switch.
  */
 export interface SwitchPlanResponse {
   /**
-   * ID of the billing intent committed for the switch.
+   * ID of the Stripe billing intent that was committed to apply the change.
    *
-   * Present for paid plan changes; null when switching to the free plan, which
-   * commits no billing intent.
+   * Returned when switching to a paid plan; absent when switching to the free plan.
    */
   intent_id: string | null;
 
@@ -303,7 +354,7 @@ export interface SwitchPlanResponse {
   object: 'switch_plan_response';
 
   /**
-   * Whether the plan switch was initiated successfully.
+   * Whether the plan switch was applied successfully.
    */
   success: boolean;
 }

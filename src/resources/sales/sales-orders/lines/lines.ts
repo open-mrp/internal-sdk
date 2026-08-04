@@ -21,7 +21,12 @@ export class Lines extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Creates a line item on a sales order.
+   * Adds a line item to a sales order.
+   *
+   * The new line is appended below the existing product lines, keeping the order's
+   * freight and discount lines at the bottom. When the order has already been
+   * issued, the line is added to its pick as outstanding work and the pick is
+   * reopened if it had been finished.
    *
    * This endpoint requires the permissions: `customers:update`, `suppliers:update`,
    * `sales_orders:update`.
@@ -30,14 +35,11 @@ export class Lines extends APIResource {
    * ```ts
    * const salesOrderLine =
    *   await client.sales.salesOrders.lines.create(
-   *     'or_01d5034136c3ccc048abecc312',
+   *     'or_9lqo07quiwyb',
    *     {
-   *       product_id: 'pd_013c29ab3f1518d0004094c316',
+   *       product_id: 'pd_07oe0r7adh2w',
    *       product_sku: 'WIDGET-001',
-   *       quantity: {
-   *         value: '10',
-   *         unit_id: 'un_01966263f74a5a0cae356000a1',
-   *       },
+   *       quantity: { value: '10', unit_id: 'un_82bd37dae5po' },
    *     },
    *   );
    * ```
@@ -58,6 +60,13 @@ export class Lines extends APIResource {
   /**
    * Partially updates a sales order line item.
    *
+   * Changing the quantity flows through to fulfillment: the order's pick is
+   * reconciled against what is still outstanding — reopening it when the new
+   * quantity leaves work to do, or dropping the surplus pick line and finishing it
+   * when everything ordered is already packed. Shipment and invoice lines that still
+   * carry the full previously ordered quantity follow the new value, while partial
+   * ones keep the amount that actually moved.
+   *
    * This endpoint requires the permissions: `customers:update`, `suppliers:update`,
    * `sales_orders:update`.
    *
@@ -65,15 +74,12 @@ export class Lines extends APIResource {
    * ```ts
    * const salesOrderLine =
    *   await client.sales.salesOrders.lines.update('example', {
-   *     id: 'or_01d5034136c3ccc048abecc312',
-   *     quantity: {
-   *       value: '20',
-   *       unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     },
+   *     id: 'or_9lqo07quiwyb',
+   *     quantity: { value: '20', unit_id: 'un_82bd37dae5po' },
    *     unit_price: {
    *       value: '30.00',
-   *       numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *       denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       numerator_unit_id: 'un_82bd37dae5po',
+   *       denominator_unit_id: 'un_82bd37dae5po',
    *     },
    *   });
    * ```
@@ -92,7 +98,14 @@ export class Lines extends APIResource {
   }
 
   /**
-   * Deletes a sales order line and related records.
+   * Deletes a sales order line and its pick lines.
+   *
+   * A line cannot be removed once it has been packed onto a shipment, or once the
+   * order is fulfilled, and removing one from an order that is already completed or
+   * has a shipped shipment requires an admin. The remaining lines are renumbered so
+   * the sequence stays contiguous, and if this was the last line left to pick, the
+   * order's pick is deleted and the order falls back to `estimate` with its reserved
+   * inventory released.
    *
    * This endpoint requires the permissions: `customers:update`, `suppliers:update`,
    * `sales_orders:update`.
@@ -101,7 +114,7 @@ export class Lines extends APIResource {
    * ```ts
    * const line = await client.sales.salesOrders.lines.delete(
    *   'example',
-   *   { id: 'or_01d5034136c3ccc048abecc312' },
+   *   { id: 'or_9lqo07quiwyb' },
    * );
    * ```
    */
@@ -113,11 +126,6 @@ export class Lines extends APIResource {
 
 /**
  * Request to create a line on a sales order.
- *
- * This mirrors the create-order line shape (not the shared purchase-order
- * OrderLineInput): the unit price is optional and, when omitted, the line is
- * priced server-side from the product. The unit cost is always resolved
- * server-side from the product.
  */
 export interface CreateSalesOrderLineRequest {
   /**
@@ -131,7 +139,10 @@ export interface CreateSalesOrderLineRequest {
   product_sku: string;
 
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   quantity: CustomersAPI.QuantityInput;
 
@@ -141,8 +152,11 @@ export interface CreateSalesOrderLineRequest {
   product_description?: string;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price?: SalesOrdersAPI.RateInput;
 }
@@ -152,29 +166,38 @@ export interface CreateSalesOrderLineRequest {
  */
 export interface UpdateSalesOrderLineRequest {
   /**
-   * Product description.
+   * Description recorded on the line.
    */
   product_description?: string;
 
   /**
-   * Product SKU.
+   * SKU recorded on the line.
    */
   product_sku?: string;
 
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   quantity?: CustomersAPI.QuantityInput;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_cost?: SalesOrdersAPI.RateInput;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price?: SalesOrdersAPI.RateInput;
 }
@@ -193,7 +216,10 @@ export interface LineCreateParams {
   product_sku: string;
 
   /**
-   * Body param: A value with an associated unit, used in create and update requests.
+   * Body param: An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   quantity: CustomersAPI.QuantityInput;
 
@@ -209,8 +235,11 @@ export interface LineCreateParams {
   product_description?: string;
 
   /**
-   * Body param: A rate value with its numerator and denominator units, used in
-   * create and update requests.
+   * Body param: A value expressed as a ratio of two units, supplied on create and
+   * update requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price?: SalesOrdersAPI.RateInput;
 }
@@ -228,29 +257,38 @@ export interface LineUpdateParams {
   include?: Array<'product' | 'quantity_ordered' | 'unit_price' | 'unit_cost' | 'totals'>;
 
   /**
-   * Body param: Product description.
+   * Body param: Description recorded on the line.
    */
   product_description?: string;
 
   /**
-   * Body param: Product SKU.
+   * Body param: SKU recorded on the line.
    */
   product_sku?: string;
 
   /**
-   * Body param: A value with an associated unit, used in create and update requests.
+   * Body param: An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   quantity?: CustomersAPI.QuantityInput;
 
   /**
-   * Body param: A rate value with its numerator and denominator units, used in
-   * create and update requests.
+   * Body param: A value expressed as a ratio of two units, supplied on create and
+   * update requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_cost?: SalesOrdersAPI.RateInput;
 
   /**
-   * Body param: A rate value with its numerator and denominator units, used in
-   * create and update requests.
+   * Body param: A value expressed as a ratio of two units, supplied on create and
+   * update requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price?: SalesOrdersAPI.RateInput;
 }

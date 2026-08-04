@@ -11,7 +11,7 @@ import { path } from '../../../internal/utils/path';
 export class Actions extends APIResource {
   /**
    * Activates a disabled or removed account user, restoring their access to the
-   * target account.
+   * account you are acting in.
    *
    * Reactivation consumes a seat, so the request fails if the account is at its seat
    * limit. Activating an already-active user is a no-op.
@@ -23,7 +23,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.identity.accountUsers.actions.activate(
-   *     'acus_01ea9983ddb41dacc44ecf997c',
+   *     'acus_e5zu8bde0z3h',
    *   );
    * ```
    */
@@ -34,9 +34,12 @@ export class Actions extends APIResource {
   /**
    * Disables (locks) an account user.
    *
-   * Disabled users cannot access the target account and their active sessions are
-   * revoked. Admin users cannot be disabled, you cannot disable yourself, and
-   * removed users must be activated before they can be disabled.
+   * Disabled users cannot access the account and their active sessions are revoked,
+   * but the membership and its role assignment are kept so access can be restored
+   * with the activate action. Disabling frees the seat the user occupied. Admin
+   * users cannot be disabled, you cannot disable yourself, and removed users must be
+   * activated before they can be disabled. Disabling an already-disabled user is a
+   * no-op.
    *
    * This endpoint requires the permissions: `team:update`, `customers:update`,
    * `suppliers:update`.
@@ -45,7 +48,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.identity.accountUsers.actions.disable(
-   *     'acus_01ea9983ddb41dacc44ecf997c',
+   *     'acus_e5zu8bde0z3h',
    *   );
    * ```
    */
@@ -54,10 +57,13 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Removes a user from the target account.
+   * Removes a user from the account you are acting in.
    *
    * Removal is a soft delete: removed users are excluded from listings unless
-   * requested via `removed_scope`, and can be restored with the activate action.
+   * requested via `removed_scope`, they free the seat they occupied, and they can be
+   * restored with the activate action. Removing an already-removed user is a no-op.
+   * The user's profile itself is untouched, so their access to any other account
+   * they belong to is unaffected.
    *
    * This endpoint requires the permissions: `team:delete`, `customers:update`,
    * `suppliers:update`.
@@ -66,7 +72,7 @@ export class Actions extends APIResource {
    * ```ts
    * const action =
    *   await client.identity.accountUsers.actions.remove(
-   *     'acus_01ea9983ddb41dacc44ecf997c',
+   *     'acus_e5zu8bde0z3h',
    *   );
    * ```
    */

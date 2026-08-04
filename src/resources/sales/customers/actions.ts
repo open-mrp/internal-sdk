@@ -22,7 +22,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.sales.customers.actions.bulkDelete({
-   *     customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
+   *     customer_ids: ['ac_opnlh43ymyee'],
    *   });
    * ```
    */
@@ -35,18 +35,21 @@ export class Actions extends APIResource {
    *
    * Sales orders, invoices, shipments, deliveries, and other transaction records
    * from the source customers are reassigned to the target; price groups, product
-   * line access, addresses, and users are consolidated without duplicates; the
-   * source customers are then deleted.
+   * line access, addresses, and users are consolidated without duplicates; child
+   * accounts of the sources are re-parented to the target; the source customers are
+   * then deleted.
+   *
+   * The target keeps its own name, number, default addresses, and default settings —
+   * none of those are copied over from the sources, and the sources' notification
+   * recipients are discarded rather than transferred.
    *
    * This endpoint requires the permissions: `customers:update`, `customers:delete`.
    *
    * @example
    * ```ts
    * const customer = await client.sales.customers.actions.merge(
-   *   'ac_0170df1ac58e4d24c66fc89f5f',
-   *   {
-   *     source_customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-   *   },
+   *   'ac_opnlh43ymyee',
+   *   { source_customer_ids: ['ac_opnlh43ymyee'] },
    * );
    * ```
    */

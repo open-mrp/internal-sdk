@@ -22,7 +22,7 @@ export class Deliveries extends APIResource {
    * ```ts
    * const delivery =
    *   await client.operations.deliveries.retrieve(
-   *     'dlv_0143cbea89e0f17c3d19828a3a',
+   *     'dlv_9xsjlqx5753y',
    *   );
    * ```
    */
@@ -35,7 +35,10 @@ export class Deliveries extends APIResource {
   }
 
   /**
-   * Returns a paginated list of deliveries for the caller's account.
+   * Returns a paginated list of deliveries for the current account, newest first.
+   *
+   * Only deliveries where goods were accepted into inventory are returned by
+   * default; pass `status` to include fully rejected ones.
    *
    * This endpoint requires the permission: `deliveries:read`.
    *
@@ -56,8 +59,10 @@ export class Deliveries extends APIResource {
 /**
  * A delivery of goods received against a purchase order.
  *
- * Each delivery records the items received and whether the delivery was accepted
- * or rejected.
+ * Deliveries are not created directly. One is recorded each time a receiving order
+ * is stocked, capturing what arrived in that shipment, where it was put away, and
+ * what was refused on inspection. A purchase order received in several shipments
+ * therefore has several deliveries.
  */
 export interface Delivery {
   /**
@@ -66,7 +71,9 @@ export interface Delivery {
   id: string;
 
   /**
-   * When the delivery was accepted, or null if it was rejected.
+   * When goods on this delivery were accepted into inventory.
+   *
+   * A delivery that also had quantities refused has both this and `rejected_at` set.
    */
   accepted_at: string | null;
 
@@ -76,12 +83,16 @@ export interface Delivery {
   created_at: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lines: ListDeliveryLine | null;
 
   /**
    * Human-readable delivery number.
+   *
+   * The first delivery against a purchase order takes that order's number; each
+   * later delivery appends a sequence suffix, such as `PO-001-2`.
    */
   number: string;
 
@@ -93,21 +104,23 @@ export interface Delivery {
   /**
    * An order placed with a supplier to purchase materials or products.
    *
-   * The list endpoint returns this same type as the retrieve endpoint, with the same
-   * fields available.
+   * The list endpoint returns this same resource as the retrieve endpoint, except
+   * that list rows never carry the note or the scheduled date and can only expand
+   * the supplier and the lines.
    */
   purchase_order: PurchaseOrder | null;
 
   /**
-   * When the delivery was rejected, or null if it was accepted.
+   * When goods on this delivery were refused on inspection.
    */
   rejected_at: string | null;
 
   /**
-   * Whether the delivery was accepted or rejected on receipt.
+   * Whether any of the delivered goods were accepted into inventory.
    *
-   * - `accepted`: the delivery was received and accepted (`accepted_at` is set).
-   * - `rejected`: the delivery was refused (`rejected_at` is set).
+   * - `accepted`: at least part of the shipment was put into inventory. Quantities
+   *   refused on inspection can still appear on the delivery's lines.
+   * - `rejected`: nothing on the delivery entered inventory.
    */
   status: 'accepted' | 'rejected';
 
@@ -118,7 +131,12 @@ export interface Delivery {
 }
 
 /**
- * Delivery line item.
+ * A quantity of one item recorded on a delivery.
+ *
+ * Stocking a receiving order creates one line for each storage allocation of
+ * accepted goods, plus one further line for any quantity refused on inspection.
+ * Exactly one of `accepted_at` and `rejected_at` is set on each line, so a single
+ * receiving order line can produce several delivery lines.
  */
 export interface DeliveryLine {
   /**
@@ -127,7 +145,7 @@ export interface DeliveryLine {
   id: string;
 
   /**
-   * When this line was accepted.
+   * When the goods on this line were accepted into inventory.
    */
   accepted_at: string | null;
 
@@ -137,7 +155,7 @@ export interface DeliveryLine {
   created_at: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
@@ -159,12 +177,16 @@ export interface DeliveryLine {
   object: 'delivery_line';
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: AccountUsersAPI.Quantity | null;
 
   /**
-   * When this line was rejected.
+   * When the goods on this line were refused on inspection.
    */
   rejected_at: string | null;
 
@@ -181,7 +203,8 @@ export interface DeliveryLine {
 }
 
 /**
- * A contact that receives email communications for an order.
+ * A contact that receives the purchase order email when an order is issued with
+ * the `send_email` option.
  */
 export interface EmailContact {
   /**
@@ -193,7 +216,7 @@ export interface EmailContact {
    * A user's membership in an account, carrying the account-specific status, role,
    * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * Profile fields (name, email, username, image URL) live on the `user`
    * sub-resource, which is shared across every account the user belongs to.
    */
   account_user: AccountUsersAPI.AccountUser | null;
@@ -205,7 +228,8 @@ export interface EmailContact {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListDelivery {
   /**
@@ -219,13 +243,20 @@ export interface ListDelivery {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListDeliveryLine {
   /**
@@ -239,13 +270,20 @@ export interface ListDeliveryLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListEmailContact {
   /**
@@ -259,13 +297,20 @@ export interface ListEmailContact {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPurchaseOrderLine {
   /**
@@ -279,13 +324,20 @@ export interface ListPurchaseOrderLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListReceivingOrderLine {
   /**
@@ -299,7 +351,13 @@ export interface ListReceivingOrderLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -316,6 +374,10 @@ export interface Lot {
 
   /**
    * Lot number identifying the batch.
+   *
+   * Unique per item within the account: stocking goods under a lot number that
+   * already exists for that item records them into the existing lot rather than
+   * creating a new one.
    */
   lot_number: string;
 
@@ -328,8 +390,9 @@ export interface Lot {
 /**
  * An order placed with a supplier to purchase materials or products.
  *
- * The list endpoint returns this same type as the retrieve endpoint, with the same
- * fields available.
+ * The list endpoint returns this same resource as the retrieve endpoint, except
+ * that list rows never carry the note or the scheduled date and can only expand
+ * the supplier and the lines.
  */
 export interface PurchaseOrder {
   /**
@@ -352,14 +415,15 @@ export interface PurchaseOrder {
   bill_to_address: APIKeysAPI.Address | null;
 
   /**
-   * When the order was completed.
+   * When the order was closed as fulfilled.
    *
-   * Null until status reaches `fulfilled`.
+   * Cleared again if the order is re-opened.
    */
   completed_at: string | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   contacts: ListEmailContact | null;
 
@@ -372,15 +436,14 @@ export interface PurchaseOrder {
    * Freight describes the carrier selection and freight billing for a record.
    *
    * It is a generic, reusable sub-resource shared by anything that carries shipping
-   * configuration — for example a sales order's chosen freight, or a customer's
-   * default freight preferences.
+   * configuration — a sales order, a purchase order, or a shipment.
    */
   freight: SalesOrdersAPI.Freight | null;
 
   /**
    * When the order was issued to the supplier.
    *
-   * Null until status reaches `issued`.
+   * Cleared again if the order is unissued back to `estimate`.
    */
   issued_at: string | null;
 
@@ -390,12 +453,13 @@ export interface PurchaseOrder {
   line_count: number;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lines: ListPurchaseOrderLine | null;
 
   /**
-   * Order note.
+   * Free-form note recorded on the order.
    */
   note: string | null;
 
@@ -429,17 +493,15 @@ export interface PurchaseOrder {
    * One receiving order is created automatically when a purchase order is issued,
    * with one line per purchase order line. As goods arrive, line quantities are
    * received and then stocked into inventory; the order is marked complete once
-   * every line is stocked.
-   *
-   * The list endpoint returns this same type as the retrieve endpoint, with the same
-   * fields available.
+   * every line is stocked. Unissuing the purchase order deletes the receiving order
+   * and its lines.
    */
   receiving_order: ReceivingOrder | null;
 
   /**
-   * Promised or scheduled date for the order, if one has been set.
+   * Date the supplier promised delivery for.
    *
-   * Set via the `promised_at` request field.
+   * Set through the `promised_at` field on create and update.
    */
   scheduled_at: string | null;
 
@@ -450,7 +512,12 @@ export interface PurchaseOrder {
   ship_to_address: APIKeysAPI.Address | null;
 
   /**
-   * A shipping term defining how freight charges are calculated for an order.
+   * A named freight pricing rule that decides what a buyer pays for shipping.
+   *
+   * A customer's default shipping term is evaluated whenever freight is quoted for
+   * one of their orders. Freight exemptions on the customer, its type group, or any
+   * of its price groups are checked first and zero the freight charge before the
+   * shipping term is considered.
    */
   shipping_term: CustomersAPI.ShippingTerm | null;
 
@@ -489,12 +556,15 @@ export interface PurchaseOrderLine {
   created_at: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
   /**
-   * Position of this line within the order, starting at 1.
+   * Sequence number of this line within the order, starting at 1.
+   *
+   * Assigned automatically as one past the highest number currently on the order, so
+   * deleting a line can leave a gap in the numbering.
    */
   line_item_number: number;
 
@@ -514,12 +584,20 @@ export interface PurchaseOrderLine {
   product_sku: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity_ordered: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity_received: AccountUsersAPI.Quantity | null;
 
@@ -547,10 +625,8 @@ export interface PurchaseOrderLine {
  * One receiving order is created automatically when a purchase order is issued,
  * with one line per purchase order line. As goods arrive, line quantities are
  * received and then stocked into inventory; the order is marked complete once
- * every line is stocked.
- *
- * The list endpoint returns this same type as the retrieve endpoint, with the same
- * fields available.
+ * every line is stocked. Unissuing the purchase order deletes the receiving order
+ * and its lines.
  */
 export interface ReceivingOrder {
   /**
@@ -559,8 +635,11 @@ export interface ReceivingOrder {
   id: string;
 
   /**
-   * Timestamp when the receiving order was completed, set automatically once all of
-   * its lines have been stocked.
+   * Timestamp when the receiving order was completed.
+   *
+   * Set automatically once every line has been stocked, and also when the
+   * originating purchase order is closed. It is cleared again when the receiving
+   * order is voided or that purchase order is re-opened.
    */
   completed_at: string | null;
 
@@ -568,8 +647,10 @@ export interface ReceivingOrder {
    * Percentage of lines that have been stocked, from `0` to `100`, rounded to two
    * decimal places.
    *
-   * A line counts toward completion once its `stocked_at` is set. Reaches `100` when
-   * every line is stocked, at which point the order is marked complete.
+   * A line counts toward completion once its `stocked_at` is set, and the order is
+   * marked complete when the figure reaches `100`. It is calculated for list results
+   * only; on responses that return a single receiving order it is `0`, and progress
+   * is best read from the lines' `stocked_at` values.
    */
   completion_percentage: number;
 
@@ -586,14 +667,15 @@ export interface ReceivingOrder {
   line_count: number;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lines: ListReceivingOrderLine | null;
 
   /**
    * Free-text note carried over from the originating purchase order.
    *
-   * Present only on the retrieve response; it is not returned in list results.
+   * Not returned in list results.
    */
   note: string | null;
 
@@ -614,8 +696,9 @@ export interface ReceivingOrder {
   /**
    * An order placed with a supplier to purchase materials or products.
    *
-   * The list endpoint returns this same type as the retrieve endpoint, with the same
-   * fields available.
+   * The list endpoint returns this same resource as the retrieve endpoint, except
+   * that list rows never carry the note or the scheduled date and can only expand
+   * the supplier and the lines.
    */
   purchase_order: PurchaseOrder | null;
 
@@ -650,7 +733,7 @@ export interface ReceivingOrderLine {
   created_at: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
@@ -660,24 +743,34 @@ export interface ReceivingOrderLine {
   object: 'receiving_order_line';
 
   /**
-   * Full sales order line resource.
+   * A single line item on a sales order.
    */
   order_line: SalesOrdersAPI.SalesOrderLine | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   rejected_quantity: AccountUsersAPI.Quantity | null;
 
   /**
    * Timestamp when the received quantity was stocked into inventory.
    *
-   * Once set, the line counts toward the order's `completion_percentage`.
+   * Once set, the line counts toward the order's `completion_percentage`. Voiding
+   * the line or the whole order clears it, but does not reverse the inventory that
+   * was already received.
    */
   stocked_at: string | null;
 
@@ -731,7 +824,10 @@ export interface DeliveryListParams {
   cursor?: string;
 
   /**
-   * Only include deliveries created on or before this date (`YYYY-MM-DD`).
+   * Only include deliveries created up to this date (`YYYY-MM-DD`).
+   *
+   * Compared against the start of the given day, so deliveries created later that
+   * same day are excluded.
    */
   end_date?: string;
 
@@ -766,10 +862,8 @@ export interface DeliveryListParams {
   /**
    * Filter by delivery status.
    *
-   * When omitted, only accepted deliveries are returned; rejected deliveries are
-   * hidden unless you opt in.
-   *
-   * - `all`: deliveries of any status, including rejected.
+   * Deliveries where nothing was accepted into inventory are hidden unless you ask
+   * for `rejected` or `all`.
    */
   status?: string;
 

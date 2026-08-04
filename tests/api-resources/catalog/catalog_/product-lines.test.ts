@@ -34,9 +34,7 @@ describe('resource productLines', () => {
   });
 
   test('retrieveProducts', async () => {
-    const responsePromise = client.catalog.catalog.productLines.retrieveProducts(
-      'pdln_01996357326a0d3f7b129542ea',
-    );
+    const responsePromise = client.catalog.catalog.productLines.retrieveProducts('pdln_k9bnlgvxhxjh');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,7 +48,7 @@ describe('resource productLines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.catalog.productLines.retrieveProducts(
-        'pdln_01996357326a0d3f7b129542ea',
+        'pdln_k9bnlgvxhxjh',
         {
           cursor: 'cursor',
           limit: 0,

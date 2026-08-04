@@ -31,9 +31,10 @@ export class SpendingCap extends APIResource {
   }
 
   /**
-   * Returns the monthly agent spending cap for the account.
+   * Returns the monthly cap on agent spending for the account.
    *
-   * A null `cap_cents` means no cap is set.
+   * The cap limits estimated agent LLM spend within a billing month; Get Account
+   * Usage reports how much of it has been spent so far.
    *
    * This endpoint requires the permission: `self:read`.
    *
@@ -53,9 +54,9 @@ export class SpendingCap extends APIResource {
  */
 export interface SetSpendingCapRequest {
   /**
-   * Monthly agent spending cap in cents.
+   * Ceiling in cents on estimated agent spending per billing month.
    *
-   * Set to `null` to remove the cap; omit the field to leave the current cap
+   * Send `null` to remove the cap entirely; omit the field to leave the current cap
    * unchanged.
    */
   cap_cents?: number | null;
@@ -66,9 +67,9 @@ export interface SetSpendingCapRequest {
  */
 export interface SpendingCapResponse {
   /**
-   * Monthly spending cap in cents.
+   * Ceiling in cents on estimated agent spending per billing month.
    *
-   * Null means no cap.
+   * Null means agent spending is uncapped.
    */
   cap_cents: number | null;
 
@@ -80,9 +81,9 @@ export interface SpendingCapResponse {
 
 export interface SpendingCapUpdateParams {
   /**
-   * Monthly agent spending cap in cents.
+   * Ceiling in cents on estimated agent spending per billing month.
    *
-   * Set to `null` to remove the cap; omit the field to leave the current cap
+   * Send `null` to remove the cap entirely; omit the field to leave the current cap
    * unchanged.
    */
   cap_cents?: number | null;

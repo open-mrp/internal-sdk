@@ -24,7 +24,7 @@ describe('resource portalDomains', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.settings.portalDomains.retrieve('podn_018e88072d1320808dc9aab42');
+    const responsePromise = client.settings.portalDomains.retrieve('podn_ml44z5ggf169');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -46,7 +46,7 @@ describe('resource portalDomains', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.settings.portalDomains.delete('podn_018e88072d1320808dc9aab42');
+    const responsePromise = client.settings.portalDomains.delete('podn_ml44z5ggf169');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

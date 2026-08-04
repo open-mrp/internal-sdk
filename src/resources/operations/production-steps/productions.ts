@@ -20,9 +20,7 @@ export class Productions extends APIResource {
    * const productionOutput =
    *   await client.operations.productionSteps.productions.retrieve(
    *     'example',
-   *     {
-   *       production_step_id: 'prst_0159474175bb59f4b1990404ee',
-   *     },
+   *     { production_step_id: 'prst_0ht5mkqx5a6t' },
    *   );
    * ```
    */
@@ -49,9 +47,9 @@ export class Productions extends APIResource {
    *   await client.operations.productionSteps.productions.update(
    *     'example',
    *     {
-   *       production_step_id: 'prst_0159474175bb59f4b1990404ee',
-   *       item_id: 'it_0131e386ac683e8c29a71f6f1f',
-   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       production_step_id: 'prst_0ht5mkqx5a6t',
+   *       item_id: 'it_pej07ckhvu62',
+   *       quantity_unit_id: 'un_82bd37dae5po',
    *       quantity_value: '500',
    *     },
    *   );
@@ -75,9 +73,11 @@ export class Productions extends APIResource {
  */
 export interface UpdateProductionRequest {
   /**
-   * New produced item ID.
+   * Item this step produces.
    *
-   * Changing the item re-links the step's connections in the production flow graph.
+   * Changing the item recomputes all of the step's connections in the production
+   * flow graph from the items it now produces and consumes, which discards
+   * connections that were made manually.
    */
   item_id?: string;
 
@@ -116,9 +116,11 @@ export interface ProductionUpdateParams {
   production_step_id: string;
 
   /**
-   * Body param: New produced item ID.
+   * Body param: Item this step produces.
    *
-   * Changing the item re-links the step's connections in the production flow graph.
+   * Changing the item recomputes all of the step's connections in the production
+   * flow graph from the items it now produces and consumes, which discards
+   * connections that were made manually.
    */
   item_id?: string;
 

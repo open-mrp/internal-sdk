@@ -11,17 +11,18 @@ import { path } from '../../../internal/utils/path';
  */
 export class Attributes extends APIResource {
   /**
-   * Adds an attribute to an item and returns the updated item.
+   * Assigns an attribute to an item and returns the updated item.
    *
-   * If the attribute is already associated with the item, this is a no-op.
+   * Adding an attribute the item already carries succeeds and changes nothing, so
+   * the call is safe to repeat.
    *
    * This endpoint requires the permission: `items:update`.
    *
    * @example
    * ```ts
    * const item = await client.catalog.items.attributes.update(
-   *   'at_01c9493ec0c46bb0ed12708ae4',
-   *   { id: 'it_0131e386ac683e8c29a71f6f1f' },
+   *   'at_rf1w295jt5ia',
+   *   { id: 'it_pej07ckhvu62' },
    * );
    * ```
    */
@@ -38,15 +39,19 @@ export class Attributes extends APIResource {
   }
 
   /**
-   * Removes an attribute from an item.
+   * Unassigns an attribute from an item and returns the updated item.
+   *
+   * Returns a not-found error if the attribute is not currently assigned to the
+   * item, so unlike adding an attribute, this call is not safe to repeat blindly.
+   * The attribute itself is not deleted and stays available for other items.
    *
    * This endpoint requires the permission: `items:update`.
    *
    * @example
    * ```ts
    * const item = await client.catalog.items.attributes.delete(
-   *   'at_01c9493ec0c46bb0ed12708ae4',
-   *   { id: 'it_0131e386ac683e8c29a71f6f1f' },
+   *   'at_rf1w295jt5ia',
+   *   { id: 'it_pej07ckhvu62' },
    * );
    * ```
    */

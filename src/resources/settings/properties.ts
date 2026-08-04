@@ -19,7 +19,7 @@ export class Properties extends APIResource {
    * ```ts
    * const sysProperty =
    *   await client.settings.properties.retrieve(
-   *     'sypp_01d8fd3a8b1a8e4c41be55ab5a',
+   *     'sypp_1czynnv1b8kc',
    *   );
    * ```
    */
@@ -28,14 +28,18 @@ export class Properties extends APIResource {
   }
 
   /**
-   * Partially updates the value of a system property.
+   * Overrides the value of a system property counter.
+   *
+   * Use this to restart or realign a number series, for example to continue the
+   * numbering used in a previous system. Records that already carry a number keep
+   * it; only the numbers handed out from now on are affected.
    *
    * This endpoint requires the permission: `system_properties:update`.
    *
    * @example
    * ```ts
    * const sysProperty = await client.settings.properties.update(
-   *   'sypp_01d8fd3a8b1a8e4c41be55ab5a',
+   *   'sypp_1czynnv1b8kc',
    *   { value: 30 },
    * );
    * ```
@@ -50,6 +54,10 @@ export class Properties extends APIResource {
 
   /**
    * Returns a paginated list of system properties for the current account.
+   *
+   * A counter appears here only once its number series has been used at least once,
+   * so an account may have fewer counters than there are counter types. The `q`
+   * search term is matched against the counter type name.
    *
    * This endpoint requires the permission: `system_properties:read`.
    *
@@ -90,7 +98,8 @@ export class Properties extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListSysProperty {
   /**
@@ -104,14 +113,23 @@ export interface ListSysProperty {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * Monotonic counter maintained by the system, such as the next transaction or
- * document number to assign.
+ * A counter maintained by the system for a numbered series, such as transaction or
+ * sales order numbers.
+ *
+ * Each account keeps at most one counter per counter type, created the first time
+ * that number series is used.
  */
 export interface SysProperty {
   /**
@@ -140,7 +158,11 @@ export interface SysProperty {
   updated_at: string;
 
   /**
-   * Current counter value.
+   * The counter's current position in its number series.
+   *
+   * The system advances the counter as it hands out numbers, so this normally
+   * matches the most recent number assigned in the series rather than the next one
+   * to be issued.
    */
   value: number;
 }
@@ -155,8 +177,19 @@ export interface SysPropertyType {
   id: string;
 
   /**
-   * Machine-readable code identifying which counter this is, such as
-   * `transaction_number` or `purchase_order_number`.
+   * Machine-readable code identifying which number series this counter feeds.
+   *
+   * - `transaction_number`: numbering for financial transactions such as payments,
+   *   credit memos, adjustments, and rebates.
+   * - `settlement_number`: numbering for settlements that apply transactions to
+   *   invoices.
+   * - `sales_order_number`: numbering for sales orders.
+   * - `purchase_order_number`: numbering for purchase orders.
+   * - `customer_number`: identifiers assigned to new customers.
+   * - `supplier_number`: identifiers assigned to new suppliers.
+   * - `production_run_number`: numbering for production runs.
+   * - `sscc_count`: serial component of the GS1 SSCC-18 codes assigned to shipping
+   *   cases.
    */
   code: string;
 
@@ -172,7 +205,7 @@ export interface SysPropertyType {
 }
 
 /**
- * The current value of a system property counter.
+ * The value read from a system property counter.
  */
 export interface SysPropertyValue {
   /**
@@ -181,7 +214,7 @@ export interface SysPropertyValue {
   object: 'sys_property_value';
 
   /**
-   * Counter value as a string.
+   * The number the counter holds after this read.
    */
   value: string;
 }
@@ -191,16 +224,14 @@ export interface SysPropertyValue {
  */
 export interface UpdateSysPropertyRequest {
   /**
-   * The new counter value, such as the next transaction or document number to
-   * assign.
+   * The number to move the counter to, so the series carries on from there.
    */
   value?: number;
 }
 
 export interface PropertyUpdateParams {
   /**
-   * The new counter value, such as the next transaction or document number to
-   * assign.
+   * The number to move the counter to, so the series carries on from there.
    */
   value?: number;
 }

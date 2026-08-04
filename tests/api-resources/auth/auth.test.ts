@@ -22,7 +22,7 @@ describe('resource auth', () => {
 
   test('scannerPasswords: only required params', async () => {
     const responsePromise = client.auth.scannerPasswords({
-      account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
+      account_user_id: 'acus_e5zu8bde0z3h',
       new_password: '50iR2X0r@bvIH',
       requester_password: 'QgS7Z8Hhj3&1',
     });
@@ -37,7 +37,7 @@ describe('resource auth', () => {
 
   test('scannerPasswords: required and optional params', async () => {
     const response = await client.auth.scannerPasswords({
-      account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
+      account_user_id: 'acus_e5zu8bde0z3h',
       new_password: '50iR2X0r@bvIH',
       requester_password: 'QgS7Z8Hhj3&1',
     });

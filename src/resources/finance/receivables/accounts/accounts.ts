@@ -15,8 +15,11 @@ export class Accounts extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Returns a paginated list of outstanding receivable entries for a specific
-   * customer account.
+   * Returns a paginated list of outstanding receivable entries for a single customer
+   * account, newest invoice first.
+   *
+   * One entry is returned per invoice billed to that customer that is not marked
+   * paid in full. Invoices billed to the customer's child accounts are not included.
    *
    * This endpoint requires the permission: `customers:read`.
    *
@@ -24,7 +27,7 @@ export class Accounts extends APIResource {
    * ```ts
    * const listReceivableEntry =
    *   await client.finance.receivables.accounts.retrieve(
-   *     'ac_01148680966698341a9c0976db',
+   *     'ac_ykxoradjoeb3',
    *   );
    * ```
    */

@@ -11,7 +11,7 @@ describe('resource apiKeys', () => {
   test('create: only required params', async () => {
     const responsePromise = client.auth.apiKeys.create({
       name: 'Production API Key',
-      role_id: 'rl_01c16d2eb637c0d1f3a372937c',
+      role_id: 'rl_3xknmfqflhvb',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -25,14 +25,14 @@ describe('resource apiKeys', () => {
   test('create: required and optional params', async () => {
     const response = await client.auth.apiKeys.create({
       name: 'Production API Key',
-      role_id: 'rl_01c16d2eb637c0d1f3a372937c',
+      role_id: 'rl_3xknmfqflhvb',
       include: ['role'],
       expires_at: '2027-01-01T00:00:00Z',
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.auth.apiKeys.retrieve('apke_01fba3a7db3996e3b3b1a07e00');
+    const responsePromise = client.auth.apiKeys.retrieve('apke_eiylmwr6q7oz');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -46,7 +46,7 @@ describe('resource apiKeys', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.auth.apiKeys.retrieve(
-        'apke_01fba3a7db3996e3b3b1a07e00',
+        'apke_eiylmwr6q7oz',
         { include: ['role'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -81,7 +81,7 @@ describe('resource apiKeys', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.auth.apiKeys.delete('apke_01fba3a7db3996e3b3b1a07e00');
+    const responsePromise = client.auth.apiKeys.delete('apke_eiylmwr6q7oz');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -13,7 +13,12 @@ import { path } from '../../../internal/utils/path';
  */
 export class SalesTargets extends APIResource {
   /**
-   * Creates a sales target for an account user.
+   * Creates a revenue goal for a sales rep covering a given period.
+   *
+   * The sales rep must be an active account user in your account, otherwise the
+   * request returns a not-found error. Periods are not checked for overlap, so a rep
+   * can hold several targets covering the same dates; use the upsert endpoint to
+   * change an existing target rather than adding another.
    *
    * This endpoint requires the permission: `sales_targets:create`.
    *
@@ -21,9 +26,9 @@ export class SalesTargets extends APIResource {
    * ```ts
    * const salesTarget =
    *   await client.sales.accountUsers.salesTargets.create(
-   *     'acus_01ea9983ddb41dacc44ecf997c',
+   *     'acus_e5zu8bde0z3h',
    *     {
-   *       amount_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       amount_unit_id: 'un_82bd37dae5po',
    *       amount_value: '50000.00',
    *       end_date: '2026-03-31T00:00:00Z',
    *       start_date: '2026-01-01T00:00:00Z',
@@ -36,11 +41,14 @@ export class SalesTargets extends APIResource {
   }
 
   /**
-   * Creates or updates a sales target by ID.
+   * Creates or updates a sales rep's revenue goal at an ID you choose.
    *
    * If no target with the given ID exists, one is created with the supplied dates,
    * amount, and unit. If it already exists, only the amount value is updated — the
-   * dates and unit are left unchanged.
+   * dates and unit are left unchanged, so raising or lowering a goal mid-period is
+   * the intended use. The sales rep must be an active account user in your account,
+   * and the target ID must belong to that account, otherwise the request returns a
+   * not-found error.
    *
    * This endpoint requires the permission: `sales_targets:update`.
    *
@@ -50,8 +58,8 @@ export class SalesTargets extends APIResource {
    *   await client.sales.accountUsers.salesTargets.update(
    *     'example',
    *     {
-   *       id: 'acus_01ea9983ddb41dacc44ecf997c',
-   *       amount_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       id: 'acus_e5zu8bde0z3h',
+   *       amount_unit_id: 'un_82bd37dae5po',
    *       amount_value: '75000.00',
    *       end_date: '2026-06-30T00:00:00Z',
    *       start_date: '2026-04-01T00:00:00Z',
@@ -72,10 +80,15 @@ export class SalesTargets extends APIResource {
   }
 
   /**
-   * Returns the sales targets for an account user.
+   * Returns the revenue goals set for one sales rep, most recent period first.
    *
    * This endpoint does not support cursor pagination; passing a `cursor` returns a
-   * validation error.
+   * validation error, and the response carries no page cursors. Requesting targets
+   * for someone who is not an active account user in your account returns a
+   * not-found error.
+   *
+   * Pass `q` to narrow the list to targets whose ID or goal amount contains the
+   * search text.
    *
    * This endpoint requires the permission: `sales_targets:read`.
    *
@@ -83,7 +96,7 @@ export class SalesTargets extends APIResource {
    * ```ts
    * const listSalesTarget =
    *   await client.sales.accountUsers.salesTargets.list(
-   *     'acus_01ea9983ddb41dacc44ecf997c',
+   *     'acus_e5zu8bde0z3h',
    *   );
    * ```
    */
@@ -101,12 +114,12 @@ export class SalesTargets extends APIResource {
  */
 export interface CreateSalesTargetRequest {
   /**
-   * ID of the unit the amount is denominated in (typically a currency unit).
+   * The unit the goal is denominated in, typically a currency unit.
    */
   amount_unit_id: string;
 
   /**
-   * Goal amount for the period, as a decimal string (e.g. `50000.00`).
+   * The revenue goal for the period, as a decimal string (e.g. `50000.00`).
    */
   amount_value: string;
 
@@ -122,7 +135,8 @@ export interface CreateSalesTargetRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListSalesTarget {
   /**
@@ -136,7 +150,13 @@ export interface ListSalesTarget {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -151,7 +171,11 @@ export interface SalesTarget {
   id: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   amount: AccountUsersAPI.Quantity | null;
 
@@ -194,7 +218,7 @@ export interface SalesTarget {
  */
 export interface UpsertSalesTargetRequest {
   /**
-   * ID of the unit the amount is denominated in (typically a currency unit).
+   * The unit the goal is denominated in, typically a currency unit.
    *
    * Only applied when creating a new target; the unit on an existing target is not
    * changed.
@@ -202,7 +226,10 @@ export interface UpsertSalesTargetRequest {
   amount_unit_id: string;
 
   /**
-   * Goal amount for the period, as a decimal string (e.g. `75000.00`).
+   * The revenue goal for the period, as a decimal string (e.g. `75000.00`).
+   *
+   * This is the only value an existing target accepts; everything else on it stays
+   * as it was.
    */
   amount_value: string;
 
@@ -225,12 +252,12 @@ export interface UpsertSalesTargetRequest {
 
 export interface SalesTargetCreateParams {
   /**
-   * ID of the unit the amount is denominated in (typically a currency unit).
+   * The unit the goal is denominated in, typically a currency unit.
    */
   amount_unit_id: string;
 
   /**
-   * Goal amount for the period, as a decimal string (e.g. `50000.00`).
+   * The revenue goal for the period, as a decimal string (e.g. `50000.00`).
    */
   amount_value: string;
 
@@ -247,13 +274,15 @@ export interface SalesTargetCreateParams {
 
 export interface SalesTargetUpdateParams {
   /**
-   * Path param: ID of the account user (sales rep) the target is for.
+   * Path param: The account user (sales rep) the target is for.
+   *
+   * Must be an active account user in your account. Only applied when creating a new
+   * target; the rep on an existing target is not changed.
    */
   id: string;
 
   /**
-   * Body param: ID of the unit the amount is denominated in (typically a currency
-   * unit).
+   * Body param: The unit the goal is denominated in, typically a currency unit.
    *
    * Only applied when creating a new target; the unit on an existing target is not
    * changed.
@@ -261,7 +290,11 @@ export interface SalesTargetUpdateParams {
   amount_unit_id: string;
 
   /**
-   * Body param: Goal amount for the period, as a decimal string (e.g. `75000.00`).
+   * Body param: The revenue goal for the period, as a decimal string (e.g.
+   * `75000.00`).
+   *
+   * This is the only value an existing target accepts; everything else on it stays
+   * as it was.
    */
   amount_value: string;
 

@@ -11,10 +11,17 @@ export class Actions extends APIResource {
   /**
    * Creates or updates multiple production steps in a single request.
    *
-   * Rows are matched to existing steps by name: matches are updated in place
-   * (replacing their production outputs and consumptions) and the rest are created.
-   * Each row succeeds or fails independently; failures are reported per row in the
-   * response instead of failing the whole request.
+   * Rows are matched to existing steps by name. A matched step has its production
+   * outputs and consumptions replaced, and its allowances, leveling factor, and
+   * scanning station overwritten from the row — omitting any of those three resets
+   * it — while its labor rate, labor time, and overhead rate keep the values they
+   * already had. Unmatched rows are created in full, and every created or updated
+   * step is reconnected into the production flow graph from the items it produces
+   * and consumes.
+   *
+   * Each row succeeds or fails independently: a row referencing an unknown SKU,
+   * scanning station, or labor time unit is skipped and reported in the response
+   * instead of failing the whole request.
    *
    * This endpoint requires the permission: `production_steps:create`.
    *
@@ -50,7 +57,9 @@ export class Actions extends APIResource {
 }
 
 /**
- * Consumption input resolved by SKU.
+ * A material the step consumes, matched to an existing item by SKU.
+ *
+ * Materials added this way record no expected waste.
  */
 export interface BulkCreateConsumptionInput {
   /**
@@ -70,7 +79,7 @@ export interface BulkCreateConsumptionInput {
 }
 
 /**
- * Production output input resolved by SKU.
+ * An item the step produces, matched to an existing item by SKU.
  */
 export interface BulkCreateProductionOutputInput {
   /**
@@ -85,11 +94,11 @@ export interface BulkCreateProductionOutputInput {
 }
 
 /**
- * Production step input for bulk creation.
+ * A production step to create or update.
  */
 export interface BulkCreateProductionStepInput {
   /**
-   * Materials consumed by the step, resolved by SKU.
+   * Materials consumed by the step, matched by SKU.
    */
   consumptions: Array<BulkCreateConsumptionInput>;
 
@@ -101,7 +110,8 @@ export interface BulkCreateProductionStepInput {
   /**
    * Labor time required per unit of output.
    *
-   * Stored as `labor_time_unit` per one base unit of the first production output.
+   * Recorded as `labor_time_unit` per one base unit of the first item in
+   * `productions`.
    */
   labor_time: number;
 
@@ -119,9 +129,7 @@ export interface BulkCreateProductionStepInput {
   overhead_rate: number;
 
   /**
-   * Items produced by the step, resolved by SKU.
-   *
-   * At least one is required.
+   * Items produced by the step, matched by SKU.
    */
   productions: Array<BulkCreateProductionOutputInput>;
 
@@ -133,10 +141,10 @@ export interface BulkCreateProductionStepInput {
   allowances?: number;
 
   /**
-   * Labor time unit abbreviation.
+   * Unit that `labor_time` is expressed in.
    *
-   * Accepted values (case-insensitive): `hr`, `minute`, `min`, `second`, `sec`,
-   * `day`. Defaults to `hr`.
+   * One of `hr`, `min`, `minute`, `sec`, `second`, or `day`; a row naming anything
+   * else is skipped. Labor time is read as hours when this is omitted.
    */
   labor_time_unit?: string;
 

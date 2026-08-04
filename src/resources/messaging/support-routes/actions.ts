@@ -10,10 +10,15 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Removes the support route for a scope in the caller's account.
+   * Removes the support route configured for one scope in your account.
    *
-   * Inbound support then falls back to the account default, or to open lazy-join if
-   * no default is configured.
+   * Clearing a customer's override sends that customer back to the account-level
+   * default. Clearing the default leaves every customer without an override of their
+   * own unable to open a new support thread until a route is set again — threads
+   * that are already open keep working, and the people seated on them stay seated.
+   *
+   * Only the exact scope you name is cleared, and clearing a scope that has no route
+   * returns a not-found error.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -21,7 +26,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.messaging.supportRoutes.actions.clear({
-   *     relation_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+   *     relation_account_id: 'ac_opnlh43ymyee',
    *   });
    * ```
    */
@@ -33,12 +38,17 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Designates (or re-points) the group conversation that handles a relationship's
-   * inbound support.
+   * Designates the group conversation that handles a relationship's inbound support.
    *
-   * Its participants become the deterministic recipients seated on the customer's
-   * support thread. The target must be an existing group conversation in the
-   * caller's account.
+   * The group's active people become the recipients seated on a customer's support
+   * thread when that customer opens one. A scope holds a single route, so setting
+   * one where a route already exists re-points it rather than adding a second.
+   *
+   * Configuring a route is what makes support reachable: until a customer's scope
+   * resolves to a route with at least one person in its group, that customer cannot
+   * open a new support thread. Re-pointing or clearing a route afterwards only
+   * affects threads opened from then on — people already seated on an open thread
+   * stay on it.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -46,7 +56,7 @@ export class Actions extends APIResource {
    * ```ts
    * const supportRoute =
    *   await client.messaging.supportRoutes.actions.set({
-   *     group_conversation_id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+   *     group_conversation_id: 'cv_w35z4ck68yq7',
    *   });
    * ```
    */
@@ -74,7 +84,10 @@ export interface ClearSupportRouteRequest {
  */
 export interface SetSupportRouteRequest {
   /**
-   * The group conversation whose participants receive this relationship's support.
+   * The group conversation whose participants handle this relationship's support.
+   *
+   * It must be an existing group conversation in your account; a direct message, a
+   * system channel, or a conversation belonging to another account is rejected.
    */
   group_conversation_id: string;
 
@@ -99,7 +112,10 @@ export interface ActionClearParams {
 
 export interface ActionSetParams {
   /**
-   * The group conversation whose participants receive this relationship's support.
+   * The group conversation whose participants handle this relationship's support.
+   *
+   * It must be an existing group conversation in your account; a direct message, a
+   * system channel, or a conversation belonging to another account is rejected.
    */
   group_conversation_id: string;
 

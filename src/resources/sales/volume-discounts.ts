@@ -20,6 +20,11 @@ export class VolumeDiscounts extends APIResource {
    * The discount name must be unique within the account; creating a discount with an
    * existing name returns a conflict error.
    *
+   * Each scoping list narrows the order lines the discount applies to, and an empty
+   * list places no restriction on that dimension. Because tier thresholds are
+   * compared against quantities converted into `unit_ids`, a discount created
+   * without any units never reaches a threshold above zero.
+   *
    * This endpoint requires the permission: `discounts:create`.
    *
    * @example
@@ -52,7 +57,7 @@ export class VolumeDiscounts extends APIResource {
    * ```ts
    * const volumeDiscount =
    *   await client.sales.volumeDiscounts.retrieve(
-   *     'quds_01b64658b647f3c5266b8f6ae1',
+   *     'quds_bn7hto9s10pp',
    *   );
    * ```
    */
@@ -72,13 +77,18 @@ export class VolumeDiscounts extends APIResource {
    * upsert semantics: tiers with an `id` are updated, tiers without one are created,
    * and existing tiers omitted from the list are deleted.
    *
+   * The name must remain unique within the account; reusing another discount's name
+   * returns a conflict error. Order lines that have already been priced keep the
+   * unit price they were given; the revised discount applies to lines priced after
+   * the change.
+   *
    * This endpoint requires the permission: `discounts:update`.
    *
    * @example
    * ```ts
    * const volumeDiscount =
    *   await client.sales.volumeDiscounts.update(
-   *     'quds_01b64658b647f3c5266b8f6ae1',
+   *     'quds_bn7hto9s10pp',
    *     {
    *       has_attributes: true,
    *       has_categories: true,
@@ -104,7 +114,12 @@ export class VolumeDiscounts extends APIResource {
   }
 
   /**
-   * Returns a paginated list of volume discounts for the target account.
+   * Returns a paginated list of volume discounts, newest first.
+   *
+   * The search term matches the discount name, the name of a customer group it is
+   * scoped to, or the name of a product line it is scoped to. Customer portal users
+   * see only discounts with no customer-group restriction plus those scoped to a
+   * group their own account belongs to.
    *
    * This endpoint requires the permissions: `discounts:read`, `customers:read`,
    * `suppliers:read`.
@@ -127,13 +142,16 @@ export class VolumeDiscounts extends APIResource {
    *
    * Deletion is permanent; further requests against the deleted ID return an error.
    *
+   * Order lines that have already been priced keep the unit price they were given;
+   * only lines priced after the deletion lose the discount.
+   *
    * This endpoint requires the permission: `discounts:delete`.
    *
    * @example
    * ```ts
    * const volumeDiscount =
    *   await client.sales.volumeDiscounts.delete(
-   *     'quds_01b64658b647f3c5266b8f6ae1',
+   *     'quds_bn7hto9s10pp',
    *   );
    * ```
    */
@@ -175,7 +193,9 @@ export interface CreateVolumeDiscountRequest {
   /**
    * Account group IDs to scope the discount to specific customer groups.
    *
-   * When empty, all customers qualify.
+   * When empty, all customers qualify. A discount scoped to a group the buyer
+   * belongs to is preferred over an unscoped one when both could apply to the same
+   * order line.
    */
   customer_group_ids?: Array<string>;
 
@@ -189,6 +209,10 @@ export interface CreateVolumeDiscountRequest {
   /**
    * IDs of the units that ordered quantities are measured in when evaluating tier
    * thresholds.
+   *
+   * Quantities ordered in other units are converted into one of these before being
+   * compared against a threshold. Leaving this empty makes the discount inert: the
+   * quantity always evaluates to zero, so no threshold above zero is ever reached.
    */
   unit_ids?: Array<string>;
 }
@@ -198,8 +222,10 @@ export interface CreateVolumeDiscountRequest {
  */
 export interface CreateVolumeDiscountTierInput {
   /**
-   * Percentage taken off the price once the threshold is met, as a decimal string
-   * (e.g. `5` for 5%).
+   * Fraction of the price taken off once the threshold is met, as a decimal string.
+   *
+   * This is a multiplier, not a whole percent: `0.05` takes 5% off. When an order
+   * meets several tiers of the same discount, their reductions compound.
    */
   discount_percentage: string;
 
@@ -211,17 +237,27 @@ export interface CreateVolumeDiscountTierInput {
   /**
    * Minimum ordered quantity at which this tier's discount begins to apply, as a
    * decimal string.
+   *
+   * The quantity compared against the threshold is the total across every line on
+   * the order that falls within the discount's scope, converted into one of the
+   * discount's units.
    */
   threshold: string;
 
   /**
-   * Parent tier ID for tier chaining.
+   * ID of another tier that this tier follows.
+   *
+   * Tier IDs are assigned when the discount is created, so a tier created in this
+   * same request cannot be referenced here. The link is stored with the tier but
+   * does not affect pricing: every tier whose threshold is met applies, regardless
+   * of any parent.
    */
   parent_tier_id?: string;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListUnit {
   /**
@@ -235,13 +271,20 @@ export interface ListUnit {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListVolumeDiscount {
   /**
@@ -255,13 +298,20 @@ export interface ListVolumeDiscount {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListVolumeDiscountTier {
   /**
@@ -275,7 +325,13 @@ export interface ListVolumeDiscountTier {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -369,13 +425,17 @@ export interface UpdateVolumeDiscountRequest {
    * IDs of the units to set as acceptable units.
    *
    * Only applied when `has_units` is `true`, in which case they replace the existing
-   * set entirely.
+   * set entirely. Clearing every unit makes the discount inert, since ordered
+   * quantity then always evaluates to zero.
    */
   unit_ids?: Array<string>;
 }
 
 /**
  * Volume discount tier to upsert.
+ *
+ * Each entry is written as a whole: send every value you want the tier to keep,
+ * since values left out are not carried over from the existing tier.
  */
 export interface UpdateVolumeDiscountTierInput {
   /**
@@ -386,8 +446,10 @@ export interface UpdateVolumeDiscountTierInput {
   id?: string;
 
   /**
-   * Percentage taken off the price once the threshold is met, as a decimal string
-   * (e.g. `5` for 5%).
+   * Fraction of the price taken off once the threshold is met, as a decimal string.
+   *
+   * This is a multiplier, not a whole percent: `0.05` takes 5% off. When an order
+   * meets several tiers of the same discount, their reductions compound.
    */
   discount_percentage?: string;
 
@@ -397,13 +459,20 @@ export interface UpdateVolumeDiscountTierInput {
   name?: string;
 
   /**
-   * Parent tier ID for tier chaining.
+   * ID of another tier in this discount that this tier follows.
+   *
+   * The link is stored with the tier but does not affect pricing. Omitting it when
+   * updating an existing tier clears the link.
    */
   parent_tier_id?: string;
 
   /**
    * Minimum ordered quantity at which this tier's discount begins to apply, as a
    * decimal string.
+   *
+   * The quantity compared against the threshold is the total across every line on
+   * the order that falls within the discount's scope, converted into one of the
+   * discount's units.
    */
   threshold?: string;
 }
@@ -412,9 +481,17 @@ export interface UpdateVolumeDiscountTierInput {
  * A quantity-based discount with tiered percentage rates.
  *
  * A volume discount reduces the price once the ordered quantity reaches a tier's
- * threshold. The customer group, product line, category, attribute, and acceptable
- * unit associations scope which orders qualify; an empty association list means no
- * restriction on that dimension.
+ * threshold. The customer group associations scope which customers qualify, and
+ * the product line, category, and attribute associations scope which order lines
+ * qualify; an empty list on any of them means no restriction on that dimension.
+ * Acceptable units are not a scope: they are the units the ordered quantity is
+ * measured in, and a discount with none of them never reaches a threshold above
+ * zero.
+ *
+ * At most one volume discount is applied to a given order line: among the
+ * discounts whose scope the line matches and whose thresholds are met, those
+ * scoped to a customer group the buyer belongs to take precedence. An account
+ * price for the same line overrides the discounted price entirely.
  */
 export interface VolumeDiscount {
   /**
@@ -423,17 +500,20 @@ export interface VolumeDiscount {
   id: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   acceptable_units: ListUnit | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   attributes: AccountUsersAPI.ListAttribute | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   categories: AccountPricesAPI.ListItemCategory | null;
 
@@ -443,7 +523,8 @@ export interface VolumeDiscount {
   created_at: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   customer_groups: CustomersAPI.ListAccountGroup | null;
 
@@ -460,12 +541,14 @@ export interface VolumeDiscount {
   object: 'volume_discount';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   product_lines: AccountGroupsAPI.ListProductLine | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   tiers: ListVolumeDiscountTier | null;
 
@@ -476,7 +559,8 @@ export interface VolumeDiscount {
 }
 
 /**
- * Tier within a volume discount.
+ * A quantity threshold within a volume discount, and the reduction that applies at
+ * or above it.
  */
 export interface VolumeDiscountTier {
   /**
@@ -490,9 +574,12 @@ export interface VolumeDiscountTier {
   created_at: string;
 
   /**
-   * Percentage taken off the price once the threshold is met, as a decimal string.
+   * Fraction of the price taken off once the threshold is met, as a decimal string.
    *
-   * For example, `5` means a 5% discount.
+   * This is a multiplier, not a whole percent: `0.05` takes 5% off. When an order
+   * meets several tiers of the same discount, their reductions compound: meeting a
+   * `0.1` tier and a `0.2` tier multiplies the price by `0.9 × 0.8`, a 28% reduction
+   * overall.
    */
   discount_percentage: string;
 
@@ -509,6 +596,10 @@ export interface VolumeDiscountTier {
   /**
    * Minimum ordered quantity at which this tier's discount begins to apply, as a
    * decimal string.
+   *
+   * The quantity compared against the threshold is the total across every line on
+   * the order that falls within the discount's scope, converted into one of the
+   * discount's acceptable units — not the quantity of a single line.
    */
   threshold: string;
 
@@ -550,7 +641,9 @@ export interface VolumeDiscountCreateParams {
   /**
    * Account group IDs to scope the discount to specific customer groups.
    *
-   * When empty, all customers qualify.
+   * When empty, all customers qualify. A discount scoped to a group the buyer
+   * belongs to is preferred over an unscoped one when both could apply to the same
+   * order line.
    */
   customer_group_ids?: Array<string>;
 
@@ -564,6 +657,10 @@ export interface VolumeDiscountCreateParams {
   /**
    * IDs of the units that ordered quantities are measured in when evaluating tier
    * thresholds.
+   *
+   * Quantities ordered in other units are converted into one of these before being
+   * compared against a threshold. Leaving this empty makes the discount inert: the
+   * quantity always evaluates to zero, so no threshold above zero is ever reached.
    */
   unit_ids?: Array<string>;
 }
@@ -662,7 +759,8 @@ export interface VolumeDiscountUpdateParams {
    * IDs of the units to set as acceptable units.
    *
    * Only applied when `has_units` is `true`, in which case they replace the existing
-   * set entirely.
+   * set entirely. Clearing every unit makes the discount inert, since ordered
+   * quantity then always evaluates to zero.
    */
   unit_ids?: Array<string>;
 }

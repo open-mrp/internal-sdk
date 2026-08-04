@@ -49,7 +49,7 @@ export class Shipments extends APIResource {
    * @example
    * ```ts
    * const shipment = await client.operations.shipments.retrieve(
-   *   'sh_018b3a946651bfb6572b06b2b2',
+   *   'sh_pfygp2gl45y4',
    * );
    * ```
    */
@@ -62,14 +62,17 @@ export class Shipments extends APIResource {
   }
 
   /**
-   * Partially updates a shipment.
+   * Updates a shipment's paperwork details and carrier selection.
+   *
+   * Only the fields sent are changed. A shipment's status is not editable here: use
+   * the ship and void actions to move a shipment between `packed` and `shipped`.
    *
    * This endpoint requires the permission: `shipments:update`.
    *
    * @example
    * ```ts
    * const shipment = await client.operations.shipments.update(
-   *   'sh_018b3a946651bfb6572b06b2b2',
+   *   'sh_pfygp2gl45y4',
    *   { note: 'Updated shipping note' },
    * );
    * ```
@@ -84,7 +87,12 @@ export class Shipments extends APIResource {
   }
 
   /**
-   * Returns a paginated list of shipments.
+   * Returns a paginated list of shipments, newest first.
+   *
+   * Filters combine with AND, while the values within a single list filter combine
+   * with OR. The `q` search term matches the shipment number, note, bill of lading
+   * and master tracking number, as well as the sales order number, customer name and
+   * customer PO number.
    *
    * This endpoint requires the permission: `shipments:read`.
    *
@@ -112,7 +120,7 @@ export class Shipments extends APIResource {
    * @example
    * ```ts
    * const shipment = await client.operations.shipments.delete(
-   *   'sh_018b3a946651bfb6572b06b2b2',
+   *   'sh_pfygp2gl45y4',
    * );
    * ```
    */
@@ -122,7 +130,8 @@ export class Shipments extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListShipment {
   /**
@@ -136,7 +145,13 @@ export interface ListShipment {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -147,6 +162,10 @@ export interface ListShipment {
 export interface UpdateShipmentRequest {
   /**
    * ID of the carrier to set on the shipment's freight.
+   *
+   * Changing the carrier records the new selection only; it does not re-rate the
+   * shipment, so the freight charges already recorded on the shipping cases are left
+   * as they are.
    */
   carrier_id?: string;
 
@@ -167,6 +186,9 @@ export interface UpdateShipmentRequest {
 
   /**
    * ID of the carrier service level to set on the shipment's freight.
+   *
+   * Sending this without `carrier_id` keeps the existing carrier, so the service
+   * level should belong to that carrier.
    */
   service_level_id?: string;
 }
@@ -212,6 +234,10 @@ export interface ShipmentUpdateParams {
 
   /**
    * Body param: ID of the carrier to set on the shipment's freight.
+   *
+   * Changing the carrier records the new selection only; it does not re-rate the
+   * shipment, so the freight charges already recorded on the shipping cases are left
+   * as they are.
    */
   carrier_id?: string;
 
@@ -232,6 +258,9 @@ export interface ShipmentUpdateParams {
 
   /**
    * Body param: ID of the carrier service level to set on the shipment's freight.
+   *
+   * Sending this without `carrier_id` keeps the existing carrier, so the service
+   * level should belong to that carrier.
    */
   service_level_id?: string;
 }
@@ -258,6 +287,8 @@ export interface ShipmentListParams {
 
   /**
    * Only include shipments created on or before this date (`YYYY-MM-DD`).
+   *
+   * Filters on when the shipment was created, not on when it was shipped.
    */
   end_date?: string;
 
@@ -297,11 +328,13 @@ export interface ShipmentListParams {
 
   /**
    * Only include shipments created on or after this date (`YYYY-MM-DD`).
+   *
+   * Filters on when the shipment was created, not on when it was shipped.
    */
   start_date?: string;
 
   /**
-   * Filter by shipment status (`packed` or `shipped`).
+   * Only include shipments with this status, either `packed` or `shipped`.
    */
   status?: string;
 }

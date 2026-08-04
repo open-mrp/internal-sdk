@@ -13,6 +13,11 @@ export class Actions extends APIResource {
    * Authenticates a user and returns the user object, setting access and refresh
    * tokens in cookies.
    *
+   * Failed attempts are throttled per identifier: after 10 failures within 5
+   * minutes, further attempts for that identifier are rejected with a rate-limit
+   * error until the window passes. Invalid credentials always return the same
+   * generic error, whether or not the identifier exists.
+   *
    * @example
    * ```ts
    * const user = await client.auth.actions.login({
@@ -28,6 +33,9 @@ export class Actions extends APIResource {
   /**
    * Exchanges a magic login token for a session, setting access and refresh tokens
    * in cookies.
+   *
+   * Signs the user in without a password. The token is short-lived, so once it
+   * expires the link no longer signs the user in.
    *
    * @example
    * ```ts
@@ -62,7 +70,10 @@ export interface LoginRequest {
  */
 export interface MagicLoginRequest {
   /**
-   * Magic login token from the "already registered" email.
+   * Magic login token taken from the `t` query parameter of the link in the "already
+   * registered" email.
+   *
+   * The token expires 15 minutes after the email is sent.
    */
   token: string;
 }
@@ -81,7 +92,10 @@ export interface ActionLoginParams {
 
 export interface ActionMagicLoginParams {
   /**
-   * Magic login token from the "already registered" email.
+   * Magic login token taken from the `t` query parameter of the link in the "already
+   * registered" email.
+   *
+   * The token expires 15 minutes after the email is sent.
    */
   token: string;
 }

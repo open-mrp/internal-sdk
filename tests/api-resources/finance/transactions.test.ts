@@ -11,7 +11,7 @@ describe('resource transactions', () => {
   test('create: only required params', async () => {
     const responsePromise = client.finance.transactions.create({
       amount: '500.00',
-      customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      customer_id: 'ac_opnlh43ymyee',
       type: 'payment',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -26,7 +26,7 @@ describe('resource transactions', () => {
   test('create: required and optional params', async () => {
     const response = await client.finance.transactions.create({
       amount: '500.00',
-      customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      customer_id: 'ac_opnlh43ymyee',
       type: 'payment',
       include: ['allocations'],
       adjustment_type: 'adjustment_type',
@@ -37,7 +37,7 @@ describe('resource transactions', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.finance.transactions.retrieve('tx_01fc4d4f2b2ee1fa6b6d87257a');
+    const responsePromise = client.finance.transactions.retrieve('tx_hvh9thtzaezn');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -51,7 +51,7 @@ describe('resource transactions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.transactions.retrieve(
-        'tx_01fc4d4f2b2ee1fa6b6d87257a',
+        'tx_hvh9thtzaezn',
         { include: ['allocations'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -59,7 +59,7 @@ describe('resource transactions', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.finance.transactions.update('tx_01fc4d4f2b2ee1fa6b6d87257a', {
+    const responsePromise = client.finance.transactions.update('tx_hvh9thtzaezn', {
       clear_adjustment_type: false,
       clear_responsible_user: false,
       clear_transaction_method: false,
@@ -74,7 +74,7 @@ describe('resource transactions', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.finance.transactions.update('tx_01fc4d4f2b2ee1fa6b6d87257a', {
+    const response = await client.finance.transactions.update('tx_hvh9thtzaezn', {
       clear_adjustment_type: false,
       clear_responsible_user: false,
       clear_transaction_method: false,
@@ -124,7 +124,7 @@ describe('resource transactions', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.finance.transactions.delete('tx_01fc4d4f2b2ee1fa6b6d87257a');
+    const responsePromise = client.finance.transactions.delete('tx_hvh9thtzaezn');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -138,7 +138,7 @@ describe('resource transactions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.transactions.delete(
-        'tx_01fc4d4f2b2ee1fa6b6d87257a',
+        'tx_hvh9thtzaezn',
         { include: ['allocations'] },
         { path: '/_stainless_unknown_path' },
       ),

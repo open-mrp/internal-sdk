@@ -357,6 +357,9 @@ export class Operations extends APIResource {
    * Returns the demand override types, which describe how an override's value
    * adjusts the forecast.
    *
+   * The taxonomy is platform-provided and identical for every account; each type's
+   * `code` is a value accepted as an override's `adjustment`.
+   *
    * This endpoint requires the permission: `demand_overrides:read`.
    *
    * @example
@@ -373,8 +376,10 @@ export class Operations extends APIResource {
    * Returns a paginated list of items with on-hand inventory quantities for the
    * account.
    *
-   * Every item in the account appears once; items with no recorded inventory report
-   * a zero quantity.
+   * Items are listed whether or not they have ever held stock; an item with no
+   * recorded inventory reports a zero quantity. Items backed by a non-sale product —
+   * the service, shipping, tax, credit, and return products that carry charges on
+   * orders — are left out. The `q` search term matches on item SKU and description.
    *
    * This endpoint requires the permission: `items:read`.
    *
@@ -394,7 +399,10 @@ export class Operations extends APIResource {
   /**
    * Returns the downtime reasons available when logging a stoppage.
    *
-   * The list is the same for every account and is ordered for display.
+   * The list is the same for every account and is ordered for display, so it can be
+   * rendered straight into a reason picker. Each reason carries the OEE term its
+   * stoppages charge, which is what makes the choice of reason matter beyond
+   * labeling.
    *
    * This endpoint requires the permission: `machine_downtime:read`.
    *
@@ -411,6 +419,9 @@ export class Operations extends APIResource {
   /**
    * Returns what every machine is running right now, how much is left on it, and
    * what is queued behind that.
+   *
+   * The whole floor comes back in one response rather than a page at a time, so a
+   * wall display can render it in a single call.
    *
    * Assembled from the published schedule, the batches the floor has scanned against
    * each campaign, and any open downtime. A campaign is `current` once its week is
@@ -458,7 +469,11 @@ export class Operations extends APIResource {
   }
 
   /**
-   * Partially updates a quantity.
+   * Updates the value or unit of a quantity in place.
+   *
+   * A quantity belongs to the resource that reports it — a material's order point,
+   * the amount a production step consumes, and so on — so this changes that
+   * resource's stored measure directly.
    *
    * This endpoint requires the permissions: `items:update`,
    * `production_steps:update`.
@@ -466,9 +481,9 @@ export class Operations extends APIResource {
    * @example
    * ```ts
    * const quantity = await client.operations.updateQuantities(
-   *   'qty_015a85becc1a6afdfb1afc27ff',
+   *   'qty_8hnxbigf0bod',
    *   {
-   *     unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     unit_id: 'un_82bd37dae5po',
    *     value: '50.000000000000000000000000000000',
    *   },
    * );
@@ -488,7 +503,11 @@ export class Operations extends APIResource {
   }
 
   /**
-   * Partially updates a rate.
+   * Updates the value or units of a rate in place.
+   *
+   * A rate belongs to the resource that reports it — an item's unit price or cost, a
+   * department's labor rate, and so on — so this changes that resource's stored rate
+   * directly.
    *
    * This endpoint requires the permissions: `items:update`,
    * `production_steps:update`.
@@ -496,11 +515,8 @@ export class Operations extends APIResource {
    * @example
    * ```ts
    * const rate = await client.operations.updateRates(
-   *   'ra_015aa0a9522cf222024fd21d1a',
-   *   {
-   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     value: '25.50',
-   *   },
+   *   'ra_jhgtyileng4s',
+   *   { numerator_unit_id: 'un_82bd37dae5po', value: '25.50' },
    * );
    * ```
    */
@@ -517,9 +533,9 @@ export class Operations extends APIResource {
 /**
  * A way of adjusting planned demand.
  *
- * `absolute` replaces the forecast for the period, `delta_units` adds to it, and
- * `delta_percent` scales it. When several overrides land on the same month they
- * are applied in that order.
+ * `absolute` replaces the forecast for each month an override covers,
+ * `delta_units` adds to it, and `delta_percent` scales it. When several overrides
+ * land on the same month they are applied in that order.
  */
 export interface DemandOverrideType {
   /**
@@ -528,7 +544,7 @@ export interface DemandOverrideType {
   id: string;
 
   /**
-   * Stable code used when creating an override.
+   * The value to send as an override's `adjustment`.
    */
   code: 'absolute' | 'delta_units' | 'delta_percent';
 
@@ -558,7 +574,7 @@ export interface DemandOverrideType {
  */
 export interface InventoryItem {
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item;
 
@@ -568,13 +584,18 @@ export interface InventoryItem {
   object: 'inventory_item';
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: AccountUsersAPI.Quantity | null;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListDemandOverrideType {
   /**
@@ -588,13 +609,20 @@ export interface ListDemandOverrideType {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListInventoryItem {
   /**
@@ -608,13 +636,20 @@ export interface ListInventoryItem {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListMachineDowntimeReason {
   /**
@@ -628,13 +663,20 @@ export interface ListMachineDowntimeReason {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListMachineStatus {
   /**
@@ -648,13 +690,20 @@ export interface ListMachineStatus {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListScheduleDeviationType {
   /**
@@ -668,13 +717,23 @@ export interface ListScheduleDeviationType {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
  * One campaign on a machine, with how far through it the floor is.
+ *
+ * A campaign is one item scheduled to run on one machine for one week. Progress is
+ * taken from the batches the floor has scanned against it rather than reported by
+ * hand, so it advances on its own as a shift runs.
  */
 export interface MachineCampaign {
   /**
@@ -688,7 +747,7 @@ export interface MachineCampaign {
   planned_quantity: number;
 
   /**
-   * Constraint hours the campaign consumes.
+   * Machine hours the plan allocates to the campaign.
    */
   planned_run_hours: number;
 
@@ -732,6 +791,13 @@ export interface MachineCampaign {
 
   /**
    * Where the campaign is in its lifecycle.
+   *
+   * - `planned`: scheduled, but not yet released to the floor.
+   * - `released`: issued to the floor as a production run, so batches can be scanned
+   *   against it.
+   * - `in_progress`: being run.
+   * - `complete`: finished.
+   * - `cancelled`: will not be run.
    */
   status: 'planned' | 'released' | 'in_progress' | 'complete' | 'cancelled';
 
@@ -767,6 +833,9 @@ export interface MachineDowntimeReason {
 
   /**
    * Stable code used when logging downtime.
+   *
+   * This is the value to send as `reason` when creating or updating a downtime
+   * event.
    */
   code:
     | 'breakdown'
@@ -889,6 +958,10 @@ export interface MachineDowntimeSummary {
 export interface MachineStatus {
   /**
    * One campaign on a machine, with how far through it the floor is.
+   *
+   * A campaign is one item scheduled to run on one machine for one week. Progress is
+   * taken from the batches the floor has scanned against it rather than reported by
+   * hand, so it advances on its own as a shift runs.
    */
   current: MachineCampaign | null;
 
@@ -909,6 +982,10 @@ export interface MachineStatus {
 
   /**
    * One campaign on a machine, with how far through it the floor is.
+   *
+   * A campaign is one item scheduled to run on one machine for one week. Progress is
+   * taken from the batches the floor has scanned against it rather than reported by
+   * hand, so it advances on its own as a shift runs.
    */
   next: MachineCampaign | null;
 
@@ -932,17 +1009,20 @@ export interface MachineStatus {
   unit: string | null;
 
   /**
-   * Planned for this machine this week.
+   * Quantity planned on this machine for the current week.
+   *
+   * Summed across every campaign scheduled on the machine that week, not just the
+   * current one.
    */
   week_planned_quantity: number;
 
   /**
-   * Constraint hours planned on this machine this week.
+   * Machine hours the plan allocates on this machine for the current week.
    */
   week_planned_run_hours: number;
 
   /**
-   * Scanned on this machine this week.
+   * Quantity scanned on this machine so far in the current week.
    */
   week_scanned_quantity: number;
 }
@@ -997,13 +1077,16 @@ export interface UpdateQuantityRequest {
   /**
    * Type of the resource that owns this quantity.
    *
-   * Determines the permission required for the update. Must be `item` or
-   * `production_step`.
+   * Determines the permission required for the update. Must be `item`,
+   * `production_step`, or `department`.
    */
   object_type?: string;
 
   /**
    * ID of the new unit of measure for the quantity.
+   *
+   * The stored value is kept as-is and is not converted into the new unit, so send
+   * `value` alongside this when the amount should change too.
    */
   unit_id?: string;
 
@@ -1019,11 +1102,16 @@ export interface UpdateQuantityRequest {
 export interface UpdateRateRequest {
   /**
    * ID of the new unit for the rate's denominator (the per-unit basis).
+   *
+   * As with the numerator, the value is not re-scaled when the unit changes.
    */
   denominator_unit_id?: string;
 
   /**
    * ID of the new unit for the rate's numerator (e.g. the currency of a price).
+   *
+   * The stored value is kept as-is and is not converted into the new unit, so send
+   * `value` alongside this when the amount should change too.
    */
   numerator_unit_id?: string;
 
@@ -1081,7 +1169,11 @@ export interface OperationRetrieveInventoriesParams {
 
 export interface OperationRetrieveMachineStatusParams {
   /**
-   * The moment to read the floor at. Defaults to now.
+   * The moment to read the floor at.
+   *
+   * Chooses the week the campaigns are read for, and the published schedule whose
+   * horizon covers that moment; open downtime and scan progress are always read as
+   * they stand now. Omit it to read the floor as it is at this instant.
    */
   as_of?: string;
 
@@ -1109,13 +1201,16 @@ export interface OperationUpdateQuantitiesParams {
   /**
    * Body param: Type of the resource that owns this quantity.
    *
-   * Determines the permission required for the update. Must be `item` or
-   * `production_step`.
+   * Determines the permission required for the update. Must be `item`,
+   * `production_step`, or `department`.
    */
   object_type?: string;
 
   /**
    * Body param: ID of the new unit of measure for the quantity.
+   *
+   * The stored value is kept as-is and is not converted into the new unit, so send
+   * `value` alongside this when the amount should change too.
    */
   unit_id?: string;
 
@@ -1135,12 +1230,17 @@ export interface OperationUpdateRatesParams {
 
   /**
    * Body param: ID of the new unit for the rate's denominator (the per-unit basis).
+   *
+   * As with the numerator, the value is not re-scaled when the unit changes.
    */
   denominator_unit_id?: string;
 
   /**
    * Body param: ID of the new unit for the rate's numerator (e.g. the currency of a
    * price).
+   *
+   * The stored value is kept as-is and is not converted into the new unit, so send
+   * `value` alongside this when the amount should change too.
    */
   numerator_unit_id?: string;
 

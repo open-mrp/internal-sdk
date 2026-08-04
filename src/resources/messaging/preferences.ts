@@ -10,7 +10,12 @@ import { RequestOptions } from '../../internal/request-options';
  */
 export class Preferences extends APIResource {
   /**
-   * Creates or replaces a notification channel preference for the caller.
+   * Creates or replaces one of the current user's notification preferences, either
+   * their global default or the override for a single category.
+   *
+   * The preference applies only to the account being acted in, and the category must
+   * be one the platform recognizes. Callers without a user membership in that
+   * account cannot hold preferences and are refused.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -31,8 +36,12 @@ export class Preferences extends APIResource {
   }
 
   /**
-   * Lists the caller's notification channel preferences (global default +
-   * per-category overrides).
+   * Lists the current user's notification preferences for the account they are
+   * acting in: their global default plus any per-category overrides.
+   *
+   * Only preferences the user has explicitly set are returned, so an empty list
+   * means everything falls back to the standard behavior — in-app notifications on,
+   * email and push off.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -48,7 +57,8 @@ export class Preferences extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListNotificationPreference {
   /**
@@ -62,16 +72,29 @@ export interface ListNotificationPreference {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * A per-(user, category) notification channel preference.
+ * One user's choice of which channels a category of notification is delivered on.
  *
- * A preference with a `null` category is the user's global default; a
- * category-specific preference overrides it.
+ * Preferences belong to the user's membership in a single account, so the same
+ * person can be notified differently in each account they belong to. A preference
+ * with no category is that user's global default, and a category-specific
+ * preference overrides it. Where neither exists, in-app notifications are
+ * delivered and email and push are not.
+ *
+ * Chat notifications are the only ones these settings currently govern:
+ * notifications in every other category reach the in-app feed and are never
+ * emailed, whatever is stored here.
  */
 export interface NotificationPreference {
   /**
@@ -82,8 +105,8 @@ export interface NotificationPreference {
   /**
    * The notification category this preference applies to.
    *
-   * `null` for the global default that applies to all categories without a specific
-   * preference.
+   * A preference with no category is the user's global default, used for every
+   * category they have not set a specific preference for.
    */
   category: string | null;
 
@@ -93,23 +116,32 @@ export interface NotificationPreference {
   created_at: string;
 
   /**
-   * How email delivery for this category is batched.
+   * How often email for this category is sent.
    *
    * - `instant`: send an email as soon as an eligible notification occurs.
-   * - `hourly`: batch eligible notifications into a single hourly email.
-   * - `daily`: batch eligible notifications into a single daily email.
-   * - `off`: never send email for this category, even when email delivery is
-   *   otherwise enabled.
+   * - `hourly`: collect eligible notifications into a single hourly email.
+   * - `daily`: collect eligible notifications into a single daily email.
+   * - `off`: never send email for this category, even when email is otherwise
+   *   enabled.
+   *
+   * This governs email only; in-app delivery is unaffected. Batched sending is not
+   * running yet, so `hourly` and `daily` currently hold email back in the same way
+   * as `off`.
    */
   digest: 'instant' | 'hourly' | 'daily' | 'off';
 
   /**
-   * Whether email notifications are delivered for this category.
+   * Whether notifications in this category are also emailed to the user.
+   *
+   * Email is additionally suppressed for a conversation the user has muted, and only
+   * sent on the cadence set by `digest`.
    */
   email_enabled: boolean;
 
   /**
-   * Whether in-app (bell) notifications are delivered for this category.
+   * Whether notifications in this category appear in the user's in-app feed.
+   *
+   * A direct @mention is always delivered in-app, even when this is disabled.
    */
   in_app_enabled: boolean;
 
@@ -119,7 +151,9 @@ export interface NotificationPreference {
   object: 'notification_preference';
 
   /**
-   * Whether push notifications are delivered for this category.
+   * Whether notifications in this category are also sent as push notifications.
+   *
+   * Push delivery is not available yet; the choice is stored for when it is.
    */
   push_enabled: boolean;
 
@@ -130,77 +164,106 @@ export interface NotificationPreference {
 }
 
 /**
- * Request to create or replace a notification preference for the caller.
+ * Request to create or replace one of the caller's notification preferences.
  *
- * The preference is keyed by (caller, category), so repeating the request with the
- * same category replaces the existing preference.
+ * A user has at most one preference per category, so sending the same category
+ * again replaces the previous settings outright — every channel is written from
+ * this request, not merged with what was there before.
+ *
+ * Chat notifications are the only ones these settings currently govern:
+ * notifications in every other category reach the in-app feed and are never
+ * emailed, whatever is stored here.
  */
 export interface UpsertNotificationPreferenceRequest {
   /**
-   * Whether email notifications are delivered for this category.
+   * Whether notifications in this category are also emailed to the user.
+   *
+   * Email is additionally suppressed for a conversation the user has muted, and only
+   * sent on the cadence set by `digest`.
    */
   email_enabled: boolean;
 
   /**
-   * Whether in-app (bell) notifications are delivered for this category.
+   * Whether notifications in this category appear in the user's in-app feed.
+   *
+   * A direct @mention is always delivered in-app, even when this is off.
    */
   in_app_enabled: boolean;
 
   /**
-   * Whether push notifications are delivered for this category.
+   * Whether notifications in this category are also sent as push notifications.
+   *
+   * Push delivery is not available yet; the choice is stored for when it is.
    */
   push_enabled: boolean;
 
   /**
-   * The notification category this preference applies to.
+   * The notification category these settings apply to, such as `chat.message`.
    *
-   * Omit (or `null`) to set the caller's global default.
+   * Leave it out to set the global default used for every category without its own
+   * preference.
    */
   category?: string | null;
 
   /**
-   * How email delivery for this category is batched.
+   * How often email for this category is sent.
    *
    * - `instant`: send an email as soon as an eligible notification occurs.
-   * - `hourly`: batch eligible notifications into a single hourly email.
-   * - `daily`: batch eligible notifications into a single daily email.
-   * - `off`: never send email for this category, even when email delivery is
-   *   otherwise enabled.
+   * - `hourly`: collect eligible notifications into a single hourly email.
+   * - `daily`: collect eligible notifications into a single daily email.
+   * - `off`: never send email for this category, even when email is otherwise
+   *   enabled.
+   *
+   * This governs email only; in-app delivery is unaffected. Batched sending is not
+   * running yet, so `hourly` and `daily` currently hold email back in the same way
+   * as `off`.
    */
   digest?: 'instant' | 'hourly' | 'daily' | 'off';
 }
 
 export interface PreferenceUpdateParams {
   /**
-   * Whether email notifications are delivered for this category.
+   * Whether notifications in this category are also emailed to the user.
+   *
+   * Email is additionally suppressed for a conversation the user has muted, and only
+   * sent on the cadence set by `digest`.
    */
   email_enabled: boolean;
 
   /**
-   * Whether in-app (bell) notifications are delivered for this category.
+   * Whether notifications in this category appear in the user's in-app feed.
+   *
+   * A direct @mention is always delivered in-app, even when this is off.
    */
   in_app_enabled: boolean;
 
   /**
-   * Whether push notifications are delivered for this category.
+   * Whether notifications in this category are also sent as push notifications.
+   *
+   * Push delivery is not available yet; the choice is stored for when it is.
    */
   push_enabled: boolean;
 
   /**
-   * The notification category this preference applies to.
+   * The notification category these settings apply to, such as `chat.message`.
    *
-   * Omit (or `null`) to set the caller's global default.
+   * Leave it out to set the global default used for every category without its own
+   * preference.
    */
   category?: string | null;
 
   /**
-   * How email delivery for this category is batched.
+   * How often email for this category is sent.
    *
    * - `instant`: send an email as soon as an eligible notification occurs.
-   * - `hourly`: batch eligible notifications into a single hourly email.
-   * - `daily`: batch eligible notifications into a single daily email.
-   * - `off`: never send email for this category, even when email delivery is
-   *   otherwise enabled.
+   * - `hourly`: collect eligible notifications into a single hourly email.
+   * - `daily`: collect eligible notifications into a single daily email.
+   * - `off`: never send email for this category, even when email is otherwise
+   *   enabled.
+   *
+   * This governs email only; in-app delivery is unaffected. Batched sending is not
+   * running yet, so `hourly` and `daily` currently hold email back in the same way
+   * as `off`.
    */
   digest?: 'instant' | 'hourly' | 'daily' | 'off';
 }

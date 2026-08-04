@@ -14,11 +14,16 @@ export class Messages extends APIResource {
   /**
    * Posts a message to a conversation.
    *
-   * With `mode` = `send` (the default) the message is delivered — immediately, or
-   * queued when `scheduled_at` is set — and the request is idempotent on
-   * `client_message_id`. With `mode` = `draft` a customer-reply draft is proposed on
-   * an external case: it is held at status `draft` for human approval rather than
-   * sent, and `channel` is required.
+   * With `mode` = `send` the message is delivered — immediately, or queued when
+   * `scheduled_at` is set — and a retry of an immediate send with the same
+   * `client_message_id` returns the original message rather than posting it twice.
+   * With `mode` = `draft` the message is proposed as a reply to the customer and
+   * held for a teammate to approve instead of being sent, and `channel` is required.
+   *
+   * Sending requires you to be an active participant allowed to post: view-only
+   * participants cannot post, and in a direct message neither side of a block can.
+   * On a customer-facing case, replying to the customer moves the case to waiting on
+   * the customer, and proposing a draft moves it to awaiting approval.
    *
    * This endpoint requires the permission: `messaging:create`.
    *
@@ -26,7 +31,7 @@ export class Messages extends APIResource {
    * ```ts
    * const message =
    *   await client.messaging.conversations.messages.create(
-   *     'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+   *     'cv_w35z4ck68yq7',
    *     {
    *       body: 'Sounds good — shipping it today.',
    *       client_message_id: 'client_msg_8c7d2f',
@@ -42,14 +47,13 @@ export class Messages extends APIResource {
    *       audience: 'customer',
    *       cc: ['ap@acme.com'],
    *       channel: 'email',
-   *       link_resource_id: 'or_01d5034136c3ccc048abecc312',
+   *       link_resource_id: 'or_9lqo07quiwyb',
    *       link_resource_type: 'sales_order',
-   *       mentions: ['acus_01ea9983ddb41dacc44ecf997c'],
+   *       mentions: ['acus_e5zu8bde0z3h'],
    *       mode: 'send',
-   *       reply_to_message_id: 'mg_01h9z8q1w2e3r4t5y6u7i8mg',
+   *       reply_to_message_id: 'mg_fdny8633ebgw',
    *       scheduled_at: '2026-05-10T15:00:00Z',
-   *       source_thread_message_id:
-   *         'mg_01h9z8q1w2e3r4t5y6u7i8mg',
+   *       source_thread_message_id: 'mg_fdny8633ebgw',
    *       subject: 'Re: Order #1042',
    *     },
    *   );
@@ -69,7 +73,10 @@ export class Messages extends APIResource {
   }
 
   /**
-   * Returns a conversation's messages, newest first, keyset-paginated by sequence.
+   * Returns the messages in a conversation, newest first.
+   *
+   * You must be an active participant. A customer reading their own case receives
+   * only the messages meant for them — internal team notes are never included.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -77,7 +84,7 @@ export class Messages extends APIResource {
    * ```ts
    * const listMessage =
    *   await client.messaging.conversations.messages.list(
-   *     'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+   *     'cv_w35z4ck68yq7',
    *   );
    * ```
    */
@@ -91,7 +98,8 @@ export class Messages extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListMessage {
   /**
@@ -105,7 +113,13 @@ export interface ListMessage {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -113,48 +127,57 @@ export interface ListMessage {
 /**
  * A single attachment supplied when sending a message.
  *
- * For uploaded kinds (`file`/`image`) supply the `s3_key` returned by the
- * upload-url endpoint; for `link` supply `url`; for `resource` supply
- * `resource_type` and `resource_id`.
+ * For an uploaded file or image, supply the `s3_key` you uploaded to; for a link,
+ * supply `url`; for a resource reference, supply `resource_type` and
+ * `resource_id`.
  */
 export interface MessageAttachmentInput {
   /**
-   * The kind of attachment.
+   * What is being attached.
+   *
+   * - `file`: a document you uploaded to object storage first.
+   * - `image`: an uploaded image, rendered inline in the conversation.
+   * - `link`: an external web address, with nothing stored on our side.
+   * - `resource`: a reference to an in-app record, such as an order.
    */
   kind: 'file' | 'image' | 'link' | 'resource';
 
   /**
-   * The MIME content type (file/image).
+   * The MIME content type of the uploaded file (file and image).
    */
   content_type?: string;
 
   /**
-   * The original filename (file/image).
+   * The filename to display for the attachment (file and image).
    */
   filename?: string;
 
   /**
-   * The linked resource id (required for resource).
+   * The id of the record being referenced, paired with `resource_type` (resource).
    */
   resource_id?: string;
 
   /**
-   * The linked resource type (required for resource).
+   * The type of the record being referenced, paired with `resource_id` (resource).
    */
   resource_type?: string;
 
   /**
-   * The object-storage key from the upload-url response (required for file/image).
+   * The key you uploaded the file to, taken from the upload-url response (file and
+   * image).
+   *
+   * The key must be one minted for this conversation and the file must already be
+   * uploaded, otherwise the send is rejected.
    */
   s3_key?: string;
 
   /**
-   * The size in bytes (file/image).
+   * The size of the uploaded file in bytes (file and image).
    */
   size_bytes?: number;
 
   /**
-   * The external URL (required for link).
+   * The web address being shared (link).
    */
   url?: string;
 }
@@ -173,8 +196,9 @@ export interface SendMessageRequest {
   /**
    * Client-supplied dedupe key.
    *
-   * A resend with the same value returns the original message. Required when sending
-   * (`mode` = `send`); ignored for drafts.
+   * Repeating an immediate send with the same value returns the message created by
+   * the first request instead of posting a second one, so a retry after a network
+   * failure is safe. Required when sending (`mode` = `send`); ignored for drafts.
    */
   client_message_id: string;
 
@@ -184,26 +208,33 @@ export interface SendMessageRequest {
   attachments?: Array<MessageAttachmentInput>;
 
   /**
-   * Who the message is addressed to on an external case.
+   * Who the message is addressed to on a customer-facing case.
    *
-   * - `customer`: sends a customer-visible reply, branded "Customer Service" and
-   *   delivered by email on an email-bridged case.
-   * - `internal`: posts a team-only note that the customer never sees.
+   * - `customer`: a reply the customer sees, shown to them as coming from "Customer
+   *   Service" and delivered as email when the case is bridged to an inbox.
+   * - `internal`: a team-only note the customer never sees.
    *
-   * When omitted, the message is posted as an internal team-only note.
+   * Messages are team-only unless you ask for `customer`, so an internal note can
+   * never leak by omission. Asking for `customer` on a conversation that has no
+   * customer is rejected.
+   *
+   * On a case bridged to an email inbox, a customer reply goes out as mail carrying
+   * only the body, subject, and copied recipients — attachments, mentions, resource
+   * links, and replies are dropped.
    */
   audience?: 'internal' | 'customer';
 
   /**
-   * Additional email recipients to copy on a customer reply (email channel).
+   * Additional email addresses to copy on a customer reply sent by email.
    */
   cc?: Array<string>;
 
   /**
-   * The channel a draft will be sent over when approved (`mode` = `draft`).
+   * The channel a draft will be sent over once it is approved (`mode` = `draft`).
    *
-   * - `message`: delivered as an in-conversation chat message.
-   * - `email`: delivered as an outbound email from the conversation's bridged inbox.
+   * - `message`: appears in the customer's conversation timeline.
+   * - `email`: goes out as an email from the inbox the case is bridged to. Falls
+   *   back to the conversation timeline if the case has no bridged inbox.
    */
   channel?: 'message' | 'email';
 
@@ -214,6 +245,9 @@ export interface SendMessageRequest {
 
   /**
    * Type of a resource to link in the message, paired with `link_resource_id`.
+   *
+   * Linking a record lets clients render the message as a reference to it. A link
+   * counts in place of text, so a message may consist of nothing but the link.
    */
   link_resource_type?:
     | 'account'
@@ -495,18 +529,20 @@ export interface SendMessageRequest {
   /**
    * Account user ids explicitly @mentioned in the message.
    *
-   * A mention delivers a notification even when the recipient has muted the
-   * conversation.
+   * A mention notifies the person even when they have muted the conversation.
    */
   mentions?: Array<string>;
 
   /**
    * Whether to deliver the message now or hold it as a customer-reply draft.
    *
-   * - `send`: delivers the message (immediately, or at `scheduled_at`). This is the
-   *   default.
-   * - `draft`: proposes a customer-reply draft on an external case, held for human
-   *   approval rather than sent. Requires `channel`.
+   * - `send`: delivers the message, immediately or at `scheduled_at`.
+   * - `draft`: proposes a reply to the customer on a customer-facing case and holds
+   *   it for a teammate to approve before it goes out. Requires `channel`.
+   *
+   * A draft is built from `body`, `subject`, `channel`, and
+   * `source_thread_message_id` only — attachments, mentions, copied recipients,
+   * resource links, replies, and scheduling are not carried onto it.
    */
   mode?: 'send' | 'draft';
 
@@ -516,10 +552,13 @@ export interface SendMessageRequest {
   reply_to_message_id?: string;
 
   /**
-   * When set, queue the message for delivery at this future time instead of sending
-   * now.
+   * When set, hold the message and deliver it at this future time instead of sending
+   * it now.
    *
-   * The created message has status `scheduled`.
+   * Only the body is carried into a scheduled send — attachments, mentions, copied
+   * recipients, resource links, replies, and audience are dropped, and it is
+   * delivered as an ordinary team-visible message. If you are no longer an active
+   * participant when it comes due, it is canceled instead of sent.
    */
   scheduled_at?: string;
 
@@ -530,8 +569,9 @@ export interface SendMessageRequest {
   source_thread_message_id?: string;
 
   /**
-   * The email subject for a customer reply on an email-bridged case (`audience` =
-   * `customer`).
+   * The subject line for a customer reply sent by email.
+   *
+   * When omitted, the reply goes out as "Re:" the case title.
    */
   subject?: string;
 }
@@ -547,8 +587,9 @@ export interface MessageCreateParams {
   /**
    * Body param: Client-supplied dedupe key.
    *
-   * A resend with the same value returns the original message. Required when sending
-   * (`mode` = `send`); ignored for drafts.
+   * Repeating an immediate send with the same value returns the message created by
+   * the first request instead of posting a second one, so a retry after a network
+   * failure is safe. Required when sending (`mode` = `send`); ignored for drafts.
    */
   client_message_id: string;
 
@@ -578,28 +619,35 @@ export interface MessageCreateParams {
   attachments?: Array<MessageAttachmentInput>;
 
   /**
-   * Body param: Who the message is addressed to on an external case.
+   * Body param: Who the message is addressed to on a customer-facing case.
    *
-   * - `customer`: sends a customer-visible reply, branded "Customer Service" and
-   *   delivered by email on an email-bridged case.
-   * - `internal`: posts a team-only note that the customer never sees.
+   * - `customer`: a reply the customer sees, shown to them as coming from "Customer
+   *   Service" and delivered as email when the case is bridged to an inbox.
+   * - `internal`: a team-only note the customer never sees.
    *
-   * When omitted, the message is posted as an internal team-only note.
+   * Messages are team-only unless you ask for `customer`, so an internal note can
+   * never leak by omission. Asking for `customer` on a conversation that has no
+   * customer is rejected.
+   *
+   * On a case bridged to an email inbox, a customer reply goes out as mail carrying
+   * only the body, subject, and copied recipients — attachments, mentions, resource
+   * links, and replies are dropped.
    */
   audience?: 'internal' | 'customer';
 
   /**
-   * Body param: Additional email recipients to copy on a customer reply (email
-   * channel).
+   * Body param: Additional email addresses to copy on a customer reply sent by
+   * email.
    */
   cc?: Array<string>;
 
   /**
-   * Body param: The channel a draft will be sent over when approved (`mode` =
+   * Body param: The channel a draft will be sent over once it is approved (`mode` =
    * `draft`).
    *
-   * - `message`: delivered as an in-conversation chat message.
-   * - `email`: delivered as an outbound email from the conversation's bridged inbox.
+   * - `message`: appears in the customer's conversation timeline.
+   * - `email`: goes out as an email from the inbox the case is bridged to. Falls
+   *   back to the conversation timeline if the case has no bridged inbox.
    */
   channel?: 'message' | 'email';
 
@@ -612,6 +660,9 @@ export interface MessageCreateParams {
   /**
    * Body param: Type of a resource to link in the message, paired with
    * `link_resource_id`.
+   *
+   * Linking a record lets clients render the message as a reference to it. A link
+   * counts in place of text, so a message may consist of nothing but the link.
    */
   link_resource_type?:
     | 'account'
@@ -893,8 +944,7 @@ export interface MessageCreateParams {
   /**
    * Body param: Account user ids explicitly @mentioned in the message.
    *
-   * A mention delivers a notification even when the recipient has muted the
-   * conversation.
+   * A mention notifies the person even when they have muted the conversation.
    */
   mentions?: Array<string>;
 
@@ -902,10 +952,13 @@ export interface MessageCreateParams {
    * Body param: Whether to deliver the message now or hold it as a customer-reply
    * draft.
    *
-   * - `send`: delivers the message (immediately, or at `scheduled_at`). This is the
-   *   default.
-   * - `draft`: proposes a customer-reply draft on an external case, held for human
-   *   approval rather than sent. Requires `channel`.
+   * - `send`: delivers the message, immediately or at `scheduled_at`.
+   * - `draft`: proposes a reply to the customer on a customer-facing case and holds
+   *   it for a teammate to approve before it goes out. Requires `channel`.
+   *
+   * A draft is built from `body`, `subject`, `channel`, and
+   * `source_thread_message_id` only — attachments, mentions, copied recipients,
+   * resource links, replies, and scheduling are not carried onto it.
    */
   mode?: 'send' | 'draft';
 
@@ -915,10 +968,13 @@ export interface MessageCreateParams {
   reply_to_message_id?: string;
 
   /**
-   * Body param: When set, queue the message for delivery at this future time instead
-   * of sending now.
+   * Body param: When set, hold the message and deliver it at this future time
+   * instead of sending it now.
    *
-   * The created message has status `scheduled`.
+   * Only the body is carried into a scheduled send — attachments, mentions, copied
+   * recipients, resource links, replies, and audience are dropped, and it is
+   * delivered as an ordinary team-visible message. If you are no longer an active
+   * participant when it comes due, it is canceled instead of sent.
    */
   scheduled_at?: string;
 
@@ -929,17 +985,19 @@ export interface MessageCreateParams {
   source_thread_message_id?: string;
 
   /**
-   * Body param: The email subject for a customer reply on an email-bridged case
-   * (`audience` = `customer`).
+   * Body param: The subject line for a customer reply sent by email.
+   *
+   * When omitted, the reply goes out as "Re:" the case title.
    */
   subject?: string;
 }
 
 export interface MessageListParams {
   /**
-   * Catch-up bound.
+   * Return only messages that come after this position in the timeline.
    *
-   * Only return messages with a sequence greater than this (reconnect sync).
+   * Use it to catch up after a dropped realtime connection: pass the sequence of the
+   * last message you already have to fetch everything since.
    */
   after_sequence?: number;
 
@@ -985,11 +1043,12 @@ export interface MessageListParams {
   q?: string;
 
   /**
-   * Filter by lifecycle state.
+   * Which set of the conversation's messages to return.
    *
-   * Defaults to `sent` (the conversation timeline); pass `draft` to list the case's
-   * open customer-reply drafts, or `scheduled` to list your not-yet-sent scheduled
-   * messages in this conversation.
+   * Left unset, you get the delivered timeline. Pass `draft` for the case's reply
+   * drafts awaiting approval, or `scheduled` for the messages you yourself have
+   * queued for a future send, soonest first. Those two ignore paging and come back
+   * in a single response.
    */
   status?: 'draft' | 'scheduled' | 'sent' | 'canceled' | 'rejected' | 'failed' | 'superseded';
 }

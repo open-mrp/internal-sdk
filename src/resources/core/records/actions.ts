@@ -24,7 +24,7 @@ export class Actions extends APIResource {
    * ```ts
    * const packList =
    *   await client.core.records.actions.generatePackList({
-   *     shipment_id: 'sh_018b3a946651bfb6572b06b2b2',
+   *     shipment_id: 'sh_pfygp2gl45y4',
    *   });
    * ```
    */
@@ -44,7 +44,8 @@ export interface GenPackListRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPackListBackOrder {
   /**
@@ -58,13 +59,20 @@ export interface ListPackListBackOrder {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPackListCase {
   /**
@@ -78,13 +86,20 @@ export interface ListPackListCase {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPackListLineItem {
   /**
@@ -98,7 +113,13 @@ export interface ListPackListLineItem {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -106,13 +127,19 @@ export interface ListPackListLineItem {
 /**
  * A pack-list document assembled for a shipment: the shipment's packed line items
  * and shipping cases, the parent order's header, parties, and terms, and any order
- * lines still back-ordered. It is generated on demand for printing and is a
- * point-in-time snapshot; it is not persisted.
+ * lines still back-ordered.
+ *
+ * The document is generated on demand for printing and is a point-in-time snapshot
+ * of the shipment and its order; it is not persisted and cannot be retrieved again
+ * by ID.
  */
 export interface PackList {
   /**
-   * Presigned download URL for the selling account's logo. Expires one hour after it
-   * is generated, so render it promptly rather than caching it.
+   * Presigned download URL for the selling account's logo.
+   *
+   * The URL expires one hour after it is generated, so render it promptly rather
+   * than caching it. Logo lookup is best effort: if the account has no logo or it
+   * cannot be resolved, the rest of the document is still returned.
    */
   account_logo_url: string | null;
 
@@ -122,7 +149,8 @@ export interface PackList {
   account_name: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   back_orders: ListPackListBackOrder | null;
 
@@ -132,18 +160,18 @@ export interface PackList {
   bill_to: PackListParty | null;
 
   /**
-   * Carrier name.
+   * Name of the carrier moving the shipment.
    */
   carrier: string | null;
 
   /**
-   * Service level name.
+   * Name of the carrier service level used for the shipment, such as `Ground`.
    */
   carrier_option: string | null;
 
   /**
-   * Additional contact lines shown under the billing party: the order's email
-   * recipients followed by the billing contact phone.
+   * Additional contact lines shown under the billing party: the sales order contacts
+   * set to receive invoice emails, followed by the billing contact phone.
    */
   contact_information: Array<string>;
 
@@ -153,7 +181,8 @@ export interface PackList {
   customer_po: string | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   line_items: ListPackListLineItem | null;
 
@@ -163,12 +192,12 @@ export interface PackList {
   object: 'pack_list';
 
   /**
-   * Payment term name.
+   * Name of the parent order's payment term.
    */
   payment_term: string | null;
 
   /**
-   * Order priority name.
+   * Name of the parent order's priority.
    */
   priority: string | null;
 
@@ -178,7 +207,7 @@ export interface PackList {
   sales_order_number: string;
 
   /**
-   * Sales representative name.
+   * Name of the sales representative on the parent order.
    */
   sales_rep: string | null;
 
@@ -198,13 +227,15 @@ export interface PackList {
   shipped_at: string | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   shipping_cases: ListPackListCase | null;
 }
 
 /**
- * An order line with quantity still back-ordered after this shipment.
+ * An order line that still has quantity outstanding once everything packed so far
+ * is accounted for.
  */
 export interface PackListBackOrder {
   /**
@@ -213,7 +244,7 @@ export interface PackListBackOrder {
   description: string;
 
   /**
-   * The order line's line number.
+   * The sales order line's line number.
    */
   line_item_number: number | null;
 
@@ -223,17 +254,19 @@ export interface PackListBackOrder {
   object: 'pack_list_back_order';
 
   /**
-   * Quantity still back-ordered.
+   * Quantity still outstanding: the quantity ordered less the quantity already
+   * packed.
    */
   quantity_back_ordered: string;
 
   /**
-   * Quantity ordered.
+   * Quantity ordered on the line.
    */
   quantity_ordered: string;
 
   /**
-   * Quantity shipped so far.
+   * Quantity packed for the line across every shipment on the order, not just this
+   * one.
    */
   quantity_shipped: string;
 
@@ -243,7 +276,7 @@ export interface PackListBackOrder {
   sku: string;
 
   /**
-   * Unit name.
+   * Name of the unit the quantities are measured in.
    */
   unit: string;
 }
@@ -293,7 +326,7 @@ export interface PackListLineItem {
   description: string;
 
   /**
-   * The order line's line number.
+   * Line number of the sales order line this shipment line was packed from.
    */
   line_item_number: number | null;
 
@@ -313,7 +346,7 @@ export interface PackListLineItem {
   sku: string;
 
   /**
-   * Unit name.
+   * Name of the unit the quantity is measured in.
    */
   unit: string;
 }

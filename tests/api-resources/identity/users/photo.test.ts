@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource photo', () => {
   test('update', async () => {
-    const responsePromise = client.identity.users.photo.update('us_0151164dcaea4cbded27b50aae');
+    const responsePromise = client.identity.users.photo.update('us_43irtlt2ajz6');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource photo', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.identity.users.photo.list('us_0151164dcaea4cbded27b50aae');
+    const responsePromise = client.identity.users.photo.list('us_43irtlt2ajz6');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

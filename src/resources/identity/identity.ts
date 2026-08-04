@@ -88,7 +88,12 @@ export class Identity extends APIResource {
   roles: RolesAPI.Roles = new RolesAPI.Roles(this._client);
 
   /**
-   * Returns a paginated list of permission groups with their nested permissions.
+   * Lists the permission catalog, organized into groups of related permissions.
+   *
+   * Each group carries the individual permissions it covers; pair a permission's
+   * code with an action (`create`, `read`, `update`, or `delete`) to build the
+   * permission strings accepted when creating or updating a role. The catalog is
+   * platform-defined and identical for every account.
    *
    * This endpoint requires the permission: `permissions:read`.
    *
@@ -107,7 +112,8 @@ export class Identity extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPermission {
   /**
@@ -121,13 +127,20 @@ export interface ListPermission {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPermissionGroup {
   /**
@@ -141,14 +154,23 @@ export interface ListPermissionGroup {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * An individual permission that can be granted to a role, identified by a code in
- * `{domain}:{action}` format.
+ * One area of the product that access can be granted for, such as customers,
+ * invoices, or production runs.
+ *
+ * A role never grants a permission outright; it grants specific actions on it,
+ * written as `{code}:{action}` — for example `customers:read`.
  */
 export interface Permission {
   /**
@@ -157,7 +179,11 @@ export interface Permission {
   id: string;
 
   /**
-   * Permission code in `{domain}:{action}` format, such as `customers:read`.
+   * Stable code identifying the area this permission controls, such as `customers`
+   * or `sales_orders`.
+   *
+   * Pair the code with an action (`create`, `read`, `update`, or `delete`) to form
+   * the permission strings used when creating or updating a role.
    */
   code: string;
 
@@ -172,7 +198,8 @@ export interface Permission {
   description: string | null;
 
   /**
-   * Code of the permission group this permission belongs to, such as `customers`.
+   * Code of the permission group this permission is listed under, such as
+   * `inventory`.
    */
   group: string;
 
@@ -193,7 +220,11 @@ export interface Permission {
 }
 
 /**
- * Grouping of related permissions.
+ * A category of the permission catalog that collects related permissions, such as
+ * inventory or invoices.
+ *
+ * Groups exist to organize the catalog for display; access is always granted by
+ * the individual permissions inside a group, never by the group itself.
  */
 export interface PermissionGroup {
   /**
@@ -232,7 +263,8 @@ export interface PermissionGroup {
   owner: APIKeysAPI.Owner | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   permissions: ListPermission | null;
 

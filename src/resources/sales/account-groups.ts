@@ -43,7 +43,7 @@ export class AccountGroups extends APIResource {
    * ```ts
    * const accountGroup =
    *   await client.sales.accountGroups.retrieve(
-   *     'acgp_018e88072d1320808dc979cfac',
+   *     'acgp_6p4z57e9alaf',
    *   );
    * ```
    */
@@ -55,7 +55,11 @@ export class AccountGroups extends APIResource {
    * Partially updates an account group.
    *
    * Only the provided fields are changed. The account group's `type` cannot be
-   * changed after creation.
+   * changed after creation, and renaming the group to a name another group in your
+   * account already uses returns a conflict error.
+   *
+   * A new commission or freight policy takes effect for every account already in the
+   * group, not just accounts added afterwards.
    *
    * This endpoint requires the permission: `customer_groups:update`.
    *
@@ -63,7 +67,7 @@ export class AccountGroups extends APIResource {
    * ```ts
    * const accountGroup =
    *   await client.sales.accountGroups.update(
-   *     'acgp_018e88072d1320808dc979cfac',
+   *     'acgp_6p4z57e9alaf',
    *     {
    *       commission_policy: 'commission_exempt',
    *       description:
@@ -83,7 +87,9 @@ export class AccountGroups extends APIResource {
   }
 
   /**
-   * Returns a paginated list of account groups.
+   * Returns a paginated list of account groups, newest first.
+   *
+   * The `q` search term matches the group's name and description.
    *
    * This endpoint requires the permission: `customer_groups:read`.
    *
@@ -103,9 +109,13 @@ export class AccountGroups extends APIResource {
   /**
    * Deletes an account group.
    *
-   * Deletion fails with a validation error while the account group is still in use —
-   * for example by customer records, product line access, volume discounts, pricing
-   * assignments, or an active registration flow.
+   * Deletion fails with a validation error while the group is still in use: a
+   * `type_group` that is set as a customer's type cannot be deleted, and no group
+   * can be deleted while it grants product line access, backs a volume discount, or
+   * is attached to a customer registration flow.
+   *
+   * Deleting a `pricing_group` first unassigns it from every customer it was applied
+   * to, so those customers immediately stop receiving its pricing.
    *
    * This endpoint requires the permission: `customer_groups:delete`.
    *
@@ -113,7 +123,7 @@ export class AccountGroups extends APIResource {
    * ```ts
    * const accountGroup =
    *   await client.sales.accountGroups.delete(
-   *     'acgp_018e88072d1320808dc979cfac',
+   *     'acgp_6p4z57e9alaf',
    *   );
    * ```
    */
@@ -129,7 +139,7 @@ export interface CreateAccountGroupRequest {
   /**
    * Display name of the account group.
    *
-   * Must be unique within your account; maximum 255 characters.
+   * Must be unique within your account.
    */
   name: string;
 
@@ -152,6 +162,9 @@ export interface CreateAccountGroupRequest {
    *   in this group.
    * - `commission_exempt`: orders from accounts in this group are exempt from
    *   commission.
+   *
+   * Leave this out and the group is created commission-exempt, so orders from its
+   * accounts earn no sales commission until you change it.
    */
   commission_policy?: 'commission_applied' | 'commission_exempt';
 
@@ -201,7 +214,7 @@ export interface UpdateAccountGroupRequest {
   /**
    * Display name of the account group.
    *
-   * Must be unique within your account; maximum 255 characters.
+   * Must be unique within your account.
    */
   name?: string;
 }
@@ -212,7 +225,7 @@ export interface AccountGroupCreateParams {
   /**
    * Display name of the account group.
    *
-   * Must be unique within your account; maximum 255 characters.
+   * Must be unique within your account.
    */
   name: string;
 
@@ -235,6 +248,9 @@ export interface AccountGroupCreateParams {
    *   in this group.
    * - `commission_exempt`: orders from accounts in this group are exempt from
    *   commission.
+   *
+   * Leave this out and the group is created commission-exempt, so orders from its
+   * accounts earn no sales commission until you change it.
    */
   commission_policy?: 'commission_applied' | 'commission_exempt';
 
@@ -281,7 +297,7 @@ export interface AccountGroupUpdateParams {
   /**
    * Display name of the account group.
    *
-   * Must be unique within your account; maximum 255 characters.
+   * Must be unique within your account.
    */
   name?: string;
 }

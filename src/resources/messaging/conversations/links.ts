@@ -13,7 +13,11 @@ import { path } from '../../../internal/utils/path';
  */
 export class Links extends APIResource {
   /**
-   * Links a business record to a conversation.
+   * Links a business record to a conversation, in addition to whatever topic the
+   * conversation is anchored to.
+   *
+   * A conversation can link any number of records, and each linked record surfaces
+   * the conversation when conversations are listed for that record.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -21,9 +25,9 @@ export class Links extends APIResource {
    * ```ts
    * const conversationLink =
    *   await client.messaging.conversations.links.create(
-   *     'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+   *     'cv_w35z4ck68yq7',
    *     {
-   *       resource_id: 'or_01d5034136c3ccc048abecc312',
+   *       resource_id: 'or_9lqo07quiwyb',
    *       resource_type: 'sales_order',
    *     },
    *   );
@@ -41,13 +45,16 @@ export class Links extends APIResource {
   /**
    * Returns the business records linked to a conversation.
    *
+   * Every link is returned in one page. The conversation's primary `topic` anchor is
+   * not a link and is not listed here.
+   *
    * This endpoint requires the permission: `messaging:read`.
    *
    * @example
    * ```ts
    * const listConversationLink =
    *   await client.messaging.conversations.links.list(
-   *     'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+   *     'cv_w35z4ck68yq7',
    *   );
    * ```
    */
@@ -69,7 +76,7 @@ export class Links extends APIResource {
    * const link =
    *   await client.messaging.conversations.links.delete(
    *     'example',
-   *     { id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv' },
+   *     { id: 'cv_w35z4ck68yq7' },
    *   );
    * ```
    */
@@ -370,9 +377,13 @@ export interface AddConversationLinkRequest {
 }
 
 /**
- * A business-record link on a conversation: the record the conversation is about
- * (an order, invoice, shipment, customer, …), shown prominently and usable as
- * agent context.
+ * A reference from a conversation to a business record it concerns, such as an
+ * order, invoice, shipment, or customer.
+ *
+ * Links sit alongside the conversation's primary `topic` anchor, so one thread can
+ * reference several records. Listing conversations by business record matches the
+ * topic anchor and these links alike, which is what surfaces a conversation on the
+ * record's own page.
  */
 export interface ConversationLink {
   /**
@@ -402,7 +413,8 @@ export interface ConversationLink {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListConversationLink {
   /**
@@ -416,7 +428,13 @@ export interface ListConversationLink {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }

@@ -27,6 +27,10 @@ export class Properties extends APIResource {
   /**
    * Creates a property.
    *
+   * The property starts with no attributes; add its selectable values afterwards
+   * with the create attribute endpoint. Returns a conflict error if a property with
+   * the same name already exists.
+   *
    * This endpoint requires the permission: `properties:create`.
    *
    * @example
@@ -49,7 +53,7 @@ export class Properties extends APIResource {
    * @example
    * ```ts
    * const property = await client.catalog.properties.retrieve(
-   *   'pp_01e21344878064372f69e67093',
+   *   'pp_fhnnvtt3q3ov',
    * );
    * ```
    */
@@ -69,7 +73,7 @@ export class Properties extends APIResource {
    * @example
    * ```ts
    * const property = await client.catalog.properties.update(
-   *   'pp_01e21344878064372f69e67093',
+   *   'pp_fhnnvtt3q3ov',
    *   { name: 'Size' },
    * );
    * ```
@@ -86,6 +90,9 @@ export class Properties extends APIResource {
   /**
    * Returns a paginated list of properties for the target account.
    *
+   * Properties come back newest first. The `q` search term is matched against the
+   * property name.
+   *
    * This endpoint requires the permission: `properties:read`.
    *
    * @example
@@ -101,14 +108,16 @@ export class Properties extends APIResource {
   }
 
   /**
-   * Deletes a property and all associated attributes.
+   * Deletes a property and every attribute defined under it.
+   *
+   * Items previously classified by those attributes lose that classification.
    *
    * This endpoint requires the permission: `properties:delete`.
    *
    * @example
    * ```ts
    * const property = await client.catalog.properties.delete(
-   *   'pp_01e21344878064372f69e67093',
+   *   'pp_fhnnvtt3q3ov',
    * );
    * ```
    */
@@ -123,6 +132,8 @@ export class Properties extends APIResource {
 export interface CreatePropertyRequest {
   /**
    * Display name of the property, such as `Color` or `Size`.
+   *
+   * Must be unique within your account.
    */
   name: string;
 }
@@ -133,6 +144,8 @@ export interface CreatePropertyRequest {
 export interface UpdatePropertyRequest {
   /**
    * Display name of the property, such as `Color` or `Size`.
+   *
+   * Must be unique within your account.
    */
   name?: string;
 }
@@ -142,6 +155,8 @@ export interface PropertyDeleteResponse {}
 export interface PropertyCreateParams {
   /**
    * Body param: Display name of the property, such as `Color` or `Size`.
+   *
+   * Must be unique within your account.
    */
   name: string;
 
@@ -169,6 +184,8 @@ export interface PropertyUpdateParams {
 
   /**
    * Body param: Display name of the property, such as `Color` or `Size`.
+   *
+   * Must be unique within your account.
    */
   name?: string;
 }

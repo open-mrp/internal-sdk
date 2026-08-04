@@ -10,7 +10,14 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Exports all matching materials as an Excel file.
+   * Downloads the materials matching the given filters as an Excel workbook named
+   * `materials.xlsx`.
+   *
+   * The filters and ordering work the same way as on the material list endpoint, but
+   * the export is not paginated: every match lands in a single `Materials` sheet,
+   * one row per material. Columns cover the ID, SKU, description, category, and the
+   * unit price and unit cost with their units, plus one column for each property
+   * defined on the exported materials' categories, filled in from their attributes.
    *
    * This endpoint requires the permissions: `materials:read`, `customers:read`,
    * `suppliers:read`.
@@ -31,27 +38,27 @@ export class Actions extends APIResource {
 
 export interface ActionExportParams {
   /**
-   * Filter by attribute IDs.
+   * Filter to materials carrying any of these attributes.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Filter by category IDs.
+   * Filter to materials in any of these categories.
    */
   category_ids?: Array<string>;
 
   /**
-   * End of creation date range.
+   * Filter to materials created on or before this date.
    */
   end_date?: string;
 
   /**
-   * Free-text search query matched against materials.
+   * Free-text search term matched against material SKU and description.
    */
   q?: string;
 
   /**
-   * Start of creation date range.
+   * Filter to materials created on or after this date.
    */
   start_date?: string;
 }

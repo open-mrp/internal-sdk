@@ -9,9 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('export', async () => {
-    const responsePromise = client.finance.receivables.accounts.actions.export(
-      'ac_01148680966698341a9c0976db',
-    );
+    const responsePromise = client.finance.receivables.accounts.actions.export('ac_ykxoradjoeb3');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -25,7 +23,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.receivables.accounts.actions.export(
-        'ac_01148680966698341a9c0976db',
+        'ac_ykxoradjoeb3',
         { cutoff_date: '2019-12-27T18:11:19.117Z' },
         { path: '/_stainless_unknown_path' },
       ),

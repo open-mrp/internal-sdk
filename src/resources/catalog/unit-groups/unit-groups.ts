@@ -26,19 +26,22 @@ export class UnitGroups extends APIResource {
   units: UnitsAPI.Units = new UnitsAPI.Units(this._client);
 
   /**
-   * Creates a unit group with optional associated units.
+   * Creates a unit group, optionally associating units with it in the same request.
+   *
+   * The name must be unique within the account, and the base unit and every
+   * associated unit must share the group's dimension.
    *
    * This endpoint requires the permission: `unit_groups:create`.
    *
    * @example
    * ```ts
    * const unitGroup = await client.catalog.unitGroups.create({
-   *   base_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *   base_unit_id: 'un_82bd37dae5po',
    *   name: 'Weight Units',
    *   type: 'mass',
    *   associated_units: [
    *     {
-   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       unit_id: 'un_82bd37dae5po',
    *       discount_percentage: 1,
    *       discount_fixed: 0,
    *       customer_portal_visibility: 'visible',
@@ -55,14 +58,15 @@ export class UnitGroups extends APIResource {
   }
 
   /**
-   * Returns a unit group by ID.
+   * Returns a unit group by ID, including the system unit groups shared across all
+   * accounts.
    *
    * This endpoint requires the permission: `unit_groups:read`.
    *
    * @example
    * ```ts
    * const unitGroup = await client.catalog.unitGroups.retrieve(
-   *   'ug_01aad07abb8e41fd392d2d7013',
+   *   'ug_andst6m79n41',
    * );
    * ```
    */
@@ -75,24 +79,27 @@ export class UnitGroups extends APIResource {
   }
 
   /**
-   * Partially updates a unit group. System unit groups cannot be updated.
+   * Partially updates a unit group.
+   *
+   * System unit groups cannot be modified, and a group's dimension is fixed once it
+   * is created.
    *
    * This endpoint requires the permission: `unit_groups:update`.
    *
    * @example
    * ```ts
    * const unitGroup = await client.catalog.unitGroups.update(
-   *   'ug_01aad07abb8e41fd392d2d7013',
+   *   'ug_andst6m79n41',
    *   {
    *     associated_units: [
    *       {
-   *         unit_id: 'un_01966263f74a5a0cae356000a1',
+   *         unit_id: 'un_82bd37dae5po',
    *         discount_percentage: 1,
    *         discount_fixed: 0,
    *         customer_portal_visibility: 'visible',
    *       },
    *     ],
-   *     base_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     base_unit_id: 'un_82bd37dae5po',
    *     name: 'Weight Units (Updated)',
    *     notes: 'Added kilogram association for metric orders.',
    *   },
@@ -127,15 +134,17 @@ export class UnitGroups extends APIResource {
   }
 
   /**
-   * Deletes a unit group and all of its associated units. System unit groups cannot
-   * be deleted.
+   * Deletes a unit group along with every unit association it contains.
+   *
+   * The units themselves are not deleted and remain available to other groups.
+   * System unit groups, which are shared across all accounts, cannot be deleted.
    *
    * This endpoint requires the permission: `unit_groups:delete`.
    *
    * @example
    * ```ts
    * const unitGroup = await client.catalog.unitGroups.delete(
-   *   'ug_01aad07abb8e41fd392d2d7013',
+   *   'ug_andst6m79n41',
    * );
    * ```
    */
@@ -150,6 +159,8 @@ export class UnitGroups extends APIResource {
 export interface CreateUnitGroupRequest {
   /**
    * ID of the unit to designate as the group's reference unit.
+   *
+   * Must be a unit of the group's `type`.
    */
   base_unit_id: string;
 
@@ -161,14 +172,17 @@ export interface CreateUnitGroupRequest {
   name: string;
 
   /**
-   * Dimension shared by every unit in this group.
+   * The dimension shared by every unit in this group, such as mass, volume, or
+   * currency.
    *
-   * All associated units must be of this dimension.
+   * The base unit and all associated units must be of this dimension, and the
+   * dimension cannot be changed after the group is created.
    */
   type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
 
   /**
-   * Associated units to create with the group.
+   * Units to associate with the group, each with its own discount and customer
+   * portal visibility.
    */
   associated_units?: Array<CreateUnitGroupUnitParam>;
 
@@ -197,18 +211,24 @@ export interface CreateUnitGroupUnitParam {
   /**
    * Flat amount subtracted from the unit's price when an order is placed in this
    * unit.
+   *
+   * Subtracted before `discount_percentage` is applied.
    */
   discount_fixed?: number;
 
   /**
-   * Percentage discount applied to the unit's price when an order is placed in this
-   * unit (e.g. `10` is a 10% discount).
+   * Share of the unit's price removed when an order is placed in this unit.
+   *
+   * Expressed as a decimal fraction rather than a whole number, so `0.1` is a 10%
+   * discount. Send `0` explicitly for no discount — omitting the field stores a
+   * discount of `1`, which removes the entire price.
    */
   discount_percentage?: number;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListUnitGroup {
   /**
@@ -222,7 +242,13 @@ export interface ListUnitGroup {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -232,15 +258,18 @@ export interface ListUnitGroup {
  */
 export interface UpdateUnitGroupRequest {
   /**
-   * Associated units to add or update in the group.
+   * Units to add to the group.
    *
-   * Upserted by unit: a listed unit already in the group has its association
-   * updated, otherwise it is added. Existing units not in the list are preserved.
+   * Only units that are not already in the group can be listed here; use the
+   * associated-unit update and delete endpoints to change or remove an existing
+   * association. Associations left out of the list are untouched.
    */
   associated_units?: Array<CreateUnitGroupUnitParam>;
 
   /**
-   * ID of the group's base unit.
+   * ID of the unit to designate as the group's reference unit.
+   *
+   * Must be a unit of the group's dimension, which cannot itself be changed.
    */
   base_unit_id?: string;
 
@@ -264,6 +293,8 @@ export interface UnitGroupDeleteResponse {}
 export interface UnitGroupCreateParams {
   /**
    * Body param: ID of the unit to designate as the group's reference unit.
+   *
+   * Must be a unit of the group's `type`.
    */
   base_unit_id: string;
 
@@ -275,9 +306,11 @@ export interface UnitGroupCreateParams {
   name: string;
 
   /**
-   * Body param: Dimension shared by every unit in this group.
+   * Body param: The dimension shared by every unit in this group, such as mass,
+   * volume, or currency.
    *
-   * All associated units must be of this dimension.
+   * The base unit and all associated units must be of this dimension, and the
+   * dimension cannot be changed after the group is created.
    */
   type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
 
@@ -288,7 +321,8 @@ export interface UnitGroupCreateParams {
   include?: Array<'owner' | 'owner.account' | 'base_unit' | 'associated_units'>;
 
   /**
-   * Body param: Associated units to create with the group.
+   * Body param: Units to associate with the group, each with its own discount and
+   * customer portal visibility.
    */
   associated_units?: Array<CreateUnitGroupUnitParam>;
 
@@ -314,15 +348,18 @@ export interface UnitGroupUpdateParams {
   include?: Array<'owner' | 'owner.account' | 'base_unit' | 'associated_units'>;
 
   /**
-   * Body param: Associated units to add or update in the group.
+   * Body param: Units to add to the group.
    *
-   * Upserted by unit: a listed unit already in the group has its association
-   * updated, otherwise it is added. Existing units not in the list are preserved.
+   * Only units that are not already in the group can be listed here; use the
+   * associated-unit update and delete endpoints to change or remove an existing
+   * association. Associations left out of the list are untouched.
    */
   associated_units?: Array<CreateUnitGroupUnitParam>;
 
   /**
-   * Body param: ID of the group's base unit.
+   * Body param: ID of the unit to designate as the group's reference unit.
+   *
+   * Must be a unit of the group's dimension, which cannot itself be changed.
    */
   base_unit_id?: string;
 

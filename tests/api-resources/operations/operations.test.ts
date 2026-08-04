@@ -89,7 +89,7 @@ describe('resource operations', () => {
   });
 
   test('updateQuantities', async () => {
-    const responsePromise = client.operations.updateQuantities('qty_015a85becc1a6afdfb1afc27ff');
+    const responsePromise = client.operations.updateQuantities('qty_8hnxbigf0bod');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -103,12 +103,12 @@ describe('resource operations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.updateQuantities(
-        'qty_015a85becc1a6afdfb1afc27ff',
+        'qty_8hnxbigf0bod',
         {
           include: ['unit'],
           object_id: 'object_id',
           object_type: 'object_type',
-          unit_id: 'un_01966263f74a5a0cae356000a1',
+          unit_id: 'un_82bd37dae5po',
           value: '50.000000000000000000000000000000',
         },
         { path: '/_stainless_unknown_path' },
@@ -117,7 +117,7 @@ describe('resource operations', () => {
   });
 
   test('updateRates', async () => {
-    const responsePromise = client.operations.updateRates('ra_015aa0a9522cf222024fd21d1a');
+    const responsePromise = client.operations.updateRates('ra_jhgtyileng4s');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -131,11 +131,11 @@ describe('resource operations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.updateRates(
-        'ra_015aa0a9522cf222024fd21d1a',
+        'ra_jhgtyileng4s',
         {
           include: ['numerator_unit'],
           denominator_unit_id: 'denominator_unit_id',
-          numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+          numerator_unit_id: 'un_82bd37dae5po',
           object_id: 'object_id',
           object_type: 'object_type',
           value: '25.50',

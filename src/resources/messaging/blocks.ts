@@ -12,17 +12,19 @@ import { path } from '../../internal/utils/path';
  */
 export class Blocks extends APIResource {
   /**
-   * Blocks an account user (prevents DMs in both directions).
+   * Blocks another user in your account from exchanging direct messages with you.
+   *
+   * While the block stands neither of you can start a direct message with the other
+   * or post in one you already share; group conversations and customer cases are
+   * unaffected. Blocking someone you have already blocked returns the original block
+   * instead of creating a second one.
    *
    * This endpoint requires the permission: `messaging:create`.
    *
    * @example
    * ```ts
    * const messagingBlock = await client.messaging.blocks.create(
-   *   {
-   *     blocked_account_user_id:
-   *       'acus_01ea9983ddb41dacc44ecf997c',
-   *   },
+   *   { blocked_account_user_id: 'acus_e5zu8bde0z3h' },
    * );
    * ```
    */
@@ -32,7 +34,9 @@ export class Blocks extends APIResource {
   }
 
   /**
-   * Lists the caller's messaging blocks.
+   * Lists the users you have blocked, most recently blocked first.
+   *
+   * Only blocks you created are returned — you are never told who has blocked you.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -50,7 +54,12 @@ export class Blocks extends APIResource {
   }
 
   /**
-   * Removes a block.
+   * Lifts a block you placed on another user, letting the two of you message each
+   * other again.
+   *
+   * Only your own block is removed: if the other person has also blocked you, direct
+   * messages between you stay blocked. Unblocking someone you have not blocked
+   * succeeds and changes nothing.
    *
    * This endpoint requires the permission: `messaging:delete`.
    *
@@ -72,12 +81,15 @@ export class Blocks extends APIResource {
 export interface BlockRequest {
   /**
    * The account user to block.
+   *
+   * It must be someone else in your account; you cannot block yourself.
    */
   blocked_account_user_id: string;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListMessagingBlock {
   /**
@@ -91,14 +103,23 @@ export interface ListMessagingBlock {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * A 1:1 messaging block: the caller has blocked another account user from
- * messaging them.
+ * A block one account user has placed on another.
+ *
+ * While the block stands, neither of the two can start a direct message with the
+ * other or post in an existing one, whichever of them created it. Group
+ * conversations and customer cases are unaffected.
  */
 export interface MessagingBlock {
   /**
@@ -110,7 +131,7 @@ export interface MessagingBlock {
    * A user's membership in an account, carrying the account-specific status, role,
    * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * Profile fields (name, email, username, image URL) live on the `user`
    * sub-resource, which is shared across every account the user belongs to.
    */
   blocked_user: AccountUsersAPI.AccountUser | null;
@@ -131,6 +152,8 @@ export interface BlockDeleteResponse {}
 export interface BlockCreateParams {
   /**
    * Body param: The account user to block.
+   *
+   * It must be someone else in your account; you cannot block yourself.
    */
   blocked_account_user_id: string;
 

@@ -17,6 +17,9 @@ export class Actions extends APIResource {
    * creating a duplicate. A failure on one item does not abort the rest of the
    * batch; check each result's status.
    *
+   * Newly created items start with a unit value, unit cost, and burn rate of zero,
+   * counted in their category's base unit; set the real figures afterwards.
+   *
    * This endpoint requires the permission: `items:create`.
    *
    * @example
@@ -27,7 +30,7 @@ export class Actions extends APIResource {
    *       {
    *         sku: 'ALM-FLOUR-25LB',
    *         description: 'Raw almond flour, 25 lb bag',
-   *         item_category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
+   *         item_category_id: 'ic_d06g9c6yc9ck',
    *       },
    *     ],
    *     type: 'material',
@@ -39,12 +42,16 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Reconciles on-hand inventory for multiple items by SKU in one call.
+   * Reconciles on-hand inventory for multiple items by SKU in one call, the bulk
+   * equivalent of counting stock and correcting the books.
    *
    * `reconcile_type` controls whether each quantity is added to the item's current
    * on-hand quantity (`addition`) or replaces it (`force`). The response reports
    * each item as reconciled, skipped (e.g. unknown SKU), or errored (e.g. unknown
    * unit), so a problem with one item does not fail the rest of the batch.
+   *
+   * Each correction is written to the item's inventory audit trail as a user
+   * correction, attributed to the caller.
    *
    * This endpoint requires the permission: `items:create`.
    *
@@ -71,8 +78,11 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Exports all items, with their on-hand inventory quantities, as an Excel file
-   * (`items.xlsx`).
+   * Downloads every item in your account, with its category and on-hand inventory,
+   * as an Excel workbook named `items.xlsx`.
+   *
+   * The export takes no filters and is not paginated: it always covers the whole
+   * catalog, one row per item, ordered by SKU.
    *
    * This endpoint requires the permission: `items:read`.
    *
@@ -88,13 +98,14 @@ export class Actions extends APIResource {
 }
 
 /**
- * BulkCreateItemInput is the input for a single item in a bulk create operation.
+ * One item to create in a bulk create request.
  */
 export interface BulkCreateItemInput {
   /**
    * ID of the category to assign to the item.
    *
-   * The category determines the base unit the item's rates are expressed in.
+   * The category determines the base unit the item's rates are expressed in, so
+   * choose one whose unit group matches how the item is counted.
    */
   item_category_id: string;
 
@@ -103,7 +114,8 @@ export interface BulkCreateItemInput {
    *
    * If an item with this SKU already exists, that item is updated in place
    * (description, category, and product line) instead of a new item being created;
-   * this path additionally requires permission to update items.
+   * this path additionally requires permission to update items, and the result for
+   * the row is still reported with status `created`.
    */
   sku: string;
 
@@ -147,7 +159,7 @@ export interface BulkCreateItemResult {
 }
 
 /**
- * BulkCreateItemsRequest is the request to create multiple items.
+ * Request to create multiple items of the same type.
  */
 export interface BulkCreateItemsRequest {
   /**
@@ -182,8 +194,7 @@ export interface BulkCreateItemsResponse {
 }
 
 /**
- * BulkReconcileItemInput is the input for a single item in a bulk reconcile
- * operation.
+ * One item to reconcile in a bulk reconcile request.
  */
 export interface BulkReconcileItemInput {
   /**
@@ -200,16 +211,18 @@ export interface BulkReconcileItemInput {
   sku: string;
 
   /**
-   * Abbreviation of the unit the quantity is expressed in (e.g. `kg`).
+   * Abbreviation of a unit available to your account (e.g. `kg`).
    *
-   * Must match a unit defined on the account; items with an unknown unit are
+   * The unit is checked for existence only: the quantity is always recorded in the
+   * item's own base unit, so send figures already expressed in that unit. Rows
+   * naming an abbreviation that matches no built-in or account-defined unit are
    * reported in the response's `errors`.
    */
   unit: string;
 }
 
 /**
- * BulkReconcileItemsRequest is the request to bulk reconcile item inventory.
+ * Request to reconcile inventory for many items at once.
  */
 export interface BulkReconcileItemsRequest {
   /**
@@ -227,11 +240,13 @@ export interface BulkReconcileItemsRequest {
 }
 
 /**
- * BulkReconcileItemsResponse is the response from bulk reconciling items.
+ * The outcome of a bulk inventory reconciliation, reported as three separate
+ * lists.
  */
 export interface BulkReconcileItemsResponse {
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   errors: ListReconcileErrorResult | null;
 
@@ -241,12 +256,14 @@ export interface BulkReconcileItemsResponse {
   object: 'bulk_reconcile_items_response';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   reconciled_items: ListReconciledItemResult | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   skipped_items: ListSkippedItemResult | null;
 }
@@ -259,7 +276,8 @@ export interface BulkReconcileItemsResponse {
 export interface FileDownload {}
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListReconcileErrorResult {
   /**
@@ -273,13 +291,20 @@ export interface ListReconcileErrorResult {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListReconciledItemResult {
   /**
@@ -293,13 +318,20 @@ export interface ListReconciledItemResult {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListSkippedItemResult {
   /**
@@ -313,13 +345,19 @@ export interface ListSkippedItemResult {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * ReconcileErrorResult is an error during reconciliation.
+ * A submitted row that could not be reconciled.
  */
 export interface ReconcileErrorResult {
   /**
@@ -334,7 +372,10 @@ export interface ReconcileErrorResult {
 }
 
 /**
- * ReconciledItemResult is a successfully reconciled item.
+ * An item whose on-hand quantity was successfully reconciled.
+ *
+ * Both quantities are expressed in the item's own base unit, not in the unit
+ * submitted with the request.
  */
 export interface ReconciledItemResult {
   /**
@@ -359,7 +400,7 @@ export interface ReconciledItemResult {
 }
 
 /**
- * SkippedItemResult is a skipped item during reconciliation.
+ * A submitted row that was skipped rather than reconciled.
  */
 export interface SkippedItemResult {
   /**

@@ -40,7 +40,7 @@ export class RegistrationFlows extends APIResource {
    * ```ts
    * const registrationFlow =
    *   await client.sales.registrationFlows.retrieve(
-   *     'rgfw_015273c2a7354d6c3e5ae4e90e',
+   *     'rgfw_5jo86wzvfpgn',
    *   );
    * ```
    */
@@ -57,7 +57,7 @@ export class RegistrationFlows extends APIResource {
    * ```ts
    * const registrationFlow =
    *   await client.sales.registrationFlows.update(
-   *     'rgfw_015273c2a7354d6c3e5ae4e90e',
+   *     'rgfw_5jo86wzvfpgn',
    *     {
    *       has_customer_group_ids: true,
    *       has_payment_term_ids: true,
@@ -102,7 +102,7 @@ export class RegistrationFlows extends APIResource {
    * ```ts
    * const registrationFlow =
    *   await client.sales.registrationFlows.delete(
-   *     'rgfw_015273c2a7354d6c3e5ae4e90e',
+   *     'rgfw_5jo86wzvfpgn',
    *   );
    * ```
    */
@@ -112,6 +112,11 @@ export class RegistrationFlows extends APIResource {
 
   /**
    * Returns the registration flow of the account with the given slug.
+   *
+   * This is how a customer-facing registration page discovers which customer groups,
+   * payment terms, and shipping terms a seller offers, without needing the seller's
+   * registration flow ID. If the account has several flows only one of them is
+   * returned, and an account with no flow is reported as not found.
    *
    * @example
    * ```ts
@@ -152,7 +157,8 @@ export interface CreateRegistrationFlowRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListRegistrationFlow {
   /**
@@ -166,13 +172,20 @@ export interface ListRegistrationFlow {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListRegistrationFlowOption {
   /**
@@ -186,7 +199,13 @@ export interface ListRegistrationFlowOption {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -209,7 +228,8 @@ export interface RegistrationFlow {
   created_at: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   customer_group_options: ListRegistrationFlowOption | null;
 
@@ -224,12 +244,14 @@ export interface RegistrationFlow {
   object: 'registration_flow';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   payment_term_options: ListRegistrationFlowOption | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   shipping_term_options: ListRegistrationFlowOption | null;
 

@@ -25,7 +25,8 @@ export class ProductionRuns extends APIResource {
    * Creates a production run.
    *
    * The run number is assigned automatically as the next sequential number for the
-   * account.
+   * account. The new run starts empty and neither started nor completed; add the
+   * work to be run with the add-batches endpoint.
    *
    * This endpoint requires the permission: `production_runs:create`.
    *
@@ -33,7 +34,7 @@ export class ProductionRuns extends APIResource {
    * ```ts
    * const productionRun =
    *   await client.operations.productionRuns.create({
-   *     responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+   *     responsible_user_id: 'us_43irtlt2ajz6',
    *   });
    * ```
    */
@@ -51,7 +52,7 @@ export class ProductionRuns extends APIResource {
    * ```ts
    * const productionRun =
    *   await client.operations.productionRuns.retrieve(
-   *     'prru_0141c28081df4faac0fe726c41',
+   *     'prru_sglzcyflxk59',
    *   );
    * ```
    */
@@ -66,7 +67,8 @@ export class ProductionRuns extends APIResource {
   /**
    * Partially updates a production run.
    *
-   * Fails if the run has been completed.
+   * Fields not provided retain their current values. A run that has already
+   * completed can no longer be updated.
    *
    * This endpoint requires the permission: `production_runs:update`.
    *
@@ -74,10 +76,10 @@ export class ProductionRuns extends APIResource {
    * ```ts
    * const productionRun =
    *   await client.operations.productionRuns.update(
-   *     'prru_0141c28081df4faac0fe726c41',
+   *     'prru_sglzcyflxk59',
    *     {
    *       number: 'PR-00042',
-   *       responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+   *       responsible_user_id: 'us_43irtlt2ajz6',
    *     },
    *   );
    * ```
@@ -96,7 +98,9 @@ export class ProductionRuns extends APIResource {
   }
 
   /**
-   * Returns a paginated list of production runs.
+   * Returns a paginated list of production runs, most recently created first.
+   *
+   * The `q` search term matches the run number.
    *
    * This endpoint requires the permission: `production_runs:read`.
    *
@@ -117,7 +121,9 @@ export class ProductionRuns extends APIResource {
    * Deletes a production run.
    *
    * All batches recorded against the run are deleted, linked orders are detached
-   * from the run, and reserved inventory for those orders is released.
+   * from the run, and the inventory those orders had reserved is released. Any
+   * production schedule lines that were released as this run revert to planned so
+   * the same work can be released again.
    *
    * This endpoint requires the permission: `production_runs:delete`.
    *
@@ -125,7 +131,7 @@ export class ProductionRuns extends APIResource {
    * ```ts
    * const productionRun =
    *   await client.operations.productionRuns.delete(
-   *     'prru_0141c28081df4faac0fe726c41',
+   *     'prru_sglzcyflxk59',
    *   );
    * ```
    */
@@ -148,7 +154,8 @@ export interface CreateProductionRunRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductionRun {
   /**
@@ -162,7 +169,13 @@ export interface ListProductionRun {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -174,7 +187,8 @@ export interface UpdateProductionRunRequest {
   /**
    * New production run number.
    *
-   * Must be unique within the account.
+   * Must be unique within the account; reusing another run's number returns a
+   * conflict error.
    */
   number?: string;
 
@@ -223,7 +237,8 @@ export interface ProductionRunUpdateParams {
   /**
    * Body param: New production run number.
    *
-   * Must be unique within the account.
+   * Must be unique within the account; reusing another run's number returns a
+   * conflict error.
    */
   number?: string;
 
@@ -247,8 +262,10 @@ export interface ProductionRunListParams {
   cursor?: string;
 
   /**
-   * Only return runs created on or before this date (inclusive), formatted as
-   * `YYYY-MM-DD`.
+   * Only return runs created before this date, formatted as `YYYY-MM-DD`.
+   *
+   * The cutoff is the start of the given day, so runs created during that day are
+   * not returned; pass the following day to include them.
    */
   end_date?: string;
 
@@ -281,16 +298,16 @@ export interface ProductionRunListParams {
   q?: string;
 
   /**
-   * Only return runs created on or after this date (inclusive), formatted as
-   * `YYYY-MM-DD`.
+   * Only return runs created on or after this date, formatted as `YYYY-MM-DD`.
    */
   start_date?: string;
 
   /**
    * Filter by run status.
    *
-   * - `open`: runs that have not been completed.
-   * - `closed`: runs that have been completed.
+   * A run is `open` until every batch in it has been scanned or deleted, at which
+   * point it completes and becomes `closed`. Only open runs are returned when this
+   * filter is omitted, so ask for `closed` explicitly to see finished runs.
    */
   status?: string;
 }

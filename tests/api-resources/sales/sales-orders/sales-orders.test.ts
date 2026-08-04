@@ -10,16 +10,16 @@ const client = new Augno({
 describe('resource salesOrders', () => {
   test('create: only required params', async () => {
     const responsePromise = client.sales.salesOrders.create({
-      bill_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
-      buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      bill_to_address_id: 'ad_npqa5y43q26z',
+      buyer_account_id: 'ac_opnlh43ymyee',
       lines: [
         {
-          product_id: 'pd_013c29ab3f1518d0004094c316',
-          quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
+          product_id: 'pd_07oe0r7adh2w',
+          quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
         },
       ],
       priority_code: 'normal',
-      ship_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
+      ship_to_address_id: 'ad_npqa5y43q26z',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -32,12 +32,12 @@ describe('resource salesOrders', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.sales.salesOrders.create({
-      bill_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
-      buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      bill_to_address_id: 'ad_npqa5y43q26z',
+      buyer_account_id: 'ac_opnlh43ymyee',
       lines: [
         {
-          product_id: 'pd_013c29ab3f1518d0004094c316',
-          quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
+          product_id: 'pd_07oe0r7adh2w',
+          quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
           product_description: 'product_description',
           product_sku: 'product_sku',
           unit_price: {
@@ -48,26 +48,26 @@ describe('resource salesOrders', () => {
         },
       ],
       priority_code: 'normal',
-      ship_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
+      ship_to_address_id: 'ad_npqa5y43q26z',
       include: ['customer'],
-      acknowledgement_email_contacts: [{ account_user_id: 'acus_01ea9983ddb41dacc44ecf997c' }],
+      acknowledgement_email_contacts: [{ account_user_id: 'acus_e5zu8bde0z3h' }],
       carrier_billing_account_number: '123456789',
       carrier_billing_type: 'sender',
-      carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+      carrier_id: 'cr_tv5vfjtgu1n3',
       customer_purchase_order_number: 'PO-88231',
-      invoice_email_contacts: [{ account_user_id: 'acus_01ea9983ddb41dacc44ecf997c' }],
+      invoice_email_contacts: [{ account_user_id: 'acus_e5zu8bde0z3h' }],
       note: 'Rush order for trade show',
-      order_discount_id: 'ords_01121c5e2f6937a6b896daad3a',
-      payment_term_id: 'pytm_018694d6601ea771cd1b52e890',
+      order_discount_id: 'ords_qnbrjvq5ih2q',
+      payment_term_id: 'pytm_skssmsy21lem',
       promised_at: '2026-05-20T00:00:00Z',
-      sales_rep_id: 'acus_01ea9983ddb41dacc44ecf997c',
-      service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
-      shipping_term_id: 'shtm_014341ab4bb5bf94d5b6936f86',
+      sales_rep_id: 'acus_e5zu8bde0z3h',
+      service_level_id: 'crop_4ilk9p6gccrx',
+      shipping_term_id: 'shtm_c5gxy05whw6r',
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.salesOrders.retrieve('or_01d5034136c3ccc048abecc312');
+    const responsePromise = client.sales.salesOrders.retrieve('or_9lqo07quiwyb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -81,7 +81,7 @@ describe('resource salesOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.salesOrders.retrieve(
-        'or_01d5034136c3ccc048abecc312',
+        'or_9lqo07quiwyb',
         { include: ['customer'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -89,7 +89,7 @@ describe('resource salesOrders', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.salesOrders.update('or_01d5034136c3ccc048abecc312');
+    const responsePromise = client.sales.salesOrders.update('or_9lqo07quiwyb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -103,7 +103,7 @@ describe('resource salesOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.salesOrders.update(
-        'or_01d5034136c3ccc048abecc312',
+        'or_9lqo07quiwyb',
         {
           include: ['customer'],
           acknowledgement_email_contacts: [{ account_user_id: 'account_user_id' }],
@@ -111,7 +111,7 @@ describe('resource salesOrders', () => {
           billing_address_id: 'billing_address_id',
           carrier_billing_account_number: 'carrier_billing_account_number',
           carrier_billing_type: 'sender',
-          carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+          carrier_id: 'cr_tv5vfjtgu1n3',
           customer_id: 'customer_id',
           customer_purchase_order_number: 'customer_purchase_order_number',
           invoice_email_contacts: [{ account_user_id: 'account_user_id' }],
@@ -122,7 +122,7 @@ describe('resource salesOrders', () => {
           promised_at: '2019-12-27T18:11:19.117Z',
           sales_rep_id: 'sales_rep_id',
           service_level_id: 'service_level_id',
-          shipping_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
+          shipping_address_id: 'ad_npqa5y43q26z',
           shipping_term_id: 'shipping_term_id',
         },
         { path: '/_stainless_unknown_path' },
@@ -165,7 +165,7 @@ describe('resource salesOrders', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.salesOrders.delete('or_01d5034136c3ccc048abecc312');
+    const responsePromise = client.sales.salesOrders.delete('or_9lqo07quiwyb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -176,7 +176,7 @@ describe('resource salesOrders', () => {
   });
 
   test('checkout: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.checkout('or_01d5034136c3ccc048abecc312', {
+    const responsePromise = client.sales.salesOrders.checkout('or_9lqo07quiwyb', {
       email: 'operations@acme.example.com',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -189,18 +189,18 @@ describe('resource salesOrders', () => {
   });
 
   test('checkout: required and optional params', async () => {
-    const response = await client.sales.salesOrders.checkout('or_01d5034136c3ccc048abecc312', {
+    const response = await client.sales.salesOrders.checkout('or_9lqo07quiwyb', {
       email: 'operations@acme.example.com',
     });
   });
 
   test('priceQuote: only required params', async () => {
     const responsePromise = client.sales.salesOrders.priceQuote({
-      buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      buyer_account_id: 'ac_opnlh43ymyee',
       lines: [
         {
-          product_id: 'pd_013c29ab3f1518d0004094c316',
-          quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
+          product_id: 'pd_07oe0r7adh2w',
+          quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
         },
       ],
     });
@@ -215,11 +215,11 @@ describe('resource salesOrders', () => {
 
   test('priceQuote: required and optional params', async () => {
     const response = await client.sales.salesOrders.priceQuote({
-      buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+      buyer_account_id: 'ac_opnlh43ymyee',
       lines: [
         {
-          product_id: 'pd_013c29ab3f1518d0004094c316',
-          quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10' },
+          product_id: 'pd_07oe0r7adh2w',
+          quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
         },
       ],
     });

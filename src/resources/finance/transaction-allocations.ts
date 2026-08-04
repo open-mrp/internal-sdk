@@ -13,7 +13,12 @@ import { path } from '../../internal/utils/path';
  */
 export class TransactionAllocations extends APIResource {
   /**
-   * Updates the amount of a transaction allocation applied to its invoice.
+   * Changes how much of a transaction is applied to the invoice it was allocated to.
+   *
+   * Only the amount can be changed; the transaction and invoice the allocation links
+   * are fixed. Payment roll-ups are left alone, so the transaction's
+   * `is_fully_allocated` flag and the invoice's paid-in-full status keep their
+   * previous values.
    *
    * This endpoint requires the permission: `settlements:update`.
    *
@@ -21,7 +26,7 @@ export class TransactionAllocations extends APIResource {
    * ```ts
    * const transactionAllocation =
    *   await client.finance.transactionAllocations.update(
-   *     'txal_016cc92c2d9c0b12801e3160e0',
+   *     'txal_2o8lu50zvphn',
    *     { amount: '150.00' },
    *   );
    * ```
@@ -35,8 +40,13 @@ export class TransactionAllocations extends APIResource {
   }
 
   /**
-   * Returns a paginated list of transaction allocation entries for the current
-   * account.
+   * Returns a paginated list of the individual applications of transaction money to
+   * invoices, newest first.
+   *
+   * Each entry pairs one transaction with one invoice and the amount applied.
+   * Entries are created by recording a settlement; there is no endpoint that creates
+   * one directly. Free-text search matches the invoice number and the transaction
+   * number.
    *
    * This endpoint requires the permission: `settlements:read`.
    *
@@ -54,11 +64,13 @@ export class TransactionAllocations extends APIResource {
   }
 
   /**
-   * Deletes a transaction allocation, making the allocated amount available again as
-   * open credit.
+   * Removes the application of a transaction's money to one invoice, leaving both
+   * the transaction and the invoice in place.
    *
-   * The parent transaction's `is_fully_allocated` flag is not recomputed
-   * automatically; update the transaction separately if needed.
+   * Payment roll-ups are left alone: the transaction's `is_fully_allocated` flag and
+   * the invoice's paid-in-full status keep their previous values, so set
+   * `is_fully_allocated` to `false` with Update Transaction to return the freed
+   * amount to the open credits list.
    *
    * This endpoint requires the permission: `settlements:delete`.
    *
@@ -66,7 +78,7 @@ export class TransactionAllocations extends APIResource {
    * ```ts
    * const transactionAllocation =
    *   await client.finance.transactionAllocations.delete(
-   *     'txal_016cc92c2d9c0b12801e3160e0',
+   *     'txal_2o8lu50zvphn',
    *   );
    * ```
    */
@@ -86,7 +98,8 @@ export interface AllocationEntry {
   id: string;
 
   /**
-   * Allocated amount as a decimal string.
+   * The part of the transaction's amount applied to this invoice, as a decimal
+   * string in US dollars.
    */
   amount: string;
 
@@ -96,11 +109,11 @@ export interface AllocationEntry {
   created_at: string;
 
   /**
-   * Minimal customer sub-resource for allocation entries and open-credit entries.
+   * Minimal customer reference carried by allocation entries and open-credit
+   * entries.
    *
-   * It carries its own allocation_customer discriminator (not customer) because the
-   * customer id is not always present (allocation list entries omit it), so it is
-   * not a guaranteed-resolvable customer reference.
+   * Open-credit entries identify the customer by `id`; allocation entries carry only
+   * the customer's name and number.
    */
   customer: FinanceAPI.AllocationCustomer | null;
 
@@ -115,7 +128,8 @@ export interface AllocationEntry {
   invoice: InvoicesAPI.AllocationInvoice | null;
 
   /**
-   * Note about this allocation.
+   * Free-form note carried by the underlying transaction, not a note specific to
+   * this allocation.
    */
   note: string | null;
 
@@ -140,17 +154,16 @@ export interface AllocationTransaction {
   id: string;
 
   /**
-   * Adjustment category code.
+   * Adjustment category code (e.g. `discount`, `write_off`).
    *
-   * Typically populated when `type` is `adjustment`; null for other types.
+   * Typically set only when `type` is `adjustment`.
    */
   adjustment_type: string | null;
 
   /**
    * Payment method code (e.g. `check`, `ach`).
    *
-   * Typically present only on payment transactions and null for credit memos,
-   * adjustments, and rebates.
+   * Typically set only when `type` is `payment`.
    */
   method: string | null;
 
@@ -160,14 +173,16 @@ export interface AllocationTransaction {
   object: 'transaction';
 
   /**
-   * Transaction type code: one of `payment`, `credit_memo`, `adjustment`, or
-   * `rebate`.
+   * Type code of the transaction the money came from.
+   *
+   * One of `payment`, `credit_memo`, `adjustment`, or `rebate`.
    */
   type: string;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAllocationEntry {
   /**
@@ -181,7 +196,13 @@ export interface ListAllocationEntry {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -191,10 +212,11 @@ export interface ListAllocationEntry {
  */
 export interface UpdateTransactionAllocationRequest {
   /**
-   * New allocated amount as a decimal string, in US dollars.
+   * New amount of the transaction to apply to this invoice, as a decimal string in
+   * US dollars.
    *
-   * Changing the amount does not recompute the parent transaction's
-   * `is_fully_allocated` flag; update the transaction separately if needed.
+   * The new amount is not checked against the transaction's total or the invoice's
+   * balance.
    */
   amount?: string;
 }
@@ -203,10 +225,11 @@ export interface TransactionAllocationDeleteResponse {}
 
 export interface TransactionAllocationUpdateParams {
   /**
-   * New allocated amount as a decimal string, in US dollars.
+   * New amount of the transaction to apply to this invoice, as a decimal string in
+   * US dollars.
    *
-   * Changing the amount does not recompute the parent transaction's
-   * `is_fully_allocated` flag; update the transaction separately if needed.
+   * The new amount is not checked against the transaction's total or the invoice's
+   * balance.
    */
   amount?: string;
 }

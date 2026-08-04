@@ -26,8 +26,8 @@ export class CompanyReviews extends APIResource {
    * ```ts
    * const hubspotCompanyReview =
    *   await client.settings.integrations.hubspot.sync.companyReviews.create(
-   *     'igrv_mkhn7eo9qexh',
-   *     { id: 'igjb_zwfvfjfxl4lj' },
+   *     'igrv_w88uo6y5g8bu',
+   *     { id: 'igjb_pbxu4l5ujuym' },
    *   );
    * ```
    */
@@ -48,13 +48,15 @@ export class CompanyReviews extends APIResource {
    * not be confidently matched to a HubSpot company and need a human decision before
    * the sync executes.
    *
+   * The whole queue is returned in a single response, without pagination.
+   *
    * This endpoint requires the permission: `integrations:read`.
    *
    * @example
    * ```ts
    * const listHubspotCompanyReview =
    *   await client.settings.integrations.hubspot.sync.companyReviews.list(
-   *     'igjb_zwfvfjfxl4lj',
+   *     'igjb_pbxu4l5ujuym',
    *   );
    * ```
    */
@@ -106,7 +108,8 @@ export interface HubspotCompanyReview {
   id: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   candidates: ListHubspotCompanyCandidate | null;
 
@@ -122,7 +125,12 @@ export interface HubspotCompanyReview {
   customer: CustomersAPI.Customer | null;
 
   /**
-   * A one-time HubSpot backfill/reconciliation run for the account.
+   * A one-time run that brings the account's existing customers, contacts, and
+   * orders into HubSpot.
+   *
+   * A sync runs in two phases: a read-only preview that matches customers to HubSpot
+   * companies and produces a report, then an execute phase that does the writing
+   * once any ambiguous matches have been resolved.
    */
   job: SyncAPI.HubspotSyncJob | null;
 
@@ -151,7 +159,7 @@ export interface HubspotCompanyReview {
    *
    * - `pending`: awaiting a decision.
    * - `resolved`: linked or marked create-new.
-   * - `skipped`: excluded from the sync.
+   * - `skipped`: the customer and its orders are left out of the sync entirely.
    */
   status: 'pending' | 'resolved' | 'skipped';
 
@@ -162,7 +170,8 @@ export interface HubspotCompanyReview {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListHubspotCompanyCandidate {
   /**
@@ -176,13 +185,20 @@ export interface ListHubspotCompanyCandidate {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListHubspotCompanyReview {
   /**
@@ -196,7 +212,13 @@ export interface ListHubspotCompanyReview {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }

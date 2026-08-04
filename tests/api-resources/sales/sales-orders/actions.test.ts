@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource actions', () => {
   test('bulkDelete: only required params', async () => {
     const responsePromise = client.sales.salesOrders.actions.bulkDelete({
-      sales_order_ids: ['or_01d5034136c3ccc048abecc312'],
+      sales_order_ids: ['or_9lqo07quiwyb'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,12 +23,12 @@ describe('resource actions', () => {
 
   test('bulkDelete: required and optional params', async () => {
     const response = await client.sales.salesOrders.actions.bulkDelete({
-      sales_order_ids: ['or_01d5034136c3ccc048abecc312'],
+      sales_order_ids: ['or_9lqo07quiwyb'],
     });
   });
 
   test('close', async () => {
-    const responsePromise = client.sales.salesOrders.actions.close('or_01d5034136c3ccc048abecc312');
+    const responsePromise = client.sales.salesOrders.actions.close('or_9lqo07quiwyb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -39,9 +39,7 @@ describe('resource actions', () => {
   });
 
   test('createProductionRun', async () => {
-    const responsePromise = client.sales.salesOrders.actions.createProductionRun(
-      'or_01d5034136c3ccc048abecc312',
-    );
+    const responsePromise = client.sales.salesOrders.actions.createProductionRun('or_9lqo07quiwyb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -55,7 +53,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.salesOrders.actions.createProductionRun(
-        'or_01d5034136c3ccc048abecc312',
+        'or_9lqo07quiwyb',
         { include: ['responsible_user'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -63,7 +61,7 @@ describe('resource actions', () => {
   });
 
   test('issue: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.actions.issue('or_01d5034136c3ccc048abecc312', {
+    const responsePromise = client.sales.salesOrders.actions.issue('or_9lqo07quiwyb', {
       notify_customer: true,
     });
     const rawResponse = await responsePromise.asResponse();
@@ -76,13 +74,13 @@ describe('resource actions', () => {
   });
 
   test('issue: required and optional params', async () => {
-    const response = await client.sales.salesOrders.actions.issue('or_01d5034136c3ccc048abecc312', {
+    const response = await client.sales.salesOrders.actions.issue('or_9lqo07quiwyb', {
       notify_customer: true,
     });
   });
 
   test('open', async () => {
-    const responsePromise = client.sales.salesOrders.actions.open('or_01d5034136c3ccc048abecc312');
+    const responsePromise = client.sales.salesOrders.actions.open('or_9lqo07quiwyb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -93,7 +91,7 @@ describe('resource actions', () => {
   });
 
   test('quoteFreight', async () => {
-    const responsePromise = client.sales.salesOrders.actions.quoteFreight('or_01d5034136c3ccc048abecc312');
+    const responsePromise = client.sales.salesOrders.actions.quoteFreight('or_9lqo07quiwyb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -104,7 +102,7 @@ describe('resource actions', () => {
   });
 
   test('unissue', async () => {
-    const responsePromise = client.sales.salesOrders.actions.unissue('or_01d5034136c3ccc048abecc312');
+    const responsePromise = client.sales.salesOrders.actions.unissue('or_9lqo07quiwyb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

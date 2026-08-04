@@ -27,14 +27,14 @@ describe('resource shippingTerms', () => {
       name: 'Prepaid',
       type: 'flat_rate_freight',
       include: ['owner'],
-      flat_rate: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '15.00' },
-      free_shipping_service_level_ids: ['crop_01cfaf03f104e90ef9680e2a30'],
-      minimum_order_value: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '500.00' },
+      flat_rate: { unit_id: 'un_82bd37dae5po', value: '15.00' },
+      free_shipping_service_level_ids: ['crop_4ilk9p6gccrx'],
+      minimum_order_value: { unit_id: 'un_82bd37dae5po', value: '500.00' },
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.shippingTerms.retrieve('shtm_014341ab4bb5bf94d5b6936f86');
+    const responsePromise = client.operations.shippingTerms.retrieve('shtm_c5gxy05whw6r');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,7 +48,7 @@ describe('resource shippingTerms', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.shippingTerms.retrieve(
-        'shtm_014341ab4bb5bf94d5b6936f86',
+        'shtm_c5gxy05whw6r',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -56,7 +56,7 @@ describe('resource shippingTerms', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.shippingTerms.update('shtm_014341ab4bb5bf94d5b6936f86');
+    const responsePromise = client.operations.shippingTerms.update('shtm_c5gxy05whw6r');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -70,12 +70,12 @@ describe('resource shippingTerms', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.shippingTerms.update(
-        'shtm_014341ab4bb5bf94d5b6936f86',
+        'shtm_c5gxy05whw6r',
         {
           include: ['owner'],
-          flat_rate: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '15.00' },
-          free_shipping_service_level_ids: ['crop_01cfaf03f104e90ef9680e2a30'],
-          minimum_order_value: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '500.00' },
+          flat_rate: { unit_id: 'un_82bd37dae5po', value: '15.00' },
+          free_shipping_service_level_ids: ['crop_4ilk9p6gccrx'],
+          minimum_order_value: { unit_id: 'un_82bd37dae5po', value: '500.00' },
           name: 'Collect',
           type: 'flat_rate_freight',
         },
@@ -111,7 +111,7 @@ describe('resource shippingTerms', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.shippingTerms.delete('shtm_014341ab4bb5bf94d5b6936f86');
+    const responsePromise = client.operations.shippingTerms.delete('shtm_c5gxy05whw6r');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

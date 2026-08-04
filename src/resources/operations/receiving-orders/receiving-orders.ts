@@ -33,7 +33,7 @@ export class ReceivingOrders extends APIResource {
    * ```ts
    * const receivingOrder =
    *   await client.operations.receivingOrders.retrieve(
-   *     'rcor_016911ec6c634a298b3dc1798e',
+   *     'rcor_iy0usuxcrjj8',
    *   );
    * ```
    */
@@ -46,7 +46,8 @@ export class ReceivingOrders extends APIResource {
   }
 
   /**
-   * Returns a paginated list of receiving orders for the current account.
+   * Returns a paginated list of receiving orders for the current account, newest
+   * first.
    *
    * Only open (incomplete) orders are returned by default; pass `status` to change
    * this.
@@ -68,7 +69,8 @@ export class ReceivingOrders extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListReceivingOrder {
   /**
@@ -82,7 +84,13 @@ export interface ListReceivingOrder {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -106,7 +114,10 @@ export interface ReceivingOrderListParams {
   cursor?: string;
 
   /**
-   * Only return orders created on or before this date (`YYYY-MM-DD`, inclusive).
+   * Only return orders created up to this date (`YYYY-MM-DD`).
+   *
+   * Compared against the start of the given day, so orders created later that same
+   * day are excluded.
    */
   end_date?: string;
 
@@ -134,17 +145,15 @@ export interface ReceivingOrderListParams {
   q?: string;
 
   /**
-   * Only return orders created on or after this date (`YYYY-MM-DD`, inclusive).
+   * Only return orders created on or after this date (`YYYY-MM-DD`).
    */
   start_date?: string;
 
   /**
    * Filter by completion status.
    *
-   * Only open orders are returned when this is omitted.
-   *
-   * An order is `open` while any line is still unstocked and `completed` once every
-   * line is stocked; `all` returns both.
+   * Accepts `open`, `completed`, or `all`. Completed orders are hidden when this is
+   * omitted.
    */
   status?: string;
 

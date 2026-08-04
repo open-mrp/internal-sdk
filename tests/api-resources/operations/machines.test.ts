@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource machines', () => {
   test('create: only required params', async () => {
     const responsePromise = client.operations.machines.create({
-      department_id: 'dp_01791c25ab59da4704cba61874',
+      department_id: 'dp_m0jayebxnkos',
       name: 'CNC Router',
       serial_number: 'SN-2024-0001',
     });
@@ -25,7 +25,7 @@ describe('resource machines', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.operations.machines.create({
-      department_id: 'dp_01791c25ab59da4704cba61874',
+      department_id: 'dp_m0jayebxnkos',
       name: 'CNC Router',
       serial_number: 'SN-2024-0001',
       include: ['department'],
@@ -34,7 +34,7 @@ describe('resource machines', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.machines.retrieve('mc_0177d18f55a1615f783d3bf8d0');
+    const responsePromise = client.operations.machines.retrieve('mc_ffcfk9dxixis');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,7 +48,7 @@ describe('resource machines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.machines.retrieve(
-        'mc_0177d18f55a1615f783d3bf8d0',
+        'mc_ffcfk9dxixis',
         { include: ['department'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -56,7 +56,7 @@ describe('resource machines', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.machines.update('mc_0177d18f55a1615f783d3bf8d0');
+    const responsePromise = client.operations.machines.update('mc_ffcfk9dxixis');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -70,7 +70,7 @@ describe('resource machines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.machines.update(
-        'mc_0177d18f55a1615f783d3bf8d0',
+        'mc_ffcfk9dxixis',
         {
           include: ['department'],
           name: 'Updated CNC Router',
@@ -108,7 +108,7 @@ describe('resource machines', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.machines.delete('mc_0177d18f55a1615f783d3bf8d0');
+    const responsePromise = client.operations.machines.delete('mc_ffcfk9dxixis');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -35,7 +35,7 @@ describe('resource productionSchedules', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.productionSchedules.retrieve('pnsc_0192a4c17b3e4f8a91c2d0');
+    const responsePromise = client.operations.productionSchedules.retrieve('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -72,7 +72,7 @@ describe('resource productionSchedules', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.productionSchedules.delete('pnsc_0192a4c17b3e4f8a91c2d0');
+    const responsePromise = client.operations.productionSchedules.delete('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -94,9 +94,7 @@ describe('resource productionSchedules', () => {
   });
 
   test('retrieveDerivedLines', async () => {
-    const responsePromise = client.operations.productionSchedules.retrieveDerivedLines(
-      'pnsc_0192a4c17b3e4f8a91c2d0',
-    );
+    const responsePromise = client.operations.productionSchedules.retrieveDerivedLines('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -110,7 +108,7 @@ describe('resource productionSchedules', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionSchedules.retrieveDerivedLines(
-        'pnsc_0192a4c17b3e4f8a91c2d0',
+        'pnsc_m4zt3z8g8src',
         { department_ids: ['string'], week_index: 0 },
         { path: '/_stainless_unknown_path' },
       ),
@@ -118,9 +116,7 @@ describe('resource productionSchedules', () => {
   });
 
   test('retrieveDeviations', async () => {
-    const responsePromise = client.operations.productionSchedules.retrieveDeviations(
-      'pnsc_0192a4c17b3e4f8a91c2d0',
-    );
+    const responsePromise = client.operations.productionSchedules.retrieveDeviations('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -134,7 +130,7 @@ describe('resource productionSchedules', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionSchedules.retrieveDeviations(
-        'pnsc_0192a4c17b3e4f8a91c2d0',
+        'pnsc_m4zt3z8g8src',
         {
           cursor: 'cursor',
           frozen: true,
@@ -147,9 +143,8 @@ describe('resource productionSchedules', () => {
   });
 
   test('retrieveFinishedPolicies', async () => {
-    const responsePromise = client.operations.productionSchedules.retrieveFinishedPolicies(
-      'pnsc_0192a4c17b3e4f8a91c2d0',
-    );
+    const responsePromise =
+      client.operations.productionSchedules.retrieveFinishedPolicies('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -160,9 +155,7 @@ describe('resource productionSchedules', () => {
   });
 
   test('retrieveItemPolicies', async () => {
-    const responsePromise = client.operations.productionSchedules.retrieveItemPolicies(
-      'pnsc_0192a4c17b3e4f8a91c2d0',
-    );
+    const responsePromise = client.operations.productionSchedules.retrieveItemPolicies('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -173,9 +166,8 @@ describe('resource productionSchedules', () => {
   });
 
   test('retrieveWeekReleasePreview', async () => {
-    const responsePromise = client.operations.productionSchedules.retrieveWeekReleasePreview(
-      'pnsc_0192a4c17b3e4f8a91c2d0',
-    );
+    const responsePromise =
+      client.operations.productionSchedules.retrieveWeekReleasePreview('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -189,7 +181,7 @@ describe('resource productionSchedules', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionSchedules.retrieveWeekReleasePreview(
-        'pnsc_0192a4c17b3e4f8a91c2d0',
+        'pnsc_m4zt3z8g8src',
         { week_index: 0 },
         { path: '/_stainless_unknown_path' },
       ),

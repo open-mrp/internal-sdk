@@ -80,7 +80,11 @@ export class Conversations extends APIResource {
   attachments: AttachmentsAPI.Attachments = new AttachmentsAPI.Attachments(this._client);
 
   /**
-   * Starts a conversation between participants.
+   * Starts a direct message or group conversation.
+   *
+   * Requesting a direct message that already exists returns the existing thread
+   * instead of creating a duplicate, and a direct message is refused when either
+   * user has blocked the other. Conversation creation is rate limited per user.
    *
    * This endpoint requires the permission: `messaging:create`.
    *
@@ -88,13 +92,11 @@ export class Conversations extends APIResource {
    * ```ts
    * const conversation =
    *   await client.messaging.conversations.create({
-   *     participant_account_user_ids: [
-   *       'acus_01ea9983ddb41dacc44ecf997c',
-   *     ],
+   *     participant_account_user_ids: ['acus_e5zu8bde0z3h'],
    *     type: 'group',
-   *     group_id: 'cvgp_018e88072d1320808dc97abc',
+   *     group_id: 'cvgp_wjlypugna7s4',
    *     title: 'Order #1042 — shipping question',
-   *     topic_resource_id: 'or_01d5034136c3ccc048abecc312',
+   *     topic_resource_id: 'or_9lqo07quiwyb',
    *     topic_resource_type: 'sales_order',
    *   });
    * ```
@@ -105,7 +107,11 @@ export class Conversations extends APIResource {
   }
 
   /**
-   * Returns one conversation (with participants) the caller belongs to.
+   * Returns a single conversation the caller participates in.
+   *
+   * Someone who has left the conversation can still read it back; it comes back
+   * marked hidden for them. A team member who opens a customer-facing case they are
+   * not yet part of is seated in it as a participant.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -113,7 +119,7 @@ export class Conversations extends APIResource {
    * ```ts
    * const conversation =
    *   await client.messaging.conversations.retrieve(
-   *     'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+   *     'cv_w35z4ck68yq7',
    *   );
    * ```
    */
@@ -126,7 +132,10 @@ export class Conversations extends APIResource {
   }
 
   /**
-   * Renames a conversation.
+   * Renames a group conversation.
+   *
+   * Only an owner or admin of the conversation can rename it, and direct messages
+   * cannot be renamed.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -134,7 +143,7 @@ export class Conversations extends APIResource {
    * ```ts
    * const conversation =
    *   await client.messaging.conversations.update(
-   *     'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+   *     'cv_w35z4ck68yq7',
    *     { title: 'Fulfillment war room' },
    *   );
    * ```
@@ -153,7 +162,10 @@ export class Conversations extends APIResource {
   }
 
   /**
-   * Returns the caller's conversations, most-recently-active first.
+   * Returns the caller's conversations, most recently active first.
+   *
+   * A customer portal user sees only their own support case with the vendor, and an
+   * empty list until they have contacted support.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -176,16 +188,26 @@ export class Conversations extends APIResource {
  */
 export interface CreateConversationRequest {
   /**
-   * The other participant(s).
+   * The other participants to add.
    *
-   * For a direct message, exactly one account_user ID. For a group, the members to
-   * add — optional when `group_id` seeds the roster or the conversation is anchored
-   * to a `topic_resource` (a record discussion can start solo).
+   * For a direct message, exactly one account user. For a group, the members to seed
+   * — these can be omitted when `group_id` supplies a roster, or when the
+   * conversation is anchored to a topic resource, since a record discussion may
+   * start solo and pull people in later.
+   *
+   * The caller is always a participant and does not need to be listed; on a group
+   * they become its owner and every other member seeded at creation is notified.
    */
   participant_account_user_ids: Array<string>;
 
   /**
    * The kind of conversation to create.
+   *
+   * - `direct_message`: a 1:1 thread with exactly one other user. Addressing
+   *   yourself is allowed and gives you a private notes thread.
+   * - `group`: a named thread with any number of user and agent members.
+   *
+   * `system` channels are created by the platform and cannot be requested here.
    */
   type: 'direct_message' | 'group' | 'system';
 
@@ -201,7 +223,7 @@ export interface CreateConversationRequest {
   /**
    * Title for a group conversation.
    *
-   * Ignored for direct messages.
+   * A direct message is identified by its participants rather than by a title.
    */
   title?: string;
 
@@ -212,6 +234,9 @@ export interface CreateConversationRequest {
 
   /**
    * The type of business record to anchor this conversation to.
+   *
+   * An anchored conversation is returned when conversations are listed for that
+   * record, which is how a discussion shows up on an order or invoice.
    */
   topic_resource_type?:
     | 'account'
@@ -492,7 +517,8 @@ export interface CreateConversationRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListConversation {
   /**
@@ -506,35 +532,51 @@ export interface ListConversation {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * Request to rename a conversation (owner/admin; groups only).
+ * Request to rename a conversation.
  */
 export interface UpdateConversationRequest {
   /**
-   * New group title.
+   * The group conversation's new display title.
    *
-   * Send `null` to clear the title; omit to leave it unchanged.
+   * Send `null` to clear the title and leave the conversation unnamed.
    */
   title?: string | null;
 }
 
 export interface ConversationCreateParams {
   /**
-   * Body param: The other participant(s).
+   * Body param: The other participants to add.
    *
-   * For a direct message, exactly one account_user ID. For a group, the members to
-   * add — optional when `group_id` seeds the roster or the conversation is anchored
-   * to a `topic_resource` (a record discussion can start solo).
+   * For a direct message, exactly one account user. For a group, the members to seed
+   * — these can be omitted when `group_id` supplies a roster, or when the
+   * conversation is anchored to a topic resource, since a record discussion may
+   * start solo and pull people in later.
+   *
+   * The caller is always a participant and does not need to be listed; on a group
+   * they become its owner and every other member seeded at creation is notified.
    */
   participant_account_user_ids: Array<string>;
 
   /**
    * Body param: The kind of conversation to create.
+   *
+   * - `direct_message`: a 1:1 thread with exactly one other user. Addressing
+   *   yourself is allowed and gives you a private notes thread.
+   * - `group`: a named thread with any number of user and agent members.
+   *
+   * `system` channels are created by the platform and cannot be requested here.
    */
   type: 'direct_message' | 'group' | 'system';
 
@@ -567,7 +609,7 @@ export interface ConversationCreateParams {
   /**
    * Body param: Title for a group conversation.
    *
-   * Ignored for direct messages.
+   * A direct message is identified by its participants rather than by a title.
    */
   title?: string;
 
@@ -578,6 +620,9 @@ export interface ConversationCreateParams {
 
   /**
    * Body param: The type of business record to anchor this conversation to.
+   *
+   * An anchored conversation is returned when conversations are listed for that
+   * record, which is how a discussion shows up on an order or invoice.
    */
   topic_resource_type?:
     | 'account'
@@ -895,22 +940,27 @@ export interface ConversationUpdateParams {
   >;
 
   /**
-   * Body param: New group title.
+   * Body param: The group conversation's new display title.
    *
-   * Send `null` to clear the title; omit to leave it unchanged.
+   * Send `null` to clear the title and leave the conversation unnamed.
    */
   title?: string | null;
 }
 
 export interface ConversationListParams {
   /**
-   * Support inbox: filter to cases owned by this assignee (a user or a team),
-   * matched by id.
+   * Filter the support inbox to cases owned by this assignee, an account user or an
+   * account group.
    */
   assignee_resource_id?: string;
 
   /**
-   * Filter by conversation audience direction.
+   * Filter by whether the conversation is team-only or customer-facing.
+   *
+   * - `internal`: threads the customer never sees — direct messages, group threads,
+   *   and record discussions.
+   * - `customer`: external customer-service cases the customer takes part in, from
+   *   the portal or a bridged email thread.
    */
   audience?: 'internal' | 'customer';
 
@@ -941,7 +991,10 @@ export interface ConversationListParams {
   >;
 
   /**
-   * Support inbox: include archived (resolved-and-closed) cases.
+   * Return the archived support inbox instead of the working one.
+   *
+   * This swaps the view rather than widening it: archived cases are returned and
+   * unarchived ones are left out.
    */
   include_archived?: boolean;
 
@@ -958,18 +1011,21 @@ export interface ConversationListParams {
   q?: string;
 
   /**
-   * Filter by conversation visibility.
+   * Filter by whether the caller has hidden the conversation from their own list.
    */
   status?: 'active' | 'hidden';
 
   /**
-   * The id of the anchoring business record (with `topic_resource_type`).
+   * The id of the business record, together with `topic_resource_type`.
    */
   topic_resource_id?: string;
 
   /**
-   * Restrict to conversations anchored to a business record of this type (with
-   * `topic_resource_id`).
+   * Restrict to conversations attached to a business record of this type, together
+   * with `topic_resource_id`.
+   *
+   * Matches both conversations anchored to the record and conversations that merely
+   * link it, which is what powers the "discussions on this record" view.
    */
   topic_resource_type?:
     | 'account'
@@ -1254,12 +1310,21 @@ export interface ConversationListParams {
   type?: 'direct_message' | 'group' | 'system';
 
   /**
-   * Support inbox: restrict to cases with no assignee.
+   * Restrict the support inbox to cases nobody has been assigned yet.
    */
   unassigned?: boolean;
 
   /**
-   * Support inbox: filter external cases to a single triage lane.
+   * Filter the support inbox to a single triage lane.
+   *
+   * - `new`: opened but nobody has triaged it yet.
+   * - `open`: actively being worked.
+   * - `waiting_internal`: blocked on the internal team.
+   * - `waiting_external`: blocked on a reply from the customer.
+   * - `needs_approval`: a drafted reply is waiting for a human to approve it.
+   * - `resolved`: closed out.
+   *
+   * The working inbox hides resolved cases unless you ask for this lane explicitly.
    */
   workflow_status?: 'new' | 'open' | 'waiting_internal' | 'waiting_external' | 'needs_approval' | 'resolved';
 }

@@ -18,16 +18,19 @@ export class Lines extends APIResource {
    * what the solver produced, and the change is written to the deviation log. Adding
    * into a frozen week requires a `reason`.
    *
+   * Only a draft or a published version can be edited; a superseded or archived
+   * version is history. The campaign is appended to the end of its week's run order.
+   *
    * This endpoint requires the permission: `production_schedules:update`.
    *
    * @example
    * ```ts
    * const productionScheduleLine =
    *   await client.operations.productionSchedules.lines.create(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *     {
-   *       item_id: 'it_0131e386ac683e8c29a71f6f1f',
-   *       machine_id: 'mc_0177d18f55a1615f783d3bf8d0',
+   *       item_id: 'it_pej07ckhvu62',
+   *       machine_id: 'mc_ffcfk9dxixis',
    *       quantity: 600,
    *       week_index: 2,
    *     },
@@ -46,14 +49,19 @@ export class Lines extends APIResource {
    * solver output. A change that touches a frozen week — including moving a campaign
    * out of one — requires a `reason`.
    *
+   * Only a draft or a published version can be edited; a superseded or archived
+   * version is history. An edit that changes several things at once is logged under
+   * the single most significant one, in the order machine, week, quantity, position
+   * — that being the change a planner has to react to first.
+   *
    * This endpoint requires the permission: `production_schedules:update`.
    *
    * @example
    * ```ts
    * const productionScheduleLine =
    *   await client.operations.productionSchedules.lines.update(
-   *     'orln_0142f9b74268973450b3a76ce3',
-   *     { id: 'pnsc_0192a4c17b3e4f8a91c2d0', quantity: 900 },
+   *     'orln_la01fxgrwcnr',
+   *     { id: 'pnsc_m4zt3z8g8src', quantity: 900 },
    *   );
    * ```
    */
@@ -78,7 +86,7 @@ export class Lines extends APIResource {
    * ```ts
    * const listProductionScheduleLine =
    *   await client.operations.productionSchedules.lines.list(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *   );
    * ```
    */
@@ -97,14 +105,19 @@ export class Lines extends APIResource {
    * readable after the line itself is gone. Removing from a frozen week requires a
    * `reason`.
    *
+   * Only a draft or a published version can be edited; a superseded or archived
+   * version is history. Removing a campaign whose week has already been released
+   * does not remove the batches it created; those live on the production run and
+   * have to be dealt with there.
+   *
    * This endpoint requires the permission: `production_schedules:update`.
    *
    * @example
    * ```ts
    * const line =
    *   await client.operations.productionSchedules.lines.delete(
-   *     'orln_0142f9b74268973450b3a76ce3',
-   *     { id: 'pnsc_0192a4c17b3e4f8a91c2d0' },
+   *     'orln_la01fxgrwcnr',
+   *     { id: 'pnsc_m4zt3z8g8src' },
    *   );
    * ```
    */
@@ -127,27 +140,43 @@ export interface CreateProductionScheduleLineRequest {
   item_id: string;
 
   /**
-   * ID of the machine that will run it.
+   * ID of the machine that will run the campaign.
+   *
+   * The machine's production step and department are copied onto the campaign, which
+   * is what department-level attainment rolls it up by. The schedule's derived
+   * department work is not re-exploded for a hand-added campaign; it is rebuilt the
+   * next time the version is regenerated.
    */
   machine_id: string;
 
   /**
-   * Units to build.
+   * Units to build over the campaign.
    */
   quantity: number;
 
   /**
    * Horizon week to plan the campaign in, zero-based.
+   *
+   * Week 0 is the week the schedule's horizon starts in. The week must fall inside
+   * the horizon this version was planned over.
    */
   week_index: number;
 
   /**
-   * Lots the quantity represents.
+   * How many lots the quantity is built in.
+   *
+   * Left unset, it is derived from the quantity and the account's default lot size.
+   * The lot size itself is taken from that account default and is not settable per
+   * campaign, so this is a record of the lot count rather than what a release splits
+   * batches by.
    */
   lots?: number;
 
   /**
-   * Why the campaign was added. Required when it lands inside a frozen week.
+   * Why the campaign was added.
+   *
+   * Required when the campaign lands inside a frozen week, since that is a
+   * commitment being changed.
    */
   reason?:
     | 'machine_down'
@@ -166,12 +195,17 @@ export interface CreateProductionScheduleLineRequest {
 
   /**
    * Machine hours the campaign will take.
+   *
+   * Left unset, it is estimated from the rate this version was solved with for this
+   * item, so the week's utilisation still reflects the added work. An item the
+   * version holds no policy for estimates to zero.
    */
   run_hours?: number;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductionScheduleLine {
   /**
@@ -185,7 +219,13 @@ export interface ListProductionScheduleLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -210,8 +250,8 @@ export interface ProductionScheduleLine {
   department: CoreAPI.Entity | null;
 
   /**
-   * Whether the line is inside the frozen window and can no longer be changed
-   * without recording a deviation.
+   * Whether the line is inside the frozen window, where changing it requires a
+   * reason for the deviation log.
    */
   freeze_status: 'frozen' | 'flexible';
 
@@ -294,7 +334,10 @@ export interface ProductionScheduleLine {
   projected_on_hand_before: number;
 
   /**
-   * Why the campaign was scheduled.
+   * Why the campaign was placed or last changed by hand.
+   *
+   * Only hand changes record a reason, and a change that touches a frozen week has
+   * to supply one.
    */
   reason:
     | 'machine_down'
@@ -309,8 +352,6 @@ export interface ProductionScheduleLine {
 
   /**
    * Batches this campaign issued to the floor when its week was released.
-   *
-   * Zero until the week is released.
    */
   released_batch_count: number;
 
@@ -334,11 +375,17 @@ export interface ProductionScheduleLine {
 
   /**
    * Whether the solver or a person created the line.
+   *
+   * Editing a solver-placed campaign turns it `manual`, and a regenerate that
+   * preserves hand work keeps exactly the campaigns marked that way.
    */
   source: 'solver' | 'manual';
 
   /**
    * Where the line is in its lifecycle.
+   *
+   * A campaign becomes `released` when its week is issued to the floor as a
+   * production run, and goes back to `planned` if that run is deleted.
    */
   status: 'planned' | 'released' | 'in_progress' | 'complete' | 'cancelled';
 
@@ -363,7 +410,10 @@ export interface ProductionScheduleLine {
  */
 export interface UpdateProductionScheduleLineRequest {
   /**
-   * Lots the quantity represents.
+   * How many lots the quantity is built in.
+   *
+   * What a release actually splits batches by is the lot size the campaign was
+   * planned at, which this does not change.
    */
   lots?: number;
 
@@ -373,12 +423,19 @@ export interface UpdateProductionScheduleLineRequest {
   machine_id?: string;
 
   /**
-   * Units to build.
+   * Units to build over the campaign.
+   *
+   * Changing this does not re-derive `lots` or `run_hours` — send those alongside it
+   * when they should follow, or the campaign will keep claiming its old share of
+   * machine time.
    */
   quantity?: number;
 
   /**
-   * Why the campaign changed. Required when the change touches a frozen week.
+   * Why the campaign changed.
+   *
+   * Required when the change touches a frozen week, including moving a campaign out
+   * of one.
    */
   reason?:
     | 'machine_down'
@@ -402,17 +459,24 @@ export interface UpdateProductionScheduleLineRequest {
   run_hours?: number;
 
   /**
-   * Position within the week's run order.
+   * Position within the week's run order, lowest first.
    */
   sequence_index?: number;
 
   /**
-   * Lifecycle state of the campaign.
+   * Progress of the campaign.
+   *
+   * Setting `released` here only labels the campaign; it does not create a
+   * production run or any batches — releasing a week to the floor is its own action.
+   * Setting `cancelled` leaves the campaign on the plan but excludes it from any
+   * later release of its week.
    */
   status?: 'planned' | 'released' | 'in_progress' | 'complete' | 'cancelled';
 
   /**
    * Horizon week to move the campaign to, zero-based.
+   *
+   * Must fall inside the horizon this version was planned over.
    */
   week_index?: number;
 }
@@ -426,27 +490,43 @@ export interface LineCreateParams {
   item_id: string;
 
   /**
-   * ID of the machine that will run it.
+   * ID of the machine that will run the campaign.
+   *
+   * The machine's production step and department are copied onto the campaign, which
+   * is what department-level attainment rolls it up by. The schedule's derived
+   * department work is not re-exploded for a hand-added campaign; it is rebuilt the
+   * next time the version is regenerated.
    */
   machine_id: string;
 
   /**
-   * Units to build.
+   * Units to build over the campaign.
    */
   quantity: number;
 
   /**
    * Horizon week to plan the campaign in, zero-based.
+   *
+   * Week 0 is the week the schedule's horizon starts in. The week must fall inside
+   * the horizon this version was planned over.
    */
   week_index: number;
 
   /**
-   * Lots the quantity represents.
+   * How many lots the quantity is built in.
+   *
+   * Left unset, it is derived from the quantity and the account's default lot size.
+   * The lot size itself is taken from that account default and is not settable per
+   * campaign, so this is a record of the lot count rather than what a release splits
+   * batches by.
    */
   lots?: number;
 
   /**
-   * Why the campaign was added. Required when it lands inside a frozen week.
+   * Why the campaign was added.
+   *
+   * Required when the campaign lands inside a frozen week, since that is a
+   * commitment being changed.
    */
   reason?:
     | 'machine_down'
@@ -465,6 +545,10 @@ export interface LineCreateParams {
 
   /**
    * Machine hours the campaign will take.
+   *
+   * Left unset, it is estimated from the rate this version was solved with for this
+   * item, so the week's utilisation still reflects the added work. An item the
+   * version holds no policy for estimates to zero.
    */
   run_hours?: number;
 }
@@ -476,7 +560,10 @@ export interface LineUpdateParams {
   id: string;
 
   /**
-   * Body param: Lots the quantity represents.
+   * Body param: How many lots the quantity is built in.
+   *
+   * What a release actually splits batches by is the lot size the campaign was
+   * planned at, which this does not change.
    */
   lots?: number;
 
@@ -486,13 +573,19 @@ export interface LineUpdateParams {
   machine_id?: string;
 
   /**
-   * Body param: Units to build.
+   * Body param: Units to build over the campaign.
+   *
+   * Changing this does not re-derive `lots` or `run_hours` — send those alongside it
+   * when they should follow, or the campaign will keep claiming its old share of
+   * machine time.
    */
   quantity?: number;
 
   /**
-   * Body param: Why the campaign changed. Required when the change touches a frozen
-   * week.
+   * Body param: Why the campaign changed.
+   *
+   * Required when the change touches a frozen week, including moving a campaign out
+   * of one.
    */
   reason?:
     | 'machine_down'
@@ -516,17 +609,24 @@ export interface LineUpdateParams {
   run_hours?: number;
 
   /**
-   * Body param: Position within the week's run order.
+   * Body param: Position within the week's run order, lowest first.
    */
   sequence_index?: number;
 
   /**
-   * Body param: Lifecycle state of the campaign.
+   * Body param: Progress of the campaign.
+   *
+   * Setting `released` here only labels the campaign; it does not create a
+   * production run or any batches — releasing a week to the floor is its own action.
+   * Setting `cancelled` leaves the campaign on the plan but excludes it from any
+   * later release of its week.
    */
   status?: 'planned' | 'released' | 'in_progress' | 'complete' | 'cancelled';
 
   /**
    * Body param: Horizon week to move the campaign to, zero-based.
+   *
+   * Must fall inside the horizon this version was planned over.
    */
   week_index?: number;
 }
@@ -550,8 +650,10 @@ export interface LineDeleteParams {
   id: string;
 
   /**
-   * Query param: Why the campaign was removed. Required when it sits in a frozen
-   * week.
+   * Query param: Why the campaign was removed.
+   *
+   * Required when the campaign sits in a frozen week, since that is a commitment
+   * being broken.
    */
   reason?:
     | 'machine_down'

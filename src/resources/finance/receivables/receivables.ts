@@ -17,7 +17,11 @@ export class Receivables extends APIResource {
 
   /**
    * Returns a paginated list of outstanding receivable entries for the current
-   * account.
+   * account, newest invoice first.
+   *
+   * One entry is returned per invoice that is not marked paid in full, across every
+   * customer. A free-text search term (`q`) is matched against the invoice number
+   * and the customer name.
    *
    * This endpoint requires the permission: `invoices:read`.
    *
@@ -36,7 +40,8 @@ export class Receivables extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListReceivableEntry {
   /**
@@ -50,7 +55,13 @@ export interface ListReceivableEntry {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -74,12 +85,15 @@ export interface ReceivableEntry {
   invoice: InvoicesAPI.Invoice | null;
 
   /**
-   * Invoice creation date.
+   * Date the invoice was created.
    */
   invoiced_at: string;
 
   /**
    * Whether the invoice has been paid in full.
+   *
+   * Always `false` here, because only invoices that still owe a balance produce a
+   * receivable entry.
    */
   is_paid_in_full: boolean;
 
@@ -89,12 +103,12 @@ export interface ReceivableEntry {
   object: 'receivable_entry';
 
   /**
-   * Customer's purchase order number from the underlying sales order, if any.
+   * Purchase order number the customer supplied on the underlying sales order.
    */
   po_number: string | null;
 
   /**
-   * Remaining unpaid balance on the invoice, as a decimal string.
+   * Remaining unpaid balance on the invoice.
    *
    * Calculated as the invoiced total minus all transaction allocations applied to
    * the invoice. When a `cutoff_date` is supplied to the listing endpoint, only

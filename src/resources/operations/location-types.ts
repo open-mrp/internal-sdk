@@ -20,7 +20,7 @@ export class LocationTypes extends APIResource {
    * ```ts
    * const locationType =
    *   await client.operations.locationTypes.retrieve(
-   *     'lc_01e69cd3745a1bc0dd485986c0',
+   *     'lc_ra08sngd0fxr',
    *   );
    * ```
    */
@@ -30,6 +30,10 @@ export class LocationTypes extends APIResource {
 
   /**
    * Returns a paginated list of location types.
+   *
+   * Location types are platform-defined and the same for every account, so this list
+   * is the complete set of levels you can assign when creating a location. The `q`
+   * search term matches on location type name.
    *
    * This endpoint requires the permission: `locations:read`.
    *
@@ -48,7 +52,8 @@ export class LocationTypes extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListLocationType {
   /**
@@ -62,13 +67,22 @@ export interface ListLocationType {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
  * A level in the storage location hierarchy, such as a building or a bin.
+ *
+ * Location types are platform-defined and identical for every account: you choose
+ * one when creating a location, but you cannot add or modify the types themselves.
  */
 export interface LocationType {
   /**
@@ -77,15 +91,10 @@ export interface LocationType {
   id: string;
 
   /**
-   * Location type code, identifying the level of the storage hierarchy this type
-   * represents.
+   * The level of the storage hierarchy this type represents.
    *
-   * - `building`: a building-level location.
-   * - `section`: a section within a building.
-   * - `aisle`: an aisle within a section.
-   * - `rack`: a rack within an aisle.
-   * - `shelf`: a shelf within a rack.
-   * - `bin`: a bin within a shelf.
+   * The levels run from largest to smallest: `building`, `section`, `aisle`, `rack`,
+   * `shelf`, `bin`.
    */
   code: AccountUsersAPI.LocationTypeCode;
 

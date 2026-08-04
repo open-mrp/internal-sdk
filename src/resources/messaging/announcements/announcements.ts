@@ -16,7 +16,12 @@ export class Announcements extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Returns one active announcement by ID.
+   * Retrieves a single announcement by ID, with the calling user's own read state.
+   *
+   * Only announcements the caller can see are returned: one published to another
+   * account, one that has not reached its publish time, or one that has expired is
+   * reported as not found. An announcement the caller has dismissed stays
+   * retrievable even though it no longer appears in their feed.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -24,7 +29,7 @@ export class Announcements extends APIResource {
    * ```ts
    * const announcement =
    *   await client.messaging.announcements.retrieve(
-   *     'an_01c4d5e6f7a8b9c0d1e2f3a4',
+   *     'an_m4vwgn2t8cqs',
    *   );
    * ```
    */
@@ -37,8 +42,12 @@ export class Announcements extends APIResource {
   }
 
   /**
-   * Returns the broadcast announcements currently active for the caller, most recent
-   * first.
+   * Lists the announcements currently active for the caller, newest first.
+   *
+   * The feed covers announcements broadcast to the account being acted in together
+   * with platform-wide announcements from Augno. Announcements the caller has
+   * dismissed are left out, as are any that are scheduled for later or have already
+   * expired.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -57,8 +66,14 @@ export class Announcements extends APIResource {
 }
 
 /**
- * A broadcast announcement shown in the bell feed, with the caller's per-user read
- * state.
+ * A broadcast announcement shown in the notification (bell) feed, carrying the
+ * calling user's own read state.
+ *
+ * A single announcement is published to everyone in an account, or to every user
+ * on the platform, and each user keeps their own seen, read, and dismissed state
+ * for it. The status and timestamps you read are therefore always the caller's,
+ * and never reflect what anyone else has done with the same announcement.
+ * Notifications addressed to one user are a separate resource.
  */
 export interface Announcement {
   /**
@@ -67,12 +82,17 @@ export interface Announcement {
   id: string;
 
   /**
-   * Preview/body text.
+   * Supporting detail shown beneath the title.
    */
   body: string | null;
 
   /**
-   * Category of the announcement.
+   * The kind of event the announcement is about.
+   *
+   * Announcements draw on the same categories as notifications, such as
+   * `system.broadcast` or `order.updated`, and the category is chosen by whoever
+   * publishes the announcement. The set is open-ended and may grow over time, so
+   * clients should tolerate values they do not recognize.
    */
   category:
     | 'chat.message'
@@ -90,12 +110,15 @@ export interface Announcement {
   created_at: string;
 
   /**
-   * When the calling actor dismissed the announcement.
+   * When the calling user dismissed the announcement.
    */
   dismissed_at: string | null;
 
   /**
    * When the announcement stops being shown.
+   *
+   * Once it expires the announcement leaves every user's feed and can no longer be
+   * retrieved; an announcement with no expiry stays until each user dismisses it.
    */
   expires_at: string | null;
 
@@ -105,17 +128,21 @@ export interface Announcement {
   object: 'announcement';
 
   /**
-   * Delivery priority.
+   * How prominently the announcement should be surfaced, from `low` through
+   * `urgent`.
    */
   priority: 'low' | 'normal' | 'high' | 'urgent';
 
   /**
    * When the announcement becomes visible in the feed.
+   *
+   * An announcement scheduled for the future is not returned by the announcement
+   * endpoints until this time passes.
    */
   publish_at: string;
 
   /**
-   * When the calling actor opened the announcement.
+   * When the calling user opened the announcement.
    */
   read_at: string | null;
 
@@ -125,31 +152,35 @@ export interface Announcement {
   resource: CoreAPI.Entity | null;
 
   /**
-   * Reach of the announcement.
+   * Who the announcement reaches.
    *
-   * - `account`: shown only to users within this account.
-   * - `platform`: shown to every user across all accounts.
+   * - `account`: published to a single account and shown only to that account's
+   *   users.
+   * - `platform`: published by Augno and shown to every user across all accounts.
    */
   scope: 'account' | 'platform';
 
   /**
-   * When the calling actor first saw the announcement.
+   * When the calling user first saw the announcement.
    */
   seen_at: string | null;
 
   /**
-   * Lifecycle status of the announcement for the calling actor, derived from their
-   * seen/read/dismissed receipt.
+   * Where the announcement is in its lifecycle for the calling user.
    *
-   * - `unseen`: not yet surfaced in the caller's feed.
-   * - `seen`: surfaced in the feed but not yet opened.
-   * - `read`: opened by the caller.
-   * - `dismissed`: dismissed by the caller.
+   * - `unseen`: not yet surfaced to the caller.
+   * - `seen`: surfaced in the caller's feed but not opened.
+   * - `read`: explicitly opened by the caller.
+   * - `dismissed`: removed from the caller's feed.
+   *
+   * The status is derived from the caller's own seen, read, and dismissed timestamps
+   * and only ever moves forward, so the same announcement can show a different
+   * status for each user in the account.
    */
   status: 'unseen' | 'seen' | 'read' | 'dismissed';
 
   /**
-   * Human-readable title.
+   * Short headline shown in the feed.
    */
   title: string;
 
@@ -160,7 +191,8 @@ export interface Announcement {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAnnouncement {
   /**
@@ -174,7 +206,13 @@ export interface ListAnnouncement {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }

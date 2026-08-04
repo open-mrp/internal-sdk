@@ -12,18 +12,18 @@ describe('resource purchaseOrders', () => {
     const responsePromise = client.operations.purchaseOrders.create({
       lines: [
         {
-          product_id: 'pd_013c29ab3f1518d0004094c316',
+          product_id: 'pd_07oe0r7adh2w',
           product_sku: 'RAW-100',
-          quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '500' },
+          quantity: { unit_id: 'un_82bd37dae5po', value: '500' },
           unit_price: {
-            denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-            numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+            denominator_unit_id: 'un_82bd37dae5po',
+            numerator_unit_id: 'un_82bd37dae5po',
             value: '12.50',
           },
         },
       ],
       priority_code: 'normal',
-      supplier_account_id: 'ac_0177902104bccac5fbb173cd96',
+      supplier_account_id: 'ac_gwy8tfbc074f',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -38,12 +38,12 @@ describe('resource purchaseOrders', () => {
     const response = await client.operations.purchaseOrders.create({
       lines: [
         {
-          product_id: 'pd_013c29ab3f1518d0004094c316',
+          product_id: 'pd_07oe0r7adh2w',
           product_sku: 'RAW-100',
-          quantity: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '500' },
+          quantity: { unit_id: 'un_82bd37dae5po', value: '500' },
           unit_price: {
-            denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-            numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+            denominator_unit_id: 'un_82bd37dae5po',
+            numerator_unit_id: 'un_82bd37dae5po',
             value: '12.50',
           },
           item_id: 'item_id',
@@ -56,7 +56,7 @@ describe('resource purchaseOrders', () => {
         },
       ],
       priority_code: 'normal',
-      supplier_account_id: 'ac_0177902104bccac5fbb173cd96',
+      supplier_account_id: 'ac_gwy8tfbc074f',
       include: ['supplier'],
       bill_to_country: 'bill_to_country',
       bill_to_locality: 'bill_to_locality',
@@ -67,12 +67,12 @@ describe('resource purchaseOrders', () => {
       bill_to_street_line_2: 'bill_to_street_line_2',
       carrier_billing_account: 'carrier_billing_account',
       carrier_billing_type: 'carrier_billing_type',
-      carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+      carrier_id: 'cr_tv5vfjtgu1n3',
       contact_account_user_ids: ['string'],
       note: 'Urgent restock order',
       payment_term_id: 'payment_term_id',
       promised_at: 'promised_at',
-      service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
+      service_level_id: 'crop_4ilk9p6gccrx',
       ship_to_country: 'US',
       ship_to_locality: 'San Francisco',
       ship_to_name: 'Acme Inc.',
@@ -85,7 +85,7 @@ describe('resource purchaseOrders', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.purchaseOrders.retrieve('po_0169aa3a722b081b117ac0e44f');
+    const responsePromise = client.operations.purchaseOrders.retrieve('po_3ov2ym1pca8m');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -99,7 +99,7 @@ describe('resource purchaseOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.purchaseOrders.retrieve(
-        'po_0169aa3a722b081b117ac0e44f',
+        'po_3ov2ym1pca8m',
         { include: ['supplier'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -107,7 +107,7 @@ describe('resource purchaseOrders', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.purchaseOrders.update('po_0169aa3a722b081b117ac0e44f');
+    const responsePromise = client.operations.purchaseOrders.update('po_3ov2ym1pca8m');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -121,7 +121,7 @@ describe('resource purchaseOrders', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.purchaseOrders.update(
-        'po_0169aa3a722b081b117ac0e44f',
+        'po_3ov2ym1pca8m',
         {
           include: ['supplier'],
           billing_address_id: 'billing_address_id',
@@ -169,7 +169,7 @@ describe('resource purchaseOrders', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.purchaseOrders.delete('po_0169aa3a722b081b117ac0e44f');
+    const responsePromise = client.operations.purchaseOrders.delete('po_3ov2ym1pca8m');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

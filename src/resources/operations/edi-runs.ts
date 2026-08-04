@@ -18,7 +18,7 @@ export class EdiRuns extends APIResource {
    * @example
    * ```ts
    * const ediRun = await client.operations.ediRuns.retrieve(
-   *   'edru_016aa43a99df34b744f6e2b878',
+   *   'edru_bpgd8fix7eeh',
    * );
    * ```
    */
@@ -28,6 +28,9 @@ export class EdiRuns extends APIResource {
 
   /**
    * Returns a paginated list of EDI runs for the target account.
+   *
+   * Runs are ordered by completion time, most recent first. The `q` search term
+   * matches the EDI run ID.
    *
    * This endpoint requires the permission: `edi_runs:read`.
    *
@@ -54,17 +57,17 @@ export interface EdiRun {
   id: string;
 
   /**
-   * Timestamp when the EDI run completed.
+   * Timestamp when the EDI run finished processing.
    */
   completed_at: string;
 
   /**
-   * Timestamp when the EDI run was created.
+   * Creation timestamp.
    */
   created_at: string;
 
   /**
-   * Whether the EDI run succeeded.
+   * Whether the run finished its EDI exchange without errors.
    */
   has_succeeded: boolean;
 
@@ -74,13 +77,14 @@ export interface EdiRun {
   object: 'edi_run';
 
   /**
-   * Timestamp when the EDI run was last updated.
+   * Last updated timestamp.
    */
   updated_at: string;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListEdiRun {
   /**
@@ -94,7 +98,13 @@ export interface ListEdiRun {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }

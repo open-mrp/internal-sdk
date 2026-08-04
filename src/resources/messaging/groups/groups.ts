@@ -19,6 +19,10 @@ export class Groups extends APIResource {
    * Creates a reusable roster of members (users and/or agents) that can seed many
    * conversations.
    *
+   * Every account user listed must exist; repeated ids are ignored. The caller is
+   * recorded as the creator but is not added to the roster automatically — include
+   * their own account user id to be a member.
+   *
    * This endpoint requires the permission: `messaging:create`.
    *
    * @example
@@ -26,12 +30,8 @@ export class Groups extends APIResource {
    * const messagingGroup = await client.messaging.groups.create(
    *   {
    *     name: 'Operations Team',
-   *     member_account_user_ids: [
-   *       'acus_01ea9983ddb41dacc44ecf997c',
-   *     ],
-   *     member_agent_config_ids: [
-   *       'agdf_01b9ef28feb99e6954201aca63',
-   *     ],
+   *     member_account_user_ids: ['acus_e5zu8bde0z3h'],
+   *     member_agent_config_ids: ['agdf_ah7tkyfxk8jl'],
    *   },
    * );
    * ```
@@ -41,7 +41,7 @@ export class Groups extends APIResource {
   }
 
   /**
-   * Retrieves a reusable roster (with its members).
+   * Retrieves a reusable roster together with its current members.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -49,7 +49,7 @@ export class Groups extends APIResource {
    * ```ts
    * const messagingGroup =
    *   await client.messaging.groups.retrieve(
-   *     'cvgp_018e88072d1320808dc97abc',
+   *     'cvgp_wjlypugna7s4',
    *   );
    * ```
    */
@@ -60,12 +60,15 @@ export class Groups extends APIResource {
   /**
    * Renames a reusable roster.
    *
+   * Members are managed through the add-member and remove-member endpoints, not
+   * here.
+   *
    * This endpoint requires the permission: `messaging:update`.
    *
    * @example
    * ```ts
    * const messagingGroup = await client.messaging.groups.update(
-   *   'cvgp_018e88072d1320808dc97abc',
+   *   'cvgp_wjlypugna7s4',
    *   { name: 'Operations Team' },
    * );
    * ```
@@ -79,8 +82,10 @@ export class Groups extends APIResource {
   }
 
   /**
-   * Lists the reusable rosters in the caller's account (most-recently-updated
-   * first).
+   * Lists the reusable rosters in the caller's account, each with its members.
+   *
+   * Rosters come back most-recently-updated first, and adding or removing a member
+   * counts as an update. The whole account's rosters are returned in one page.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -105,7 +110,7 @@ export class Groups extends APIResource {
    * @example
    * ```ts
    * const group = await client.messaging.groups.delete(
-   *   'cvgp_018e88072d1320808dc97abc',
+   *   'cvgp_wjlypugna7s4',
    * );
    * ```
    */
@@ -135,7 +140,8 @@ export interface CreateMessagingGroupRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListMessagingGroup {
   /**
@@ -149,7 +155,13 @@ export interface ListMessagingGroup {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }

@@ -54,10 +54,19 @@ export class ProductionSchedules extends APIResource {
   /**
    * Generates and saves a new production schedule.
    *
-   * The plan is saved as a draft: nothing is frozen and every line is editable until
-   * the version is published. Generating again creates a new version rather than
-   * replacing this one, because attainment is measured against whichever version was
-   * live at the time.
+   * The plan is saved as a draft: nothing is frozen yet, so campaigns can be added,
+   * changed and removed without having to give a reason. Generating again creates a
+   * new version rather than replacing this one, because attainment is measured
+   * against whichever version was live at the time.
+   *
+   * The solver plans the constraint department — the room that sets the pace of the
+   * factory — so production schedule settings must name one and it must have
+   * machines that are included in planning. Without that there is nothing to
+   * schedule and the request is rejected rather than returning an empty plan.
+   *
+   * Alongside the campaigns, the version stores the assumptions it was solved with,
+   * the per-item policies behind each campaign, and the downstream department work
+   * implied by the plan.
    *
    * This endpoint requires the permission: `production_schedules:create`.
    *
@@ -85,7 +94,7 @@ export class ProductionSchedules extends APIResource {
    * ```ts
    * const productionSchedule =
    *   await client.operations.productionSchedules.retrieve(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *   );
    * ```
    */
@@ -112,7 +121,8 @@ export class ProductionSchedules extends APIResource {
   }
 
   /**
-   * Deletes a draft schedule and everything derived from it.
+   * Deletes a draft schedule along with its planned campaigns and its item policy
+   * snapshot.
    *
    * Only drafts can be deleted. A published version is the baseline attainment is
    * measured against, so removing it would erase the record of what was promised —
@@ -124,7 +134,7 @@ export class ProductionSchedules extends APIResource {
    * ```ts
    * const productionSchedule =
    *   await client.operations.productionSchedules.delete(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *   );
    * ```
    */
@@ -136,7 +146,12 @@ export class ProductionSchedules extends APIResource {
    * Returns the published schedule covering today.
    *
    * Responds 404 when no published version covers today, which is the normal state
-   * before the first schedule is published.
+   * before the first schedule is published. Drafts are never returned here — a plan
+   * nobody has committed to is not the current plan.
+   *
+   * At most one version is ever current: publishing a new one supersedes every
+   * published version its horizon overlaps, so republishing mid-horizon takes over
+   * immediately.
    *
    * This endpoint requires the permission: `production_schedules:read`.
    *
@@ -168,7 +183,7 @@ export class ProductionSchedules extends APIResource {
    * ```ts
    * const listProductionScheduleDerivedLine =
    *   await client.operations.productionSchedules.retrieveDerivedLines(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *   );
    * ```
    */
@@ -197,7 +212,7 @@ export class ProductionSchedules extends APIResource {
    * ```ts
    * const listProductionScheduleDeviation =
    *   await client.operations.productionSchedules.retrieveDeviations(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *   );
    * ```
    */
@@ -232,7 +247,7 @@ export class ProductionSchedules extends APIResource {
    * ```ts
    * const listProductionScheduleFinishedPolicy =
    *   await client.operations.productionSchedules.retrieveFinishedPolicies(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *   );
    * ```
    */
@@ -256,7 +271,7 @@ export class ProductionSchedules extends APIResource {
    * ```ts
    * const listProductionScheduleItemPolicy =
    *   await client.operations.productionSchedules.retrieveItemPolicies(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *   );
    * ```
    */
@@ -274,13 +289,17 @@ export class ProductionSchedules extends APIResource {
    * `blocked_reason` saying which; `existing_production_run_id` names the run a
    * released week is already tied to.
    *
+   * Cancelled campaigns and campaigns planned at zero are excluded here exactly as
+   * the release excludes them, so a week holding nothing but those previews as
+   * empty.
+   *
    * This endpoint requires the permission: `production_schedules:read`.
    *
    * @example
    * ```ts
    * const releaseScheduleWeekPreview =
    *   await client.operations.productionSchedules.retrieveWeekReleasePreview(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *   );
    * ```
    */
@@ -301,28 +320,43 @@ export class ProductionSchedules extends APIResource {
  */
 export interface GenerateProductionScheduleRequest {
   /**
-   * Overrides the configured demand basis for this version only.
+   * How future demand is derived, overriding the account's configured basis for this
+   * version only.
+   *
+   * - `trailing_12`: demand is the trailing twelve months of orders.
+   * - `seasonal_ema`: demand is a seasonal exponential moving average, which follows
+   *   a season arriving early or late rather than flattening it.
    */
   demand_basis?: 'trailing_12' | 'seasonal_ema';
 
   /**
-   * Overrides the configured horizon for this version only.
+   * Number of weeks the plan should cover, overriding the account's configured
+   * horizon for this version only.
    */
   horizon_weeks?: number;
 
   /**
-   * Label for the version.
+   * Human-readable label for the version, such as the week it was cut for.
+   *
+   * Purely for recognising the version in a list; versions are numbered
+   * automatically and the number is what identifies them.
    */
   name?: string;
 
   /**
-   * The instant to plan against. Defaults to now.
+   * The instant to plan against, which is what stock, demand history and active
+   * demand overrides are read as of.
+   *
+   * Left unset, the plan is solved against the moment the request arrives. The
+   * horizon starts on the account's configured week-start day on or before this
+   * instant, so backdating this shifts the whole week grid.
    */
   planning_as_of?: string;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductionSchedule {
   /**
@@ -336,13 +370,20 @@ export interface ListProductionSchedule {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductionScheduleDerivedLine {
   /**
@@ -356,13 +397,20 @@ export interface ListProductionScheduleDerivedLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductionScheduleDeviation {
   /**
@@ -376,13 +424,20 @@ export interface ListProductionScheduleDeviation {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductionScheduleFinishedPolicy {
   /**
@@ -396,13 +451,20 @@ export interface ListProductionScheduleFinishedPolicy {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductionScheduleItemPolicy {
   /**
@@ -416,13 +478,20 @@ export interface ListProductionScheduleItemPolicy {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListReleaseScheduleBatch {
   /**
@@ -436,13 +505,20 @@ export interface ListReleaseScheduleBatch {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListReleasedScheduleLine {
   /**
@@ -456,13 +532,20 @@ export interface ListReleasedScheduleLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListScheduleAppliedOverride {
   /**
@@ -476,7 +559,13 @@ export interface ListScheduleAppliedOverride {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -484,9 +573,10 @@ export interface ListScheduleAppliedOverride {
 /**
  * A saved production schedule.
  *
- * Versions are immutable history: generating again creates a new version, and
- * publishing supersedes the previous one rather than editing it, because
- * attainment is measured against whichever version was live at the time.
+ * A published version is a record rather than a document that keeps being edited:
+ * generating again creates a new version, and publishing supersedes the previous
+ * one rather than changing it, because attainment is measured against whichever
+ * version was live at the time.
  */
 export interface ProductionSchedule {
   /**
@@ -501,6 +591,10 @@ export interface ProductionSchedule {
 
   /**
    * Which demand basis produced the plan.
+   *
+   * - `trailing_12`: demand is taken from the trailing twelve months of orders.
+   * - `seasonal_ema`: demand is a seasonal exponential moving average, which follows
+   *   a season arriving earlier or later than usual.
    */
   demand_basis: 'trailing_12' | 'seasonal_ema';
 
@@ -515,8 +609,10 @@ export interface ProductionSchedule {
   error_message: string | null;
 
   /**
-   * Number of lines that were frozen at publish. Captured once and never recomputed,
-   * because frozen-week adherence measures against what was committed to.
+   * Number of lines that were frozen at publish.
+   *
+   * Captured once and never recomputed, because frozen-week adherence measures
+   * against what was committed to.
    */
   frozen_line_count: number;
 
@@ -526,12 +622,15 @@ export interface ProductionSchedule {
   frozen_planned_quantity: number;
 
   /**
-   * Last instant covered by the frozen window, set when the version is published.
+   * The last day the frozen window covers, set when the version is published.
    */
   frozen_through_at: string | null;
 
   /**
    * How many leading weeks freeze on publish.
+   *
+   * Publishing freezes every campaign that starts inside the window; changing one
+   * afterwards requires a reason and is recorded in the deviation log.
    */
   frozen_weeks: number;
 
@@ -543,6 +642,9 @@ export interface ProductionSchedule {
 
   /**
    * What triggered the generation.
+   *
+   * - `manual`: someone asked for this version.
+   * - `scheduled`: the account's generation cadence produced it on its own.
    */
   generation_source: 'manual' | 'scheduled';
 
@@ -562,7 +664,7 @@ export interface ProductionSchedule {
   horizon_weeks: number;
 
   /**
-   * Optional label for the version.
+   * Label for the version, such as the planning cycle it was generated for.
    */
   name: string | null;
 
@@ -600,6 +702,13 @@ export interface ProductionSchedule {
 
   /**
    * Where this version is in its lifecycle.
+   *
+   * - `draft`: still editable and commits to nothing.
+   * - `generating`: a scheduled solve is still building this version.
+   * - `published`: live, with its leading weeks frozen as a commitment to the floor.
+   * - `superseded`: a later version was published over an overlapping horizon.
+   * - `archived`: retired without being replaced.
+   * - `failed`: the solver could not produce a plan; `error_message` says why.
    */
   status: 'draft' | 'generating' | 'published' | 'superseded' | 'archived' | 'failed';
 
@@ -615,6 +724,9 @@ export interface ProductionSchedule {
 
   /**
    * Sequential version number within the account.
+   *
+   * Regenerating a draft re-solves it in place and keeps its number; only generating
+   * a new plan takes the next one.
    */
   version: number;
 }
@@ -693,7 +805,11 @@ export interface ProductionScheduleDerivedLine {
   source_line: CoreAPI.Entity | null;
 
   /**
-   * Progress of the derived work.
+   * State of the derived work.
+   *
+   * Derived rows are discarded and rebuilt from the constraint plan every time the
+   * version is solved, and are only ever written as `planned`, so they report what
+   * the plan implies rather than what the floor has done.
    */
   status: 'planned' | 'released' | 'in_progress' | 'complete' | 'cancelled';
 
@@ -721,7 +837,7 @@ export interface ProductionScheduleDerivedLine {
  * the first time. `before` and `after` are full snapshots of the line, so a
  * deviation stays readable after the line it describes is deleted.
  *
- * `is_frozen_week` is recorded when the change is made, from the freeze window as
+ * `freeze_status` is recorded when the change is made, from the freeze window as
  * it stood at that moment. It is never re-derived, so a later publish cannot
  * retroactively reclassify a past edit.
  */
@@ -764,6 +880,11 @@ export interface ProductionScheduleDeviation {
 
   /**
    * What kind of change this was.
+   *
+   * Derived from the change itself rather than supplied by the person making it. An
+   * edit that both moves a campaign to another machine and changes its quantity is
+   * recorded as the machine change, because that is what a planner has to react to
+   * first.
    */
   deviation_type:
     | 'line_added'
@@ -804,7 +925,21 @@ export interface ProductionScheduleDeviation {
   production_schedule: CoreAPI.Entity | null;
 
   /**
-   * Why the change was made. Required for changes inside a frozen week.
+   * Why the change was made.
+   *
+   * A change inside a frozen week has to supply one; outside it a reason is left to
+   * the planner.
+   *
+   * - `machine_down`: the machine the campaign was on stopped running.
+   * - `material_shortage`: the material the campaign needs did not arrive.
+   * - `rush_order`: demand that could not wait for the next plan.
+   * - `quality_hold`: the work was stopped over a quality problem.
+   * - `over_run`: the floor produced more than the plan asked for.
+   * - `under_run`: the floor produced less than the plan asked for.
+   * - `capacity_change`: the available machine time changed, such as a shutdown or
+   *   an added shift.
+   * - `other`: something outside the list, which should be spelled out in
+   *   `reason_note`.
    */
   reason:
     | 'machine_down'
@@ -903,8 +1038,10 @@ export interface ProductionScheduleFinishedPolicy {
   safety_stock: number;
 
   /**
-   * This SKU's own weekly demand variability. The constraint buffer pools these as
-   * the root of the sum of squares; these targets use them one at a time.
+   * This SKU's own weekly demand variability.
+   *
+   * The constraint buffer pools these as the root of the sum of squares; these
+   * targets use them one at a time.
    */
   sigma_weekly: number;
 
@@ -943,6 +1080,10 @@ export interface ProductionScheduleItemPolicy {
 
   /**
    * ABC class by share of constraint run hours.
+   *
+   * - `a`: consumes the largest share of constraint capacity.
+   * - `b`: moderate constraint consumption.
+   * - `c`: consumes little constraint capacity.
    */
   abc_class: 'a' | 'b' | 'c' | null;
 
@@ -968,8 +1109,14 @@ export interface ProductionScheduleItemPolicy {
   constraint_lead_time_weeks: number;
 
   /**
-   * Limits the solver hit while sizing this item's campaigns. Empty when the policy
+   * Limits the solver hit while sizing this item's campaigns, empty when the policy
    * was applied as calculated.
+   *
+   * - `eoq_capped`: the economic lot size did not fit one machine-week and was cut
+   *   back to what does, so campaigns run shorter and more often than the cost
+   *   calculation alone would ask for.
+   * - `capacity_starved`: the item was already below its trigger point and never won
+   *   a slot in the horizon, so the plan does not replenish it.
    */
   constraints: Array<'eoq_capped' | 'capacity_starved'>;
 
@@ -979,7 +1126,8 @@ export interface ProductionScheduleItemPolicy {
   created_at: string;
 
   /**
-   * Economic order quantity.
+   * Economic order quantity: the campaign size that balances the cost of a
+   * changeover against the cost of holding what it produces.
    */
   eoq_units: number;
 
@@ -1009,15 +1157,18 @@ export interface ProductionScheduleItemPolicy {
   object: 'production_schedule_item_policy';
 
   /**
-   * Stock at the constraint plus everything downstream of it. This is what the build
-   * decision is made against — stock already finished still counts against building
-   * more.
+   * Stock at the constraint plus everything downstream of it.
+   *
+   * This is what the build decision is made against — stock already finished still
+   * counts against building more.
    */
   on_hand_echelon: number;
 
   /**
-   * Stock sitting at the constraint stage on its own, which the echelon figure
-   * cannot be decomposed back into once summed.
+   * Stock sitting at the constraint stage on its own.
+   *
+   * Kept alongside the echelon total because that total cannot be decomposed back
+   * into its stages once summed.
    */
   on_hand_greige: number;
 
@@ -1043,9 +1194,10 @@ export interface ProductionScheduleItemPolicy {
 
   /**
    * The echelon position at the end of each horizon week, after that week's
-   * campaigns land and its demand is drawn down. A run of weeks with no campaign is
-   * stock draining toward `reorder_point`; this is what makes that visible rather
-   * than looking like the solver did nothing.
+   * campaigns land and its demand is drawn down.
+   *
+   * A run of weeks with no campaign is stock draining toward `reorder_point`; this
+   * is what makes that visible rather than looking like the solver did nothing.
    */
   projected_on_hand: Array<number>;
 
@@ -1140,8 +1292,10 @@ export interface ReleaseScheduleBatch {
   item: CoreAPI.Entity | null;
 
   /**
-   * Units in this lot. The last lot of a campaign is short when the planned quantity
-   * is not a whole number of lots.
+   * Units in this lot.
+   *
+   * The last lot of a campaign is short when the planned quantity is not a whole
+   * number of lots.
    */
   quantity: number;
 
@@ -1165,7 +1319,10 @@ export interface ReleaseScheduleWeekPreview {
   batch_count: number;
 
   /**
-   * Why the week cannot be released.
+   * Why the week cannot be released, phrased for display.
+   *
+   * A week is blocked when it has already been released to the floor, or when it
+   * holds nothing to release.
    */
   blocked_reason: string | null;
 
@@ -1185,7 +1342,8 @@ export interface ReleaseScheduleWeekPreview {
   line_count: number;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lines: ListReleasedScheduleLine | null;
 
@@ -1220,7 +1378,8 @@ export interface ReleasedScheduleLine {
   batch_count: number;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   batches: ListReleaseScheduleBatch | null;
 
@@ -1269,6 +1428,10 @@ export interface ReleasedScheduleLine {
 export interface ScheduleAppliedOverride {
   /**
    * How the override was expressed.
+   *
+   * - `absolute`: the override replaced the forecast for the month outright.
+   * - `delta_units`: the override was added to the forecast.
+   * - `delta_percent`: the override scaled the forecast.
    */
   adjustment: 'absolute' | 'delta_units' | 'delta_percent';
 
@@ -1317,7 +1480,8 @@ export interface ScheduleAppliedOverride {
  */
 export interface ScheduleDiagnostics {
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   applied_overrides: ListScheduleAppliedOverride | null;
 
@@ -1327,13 +1491,19 @@ export interface ScheduleDiagnostics {
   average_inputs_added: number;
 
   /**
-   * Items below their reorder point that never won a slot in the horizon. This is
-   * the signal that the plant is short of capacity.
+   * Items below their reorder point that never won a slot in the horizon.
+   *
+   * This is the signal that the plant is short of capacity.
    */
   capacity_starved_skus: Array<string>;
 
   /**
-   * Calibrated changeover minutes per additional input.
+   * Minutes of changeover the model adds for each new input a product transition
+   * introduces.
+   *
+   * Calibrated from measured production against `average_inputs_added`, so the
+   * modelled changeover lands on the time the floor actually reports rather than on
+   * a fixed allowance.
    */
   changeover_slope_minutes: number;
 
@@ -1360,15 +1530,17 @@ export interface ScheduleDiagnostics {
   items_without_run_rate: Array<string>;
 
   /**
-   * Machines in the constraint department with no production step. Their campaigns
-   * derive no downstream department work.
+   * Machines in the constraint department with no production step.
+   *
+   * Their campaigns derive no downstream department work.
    */
   machines_without_step: number;
 
   /**
-   * Batches found on those machines in the demand window. Zero means nothing has
-   * been scanned there, which is why a plan can be empty even with machines
-   * configured.
+   * Batches found on those machines in the demand window.
+   *
+   * Zero means nothing has been scanned there, which is why a plan can be empty even
+   * with machines configured.
    */
   measured_batch_count: number;
 
@@ -1383,22 +1555,36 @@ export interface ProductionScheduleDeleteResponse {}
 
 export interface ProductionScheduleCreateParams {
   /**
-   * Overrides the configured demand basis for this version only.
+   * How future demand is derived, overriding the account's configured basis for this
+   * version only.
+   *
+   * - `trailing_12`: demand is the trailing twelve months of orders.
+   * - `seasonal_ema`: demand is a seasonal exponential moving average, which follows
+   *   a season arriving early or late rather than flattening it.
    */
   demand_basis?: 'trailing_12' | 'seasonal_ema';
 
   /**
-   * Overrides the configured horizon for this version only.
+   * Number of weeks the plan should cover, overriding the account's configured
+   * horizon for this version only.
    */
   horizon_weeks?: number;
 
   /**
-   * Label for the version.
+   * Human-readable label for the version, such as the week it was cut for.
+   *
+   * Purely for recognising the version in a list; versions are numbered
+   * automatically and the number is what identifies them.
    */
   name?: string;
 
   /**
-   * The instant to plan against. Defaults to now.
+   * The instant to plan against, which is what stock, demand history and active
+   * demand overrides are read as of.
+   *
+   * Left unset, the plan is solved against the moment the request arrives. The
+   * horizon starts on the account's configured week-start day on or before this
+   * instant, so backdating this shifts the whole week grid.
    */
   planning_as_of?: string;
 }
@@ -1427,6 +1613,14 @@ export interface ProductionScheduleListParams {
 
   /**
    * Only return versions in these lifecycle states.
+   *
+   * - `draft`: still editable and committed to nothing.
+   * - `generating`: the solver is still building the version.
+   * - `published`: live, with its first weeks frozen as a commitment to the floor.
+   * - `superseded`: a later version was published over the same horizon and replaced
+   *   this one.
+   * - `archived`: retired without being replaced.
+   * - `failed`: the solver could not produce a plan.
    */
   statuses?: Array<'draft' | 'generating' | 'published' | 'superseded' | 'archived' | 'failed'>;
 }
@@ -1454,7 +1648,10 @@ export interface ProductionScheduleRetrieveDeviationsParams {
   cursor?: string;
 
   /**
-   * Only return changes that fell inside the frozen window.
+   * Whether the change fell inside the frozen window.
+   *
+   * Judged against the freeze as it stood when the change was made, not as it stands
+   * now, so a later publish cannot reclassify history.
    */
   frozen?: boolean;
 

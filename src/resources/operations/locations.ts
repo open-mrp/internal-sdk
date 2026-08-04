@@ -20,8 +20,8 @@ export class Locations extends APIResource {
    * const location = await client.operations.locations.create({
    *   name: 'Warehouse A',
    *   type: 'building',
-   *   child_ids: ['lc_014d187d99b31926f0c74af9d8'],
-   *   parent_id: 'lc_014d187d99b31926f0c74af9d8',
+   *   child_ids: ['lc_yonnys0hx3ju'],
+   *   parent_id: 'lc_yonnys0hx3ju',
    * });
    * ```
    */
@@ -38,7 +38,7 @@ export class Locations extends APIResource {
    * @example
    * ```ts
    * const location = await client.operations.locations.retrieve(
-   *   'lc_014d187d99b31926f0c74af9d8',
+   *   'lc_yonnys0hx3ju',
    * );
    * ```
    */
@@ -58,11 +58,11 @@ export class Locations extends APIResource {
    * @example
    * ```ts
    * const location = await client.operations.locations.update(
-   *   'lc_014d187d99b31926f0c74af9d8',
+   *   'lc_yonnys0hx3ju',
    *   {
-   *     child_ids: ['lc_014d187d99b31926f0c74af9d8'],
+   *     child_ids: ['lc_yonnys0hx3ju'],
    *     name: 'Warehouse B',
-   *     parent_id: 'lc_014d187d99b31926f0c74af9d8',
+   *     parent_id: 'lc_yonnys0hx3ju',
    *     type: 'section',
    *   },
    * );
@@ -78,7 +78,11 @@ export class Locations extends APIResource {
   }
 
   /**
-   * Returns a paginated list of locations in your account.
+   * Returns a paginated list of locations in your account, newest first.
+   *
+   * Every location is returned regardless of its depth in the hierarchy, so
+   * top-level locations and their descendants appear side by side. The `q` search
+   * term matches on location name.
    *
    * This endpoint requires the permission: `locations:read`.
    *
@@ -106,7 +110,7 @@ export class Locations extends APIResource {
    * @example
    * ```ts
    * const location = await client.operations.locations.delete(
-   *   'lc_014d187d99b31926f0c74af9d8',
+   *   'lc_yonnys0hx3ju',
    * );
    * ```
    */
@@ -127,28 +131,27 @@ export interface CreateLocationRequest {
   name: string;
 
   /**
-   * Location type code, identifying this location's level in the storage hierarchy.
+   * This location's level in the storage hierarchy.
    *
-   * - `building`: a building-level location.
-   * - `section`: a section within a building.
-   * - `aisle`: an aisle within a section.
-   * - `rack`: a rack within an aisle.
-   * - `shelf`: a shelf within a rack.
-   * - `bin`: a bin within a shelf.
+   * The levels run from largest to smallest: `building`, `section`, `aisle`, `rack`,
+   * `shelf`, `bin`. They are descriptive labels rather than a rule — the parent you
+   * choose is not required to be the next level up.
    */
   type: AccountUsersAPI.LocationTypeCode;
 
   /**
-   * IDs of existing locations to attach as children of the new location.
+   * Existing locations to attach beneath the new location.
    *
-   * Listed locations are moved from their current parent, if any.
+   * Each listed location is reparented onto the new location, detaching it from its
+   * current parent. Every ID must belong to your account.
    */
   child_ids?: Array<string>;
 
   /**
-   * ID of the parent location.
+   * The location this one sits under in the storage hierarchy.
    *
-   * Omit for top-level locations.
+   * Must be an existing location in your account. Omit to create a top-level
+   * location.
    */
   parent_id?: string;
 }
@@ -158,11 +161,12 @@ export interface CreateLocationRequest {
  */
 export interface UpdateLocationRequest {
   /**
-   * IDs of locations to set as this location's children.
+   * The locations that sit directly beneath this one.
    *
-   * When provided, replaces the full set of children: current children not listed
-   * are detached, and listed locations are moved from their current parent. Send
-   * `null` to detach all children.
+   * This replaces the full set of children: current children that are not listed are
+   * detached and become top-level locations, and listed locations are reparented
+   * onto this location. Send `null` to detach every child. Omit the field to leave
+   * the existing children untouched.
    */
   child_ids?: Array<string> | null;
 
@@ -174,21 +178,20 @@ export interface UpdateLocationRequest {
   name?: string;
 
   /**
-   * ID of the parent location.
+   * The location this one sits under in the storage hierarchy.
    *
-   * Send `null` to clear the parent and make this a top-level location.
+   * Must be an existing location in your account, and cannot be the location being
+   * updated. Send `null` to detach it from its parent and make it a top-level
+   * location.
    */
   parent_id?: string | null;
 
   /**
-   * Location type code, identifying this location's level in the storage hierarchy.
+   * This location's level in the storage hierarchy.
    *
-   * - `building`: a building-level location.
-   * - `section`: a section within a building.
-   * - `aisle`: an aisle within a section.
-   * - `rack`: a rack within an aisle.
-   * - `shelf`: a shelf within a rack.
-   * - `bin`: a bin within a shelf.
+   * The levels run from largest to smallest: `building`, `section`, `aisle`, `rack`,
+   * `shelf`, `bin`. They are descriptive labels rather than a rule — the parent is
+   * not required to be the next level up.
    */
   type?: AccountUsersAPI.LocationTypeCode;
 }
@@ -204,15 +207,11 @@ export interface LocationCreateParams {
   name: string;
 
   /**
-   * Body param: Location type code, identifying this location's level in the storage
-   * hierarchy.
+   * Body param: This location's level in the storage hierarchy.
    *
-   * - `building`: a building-level location.
-   * - `section`: a section within a building.
-   * - `aisle`: an aisle within a section.
-   * - `rack`: a rack within an aisle.
-   * - `shelf`: a shelf within a rack.
-   * - `bin`: a bin within a shelf.
+   * The levels run from largest to smallest: `building`, `section`, `aisle`, `rack`,
+   * `shelf`, `bin`. They are descriptive labels rather than a rule — the parent you
+   * choose is not required to be the next level up.
    */
   type: AccountUsersAPI.LocationTypeCode;
 
@@ -223,16 +222,18 @@ export interface LocationCreateParams {
   include?: Array<'parent' | 'children'>;
 
   /**
-   * Body param: IDs of existing locations to attach as children of the new location.
+   * Body param: Existing locations to attach beneath the new location.
    *
-   * Listed locations are moved from their current parent, if any.
+   * Each listed location is reparented onto the new location, detaching it from its
+   * current parent. Every ID must belong to your account.
    */
   child_ids?: Array<string>;
 
   /**
-   * Body param: ID of the parent location.
+   * Body param: The location this one sits under in the storage hierarchy.
    *
-   * Omit for top-level locations.
+   * Must be an existing location in your account. Omit to create a top-level
+   * location.
    */
   parent_id?: string;
 }
@@ -253,11 +254,12 @@ export interface LocationUpdateParams {
   include?: Array<'parent' | 'children'>;
 
   /**
-   * Body param: IDs of locations to set as this location's children.
+   * Body param: The locations that sit directly beneath this one.
    *
-   * When provided, replaces the full set of children: current children not listed
-   * are detached, and listed locations are moved from their current parent. Send
-   * `null` to detach all children.
+   * This replaces the full set of children: current children that are not listed are
+   * detached and become top-level locations, and listed locations are reparented
+   * onto this location. Send `null` to detach every child. Omit the field to leave
+   * the existing children untouched.
    */
   child_ids?: Array<string> | null;
 
@@ -269,22 +271,20 @@ export interface LocationUpdateParams {
   name?: string;
 
   /**
-   * Body param: ID of the parent location.
+   * Body param: The location this one sits under in the storage hierarchy.
    *
-   * Send `null` to clear the parent and make this a top-level location.
+   * Must be an existing location in your account, and cannot be the location being
+   * updated. Send `null` to detach it from its parent and make it a top-level
+   * location.
    */
   parent_id?: string | null;
 
   /**
-   * Body param: Location type code, identifying this location's level in the storage
-   * hierarchy.
+   * Body param: This location's level in the storage hierarchy.
    *
-   * - `building`: a building-level location.
-   * - `section`: a section within a building.
-   * - `aisle`: an aisle within a section.
-   * - `rack`: a rack within an aisle.
-   * - `shelf`: a shelf within a rack.
-   * - `bin`: a bin within a shelf.
+   * The levels run from largest to smallest: `building`, `section`, `aisle`, `rack`,
+   * `shelf`, `bin`. They are descriptive labels rather than a rule — the parent is
+   * not required to be the next level up.
    */
   type?: AccountUsersAPI.LocationTypeCode;
 }

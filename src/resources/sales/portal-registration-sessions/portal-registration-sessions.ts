@@ -15,12 +15,15 @@ export class PortalRegistrationSessions extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Starts a new customer-portal registration session for the authenticated buyer,
-   * or resumes the buyer's existing in-progress session for the same seller.
+   * Starts a customer-portal registration for the authenticated buyer, or resumes
+   * the one they already have with this seller.
    *
-   * Registering into a seller's portal is a multi-step flow; the session tracks
-   * progress so a half-finished registration can be resumed instead of leaving the
-   * buyer stuck.
+   * Registering into a seller's portal is a multi-step flow, and the session carries
+   * the progress so a half-finished registration is never lost. If the buyer has an
+   * unfinished session with this seller that is still inside its seven-day resume
+   * window, that session comes back with its saved step and form data; otherwise a
+   * new one starts at the `customer_details` step. Completed, abandoned, and expired
+   * sessions are never resumed.
    *
    * @example
    * ```ts
@@ -38,14 +41,18 @@ export class PortalRegistrationSessions extends APIResource {
   }
 
   /**
-   * Returns the authenticated buyer's portal registration session, so the wizard can
-   * restore its saved step and form data. Expired or unknown sessions return a 404.
+   * Returns a portal registration session with its saved step and form data, so a
+   * partially-completed registration can be restored.
+   *
+   * Only the buyer who started the session can read it. A session that was never
+   * finished and has passed its seven-day resume window reads as not found, as does
+   * an unknown ID.
    *
    * @example
    * ```ts
    * const portalRegistrationSession =
    *   await client.sales.portalRegistrationSessions.retrieve(
-   *     'porgse_017513382536fd23a343e958ef',
+   *     'porgse_q1hs0mapqh6x',
    *   );
    * ```
    */
@@ -54,15 +61,18 @@ export class PortalRegistrationSessions extends APIResource {
   }
 
   /**
-   * Advances the buyer's registration session to the given step and saves the
-   * accumulated form data. Steps are forward-only; a completed or abandoned session
-   * cannot be updated.
+   * Advances the buyer's registration session and saves the data entered so far.
+   *
+   * Each update writes the session's step, form data, and existing-customer choice
+   * as sent, so send the full picture every time rather than just the newly-entered
+   * fields. Steps only move forward, and a session that has already been completed
+   * or abandoned can no longer be updated.
    *
    * @example
    * ```ts
    * const portalRegistrationSession =
    *   await client.sales.portalRegistrationSessions.update(
-   *     'porgse_017513382536fd23a343e958ef',
+   *     'porgse_q1hs0mapqh6x',
    *     { step: 'customer_details' },
    *   );
    * ```
@@ -76,10 +86,13 @@ export class PortalRegistrationSessions extends APIResource {
   }
 
   /**
-   * Returns the account's buyer customer-portal registration sessions, newest first,
-   * so customer service can follow up on registrations that stalled or expired
-   * before completing. Includes in-progress, completed, abandoned, and expired
-   * sessions; filter with `status`.
+   * Returns the account's buyer registrations into its customer portal, newest
+   * first.
+   *
+   * Registrations in every state are returned — in progress, completed, abandoned,
+   * and expired — so customer service can follow up on the ones that stalled before
+   * completing; narrow them with `status`. The search term matches the session ID
+   * and the customer name or number the buyer entered.
    *
    * This endpoint requires the permission: `self:read`.
    *
@@ -102,13 +115,14 @@ export class PortalRegistrationSessions extends APIResource {
  */
 export interface CreateOrResumePortalRegistrationSessionRequest {
   /**
-   * The seller's portal slug to register into.
+   * The portal slug of the seller the buyer is registering with.
    */
   seller_slug: string;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPortalRegistrationSession {
   /**
@@ -122,16 +136,24 @@ export interface ListPortalRegistrationSession {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * PortalRegistrationSession is a buyer's session-based registration into a
- * seller's customer portal. The buyer creates or resumes a session, advances it
- * step by step, and completes it — so a half-finished registration can be resumed
- * rather than leaving the buyer stuck.
+ * A buyer's registration into a seller's customer portal.
+ *
+ * The buyer starts a session, advances it step by step, and completes it — so a
+ * half-finished registration can be resumed rather than leaving the buyer stuck.
+ * Sellers use the same record to see which registrations stalled before
+ * completing.
  */
 export interface PortalRegistrationSession {
   /**
@@ -140,12 +162,12 @@ export interface PortalRegistrationSession {
   id: string;
 
   /**
-   * When the session was abandoned, or null.
+   * When the buyer abandoned the session.
    */
   abandoned_at: string | null;
 
   /**
-   * When the registration completed, or null while in progress.
+   * When the buyer completed the registration.
    */
   completed_at: string | null;
 
@@ -155,12 +177,17 @@ export interface PortalRegistrationSession {
   created_at: string;
 
   /**
-   * The customer account created/linked on completion.
+   * The customer the registration created or joined.
    */
   customer_id: string | null;
 
   /**
-   * Whether the buyer is linking an existing customer record vs. creating a new one.
+   * Whether the buyer is joining a customer the seller already has, rather than
+   * creating a new one.
+   *
+   * When true, completing the registration links the buyer to the seller's existing
+   * customer identified by `customer_number`; otherwise it creates a new customer
+   * from the rest of the session data.
    */
   is_existing_customer: boolean | null;
 
@@ -170,29 +197,42 @@ export interface PortalRegistrationSession {
   object: 'portal_registration_session';
 
   /**
-   * The seller account this registration is for.
+   * The seller account whose portal the buyer is registering into.
    */
   seller_account_id: string;
 
   /**
-   * The seller's portal slug.
+   * The portal slug the registration was started from.
    */
   seller_slug: string;
 
   /**
-   * PortalRegistrationSessionData is the scratch form data accumulated across a
-   * buyer's registration steps, echoed back so a resumed session restores the form.
+   * The form data a buyer has entered so far in a customer-portal registration.
+   *
+   * It is saved on the session as the buyer advances and echoed back on every read,
+   * so a resumed registration can restore the form exactly where the buyer left off.
+   * The values are used to create or link the customer when the registration is
+   * completed.
    */
   session_data: PortalRegistrationSessionData | null;
 
   /**
-   * Derived lifecycle status, so customer service can spot registrations that
-   * stalled.
+   * Where the registration stands, derived from its completion and abandonment
+   * timestamps and the seven-day resume window.
+   *
+   * - `in_progress`: still incomplete and inside the resume window.
+   * - `completed`: the buyer finished registering.
+   * - `abandoned`: the buyer explicitly gave the session up.
+   * - `expired`: still incomplete, but past the resume window, so the buyer can no
+   *   longer pick it back up.
    */
   status: 'in_progress' | 'completed' | 'abandoned' | 'expired';
 
   /**
-   * The current registration step.
+   * The step the buyer has reached.
+   *
+   * Steps run `customer_details` → `billing_address` → `contact` → `completed`, and
+   * only ever move forward.
    */
   step: 'customer_details' | 'billing_address' | 'contact' | 'completed';
 
@@ -202,14 +242,20 @@ export interface PortalRegistrationSession {
   updated_at: string;
 
   /**
-   * The user who registered.
+   * The buyer this session belongs to.
+   *
+   * Only this user can retrieve, update, complete, or abandon the session.
    */
   user_id: string;
 }
 
 /**
- * PortalRegistrationSessionData is the scratch form data accumulated across a
- * buyer's registration steps, echoed back so a resumed session restores the form.
+ * The form data a buyer has entered so far in a customer-portal registration.
+ *
+ * It is saved on the session as the buyer advances and echoed back on every read,
+ * so a resumed registration can restore the form exactly where the buyer left off.
+ * The values are used to create or link the customer when the registration is
+ * completed.
  */
 export interface PortalRegistrationSessionData {
   /**
@@ -253,12 +299,19 @@ export interface PortalRegistrationSessionData {
   customer_group_id: string;
 
   /**
-   * The customer's name.
+   * The name the buyer entered for the customer.
+   *
+   * Only used when the registration creates a new customer; joining an existing
+   * customer keeps that customer's own name.
    */
   customer_name: string;
 
   /**
-   * An existing customer number to link.
+   * The seller-assigned customer number the buyer is claiming.
+   *
+   * Only used when the buyer is joining an existing customer, where it must match a
+   * customer already on the seller's books. New customers are assigned a number
+   * automatically when the registration completes.
    */
   customer_number: string;
 
@@ -284,8 +337,11 @@ export interface PortalRegistrationSessionData {
 }
 
 /**
- * PortalRegistrationSessionDataInput is the scratch form data saved on a
- * registration session as the buyer advances.
+ * The form data to save on a registration session as the buyer advances.
+ *
+ * These values are what the registration is completed from, so send everything
+ * collected so far on each update — the stored data is replaced outright rather
+ * than merged.
  */
 export interface PortalRegistrationSessionDataInput {
   address_country: string;
@@ -316,47 +372,73 @@ export interface PortalRegistrationSessionDataInput {
 }
 
 /**
- * Request to advance a portal registration session to the next step.
+ * Request to save a buyer's progress on a portal registration session.
  */
 export interface UpdatePortalRegistrationSessionRequest {
   /**
-   * The step to advance to. Steps are forward-only.
+   * The step the buyer has reached.
+   *
+   * Steps only move forward: sending an earlier step than the session has already
+   * reached is rejected, while re-sending the current step saves data without
+   * advancing.
    */
   step: 'customer_details' | 'billing_address' | 'contact' | 'completed';
 
   /**
-   * Whether the buyer is linking an existing customer vs. creating a new one.
+   * Whether the buyer is joining a customer the seller already has, rather than
+   * creating a new one.
+   *
+   * This decides what completing the registration does: joining an existing customer
+   * links the buyer to the customer matching `customer_number`, while a new customer
+   * is built from the rest of the session data. Like the session data it is stored
+   * as sent, so re-send it on every update to keep the choice.
    */
   is_existing_customer?: boolean;
 
   /**
-   * PortalRegistrationSessionDataInput is the scratch form data saved on a
-   * registration session as the buyer advances.
+   * The form data to save on a registration session as the buyer advances.
+   *
+   * These values are what the registration is completed from, so send everything
+   * collected so far on each update — the stored data is replaced outright rather
+   * than merged.
    */
   session_data?: PortalRegistrationSessionDataInput;
 }
 
 export interface PortalRegistrationSessionCreateParams {
   /**
-   * The seller's portal slug to register into.
+   * The portal slug of the seller the buyer is registering with.
    */
   seller_slug: string;
 }
 
 export interface PortalRegistrationSessionUpdateParams {
   /**
-   * The step to advance to. Steps are forward-only.
+   * The step the buyer has reached.
+   *
+   * Steps only move forward: sending an earlier step than the session has already
+   * reached is rejected, while re-sending the current step saves data without
+   * advancing.
    */
   step: 'customer_details' | 'billing_address' | 'contact' | 'completed';
 
   /**
-   * Whether the buyer is linking an existing customer vs. creating a new one.
+   * Whether the buyer is joining a customer the seller already has, rather than
+   * creating a new one.
+   *
+   * This decides what completing the registration does: joining an existing customer
+   * links the buyer to the customer matching `customer_number`, while a new customer
+   * is built from the rest of the session data. Like the session data it is stored
+   * as sent, so re-send it on every update to keep the choice.
    */
   is_existing_customer?: boolean;
 
   /**
-   * PortalRegistrationSessionDataInput is the scratch form data saved on a
-   * registration session as the buyer advances.
+   * The form data to save on a registration session as the buyer advances.
+   *
+   * These values are what the registration is completed from, so send everything
+   * collected so far on each update — the stored data is replaced outright rather
+   * than merged.
    */
   session_data?: PortalRegistrationSessionDataInput;
 }
@@ -384,7 +466,13 @@ export interface PortalRegistrationSessionListParams {
   q?: string;
 
   /**
-   * Restrict the results to a single lifecycle status.
+   * Restrict the results to a single registration state.
+   *
+   * - `in_progress`: still incomplete and inside the seven-day resume window.
+   * - `completed`: the buyer finished registering.
+   * - `abandoned`: the buyer explicitly gave the session up.
+   * - `expired`: still incomplete, but past the resume window, so the buyer can no
+   *   longer pick it back up.
    */
   status?: string;
 }

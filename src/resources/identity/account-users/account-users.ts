@@ -16,11 +16,19 @@ export class AccountUsers extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Adds a user to the target account.
+   * Adds a user to the account you are acting in.
    *
-   * If no user with the given email or username exists, a new user is created and
-   * sent a welcome email containing a generated password. If a matching user already
-   * exists, that user is added to the account instead.
+   * If no user with the given email or username exists, a new user is created; a
+   * user created with an email address is sent a welcome email containing a
+   * generated password, unless they are being added to a supplier account, since
+   * suppliers have no portal to sign in to. If a matching user already exists, that
+   * user is added to the account instead, and a user you previously removed is
+   * restored rather than duplicated. Adding a user to your own account consumes a
+   * seat and is rejected once your plan's seat limit is reached.
+   *
+   * When you add a user to a customer or supplier account that has its own Augno
+   * subscription, the membership is created disabled and has to be activated before
+   * that user can sign in.
    *
    * This endpoint requires the permissions: `team:create`, `customers:update`,
    * `suppliers:update`.
@@ -29,7 +37,7 @@ export class AccountUsers extends APIResource {
    * ```ts
    * const accountUser =
    *   await client.identity.accountUsers.create({
-   *     department_id: 'dp_01791c25ab59da4704cba61874',
+   *     department_id: 'dp_m0jayebxnkos',
    *     email: 'jdoe@augno.com',
    *     name: 'John Doe',
    *     password: 'QgS7Z8Hhj3&1',
@@ -39,7 +47,7 @@ export class AccountUsers extends APIResource {
    *         enabled: true,
    *       },
    *     ],
-   *     role_id: 'rl_01c16d2eb637c0d1f3a372937c',
+   *     role_id: 'rl_3xknmfqflhvb',
    *     username: 'jdoe',
    *   });
    * ```
@@ -55,6 +63,9 @@ export class AccountUsers extends APIResource {
   /**
    * Returns an account user by ID.
    *
+   * The lookup is scoped to the account you are acting in, so an ID belonging to
+   * another account is reported as not found.
+   *
    * This endpoint requires the permissions: `team:read`, `customers:read`,
    * `suppliers:read`.
    *
@@ -62,7 +73,7 @@ export class AccountUsers extends APIResource {
    * ```ts
    * const accountUser =
    *   await client.identity.accountUsers.retrieve(
-   *     'acus_01ea9983ddb41dacc44ecf997c',
+   *     'acus_e5zu8bde0z3h',
    *   );
    * ```
    */
@@ -79,7 +90,7 @@ export class AccountUsers extends APIResource {
    *
    * Omitted fields are left unchanged. Profile fields (`name`, `email`, `username`)
    * update the underlying user, which is shared across every account the user
-   * belongs to.
+   * belongs to, so the change is visible everywhere that person works.
    *
    * This endpoint requires the permissions: `team:update`, `customers:update`,
    * `suppliers:update`.
@@ -88,9 +99,9 @@ export class AccountUsers extends APIResource {
    * ```ts
    * const accountUser =
    *   await client.identity.accountUsers.update(
-   *     'acus_01ea9983ddb41dacc44ecf997c',
+   *     'acus_e5zu8bde0z3h',
    *     {
-   *       department_id: 'dp_01791c25ab59da4704cba61874',
+   *       department_id: 'dp_m0jayebxnkos',
    *       email: 'jdoe@augno.com',
    *       name: 'John Doe',
    *       preferences: [
@@ -99,7 +110,7 @@ export class AccountUsers extends APIResource {
    *           enabled: true,
    *         },
    *       ],
-   *       role_id: 'rl_01c16d2eb637c0d1f3a372937c',
+   *       role_id: 'rl_3xknmfqflhvb',
    *       username: 'jdoe',
    *     },
    *   );
@@ -119,7 +130,11 @@ export class AccountUsers extends APIResource {
   }
 
   /**
-   * Returns a paginated list of account users for the current account.
+   * Returns a paginated list of the users who belong to the account you are acting
+   * in.
+   *
+   * When the account you are acting in is a customer or supplier account you manage,
+   * this lists that account's users rather than your own team.
    *
    * This endpoint requires the permissions: `team:read`, `customers:read`,
    * `suppliers:read`.
@@ -142,7 +157,7 @@ export class AccountUsers extends APIResource {
  * A user's membership in an account, carrying the account-specific status, role,
  * and department.
  *
- * Profile fields (name, email, username, image URL) live on the expandable `user`
+ * Profile fields (name, email, username, image URL) live on the `user`
  * sub-resource, which is shared across every account the user belongs to.
  */
 export interface AccountUser {
@@ -179,11 +194,14 @@ export interface AccountUser {
   role: APIKeysAPI.Role | null;
 
   /**
-   * Account user status.
+   * The current state of this user's membership in the account.
    *
-   * - `active`: the user can access the account.
-   * - `disabled`: the user is locked out of the account.
-   * - `removed`: the user has been removed (soft-deleted) from the account.
+   * - `active`: the user can sign in to the account and occupies one of the plan's
+   *   seats.
+   * - `disabled`: the user is locked out of the account and their sessions have been
+   *   revoked, but the membership is retained.
+   * - `removed`: the membership has been soft-deleted; it is hidden from listings by
+   *   default and can be restored with the activate action.
    */
   status: 'active' | 'disabled' | 'removed';
 
@@ -265,6 +283,11 @@ export interface Attribute {
  * Each consumption records one input item and how much of it the step uses.
  * Consumptions also determine the production flow: when another step produces the
  * consumed item, the two steps are linked upstream/downstream automatically.
+ *
+ * The quantities are stated against the step's own output, so a step producing 100
+ * pairs and consuming 5 kg of yarn needs 5 kg per 100 pairs. Material requirements
+ * for an order scale every consumption in the flow by how much of the finished
+ * item is wanted.
  */
 export interface Consumption {
   /**
@@ -273,7 +296,7 @@ export interface Consumption {
   id: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   consumed_item: Item | null;
 
@@ -293,7 +316,11 @@ export interface Consumption {
   object: 'consumption';
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: Quantity | null;
 
@@ -303,7 +330,11 @@ export interface Consumption {
   updated_at: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   waste_quantity: Quantity | null;
 }
@@ -314,6 +345,8 @@ export interface Consumption {
 export interface CreateAccountUserRequest {
   /**
    * ID of the department to assign to the user.
+   *
+   * The department must already exist in the account you are acting in.
    */
   department_id?: string;
 
@@ -321,7 +354,9 @@ export interface CreateAccountUserRequest {
    * User email address.
    *
    * Either `email` or `username` must be provided. If a user with this email already
-   * exists, that user is added to the account instead of a new user being created.
+   * exists, that user is added to the account instead of a new user being created,
+   * and the request fails with a conflict if they are already an active member of
+   * it.
    */
   email?: string;
 
@@ -351,7 +386,11 @@ export interface CreateAccountUserRequest {
   /**
    * ID of the role to assign to the user.
    *
-   * Ignored for scanning station users, which are always assigned the scanner role.
+   * The role you supply can be overridden: users added to a customer account always
+   * receive the shared customer role so their portal capabilities stay
+   * permission-driven, and scanning station users in any other account receive the
+   * scanner role. Supplying a role whose type is `sales_rep` normalizes to the
+   * account's canonical sales-rep role.
    */
   role_id?: string;
 
@@ -393,7 +432,8 @@ export interface Department {
   location: Location | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   machines: ListMachine | null;
 
@@ -415,7 +455,8 @@ export interface Department {
   object: 'department';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   scanning_stations: ListScanningStation | null;
 
@@ -426,7 +467,7 @@ export interface Department {
 }
 
 /**
- * Item is an inventory item (product, material, or part).
+ * An entry in your catalog: something you sell, consume, or build with.
  */
 export interface Item {
   /**
@@ -435,7 +476,8 @@ export interface Item {
   id: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   attributes: ListAttribute | null;
 
@@ -539,25 +581,31 @@ export interface ItemCategory {
   owner: APIKeysAPI.Owner | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   properties: ListProperty | null;
 
   /**
    * What kind of items this category groups.
    *
-   * An item can only be assigned to a category whose type matches the item's `type`.
-   *
    * - `material_category`: groups raw materials and components (items of type
    *   `material`).
    * - `product_category`: groups finished products and parts (items of type
    *   `product` or `part`).
+   *
+   * An item can only be assigned to a category whose type matches the item's `type`,
+   * and the category's type is fixed at creation.
    */
   type: 'material_category' | 'product_category';
 
   /**
-   * Named collection of units sharing one dimension, defining which units products
-   * can be ordered in along with per-unit discounts and customer portal visibility.
+   * A named collection of units that share one dimension, defining which units a
+   * product can be ordered in.
+   *
+   * Each associated unit carries its own discount and customer portal visibility,
+   * applied when an order line is priced in that unit. A product takes its unit
+   * group from its product line, falling back to its item category.
    */
   unit_group: UnitGroup | null;
 
@@ -568,7 +616,8 @@ export interface ItemCategory {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAccountUser {
   /**
@@ -582,13 +631,20 @@ export interface ListAccountUser {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAttribute {
   /**
@@ -602,13 +658,20 @@ export interface ListAttribute {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListConsumption {
   /**
@@ -622,13 +685,20 @@ export interface ListConsumption {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListLocation {
   /**
@@ -642,13 +712,20 @@ export interface ListLocation {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListMachine {
   /**
@@ -662,13 +739,20 @@ export interface ListMachine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductionStep {
   /**
@@ -682,13 +766,20 @@ export interface ListProductionStep {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProperty {
   /**
@@ -702,13 +793,20 @@ export interface ListProperty {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListScanningStation {
   /**
@@ -722,13 +820,20 @@ export interface ListScanningStation {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListUnitGroupUnit {
   /**
@@ -742,7 +847,13 @@ export interface ListUnitGroupUnit {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -758,7 +869,8 @@ export interface Location {
   id: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   children: ListLocation | null;
 
@@ -784,14 +896,11 @@ export interface Location {
   parent: Location | null;
 
   /**
-   * Location type code, identifying this location's level in the storage hierarchy.
+   * This location's level in the storage hierarchy.
    *
-   * - `building`: a building-level location.
-   * - `section`: a section within a building.
-   * - `aisle`: an aisle within a section.
-   * - `rack`: a rack within an aisle.
-   * - `shelf`: a shelf within a rack.
-   * - `bin`: a bin within a shelf.
+   * The levels run from largest to smallest: `building`, `section`, `aisle`, `rack`,
+   * `shelf`, `bin`. They are descriptive labels rather than a rule — a location's
+   * parent is not required to be the next level up.
    */
   type: LocationTypeCode;
 
@@ -887,12 +996,16 @@ export interface ProductionOutput {
   object: 'production';
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   produced_item: Item | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: Quantity | null;
 
@@ -922,7 +1035,8 @@ export interface ProductionStep {
   allowances: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   consumptions: ListConsumption | null;
 
@@ -938,7 +1052,8 @@ export interface ProductionStep {
   department: Department | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   in_steps: ListProductionStep | null;
 
@@ -964,7 +1079,8 @@ export interface ProductionStep {
   leveling_factor: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   machines: ListMachine | null;
 
@@ -984,7 +1100,8 @@ export interface ProductionStep {
   object: 'production_step';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   out_steps: ListProductionStep | null;
 
@@ -1024,7 +1141,8 @@ export interface Property {
   id: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   attributes: ListAttribute | null;
 
@@ -1035,6 +1153,8 @@ export interface Property {
 
   /**
    * Display name of the property, such as `Color` or `Size`.
+   *
+   * Unique within the account.
    */
   name: string;
 
@@ -1050,7 +1170,11 @@ export interface Property {
 }
 
 /**
- * Value with an associated unit.
+ * A measured amount: a numeric value together with the unit it is expressed in.
+ *
+ * Quantities are shared building blocks rather than standalone records — other
+ * resources point at them to report stock levels, ordered and packed amounts,
+ * money, weights, and durations.
  */
 export interface Quantity {
   /**
@@ -1192,17 +1316,22 @@ export interface ScanningStation {
   operator_requirement: 'none' | 'material_check';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   production_steps: ListProductionStep | null;
 
   /**
-   * Scanning station type, determining which batch operation the station performs.
+   * Scanning station type, determining which batch operation an operator performs
+   * when they scan here.
    *
-   * - `init_batch`: initializes a new batch.
-   * - `merge_batch`: merges multiple batches into one.
-   * - `move_batch`: moves a batch to another location or step.
-   * - `split_batch`: splits a batch into multiple batches.
+   * - `init_batch`: starts a new batch at the beginning of a production flow.
+   * - `merge_batch`: combines several scanned batches into one.
+   * - `move_batch`: advances a batch through a production step connected to this
+   *   station.
+   * - `split_batch`: divides a batch into several batches.
+   *
+   * Fixed when the station is created.
    */
   type: 'init_batch' | 'merge_batch' | 'move_batch' | 'split_batch';
 
@@ -1234,8 +1363,8 @@ export interface Unit {
   /**
    * Whether this is the base unit for its dimension.
    *
-   * Conversion ratios are relative to this unit. Base units are platform-defined;
-   * account-created units always have this set to `false`.
+   * Every other unit's conversion ratio is expressed relative to the base unit. Base
+   * units are platform-defined; units created through the API are never base units.
    */
   is_base_unit: boolean;
 
@@ -1250,16 +1379,18 @@ export interface Unit {
   object: 'unit';
 
   /**
-   * Conversion offset denominator.
+   * Denominator of the conversion offset applied after the ratio.
    *
-   * Typically 1. Cannot be zero.
+   * Never zero; a unit with no offset carries a numerator of `0` over a denominator
+   * of `1`.
    */
   offset_denominator: string;
 
   /**
-   * Conversion offset numerator, used for temperature-like conversions.
+   * Numerator of the conversion offset, applied after the ratio for scales that do
+   * not share a zero point, such as temperature.
    *
-   * Zero for most unit types.
+   * Zero for units that convert by ratio alone.
    */
   offset_numerator: string;
 
@@ -1269,19 +1400,26 @@ export interface Unit {
   owner: APIKeysAPI.Owner | null;
 
   /**
-   * Conversion ratio denominator relative to the base unit in the same dimension.
+   * Denominator of the ratio that converts a quantity in this unit into the
+   * dimension's base unit.
    *
    * Cannot be zero.
    */
   ratio_denominator: string;
 
   /**
-   * Conversion ratio numerator relative to the base unit in the same dimension.
+   * Numerator of the ratio that converts a quantity in this unit into the
+   * dimension's base unit.
+   *
+   * A quantity is converted with
+   * `value × (ratio_numerator / ratio_denominator) + (offset_numerator / offset_denominator)`,
+   * so a kilogram in a gram-based dimension has a numerator of `1000` and a
+   * denominator of `1`.
    */
   ratio_numerator: string;
 
   /**
-   * Physical dimension the unit measures, such as mass, volume, or currency.
+   * The dimension this unit measures, such as mass, volume, or currency.
    *
    * A unit can only be converted to another unit of the same dimension. The
    * `quantity` dimension is for discrete countable items rather than a physical
@@ -1296,8 +1434,12 @@ export interface Unit {
 }
 
 /**
- * Named collection of units sharing one dimension, defining which units products
- * can be ordered in along with per-unit discounts and customer portal visibility.
+ * A named collection of units that share one dimension, defining which units a
+ * product can be ordered in.
+ *
+ * Each associated unit carries its own discount and customer portal visibility,
+ * applied when an order line is priced in that unit. A product takes its unit
+ * group from its product line, falling back to its item category.
  */
 export interface UnitGroup {
   /**
@@ -1306,7 +1448,8 @@ export interface UnitGroup {
   id: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   associated_units: ListUnitGroupUnit | null;
 
@@ -1343,10 +1486,11 @@ export interface UnitGroup {
   owner: APIKeysAPI.Owner | null;
 
   /**
-   * Physical dimension shared by every unit in this group, such as mass, volume, or
+   * The dimension shared by every unit in this group, such as mass, volume, or
    * currency.
    *
-   * Only units of this dimension can belong to the group.
+   * Only units of this dimension can belong to the group, and the dimension is fixed
+   * once the group is created.
    */
   type: 'currency' | 'quantity' | 'time' | 'mass' | 'volume' | 'length' | 'temperature' | 'area';
 
@@ -1379,12 +1523,16 @@ export interface UnitGroupUnit {
   /**
    * Flat amount subtracted from the unit's price when an order is placed in this
    * unit.
+   *
+   * Subtracted before `discount_percentage` is applied.
    */
   discount_fixed: number;
 
   /**
-   * Percentage discount applied to the unit's price when an order is placed in this
-   * unit (e.g. `10` is a 10% discount).
+   * Share of the unit's price removed when an order is placed in this unit.
+   *
+   * Expressed as a decimal fraction rather than a whole number, so `0.1` is a 10%
+   * discount and `0` is no discount.
    */
   discount_percentage: number;
 
@@ -1411,7 +1559,8 @@ export interface UpdateAccountUserRequest {
   /**
    * ID of the department to assign to the user.
    *
-   * Set to `null` to clear the department.
+   * Set to `null` to clear the department. The department must already exist in the
+   * account.
    */
   department_id?: string | null;
 
@@ -1460,6 +1609,8 @@ export interface AccountUserCreateParams {
 
   /**
    * Body param: ID of the department to assign to the user.
+   *
+   * The department must already exist in the account you are acting in.
    */
   department_id?: string;
 
@@ -1467,7 +1618,9 @@ export interface AccountUserCreateParams {
    * Body param: User email address.
    *
    * Either `email` or `username` must be provided. If a user with this email already
-   * exists, that user is added to the account instead of a new user being created.
+   * exists, that user is added to the account instead of a new user being created,
+   * and the request fails with a conflict if they are already an active member of
+   * it.
    */
   email?: string;
 
@@ -1497,7 +1650,11 @@ export interface AccountUserCreateParams {
   /**
    * Body param: ID of the role to assign to the user.
    *
-   * Ignored for scanning station users, which are always assigned the scanner role.
+   * The role you supply can be overridden: users added to a customer account always
+   * receive the shared customer role so their portal capabilities stay
+   * permission-driven, and scanning station users in any other account receive the
+   * scanner role. Supplying a role whose type is `sales_rep` normalizes to the
+   * account's canonical sales-rep role.
    */
   role_id?: string;
 
@@ -1529,7 +1686,8 @@ export interface AccountUserUpdateParams {
   /**
    * Body param: ID of the department to assign to the user.
    *
-   * Set to `null` to clear the department.
+   * Set to `null` to clear the department. The department must already exist in the
+   * account.
    */
   department_id?: string | null;
 
@@ -1600,8 +1758,8 @@ export interface AccountUserListParams {
   /**
    * Controls whether removed (soft-deleted) account users appear in the list.
    *
-   * - `excluded`: only active and disabled users (default).
-   * - `included`: removed users are listed as well.
+   * Removed users are left out unless you pass `included`, so a user removed with
+   * the remove action disappears from the default listing.
    */
   removed_scope?: 'excluded' | 'included';
 

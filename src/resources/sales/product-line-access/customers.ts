@@ -15,9 +15,12 @@ export class Customers extends APIResource {
   /**
    * Grants a customer direct access to a set of product lines.
    *
-   * Each customer can have at most one access record; fails with a conflict error if
-   * one already exists. Use Update Customer Product Line Access to change an
-   * existing record.
+   * The customer can then browse and order those product lines, on top of anything
+   * it already reaches through its type group or pricing groups.
+   *
+   * Each customer can have at most one access record; creating one for a customer
+   * that already has one returns a conflict error. Use Update Customer Product Line
+   * Access to change an existing record.
    *
    * This endpoint requires the permission: `relevant_products:create`.
    *
@@ -25,8 +28,8 @@ export class Customers extends APIResource {
    * ```ts
    * const customerProductLineAccess =
    *   await client.sales.productLineAccess.customers.create({
-   *     customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+   *     customer_id: 'ac_opnlh43ymyee',
+   *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
    *   });
    * ```
    */
@@ -37,13 +40,17 @@ export class Customers extends APIResource {
   /**
    * Returns a customer's direct product line access record.
    *
+   * A customer with no direct grants has no record and returns a not-found error;
+   * product lines the customer reaches through its type group or pricing groups are
+   * not reported here.
+   *
    * This endpoint requires the permission: `relevant_products:read`.
    *
    * @example
    * ```ts
    * const customerProductLineAccess =
    *   await client.sales.productLineAccess.customers.retrieve(
-   *     'ac_0170df1ac58e4d24c66fc89f5f',
+   *     'ac_opnlh43ymyee',
    *   );
    * ```
    */
@@ -54,16 +61,18 @@ export class Customers extends APIResource {
   /**
    * Replaces a customer's direct product line access with the provided set.
    *
+   * This is a full replacement, not a merge: product lines omitted from the request
+   * lose access. The customer must already have a direct access record; create one
+   * with Create Customer Product Line Access first.
+   *
    * This endpoint requires the permission: `relevant_products:update`.
    *
    * @example
    * ```ts
    * const customerProductLineAccess =
    *   await client.sales.productLineAccess.customers.update(
-   *     'ac_0170df1ac58e4d24c66fc89f5f',
-   *     {
-   *       product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
-   *     },
+   *     'ac_opnlh43ymyee',
+   *     { product_line_ids: ['pdln_k9bnlgvxhxjh'] },
    *   );
    * ```
    */
@@ -79,7 +88,12 @@ export class Customers extends APIResource {
   }
 
   /**
-   * Returns a paginated list of product line access records grouped by customer.
+   * Returns a paginated list of direct product line access records, one per
+   * customer.
+   *
+   * Only customers granted at least one product line directly appear; access
+   * inherited through a type group or pricing group is not listed here. The `q`
+   * search term is matched against the customer name and customer number.
    *
    * This endpoint requires the permission: `relevant_products:read`.
    *
@@ -100,7 +114,8 @@ export class Customers extends APIResource {
    * Removes a customer's direct product line access record.
    *
    * Access the customer inherits through its type group or pricing groups is not
-   * affected.
+   * affected. Deleting a record that was already deleted returns an already-deleted
+   * error rather than succeeding silently.
    *
    * This endpoint requires the permission: `relevant_products:delete`.
    *
@@ -108,7 +123,7 @@ export class Customers extends APIResource {
    * ```ts
    * const customer =
    *   await client.sales.productLineAccess.customers.delete(
-   *     'ac_0170df1ac58e4d24c66fc89f5f',
+   *     'ac_opnlh43ymyee',
    *   );
    * ```
    */
@@ -128,6 +143,9 @@ export interface CreateCustomerProductLineAccessRequest {
 
   /**
    * IDs of the product lines the customer can access.
+   *
+   * Must contain at least one ID, and each one must be a product line your account
+   * owns; the shared system product lines cannot be granted.
    */
   product_line_ids: Array<string>;
 }
@@ -141,7 +159,7 @@ export interface CreateCustomerProductLineAccessRequest {
  */
 export interface CustomerProductLineAccess {
   /**
-   * When this record was created.
+   * When the relationship with this customer was created.
    */
   created_at: string;
 
@@ -157,18 +175,20 @@ export interface CustomerProductLineAccess {
   object: 'customer_product_line_access';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   product_lines: AccountGroupsAPI.ListProductLine | null;
 
   /**
-   * When this record was last updated.
+   * When the relationship with this customer was last updated.
    */
   updated_at: string;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListCustomerProductLineAccess {
   /**
@@ -182,7 +202,13 @@ export interface ListCustomerProductLineAccess {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -192,10 +218,15 @@ export interface ListCustomerProductLineAccess {
  */
 export interface UpdateCustomerProductLineAccessRequest {
   /**
-   * The full set of product line IDs the customer can access.
+   * The full set of product line IDs the customer has direct access to.
    *
-   * Replaces all existing direct product line access. Omitting this field or sending
-   * an empty list removes all direct access.
+   * Replaces the customer's existing direct grants, and each ID must be a product
+   * line your account owns.
+   *
+   * The list has to name at least one product line: omitting the field or sending an
+   * empty list leaves the customer with no record at all, which the request rejects
+   * as not found without changing anything. Use Delete Customer Product Line Access
+   * to revoke direct access entirely.
    */
   product_line_ids?: Array<string>;
 }
@@ -210,16 +241,24 @@ export interface CustomerCreateParams {
 
   /**
    * IDs of the product lines the customer can access.
+   *
+   * Must contain at least one ID, and each one must be a product line your account
+   * owns; the shared system product lines cannot be granted.
    */
   product_line_ids: Array<string>;
 }
 
 export interface CustomerUpdateParams {
   /**
-   * The full set of product line IDs the customer can access.
+   * The full set of product line IDs the customer has direct access to.
    *
-   * Replaces all existing direct product line access. Omitting this field or sending
-   * an empty list removes all direct access.
+   * Replaces the customer's existing direct grants, and each ID must be a product
+   * line your account owns.
+   *
+   * The list has to name at least one product line: omitting the field or sending an
+   * empty list leaves the customer with no record at all, which the request rejects
+   * as not found without changing anything. Use Delete Customer Product Line Access
+   * to revoke direct access entirely.
    */
   product_line_ids?: Array<string>;
 }

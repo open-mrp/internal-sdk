@@ -34,13 +34,16 @@ export class PaymentTerms extends APIResource {
   /**
    * Returns a payment term by ID.
    *
+   * Both payment terms created by your account and Augno-provided system defaults
+   * can be retrieved.
+   *
    * This endpoint requires the permission: `payment_terms:read`.
    *
    * @example
    * ```ts
    * const paymentTerm =
    *   await client.finance.paymentTerms.retrieve(
-   *     'pytm_018694d6601ea771cd1b52e890',
+   *     'pytm_skssmsy21lem',
    *   );
    * ```
    */
@@ -64,7 +67,7 @@ export class PaymentTerms extends APIResource {
    * ```ts
    * const paymentTerm =
    *   await client.finance.paymentTerms.update(
-   *     'pytm_018694d6601ea771cd1b52e890',
+   *     'pytm_skssmsy21lem',
    *     { name: 'Net 60' },
    *   );
    * ```
@@ -115,7 +118,7 @@ export class PaymentTerms extends APIResource {
    * ```ts
    * const paymentTerm =
    *   await client.finance.paymentTerms.delete(
-   *     'pytm_018694d6601ea771cd1b52e890',
+   *     'pytm_skssmsy21lem',
    *   );
    * ```
    */
@@ -138,7 +141,8 @@ export interface CreatePaymentTermRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPaymentTerm {
   /**
@@ -152,7 +156,13 @@ export interface ListPaymentTerm {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }

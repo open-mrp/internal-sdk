@@ -30,7 +30,7 @@ describe('resource registrationSessions', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.auth.registrationSessions.retrieve('rgfw_01011dbade766ab524553afb10');
+    const responsePromise = client.auth.registrationSessions.retrieve('rgfw_6xab8u2fun46');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -41,7 +41,7 @@ describe('resource registrationSessions', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.auth.registrationSessions.update('rgfw_01011dbade766ab524553afb10');
+    const responsePromise = client.auth.registrationSessions.update('rgfw_6xab8u2fun46');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -55,7 +55,7 @@ describe('resource registrationSessions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.auth.registrationSessions.update(
-        'rgfw_01011dbade766ab524553afb10',
+        'rgfw_6xab8u2fun46',
         {
           session_data: {
             account_name: 'Acme Corp',
@@ -100,7 +100,7 @@ describe('resource registrationSessions', () => {
   });
 
   test('accounts', async () => {
-    const responsePromise = client.auth.registrationSessions.accounts('rgfw_01011dbade766ab524553afb10');
+    const responsePromise = client.auth.registrationSessions.accounts('rgfw_6xab8u2fun46');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -111,7 +111,7 @@ describe('resource registrationSessions', () => {
   });
 
   test('users: only required params', async () => {
-    const responsePromise = client.auth.registrationSessions.users('rgfw_01011dbade766ab524553afb10', {
+    const responsePromise = client.auth.registrationSessions.users('rgfw_6xab8u2fun46', {
       name: 'Jane Smith',
       password: 'P@ssw0rd123!',
     });
@@ -125,7 +125,7 @@ describe('resource registrationSessions', () => {
   });
 
   test('users: required and optional params', async () => {
-    const response = await client.auth.registrationSessions.users('rgfw_01011dbade766ab524553afb10', {
+    const response = await client.auth.registrationSessions.users('rgfw_6xab8u2fun46', {
       name: 'Jane Smith',
       password: 'P@ssw0rd123!',
     });

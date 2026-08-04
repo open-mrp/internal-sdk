@@ -11,8 +11,15 @@ import { path } from '../../../internal/utils/path';
  */
 export class Agents extends APIResource {
   /**
-   * Adds (or re-activates) an agent participant in a conversation with a trigger
-   * policy.
+   * Adds an AI agent to a conversation so it can respond to messages there.
+   *
+   * Adding an agent that is already a participant is not an error: its trigger
+   * policy and keywords are replaced with the ones supplied here, and an agent that
+   * had been removed is put back. That makes this endpoint the way to change when an
+   * existing agent responds, without removing and re-adding it.
+   *
+   * In an internal group conversation only an owner or admin can add an agent; in a
+   * direct message or a customer-facing case any active participant can.
    *
    * This endpoint requires the permission: `messaging:create`.
    *
@@ -20,9 +27,9 @@ export class Agents extends APIResource {
    * ```ts
    * const conversationParticipant =
    *   await client.messaging.conversations.agents.create(
-   *     'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+   *     'cv_w35z4ck68yq7',
    *     {
-   *       agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
+   *       agent_config_id: 'agdf_ah7tkyfxk8jl',
    *       trigger_keywords: ['forecast'],
    *       trigger_policy: 'mention',
    *     },
@@ -38,7 +45,11 @@ export class Agents extends APIResource {
   }
 
   /**
-   * Removes an agent participant from a conversation.
+   * Removes an AI agent from a conversation so it stops responding there.
+   *
+   * In an internal group conversation only an owner or admin can remove an agent; in
+   * a direct message or a customer-facing case any active participant can. The
+   * agent's earlier messages stay in the thread, and it can be added back later.
    *
    * This endpoint requires the permission: `messaging:delete`.
    *
@@ -46,8 +57,8 @@ export class Agents extends APIResource {
    * ```ts
    * const agent =
    *   await client.messaging.conversations.agents.delete(
-   *     'cvpt_01h9z8q1w2e3r4t5y6u7cvpt',
-   *     { id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv' },
+   *     'cvpt_be2h3ul14cts',
+   *     { id: 'cv_w35z4ck68yq7' },
    *   );
    * ```
    */
@@ -67,8 +78,13 @@ export interface AddAgentParticipantRequest {
   agent_config_id: string;
 
   /**
-   * For keyword/mention policies, the keywords (or mention handles) that trigger the
-   * agent.
+   * For the keyword and mention policies, the keywords (or mention handles) that
+   * trigger the agent.
+   *
+   * Matching is case-insensitive and looks anywhere in the message body: under
+   * `keyword` the bare word is matched, under `mention` it must appear as
+   * `@keyword`. Replying directly to one of the agent's own messages always reaches
+   * it, so an agent left without keywords still answers replies but nothing else.
    */
   trigger_keywords?: Array<string>;
 
@@ -91,8 +107,13 @@ export interface AgentCreateParams {
   agent_config_id: string;
 
   /**
-   * For keyword/mention policies, the keywords (or mention handles) that trigger the
-   * agent.
+   * For the keyword and mention policies, the keywords (or mention handles) that
+   * trigger the agent.
+   *
+   * Matching is case-insensitive and looks anywhere in the message body: under
+   * `keyword` the bare word is matched, under `mention` it must appear as
+   * `@keyword`. Replying directly to one of the agent's own messages always reaches
+   * it, so an agent left without keywords still answers replies but nothing else.
    */
   trigger_keywords?: Array<string>;
 

@@ -9,10 +9,9 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('receive: only required params', async () => {
-    const responsePromise = client.operations.receivingOrders.lines.actions.receive(
-      'orln_0142f9b74268973450b3a76ce3',
-      { receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e' },
-    );
+    const responsePromise = client.operations.receivingOrders.lines.actions.receive('orln_la01fxgrwcnr', {
+      receiving_order_id: 'rcor_iy0usuxcrjj8',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,17 +22,15 @@ describe('resource actions', () => {
   });
 
   test('receive: required and optional params', async () => {
-    const response = await client.operations.receivingOrders.lines.actions.receive(
-      'orln_0142f9b74268973450b3a76ce3',
-      { receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e' },
-    );
+    const response = await client.operations.receivingOrders.lines.actions.receive('orln_la01fxgrwcnr', {
+      receiving_order_id: 'rcor_iy0usuxcrjj8',
+    });
   });
 
   test('void: only required params', async () => {
-    const responsePromise = client.operations.receivingOrders.lines.actions.void(
-      'orln_0142f9b74268973450b3a76ce3',
-      { receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e' },
-    );
+    const responsePromise = client.operations.receivingOrders.lines.actions.void('orln_la01fxgrwcnr', {
+      receiving_order_id: 'rcor_iy0usuxcrjj8',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -44,9 +41,8 @@ describe('resource actions', () => {
   });
 
   test('void: required and optional params', async () => {
-    const response = await client.operations.receivingOrders.lines.actions.void(
-      'orln_0142f9b74268973450b3a76ce3',
-      { receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e' },
-    );
+    const response = await client.operations.receivingOrders.lines.actions.void('orln_la01fxgrwcnr', {
+      receiving_order_id: 'rcor_iy0usuxcrjj8',
+    });
   });
 });

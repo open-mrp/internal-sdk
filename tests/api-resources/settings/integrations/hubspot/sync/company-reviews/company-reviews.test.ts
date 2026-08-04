@@ -10,8 +10,8 @@ const client = new Augno({
 describe('resource companyReviews', () => {
   test('create: only required params', async () => {
     const responsePromise = client.settings.integrations.hubspot.sync.companyReviews.create(
-      'igrv_mkhn7eo9qexh',
-      { id: 'igjb_zwfvfjfxl4lj' },
+      'igrv_w88uo6y5g8bu',
+      { id: 'igjb_pbxu4l5ujuym' },
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -24,14 +24,14 @@ describe('resource companyReviews', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.settings.integrations.hubspot.sync.companyReviews.create(
-      'igrv_mkhn7eo9qexh',
-      { id: 'igjb_zwfvfjfxl4lj' },
+      'igrv_w88uo6y5g8bu',
+      { id: 'igjb_pbxu4l5ujuym' },
     );
   });
 
   test('list', async () => {
     const responsePromise =
-      client.settings.integrations.hubspot.sync.companyReviews.list('igjb_zwfvfjfxl4lj');
+      client.settings.integrations.hubspot.sync.companyReviews.list('igjb_pbxu4l5ujuym');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource companyReviews', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.settings.integrations.hubspot.sync.companyReviews.list(
-        'igjb_zwfvfjfxl4lj',
+        'igjb_pbxu4l5ujuym',
         { status: 'pending' },
         { path: '/_stainless_unknown_path' },
       ),

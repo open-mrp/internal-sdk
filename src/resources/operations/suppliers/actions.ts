@@ -20,7 +20,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.suppliers.actions.bulkDelete({
-   *     supplier_ids: ['ac_0177902104bccac5fbb173cd96'],
+   *     supplier_ids: ['ac_gwy8tfbc074f'],
    *   });
    * ```
    */
@@ -30,7 +30,7 @@ export class Actions extends APIResource {
 }
 
 /**
- * BulkDeleteSuppliersRequest is the request to bulk delete suppliers.
+ * Request to delete multiple suppliers.
  */
 export interface BulkDeleteSuppliersRequest {
   /**

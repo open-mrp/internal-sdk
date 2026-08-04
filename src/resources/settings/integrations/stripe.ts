@@ -9,10 +9,12 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Stripe extends APIResource {
   /**
-   * Returns the Stripe publishable key for the target account.
+   * Returns the Stripe publishable key for the target account, for initializing
+   * Stripe in a client-side checkout.
    *
-   * Fails if the account has no Stripe integration or the Stripe integration is
-   * inactive.
+   * Only the publishable key is exposed; the account's secret key and webhook secret
+   * never leave the platform. Fails if the account has no Stripe integration or the
+   * Stripe integration is inactive.
    *
    * @example
    * ```ts
@@ -25,7 +27,12 @@ export class Stripe extends APIResource {
   }
 
   /**
-   * Returns whether the target account has a Stripe integration configured.
+   * Reports whether the target account has a Stripe integration configured, so a
+   * checkout flow can tell up front whether card payments are available.
+   *
+   * The account is reported as connected whenever Stripe credentials are on file,
+   * even if the integration has been deactivated, and the stored keys are not
+   * verified against Stripe.
    *
    * @example
    * ```ts
@@ -67,7 +74,8 @@ export interface StripeStatus {
    * Whether a Stripe integration is configured.
    *
    * `connected` if the account has a Stripe integration on file, regardless of
-   * whether the integration is currently active.
+   * whether the integration is currently active. The stored keys are not checked
+   * against Stripe, so `connected` does not guarantee that payments will succeed.
    */
   status: 'connected' | 'not_connected';
 }

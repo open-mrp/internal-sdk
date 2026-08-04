@@ -18,12 +18,16 @@ export class Actions extends APIResource {
    * in a terminal status (`completed`, `failed`, `cancelled`) returns a validation
    * error.
    *
+   * Cancelling a run that is `awaiting_approval` counts as denying the review: every
+   * action still pending review is recorded as rejected, attributed to the caller.
+   * Work the agent already completed is not undone.
+   *
    * This endpoint requires the permission: `agent_runs:update`.
    *
    * @example
    * ```ts
    * const agentRun = await client.ai.runs.actions.cancel(
-   *   'agrn_01502aa6da9bbdbaa595915fa4',
+   *   'agrn_l6ob5relrd7t',
    * );
    * ```
    */
@@ -37,16 +41,19 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Resumes a paused agent run with a user message and any tool approvals.
+   * Resumes a paused agent run with a user message and any tool review decisions.
    *
-   * The run must be in the `awaiting_input` or `awaiting_approval` status.
+   * The run must be `awaiting_input` or `awaiting_approval`; resuming it from any
+   * other status returns a validation error. It moves back to `running` and
+   * continues asynchronously, so poll Retrieve Agent Run to follow it. Each approval
+   * and denial is recorded on the matching action and attributed to the caller.
    *
    * This endpoint requires the permission: `agent_runs:update`.
    *
    * @example
    * ```ts
    * const agentRun = await client.ai.runs.actions.continue(
-   *   'agrn_01502aa6da9bbdbaa595915fa4',
+   *   'agrn_l6ob5relrd7t',
    *   { message: 'Yes, proceed with creating the order.' },
    * );
    * ```
@@ -66,15 +73,18 @@ export class Actions extends APIResource {
    * Only runs in the `failed` status can be retried; retrying a run in any other
    * status returns a validation error. The run is re-attempted from where it left
    * off — its prior reasoning and tool results are replayed, so the agent continues
-   * with full knowledge of what it already did rather than starting over. Each run
-   * can be retried a limited number of times.
+   * with full knowledge of what it already did rather than starting over, which
+   * minimizes the chance of it repeating side effects it has already caused.
+   *
+   * A run can be retried at most five times in total, and any automatic retries the
+   * platform already performed for transient failures count against that budget.
    *
    * This endpoint requires the permission: `agent_runs:update`.
    *
    * @example
    * ```ts
    * const agentRun = await client.ai.runs.actions.retry(
-   *   'agrn_01502aa6da9bbdbaa595915fa4',
+   *   'agrn_l6ob5relrd7t',
    * );
    * ```
    */
@@ -93,7 +103,10 @@ export class Actions extends APIResource {
  */
 export interface ContinueRunRequest {
   /**
-   * User message to send to the agent.
+   * Message to send to the agent as the next turn of the run.
+   *
+   * It accompanies any approval or denial in the same request, so use it to tell the
+   * agent how to proceed with what you just allowed or blocked.
    */
   message: string;
 
@@ -109,8 +122,9 @@ export interface ContinueRunRequest {
   /**
    * Slugs of tools whose pending calls should be approved.
    *
-   * When empty, all pending tool calls are approved. Approvals are always one-time:
-   * a later call to the same tool pauses for review again.
+   * Approves every call currently pending review for each named tool. Approval is
+   * one-time — the next call to the same tool pauses for review again. Tools you do
+   * not name are left pending, and the run resumes without them.
    */
   approved_tool_slugs?: Array<string>;
 
@@ -143,7 +157,10 @@ export interface ActionCancelParams {
 
 export interface ActionContinueParams {
   /**
-   * Body param: User message to send to the agent.
+   * Body param: Message to send to the agent as the next turn of the run.
+   *
+   * It accompanies any approval or denial in the same request, so use it to tell the
+   * agent how to proceed with what you just allowed or blocked.
    */
   message: string;
 
@@ -166,8 +183,9 @@ export interface ActionContinueParams {
   /**
    * Body param: Slugs of tools whose pending calls should be approved.
    *
-   * When empty, all pending tool calls are approved. Approvals are always one-time:
-   * a later call to the same tool pauses for review again.
+   * Approves every call currently pending review for each named tool. Approval is
+   * one-time — the next call to the same tool pauses for review again. Tools you do
+   * not name are left pending, and the run resumes without them.
    */
   approved_tool_slugs?: Array<string>;
 

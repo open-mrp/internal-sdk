@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource scanningStations', () => {
   test('create: only required params', async () => {
     const responsePromise = client.operations.scanningStations.create({
-      department_id: 'dp_01791c25ab59da4704cba61874',
+      department_id: 'dp_m0jayebxnkos',
       name: 'Packaging Line 1',
       operator_requirement: 'none',
       type: 'init_batch',
@@ -26,7 +26,7 @@ describe('resource scanningStations', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.operations.scanningStations.create({
-      department_id: 'dp_01791c25ab59da4704cba61874',
+      department_id: 'dp_m0jayebxnkos',
       name: 'Packaging Line 1',
       operator_requirement: 'none',
       type: 'init_batch',
@@ -38,7 +38,7 @@ describe('resource scanningStations', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.scanningStations.retrieve('scst_0129335dd6286056a97024fcc1');
+    const responsePromise = client.operations.scanningStations.retrieve('scst_t71bn7lq5yov');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -52,7 +52,7 @@ describe('resource scanningStations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.scanningStations.retrieve(
-        'scst_0129335dd6286056a97024fcc1',
+        'scst_t71bn7lq5yov',
         { include: ['department'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -60,7 +60,7 @@ describe('resource scanningStations', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.scanningStations.update('scst_0129335dd6286056a97024fcc1');
+    const responsePromise = client.operations.scanningStations.update('scst_t71bn7lq5yov');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -74,7 +74,7 @@ describe('resource scanningStations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.scanningStations.update(
-        'scst_0129335dd6286056a97024fcc1',
+        'scst_t71bn7lq5yov',
         {
           include: ['department'],
           label_size: '1x1',
@@ -115,7 +115,7 @@ describe('resource scanningStations', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.scanningStations.delete('scst_0129335dd6286056a97024fcc1');
+    const responsePromise = client.operations.scanningStations.delete('scst_t71bn7lq5yov');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -126,10 +126,9 @@ describe('resource scanningStations', () => {
   });
 
   test('consumptions: only required params', async () => {
-    const responsePromise = client.operations.scanningStations.consumptions(
-      'scst_0129335dd6286056a97024fcc1',
-      { batch_ids: ['bt_017313a7df2d7ac8d895809747'] },
-    );
+    const responsePromise = client.operations.scanningStations.consumptions('scst_t71bn7lq5yov', {
+      batch_ids: ['bt_fuies8j4pk45'],
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -140,24 +139,19 @@ describe('resource scanningStations', () => {
   });
 
   test('consumptions: required and optional params', async () => {
-    const response = await client.operations.scanningStations.consumptions(
-      'scst_0129335dd6286056a97024fcc1',
-      {
-        batch_ids: ['bt_017313a7df2d7ac8d895809747'],
-        production_step_id: 'prst_0159474175bb59f4b1990404ee',
-        split_quantity: {
-          id: 'bt_017313a7df2d7ac8d895809747',
-          measure: '10.5',
-          unit_id: 'un_01966263f74a5a0cae356000a1',
-        },
+    const response = await client.operations.scanningStations.consumptions('scst_t71bn7lq5yov', {
+      batch_ids: ['bt_fuies8j4pk45'],
+      production_step_id: 'prst_0ht5mkqx5a6t',
+      split_quantity: {
+        id: 'bt_fuies8j4pk45',
+        measure: '10.5',
+        unit_id: 'un_82bd37dae5po',
       },
-    );
+    });
   });
 
   test('retrieveBatches', async () => {
-    const responsePromise = client.operations.scanningStations.retrieveBatches(
-      'scst_0129335dd6286056a97024fcc1',
-    );
+    const responsePromise = client.operations.scanningStations.retrieveBatches('scst_t71bn7lq5yov');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -171,7 +165,7 @@ describe('resource scanningStations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.scanningStations.retrieveBatches(
-        'scst_0129335dd6286056a97024fcc1',
+        'scst_t71bn7lq5yov',
         {
           cursor: 'cursor',
           limit: 0,
@@ -183,10 +177,9 @@ describe('resource scanningStations', () => {
   });
 
   test('updateProductionSteps: only required params', async () => {
-    const responsePromise = client.operations.scanningStations.updateProductionSteps(
-      'scst_0129335dd6286056a97024fcc1',
-      { name: 'Mixing' },
-    );
+    const responsePromise = client.operations.scanningStations.updateProductionSteps('scst_t71bn7lq5yov', {
+      name: 'Mixing',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -197,9 +190,8 @@ describe('resource scanningStations', () => {
   });
 
   test('updateProductionSteps: required and optional params', async () => {
-    const response = await client.operations.scanningStations.updateProductionSteps(
-      'scst_0129335dd6286056a97024fcc1',
-      { name: 'Mixing' },
-    );
+    const response = await client.operations.scanningStations.updateProductionSteps('scst_t71bn7lq5yov', {
+      name: 'Mixing',
+    });
   });
 });

@@ -24,8 +24,9 @@ export class Passwords extends APIResource {
    * Updates the authenticated user's password after verifying their current
    * password.
    *
-   * All of the user's existing refresh tokens are revoked, signing out their other
-   * active sessions.
+   * Every refresh token for the user is revoked, including the caller's own, so all
+   * sessions end once their current access tokens expire. A confirmation email is
+   * sent to the user.
    *
    * @example
    * ```ts

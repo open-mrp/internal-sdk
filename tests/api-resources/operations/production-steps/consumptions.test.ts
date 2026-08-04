@@ -9,16 +9,13 @@ const client = new Augno({
 
 describe('resource consumptions', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.productionSteps.consumptions.create(
-      'prst_0159474175bb59f4b1990404ee',
-      {
-        item_id: 'it_0131e386ac683e8c29a71f6f1f',
-        quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-        quantity_value: '10.000000000000000000000000000000',
-        waste_quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-        waste_quantity_value: '0.500000000000000000000000000000',
-      },
-    );
+    const responsePromise = client.operations.productionSteps.consumptions.create('prst_0ht5mkqx5a6t', {
+      item_id: 'it_pej07ckhvu62',
+      quantity_unit_id: 'un_82bd37dae5po',
+      quantity_value: '10.000000000000000000000000000000',
+      waste_quantity_unit_id: 'un_82bd37dae5po',
+      waste_quantity_value: '0.500000000000000000000000000000',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -29,25 +26,21 @@ describe('resource consumptions', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.operations.productionSteps.consumptions.create(
-      'prst_0159474175bb59f4b1990404ee',
-      {
-        item_id: 'it_0131e386ac683e8c29a71f6f1f',
-        quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-        quantity_value: '10.000000000000000000000000000000',
-        waste_quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-        waste_quantity_value: '0.500000000000000000000000000000',
-        include: ['consumed_item'],
-        instructions: 'Mix with water before adding',
-      },
-    );
+    const response = await client.operations.productionSteps.consumptions.create('prst_0ht5mkqx5a6t', {
+      item_id: 'it_pej07ckhvu62',
+      quantity_unit_id: 'un_82bd37dae5po',
+      quantity_value: '10.000000000000000000000000000000',
+      waste_quantity_unit_id: 'un_82bd37dae5po',
+      waste_quantity_value: '0.500000000000000000000000000000',
+      include: ['consumed_item'],
+      instructions: 'Mix with water before adding',
+    });
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.operations.productionSteps.consumptions.retrieve(
-      'cp_0152c5d4330f178ebe1158f910',
-      { production_step_id: 'prst_0159474175bb59f4b1990404ee' },
-    );
+    const responsePromise = client.operations.productionSteps.consumptions.retrieve('cp_blst8ze24dy3', {
+      production_step_id: 'prst_0ht5mkqx5a6t',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -58,17 +51,16 @@ describe('resource consumptions', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.operations.productionSteps.consumptions.retrieve(
-      'cp_0152c5d4330f178ebe1158f910',
-      { production_step_id: 'prst_0159474175bb59f4b1990404ee', include: ['consumed_item'] },
-    );
+    const response = await client.operations.productionSteps.consumptions.retrieve('cp_blst8ze24dy3', {
+      production_step_id: 'prst_0ht5mkqx5a6t',
+      include: ['consumed_item'],
+    });
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.productionSteps.consumptions.update(
-      'cp_0152c5d4330f178ebe1158f910',
-      { production_step_id: 'prst_0159474175bb59f4b1990404ee' },
-    );
+    const responsePromise = client.operations.productionSteps.consumptions.update('cp_blst8ze24dy3', {
+      production_step_id: 'prst_0ht5mkqx5a6t',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -79,26 +71,22 @@ describe('resource consumptions', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.productionSteps.consumptions.update(
-      'cp_0152c5d4330f178ebe1158f910',
-      {
-        production_step_id: 'prst_0159474175bb59f4b1990404ee',
-        include: ['consumed_item'],
-        instructions: 'instructions',
-        item_id: 'item_id',
-        quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-        quantity_value: '20.000000000000000000000000000000',
-        waste_quantity_unit_id: 'waste_quantity_unit_id',
-        waste_quantity_value: 'waste_quantity_value',
-      },
-    );
+    const response = await client.operations.productionSteps.consumptions.update('cp_blst8ze24dy3', {
+      production_step_id: 'prst_0ht5mkqx5a6t',
+      include: ['consumed_item'],
+      instructions: 'instructions',
+      item_id: 'item_id',
+      quantity_unit_id: 'un_82bd37dae5po',
+      quantity_value: '20.000000000000000000000000000000',
+      waste_quantity_unit_id: 'waste_quantity_unit_id',
+      waste_quantity_value: 'waste_quantity_value',
+    });
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.operations.productionSteps.consumptions.delete(
-      'cp_0152c5d4330f178ebe1158f910',
-      { production_step_id: 'prst_0159474175bb59f4b1990404ee' },
-    );
+    const responsePromise = client.operations.productionSteps.consumptions.delete('cp_blst8ze24dy3', {
+      production_step_id: 'prst_0ht5mkqx5a6t',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -109,9 +97,9 @@ describe('resource consumptions', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.operations.productionSteps.consumptions.delete(
-      'cp_0152c5d4330f178ebe1158f910',
-      { production_step_id: 'prst_0159474175bb59f4b1990404ee', include: ['consumed_item'] },
-    );
+    const response = await client.operations.productionSteps.consumptions.delete('cp_blst8ze24dy3', {
+      production_step_id: 'prst_0ht5mkqx5a6t',
+      include: ['consumed_item'],
+    });
   });
 });

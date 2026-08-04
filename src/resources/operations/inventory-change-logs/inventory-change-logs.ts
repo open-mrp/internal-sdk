@@ -25,7 +25,7 @@ export class InventoryChangeLogs extends APIResource {
    * ```ts
    * const inventoryChangeLog =
    *   await client.operations.inventoryChangeLogs.retrieve(
-   *     'icl_01424a802cb48a96f94196f4f1',
+   *     'icl_kb4dlhqx4voe',
    *   );
    * ```
    */
@@ -39,6 +39,10 @@ export class InventoryChangeLogs extends APIResource {
 
   /**
    * Returns a paginated list of inventory change logs, newest first.
+   *
+   * Filters combine with AND, while the values within a single filter combine with
+   * OR. The `q` search term matches on item SKU, responsible user name, and scanning
+   * station name.
    *
    * This endpoint requires the permission: `inventory_logs:read`.
    *
@@ -57,8 +61,7 @@ export class InventoryChangeLogs extends APIResource {
 }
 
 /**
- * InventoryChangeLog is a record of a single change to an item's on-hand
- * inventory.
+ * A record of a single change to an item's on-hand inventory.
  *
  * Every inventory movement — production scans, manual user adjustments, and
  * automatic system actions — produces one entry, forming an audit trail of how
@@ -87,7 +90,7 @@ export interface InventoryChangeLog {
   created_at: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
@@ -97,7 +100,11 @@ export interface InventoryChangeLog {
   object: 'inventory_change_log';
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: AccountUsersAPI.Quantity | null;
 
@@ -122,7 +129,8 @@ export interface InventoryChangeLog {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListInventoryChangeLog {
   /**
@@ -136,7 +144,13 @@ export interface ListInventoryChangeLog {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -153,12 +167,16 @@ export interface InventoryChangeLogRetrieveParams {
 
 export interface InventoryChangeLogListParams {
   /**
-   * Filter by the action that produced the change.
+   * Restricts results to these action types (`scan`, `user_action`, `system_action`,
+   * `user_correction`).
    */
   action_type_codes?: Array<string>;
 
   /**
-   * Filter by the user responsible for the change.
+   * Restricts results to changes made by these users.
+   *
+   * Changes that were recorded without a responsible user are excluded whenever this
+   * filter is set.
    */
   changed_by_user_ids?: Array<string>;
 
@@ -185,7 +203,7 @@ export interface InventoryChangeLogListParams {
   >;
 
   /**
-   * Filter by item IDs.
+   * Restricts results to changes affecting these items.
    */
   item_ids?: Array<string>;
 

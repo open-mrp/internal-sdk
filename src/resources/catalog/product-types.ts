@@ -13,6 +13,10 @@ export class ProductTypes extends APIResource {
   /**
    * Creates a product type.
    *
+   * Product types are shared across all accounts, so a new type is immediately
+   * available everywhere and its name and code must not collide with any existing
+   * type; either collision returns a conflict error.
+   *
    * This endpoint requires the permission: `product_types:create`.
    *
    * @example
@@ -37,7 +41,7 @@ export class ProductTypes extends APIResource {
    * ```ts
    * const productType =
    *   await client.catalog.productTypes.retrieve(
-   *     'prty_01ddca85eedfb6b101a3c2f379',
+   *     'prty_bdu6hiasyjl4',
    *   );
    * ```
    */
@@ -48,13 +52,16 @@ export class ProductTypes extends APIResource {
   /**
    * Partially updates a product type.
    *
+   * Product types are shared across all accounts, so a change here applies
+   * everywhere.
+   *
    * This endpoint requires the permission: `product_types:update`.
    *
    * @example
    * ```ts
    * const productType =
    *   await client.catalog.productTypes.update(
-   *     'prty_01ddca85eedfb6b101a3c2f379',
+   *     'prty_bdu6hiasyjl4',
    *     { code: 'service', name: 'Service' },
    *   );
    * ```
@@ -70,7 +77,8 @@ export class ProductTypes extends APIResource {
   /**
    * Returns a paginated list of product types.
    *
-   * Product types are global and not scoped to a specific account.
+   * Product types are global and not scoped to a specific account. The `q` search
+   * term is matched against the product type name.
    *
    * This endpoint requires the permission: `product_types:read`.
    *
@@ -90,13 +98,18 @@ export class ProductTypes extends APIResource {
   /**
    * Deletes a product type.
    *
+   * Products point at their product type by code, and nothing blocks the delete, so
+   * removing a type that products still use leaves those products referencing a code
+   * that no longer resolves. Reassign or delete those products first. Product types
+   * are shared across all accounts, so the deletion affects every account.
+   *
    * This endpoint requires the permission: `product_types:delete`.
    *
    * @example
    * ```ts
    * const productType =
    *   await client.catalog.productTypes.delete(
-   *     'prty_01ddca85eedfb6b101a3c2f379',
+   *     'prty_bdu6hiasyjl4',
    *   );
    * ```
    */
@@ -112,22 +125,23 @@ export interface CreateProductTypeRequest {
   /**
    * Stable machine-readable code for the product type.
    *
-   * Must be unique across product types. Products reference their product type by
-   * this code, and the code can be used in place of the ID when retrieving a product
-   * type.
+   * Must be unique across all product types. Products reference their product type
+   * by this code rather than by ID, and the code can be used in place of the ID when
+   * retrieving a product type.
    */
   code: string;
 
   /**
-   * Human-readable name of the product type.
+   * Display name of the product type.
    *
-   * Must be unique across product types.
+   * Must be unique across all product types.
    */
   name: string;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductType {
   /**
@@ -141,13 +155,22 @@ export interface ListProductType {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * ProductType classifies how a product behaves on orders and invoices.
+ * The classification that decides how a product behaves on orders and invoices — a
+ * sellable good, a service, a shipping charge, and so on.
+ *
+ * Product types are shared across all accounts rather than owned by one.
  */
 export interface ProductType {
   /**
@@ -165,8 +188,8 @@ export interface ProductType {
    * - `return`: a returned product (RMA).
    * - `tax`: a tax line.
    *
-   * Products reference their product type by this code, and the code can be used in
-   * place of the ID when retrieving a product type.
+   * Products reference their product type by this code rather than by ID, and the
+   * code can be used in place of the ID when retrieving a product type.
    */
   code: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
 
@@ -176,7 +199,9 @@ export interface ProductType {
   created_at: string;
 
   /**
-   * Human-readable name of the product type, unique across product types.
+   * Display name of the product type.
+   *
+   * Unique across all product types.
    */
   name: string;
 
@@ -196,16 +221,18 @@ export interface ProductType {
  */
 export interface UpdateProductTypeRequest {
   /**
-   * New machine-readable code.
+   * New machine-readable code for the product type.
    *
-   * Must be unique across product types.
+   * Must be unique across all product types. Existing products point at their
+   * product type by code, so changing it leaves them referencing a code that no
+   * longer exists; only rename a code no product uses.
    */
   code?: string;
 
   /**
-   * New human-readable name.
+   * New display name for the product type.
    *
-   * Must be unique across product types.
+   * Must be unique across all product types.
    */
   name?: string;
 }
@@ -216,32 +243,34 @@ export interface ProductTypeCreateParams {
   /**
    * Stable machine-readable code for the product type.
    *
-   * Must be unique across product types. Products reference their product type by
-   * this code, and the code can be used in place of the ID when retrieving a product
-   * type.
+   * Must be unique across all product types. Products reference their product type
+   * by this code rather than by ID, and the code can be used in place of the ID when
+   * retrieving a product type.
    */
   code: string;
 
   /**
-   * Human-readable name of the product type.
+   * Display name of the product type.
    *
-   * Must be unique across product types.
+   * Must be unique across all product types.
    */
   name: string;
 }
 
 export interface ProductTypeUpdateParams {
   /**
-   * New machine-readable code.
+   * New machine-readable code for the product type.
    *
-   * Must be unique across product types.
+   * Must be unique across all product types. Existing products point at their
+   * product type by code, so changing it leaves them referencing a code that no
+   * longer exists; only rename a code no product uses.
    */
   code?: string;
 
   /**
-   * New human-readable name.
+   * New display name for the product type.
    *
-   * Must be unique across product types.
+   * Must be unique across all product types.
    */
   name?: string;
 }

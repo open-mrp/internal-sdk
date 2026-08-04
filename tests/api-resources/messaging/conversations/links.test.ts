@@ -9,8 +9,8 @@ const client = new Augno({
 
 describe('resource links', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.messaging.conversations.links.create('cv_01h9z8q1w2e3r4t5y6u7i8cv', {
-      resource_id: 'or_01d5034136c3ccc048abecc312',
+    const responsePromise = client.messaging.conversations.links.create('cv_w35z4ck68yq7', {
+      resource_id: 'or_9lqo07quiwyb',
       resource_type: 'sales_order',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -23,15 +23,15 @@ describe('resource links', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.messaging.conversations.links.create('cv_01h9z8q1w2e3r4t5y6u7i8cv', {
-      resource_id: 'or_01d5034136c3ccc048abecc312',
+    const response = await client.messaging.conversations.links.create('cv_w35z4ck68yq7', {
+      resource_id: 'or_9lqo07quiwyb',
       resource_type: 'sales_order',
       include: ['conversation'],
     });
   });
 
   test('list', async () => {
-    const responsePromise = client.messaging.conversations.links.list('cv_01h9z8q1w2e3r4t5y6u7i8cv');
+    const responsePromise = client.messaging.conversations.links.list('cv_w35z4ck68yq7');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource links', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.messaging.conversations.links.list(
-        'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+        'cv_w35z4ck68yq7',
         { include: ['conversation'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -53,9 +53,7 @@ describe('resource links', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.messaging.conversations.links.delete('example', {
-      id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv',
-    });
+    const responsePromise = client.messaging.conversations.links.delete('example', { id: 'cv_w35z4ck68yq7' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -66,8 +64,6 @@ describe('resource links', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.messaging.conversations.links.delete('example', {
-      id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv',
-    });
+    const response = await client.messaging.conversations.links.delete('example', { id: 'cv_w35z4ck68yq7' });
   });
 });

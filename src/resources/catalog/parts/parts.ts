@@ -28,21 +28,21 @@ export class Parts extends APIResource {
    * @example
    * ```ts
    * const part = await client.catalog.parts.create({
-   *   category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
+   *   category_id: 'ic_d06g9c6yc9ck',
    *   sku: 'BRG-6204-2RS',
-   *   attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
+   *   attribute_ids: ['at_rf1w295jt5ia'],
    *   description: 'Deep groove ball bearing, 20x47x14mm',
    *   notes:
    *     'OEM-equivalent; verify shielding type before substitution.',
    *   unit_cost: {
    *     value: '9.40',
-   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     numerator_unit_id: 'un_82bd37dae5po',
+   *     denominator_unit_id: 'un_82bd37dae5po',
    *   },
    *   unit_price: {
    *     value: '14.99',
-   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     numerator_unit_id: 'un_82bd37dae5po',
+   *     denominator_unit_id: 'un_82bd37dae5po',
    *   },
    * });
    * ```
@@ -61,7 +61,7 @@ export class Parts extends APIResource {
    * @example
    * ```ts
    * const part = await client.catalog.parts.retrieve(
-   *   'pt_018d7bab53e864351f4c693a21',
+   *   'pt_coba9fgvd84c',
    * );
    * ```
    */
@@ -76,7 +76,9 @@ export class Parts extends APIResource {
   /**
    * Partially updates a part.
    *
-   * Fields not provided retain their current values.
+   * Fields not provided retain their current values. Only the SKU, description, and
+   * notes are editable here; the part's category and attributes are changed through
+   * the item endpoints.
    *
    * This endpoint requires the permissions: `parts:update`, `customers:update`,
    * `suppliers:update`.
@@ -84,7 +86,7 @@ export class Parts extends APIResource {
    * @example
    * ```ts
    * const part = await client.catalog.parts.update(
-   *   'pt_018d7bab53e864351f4c693a21',
+   *   'pt_coba9fgvd84c',
    *   {
    *     description: 'Deep groove ball bearing, 20x47x14mm',
    *     notes:
@@ -104,7 +106,12 @@ export class Parts extends APIResource {
   }
 
   /**
-   * Returns a paginated list of parts for the current account.
+   * Returns a paginated list of parts for the current account, most recently created
+   * first.
+   *
+   * The `q` search term matches the part's SKU or description. When it is supplied,
+   * the parts whose SKU matches it most closely are returned first, ordered by
+   * creation time within each level of match.
    *
    * This endpoint requires the permissions: `parts:read`, `customers:read`,
    * `suppliers:read`.
@@ -131,7 +138,7 @@ export class Parts extends APIResource {
    * @example
    * ```ts
    * const part = await client.catalog.parts.delete(
-   *   'pt_018d7bab53e864351f4c693a21',
+   *   'pt_coba9fgvd84c',
    * );
    * ```
    */
@@ -176,20 +183,27 @@ export interface CreatePartRequest {
   notes?: string;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_cost?: SalesOrdersAPI.RateInput;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price?: SalesOrdersAPI.RateInput;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPart {
   /**
@@ -203,7 +217,13 @@ export interface ListPart {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -226,7 +246,7 @@ export interface Part {
   created_at: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
@@ -246,16 +266,12 @@ export interface Part {
  */
 export interface UpdatePartRequest {
   /**
-   * New description for the part.
-   *
-   * Set to a string to replace the current description, or `null` to clear it.
+   * New free-form description of the part.
    */
   description?: string | null;
 
   /**
-   * New notes for the part.
-   *
-   * Set to a string to replace the current notes, or `null` to clear them.
+   * New free-form notes about the part.
    */
   notes?: string | null;
 
@@ -309,14 +325,20 @@ export interface PartCreateParams {
   notes?: string;
 
   /**
-   * Body param: A rate value with its numerator and denominator units, used in
-   * create and update requests.
+   * Body param: A value expressed as a ratio of two units, supplied on create and
+   * update requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_cost?: SalesOrdersAPI.RateInput;
 
   /**
-   * Body param: A rate value with its numerator and denominator units, used in
-   * create and update requests.
+   * Body param: A value expressed as a ratio of two units, supplied on create and
+   * update requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price?: SalesOrdersAPI.RateInput;
 }
@@ -348,16 +370,12 @@ export interface PartUpdateParams {
   >;
 
   /**
-   * Body param: New description for the part.
-   *
-   * Set to a string to replace the current description, or `null` to clear it.
+   * Body param: New free-form description of the part.
    */
   description?: string | null;
 
   /**
-   * Body param: New notes for the part.
-   *
-   * Set to a string to replace the current notes, or `null` to clear them.
+   * Body param: New free-form notes about the part.
    */
   notes?: string | null;
 
@@ -372,12 +390,12 @@ export interface PartUpdateParams {
 
 export interface PartListParams {
   /**
-   * Filter by attribute IDs.
+   * Only return parts carrying at least one of these attributes.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Filter by category IDs.
+   * Only return parts belonging to any of these item categories.
    */
   category_ids?: Array<string>;
 
@@ -391,7 +409,7 @@ export interface PartListParams {
   cursor?: string;
 
   /**
-   * Filter parts created on or before this date.
+   * Only return parts created at or before this time.
    */
   end_date?: string;
 
@@ -423,7 +441,7 @@ export interface PartListParams {
   q?: string;
 
   /**
-   * Filter parts created on or after this date.
+   * Only return parts created at or after this time.
    */
   start_date?: string;
 }

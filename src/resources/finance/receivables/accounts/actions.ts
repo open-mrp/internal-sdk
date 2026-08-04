@@ -11,8 +11,12 @@ import { path } from '../../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Exports all outstanding receivable entries for a specific customer account as a
-   * CSV file.
+   * Exports a single customer's outstanding receivable entries as a downloadable CSV
+   * file.
+   *
+   * The response is the file itself rather than a JSON resource, and it covers every
+   * open invoice for the customer instead of one page of results. When a cutoff date
+   * is supplied, it is included in the generated file name.
    *
    * This endpoint requires the permission: `customers:read`.
    *
@@ -20,7 +24,7 @@ export class Actions extends APIResource {
    * ```ts
    * const fileDownload =
    *   await client.finance.receivables.accounts.actions.export(
-   *     'ac_01148680966698341a9c0976db',
+   *     'ac_ykxoradjoeb3',
    *   );
    * ```
    */

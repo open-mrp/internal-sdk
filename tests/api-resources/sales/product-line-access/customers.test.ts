@@ -10,8 +10,8 @@ const client = new Augno({
 describe('resource customers', () => {
   test('create: only required params', async () => {
     const responsePromise = client.sales.productLineAccess.customers.create({
-      customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+      customer_id: 'ac_opnlh43ymyee',
+      product_line_ids: ['pdln_k9bnlgvxhxjh'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -24,15 +24,13 @@ describe('resource customers', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.sales.productLineAccess.customers.create({
-      customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+      customer_id: 'ac_opnlh43ymyee',
+      product_line_ids: ['pdln_k9bnlgvxhxjh'],
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.productLineAccess.customers.retrieve(
-      'ac_0170df1ac58e4d24c66fc89f5f',
-    );
+    const responsePromise = client.sales.productLineAccess.customers.retrieve('ac_opnlh43ymyee');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -43,7 +41,7 @@ describe('resource customers', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.productLineAccess.customers.update('ac_0170df1ac58e4d24c66fc89f5f');
+    const responsePromise = client.sales.productLineAccess.customers.update('ac_opnlh43ymyee');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -57,8 +55,8 @@ describe('resource customers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.productLineAccess.customers.update(
-        'ac_0170df1ac58e4d24c66fc89f5f',
-        { product_line_ids: ['pdln_01996357326a0d3f7b129542ea'] },
+        'ac_opnlh43ymyee',
+        { product_line_ids: ['pdln_k9bnlgvxhxjh'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
@@ -90,7 +88,7 @@ describe('resource customers', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.productLineAccess.customers.delete('ac_0170df1ac58e4d24c66fc89f5f');
+    const responsePromise = client.sales.productLineAccess.customers.delete('ac_opnlh43ymyee');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

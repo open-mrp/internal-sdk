@@ -13,10 +13,15 @@ import { path } from '../../../internal/utils/path';
  */
 export class AccountGroups extends APIResource {
   /**
-   * Creates a product line access record for an account group.
+   * Grants an account group access to a set of product lines.
+   *
+   * Every customer that has this group as its type group or as one of its pricing
+   * groups can then browse and order those product lines, on top of anything granted
+   * to the customer directly.
    *
    * Each account group can have at most one access record; creating one for an
-   * account group that already has one returns a conflict error.
+   * account group that already has one returns a conflict error. Use Update Account
+   * Group Product Line Access to change an existing record.
    *
    * This endpoint requires the permission: `relevant_products:create`.
    *
@@ -25,8 +30,8 @@ export class AccountGroups extends APIResource {
    * const accountGroupProductLineAccess =
    *   await client.sales.productLineAccess.accountGroups.create(
    *     {
-   *       account_group_id: 'acgp_018e88072d1320808dc979cfac',
-   *       product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+   *       account_group_id: 'acgp_6p4z57e9alaf',
+   *       product_line_ids: ['pdln_k9bnlgvxhxjh'],
    *     },
    *   );
    * ```
@@ -39,7 +44,10 @@ export class AccountGroups extends APIResource {
   }
 
   /**
-   * Returns product line access for an account group.
+   * Returns the set of product lines an account group has been granted access to.
+   *
+   * An account group that has never been granted anything returns an empty product
+   * line list rather than a not-found error.
    *
    * This endpoint requires the permission: `relevant_products:read`.
    *
@@ -47,7 +55,7 @@ export class AccountGroups extends APIResource {
    * ```ts
    * const accountGroupProductLineAccess =
    *   await client.sales.productLineAccess.accountGroups.retrieve(
-   *     'acgp_018e88072d1320808dc979cfac',
+   *     'acgp_6p4z57e9alaf',
    *   );
    * ```
    */
@@ -59,7 +67,9 @@ export class AccountGroups extends APIResource {
    * Replaces the set of product lines accessible to an account group.
    *
    * This is a full replacement, not a merge: product lines omitted from the request
-   * lose access.
+   * lose access. The account group must already have at least one product line
+   * granted, otherwise the request returns a not-found error and the grant has to be
+   * made with Create Account Group Product Line Access.
    *
    * This endpoint requires the permission: `relevant_products:update`.
    *
@@ -67,10 +77,8 @@ export class AccountGroups extends APIResource {
    * ```ts
    * const accountGroupProductLineAccess =
    *   await client.sales.productLineAccess.accountGroups.update(
-   *     'acgp_018e88072d1320808dc979cfac',
-   *     {
-   *       product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
-   *     },
+   *     'acgp_6p4z57e9alaf',
+   *     { product_line_ids: ['pdln_k9bnlgvxhxjh'] },
    *   );
    * ```
    */
@@ -88,6 +96,9 @@ export class AccountGroups extends APIResource {
   /**
    * Returns a paginated list of product line access records, one per account group.
    *
+   * Only account groups that have been granted at least one product line appear. The
+   * `q` search term is matched against the account group name.
+   *
    * This endpoint requires the permission: `relevant_products:read`.
    *
    * @example
@@ -104,7 +115,11 @@ export class AccountGroups extends APIResource {
   }
 
   /**
-   * Removes all product line access for an account group.
+   * Removes an account group's product line access record.
+   *
+   * Customers in the group keep any product lines granted to them directly or
+   * through another of their groups. Removing access from a group that has none
+   * returns a not-found error rather than succeeding silently.
    *
    * This endpoint requires the permission: `relevant_products:delete`.
    *
@@ -112,7 +127,7 @@ export class AccountGroups extends APIResource {
    * ```ts
    * const accountGroup =
    *   await client.sales.productLineAccess.accountGroups.delete(
-   *     'acgp_018e88072d1320808dc979cfac',
+   *     'acgp_6p4z57e9alaf',
    *   );
    * ```
    */
@@ -124,16 +139,25 @@ export class AccountGroups extends APIResource {
 /**
  * The set of product lines that accounts in an account group are allowed to order
  * from.
+ *
+ * A customer reaches these product lines when the group is its type group or one
+ * of its pricing groups. Group access is additive with the customer's own direct
+ * access — a customer can order anything granted by either route.
  */
 export interface AccountGroupProductLineAccess {
   /**
    * A named grouping of customer accounts, used for pricing rules or to categorize
    * accounts.
+   *
+   * A customer carries at most one group of type `type_group` as its customer type,
+   * plus any number of groups of type `pricing_group`. Membership of either kind can
+   * scope a volume discount to the customer and open up product lines for it to
+   * order from.
    */
   account_group: CustomersAPI.AccountGroup | null;
 
   /**
-   * Creation timestamp.
+   * When the account group was created.
    */
   created_at: string;
 
@@ -143,12 +167,13 @@ export interface AccountGroupProductLineAccess {
   object: 'account_group_product_line_access';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   product_lines: ListProductLine | null;
 
   /**
-   * Last updated timestamp.
+   * When the account group was last updated.
    */
   updated_at: string;
 }
@@ -165,13 +190,15 @@ export interface CreateAccountGroupProductLineAccessRequest {
   /**
    * IDs of the product lines the account group is granted access to.
    *
-   * Must contain at least one product line ID; every ID must belong to your account.
+   * Must contain at least one ID, and each one must be a product line your account
+   * owns; the shared system product lines cannot be granted.
    */
   product_line_ids: Array<string>;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAccountGroupProductLineAccess {
   /**
@@ -185,13 +212,20 @@ export interface ListAccountGroupProductLineAccess {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductLine {
   /**
@@ -205,7 +239,13 @@ export interface ListProductLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -217,8 +257,12 @@ export interface UpdateAccountGroupProductLineAccessRequest {
   /**
    * IDs of the product lines the account group should have access to.
    *
-   * The provided list replaces the account group's existing set of product lines;
-   * every ID must belong to your account.
+   * The provided list replaces the account group's existing set of product lines,
+   * and each ID must be a product line your account owns.
+   *
+   * Sending an empty list, or omitting the field, revokes every product line from
+   * the group. The record then has nothing left to update, so granting access again
+   * goes through Create Account Group Product Line Access.
    */
   product_line_ids?: Array<string>;
 }
@@ -234,7 +278,8 @@ export interface AccountGroupCreateParams {
   /**
    * IDs of the product lines the account group is granted access to.
    *
-   * Must contain at least one product line ID; every ID must belong to your account.
+   * Must contain at least one ID, and each one must be a product line your account
+   * owns; the shared system product lines cannot be granted.
    */
   product_line_ids: Array<string>;
 }
@@ -243,8 +288,12 @@ export interface AccountGroupUpdateParams {
   /**
    * IDs of the product lines the account group should have access to.
    *
-   * The provided list replaces the account group's existing set of product lines;
-   * every ID must belong to your account.
+   * The provided list replaces the account group's existing set of product lines,
+   * and each ID must be a product line your account owns.
+   *
+   * Sending an empty list, or omitting the field, revokes every product line from
+   * the group. The record then has nothing left to update, so granting access again
+   * goes through Create Account Group Product Line Access.
    */
   product_line_ids?: Array<string>;
 }

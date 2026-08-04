@@ -10,11 +10,11 @@ const client = new Augno({
 describe('resource accountPrices', () => {
   test('create: only required params', async () => {
     const responsePromise = client.sales.accountPrices.create({
-      product_line_id: 'pdln_01996357326a0d3f7b129542ea',
-      rate_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-      rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+      product_line_id: 'pdln_k9bnlgvxhxjh',
+      rate_denominator_unit_id: 'un_82bd37dae5po',
+      rate_numerator_unit_id: 'un_82bd37dae5po',
       rate_value: '25.50',
-      recipient_account_id: 'ac_01148680966698341a9c0976db',
+      recipient_account_id: 'ac_ykxoradjoeb3',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -27,19 +27,19 @@ describe('resource accountPrices', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.sales.accountPrices.create({
-      product_line_id: 'pdln_01996357326a0d3f7b129542ea',
-      rate_denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-      rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+      product_line_id: 'pdln_k9bnlgvxhxjh',
+      rate_denominator_unit_id: 'un_82bd37dae5po',
+      rate_numerator_unit_id: 'un_82bd37dae5po',
       rate_value: '25.50',
-      recipient_account_id: 'ac_01148680966698341a9c0976db',
+      recipient_account_id: 'ac_ykxoradjoeb3',
       include: ['recipient_account'],
-      attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
-      category_ids: ['ic_01ae7bd7bfd21ca0ab81e1357e'],
+      attribute_ids: ['at_rf1w295jt5ia'],
+      category_ids: ['ic_d06g9c6yc9ck'],
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.accountPrices.retrieve('acpr_01dfc47cc46b1e0b66ca8eec0a');
+    const responsePromise = client.sales.accountPrices.retrieve('acpr_7l4j483kf32p');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -53,7 +53,7 @@ describe('resource accountPrices', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.accountPrices.retrieve(
-        'acpr_01dfc47cc46b1e0b66ca8eec0a',
+        'acpr_7l4j483kf32p',
         { include: ['recipient_account'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -61,7 +61,7 @@ describe('resource accountPrices', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.accountPrices.update('acpr_01dfc47cc46b1e0b66ca8eec0a');
+    const responsePromise = client.sales.accountPrices.update('acpr_7l4j483kf32p');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -75,7 +75,7 @@ describe('resource accountPrices', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.accountPrices.update(
-        'acpr_01dfc47cc46b1e0b66ca8eec0a',
+        'acpr_7l4j483kf32p',
         {
           include: ['recipient_account'],
           attribute_ids: ['string'],
@@ -118,7 +118,7 @@ describe('resource accountPrices', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.accountPrices.delete('acpr_01dfc47cc46b1e0b66ca8eec0a');
+    const responsePromise = client.sales.accountPrices.delete('acpr_7l4j483kf32p');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

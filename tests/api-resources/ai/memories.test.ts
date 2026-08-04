@@ -35,7 +35,7 @@ describe('resource memories', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.ai.memories.retrieve('agmm_018731bdaf4ab04bd5bff1b65c');
+    const responsePromise = client.ai.memories.retrieve('agmm_o7tjkr16gfmh');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -46,7 +46,7 @@ describe('resource memories', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.ai.memories.update('agmm_018731bdaf4ab04bd5bff1b65c');
+    const responsePromise = client.ai.memories.update('agmm_o7tjkr16gfmh');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -60,7 +60,7 @@ describe('resource memories', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.ai.memories.update(
-        'agmm_018731bdaf4ab04bd5bff1b65c',
+        'agmm_o7tjkr16gfmh',
         {
           category: 'category',
           content: 'Customer prefers next-day shipping on all orders.',
@@ -103,7 +103,7 @@ describe('resource memories', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.ai.memories.delete('agmm_018731bdaf4ab04bd5bff1b65c');
+    const responsePromise = client.ai.memories.delete('agmm_o7tjkr16gfmh');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

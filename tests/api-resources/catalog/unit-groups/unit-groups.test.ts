@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource unitGroups', () => {
   test('create: only required params', async () => {
     const responsePromise = client.catalog.unitGroups.create({
-      base_unit_id: 'un_01966263f74a5a0cae356000a1',
+      base_unit_id: 'un_82bd37dae5po',
       name: 'Weight Units',
       type: 'mass',
     });
@@ -25,13 +25,13 @@ describe('resource unitGroups', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.catalog.unitGroups.create({
-      base_unit_id: 'un_01966263f74a5a0cae356000a1',
+      base_unit_id: 'un_82bd37dae5po',
       name: 'Weight Units',
       type: 'mass',
       include: ['owner'],
       associated_units: [
         {
-          unit_id: 'un_01966263f74a5a0cae356000a1',
+          unit_id: 'un_82bd37dae5po',
           customer_portal_visibility: 'visible',
           discount_fixed: 0,
           discount_percentage: 1,
@@ -42,7 +42,7 @@ describe('resource unitGroups', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.unitGroups.retrieve('ug_01aad07abb8e41fd392d2d7013');
+    const responsePromise = client.catalog.unitGroups.retrieve('ug_andst6m79n41');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -56,7 +56,7 @@ describe('resource unitGroups', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.unitGroups.retrieve(
-        'ug_01aad07abb8e41fd392d2d7013',
+        'ug_andst6m79n41',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -64,7 +64,7 @@ describe('resource unitGroups', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.unitGroups.update('ug_01aad07abb8e41fd392d2d7013');
+    const responsePromise = client.catalog.unitGroups.update('ug_andst6m79n41');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -78,18 +78,18 @@ describe('resource unitGroups', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.unitGroups.update(
-        'ug_01aad07abb8e41fd392d2d7013',
+        'ug_andst6m79n41',
         {
           include: ['owner'],
           associated_units: [
             {
-              unit_id: 'un_01966263f74a5a0cae356000a1',
+              unit_id: 'un_82bd37dae5po',
               customer_portal_visibility: 'visible',
               discount_fixed: 0,
               discount_percentage: 1,
             },
           ],
-          base_unit_id: 'un_01966263f74a5a0cae356000a1',
+          base_unit_id: 'un_82bd37dae5po',
           name: 'Weight Units (Updated)',
           notes: 'Added kilogram association for metric orders.',
         },
@@ -126,7 +126,7 @@ describe('resource unitGroups', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.unitGroups.delete('ug_01aad07abb8e41fd392d2d7013');
+    const responsePromise = client.catalog.unitGroups.delete('ug_andst6m79n41');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

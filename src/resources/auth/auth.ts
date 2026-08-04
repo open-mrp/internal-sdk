@@ -70,7 +70,11 @@ export class Auth extends APIResource {
     new RegistrationSessionsAPI.RegistrationSessions(this._client);
 
   /**
-   * Revokes a refresh token.
+   * Signs the current session out by revoking its refresh token.
+   *
+   * The auth cookies are cleared and the refresh token can no longer be exchanged
+   * for access tokens. Other sessions belonging to the user are unaffected, and any
+   * access token already issued stays valid until it expires.
    *
    * @example
    * ```ts
@@ -82,16 +86,20 @@ export class Auth extends APIResource {
   }
 
   /**
-   * Rotates the password for a scanner-role account user backing a scanning station.
+   * Sets a new password for a scanner-role account user, the login used by a
+   * scanning station.
    *
-   * Requires the caller's current password for verification.
+   * The caller must be signed in as a user with permission to manage team users and
+   * must supply their own current password; API keys cannot perform this operation
+   * because they have no password to verify. Only scanner-role users in the caller's
+   * account can be changed this way — use the password reset flow for everyone else.
    *
    * This endpoint requires the permission: `team:update`.
    *
    * @example
    * ```ts
    * const response = await client.auth.scannerPasswords({
-   *   account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
+   *   account_user_id: 'acus_e5zu8bde0z3h',
    *   new_password: '50iR2X0r@bvIH',
    *   requester_password: 'QgS7Z8Hhj3&1',
    * });
@@ -105,8 +113,13 @@ export class Auth extends APIResource {
   }
 
   /**
-   * Refreshes an access token using a refresh token, setting a new access token in a
+   * Issues a new access token from the caller's refresh token, setting it in a
    * cookie.
+   *
+   * The refresh token itself is not rotated and keeps its original expiration, so
+   * the same cookie can be exchanged repeatedly until it expires or is revoked. A
+   * refresh token that has been revoked or has expired fails here and the user must
+   * sign in again.
    *
    * @example
    * ```ts
@@ -120,8 +133,11 @@ export class Auth extends APIResource {
   /**
    * Registers a user on the customer portal.
    *
-   * Returns the new user object and sets access and refresh tokens in cookies. If
-   * the email is already registered, the request fails with a generic validation
+   * Returns the new user object, sets access and refresh tokens in cookies, and
+   * sends the user a welcome email. Registering creates the user record only;
+   * membership in an account is granted separately.
+   *
+   * If the email is already registered, the request fails with a generic validation
    * error (so existing emails are not revealed) and an "already registered" email
    * containing a magic login link is sent to the existing user instead.
    *
@@ -144,23 +160,30 @@ export class Auth extends APIResource {
  */
 export interface RegisterRequest {
   /**
-   * Email address.
+   * Email address the user will sign in with.
+   *
+   * Must not already belong to a user; the request is rejected without revealing
+   * that the address is taken.
    */
   email: string;
 
   /**
-   * Full name.
+   * Full name of the user, used to address them in emails.
    */
   name: string;
 
   /**
-   * User password.
+   * Password the user will sign in with.
    */
   password: string;
 
   /**
-   * When registering from a customer portal, scopes the magic-login link in the
-   * "already registered" email.
+   * Slug of the customer portal the user is registering from.
+   *
+   * Only affects the "already registered" email sent when the address is taken: it
+   * points the magic-login link back at that portal instead of the generic
+   * dashboard. Accounts with a verified custom portal domain use that domain in the
+   * link instead of the slug.
    */
   account_slug?: string;
 }
@@ -170,7 +193,10 @@ export interface RegisterRequest {
  */
 export interface UpdateScannerPasswordRequest {
   /**
-   * Target scanner account user ID.
+   * ID of the account user whose password is being changed.
+   *
+   * Must belong to the caller's account and hold a scanner role; requests targeting
+   * any other user are rejected.
    */
   account_user_id: string;
 
@@ -180,7 +206,8 @@ export interface UpdateScannerPasswordRequest {
   new_password: string;
 
   /**
-   * Requester's current password (the caller's own password, for verification).
+   * The caller's own current password, used to confirm the caller's identity before
+   * the scanner password is changed.
    */
   requester_password: string;
 }
@@ -203,7 +230,7 @@ export interface User {
   created_at: string;
 
   /**
-   * Email address.
+   * Email address the user signs in with and receives platform email at.
    */
   email: string | null;
 
@@ -213,7 +240,11 @@ export interface User {
   email_verified_at: string | null;
 
   /**
-   * URL of the user's profile image.
+   * Location of the user's profile image.
+   *
+   * For photos uploaded through the API this holds an internal path rather than a
+   * fetchable image URL; call Get User Photo URL to obtain a temporary link to the
+   * image itself.
    */
   image_url: string | null;
 
@@ -233,7 +264,9 @@ export interface User {
   updated_at: string;
 
   /**
-   * Username.
+   * Username the user can sign in with instead of their email address.
+   *
+   * Usernames are unique across the whole platform, not just within your account.
    */
   username: string | null;
 }
@@ -246,7 +279,10 @@ export interface AuthUpdateAccessTokensResponse {}
 
 export interface AuthScannerPasswordsParams {
   /**
-   * Target scanner account user ID.
+   * ID of the account user whose password is being changed.
+   *
+   * Must belong to the caller's account and hold a scanner role; requests targeting
+   * any other user are rejected.
    */
   account_user_id: string;
 
@@ -256,30 +292,38 @@ export interface AuthScannerPasswordsParams {
   new_password: string;
 
   /**
-   * Requester's current password (the caller's own password, for verification).
+   * The caller's own current password, used to confirm the caller's identity before
+   * the scanner password is changed.
    */
   requester_password: string;
 }
 
 export interface AuthUsersParams {
   /**
-   * Email address.
+   * Email address the user will sign in with.
+   *
+   * Must not already belong to a user; the request is rejected without revealing
+   * that the address is taken.
    */
   email: string;
 
   /**
-   * Full name.
+   * Full name of the user, used to address them in emails.
    */
   name: string;
 
   /**
-   * User password.
+   * Password the user will sign in with.
    */
   password: string;
 
   /**
-   * When registering from a customer portal, scopes the magic-login link in the
-   * "already registered" email.
+   * Slug of the customer portal the user is registering from.
+   *
+   * Only affects the "already registered" email sent when the address is taken: it
+   * points the magic-login link back at that portal instead of the generic
+   * dashboard. Accounts with a verified custom portal domain use that domain in the
+   * link instead of the slug.
    */
   account_slug?: string;
 }

@@ -9,9 +9,7 @@ const client = new Augno({
 
 describe('resource blocks', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.messaging.blocks.create({
-      blocked_account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
-    });
+    const responsePromise = client.messaging.blocks.create({ blocked_account_user_id: 'acus_e5zu8bde0z3h' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +21,7 @@ describe('resource blocks', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.messaging.blocks.create({
-      blocked_account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
+      blocked_account_user_id: 'acus_e5zu8bde0z3h',
       include: ['blocked_user'],
     });
   });

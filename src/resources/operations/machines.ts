@@ -13,14 +13,16 @@ export class Machines extends APIResource {
   /**
    * Creates a machine and assigns it to a department.
    *
-   * Returns a conflict error if a machine with the same name already exists.
+   * Returns a conflict error if another machine in your account already uses the
+   * same name, and a not-found error if the department does not belong to your
+   * account. The department cannot be changed once the machine exists.
    *
    * This endpoint requires the permission: `machines:create`.
    *
    * @example
    * ```ts
    * const machine = await client.operations.machines.create({
-   *   department_id: 'dp_01791c25ab59da4704cba61874',
+   *   department_id: 'dp_m0jayebxnkos',
    *   name: 'CNC Router',
    *   serial_number: 'SN-2024-0001',
    * });
@@ -39,7 +41,7 @@ export class Machines extends APIResource {
    * @example
    * ```ts
    * const machine = await client.operations.machines.retrieve(
-   *   'mc_0177d18f55a1615f783d3bf8d0',
+   *   'mc_ffcfk9dxixis',
    * );
    * ```
    */
@@ -55,14 +57,15 @@ export class Machines extends APIResource {
    * Partially updates a machine.
    *
    * Only the fields provided in the request are changed. Returns a conflict error if
-   * the new name is already in use by another machine.
+   * the new name is already in use by another machine in your account. A machine
+   * cannot be moved to a different department.
    *
    * This endpoint requires the permission: `machines:update`.
    *
    * @example
    * ```ts
    * const machine = await client.operations.machines.update(
-   *   'mc_0177d18f55a1615f783d3bf8d0',
+   *   'mc_ffcfk9dxixis',
    *   { name: 'Updated CNC Router' },
    * );
    * ```
@@ -77,7 +80,10 @@ export class Machines extends APIResource {
   }
 
   /**
-   * Returns a paginated list of machines in your account.
+   * Returns a paginated list of machines in your account, most recently created
+   * first.
+   *
+   * The search term matches the machine name.
    *
    * This endpoint requires the permission: `machines:read`.
    *
@@ -96,12 +102,16 @@ export class Machines extends APIResource {
   /**
    * Deletes a machine.
    *
+   * Deletion is permanent, and repeating the call reports that the machine has
+   * already been deleted. Downtime events and schedule lines already logged against
+   * the machine are kept rather than removed with it.
+   *
    * This endpoint requires the permission: `machines:delete`.
    *
    * @example
    * ```ts
    * const machine = await client.operations.machines.delete(
-   *   'mc_0177d18f55a1615f783d3bf8d0',
+   *   'mc_ffcfk9dxixis',
    * );
    * ```
    */

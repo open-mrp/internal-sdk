@@ -109,7 +109,11 @@ export class Finance extends APIResource {
   settlements: SettlementsAPI.Settlements = new SettlementsAPI.Settlements(this._client);
 
   /**
-   * Returns a paginated list of adjustment types.
+   * Returns a paginated list of the adjustment categories that can be recorded on an
+   * adjustment transaction, such as discounts, fees, and write-offs.
+   *
+   * Adjustment types are platform-provided and identical for every account.
+   * Free-text search matches the display name.
    *
    * @example
    * ```ts
@@ -125,8 +129,13 @@ export class Finance extends APIResource {
   }
 
   /**
-   * Returns a paginated list of transactions that are not fully allocated against
-   * invoices, with the remaining balance available to apply.
+   * Returns a paginated list of customer transactions that still have money left to
+   * apply to invoices, newest first.
+   *
+   * Membership is driven by each transaction's `is_fully_allocated` flag rather than
+   * by a recomputed balance, so a transaction remains listed until that flag is set.
+   * Free-text search matches the transaction ID, transaction number, customer name,
+   * and note.
    *
    * This endpoint requires the permission: `settlements:read`.
    *
@@ -144,7 +153,12 @@ export class Finance extends APIResource {
   }
 
   /**
-   * Returns a paginated list of transaction methods.
+   * Returns the payment methods that can be recorded on a transaction, such as cash,
+   * check, and ACH.
+   *
+   * The set is fixed by the platform and identical for every account, so the results
+   * come back in one page; supplying a pagination cursor returns a validation error.
+   * Free-text search matches the display name.
    *
    * @example
    * ```ts
@@ -160,7 +174,12 @@ export class Finance extends APIResource {
   }
 
   /**
-   * Returns a paginated list of transaction types.
+   * Returns the transaction types that can be recorded against a customer: payments,
+   * credit memos, adjustments, and rebates.
+   *
+   * The set is fixed by the platform and identical for every account, so the results
+   * come back in one page; supplying a pagination cursor returns a validation error.
+   * Free-text search matches the display name.
    *
    * @example
    * ```ts
@@ -179,8 +198,8 @@ export class Finance extends APIResource {
 /**
  * A category of financial adjustment, such as a discount, fee, or write-off.
  *
- * Adjustment types classify adjustment transactions recorded against customer
- * invoices.
+ * Adjustment types classify the `adjustment` transactions recorded against a
+ * customer.
  */
 export interface AdjustmentType {
   /**
@@ -228,11 +247,11 @@ export interface AdjustmentType {
 }
 
 /**
- * Minimal customer sub-resource for allocation entries and open-credit entries.
+ * Minimal customer reference carried by allocation entries and open-credit
+ * entries.
  *
- * It carries its own allocation_customer discriminator (not customer) because the
- * customer id is not always present (allocation list entries omit it), so it is
- * not a guaranteed-resolvable customer reference.
+ * Open-credit entries identify the customer by `id`; allocation entries carry only
+ * the customer's name and number.
  */
 export interface AllocationCustomer {
   /**
@@ -246,7 +265,8 @@ export interface AllocationCustomer {
   name: string;
 
   /**
-   * Customer number.
+   * The customer number for this customer, matching the `number` on your customer
+   * record for it.
    */
   number: string | null;
 
@@ -277,7 +297,8 @@ export interface InvoiceAllocationEntry {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAdjustmentType {
   /**
@@ -291,13 +312,20 @@ export interface ListAdjustmentType {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListInvoiceAllocationEntry {
   /**
@@ -311,13 +339,20 @@ export interface ListInvoiceAllocationEntry {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListOpenCreditEntry {
   /**
@@ -331,13 +366,20 @@ export interface ListOpenCreditEntry {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListTransactionMethod {
   /**
@@ -351,13 +393,20 @@ export interface ListTransactionMethod {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListTransactionType {
   /**
@@ -371,13 +420,24 @@ export interface ListTransactionType {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * Open (not fully allocated) credit transaction.
+ * A transaction that still has credit available to apply to invoices.
+ *
+ * Whether a transaction counts as an open credit is driven by its
+ * `is_fully_allocated` flag rather than by a recomputed balance, so a transaction
+ * keeps appearing here until that flag is set — even if its allocations already
+ * cover the full amount.
  */
 export interface OpenCreditEntry {
   /**
@@ -386,9 +446,9 @@ export interface OpenCreditEntry {
   id: string;
 
   /**
-   * Adjustment category of the underlying transaction.
+   * Display name of the adjustment category, such as "Discount" or "Write Off".
    *
-   * Typically populated for adjustment transactions; null for other types.
+   * Typically set only on adjustment transactions.
    */
   adjustment_type: string | null;
 
@@ -403,29 +463,28 @@ export interface OpenCreditEntry {
   created_at: string;
 
   /**
-   * Minimal customer sub-resource for allocation entries and open-credit entries.
+   * Minimal customer reference carried by allocation entries and open-credit
+   * entries.
    *
-   * It carries its own allocation_customer discriminator (not customer) because the
-   * customer id is not always present (allocation list entries omit it), so it is
-   * not a guaranteed-resolvable customer reference.
+   * Open-credit entries identify the customer by `id`; allocation entries carry only
+   * the customer's name and number.
    */
   customer: AllocationCustomer | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   invoice_allocations: ListInvoiceAllocationEntry | null;
 
   /**
-   * Remaining unallocated credit as a decimal string (`original_amount` minus
+   * Credit still available to apply, as a decimal string (`original_amount` minus
    * `allocated_amount`).
-   *
-   * This is the balance still available to apply.
    */
   leftover_amount: string;
 
   /**
-   * Note about this transaction.
+   * Free-form note attached to the transaction.
    */
   note: string | null;
 
@@ -445,28 +504,24 @@ export interface OpenCreditEntry {
   original_amount: string;
 
   /**
-   * Responsible user's name.
+   * Username of the account user recorded as responsible for the transaction.
    */
   responsible_user_name: string | null;
 
   /**
-   * Stripe payment ID, if applicable.
+   * Identifier of the Stripe payment that produced this transaction.
    */
   stripe_payment_id: string | null;
 
   /**
-   * Payment method of the underlying transaction.
+   * Display name of the payment method, such as "Check" or "Credit Card".
    *
-   * Typically present only on payment transactions and null for credit memos,
-   * adjustments, and rebates.
+   * Typically set only on payment transactions.
    */
   transaction_method: string | null;
 
   /**
-   * Type of the underlying transaction.
-   *
-   * Corresponds to one of the standard transaction types: payment, credit memo,
-   * adjustment, or rebate.
+   * Display name of the transaction's type, such as "Payment" or "Credit Memo".
    */
   transaction_type: string;
 }

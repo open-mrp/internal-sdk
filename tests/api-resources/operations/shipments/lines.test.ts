@@ -9,10 +9,10 @@ const client = new Augno({
 
 describe('resource lines', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.operations.shipments.lines.create('sh_018b3a946651bfb6572b06b2b2', {
-      quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+    const responsePromise = client.operations.shipments.lines.create('sh_pfygp2gl45y4', {
+      quantity_unit_id: 'un_82bd37dae5po',
       quantity_value: '10.000000000000000000000000000000',
-      sales_order_line_id: 'orln_0142f9b74268973450b3a76ce3',
+      sales_order_line_id: 'orln_la01fxgrwcnr',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -24,16 +24,16 @@ describe('resource lines', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.operations.shipments.lines.create('sh_018b3a946651bfb6572b06b2b2', {
-      quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+    const response = await client.operations.shipments.lines.create('sh_pfygp2gl45y4', {
+      quantity_unit_id: 'un_82bd37dae5po',
       quantity_value: '10.000000000000000000000000000000',
-      sales_order_line_id: 'orln_0142f9b74268973450b3a76ce3',
+      sales_order_line_id: 'orln_la01fxgrwcnr',
     });
   });
 
   test('retrieve: only required params', async () => {
     const responsePromise = client.operations.shipments.lines.retrieve('example', {
-      shipment_id: 'sh_018b3a946651bfb6572b06b2b2',
+      shipment_id: 'sh_pfygp2gl45y4',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -46,13 +46,13 @@ describe('resource lines', () => {
 
   test('retrieve: required and optional params', async () => {
     const response = await client.operations.shipments.lines.retrieve('example', {
-      shipment_id: 'sh_018b3a946651bfb6572b06b2b2',
+      shipment_id: 'sh_pfygp2gl45y4',
     });
   });
 
   test('update: only required params', async () => {
     const responsePromise = client.operations.shipments.lines.update('example', {
-      shipment_id: 'sh_018b3a946651bfb6572b06b2b2',
+      shipment_id: 'sh_pfygp2gl45y4',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -65,14 +65,14 @@ describe('resource lines', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.operations.shipments.lines.update('example', {
-      shipment_id: 'sh_018b3a946651bfb6572b06b2b2',
-      quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+      shipment_id: 'sh_pfygp2gl45y4',
+      quantity_unit_id: 'un_82bd37dae5po',
       quantity_value: '5.000000000000000000000000000000',
     });
   });
 
   test('list', async () => {
-    const responsePromise = client.operations.shipments.lines.list('sh_018b3a946651bfb6572b06b2b2');
+    const responsePromise = client.operations.shipments.lines.list('sh_pfygp2gl45y4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -86,7 +86,7 @@ describe('resource lines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.shipments.lines.list(
-        'sh_018b3a946651bfb6572b06b2b2',
+        'sh_pfygp2gl45y4',
         {
           cursor: 'cursor',
           limit: 0,
@@ -99,7 +99,7 @@ describe('resource lines', () => {
 
   test('delete: only required params', async () => {
     const responsePromise = client.operations.shipments.lines.delete('example', {
-      shipment_id: 'sh_018b3a946651bfb6572b06b2b2',
+      shipment_id: 'sh_pfygp2gl45y4',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -112,7 +112,7 @@ describe('resource lines', () => {
 
   test('delete: required and optional params', async () => {
     const response = await client.operations.shipments.lines.delete('example', {
-      shipment_id: 'sh_018b3a946651bfb6572b06b2b2',
+      shipment_id: 'sh_pfygp2gl45y4',
     });
   });
 });

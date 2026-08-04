@@ -21,7 +21,12 @@ export class SupportRoutes extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Returns the support route for an exact scope in the caller's account.
+   * Retrieves the support route configured for one scope in your account.
+   *
+   * This reads the exact scope you ask for and does not fall back: asking for a
+   * customer that has no override of its own returns a not-found error even when an
+   * account-level default is configured, so a caller checking which route will
+   * actually be used for a customer must also read the default.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -43,10 +48,17 @@ export class SupportRoutes extends APIResource {
  * A support route designates the group conversation that handles a relationship's
  * inbound support.
  *
- * Its group conversation's participants become the deterministic recipients seated
- * on a customer's support thread. The scope is `relation_account_id`: null is the
- * account-level default for any customer; a concrete account id is a per-relation
- * override that wins over the default.
+ * A route is scoped by `relation_account`: the route with no relation account is
+ * the account-level default used for any customer, and a route naming a specific
+ * customer account overrides that default for that customer.
+ *
+ * When a customer opens a support thread, the route in effect for them is resolved
+ * and the group conversation's active people are seated on the new thread as its
+ * recipients. Routes are applied at that moment only, so re-pointing or clearing a
+ * route never changes who is already seated on threads that are open.
+ *
+ * The group also serves as the account's customer-service team elsewhere: its
+ * people are the ones alerted when a customer registers for access to your portal.
  */
 export interface SupportRoute {
   /**

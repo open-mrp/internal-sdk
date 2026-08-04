@@ -31,7 +31,12 @@ export class Sync extends APIResource {
    *
    * The job matches existing customers to HubSpot companies and produces a dry-run
    * report; it writes nothing to HubSpot until the review queue is resolved and the
-   * sync is executed.
+   * sync is executed. Poll the returned job to know when the preview has finished.
+   *
+   * Only one sync can be underway at a time: starting another while a sync is
+   * previewing, awaiting review, or executing is rejected. If the account has no
+   * active HubSpot integration, the job is still created but its preview pass fails
+   * immediately.
    *
    * This endpoint requires the permission: `integrations:update`.
    *
@@ -62,7 +67,7 @@ export class Sync extends APIResource {
    * ```ts
    * const hubspotSyncJob =
    *   await client.settings.integrations.hubspot.sync.retrieve(
-   *     'igjb_zwfvfjfxl4lj',
+   *     'igjb_pbxu4l5ujuym',
    *   );
    * ```
    */
@@ -89,11 +94,13 @@ export class Sync extends APIResource {
   }
 
   /**
-   * Lists what the HubSpot sync has written — each Augno record and the HubSpot
-   * object it maps to.
+   * Lists the mappings the HubSpot sync has recorded for the account — each Augno
+   * record and the HubSpot object it maps to.
    *
-   * Use this to see which customers reached HubSpot, when each was last pushed, and
-   * why any of them failed. Results are ordered by Augno record id.
+   * A mapping is recorded as soon as the sync resolves a record's HubSpot object,
+   * which for a confidently matched customer happens during the read-only preview,
+   * before anything has been written to HubSpot. Results are ordered by Augno record
+   * id.
    *
    * This endpoint requires the permission: `integrations:read`.
    *
@@ -112,7 +119,12 @@ export class Sync extends APIResource {
 }
 
 /**
- * A one-time HubSpot backfill/reconciliation run for the account.
+ * A one-time run that brings the account's existing customers, contacts, and
+ * orders into HubSpot.
+ *
+ * A sync runs in two phases: a read-only preview that matches customers to HubSpot
+ * companies and produces a report, then an execute phase that does the writing
+ * once any ambiguous matches have been resolved.
  */
 export interface HubspotSyncJob {
   /**
@@ -131,14 +143,18 @@ export interface HubspotSyncJob {
   created_at: string;
 
   /**
-   * Orders placed on or after this instant are backfilled as Closed-Won deals.
+   * Orders placed on or after this cutoff are backfilled as Closed-Won deals.
    *
-   * When unset, no historical deals are created; companies and contacts still sync.
+   * Only the UTC date is used, so the whole of that day is included regardless of
+   * the time of day given. When unset, no historical deals are created; companies
+   * and contacts still sync.
    */
   go_live_cutoff_at: string | null;
 
   /**
-   * Failure detail when `status` is `failed`.
+   * Explanation of why the run stopped.
+   *
+   * A cancelled sync records who cancelled it here.
    */
   last_error: string | null;
 
@@ -161,12 +177,18 @@ export interface HubspotSyncJob {
   /**
    * Lifecycle status of the job.
    *
-   * - `previewing`: matching customers to HubSpot companies (no writes yet).
+   * - `previewing`: matching customers to HubSpot companies; nothing is written to
+   *   HubSpot yet.
    * - `review_pending`: awaiting resolution of ambiguous company matches and
    *   confirmation to execute.
    * - `executing`: writing companies, contacts, and deals to HubSpot.
-   * - `completed`: finished.
-   * - `failed`: stopped on an error (see `last_error`); re-run to resume.
+   * - `completed`: the write phase finished successfully.
+   * - `failed`: stopped on an error, or was cancelled (see `last_error`).
+   *
+   * A run that failed while writing to HubSpot can be executed again to resume where
+   * it stopped; a run that failed before its preview finished cannot, and a new sync
+   * has to be started instead. Only one sync per account can be `previewing`,
+   * `review_pending`, or `executing` at a time.
    */
   status: 'previewing' | 'review_pending' | 'executing' | 'completed' | 'failed';
 
@@ -177,7 +199,7 @@ export interface HubspotSyncJob {
 }
 
 /**
- * One Augno record that has been written to HubSpot, and where it landed.
+ * One Augno record and the HubSpot object the sync has mapped it to.
  */
 export interface HubspotSyncRecord {
   /**
@@ -187,6 +209,9 @@ export interface HubspotSyncRecord {
 
   /**
    * ID of the Augno record that was synced.
+   *
+   * A `contact` record carries the customer's id, because a customer keeps a single
+   * primary contact in HubSpot.
    */
   augno_id: string;
 
@@ -199,6 +224,10 @@ export interface HubspotSyncRecord {
 
   /**
    * The kind of Augno record that was synced.
+   *
+   * - `customer`: a customer, mapped to a HubSpot company.
+   * - `contact`: a customer's primary contact person, mapped to a HubSpot contact.
+   * - `deal`: a sales order, mapped to a HubSpot deal.
    */
   augno_type: 'customer' | 'contact' | 'deal';
 
@@ -214,16 +243,19 @@ export interface HubspotSyncRecord {
 
   /**
    * The kind of HubSpot object it maps to.
+   *
+   * These are HubSpot's own object-type names, so they can be used directly against
+   * HubSpot's API.
    */
   hubspot_type: 'companies' | 'contacts' | 'deals';
 
   /**
-   * Failure detail from the last attempt to sync this record.
+   * Why the last attempt to sync this record failed.
    */
   last_error: string | null;
 
   /**
-   * When this record was last pushed to HubSpot.
+   * When the sync last updated this mapping.
    */
   last_synced_at: string | null;
 
@@ -259,7 +291,10 @@ export interface HubspotSyncReport {
   companies_to_create: number;
 
   /**
-   * Customers with an email — contact upsert candidates.
+   * Customers with an email address, each of which becomes a HubSpot contact.
+   *
+   * A customer with no email address gets no contact, since HubSpot matches contacts
+   * by email.
    */
   contacts_with_email: number;
 
@@ -275,7 +310,8 @@ export interface HubspotSyncReport {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListHubspotSyncRecord {
   /**
@@ -289,7 +325,13 @@ export interface ListHubspotSyncRecord {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -302,7 +344,9 @@ export interface StartHubspotSyncRequest {
    * Orders placed on or after this date are backfilled as Closed-Won deals during
    * the sync.
    *
-   * Omit to sync companies and contacts only, with no historical deals.
+   * Only the UTC date is used, so the whole of that day is included regardless of
+   * the time of day given. Omit to sync companies and contacts only, with no
+   * historical deals.
    */
   go_live_cutoff_at?: string;
 }
@@ -312,14 +356,19 @@ export interface SyncCreateParams {
    * Orders placed on or after this date are backfilled as Closed-Won deals during
    * the sync.
    *
-   * Omit to sync companies and contacts only, with no historical deals.
+   * Only the UTC date is used, so the whole of that day is included regardless of
+   * the time of day given. Omit to sync companies and contacts only, with no
+   * historical deals.
    */
   go_live_cutoff_at?: string;
 }
 
 export interface SyncRetrieveRecordsParams {
   /**
-   * Restrict the results to records of this Augno type.
+   * The kind of mapping to list.
+   *
+   * One request returns one kind of mapping; omit this to list the
+   * customer-to-company mappings.
    */
   augno_type?: 'customer' | 'contact' | 'deal';
 

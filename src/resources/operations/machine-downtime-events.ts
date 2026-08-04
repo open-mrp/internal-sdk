@@ -17,9 +17,13 @@ export class MachineDowntimeEvents extends APIResource {
   /**
    * Logs a machine downtime event.
    *
-   * Omit `ended_at` while the machine is still down; a machine can only have one
-   * open event at a time. The department and production step are resolved from the
-   * machine, and the duration is calculated when the event is closed.
+   * Omit `ended_at` while the machine is still down. A machine can only have one
+   * open event at a time, so logging a second open stoppage against a machine that
+   * is already down is rejected until the first is closed.
+   *
+   * The department is taken from the machine, the business day is taken from
+   * `started_at`, the event is attributed to the credentials that made the request,
+   * and the duration is calculated when the event is closed.
    *
    * This endpoint requires the permission: `machine_downtime:create`.
    *
@@ -27,7 +31,7 @@ export class MachineDowntimeEvents extends APIResource {
    * ```ts
    * const machineDowntimeEvent =
    *   await client.operations.machineDowntimeEvents.create({
-   *     machine_id: 'mc_0177d18f55a1615f783d3bf8d0',
+   *     machine_id: 'mc_ffcfk9dxixis',
    *     reason: 'breakdown',
    *     started_at: '2026-05-10T00:00:00Z',
    *   });
@@ -54,7 +58,7 @@ export class MachineDowntimeEvents extends APIResource {
    * ```ts
    * const machineDowntimeEvent =
    *   await client.operations.machineDowntimeEvents.retrieve(
-   *     'mcdt_0192a4c17b3e4f8a91c2d05e77',
+   *     'mcdt_ff5te1hqttco',
    *   );
    * ```
    */
@@ -67,9 +71,12 @@ export class MachineDowntimeEvents extends APIResource {
   }
 
   /**
-   * Updates a machine downtime event.
+   * Closes or corrects a machine downtime event.
    *
-   * Setting `ended_at` closes the event and calculates its duration.
+   * Only the fields provided in the request are changed. Setting `ended_at` closes
+   * the event and calculates its duration; sending it as null reopens an event
+   * closed by mistake, which is rejected when the machine already has another open
+   * stoppage. The machine an event belongs to cannot be changed.
    *
    * This endpoint requires the permission: `machine_downtime:update`.
    *
@@ -77,7 +84,7 @@ export class MachineDowntimeEvents extends APIResource {
    * ```ts
    * const machineDowntimeEvent =
    *   await client.operations.machineDowntimeEvents.update(
-   *     'mcdt_0192a4c17b3e4f8a91c2d05e77',
+   *     'mcdt_ff5te1hqttco',
    *     { ended_at: '2026-05-10T00:23:00Z' },
    *   );
    * ```
@@ -96,7 +103,11 @@ export class MachineDowntimeEvents extends APIResource {
   }
 
   /**
-   * Returns a paginated list of machine downtime events, most recent first.
+   * Returns a paginated list of machine downtime events, most recently started
+   * first.
+   *
+   * The search term matches text in the event note. Filters combine, so a machine, a
+   * reason and a date range narrow the list together.
    *
    * This endpoint requires the permission: `machine_downtime:read`.
    *
@@ -116,13 +127,17 @@ export class MachineDowntimeEvents extends APIResource {
   /**
    * Deletes a machine downtime event.
    *
+   * Meant for a stoppage that was logged by mistake: the event is removed
+   * permanently and stops counting against the machine's availability. To correct a
+   * real stoppage, update it instead so the record of the downtime survives.
+   *
    * This endpoint requires the permission: `machine_downtime:delete`.
    *
    * @example
    * ```ts
    * const machineDowntimeEvent =
    *   await client.operations.machineDowntimeEvents.delete(
-   *     'mcdt_0192a4c17b3e4f8a91c2d05e77',
+   *     'mcdt_ff5te1hqttco',
    *   );
    * ```
    */
@@ -142,6 +157,10 @@ export interface CreateMachineDowntimeEventRequest {
 
   /**
    * Why the machine stopped.
+   *
+   * The reason decides which OEE term the stoppage charges, so it does more than
+   * label the event. Retrieve the available reasons and the term each one charges
+   * from the downtime reasons list.
    */
   reason:
     | 'breakdown'
@@ -155,6 +174,10 @@ export interface CreateMachineDowntimeEventRequest {
 
   /**
    * When the machine stopped.
+   *
+   * Cannot be in the future beyond a few minutes of clock skew, which is allowed so
+   * a shop-floor tablet running fast can still log "just now". The business day the
+   * stoppage counts against is taken from this timestamp.
    */
   started_at: string;
 
@@ -164,7 +187,11 @@ export interface CreateMachineDowntimeEventRequest {
   batch_id?: string;
 
   /**
-   * When the machine started running again. Omit while the machine is still down.
+   * When the machine started running again.
+   *
+   * Omit it while the machine is still down; that leaves the event open, and the
+   * duration is filled in once the event is closed. It must be later than
+   * `started_at`.
    */
   ended_at?: string;
 
@@ -175,6 +202,8 @@ export interface CreateMachineDowntimeEventRequest {
 
   /**
    * Free-form notes about the stoppage.
+   *
+   * Searchable from the downtime events list. Maximum 2000 characters.
    */
   note?: string;
 
@@ -185,12 +214,17 @@ export interface CreateMachineDowntimeEventRequest {
 
   /**
    * How the event was recorded.
+   *
+   * Records the stoppage as manually logged unless you say otherwise, so an
+   * integration or shop-floor station should send its own source to keep
+   * hand-entered downtime distinguishable.
    */
   source?: 'manual' | 'scanner' | 'inferred' | 'api';
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListMachineDowntimeEvent {
   /**
@@ -204,7 +238,13 @@ export interface ListMachineDowntimeEvent {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -240,6 +280,9 @@ export interface MachineDowntimeEvent {
 
   /**
    * How long the machine was down, in seconds.
+   *
+   * Calculated when the event is closed, and recalculated whenever its start or end
+   * time changes.
    */
   duration_seconds: number | null;
 
@@ -249,7 +292,7 @@ export interface MachineDowntimeEvent {
   ended_at: string | null;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
@@ -295,6 +338,9 @@ export interface MachineDowntimeEvent {
 
   /**
    * The business day the stoppage is counted against.
+   *
+   * Taken from the calendar date of `started_at`, so correcting the start time can
+   * move the stoppage onto a different day's totals.
    */
   shift_at: string;
 
@@ -305,6 +351,11 @@ export interface MachineDowntimeEvent {
 
   /**
    * How the event was recorded.
+   *
+   * - `manual`: a person logged the stoppage.
+   * - `scanner`: a shop-floor station logged it.
+   * - `inferred`: the system derived it from a gap in activity.
+   * - `api`: an integration reported it.
    */
   source: 'manual' | 'scanner' | 'inferred' | 'api';
 
@@ -324,36 +375,47 @@ export interface MachineDowntimeEvent {
  */
 export interface UpdateMachineDowntimeEventRequest {
   /**
-   * ID of the batch in progress when the machine stopped. Send null to detach the
-   * batch.
+   * ID of the batch in progress when the machine stopped.
+   *
+   * Send null to detach the batch.
    */
   batch_id?: string | null;
 
   /**
-   * When the machine started running again. Send null to reopen an event that was
-   * closed by mistake.
+   * When the machine started running again.
+   *
+   * Setting it closes the event and records the duration. Send null to reopen an
+   * event that was closed by mistake, which is rejected if the machine has since had
+   * another stoppage logged that is still open.
    */
   ended_at?: string | null;
 
   /**
-   * ID of the item the machine was running when it stopped. Send null to detach the
-   * item.
+   * ID of the item the machine was running when it stopped.
+   *
+   * Send null to detach the item.
    */
   item_id?: string | null;
 
   /**
-   * Free-form notes about the stoppage. Send null to remove the note.
+   * Free-form notes about the stoppage.
+   *
+   * Send null to remove the note. Maximum 2000 characters.
    */
   note?: string | null;
 
   /**
-   * ID of the production run in progress when the machine stopped. Send null to
-   * detach the run.
+   * ID of the production run in progress when the machine stopped.
+   *
+   * Send null to detach the run.
    */
   production_run_id?: string | null;
 
   /**
    * Why the machine stopped.
+   *
+   * Reclassifying a stoppage moves it to the OEE term the new reason charges, so
+   * past availability figures change with it.
    */
   reason?:
     | 'breakdown'
@@ -367,6 +429,9 @@ export interface UpdateMachineDowntimeEventRequest {
 
   /**
    * When the machine stopped.
+   *
+   * Correcting it recalculates the duration and can move the stoppage onto a
+   * different business day.
    */
   started_at?: string;
 }
@@ -381,6 +446,10 @@ export interface MachineDowntimeEventCreateParams {
 
   /**
    * Body param: Why the machine stopped.
+   *
+   * The reason decides which OEE term the stoppage charges, so it does more than
+   * label the event. Retrieve the available reasons and the term each one charges
+   * from the downtime reasons list.
    */
   reason:
     | 'breakdown'
@@ -394,6 +463,10 @@ export interface MachineDowntimeEventCreateParams {
 
   /**
    * Body param: When the machine stopped.
+   *
+   * Cannot be in the future beyond a few minutes of clock skew, which is allowed so
+   * a shop-floor tablet running fast can still log "just now". The business day the
+   * stoppage counts against is taken from this timestamp.
    */
   started_at: string;
 
@@ -409,8 +482,11 @@ export interface MachineDowntimeEventCreateParams {
   batch_id?: string;
 
   /**
-   * Body param: When the machine started running again. Omit while the machine is
-   * still down.
+   * Body param: When the machine started running again.
+   *
+   * Omit it while the machine is still down; that leaves the event open, and the
+   * duration is filled in once the event is closed. It must be later than
+   * `started_at`.
    */
   ended_at?: string;
 
@@ -421,6 +497,8 @@ export interface MachineDowntimeEventCreateParams {
 
   /**
    * Body param: Free-form notes about the stoppage.
+   *
+   * Searchable from the downtime events list. Maximum 2000 characters.
    */
   note?: string;
 
@@ -431,6 +509,10 @@ export interface MachineDowntimeEventCreateParams {
 
   /**
    * Body param: How the event was recorded.
+   *
+   * Records the stoppage as manually logged unless you say otherwise, so an
+   * integration or shop-floor station should send its own source to keep
+   * hand-entered downtime distinguishable.
    */
   source?: 'manual' | 'scanner' | 'inferred' | 'api';
 }
@@ -451,36 +533,47 @@ export interface MachineDowntimeEventUpdateParams {
   include?: Array<'machine' | 'department' | 'item' | 'reported_by'>;
 
   /**
-   * Body param: ID of the batch in progress when the machine stopped. Send null to
-   * detach the batch.
+   * Body param: ID of the batch in progress when the machine stopped.
+   *
+   * Send null to detach the batch.
    */
   batch_id?: string | null;
 
   /**
-   * Body param: When the machine started running again. Send null to reopen an event
-   * that was closed by mistake.
+   * Body param: When the machine started running again.
+   *
+   * Setting it closes the event and records the duration. Send null to reopen an
+   * event that was closed by mistake, which is rejected if the machine has since had
+   * another stoppage logged that is still open.
    */
   ended_at?: string | null;
 
   /**
-   * Body param: ID of the item the machine was running when it stopped. Send null to
-   * detach the item.
+   * Body param: ID of the item the machine was running when it stopped.
+   *
+   * Send null to detach the item.
    */
   item_id?: string | null;
 
   /**
-   * Body param: Free-form notes about the stoppage. Send null to remove the note.
+   * Body param: Free-form notes about the stoppage.
+   *
+   * Send null to remove the note. Maximum 2000 characters.
    */
   note?: string | null;
 
   /**
-   * Body param: ID of the production run in progress when the machine stopped. Send
-   * null to detach the run.
+   * Body param: ID of the production run in progress when the machine stopped.
+   *
+   * Send null to detach the run.
    */
   production_run_id?: string | null;
 
   /**
    * Body param: Why the machine stopped.
+   *
+   * Reclassifying a stoppage moves it to the OEE term the new reason charges, so
+   * past availability figures change with it.
    */
   reason?:
     | 'breakdown'
@@ -494,6 +587,9 @@ export interface MachineDowntimeEventUpdateParams {
 
   /**
    * Body param: When the machine stopped.
+   *
+   * Correcting it recalculates the duration and can move the stoppage onto a
+   * different business day.
    */
   started_at?: string;
 }
@@ -537,6 +633,9 @@ export interface MachineDowntimeEventListParams {
 
   /**
    * Only return events that are still open, meaning the machine is down right now.
+   *
+   * Sending `false` is the same as leaving it out: both open and closed events come
+   * back.
    */
   open?: boolean;
 

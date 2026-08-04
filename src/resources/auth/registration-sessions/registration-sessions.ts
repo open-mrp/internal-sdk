@@ -22,10 +22,16 @@ export class RegistrationSessions extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Starts a self-serve registration session and sends a verification email.
+   * Starts a self-serve registration session and emails a verification link to the
+   * registrant.
    *
-   * If an active session already exists for the email, the existing session's ID is
-   * returned instead of creating a new one.
+   * If a session started for the same email within the last seven days is still in
+   * progress, its ID is returned instead of a new one, its plan is switched to
+   * `plan_code`, and the verification email is sent again.
+   *
+   * If the email already belongs to a user, the message sent directs them to sign in
+   * rather than carrying a verification link, since an existing account cannot be
+   * registered again.
    *
    * @example
    * ```ts
@@ -48,7 +54,7 @@ export class RegistrationSessions extends APIResource {
    * ```ts
    * const registrationSession =
    *   await client.auth.registrationSessions.retrieve(
-   *     'rgfw_01011dbade766ab524553afb10',
+   *     'rgfw_6xab8u2fun46',
    *   );
    * ```
    */
@@ -57,14 +63,16 @@ export class RegistrationSessions extends APIResource {
   }
 
   /**
-   * Partially updates a registration session's step and form data; omitted fields
-   * are left unchanged.
+   * Partially updates a registration session's step and form data.
+   *
+   * Omitted fields are left unchanged, and a session that has already completed can
+   * no longer be updated.
    *
    * @example
    * ```ts
    * const registrationSession =
    *   await client.auth.registrationSessions.update(
-   *     'rgfw_01011dbade766ab524553afb10',
+   *     'rgfw_6xab8u2fun46',
    *     {
    *       session_data: {
    *         user_name: 'Jane Smith',
@@ -84,8 +92,10 @@ export class RegistrationSessions extends APIResource {
   }
 
   /**
-   * Returns a paginated list of open registration sessions for the authenticated
-   * user.
+   * Returns a paginated list of the authenticated user's registration sessions that
+   * are still in progress, newest first.
+   *
+   * The list is empty once the user has finished registering.
    *
    * @example
    * ```ts
@@ -101,17 +111,21 @@ export class RegistrationSessions extends APIResource {
   }
 
   /**
-   * Completes a registration session by provisioning the new account with its roles
-   * and permissions.
+   * Completes a registration session by creating the account the registrant signed
+   * up for.
    *
-   * Requires a user to have been created for the session, and, for paid plans,
-   * payment to be confirmed first. Returns the ID of the newly created account.
+   * The registering user becomes an administrator of the new account, and a paired
+   * sandbox account is provisioned alongside it. Requires a user to have been
+   * created for the session and an account name to have been supplied; paid plans
+   * additionally require confirmed payment, and their subscription starts here. If
+   * the selected plan has reached its signup capacity the request fails and the
+   * registration is added to a waiting list. Returns the ID of the new account.
    *
    * @example
    * ```ts
    * const completeRegistrationResponse =
    *   await client.auth.registrationSessions.accounts(
-   *     'rgfw_01011dbade766ab524553afb10',
+   *     'rgfw_6xab8u2fun46',
    *   );
    * ```
    */
@@ -120,17 +134,20 @@ export class RegistrationSessions extends APIResource {
   }
 
   /**
-   * Creates the user for a registration session.
+   * Creates the user for a registration session and signs the registrant in.
    *
-   * If the session's email matches an existing user, that user is associated with
-   * the session instead of creating a new one. Advances the session to the
-   * `account_details` step.
+   * The session's email must already be verified, and no user may exist for that
+   * email yet; someone who already has an account must sign in instead of
+   * registering again. On success the session advances to the `account_details` step
+   * and the response sets authentication cookies, so the remaining registration
+   * calls are made as the new user. Repeating the call on a session that already has
+   * a user re-issues cookies for that user instead of creating another.
    *
    * @example
    * ```ts
    * const createUserResponse =
    *   await client.auth.registrationSessions.users(
-   *     'rgfw_01011dbade766ab524553afb10',
+   *     'rgfw_6xab8u2fun46',
    *     { name: 'Jane Smith', password: 'P@ssw0rd123!' },
    *   );
    * ```
@@ -222,8 +239,8 @@ export interface CreateUserResponse {
   /**
    * ID of the user associated with the session.
    *
-   * This is either the newly created user or, if the session's email matched an
-   * existing user, that existing user.
+   * Repeating the call on a session that already has a user returns that same user
+   * rather than creating another.
    */
   id: string;
 
@@ -234,7 +251,8 @@ export interface CreateUserResponse {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListRegistrationSession {
   /**
@@ -248,7 +266,13 @@ export interface ListRegistrationSession {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -288,8 +312,9 @@ export interface RegistrationSession {
   /**
    * Whether payment has been completed for this registration.
    *
-   * Set to `true` once the `payment` step succeeds; `false` for free plans that
-   * require no payment.
+   * Set to `true` once Confirm Registration Payment verifies the Setup Intent. Free
+   * plans never collect payment, so this stays `false` and the registration can
+   * still be completed.
    */
   payment_completed: boolean;
 
@@ -315,16 +340,16 @@ export interface RegistrationSession {
   /**
    * ID of the Stripe Setup Intent created to collect the payment method.
    *
-   * Despite the field name, this holds the Setup Intent ID created by **Setup
-   * Registration Billing**, which **Confirm Registration Payment** verifies against
-   * its `setup_intent_id`. It is populated once billing setup runs.
+   * Despite the field name, this holds the Setup Intent ID created by Setup
+   * Registration Billing, and Confirm Registration Payment only accepts a
+   * `setup_intent_id` matching it.
    */
   stripe_checkout_session_id: string | null;
 
   /**
    * ID of the Stripe customer created for this registration.
    *
-   * Populated when **Setup Registration Billing** runs; absent for free plans, which
+   * Populated when Setup Registration Billing runs; absent for free plans, which
    * never set up billing.
    */
   stripe_customer_id: string | null;
@@ -373,10 +398,6 @@ export interface RegistrationSessionAccount {
 export interface RegistrationSessionAddress {
   /**
    * ID of the address record.
-   *
-   * Populated only after the registration completes and the address is persisted;
-   * while the session is in progress the address fields hold the entered values
-   * without an ID.
    */
   id: string | null;
 
@@ -433,10 +454,11 @@ export interface RegistrationSessionUser {
   email: string;
 
   /**
-   * Timestamp when the user's email address was verified.
+   * When the user's email address was verified.
    *
-   * Set once the `verification` step completes; until then the email is still
-   * pending verification.
+   * Set once the registrant follows the link in the verification email. It mirrors
+   * the session's `updated_at` timestamp rather than recording the moment of
+   * verification, so it moves forward as the rest of the registration is filled in.
    */
   email_verified_at: string | null;
 
@@ -459,6 +481,9 @@ export interface RegistrationSessionUser {
 export interface UpdateSessionDataRequest {
   /**
    * Display name for the account.
+   *
+   * Becomes the name of the account created when the registration completes, and
+   * must be set before Complete Registration will succeed.
    */
   account_name?: string;
 

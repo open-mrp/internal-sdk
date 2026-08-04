@@ -11,7 +11,13 @@ import { path } from '../../../internal/utils/path';
  */
 export class Members extends APIResource {
   /**
-   * Adds a member (a user or an agent) to a reusable roster.
+   * Adds a member (a user or an agent) to a reusable roster and returns the updated
+   * roster.
+   *
+   * Adding someone who is already on the roster does not create a second entry for
+   * them. The new member is picked up only by conversations started from the roster
+   * afterwards; conversations already created from it keep the members they were
+   * seeded with.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -19,11 +25,11 @@ export class Members extends APIResource {
    * ```ts
    * const messagingGroup =
    *   await client.messaging.groups.members.create(
-   *     'cvgp_018e88072d1320808dc97abc',
+   *     'cvgp_wjlypugna7s4',
    *     {
    *       member_type: 'user',
-   *       account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
-   *       agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
+   *       account_user_id: 'acus_e5zu8bde0z3h',
+   *       agent_config_id: 'agdf_ah7tkyfxk8jl',
    *     },
    *   );
    * ```
@@ -37,7 +43,10 @@ export class Members extends APIResource {
   }
 
   /**
-   * Removes a member from a reusable roster.
+   * Removes a member from a reusable roster and returns the updated roster.
+   *
+   * Only conversations started from the roster afterwards are affected; the member
+   * stays in every conversation that was already seeded from it.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -45,8 +54,8 @@ export class Members extends APIResource {
    * ```ts
    * const messagingGroup =
    *   await client.messaging.groups.members.delete(
-   *     'cvgppt_018e88072d1320808dc9def',
-   *     { id: 'cvgp_018e88072d1320808dc97abc' },
+   *     'cvgppt_obu4df48t1xx',
+   *     { id: 'cvgp_wjlypugna7s4' },
    *   );
    * ```
    */
@@ -65,7 +74,8 @@ export class Members extends APIResource {
  */
 export interface AddMessagingGroupMemberRequest {
   /**
-   * The kind of member being added.
+   * The kind of member being added, which decides whether `account_user_id` or
+   * `agent_config_id` is expected.
    */
   member_type: 'user' | 'agent';
 
@@ -82,7 +92,8 @@ export interface AddMessagingGroupMemberRequest {
 
 export interface MemberCreateParams {
   /**
-   * The kind of member being added.
+   * The kind of member being added, which decides whether `account_user_id` or
+   * `agent_config_id` is expected.
    */
   member_type: 'user' | 'agent';
 

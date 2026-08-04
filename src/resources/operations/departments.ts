@@ -23,10 +23,8 @@ export class Departments extends APIResource {
    * const department =
    *   await client.operations.departments.create({
    *     name: 'Fabrication',
-   *     machine_ids: ['mc_0177d18f55a1615f783d3bf8d0'],
-   *     scanning_station_ids: [
-   *       'scst_0129335dd6286056a97024fcc1',
-   *     ],
+   *     machine_ids: ['mc_ffcfk9dxixis'],
+   *     scanning_station_ids: ['scst_t71bn7lq5yov'],
    *   });
    * ```
    */
@@ -44,7 +42,7 @@ export class Departments extends APIResource {
    * ```ts
    * const department =
    *   await client.operations.departments.retrieve(
-   *     'dp_01791c25ab59da4704cba61874',
+   *     'dp_m0jayebxnkos',
    *   );
    * ```
    */
@@ -69,7 +67,7 @@ export class Departments extends APIResource {
    * ```ts
    * const department =
    *   await client.operations.departments.update(
-   *     'dp_01791c25ab59da4704cba61874',
+   *     'dp_m0jayebxnkos',
    *     { name: 'Production' },
    *   );
    * ```
@@ -88,7 +86,10 @@ export class Departments extends APIResource {
   }
 
   /**
-   * Returns a paginated list of departments in your account.
+   * Returns a paginated list of departments in your account, most recently created
+   * first.
+   *
+   * The `q` search term matches the department name.
    *
    * This endpoint requires the permission: `departments:read`.
    *
@@ -108,7 +109,11 @@ export class Departments extends APIResource {
   /**
    * Deletes a department.
    *
-   * Scanning stations and machines assigned to the department are not deleted.
+   * Scanning stations and machines assigned to the department are not deleted, but
+   * they keep pointing at it, and a machine whose department is gone can no longer
+   * be read, updated, or deleted through the machines endpoints. Reassign both to
+   * another department before deleting this one. Deleting a department that was
+   * already deleted returns an already-deleted error rather than a not-found error.
    *
    * This endpoint requires the permission: `departments:delete`.
    *
@@ -116,7 +121,7 @@ export class Departments extends APIResource {
    * ```ts
    * const department =
    *   await client.operations.departments.delete(
-   *     'dp_01791c25ab59da4704cba61874',
+   *     'dp_m0jayebxnkos',
    *   );
    * ```
    */
@@ -137,8 +142,8 @@ export interface CreateDepartmentRequest {
   name: string;
 
   /**
-   * DepartmentRateInput is a rate supplied inline when creating or updating a
-   * department.
+   * A rate, expressed as a value together with the units of its numerator and
+   * denominator (for example, `25.00` `$` per `hr`).
    */
   labor_rate?: DepartmentRateInput;
 
@@ -170,8 +175,8 @@ export interface CreateDepartmentRequest {
 }
 
 /**
- * DepartmentRateInput is a rate supplied inline when creating or updating a
- * department.
+ * A rate, expressed as a value together with the units of its numerator and
+ * denominator (for example, `25.00` `$` per `hr`).
  */
 export interface DepartmentRateInput {
   /**
@@ -195,8 +200,8 @@ export interface DepartmentRateInput {
  */
 export interface UpdateDepartmentRequest {
   /**
-   * DepartmentRateInput is a rate supplied inline when creating or updating a
-   * department.
+   * A rate, expressed as a value together with the units of its numerator and
+   * denominator (for example, `25.00` `$` per `hr`).
    */
   labor_rate?: DepartmentRateInput;
 
@@ -251,8 +256,8 @@ export interface DepartmentCreateParams {
   include?: Array<'location' | 'scanning_stations' | 'machines'>;
 
   /**
-   * Body param: DepartmentRateInput is a rate supplied inline when creating or
-   * updating a department.
+   * Body param: A rate, expressed as a value together with the units of its
+   * numerator and denominator (for example, `25.00` `$` per `hr`).
    */
   labor_rate?: DepartmentRateInput;
 
@@ -299,8 +304,8 @@ export interface DepartmentUpdateParams {
   include?: Array<'location' | 'scanning_stations' | 'machines'>;
 
   /**
-   * Body param: DepartmentRateInput is a rate supplied inline when creating or
-   * updating a department.
+   * Body param: A rate, expressed as a value together with the units of its
+   * numerator and denominator (for example, `25.00` `$` per `hr`).
    */
   labor_rate?: DepartmentRateInput;
 

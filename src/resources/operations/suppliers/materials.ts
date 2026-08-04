@@ -23,7 +23,7 @@ export class Materials extends APIResource {
    *   await client.operations.suppliers.materials.create(
    *     'example',
    *     {
-   *       material_id: 'ml_014613b8f7959a091d8cc0cef4',
+   *       material_id: 'ml_ow202v78slbl',
    *       supplier_part_number: 'SUP-PART-001',
    *       is_active: true,
    *     },
@@ -47,7 +47,7 @@ export class Materials extends APIResource {
    * ```ts
    * const supplierMaterial =
    *   await client.operations.suppliers.materials.retrieve(
-   *     'ml_014613b8f7959a091d8cc0cef4',
+   *     'ml_ow202v78slbl',
    *     { supplier_id: 'example' },
    *   );
    * ```
@@ -75,7 +75,7 @@ export class Materials extends APIResource {
    * ```ts
    * const supplierMaterial =
    *   await client.operations.suppliers.materials.update(
-   *     'ml_014613b8f7959a091d8cc0cef4',
+   *     'ml_ow202v78slbl',
    *     {
    *       supplier_id: 'example',
    *       supplier_part_number: 'SUP-PART-002',
@@ -92,7 +92,12 @@ export class Materials extends APIResource {
   }
 
   /**
-   * Returns a paginated list of materials linked to the given supplier.
+   * Returns a paginated list of materials linked to the given supplier, newest
+   * first.
+   *
+   * Both active and inactive links are returned. The `q` search term matches the
+   * supplier part number and description as well as the underlying item's SKU and
+   * description.
    *
    * This endpoint requires the permission: `suppliers:read`.
    *
@@ -115,7 +120,8 @@ export class Materials extends APIResource {
   /**
    * Deletes a supplier material link.
    *
-   * Removing the link does not affect the underlying material or supplier.
+   * Returns the link as it looked immediately before deletion. Removing the link
+   * does not affect the underlying material or supplier.
    *
    * This endpoint requires the permission: `suppliers:update`.
    *
@@ -123,7 +129,7 @@ export class Materials extends APIResource {
    * ```ts
    * const supplierMaterial =
    *   await client.operations.suppliers.materials.delete(
-   *     'ml_014613b8f7959a091d8cc0cef4',
+   *     'ml_ow202v78slbl',
    *     { supplier_id: 'example' },
    *   );
    * ```
@@ -152,10 +158,9 @@ export interface CreateSupplierMaterialRequest {
   supplier_part_number: string;
 
   /**
-   * Whether the supplier is available to source this material.
+   * Whether this supplier is currently one you would source the material from.
    *
-   * When omitted, the link is created active so the supplier is immediately usable
-   * as a source.
+   * Links are created active unless this is explicitly set to `false`.
    */
   is_active?: boolean;
 
@@ -166,7 +171,8 @@ export interface CreateSupplierMaterialRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListSupplierMaterial {
   /**
@@ -180,7 +186,13 @@ export interface ListSupplierMaterial {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -218,7 +230,11 @@ export interface SupplierMaterial {
   object: 'supplier_material';
 
   /**
-   * Whether this supplier is currently available as a source for the material.
+   * Whether this supplier is currently one you would source the material from.
+   *
+   * Inactive links are kept for reference and are still returned when listing or
+   * retrieving supplier materials; the status is a record-keeping flag and does not
+   * by itself prevent purchasing the material from this supplier.
    */
   status: 'active' | 'inactive';
 
@@ -243,7 +259,7 @@ export interface SupplierMaterial {
  */
 export interface UpdateSupplierMaterialRequest {
   /**
-   * Whether the supplier is available to source this material.
+   * Whether this supplier is currently one you would source the material from.
    */
   is_active?: boolean;
 
@@ -273,10 +289,9 @@ export interface MaterialCreateParams {
   supplier_part_number: string;
 
   /**
-   * Whether the supplier is available to source this material.
+   * Whether this supplier is currently one you would source the material from.
    *
-   * When omitted, the link is created active so the supplier is immediately usable
-   * as a source.
+   * Links are created active unless this is explicitly set to `false`.
    */
   is_active?: boolean;
 
@@ -306,7 +321,8 @@ export interface MaterialUpdateParams {
   supplier_id: string;
 
   /**
-   * Body param: Whether the supplier is available to source this material.
+   * Body param: Whether this supplier is currently one you would source the material
+   * from.
    */
   is_active?: boolean;
 

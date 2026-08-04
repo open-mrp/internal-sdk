@@ -15,7 +15,12 @@ export class Addresses extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Returns the full parsed address for a place returned by address autocomplete.
+   * Returns the full parsed address for a suggestion returned by address
+   * autocomplete.
+   *
+   * Use this after the user picks a suggestion to get the street, city, state,
+   * postal code, and country to prefill an address form. Nothing is saved by this
+   * lookup; create an address separately to keep it.
    *
    * @example
    * ```ts
@@ -34,7 +39,13 @@ export class Addresses extends APIResource {
   }
 
   /**
-   * Returns address suggestions based on input text.
+   * Returns address suggestions for partial address text, for use in type-ahead
+   * address entry.
+   *
+   * Only street addresses are suggested; cities, regions, and business listings are
+   * not returned. Suggestions are lookup results, not saved addresses in your
+   * account. Pass a suggestion's `id` to the address details endpoint to get the
+   * full parsed address.
    *
    * @example
    * ```ts
@@ -98,7 +109,7 @@ export interface AddressComponents {
 }
 
 /**
- * Result of a place details lookup.
+ * The full address behind an autocomplete suggestion.
  */
 export interface AddressDetailsResult {
   /**
@@ -118,11 +129,18 @@ export interface AddressDetailsResult {
 }
 
 /**
- * Autocomplete address suggestion.
+ * A candidate address returned by address autocomplete.
+ *
+ * A suggestion is a lookup result from the address provider, not a saved address
+ * in your account. Creating an address from one is a separate step.
  */
 export interface AddressSuggestion {
   /**
-   * Address suggestion ID.
+   * Identifier of the suggested place.
+   *
+   * Pass this value as the `id` path parameter of the address details endpoint to
+   * retrieve the full parsed address. It is issued by the underlying address
+   * provider rather than by Augno, so it is not a durable Augno resource ID.
    */
   id: string;
 
@@ -148,7 +166,8 @@ export interface AddressSuggestion {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAddressSuggestion {
   /**
@@ -162,14 +181,24 @@ export interface ListAddressSuggestion {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 export interface AddressRetrieveDetailsParams {
   /**
-   * Session token for grouping with a previous autocomplete request.
+   * Opaque token that ties this lookup to the autocomplete requests the suggestion
+   * came from.
+   *
+   * Pass the same token used for those autocomplete requests so the whole address
+   * entry is treated as one lookup.
    */
   session_token?: string;
 }
@@ -184,7 +213,9 @@ export interface AddressRetrieveSuggestionsParams {
    * Opaque token that groups a series of related autocomplete requests into a single
    * session.
    *
-   * Reuse the same token for each keystroke of one address entry.
+   * Reuse the same token for each keystroke of one address entry, and again when you
+   * retrieve the details of the suggestion the user picks, so the whole entry is
+   * treated as one lookup.
    */
   session_token?: string;
 }

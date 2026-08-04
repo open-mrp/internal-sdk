@@ -14,7 +14,10 @@ export class Actions extends APIResource {
    * recipients.
    *
    * The email carries an Excel attachment listing the customer's outstanding
-   * receivables and open credits.
+   * receivables and its open credits, which are transactions such as payments and
+   * credit memos that still have an unapplied balance. The statement always reflects
+   * current balances; there is no cutoff date. Delivery is asynchronous: the
+   * endpoint returns `202 Accepted` once the email is queued.
    *
    * This endpoint requires the permission: `customers:read`.
    *
@@ -22,7 +25,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.finance.accounts.actions.emailReceivables(
-   *     'ac_01148680966698341a9c0976db',
+   *     'ac_ykxoradjoeb3',
    *     { recipient_emails: ['jdoe@augno.com'] },
    *   );
    * ```
@@ -45,6 +48,9 @@ export class Actions extends APIResource {
 export interface EmailReceivablesForCustomerRequest {
   /**
    * Email addresses to send the statement of account to.
+   *
+   * The statement goes only to these addresses; the customer's own notification
+   * contacts are not added.
    */
   recipient_emails: Array<string>;
 }
@@ -54,6 +60,9 @@ export interface ActionEmailReceivablesResponse {}
 export interface ActionEmailReceivablesParams {
   /**
    * Email addresses to send the statement of account to.
+   *
+   * The statement goes only to these addresses; the customer's own notification
+   * contacts are not added.
    */
   recipient_emails: Array<string>;
 }

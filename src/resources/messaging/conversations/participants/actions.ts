@@ -11,7 +11,17 @@ import { path } from '../../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Changes a participant's role within a group conversation.
+   * Changes a participant's role in a conversation and returns the updated
+   * conversation.
+   *
+   * Only the conversation's owner can change roles, and agent and system
+   * participants are rejected — they hold no role that can be changed. This is also
+   * the only way to grant `owner`: the promoted member gains full control while the
+   * caller keeps their own owner role, so a conversation can have more than one
+   * owner.
+   *
+   * A change of role posts a system event to the thread; setting a participant to
+   * the role they already hold is a no-op.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -19,8 +29,8 @@ export class Actions extends APIResource {
    * ```ts
    * const conversation =
    *   await client.messaging.conversations.participants.actions.setRole(
-   *     'cvpt_01h9z8q1w2e3r4t5y6u7cvpt',
-   *     { id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv', role: 'admin' },
+   *     'cvpt_be2h3ul14cts',
+   *     { id: 'cv_w35z4ck68yq7', role: 'admin' },
    *   );
    * ```
    */
@@ -39,7 +49,7 @@ export class Actions extends APIResource {
 }
 
 /**
- * Request to change a participant's role (owner only).
+ * Request to change a participant's role in a conversation.
  */
 export interface UpdateParticipantRoleRequest {
   /**

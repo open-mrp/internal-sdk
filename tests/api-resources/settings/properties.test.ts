@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource properties', () => {
   test('retrieve', async () => {
-    const responsePromise = client.settings.properties.retrieve('sypp_01d8fd3a8b1a8e4c41be55ab5a');
+    const responsePromise = client.settings.properties.retrieve('sypp_1czynnv1b8kc');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource properties', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.settings.properties.update('sypp_01d8fd3a8b1a8e4c41be55ab5a');
+    const responsePromise = client.settings.properties.update('sypp_1czynnv1b8kc');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,7 +34,7 @@ describe('resource properties', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.settings.properties.update(
-        'sypp_01d8fd3a8b1a8e4c41be55ab5a',
+        'sypp_1czynnv1b8kc',
         { value: 30 },
         { path: '/_stainless_unknown_path' },
       ),

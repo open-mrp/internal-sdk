@@ -49,6 +49,9 @@ export class ProductionSteps extends APIResource {
    * The step is automatically connected into the production flow graph based on the
    * items it produces and consumes.
    *
+   * Returns a conflict error if a production step with the same name already exists
+   * in the account.
+   *
    * This endpoint requires the permission: `production_steps:create`.
    *
    * @example
@@ -57,36 +60,36 @@ export class ProductionSteps extends APIResource {
    *   allowances: '0.05',
    *   labor_rate: {
    *     value: '25.00',
-   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     numerator_unit_id: 'un_82bd37dae5po',
+   *     denominator_unit_id: 'un_82bd37dae5po',
    *   },
    *   labor_time: {
    *     value: '1.5',
-   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     numerator_unit_id: 'un_82bd37dae5po',
+   *     denominator_unit_id: 'un_82bd37dae5po',
    *   },
    *   leveling_factor: '1.10',
    *   name: 'Mixing',
    *   overhead_rate: {
    *     value: '15.00',
-   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     numerator_unit_id: 'un_82bd37dae5po',
+   *     denominator_unit_id: 'un_82bd37dae5po',
    *   },
    *   production: {
-   *     item_id: 'it_0131e386ac683e8c29a71f6f1f',
+   *     item_id: 'it_pej07ckhvu62',
    *     quantity_value: '100',
-   *     quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     quantity_unit_id: 'un_82bd37dae5po',
    *   },
    *   consumptions: [
    *     {
-   *       item_id: 'it_0131e386ac683e8c29a71f6f1f',
+   *       item_id: 'it_pej07ckhvu62',
    *       quantity_value: '50',
-   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       quantity_unit_id: 'un_82bd37dae5po',
    *       waste_quantity_value: '2',
-   *       waste_quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       waste_quantity_unit_id: 'un_82bd37dae5po',
    *     },
    *   ],
-   *   scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
+   *   scanning_station_id: 'scst_t71bn7lq5yov',
    * });
    * ```
    */
@@ -106,7 +109,7 @@ export class ProductionSteps extends APIResource {
    * ```ts
    * const productionStep =
    *   await client.operations.productionSteps.retrieve(
-   *     'prst_0159474175bb59f4b1990404ee',
+   *     'prst_0ht5mkqx5a6t',
    *   );
    * ```
    */
@@ -121,18 +124,20 @@ export class ProductionSteps extends APIResource {
   /**
    * Partially updates a production step.
    *
+   * Returns a conflict error if another production step in the account already uses
+   * the requested name.
+   *
    * This endpoint requires the permission: `production_steps:update`.
    *
    * @example
    * ```ts
    * const productionStep =
    *   await client.operations.productionSteps.update(
-   *     'prst_0159474175bb59f4b1990404ee',
+   *     'prst_0ht5mkqx5a6t',
    *     {
    *       leveling_factor: '1.15',
    *       name: 'Assembly Step A',
-   *       scanning_station_id:
-   *         'scst_0129335dd6286056a97024fcc1',
+   *       scanning_station_id: 'scst_t71bn7lq5yov',
    *     },
    *   );
    * ```
@@ -146,7 +151,11 @@ export class ProductionSteps extends APIResource {
   }
 
   /**
-   * Returns a paginated list of production steps for the current account.
+   * Returns a paginated list of production steps for the current account, newest
+   * first.
+   *
+   * The `q` search term matches against the step name. Filters combine with AND,
+   * while the values within a single filter combine with OR.
    *
    * This endpoint requires the permission: `production_steps:read`.
    *
@@ -164,10 +173,12 @@ export class ProductionSteps extends APIResource {
   }
 
   /**
-   * Deletes a production step and its associated data.
+   * Deletes a production step.
    *
-   * The step's connections in the production flow graph are removed as part of the
-   * deletion.
+   * The step's connections to its upstream and downstream steps are removed as part
+   * of the deletion, so the neighboring steps are left unconnected to each other.
+   * Deleting a step that was already deleted returns an already-deleted error rather
+   * than a not-found error.
    *
    * This endpoint requires the permission: `production_steps:delete`.
    *
@@ -175,7 +186,7 @@ export class ProductionSteps extends APIResource {
    * ```ts
    * const productionStep =
    *   await client.operations.productionSteps.delete(
-   *     'prst_0159474175bb59f4b1990404ee',
+   *     'prst_0ht5mkqx5a6t',
    *   );
    * ```
    */
@@ -185,16 +196,16 @@ export class ProductionSteps extends APIResource {
 }
 
 /**
- * Consumption input for a production step.
+ * A material a production step consumes, with its quantity and expected waste.
  */
 export interface CreateConsumptionInput {
   /**
-   * Item ID.
+   * Material the step consumes.
    */
   item_id: string;
 
   /**
-   * Quantity unit ID.
+   * Unit for `quantity_value`.
    */
   quantity_unit_id: string;
 
@@ -204,7 +215,7 @@ export interface CreateConsumptionInput {
   quantity_value: string;
 
   /**
-   * Unit ID for `waste_quantity_value`.
+   * Unit for `waste_quantity_value`.
    */
   waste_quantity_unit_id: string;
 
@@ -220,16 +231,16 @@ export interface CreateConsumptionInput {
 }
 
 /**
- * Production output input.
+ * The item and quantity a production step produces.
  */
 export interface CreateProductionInput {
   /**
-   * Item ID.
+   * Item the step produces.
    */
   item_id: string;
 
   /**
-   * Quantity unit ID.
+   * Unit for `quantity_value`.
    */
   quantity_unit_id: string;
 
@@ -246,37 +257,50 @@ export interface CreateProductionStepRequest {
   /**
    * Allowance correction factor applied to labor time in cost calculations, as a
    * decimal string.
+   *
+   * Effective labor time per unit is
+   * `labor_time × (1 + leveling_factor) × (1 + allowances)`, so `0` applies no
+   * allowance.
    */
   allowances: string;
 
   /**
-   * Rate configuration input.
+   * A rate, expressed as a value together with the units of its numerator and
+   * denominator (for example, `25.00` `$` per `hr`).
    */
   labor_rate: CreateRateInput;
 
   /**
-   * Rate configuration input.
+   * A rate, expressed as a value together with the units of its numerator and
+   * denominator (for example, `25.00` `$` per `hr`).
    */
   labor_time: CreateRateInput;
 
   /**
    * Leveling correction factor applied to labor time in cost calculations, as a
    * decimal string.
+   *
+   * Effective labor time per unit is
+   * `labor_time × (1 + leveling_factor) × (1 + allowances)`, so `0` applies no
+   * leveling correction.
    */
   leveling_factor: string;
 
   /**
    * Display name of the step.
+   *
+   * Must be unique within the account.
    */
   name: string;
 
   /**
-   * Rate configuration input.
+   * A rate, expressed as a value together with the units of its numerator and
+   * denominator (for example, `25.00` `$` per `hr`).
    */
   overhead_rate: CreateRateInput;
 
   /**
-   * Production output input.
+   * The item and quantity a production step produces.
    */
   production: CreateProductionInput;
 
@@ -286,7 +310,7 @@ export interface CreateProductionStepRequest {
   consumptions?: Array<CreateConsumptionInput>;
 
   /**
-   * Department ID.
+   * Department responsible for this step.
    */
   department_id?: string;
 
@@ -296,22 +320,23 @@ export interface CreateProductionStepRequest {
   notes?: string;
 
   /**
-   * Scanning station ID.
+   * Scanning station where batches at this step are scanned.
    */
   scanning_station_id?: string;
 }
 
 /**
- * Rate configuration input.
+ * A rate, expressed as a value together with the units of its numerator and
+ * denominator (for example, `25.00` `$` per `hr`).
  */
 export interface CreateRateInput {
   /**
-   * Denominator unit ID.
+   * Unit of the rate's denominator.
    */
   denominator_unit_id: string;
 
   /**
-   * Numerator unit ID.
+   * Unit of the rate's numerator.
    */
   numerator_unit_id: string;
 
@@ -345,7 +370,7 @@ export interface UpdateProductionStepRequest {
   name?: string;
 
   /**
-   * Scanning station ID.
+   * Scanning station where batches at this step are scanned.
    */
   scanning_station_id?: string;
 }
@@ -356,37 +381,50 @@ export interface ProductionStepCreateParams {
   /**
    * Allowance correction factor applied to labor time in cost calculations, as a
    * decimal string.
+   *
+   * Effective labor time per unit is
+   * `labor_time × (1 + leveling_factor) × (1 + allowances)`, so `0` applies no
+   * allowance.
    */
   allowances: string;
 
   /**
-   * Rate configuration input.
+   * A rate, expressed as a value together with the units of its numerator and
+   * denominator (for example, `25.00` `$` per `hr`).
    */
   labor_rate: CreateRateInput;
 
   /**
-   * Rate configuration input.
+   * A rate, expressed as a value together with the units of its numerator and
+   * denominator (for example, `25.00` `$` per `hr`).
    */
   labor_time: CreateRateInput;
 
   /**
    * Leveling correction factor applied to labor time in cost calculations, as a
    * decimal string.
+   *
+   * Effective labor time per unit is
+   * `labor_time × (1 + leveling_factor) × (1 + allowances)`, so `0` applies no
+   * leveling correction.
    */
   leveling_factor: string;
 
   /**
    * Display name of the step.
+   *
+   * Must be unique within the account.
    */
   name: string;
 
   /**
-   * Rate configuration input.
+   * A rate, expressed as a value together with the units of its numerator and
+   * denominator (for example, `25.00` `$` per `hr`).
    */
   overhead_rate: CreateRateInput;
 
   /**
-   * Production output input.
+   * The item and quantity a production step produces.
    */
   production: CreateProductionInput;
 
@@ -396,7 +434,7 @@ export interface ProductionStepCreateParams {
   consumptions?: Array<CreateConsumptionInput>;
 
   /**
-   * Department ID.
+   * Department responsible for this step.
    */
   department_id?: string;
 
@@ -406,7 +444,7 @@ export interface ProductionStepCreateParams {
   notes?: string;
 
   /**
-   * Scanning station ID.
+   * Scanning station where batches at this step are scanned.
    */
   scanning_station_id?: string;
 }
@@ -452,7 +490,7 @@ export interface ProductionStepUpdateParams {
   name?: string;
 
   /**
-   * Scanning station ID.
+   * Scanning station where batches at this step are scanned.
    */
   scanning_station_id?: string;
 }

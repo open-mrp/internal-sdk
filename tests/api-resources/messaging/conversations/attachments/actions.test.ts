@@ -9,10 +9,9 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('uploadURL: only required params', async () => {
-    const responsePromise = client.messaging.conversations.attachments.actions.uploadURL(
-      'cv_01h9z8q1w2e3r4t5y6u7i8cv',
-      { filename: 'diagram.png' },
-    );
+    const responsePromise = client.messaging.conversations.attachments.actions.uploadURL('cv_w35z4ck68yq7', {
+      filename: 'diagram.png',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,13 +22,10 @@ describe('resource actions', () => {
   });
 
   test('uploadURL: required and optional params', async () => {
-    const response = await client.messaging.conversations.attachments.actions.uploadURL(
-      'cv_01h9z8q1w2e3r4t5y6u7i8cv',
-      {
-        filename: 'diagram.png',
-        include: ['attachment'],
-        content_type: 'image/png',
-      },
-    );
+    const response = await client.messaging.conversations.attachments.actions.uploadURL('cv_w35z4ck68yq7', {
+      filename: 'diagram.png',
+      include: ['attachment'],
+      content_type: 'image/png',
+    });
   });
 });

@@ -11,7 +11,11 @@ import { path } from '../../../internal/utils/path';
  */
 export class Lines extends APIResource {
   /**
-   * Creates a line on a shipment.
+   * Adds a line to a shipment, recording how much of a sales order line the shipment
+   * carries.
+   *
+   * The line only records what the shipment carries: it does not touch the pick for
+   * the order, so the pick's lines keep their existing packed state.
    *
    * This endpoint requires the permission: `shipments:create`.
    *
@@ -19,12 +23,11 @@ export class Lines extends APIResource {
    * ```ts
    * const shipmentLine =
    *   await client.operations.shipments.lines.create(
-   *     'sh_018b3a946651bfb6572b06b2b2',
+   *     'sh_pfygp2gl45y4',
    *     {
-   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       quantity_unit_id: 'un_82bd37dae5po',
    *       quantity_value: '10.000000000000000000000000000000',
-   *       sales_order_line_id:
-   *         'orln_0142f9b74268973450b3a76ce3',
+   *       sales_order_line_id: 'orln_la01fxgrwcnr',
    *     },
    *   );
    * ```
@@ -48,7 +51,7 @@ export class Lines extends APIResource {
    * const shipmentLine =
    *   await client.operations.shipments.lines.retrieve(
    *     'example',
-   *     { shipment_id: 'sh_018b3a946651bfb6572b06b2b2' },
+   *     { shipment_id: 'sh_pfygp2gl45y4' },
    *   );
    * ```
    */
@@ -62,7 +65,10 @@ export class Lines extends APIResource {
   }
 
   /**
-   * Partially updates a shipment line.
+   * Changes the shipped quantity on a shipment line.
+   *
+   * The line stays attached to the sales order line it was created against, and
+   * changing the quantity does not touch the pick for the order.
    *
    * This endpoint requires the permission: `shipments:update`.
    *
@@ -72,8 +78,8 @@ export class Lines extends APIResource {
    *   await client.operations.shipments.lines.update(
    *     'example',
    *     {
-   *       shipment_id: 'sh_018b3a946651bfb6572b06b2b2',
-   *       quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       shipment_id: 'sh_pfygp2gl45y4',
+   *       quantity_unit_id: 'un_82bd37dae5po',
    *       quantity_value: '5.000000000000000000000000000000',
    *     },
    *   );
@@ -101,7 +107,7 @@ export class Lines extends APIResource {
    * ```ts
    * const listShipmentLine =
    *   await client.operations.shipments.lines.list(
-   *     'sh_018b3a946651bfb6572b06b2b2',
+   *     'sh_pfygp2gl45y4',
    *   );
    * ```
    */
@@ -114,7 +120,10 @@ export class Lines extends APIResource {
   }
 
   /**
-   * Deletes a line from a shipment.
+   * Removes a line from a shipment.
+   *
+   * Unlike deleting the whole shipment, removing a single line leaves the pick for
+   * the order untouched, so the pick's lines keep their existing packed state.
    *
    * This endpoint requires the permission: `shipments:delete`.
    *
@@ -122,7 +131,7 @@ export class Lines extends APIResource {
    * ```ts
    * const line = await client.operations.shipments.lines.delete(
    *   'example',
-   *   { shipment_id: 'sh_018b3a946651bfb6572b06b2b2' },
+   *   { shipment_id: 'sh_pfygp2gl45y4' },
    * );
    * ```
    */

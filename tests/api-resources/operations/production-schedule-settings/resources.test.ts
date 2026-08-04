@@ -12,7 +12,7 @@ describe('resource resources', () => {
     const responsePromise = client.operations.productionScheduleSettings.resources.update({
       lead_time_offset_weeks: 0,
       participation_status: 'excluded',
-      scope_ref_id: 'mc_0177d18f55a1615f783d3bf8d0',
+      scope_ref_id: 'mc_ffcfk9dxixis',
       scope_type: 'machine',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -28,7 +28,7 @@ describe('resource resources', () => {
     const response = await client.operations.productionScheduleSettings.resources.update({
       lead_time_offset_weeks: 0,
       participation_status: 'excluded',
-      scope_ref_id: 'mc_0177d18f55a1615f783d3bf8d0',
+      scope_ref_id: 'mc_ffcfk9dxixis',
       scope_type: 'machine',
       lead_time_weeks: 0,
     });

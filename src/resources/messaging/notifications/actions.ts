@@ -13,13 +13,17 @@ export class Actions extends APIResource {
   /**
    * Dismisses a notification, removing it from the active feed.
    *
+   * The notification is not deleted: it can still be retrieved by ID and listed with
+   * the `dismissed` status filter. Dismissing an already-dismissed notification
+   * keeps the original dismissal time.
+   *
    * This endpoint requires the permission: `messaging:update`.
    *
    * @example
    * ```ts
    * const notification =
    *   await client.messaging.notifications.actions.dismiss(
-   *     'nf_01h9z8q1w2e3r4t5y6u7i8o9',
+   *     'nf_yvw2bfj2guyn',
    *   );
    * ```
    */
@@ -36,7 +40,11 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Marks every one of the caller's unseen notifications as seen.
+   * Marks every one of the caller's unseen notifications as seen in a single call.
+   *
+   * The notifications stay in the feed and are not marked read. Account
+   * announcements are unaffected and are cleared individually, so the unread total
+   * can remain above zero afterwards.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -51,9 +59,10 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Marks a notification as read.
+   * Marks a notification as read, as when the user opens it.
    *
-   * Reading also marks the notification seen if it was not already.
+   * Reading also marks the notification seen if it was not already, and leaves it in
+   * the feed until it is dismissed. Repeating the call keeps the original read time.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -61,7 +70,7 @@ export class Actions extends APIResource {
    * ```ts
    * const notification =
    *   await client.messaging.notifications.actions.read(
-   *     'nf_01h9z8q1w2e3r4t5y6u7i8o9',
+   *     'nf_yvw2bfj2guyn',
    *   );
    * ```
    */
@@ -78,7 +87,11 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Marks a notification as seen.
+   * Marks a notification as seen, as when it is surfaced to the user without being
+   * opened.
+   *
+   * Seeing a notification removes it from the unread count but leaves it in the
+   * feed. Repeating the call keeps the original seen time.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -86,7 +99,7 @@ export class Actions extends APIResource {
    * ```ts
    * const notification =
    *   await client.messaging.notifications.actions.seen(
-   *     'nf_01h9z8q1w2e3r4t5y6u7i8o9',
+   *     'nf_yvw2bfj2guyn',
    *   );
    * ```
    */

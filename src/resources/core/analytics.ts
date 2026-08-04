@@ -42,11 +42,11 @@ export class Analytics extends APIResource {
    *   await client.core.analytics.updateDeliveries({
    *     end_date: '2026-05-10T00:23:00Z',
    *     start_date: '2026-05-10T00:00:00Z',
-   *     customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-   *     customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
+   *     customer_group_ids: ['acgp_6p4z57e9alaf'],
+   *     customer_ids: ['ac_opnlh43ymyee'],
    *     override_promised_dates: true,
-   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
-   *     sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+   *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
+   *     sales_rep_ids: ['acus_e5zu8bde0z3h'],
    *     target_delivery_time_days: 7,
    *   });
    * ```
@@ -70,8 +70,8 @@ export class Analytics extends APIResource {
    *   await client.core.analytics.updateDemandForecast({
    *     forecast_months: 3,
    *     history_months: 6,
-   *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+   *     item_ids: ['it_pej07ckhvu62'],
+   *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
    *   });
    * ```
    */
@@ -92,9 +92,9 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeInventoryReceiptsResponse =
    *   await client.core.analytics.updateInventoryReceipts({
-   *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     location_ids: ['lc_014d187d99b31926f0c74af9d8'],
-   *     lot_ids: ['lot_01efb5e19625fdc035bb0670df'],
+   *     item_ids: ['it_pej07ckhvu62'],
+   *     location_ids: ['lc_yonnys0hx3ju'],
+   *     lot_ids: ['lot_t1ge2m2qt3cw'],
    *   });
    * ```
    */
@@ -143,10 +143,10 @@ export class Analytics extends APIResource {
    *     comparison_start_date: '2026-04-10T00:00:00Z',
    *     end_date: '2026-05-10T00:23:00Z',
    *     start_date: '2026-05-10T00:00:00Z',
-   *     customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-   *     customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-   *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+   *     customer_group_ids: ['acgp_6p4z57e9alaf'],
+   *     customer_ids: ['ac_opnlh43ymyee'],
+   *     item_ids: ['it_pej07ckhvu62'],
+   *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
    *   });
    * ```
    */
@@ -167,8 +167,8 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeMaterialsResponse =
    *   await client.core.analytics.updateMaterials({
-   *     sales_order_ids: ['or_01d5034136c3ccc048abecc312'],
-   *     supplier_ids: ['ac_0177902104bccac5fbb173cd96'],
+   *     sales_order_ids: ['or_9lqo07quiwyb'],
+   *     supplier_ids: ['ac_gwy8tfbc074f'],
    *   });
    * ```
    */
@@ -191,8 +191,8 @@ export class Analytics extends APIResource {
    *   await client.core.analytics.updateNewCustomers({
    *     end_date: '2026-05-10T00:23:00Z',
    *     start_date: '2026-05-10T00:00:00Z',
-   *     customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-   *     sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+   *     customer_group_ids: ['acgp_6p4z57e9alaf'],
+   *     sales_rep_ids: ['acus_e5zu8bde0z3h'],
    *   });
    * ```
    */
@@ -219,7 +219,7 @@ export class Analytics extends APIResource {
    *   await client.core.analytics.updateOee({
    *     end_date: '2026-05-10T00:23:00Z',
    *     start_date: '2026-05-10T00:00:00Z',
-   *     department_ids: ['dp_01791c25ab59da4704cba61874'],
+   *     department_ids: ['dp_m0jayebxnkos'],
    *   });
    * ```
    */
@@ -236,8 +236,8 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeOpenBatchesResponse =
    *   await client.core.analytics.updateOpenBatches({
-   *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+   *     item_ids: ['it_pej07ckhvu62'],
+   *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
    *   });
    * ```
    */
@@ -257,10 +257,10 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeOrdersResponse =
    *   await client.core.analytics.updateOrders({
-   *     customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-   *     customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
-   *     sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+   *     customer_group_ids: ['acgp_6p4z57e9alaf'],
+   *     customer_ids: ['ac_opnlh43ymyee'],
+   *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
+   *     sales_rep_ids: ['acus_e5zu8bde0z3h'],
    *   });
    * ```
    */
@@ -280,11 +280,11 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeProductionCostsResponse =
    *   await client.core.analytics.updateProductionCosts({
-   *     category_ids: ['ic_01ae7bd7bfd21ca0ab81e1357e'],
-   *     department_ids: ['dp_01791c25ab59da4704cba61874'],
+   *     category_ids: ['ic_d06g9c6yc9ck'],
+   *     department_ids: ['dp_m0jayebxnkos'],
    *     end_date: '2026-05-10T00:23:00Z',
-   *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+   *     item_ids: ['it_pej07ckhvu62'],
+   *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
    *     start_date: '2026-05-10T00:00:00Z',
    *   });
    * ```
@@ -305,11 +305,11 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeQuarterlyOrdersResponse =
    *   await client.core.analytics.updateQuarterlyOrders({
-   *     customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-   *     customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-   *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
-   *     sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+   *     customer_group_ids: ['acgp_6p4z57e9alaf'],
+   *     customer_ids: ['ac_opnlh43ymyee'],
+   *     item_ids: ['it_pej07ckhvu62'],
+   *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
+   *     sales_rep_ids: ['acus_e5zu8bde0z3h'],
    *   });
    * ```
    */
@@ -331,11 +331,11 @@ export class Analytics extends APIResource {
    *   await client.core.analytics.updateSales({
    *     end_date: '2026-05-10T00:23:00Z',
    *     start_date: '2026-05-10T00:00:00Z',
-   *     customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-   *     customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+   *     customer_group_ids: ['acgp_6p4z57e9alaf'],
+   *     customer_ids: ['ac_opnlh43ymyee'],
+   *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
    *     query: '6061',
-   *     sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+   *     sales_rep_ids: ['acus_e5zu8bde0z3h'],
    *   });
    * ```
    */
@@ -430,12 +430,20 @@ export interface AnalyticsLot {
  */
 export interface AnalyticsRate {
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   denominator: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   numerator: AccountUsersAPI.Quantity | null;
 }
@@ -592,7 +600,8 @@ export interface AnalyzeDemandForecastResponse {
   current_month_fraction: number;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   data: ListDemandForecastRow | null;
 
@@ -846,7 +855,8 @@ export interface AnalyzeOeeRequest {
  */
 export interface AnalyzeOeeResponse {
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   departments: ListOeeDepartment | null;
 
@@ -1153,7 +1163,8 @@ export interface AnalyzeScheduleAttainmentRequest {
  */
 export interface AnalyzeScheduleAttainmentResponse {
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   baseline_schedules: CoreAPI.ListEntity | null;
 
@@ -1164,7 +1175,8 @@ export interface AnalyzeScheduleAttainmentResponse {
   baseline_status: 'measured' | 'no_baseline';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   buckets: ListAttainmentBucket | null;
 
@@ -1174,7 +1186,8 @@ export interface AnalyzeScheduleAttainmentResponse {
   ends_at: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   frozen_adherence: ListFrozenAdherence | null;
 
@@ -1341,32 +1354,56 @@ export interface Coordinate {
  */
 export interface CostBreakdown {
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   labor: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   materials: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   overhead: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   time: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   total: AccountUsersAPI.Quantity | null;
 }
@@ -1647,7 +1684,11 @@ export interface InventoryReceiptSummaryEntry {
   holder_account: CoreAPI.Entity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   inventory_value: AccountUsersAPI.Quantity | null;
 
@@ -1682,7 +1723,11 @@ export interface InventoryReceiptSummaryEntry {
   owner_account: CoreAPI.Entity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   remaining_quantity: AccountUsersAPI.Quantity | null;
 
@@ -1693,7 +1738,8 @@ export interface InventoryReceiptSummaryEntry {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAttainmentBucket {
   /**
@@ -1707,13 +1753,20 @@ export interface ListAttainmentBucket {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListDemandForecastRow {
   /**
@@ -1727,13 +1780,20 @@ export interface ListDemandForecastRow {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListFrozenAdherence {
   /**
@@ -1747,13 +1807,20 @@ export interface ListFrozenAdherence {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListOeeDepartment {
   /**
@@ -1767,13 +1834,20 @@ export interface ListOeeDepartment {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListOeeDowntimeReason {
   /**
@@ -1787,7 +1861,13 @@ export interface ListOeeDowntimeReason {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -1842,22 +1922,38 @@ export interface MaterialAnalyticsEntry {
   item_id: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   lead_time: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   order_point: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity_in_demand: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity_in_inventory: AccountUsersAPI.Quantity | null;
 
@@ -1928,7 +2024,8 @@ export interface OeeDepartment {
   department: CoreAPI.Entity | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   downtime_breakdown: ListOeeDowntimeReason | null;
 
@@ -2088,12 +2185,17 @@ export interface OeeDowntimeReason {
 }
 
 /**
- * Aggregated open-batch quantity for one item at one scanning station.
+ * Work in progress still sitting at one scanning station, aggregated for a single
+ * item.
  */
 export interface OpenBatchSummary {
   /**
-   * Aggregated open quantity for this item and scanning station, as a decimal
-   * measure expressed in `unit`.
+   * Quantity still waiting at this scanning station, as a decimal measure expressed
+   * in `unit`.
+   *
+   * Each contributing batch counts for its own quantity less whatever has already
+   * been passed downstream into output batches, so the total reflects what is left
+   * to work on rather than everything ever produced at the station.
    */
   count: string;
 
@@ -2103,7 +2205,7 @@ export interface OpenBatchSummary {
   department_name: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
@@ -2594,7 +2696,11 @@ export interface SalesEntry {
  */
 export interface WeeksOfSalesItem {
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   average_sales_quantity: AccountUsersAPI.Quantity | null;
 
@@ -2604,7 +2710,11 @@ export interface WeeksOfSalesItem {
   product_line: CoreAPI.Entity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity_on_hand: AccountUsersAPI.Quantity | null;
 

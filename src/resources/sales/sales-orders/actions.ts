@@ -14,6 +14,7 @@ export class Actions extends APIResource {
   /**
    * Deletes multiple sales orders in a single atomic operation.
    *
+   * Each order is torn down exactly as it would be by deleting it on its own.
    * Fulfilled orders cannot be deleted; if any requested order fails this check, no
    * orders are deleted.
    *
@@ -23,7 +24,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.sales.salesOrders.actions.bulkDelete({
-   *     sales_order_ids: ['or_01d5034136c3ccc048abecc312'],
+   *     sales_order_ids: ['or_9lqo07quiwyb'],
    *   });
    * ```
    */
@@ -34,7 +35,10 @@ export class Actions extends APIResource {
   /**
    * Closes a sales order, transitioning it from `issued` to `fulfilled`.
    *
-   * Sets the order's completion timestamp and marks its pick as finished.
+   * Stamps the order's completion timestamp and closes its pick, packing every pick
+   * line that is still open so the pick reads as complete alongside the order. Only
+   * an order in `issued` can be closed, and once it is fulfilled it can no longer be
+   * deleted, nor can its lines be removed, until it is reopened.
    *
    * This endpoint requires the permission: `sales_orders:update`.
    *
@@ -42,7 +46,7 @@ export class Actions extends APIResource {
    * ```ts
    * const salesOrder =
    *   await client.sales.salesOrders.actions.close(
-   *     'or_01d5034136c3ccc048abecc312',
+   *     'or_9lqo07quiwyb',
    *   );
    * ```
    */
@@ -53,9 +57,13 @@ export class Actions extends APIResource {
   /**
    * Creates a production run from a sales order.
    *
-   * Creates a batch for each of the order's item-backed lines, reserves the material
-   * inventory required to produce them, and links the run to the order. An order can
-   * have at most one production run.
+   * Walks the production flow behind each item-backed line to work out what actually
+   * has to be made, then creates one batch for each item that is produced directly
+   * from raw materials, sized to cover every line that needs it. Reserves the
+   * material inventory those batches consume and links the run to the order. The
+   * caller becomes the run's responsible user. An order can have at most one
+   * production run, and a line whose item has no production flow contributes no
+   * batches.
    *
    * This endpoint requires the permission: `production_runs:create`.
    *
@@ -63,7 +71,7 @@ export class Actions extends APIResource {
    * ```ts
    * const productionRun =
    *   await client.sales.salesOrders.actions.createProductionRun(
-   *     'or_01d5034136c3ccc048abecc312',
+   *     'or_9lqo07quiwyb',
    *   );
    * ```
    */
@@ -84,6 +92,7 @@ export class Actions extends APIResource {
    *
    * Issuing commits the order for fulfillment: a pick is created for the order's
    * sale lines and inventory is reserved for each line tied to an inventory item.
+   * Only an order still in `estimate` can be issued.
    *
    * This endpoint requires the permission: `sales_orders:update`.
    *
@@ -91,7 +100,7 @@ export class Actions extends APIResource {
    * ```ts
    * const salesOrder =
    *   await client.sales.salesOrders.actions.issue(
-   *     'or_01d5034136c3ccc048abecc312',
+   *     'or_9lqo07quiwyb',
    *     { notify_customer: true },
    *   );
    * ```
@@ -107,7 +116,10 @@ export class Actions extends APIResource {
   /**
    * Reopens a sales order, transitioning it from `fulfilled` back to `issued`.
    *
-   * Clears the order's completion timestamp and marks its pick as unfinished.
+   * Clears the order's completion timestamp and reopens its pick, unpacking every
+   * pick line that is not yet fully picked so the outstanding work can be resumed;
+   * lines already picked in full stay packed. Only an order in `fulfilled` can be
+   * reopened.
    *
    * This endpoint requires the permission: `sales_orders:update`.
    *
@@ -115,7 +127,7 @@ export class Actions extends APIResource {
    * ```ts
    * const salesOrder =
    *   await client.sales.salesOrders.actions.open(
-   *     'or_01d5034136c3ccc048abecc312',
+   *     'or_9lqo07quiwyb',
    *   );
    * ```
    */
@@ -141,7 +153,7 @@ export class Actions extends APIResource {
    * ```ts
    * const quoteSalesOrderFreightResponse =
    *   await client.sales.salesOrders.actions.quoteFreight(
-   *     'or_01d5034136c3ccc048abecc312',
+   *     'or_9lqo07quiwyb',
    *   );
    * ```
    */
@@ -152,8 +164,9 @@ export class Actions extends APIResource {
   /**
    * Unissues a sales order, transitioning it from `issued` back to `estimate`.
    *
-   * Deletes the order's pick and releases any inventory reserved when the order was
-   * issued.
+   * Deletes the order's pick, discarding any picking progress recorded against it,
+   * and releases the inventory reserved when the order was issued. Only an order in
+   * `issued` can be unissued.
    *
    * This endpoint requires the permission: `sales_orders:update`.
    *
@@ -161,7 +174,7 @@ export class Actions extends APIResource {
    * ```ts
    * const salesOrder =
    *   await client.sales.salesOrders.actions.unissue(
-   *     'or_01d5034136c3ccc048abecc312',
+   *     'or_9lqo07quiwyb',
    *   );
    * ```
    */
@@ -187,14 +200,17 @@ export interface IssueSalesOrderRequest {
   /**
    * Whether to notify the customer.
    *
-   * When `true`, the order acknowledgement email is sent to the contacts configured
-   * on the order and the order's `acknowledgment_status` is set to `sent`.
+   * When `true`, an order acknowledgement email with a PDF of the order is sent to
+   * the acknowledgement contacts on the order and the order's
+   * `acknowledgment_status` becomes `sent`. An order with no acknowledgement
+   * contacts sends nothing and leaves its `acknowledgment_status` unchanged.
    */
   notify_customer: boolean;
 }
 
 /**
- * Production run resource.
+ * A production run: the group of shop-floor batches that are executed together,
+ * tracked from the first batch scan through to completion.
  */
 export interface ProductionRun {
   /**
@@ -208,11 +224,11 @@ export interface ProductionRun {
   batch_count: number;
 
   /**
-   * Time the run was marked complete.
+   * Time the run finished production.
    *
-   * Set automatically once every batch in the run has been scanned or deleted, and
-   * unset while the run is still in progress. Once set, the run can no longer be
-   * updated and new batches can no longer be added.
+   * Set automatically once every batch in the run has been scanned or deleted. From
+   * that point the run can no longer be updated and no further batches can be added
+   * to it.
    */
   completed_at: string | null;
 
@@ -238,7 +254,7 @@ export interface ProductionRun {
    * A user's membership in an account, carrying the account-specific status, role,
    * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * Profile fields (name, email, username, image URL) live on the `user`
    * sub-resource, which is shared across every account the user belongs to.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
@@ -246,8 +262,7 @@ export interface ProductionRun {
   /**
    * Time the run started production.
    *
-   * Set automatically when the first batch in the run is scanned, and unset until
-   * then.
+   * Set automatically the first time a batch in the run is scanned at a station.
    */
   started_at: string | null;
 
@@ -296,8 +311,10 @@ export interface ActionIssueParams {
   /**
    * Whether to notify the customer.
    *
-   * When `true`, the order acknowledgement email is sent to the contacts configured
-   * on the order and the order's `acknowledgment_status` is set to `sent`.
+   * When `true`, an order acknowledgement email with a PDF of the order is sent to
+   * the acknowledgement contacts on the order and the order's
+   * `acknowledgment_status` becomes `sent`. An order with no acknowledgement
+   * contacts sends nothing and leaves its `acknowledgment_status` unchanged.
    */
   notify_customer: boolean;
 }

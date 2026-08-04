@@ -11,6 +11,11 @@ export class Healthz extends APIResource {
   /**
    * Returns the current health status of the API.
    *
+   * The check is shallow: a successful response confirms the API is running and
+   * serving requests, and does not probe the database or any downstream service. It
+   * is intended for uptime monitors and load-balancer probes, and is not recorded in
+   * the request log.
+   *
    * @example
    * ```ts
    * const healthcheck = await client.healthz.list();
@@ -22,7 +27,7 @@ export class Healthz extends APIResource {
 }
 
 /**
- * Healthcheck contains information on the health of the application.
+ * A liveness report for the API.
  */
 export interface Healthcheck {
   /**
@@ -31,9 +36,10 @@ export interface Healthcheck {
   object: 'healthcheck';
 
   /**
-   * Current operational status of the API service.
+   * Current operational status of the API.
    *
-   * Returns `healthy` when the service is up and able to handle requests.
+   * Always `healthy` on a successful response: no other value is ever reported, so
+   * treat the HTTP status code, not this field, as the real signal.
    */
   status: string;
 }

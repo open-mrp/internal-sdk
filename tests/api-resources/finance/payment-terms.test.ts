@@ -24,7 +24,7 @@ describe('resource paymentTerms', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.finance.paymentTerms.retrieve('pytm_018694d6601ea771cd1b52e890');
+    const responsePromise = client.finance.paymentTerms.retrieve('pytm_skssmsy21lem');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,7 +38,7 @@ describe('resource paymentTerms', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.paymentTerms.retrieve(
-        'pytm_018694d6601ea771cd1b52e890',
+        'pytm_skssmsy21lem',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -46,7 +46,7 @@ describe('resource paymentTerms', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.finance.paymentTerms.update('pytm_018694d6601ea771cd1b52e890');
+    const responsePromise = client.finance.paymentTerms.update('pytm_skssmsy21lem');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -60,7 +60,7 @@ describe('resource paymentTerms', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.paymentTerms.update(
-        'pytm_018694d6601ea771cd1b52e890',
+        'pytm_skssmsy21lem',
         { include: ['owner'], name: 'Net 60' },
         { path: '/_stainless_unknown_path' },
       ),
@@ -94,7 +94,7 @@ describe('resource paymentTerms', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.finance.paymentTerms.delete('pytm_018694d6601ea771cd1b52e890');
+    const responsePromise = client.finance.paymentTerms.delete('pytm_skssmsy21lem');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

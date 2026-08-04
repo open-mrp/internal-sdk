@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('dismiss', async () => {
-    const responsePromise = client.messaging.announcements.actions.dismiss('an_01c4d5e6f7a8b9c0d1e2f3a4');
+    const responsePromise = client.messaging.announcements.actions.dismiss('an_m4vwgn2t8cqs');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.messaging.announcements.actions.dismiss(
-        'an_01c4d5e6f7a8b9c0d1e2f3a4',
+        'an_m4vwgn2t8cqs',
         { include: ['resource'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource actions', () => {
   });
 
   test('read', async () => {
-    const responsePromise = client.messaging.announcements.actions.read('an_01c4d5e6f7a8b9c0d1e2f3a4');
+    const responsePromise = client.messaging.announcements.actions.read('an_m4vwgn2t8cqs');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.messaging.announcements.actions.read(
-        'an_01c4d5e6f7a8b9c0d1e2f3a4',
+        'an_m4vwgn2t8cqs',
         { include: ['resource'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -53,7 +53,7 @@ describe('resource actions', () => {
   });
 
   test('seen', async () => {
-    const responsePromise = client.messaging.announcements.actions.seen('an_01c4d5e6f7a8b9c0d1e2f3a4');
+    const responsePromise = client.messaging.announcements.actions.seen('an_m4vwgn2t8cqs');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -67,7 +67,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.messaging.announcements.actions.seen(
-        'an_01c4d5e6f7a8b9c0d1e2f3a4',
+        'an_m4vwgn2t8cqs',
         { include: ['resource'] },
         { path: '/_stainless_unknown_path' },
       ),

@@ -14,10 +14,11 @@ export class Actions extends APIResource {
    * Records the full outstanding quantity as received on every unstocked line of a
    * receiving order.
    *
-   * Each unstocked line's quantity is set to the quantity still outstanding on its
-   * purchase order line (ordered minus previously received); lines with nothing
-   * outstanding are left unchanged. This does not add inventory — use Stock
-   * Receiving Order to put the received quantities away.
+   * Each unstocked line's quantity is set to what is still outstanding on its
+   * purchase order line — the ordered quantity less everything already stocked
+   * against that line — and lines with nothing outstanding are left as they are.
+   * Nothing enters inventory and no delivery is recorded; use Stock Receiving Order
+   * to put the received quantities away.
    *
    * This endpoint requires the permission: `receiving_orders:update`.
    *
@@ -25,7 +26,7 @@ export class Actions extends APIResource {
    * ```ts
    * const receivingOrder =
    *   await client.operations.receivingOrders.actions.receive(
-   *     'rcor_016911ec6c634a298b3dc1798e',
+   *     'rcor_iy0usuxcrjj8',
    *   );
    * ```
    */
@@ -37,14 +38,22 @@ export class Actions extends APIResource {
    * Stocks the received quantities on a receiving order into inventory.
    *
    * Every unstocked line with a non-zero quantity is marked as stocked. For each
-   * entry in `line_items`, the accepted allocations create inventory receipts at the
-   * given storage locations (and lot, if provided), and any `rejected_quantity` is
-   * recorded as rejected without entering inventory. A delivery record is created
-   * for the stocking event.
+   * entry in `line_items`, the allocations create inventory receipts at the given
+   * storage locations (and lot, if one was given), and any `rejected_quantity` is
+   * recorded as refused without entering inventory. One delivery is recorded for the
+   * whole stocking event, with a line per allocation and a line per refused
+   * quantity.
+   *
+   * The newly received stock is then applied to any open inventory issues for the
+   * same item, oldest first, so demand already waiting on the item is satisfied
+   * automatically.
    *
    * If a line was received short of its ordered quantity, a new unstocked line is
    * created automatically for the remainder. Once every line is stocked, the order
    * is marked complete and the originating purchase order is marked fulfilled.
+   *
+   * A receiving order with no unstocked, non-zero lines is returned untouched: no
+   * delivery is recorded and no inventory is created.
    *
    * This endpoint requires the permission: `receiving_orders:update`.
    *
@@ -52,15 +61,14 @@ export class Actions extends APIResource {
    * ```ts
    * const receivingOrder =
    *   await client.operations.receivingOrders.actions.stock(
-   *     'rcor_016911ec6c634a298b3dc1798e',
+   *     'rcor_iy0usuxcrjj8',
    *     {
    *       line_items: [
    *         {
-   *           receiving_order_line_id:
-   *             'rcorln_01f2aca124f3f5add7c94d5e4f',
+   *           receiving_order_line_id: 'rcorln_7f39n28j00fr',
    *           allocations: [
    *             {
-   *               location_id: 'lc_014d187d99b31926f0c74af9d8',
+   *               location_id: 'lc_yonnys0hx3ju',
    *               quantity: '100',
    *             },
    *           ],
@@ -82,9 +90,16 @@ export class Actions extends APIResource {
    * Voids a receiving order, resetting all receiving progress.
    *
    * Every line's received quantity is reset to `0` and its stocked state is cleared,
-   * extra lines created for short receipts are removed (leaving one line per
-   * purchase order line), and the order returns to open. The receiving order itself
-   * is not deleted.
+   * the extra lines created for short receipts are removed so that one line per
+   * purchase order line remains, and the order returns to open. The receiving order
+   * itself is not deleted, and it can be received and stocked again from scratch.
+   *
+   * A receiving order that has already been marked complete is only reopened: the
+   * extra lines are still removed, but the lines that remain keep their received
+   * quantities and stay marked as stocked.
+   *
+   * Deliveries and inventory received by earlier stocking are not reversed — voiding
+   * only reopens the receiving order.
    *
    * This endpoint requires the permission: `receiving_orders:update`.
    *
@@ -92,7 +107,7 @@ export class Actions extends APIResource {
    * ```ts
    * const receivingOrder =
    *   await client.operations.receivingOrders.actions.void(
-   *     'rcor_016911ec6c634a298b3dc1798e',
+   *     'rcor_iy0usuxcrjj8',
    *   );
    * ```
    */
@@ -128,25 +143,27 @@ export interface StockLineItemRequest {
   receiving_order_line_id: string;
 
   /**
-   * Storage allocations for the accepted quantity.
+   * Storage allocations for the quantity being accepted.
    *
    * Each allocation creates an inventory receipt for the given quantity at the given
-   * location.
+   * location, so a single line can be split across several locations.
    */
   allocations?: Array<AllocationRequest>;
 
   /**
-   * Lot number to record for the received inventory.
+   * Lot number to record for the received goods.
    *
    * A lot is created for the line's item if one with this number does not already
-   * exist. Applies to every allocation and any rejected quantity on this line item.
+   * exist for it. The lot applies to every allocation and to any rejected quantity
+   * on this line item.
    */
   lot_number?: string;
 
   /**
-   * Quantity rejected on inspection, as a decimal string.
+   * Quantity refused on inspection, as a decimal string.
    *
-   * Rejected quantity is recorded on the delivery but is not stocked into inventory.
+   * The refused quantity is recorded on the delivery and on the receiving order
+   * line's `rejected_quantity`, but never enters inventory.
    */
   rejected_quantity?: string;
 }
@@ -156,22 +173,22 @@ export interface StockLineItemRequest {
  */
 export interface StockReceivingOrderRequest {
   /**
-   * Per-line stocking details: storage allocations, optional lot number, and any
-   * rejected quantity.
+   * Per-line stocking details: where to put the goods away, which lot to record them
+   * under, and how much was refused on inspection.
    *
-   * Lines not listed here are still marked as stocked, but produce no inventory
-   * receipts.
+   * Unstocked lines left out of this list are still marked as stocked, but nothing
+   * is added to inventory for them and they contribute no delivery lines.
    */
   line_items?: Array<StockLineItemRequest>;
 }
 
 export interface ActionStockParams {
   /**
-   * Per-line stocking details: storage allocations, optional lot number, and any
-   * rejected quantity.
+   * Per-line stocking details: where to put the goods away, which lot to record them
+   * under, and how much was refused on inspection.
    *
-   * Lines not listed here are still marked as stocked, but produce no inventory
-   * receipts.
+   * Unstocked lines left out of this list are still marked as stocked, but nothing
+   * is added to inventory for them and they contribute no delivery lines.
    */
   line_items?: Array<StockLineItemRequest>;
 }

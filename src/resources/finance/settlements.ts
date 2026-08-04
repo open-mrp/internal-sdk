@@ -15,8 +15,13 @@ export class Settlements extends APIResource {
   /**
    * Creates a settlement that applies transaction amounts to invoices.
    *
-   * The settlement number is generated automatically from a per-account sequence,
-   * and the allocated transactions are marked as fully allocated.
+   * The settlement number is generated automatically from a per-account sequence.
+   *
+   * Once the settlement is recorded, every transaction it drew from is marked fully
+   * allocated even if only part of its amount was applied, which drops it out of
+   * List Open Credits. Each invoice it touched has its paid-in-full and overpaid
+   * flags — and therefore its `payment_status` — recomputed from every allocation
+   * recorded against that invoice, including allocations made by other settlements.
    *
    * This endpoint requires the permission: `settlements:create`.
    *
@@ -25,12 +30,12 @@ export class Settlements extends APIResource {
    * const settlement = await client.finance.settlements.create({
    *   allocations: [
    *     {
-   *       transaction_id: 'tx_01fc4d4f2b2ee1fa6b6d87257a',
-   *       invoice_id: 'iv_018b5949ada8abca36358bbea9',
+   *       transaction_id: 'tx_hvh9thtzaezn',
+   *       invoice_id: 'iv_m982ezb0fgp7',
    *       amount: '150.00',
    *     },
    *   ],
-   *   responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+   *   responsible_user_id: 'us_43irtlt2ajz6',
    * });
    * ```
    */
@@ -47,7 +52,7 @@ export class Settlements extends APIResource {
    * ```ts
    * const settlement =
    *   await client.finance.settlements.retrieve(
-   *     'sl_014f3f9af18ff1c8ded3205149',
+   *     'sl_2k5juz0yf5a7',
    *   );
    * ```
    */
@@ -62,15 +67,18 @@ export class Settlements extends APIResource {
   /**
    * Partially updates a settlement's number, note, or responsible user.
    *
+   * The allocations a settlement contains cannot be changed here; use the
+   * transaction allocation endpoints to amend or remove an individual allocation.
+   *
    * This endpoint requires the permission: `settlements:update`.
    *
    * @example
    * ```ts
    * const settlement = await client.finance.settlements.update(
-   *   'sl_014f3f9af18ff1c8ded3205149',
+   *   'sl_2k5juz0yf5a7',
    *   {
    *     note: 'Partial payment applied',
-   *     responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+   *     responsible_user_id: 'us_43irtlt2ajz6',
    *   },
    * );
    * ```
@@ -84,7 +92,14 @@ export class Settlements extends APIResource {
   }
 
   /**
-   * Returns a paginated list of settlements for the current account.
+   * Returns a paginated list of settlements, newest first.
+   *
+   * Each entry is a condensed view that summarizes the settlement's allocations as
+   * totals per transaction type instead of listing them; retrieve a settlement to
+   * see its individual allocations. Filtering by `transaction_ids` or `invoice_ids`
+   * also narrows each entry's aggregates to just the matching allocations, and when
+   * both are supplied a settlement matches only if one of its allocations satisfies
+   * both.
    *
    * This endpoint requires the permission: `settlements:read`.
    *
@@ -104,16 +119,24 @@ export class Settlements extends APIResource {
   /**
    * Deletes a settlement and all of its allocations.
    *
-   * Affected invoices revert to an `unpaid` payment status, affected transactions
-   * are no longer marked fully allocated, and adjustment transactions referenced
-   * only by this settlement are removed.
+   * Every transaction the settlement drew from is marked not fully allocated, so it
+   * reappears in List Open Credits even when allocations from other settlements
+   * already cover its full amount.
+   *
+   * Every invoice the settlement touched has its paid-in-full and overpaid flags
+   * cleared rather than recomputed, so its `payment_status` returns to `unpaid` even
+   * when other settlements still pay it off; those flags are only recomputed the
+   * next time a settlement allocates to that invoice.
+   *
+   * Adjustment transactions referenced only by this settlement are deleted along
+   * with it.
    *
    * This endpoint requires the permission: `settlements:delete`.
    *
    * @example
    * ```ts
    * const settlement = await client.finance.settlements.delete(
-   *   'sl_014f3f9af18ff1c8ded3205149',
+   *   'sl_2k5juz0yf5a7',
    * );
    * ```
    */
@@ -127,7 +150,12 @@ export class Settlements extends APIResource {
  */
 export interface CreateSettlementAllocationRequest {
   /**
-   * Amount to allocate as a decimal string.
+   * The part of the transaction's amount to apply to this invoice, as a decimal
+   * string in US dollars.
+   *
+   * This is not checked against the transaction's unallocated balance or the
+   * invoice's outstanding total; applying more than an invoice owes leaves that
+   * invoice `overpaid`.
    */
   amount: string;
 
@@ -143,7 +171,7 @@ export interface CreateSettlementAllocationRequest {
   transaction_id: string;
 
   /**
-   * Note about this allocation.
+   * Free-form note about this allocation.
    */
   note?: string;
 }
@@ -167,7 +195,8 @@ export interface CreateSettlementRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListSettlementSummary {
   /**
@@ -181,7 +210,13 @@ export interface ListSettlementSummary {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -200,7 +235,8 @@ export interface Settlement {
   id: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   allocations: InvoicesAPI.ListTransactionAllocation | null;
 
@@ -210,7 +246,7 @@ export interface Settlement {
   created_at: string;
 
   /**
-   * Note attached to this settlement.
+   * Free-form note attached to this settlement.
    */
   note: string | null;
 
@@ -231,7 +267,7 @@ export interface Settlement {
    * A user's membership in an account, carrying the account-specific status, role,
    * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * Profile fields (name, email, username, image URL) live on the `user`
    * sub-resource, which is shared across every account the user belongs to.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
@@ -247,6 +283,11 @@ export interface Settlement {
  *
  * Replaces the full allocation list with aggregate totals per transaction type,
  * plus the invoice numbers and customer names the allocations touch.
+ *
+ * When the list is filtered by transaction or invoice, every aggregate here — the
+ * allocation count, the totals, the invoice numbers, and the customer names —
+ * covers only the allocations that matched the filter, not every allocation in the
+ * settlement.
  */
 export interface SettlementSummary {
   /**
@@ -265,12 +306,13 @@ export interface SettlementSummary {
   created_at: string;
 
   /**
-   * Customer names included in this settlement.
+   * Names of the customers billed by those invoices, without duplicates.
    */
   customer_names: Array<string>;
 
   /**
-   * Invoice numbers included in this settlement.
+   * Numbers of the invoices this settlement's allocations were applied to, without
+   * duplicates.
    */
   invoice_numbers: Array<string>;
 
@@ -391,12 +433,16 @@ export interface SettlementListParams {
   cursor?: string;
 
   /**
-   * Only return settlements created before this date (`YYYY-MM-DD`).
+   * Only return settlements created up to the start of this date (`YYYY-MM-DD`,
+   * UTC).
+   *
+   * Settlements created later on that day are excluded, so pass the following day to
+   * cover a full day.
    */
   end_date?: string;
 
   /**
-   * Filter by invoice IDs present in allocations.
+   * Only return settlements that allocate to at least one of these invoices.
    */
   invoice_ids?: Array<string>;
 
@@ -413,12 +459,13 @@ export interface SettlementListParams {
   q?: string;
 
   /**
-   * Only return settlements created on or after this date (`YYYY-MM-DD`).
+   * Only return settlements created on or after the start of this date
+   * (`YYYY-MM-DD`, UTC).
    */
   start_date?: string;
 
   /**
-   * Filter by transaction IDs present in allocations.
+   * Only return settlements that allocate at least one of these transactions.
    */
   transaction_ids?: Array<string>;
 }

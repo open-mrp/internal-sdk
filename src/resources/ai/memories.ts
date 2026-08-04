@@ -12,7 +12,7 @@ import { path } from '../../internal/utils/path';
  */
 export class Memories extends APIResource {
   /**
-   * Creates an agent memory.
+   * Saves a piece of information for agents to recall on future runs.
    *
    * This endpoint requires the permission: `agent_memories:create`.
    *
@@ -34,12 +34,15 @@ export class Memories extends APIResource {
   /**
    * Returns an agent memory by ID.
    *
+   * An expired memory is still returned here, even though it is excluded from list
+   * results and no longer recalled by agents.
+   *
    * This endpoint requires the permission: `agent_memories:read`.
    *
    * @example
    * ```ts
    * const agentMemory = await client.ai.memories.retrieve(
-   *   'agmm_018731bdaf4ab04bd5bff1b65c',
+   *   'agmm_o7tjkr16gfmh',
    * );
    * ```
    */
@@ -48,14 +51,17 @@ export class Memories extends APIResource {
   }
 
   /**
-   * Partially updates an agent memory.
+   * Updates an agent memory.
+   *
+   * Only the fields included in the request are changed; everything else keeps its
+   * current value.
    *
    * This endpoint requires the permission: `agent_memories:update`.
    *
    * @example
    * ```ts
    * const agentMemory = await client.ai.memories.update(
-   *   'agmm_018731bdaf4ab04bd5bff1b65c',
+   *   'agmm_o7tjkr16gfmh',
    *   {
    *     content:
    *       'Customer prefers next-day shipping on all orders.',
@@ -73,9 +79,12 @@ export class Memories extends APIResource {
   }
 
   /**
-   * Returns a paginated list of agent memories for the current account.
+   * Returns a paginated list of agent memories for the current account, newest
+   * first.
    *
-   * Memories whose `expires_at` has passed are excluded.
+   * Memories whose `expires_at` has passed are excluded. The `q` search term matches
+   * against a memory's ID, category, content, and the ID of the record it is scoped
+   * to.
    *
    * This endpoint requires the permission: `agent_memories:read`.
    *
@@ -92,14 +101,17 @@ export class Memories extends APIResource {
   }
 
   /**
-   * Deletes an agent memory.
+   * Permanently deletes an agent memory so it is no longer recalled.
+   *
+   * Deleting a memory that has already been deleted succeeds rather than returning
+   * an error.
    *
    * This endpoint requires the permission: `agent_memories:delete`.
    *
    * @example
    * ```ts
    * const memory = await client.ai.memories.delete(
-   *   'agmm_018731bdaf4ab04bd5bff1b65c',
+   *   'agmm_o7tjkr16gfmh',
    * );
    * ```
    */
@@ -118,12 +130,19 @@ export interface AgentMemory {
   id: string;
 
   /**
-   * Free-form category used to group related memories (e.g. `preference`).
+   * The kind of information this memory holds, used to group related memories.
+   *
+   * - `preference`: how someone likes things done, such as a customer who always
+   *   wants express shipping.
+   * - `fact`: a durable detail worth remembering about the account or one of its
+   *   records, such as a customer's typical order size.
+   * - `instruction`: standing guidance for agents to follow, such as always
+   *   confirming freight before issuing an order.
    */
   category: string;
 
   /**
-   * Memory content.
+   * The information itself, written as plain text for an agent to read.
    */
   content: string;
 
@@ -138,10 +157,11 @@ export interface AgentMemory {
   entity: CoreAPI.Entity | null;
 
   /**
-   * When this memory expires.
+   * When this memory stops being used.
    *
-   * `null` means it never expires. Expired memories are excluded from list results
-   * and are no longer recalled by agents.
+   * Past this time the memory is no longer recalled by agents and is omitted from
+   * list results, but it is not deleted and can still be retrieved by ID. A memory
+   * with no expiration is used indefinitely.
    */
   expires_at: string | null;
 
@@ -149,7 +169,8 @@ export interface AgentMemory {
    * Relative importance from `0` to `1`, used to prioritize which memories the agent
    * recalls.
    *
-   * Higher is more important.
+   * An agent takes in only a limited number of memories per run, and the
+   * highest-importance ones are recalled first.
    */
   importance: number;
 
@@ -175,12 +196,19 @@ export interface AgentMemory {
  */
 export interface CreateMemoryRequest {
   /**
-   * Category used to group related memories.
+   * The kind of information this memory holds, used to group related memories.
+   *
+   * - `preference`: how someone likes things done, such as a customer who always
+   *   wants express shipping.
+   * - `fact`: a durable detail worth remembering about the account or one of its
+   *   records, such as a customer's typical order size.
+   * - `instruction`: standing guidance for agents to follow, such as always
+   *   confirming freight before issuing an order.
    */
   category: string;
 
   /**
-   * Text content.
+   * The information to remember, written as plain text for an agent to read.
    */
   content: string;
 
@@ -195,15 +223,17 @@ export interface CreateMemoryRequest {
    * Type of platform record this memory is scoped to (e.g. `customer`, `product`).
    *
    * Provide together with `entity_id` to scope the memory to a specific record; omit
-   * both for an account-wide memory.
+   * both for a memory that is not tied to any particular record.
    */
   entity_type?: string;
 
   /**
-   * Expiration timestamp in ISO 8601 format (e.g. `2026-01-02T15:04:05Z`).
+   * When this memory should stop being used, as an ISO 8601 timestamp (e.g.
+   * `2026-01-02T15:04:05Z`).
    *
-   * Omit for a memory that never expires. Expired memories are excluded from list
-   * results and are no longer recalled by agents.
+   * Past this time the memory is no longer recalled by agents and is omitted from
+   * list results, but it is not deleted. Omit it for a memory that should be used
+   * indefinitely.
    */
   expires_at?: string;
 
@@ -211,8 +241,9 @@ export interface CreateMemoryRequest {
    * Relative importance from `0` to `1` in increments of `0.1`, used to prioritize
    * which memories the agent recalls.
    *
-   * Higher is more important. When omitted, the memory is stored at the lowest
-   * priority (`0`).
+   * An agent takes in only a limited number of memories per run and recalls the
+   * highest-importance ones first, so a memory created without an importance is
+   * stored at `0` and is the first to be left out.
    */
   importance?: number;
 
@@ -224,7 +255,8 @@ export interface CreateMemoryRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAgentMemory {
   /**
@@ -238,7 +270,13 @@ export interface ListAgentMemory {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -248,12 +286,19 @@ export interface ListAgentMemory {
  */
 export interface UpdateMemoryRequest {
   /**
-   * Category used to group related memories.
+   * The kind of information this memory holds, used to group related memories.
+   *
+   * - `preference`: how someone likes things done, such as a customer who always
+   *   wants express shipping.
+   * - `fact`: a durable detail worth remembering about the account or one of its
+   *   records, such as a customer's typical order size.
+   * - `instruction`: standing guidance for agents to follow, such as always
+   *   confirming freight before issuing an order.
    */
   category?: string;
 
   /**
-   * Text content.
+   * The information to remember, written as plain text for an agent to read.
    */
   content?: string;
 
@@ -273,10 +318,12 @@ export interface UpdateMemoryRequest {
   entity_type?: string | null;
 
   /**
-   * Expiration timestamp in ISO 8601 format (e.g. `2026-01-02T15:04:05Z`).
+   * When this memory should stop being used, as an ISO 8601 timestamp (e.g.
+   * `2026-01-02T15:04:05Z`).
    *
-   * Expired memories are excluded from list results and are no longer recalled by
-   * agents. Send `null` to make the memory permanent (never expires).
+   * Past this time the memory is no longer recalled by agents and is omitted from
+   * list results, but it is not deleted. Send `null` so the memory is used
+   * indefinitely.
    */
   expires_at?: string | null;
 
@@ -284,13 +331,17 @@ export interface UpdateMemoryRequest {
    * Relative importance from `0` to `1` in increments of `0.1`, used to prioritize
    * which memories the agent recalls.
    *
-   * Higher is more important.
+   * An agent takes in only a limited number of memories per run and recalls the
+   * highest-importance ones first.
    */
   importance?: number;
 
   /**
-   * Arbitrary metadata as JSON. Encoded as a JSON value (object, array, string,
-   * number, boolean, or null), not a JSON-encoded string.
+   * Arbitrary metadata as JSON.
+   *
+   * Replaces the stored metadata outright rather than merging into it. Encoded as a
+   * JSON value (object, array, string, number, boolean, or null), not a JSON-encoded
+   * string.
    */
   metadata?: unknown | null;
 }
@@ -299,12 +350,19 @@ export interface MemoryDeleteResponse {}
 
 export interface MemoryCreateParams {
   /**
-   * Category used to group related memories.
+   * The kind of information this memory holds, used to group related memories.
+   *
+   * - `preference`: how someone likes things done, such as a customer who always
+   *   wants express shipping.
+   * - `fact`: a durable detail worth remembering about the account or one of its
+   *   records, such as a customer's typical order size.
+   * - `instruction`: standing guidance for agents to follow, such as always
+   *   confirming freight before issuing an order.
    */
   category: string;
 
   /**
-   * Text content.
+   * The information to remember, written as plain text for an agent to read.
    */
   content: string;
 
@@ -319,15 +377,17 @@ export interface MemoryCreateParams {
    * Type of platform record this memory is scoped to (e.g. `customer`, `product`).
    *
    * Provide together with `entity_id` to scope the memory to a specific record; omit
-   * both for an account-wide memory.
+   * both for a memory that is not tied to any particular record.
    */
   entity_type?: string;
 
   /**
-   * Expiration timestamp in ISO 8601 format (e.g. `2026-01-02T15:04:05Z`).
+   * When this memory should stop being used, as an ISO 8601 timestamp (e.g.
+   * `2026-01-02T15:04:05Z`).
    *
-   * Omit for a memory that never expires. Expired memories are excluded from list
-   * results and are no longer recalled by agents.
+   * Past this time the memory is no longer recalled by agents and is omitted from
+   * list results, but it is not deleted. Omit it for a memory that should be used
+   * indefinitely.
    */
   expires_at?: string;
 
@@ -335,8 +395,9 @@ export interface MemoryCreateParams {
    * Relative importance from `0` to `1` in increments of `0.1`, used to prioritize
    * which memories the agent recalls.
    *
-   * Higher is more important. When omitted, the memory is stored at the lowest
-   * priority (`0`).
+   * An agent takes in only a limited number of memories per run and recalls the
+   * highest-importance ones first, so a memory created without an importance is
+   * stored at `0` and is the first to be left out.
    */
   importance?: number;
 
@@ -349,12 +410,19 @@ export interface MemoryCreateParams {
 
 export interface MemoryUpdateParams {
   /**
-   * Category used to group related memories.
+   * The kind of information this memory holds, used to group related memories.
+   *
+   * - `preference`: how someone likes things done, such as a customer who always
+   *   wants express shipping.
+   * - `fact`: a durable detail worth remembering about the account or one of its
+   *   records, such as a customer's typical order size.
+   * - `instruction`: standing guidance for agents to follow, such as always
+   *   confirming freight before issuing an order.
    */
   category?: string;
 
   /**
-   * Text content.
+   * The information to remember, written as plain text for an agent to read.
    */
   content?: string;
 
@@ -374,10 +442,12 @@ export interface MemoryUpdateParams {
   entity_type?: string | null;
 
   /**
-   * Expiration timestamp in ISO 8601 format (e.g. `2026-01-02T15:04:05Z`).
+   * When this memory should stop being used, as an ISO 8601 timestamp (e.g.
+   * `2026-01-02T15:04:05Z`).
    *
-   * Expired memories are excluded from list results and are no longer recalled by
-   * agents. Send `null` to make the memory permanent (never expires).
+   * Past this time the memory is no longer recalled by agents and is omitted from
+   * list results, but it is not deleted. Send `null` so the memory is used
+   * indefinitely.
    */
   expires_at?: string | null;
 
@@ -385,13 +455,17 @@ export interface MemoryUpdateParams {
    * Relative importance from `0` to `1` in increments of `0.1`, used to prioritize
    * which memories the agent recalls.
    *
-   * Higher is more important.
+   * An agent takes in only a limited number of memories per run and recalls the
+   * highest-importance ones first.
    */
   importance?: number;
 
   /**
-   * Arbitrary metadata as JSON. Encoded as a JSON value (object, array, string,
-   * number, boolean, or null), not a JSON-encoded string.
+   * Arbitrary metadata as JSON.
+   *
+   * Replaces the stored metadata outright rather than merging into it. Encoded as a
+   * JSON value (object, array, string, number, boolean, or null), not a JSON-encoded
+   * string.
    */
   metadata?: unknown | null;
 }

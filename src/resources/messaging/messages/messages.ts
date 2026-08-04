@@ -21,14 +21,18 @@ export class Messages extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Edits a still-open customer-reply draft.
+   * Revises a reply draft before it is sent to the customer.
+   *
+   * Only a draft that is still awaiting approval can be edited; once it has been
+   * approved, rejected, or superseded the request fails. Nothing reaches the
+   * customer until the draft is approved.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
    * @example
    * ```ts
    * const message = await client.messaging.messages.update(
-   *   'mg_01h9z8q1w2e3r4t5y6u7i8mg',
+   *   'mg_fdny8633ebgw',
    *   {
    *     body: 'Hi Joe — good news, your order ships tomorrow.',
    *     subject: 'Re: Order #1042',
@@ -51,19 +55,21 @@ export class Messages extends APIResource {
  */
 export interface UpdateDraftRequest {
   /**
-   * The revised reply body.
+   * The revised reply body, replacing what the draft said before.
    */
   body: string;
 
   /**
-   * The revised email subject, for the email channel.
+   * The revised subject line for a draft that will be sent by email.
+   *
+   * Leaving it out keeps the draft's current subject.
    */
   subject?: string;
 }
 
 export interface MessageUpdateParams {
   /**
-   * Body param: The revised reply body.
+   * Body param: The revised reply body, replacing what the draft said before.
    */
   body: string;
 
@@ -88,7 +94,9 @@ export interface MessageUpdateParams {
   >;
 
   /**
-   * Body param: The revised email subject, for the email channel.
+   * Body param: The revised subject line for a draft that will be sent by email.
+   *
+   * Leaving it out keeps the draft's current subject.
    */
   subject?: string;
 }

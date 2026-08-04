@@ -37,6 +37,9 @@ export class Suppliers extends APIResource {
   /**
    * Creates a supplier, optionally with inline bill-to and ship-to addresses.
    *
+   * Returns a conflict error if another supplier in the account already uses the
+   * given number.
+   *
    * This endpoint requires the permission: `suppliers:create`.
    *
    * @example
@@ -70,7 +73,7 @@ export class Suppliers extends APIResource {
    * ```ts
    * const supplierDetail =
    *   await client.operations.suppliers.retrieve(
-   *     'ac_0177902104bccac5fbb173cd96',
+   *     'ac_gwy8tfbc074f',
    *   );
    * ```
    */
@@ -94,7 +97,7 @@ export class Suppliers extends APIResource {
    * ```ts
    * const supplierDetail =
    *   await client.operations.suppliers.update(
-   *     'ac_0177902104bccac5fbb173cd96',
+   *     'ac_gwy8tfbc074f',
    *     {
    *       update_note: true,
    *       name: 'Acme Supplies LLC',
@@ -108,7 +111,10 @@ export class Suppliers extends APIResource {
   }
 
   /**
-   * Returns a paginated list of suppliers for the current account.
+   * Returns a paginated list of suppliers for the current account, newest first.
+   *
+   * Filters combine with AND, so an item filter and a date range narrow the list
+   * together. The `q` search term matches the supplier name and number.
    *
    * This endpoint requires the permission: `suppliers:read`.
    *
@@ -129,7 +135,9 @@ export class Suppliers extends APIResource {
    * Deletes a supplier.
    *
    * The supplier's saved addresses and any users belonging to the supplier are
-   * deleted along with it. Returns the deleted supplier.
+   * deleted along with it. Returns the supplier as it looked immediately before
+   * deletion. Deleting a supplier that has already been deleted returns an error
+   * rather than succeeding again.
    *
    * This endpoint requires the permission: `suppliers:update`.
    *
@@ -137,7 +145,7 @@ export class Suppliers extends APIResource {
    * ```ts
    * const supplierDetail =
    *   await client.operations.suppliers.delete(
-   *     'ac_0177902104bccac5fbb173cd96',
+   *     'ac_gwy8tfbc074f',
    *   );
    * ```
    */
@@ -147,7 +155,7 @@ export class Suppliers extends APIResource {
 }
 
 /**
- * CreateSupplierRequest is the request to create a supplier.
+ * Request to create a supplier.
  */
 export interface CreateSupplierRequest {
   /**
@@ -164,8 +172,11 @@ export interface CreateSupplierRequest {
   number: string;
 
   /**
-   * Address details used to create an address, either directly or inline on another
-   * resource.
+   * Address details supplied when creating an address, either on its own or inline
+   * on another resource.
+   *
+   * A few requests, such as shipping rate estimates, take these same fields for a
+   * one-off address that is never saved to the account.
    */
   bill_to_address?: CustomersAPI.AddressInput;
 
@@ -175,14 +186,18 @@ export interface CreateSupplierRequest {
   note?: string;
 
   /**
-   * Address details used to create an address, either directly or inline on another
-   * resource.
+   * Address details supplied when creating an address, either on its own or inline
+   * on another resource.
+   *
+   * A few requests, such as shipping rate estimates, take these same fields for a
+   * one-off address that is never saved to the account.
    */
   ship_to_address?: CustomersAPI.AddressInput;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListSupplierSummary {
   /**
@@ -196,7 +211,13 @@ export interface ListSupplierSummary {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -224,6 +245,9 @@ export interface SupplierDetail {
 
   /**
    * Number of materials sourced from this supplier.
+   *
+   * Counts every material linked to the supplier, including links whose status is
+   * `inactive`.
    */
   material_count: number;
 
@@ -260,7 +284,10 @@ export interface SupplierDetail {
 }
 
 /**
- * A condensed supplier representation returned by list endpoints.
+ * A condensed supplier returned by the supplier list endpoint.
+ *
+ * The supplier's note and its default bill-to and ship-to addresses are only
+ * available when a single supplier is retrieved.
  */
 export interface SupplierSummary {
   /**
@@ -275,6 +302,9 @@ export interface SupplierSummary {
 
   /**
    * Number of materials sourced from this supplier.
+   *
+   * Counts every material linked to the supplier, including links whose status is
+   * `inactive`.
    */
   material_count: number;
 
@@ -295,14 +325,14 @@ export interface SupplierSummary {
 }
 
 /**
- * UpdateSupplierRequest is the request to update a supplier.
+ * Request to update a supplier.
  */
 export interface UpdateSupplierRequest {
   /**
    * Whether to apply the `note` field.
    *
-   * When `true`, the note is set to the provided `note` value, or cleared to null if
-   * `note` is omitted. When `false` (the default), the note is left unchanged.
+   * When `true`, the note is set to the provided `note` value, or cleared if `note`
+   * is omitted. When `false`, the note is left unchanged.
    */
   update_note: boolean;
 
@@ -352,8 +382,11 @@ export interface SupplierCreateParams {
   number: string;
 
   /**
-   * Address details used to create an address, either directly or inline on another
-   * resource.
+   * Address details supplied when creating an address, either on its own or inline
+   * on another resource.
+   *
+   * A few requests, such as shipping rate estimates, take these same fields for a
+   * one-off address that is never saved to the account.
    */
   bill_to_address?: CustomersAPI.AddressInput;
 
@@ -363,8 +396,11 @@ export interface SupplierCreateParams {
   note?: string;
 
   /**
-   * Address details used to create an address, either directly or inline on another
-   * resource.
+   * Address details supplied when creating an address, either on its own or inline
+   * on another resource.
+   *
+   * A few requests, such as shipping rate estimates, take these same fields for a
+   * one-off address that is never saved to the account.
    */
   ship_to_address?: CustomersAPI.AddressInput;
 }
@@ -381,8 +417,8 @@ export interface SupplierUpdateParams {
   /**
    * Whether to apply the `note` field.
    *
-   * When `true`, the note is set to the provided `note` value, or cleared to null if
-   * `note` is omitted. When `false` (the default), the note is left unchanged.
+   * When `true`, the note is set to the provided `note` value, or cleared if `note`
+   * is omitted. When `false`, the note is left unchanged.
    */
   update_note: boolean;
 
@@ -433,10 +469,10 @@ export interface SupplierListParams {
   end_date?: string;
 
   /**
-   * Filter by item IDs.
+   * Filter to suppliers that can source any of these items.
    *
-   * Returns only suppliers that provide at least one material linked to any of the
-   * given items.
+   * A supplier matches when it provides a material for one of the items, whether or
+   * not that material link is active.
    */
   item_ids?: Array<string>;
 

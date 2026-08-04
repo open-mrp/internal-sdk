@@ -13,7 +13,7 @@ describe('resource productLines', () => {
       commission_policy: 'commission_exempt',
       freight_policy: 'billed_freight',
       name: 'Industrial Fasteners',
-      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
+      unit_group_id: 'ug_andst6m79n41',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -29,14 +29,14 @@ describe('resource productLines', () => {
       commission_policy: 'commission_exempt',
       freight_policy: 'billed_freight',
       name: 'Industrial Fasteners',
-      unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
+      unit_group_id: 'ug_andst6m79n41',
       include: ['owner'],
       default_lot: { unit_id: 'unit_id', value: 'value' },
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.productLines.retrieve('pdln_01996357326a0d3f7b129542ea');
+    const responsePromise = client.catalog.productLines.retrieve('pdln_k9bnlgvxhxjh');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,7 +50,7 @@ describe('resource productLines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productLines.retrieve(
-        'pdln_01996357326a0d3f7b129542ea',
+        'pdln_k9bnlgvxhxjh',
         { include: ['owner'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -58,7 +58,7 @@ describe('resource productLines', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.productLines.update('pdln_01996357326a0d3f7b129542ea');
+    const responsePromise = client.catalog.productLines.update('pdln_k9bnlgvxhxjh');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -72,14 +72,14 @@ describe('resource productLines', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productLines.update(
-        'pdln_01996357326a0d3f7b129542ea',
+        'pdln_k9bnlgvxhxjh',
         {
           include: ['owner'],
           commission_policy: 'commission_applied',
           default_lot: { unit_id: 'unit_id', value: 'value' },
           freight_policy: 'billed_freight',
           name: 'Updated Product Line',
-          unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
+          unit_group_id: 'ug_andst6m79n41',
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -113,7 +113,7 @@ describe('resource productLines', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.productLines.delete('pdln_01996357326a0d3f7b129542ea');
+    const responsePromise = client.catalog.productLines.delete('pdln_k9bnlgvxhxjh');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

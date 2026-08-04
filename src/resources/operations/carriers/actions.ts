@@ -11,10 +11,12 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Initiates the OAuth authorization flow for a Shippo-managed carrier and returns
-   * the URL to redirect the user to.
+   * Starts the OAuth flow that authorizes your own account with the carrier,
+   * returning the URL to send the user to.
    *
-   * Not available in sandbox mode.
+   * The carrier must already have a Shippo carrier account, which is created when
+   * the carrier is created with a Shippo-supported code. Not available in sandbox
+   * mode.
    *
    * This endpoint requires the permission: `carriers:update`.
    *
@@ -22,7 +24,7 @@ export class Actions extends APIResource {
    * ```ts
    * const oauthResponse =
    *   await client.operations.carriers.actions.initiateOAuth(
-   *     'cr_01784fd54c9ba197bb4e42f0e6',
+   *     'cr_tv5vfjtgu1n3',
    *     {
    *       redirect_uri:
    *         'https://app.example.com/carriers/oauth/callback',
@@ -55,7 +57,7 @@ export class Actions extends APIResource {
    * ```ts
    * const carrier =
    *   await client.operations.carriers.actions.syncOptions(
-   *     'cr_01784fd54c9ba197bb4e42f0e6',
+   *     'cr_tv5vfjtgu1n3',
    *   );
    * ```
    */
@@ -77,12 +79,15 @@ export class Actions extends APIResource {
  */
 export interface InitiateOAuthRequest {
   /**
-   * Redirect URI after OAuth completes.
+   * URL the carrier sends the user back to once they finish authorizing.
    */
   redirect_uri: string;
 
   /**
-   * Opaque state value passed through the OAuth flow.
+   * Opaque value passed through the OAuth flow and handed back on the redirect.
+   *
+   * Use it to correlate the callback with the request that started it, or to carry
+   * the page the user should return to.
    */
   state?: string;
 }
@@ -92,7 +97,10 @@ export interface InitiateOAuthRequest {
  */
 export interface OAuthResponse {
   /**
-   * OAuth URL to redirect the user to.
+   * URL to send the user to so they can authorize their carrier account.
+   *
+   * Once the user finishes authorizing, the carrier returns them to the
+   * `redirect_uri` supplied when the flow was initiated.
    */
   oauth_url: string;
 
@@ -104,12 +112,15 @@ export interface OAuthResponse {
 
 export interface ActionInitiateOAuthParams {
   /**
-   * Redirect URI after OAuth completes.
+   * URL the carrier sends the user back to once they finish authorizing.
    */
   redirect_uri: string;
 
   /**
-   * Opaque state value passed through the OAuth flow.
+   * Opaque value passed through the OAuth flow and handed back on the redirect.
+   *
+   * Use it to correlate the callback with the request that started it, or to carry
+   * the page the user should return to.
    */
   state?: string;
 }

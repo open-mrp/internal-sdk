@@ -11,7 +11,14 @@ import { path } from '../../internal/utils/path';
  */
 export class Stripe extends APIResource {
   /**
-   * Processes a Stripe webhook event, verifying the signature before dispatching.
+   * Processes a Stripe webhook event delivered to Augno's own Stripe account.
+   *
+   * The payload's signature is verified, then the events Augno acts on —
+   * subscription servicing and collection changes, billing cadence outcomes,
+   * customer deletions, and completed checkouts — are queued for asynchronous
+   * handling; every other event type is acknowledged and dropped. A success response
+   * means the event was accepted, not that it has already been applied to the
+   * account.
    *
    * @example
    * ```ts
@@ -34,16 +41,21 @@ export class Stripe extends APIResource {
   }
 
   /**
-   * Processes a Stripe webhook event from an account's connected Stripe account,
-   * verifying the signature against the account's stored webhook secret before
-   * recording order payments.
+   * Processes a Stripe webhook event delivered by an account's own connected Stripe
+   * account.
+   *
+   * The payload is verified against the webhook secret stored on that account's
+   * Stripe integration. A succeeded payment is linked to the sales order it
+   * references and recorded as a customer payment; failed and canceled payments undo
+   * that link, and a completed payout marks the payments it covers as having reached
+   * the account's bank. Other event types, and payments that reference an order the
+   * account does not own, are acknowledged without action. Processing is idempotent,
+   * so Stripe's retries are safe.
    *
    * @example
    * ```ts
    * const webhookResponse =
-   *   await client.webhooks.stripe.accounts(
-   *     'ac_01148680966698341a9c0976db',
-   *   );
+   *   await client.webhooks.stripe.accounts('ac_ykxoradjoeb3');
    * ```
    */
   accounts(
@@ -63,7 +75,7 @@ export class Stripe extends APIResource {
 }
 
 /**
- * Result of processing a webhook.
+ * Acknowledgement that a webhook event was accepted.
  */
 export interface WebhookResponse {
   /**
@@ -72,7 +84,11 @@ export interface WebhookResponse {
   object: 'webhook_response';
 
   /**
-   * Whether the webhook was received and processed.
+   * Whether the event was accepted for processing.
+   *
+   * Acceptance means the signature was verified and the event was handled or queued.
+   * Event types Augno takes no action on are acknowledged the same way, so this is
+   * not a signal that anything changed.
    */
   received: boolean;
 }

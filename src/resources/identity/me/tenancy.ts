@@ -16,12 +16,17 @@ export class TenancyResource extends APIResource {
    *
    * The user must have access to the requested account; switching to an account
    * where the user is disabled or removed, or to a suspended or deactivated account,
-   * is rejected.
+   * is rejected. Switching into a sandbox is also rejected when the user is disabled
+   * or removed on the production account that owns it.
+   *
+   * A successful switch marks the account as the user's most recently used one,
+   * which Get Tenancy takes into account when it picks a current account for a
+   * request that does not target one.
    *
    * @example
    * ```ts
    * const tenancy = await client.identity.me.tenancy.update({
-   *   account_id: 'ac_01148680966698341a9c0976db',
+   *   account_id: 'ac_ykxoradjoeb3',
    * });
    * ```
    */
@@ -34,7 +39,14 @@ export class TenancyResource extends APIResource {
    *
    * The tenancy describes which account the user is currently acting in and every
    * other account they can switch to, including sandboxes. It can be called before
-   * an account is selected, such as immediately after authentication.
+   * an account is selected, such as immediately after authentication; when the
+   * request does not target an account, one is chosen automatically, preferring paid
+   * accounts and then the account the user most recently used.
+   *
+   * Accounts where the user has been disabled or removed are left out, and sandboxes
+   * are only listed when the current account is a production account and the user is
+   * an administrator of it. A user who belongs to no usable account gets an empty
+   * tenancy, along with any registration they started but never finished.
    *
    * @example
    * ```ts
@@ -46,8 +58,13 @@ export class TenancyResource extends APIResource {
   }
 
   /**
-   * Returns a paginated list of customer accounts accessible to the authenticated
-   * user under the specified vendor account.
+   * Returns the customer accounts of the given seller account that the authenticated
+   * user belongs to.
+   *
+   * This is how a buyer with access to more than one of a seller's customer accounts
+   * chooses which one to act as. Only accounts where the user's membership is still
+   * active are returned. The paging and search parameters are ignored: every match
+   * comes back in a single page.
    *
    * @example
    * ```ts
@@ -70,7 +87,8 @@ export class TenancyResource extends APIResource {
 }
 
 /**
- * Minimal customer account summary.
+ * A customer account under a vendor that the authenticated user is able to act on
+ * behalf of in that vendor's customer portal.
  */
 export interface CustomerAccountSummary {
   /**
@@ -90,7 +108,8 @@ export interface CustomerAccountSummary {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListCustomerAccountSummary {
   /**
@@ -104,13 +123,20 @@ export interface ListCustomerAccountSummary {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListTenancyOtherAccount {
   /**
@@ -124,13 +150,20 @@ export interface ListTenancyOtherAccount {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListTenancySandboxAccount {
   /**
@@ -144,7 +177,13 @@ export interface ListTenancySandboxAccount {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -175,12 +214,13 @@ export interface Tenancy {
   object: 'tenancy';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   other_accounts: ListTenancyOtherAccount | null;
 
   /**
-   * Owner account for the user's tenancy.
+   * The production account that the current account belongs to.
    */
   owner_account: TenancyOwnerAccount | null;
 
@@ -191,7 +231,8 @@ export interface Tenancy {
   pending_registration: TenancyPendingRegistration | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   sandboxes: ListTenancySandboxAccount | null;
 }
@@ -202,17 +243,20 @@ export interface Tenancy {
  */
 export interface TenancyAccountPlan {
   /**
-   * Feature availability for this plan, keyed by feature code.
+   * Which capabilities this plan unlocks, keyed by feature code (for example
+   * `customer_portal`).
    */
   features: { [key: string]: boolean };
 
   /**
-   * Resource limits, keyed by limit code; a `null` value means unlimited.
+   * Ceilings this plan imposes, keyed by limit code (for example `seats_maximum`).
+   *
+   * A `null` value means that resource is unlimited on this plan.
    */
   limits: { [key: string]: number };
 
   /**
-   * Display name.
+   * Display name of the plan, as shown in billing.
    */
   name: string;
 
@@ -222,32 +266,40 @@ export interface TenancyAccountPlan {
   object: 'account_plan';
 
   /**
-   * Plan type code.
+   * Stable code for the plan tier (for example `free`, `starter`, or `pro`).
    */
   plan_type_code: string;
 
   /**
-   * Flat monthly price, if applicable.
+   * Per-seat price override in dollars used in place of `price_per_seat` when set.
+   *
+   * The monthly bill multiplies this by the number of seats (at least
+   * `seat_minimum`). `null` or `0` falls back to `price_per_seat`.
    */
   price_per_month: number | null;
 
   /**
-   * Price per seat per month.
+   * Price per seat per month in dollars.
    */
   price_per_seat: number;
 
   /**
-   * Minimum seats required for this plan.
+   * Fewest seats the account is billed for, regardless of how many users it actually
+   * has.
    */
   seat_minimum: number | null;
 
   /**
-   * Plan ID.
+   * Identifier of the plan definition the account is subscribed to.
    */
   type_id: string;
 
   /**
-   * Plan version.
+   * Revision of the plan definition the account is on.
+   *
+   * Plans are versioned so existing subscribers keep the pricing, limits, and
+   * features they signed up under when a newer version of the same plan is
+   * published.
    */
   version: number;
 }
@@ -273,7 +325,10 @@ export interface TenancyCurrentAccount {
   account_user_id: string;
 
   /**
-   * Internal Stripe customer ID for this account.
+   * The Stripe customer that Augno bills this account's own subscription and usage
+   * against.
+   *
+   * This is not the account's own Stripe customer for charging their customers.
    */
   internal_stripe_customer_id: string | null;
 
@@ -288,13 +343,18 @@ export interface TenancyCurrentAccount {
   object: 'account';
 
   /**
-   * Onboarding status.
+   * How far the account has progressed through onboarding.
+   *
+   * The account is fully set up and usable once this is `active`.
    */
   onboarding_status: string;
 
   /**
    * Code of the account's subscription plan (for example `free`, `starter`, or
    * `pro`).
+   *
+   * The same code appears as `account_plan.plan_type_code`, alongside the plan's
+   * resolved limits and features.
    */
   plan: string;
 
@@ -305,7 +365,9 @@ export interface TenancyCurrentAccount {
   role: APIKeysAPI.Role | null;
 
   /**
-   * The account's customer portal slug.
+   * The slug this account's customer portal is addressed by.
+   *
+   * Absent until the account enables its customer portal.
    */
   slug: string | null;
 
@@ -347,7 +409,7 @@ export interface TenancyOtherAccount {
 }
 
 /**
- * Owner account for the user's tenancy.
+ * The production account that the current account belongs to.
  */
 export interface TenancyOwnerAccount {
   /**
@@ -392,7 +454,11 @@ export interface TenancyPendingRegistration {
   session_id: string;
 
   /**
-   * Current step in the registration flow.
+   * How far the signup has progressed, so the flow can be resumed where the user
+   * left off.
+   *
+   * Steps run `verification`, `user_details`, `account_details`, `review`,
+   * `payment`, then `completed`.
    */
   step: string;
 }

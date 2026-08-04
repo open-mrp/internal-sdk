@@ -9,9 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('bulkDelete: only required params', async () => {
-    const responsePromise = client.sales.customers.actions.bulkDelete({
-      customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-    });
+    const responsePromise = client.sales.customers.actions.bulkDelete({ customer_ids: ['ac_opnlh43ymyee'] });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,14 +20,12 @@ describe('resource actions', () => {
   });
 
   test('bulkDelete: required and optional params', async () => {
-    const response = await client.sales.customers.actions.bulkDelete({
-      customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-    });
+    const response = await client.sales.customers.actions.bulkDelete({ customer_ids: ['ac_opnlh43ymyee'] });
   });
 
   test('merge: only required params', async () => {
-    const responsePromise = client.sales.customers.actions.merge('ac_0170df1ac58e4d24c66fc89f5f', {
-      source_customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
+    const responsePromise = client.sales.customers.actions.merge('ac_opnlh43ymyee', {
+      source_customer_ids: ['ac_opnlh43ymyee'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -41,8 +37,8 @@ describe('resource actions', () => {
   });
 
   test('merge: required and optional params', async () => {
-    const response = await client.sales.customers.actions.merge('ac_0170df1ac58e4d24c66fc89f5f', {
-      source_customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
+    const response = await client.sales.customers.actions.merge('ac_opnlh43ymyee', {
+      source_customer_ids: ['ac_opnlh43ymyee'],
       include: ['bill_to_address'],
     });
   });

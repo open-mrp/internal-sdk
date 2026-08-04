@@ -29,14 +29,14 @@ describe('resource departments', () => {
         value: 'value',
       },
       location_id: 'location_id',
-      machine_ids: ['mc_0177d18f55a1615f783d3bf8d0'],
+      machine_ids: ['mc_ffcfk9dxixis'],
       notes: 'notes',
-      scanning_station_ids: ['scst_0129335dd6286056a97024fcc1'],
+      scanning_station_ids: ['scst_t71bn7lq5yov'],
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.departments.retrieve('dp_01791c25ab59da4704cba61874');
+    const responsePromise = client.operations.departments.retrieve('dp_m0jayebxnkos');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,7 +50,7 @@ describe('resource departments', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.departments.retrieve(
-        'dp_01791c25ab59da4704cba61874',
+        'dp_m0jayebxnkos',
         { include: ['location'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -58,7 +58,7 @@ describe('resource departments', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.departments.update('dp_01791c25ab59da4704cba61874');
+    const responsePromise = client.operations.departments.update('dp_m0jayebxnkos');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -72,7 +72,7 @@ describe('resource departments', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.departments.update(
-        'dp_01791c25ab59da4704cba61874',
+        'dp_m0jayebxnkos',
         {
           include: ['location'],
           labor_rate: {
@@ -118,7 +118,7 @@ describe('resource departments', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.departments.delete('dp_01791c25ab59da4704cba61874');
+    const responsePromise = client.operations.departments.delete('dp_m0jayebxnkos');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

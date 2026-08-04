@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource conversations', () => {
   test('create: only required params', async () => {
     const responsePromise = client.messaging.conversations.create({
-      participant_account_user_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+      participant_account_user_ids: ['acus_e5zu8bde0z3h'],
       type: 'group',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -24,18 +24,18 @@ describe('resource conversations', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.messaging.conversations.create({
-      participant_account_user_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+      participant_account_user_ids: ['acus_e5zu8bde0z3h'],
       type: 'group',
       include: ['assignee'],
-      group_id: 'cvgp_018e88072d1320808dc97abc',
+      group_id: 'cvgp_wjlypugna7s4',
       title: 'Order #1042 — shipping question',
-      topic_resource_id: 'or_01d5034136c3ccc048abecc312',
+      topic_resource_id: 'or_9lqo07quiwyb',
       topic_resource_type: 'sales_order',
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.messaging.conversations.retrieve('cv_01h9z8q1w2e3r4t5y6u7i8cv');
+    const responsePromise = client.messaging.conversations.retrieve('cv_w35z4ck68yq7');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -49,7 +49,7 @@ describe('resource conversations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.messaging.conversations.retrieve(
-        'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+        'cv_w35z4ck68yq7',
         { include: ['assignee'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -57,7 +57,7 @@ describe('resource conversations', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.messaging.conversations.update('cv_01h9z8q1w2e3r4t5y6u7i8cv');
+    const responsePromise = client.messaging.conversations.update('cv_w35z4ck68yq7');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -71,7 +71,7 @@ describe('resource conversations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.messaging.conversations.update(
-        'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+        'cv_w35z4ck68yq7',
         { include: ['assignee'], title: 'Fulfillment war room' },
         { path: '/_stainless_unknown_path' },
       ),

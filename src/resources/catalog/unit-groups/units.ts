@@ -11,8 +11,12 @@ import { path } from '../../../internal/utils/path';
  */
 export class Units extends APIResource {
   /**
-   * Adds a unit to a unit group. If the unit is already in the group, its existing
-   * association is updated with the provided settings instead.
+   * Adds a unit to a unit group so that products using the group can be ordered in
+   * it.
+   *
+   * A unit can appear in a group only once, so use the update endpoint to change the
+   * discount or visibility of a unit that is already associated. Units cannot be
+   * added to system unit groups.
    *
    * This endpoint requires the permission: `unit_groups:update`.
    *
@@ -20,9 +24,9 @@ export class Units extends APIResource {
    * ```ts
    * const unitGroupUnit =
    *   await client.catalog.unitGroups.units.create(
-   *     'ug_01aad07abb8e41fd392d2d7013',
+   *     'ug_andst6m79n41',
    *     {
-   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       unit_id: 'un_82bd37dae5po',
    *       customer_portal_visibility: 'visible',
    *       discount_percentage: 1,
    *     },
@@ -43,7 +47,8 @@ export class Units extends APIResource {
   }
 
   /**
-   * Returns an associated unit within a unit group by ID.
+   * Returns a single unit association within a unit group, including the discount
+   * and customer portal visibility applied to it.
    *
    * This endpoint requires the permission: `unit_groups:read`.
    *
@@ -51,8 +56,8 @@ export class Units extends APIResource {
    * ```ts
    * const unitGroupUnit =
    *   await client.catalog.unitGroups.units.retrieve(
-   *     'un_01966263f74a5a0cae356000a1',
-   *     { unit_group_id: 'ug_01aad07abb8e41fd392d2d7013' },
+   *     'un_82bd37dae5po',
+   *     { unit_group_id: 'ug_andst6m79n41' },
    *   );
    * ```
    */
@@ -69,7 +74,10 @@ export class Units extends APIResource {
   }
 
   /**
-   * Partially updates an associated unit within a unit group.
+   * Partially updates a unit's association with a unit group, changing the discount
+   * or customer portal visibility applied when ordering in that unit.
+   *
+   * Associations within system unit groups cannot be modified.
    *
    * This endpoint requires the permission: `unit_groups:update`.
    *
@@ -77,13 +85,13 @@ export class Units extends APIResource {
    * ```ts
    * const unitGroupUnit =
    *   await client.catalog.unitGroups.units.update(
-   *     'un_01966263f74a5a0cae356000a1',
+   *     'un_82bd37dae5po',
    *     {
-   *       unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
+   *       unit_group_id: 'ug_andst6m79n41',
    *       customer_portal_visibility: 'visible',
    *       discount_fixed: 2.5,
    *       discount_percentage: 0.9,
-   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       unit_id: 'un_82bd37dae5po',
    *     },
    *   );
    * ```
@@ -102,7 +110,11 @@ export class Units extends APIResource {
   }
 
   /**
-   * Returns a list of associated units within a unit group.
+   * Returns the units associated with a unit group, along with the discount and
+   * customer portal visibility applied to each.
+   *
+   * Every association in the group is returned in a single response; this list is
+   * not paginated.
    *
    * This endpoint requires the permission: `unit_groups:read`.
    *
@@ -110,7 +122,7 @@ export class Units extends APIResource {
    * ```ts
    * const listUnitGroupUnit =
    *   await client.catalog.unitGroups.units.list(
-   *     'ug_01aad07abb8e41fd392d2d7013',
+   *     'ug_andst6m79n41',
    *   );
    * ```
    */
@@ -123,15 +135,19 @@ export class Units extends APIResource {
   }
 
   /**
-   * Removes a unit from a unit group. The unit itself is not deleted.
+   * Removes a unit from a unit group so that products using the group can no longer
+   * be ordered in it.
+   *
+   * Only the association is deleted; the unit itself remains available. Associations
+   * cannot be removed from system unit groups.
    *
    * This endpoint requires the permission: `unit_groups:delete`.
    *
    * @example
    * ```ts
    * const unit = await client.catalog.unitGroups.units.delete(
-   *   'un_01966263f74a5a0cae356000a1',
-   *   { unit_group_id: 'ug_01aad07abb8e41fd392d2d7013' },
+   *   'un_82bd37dae5po',
+   *   { unit_group_id: 'ug_andst6m79n41' },
    * );
    * ```
    */
@@ -160,12 +176,17 @@ export interface CreateUnitGroupUnitRequest {
   /**
    * Flat amount subtracted from the unit's price when an order is placed in this
    * unit.
+   *
+   * Subtracted before `discount_percentage` is applied.
    */
   discount_fixed?: number;
 
   /**
-   * Percentage discount applied to the unit's price when an order is placed in this
-   * unit (e.g. `10` is a 10% discount).
+   * Share of the unit's price removed when an order is placed in this unit.
+   *
+   * Expressed as a decimal fraction rather than a whole number, so `0.1` is a 10%
+   * discount. Send `0` explicitly for no discount — omitting the field stores a
+   * discount of `1`, which removes the entire price.
    */
   discount_percentage?: number;
 }
@@ -182,19 +203,25 @@ export interface UpdateUnitGroupUnitRequest {
   /**
    * Flat amount subtracted from the unit's price when an order is placed in this
    * unit.
+   *
+   * Subtracted before `discount_percentage` is applied.
    */
   discount_fixed?: number;
 
   /**
-   * Percentage discount applied to the unit's price when an order is placed in this
-   * unit (e.g. `10` is a 10% discount).
+   * Share of the unit's price removed when an order is placed in this unit.
+   *
+   * Expressed as a decimal fraction rather than a whole number, so `0.1` is a 10%
+   * discount and `0` is no discount.
    */
   discount_percentage?: number;
 
   /**
    * ID of the unit this association refers to.
    *
-   * The unit's dimension must match the group's `type`.
+   * Sending a different unit does not repoint the association; remove the
+   * association and add a new one instead. A unit sent here must still match the
+   * group's `type`.
    */
   unit_id?: string;
 }
@@ -223,12 +250,18 @@ export interface UnitCreateParams {
   /**
    * Body param: Flat amount subtracted from the unit's price when an order is placed
    * in this unit.
+   *
+   * Subtracted before `discount_percentage` is applied.
    */
   discount_fixed?: number;
 
   /**
-   * Body param: Percentage discount applied to the unit's price when an order is
-   * placed in this unit (e.g. `10` is a 10% discount).
+   * Body param: Share of the unit's price removed when an order is placed in this
+   * unit.
+   *
+   * Expressed as a decimal fraction rather than a whole number, so `0.1` is a 10%
+   * discount. Send `0` explicitly for no discount — omitting the field stores a
+   * discount of `1`, which removes the entire price.
    */
   discount_percentage?: number;
 }
@@ -266,19 +299,26 @@ export interface UnitUpdateParams {
   /**
    * Body param: Flat amount subtracted from the unit's price when an order is placed
    * in this unit.
+   *
+   * Subtracted before `discount_percentage` is applied.
    */
   discount_fixed?: number;
 
   /**
-   * Body param: Percentage discount applied to the unit's price when an order is
-   * placed in this unit (e.g. `10` is a 10% discount).
+   * Body param: Share of the unit's price removed when an order is placed in this
+   * unit.
+   *
+   * Expressed as a decimal fraction rather than a whole number, so `0.1` is a 10%
+   * discount and `0` is no discount.
    */
   discount_percentage?: number;
 
   /**
    * Body param: ID of the unit this association refers to.
    *
-   * The unit's dimension must match the group's `type`.
+   * Sending a different unit does not repoint the association; remove the
+   * association and add a new one instead. A unit sent here must still match the
+   * group's `type`.
    */
   unit_id?: string;
 }

@@ -9,17 +9,11 @@ const client = new Augno({
 
 describe('resource notificationRecipients', () => {
   test('update: only required params', async () => {
-    const responsePromise = client.sales.customers.notificationRecipients.update(
-      'ac_0170df1ac58e4d24c66fc89f5f',
-      {
-        recipients: [
-          {
-            account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
-            notification_types: ['order_acknowledgement', 'invoice'],
-          },
-        ],
-      },
-    );
+    const responsePromise = client.sales.customers.notificationRecipients.update('ac_opnlh43ymyee', {
+      recipients: [
+        { account_user_id: 'acus_e5zu8bde0z3h', notification_types: ['order_acknowledgement', 'invoice'] },
+      ],
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -30,24 +24,16 @@ describe('resource notificationRecipients', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.customers.notificationRecipients.update(
-      'ac_0170df1ac58e4d24c66fc89f5f',
-      {
-        recipients: [
-          {
-            account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
-            notification_types: ['order_acknowledgement', 'invoice'],
-          },
-        ],
-        include: ['account_user'],
-      },
-    );
+    const response = await client.sales.customers.notificationRecipients.update('ac_opnlh43ymyee', {
+      recipients: [
+        { account_user_id: 'acus_e5zu8bde0z3h', notification_types: ['order_acknowledgement', 'invoice'] },
+      ],
+      include: ['account_user'],
+    });
   });
 
   test('list', async () => {
-    const responsePromise = client.sales.customers.notificationRecipients.list(
-      'ac_0170df1ac58e4d24c66fc89f5f',
-    );
+    const responsePromise = client.sales.customers.notificationRecipients.list('ac_opnlh43ymyee');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -61,7 +47,7 @@ describe('resource notificationRecipients', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.customers.notificationRecipients.list(
-        'ac_0170df1ac58e4d24c66fc89f5f',
+        'ac_opnlh43ymyee',
         { include: ['account_user'] },
         { path: '/_stainless_unknown_path' },
       ),

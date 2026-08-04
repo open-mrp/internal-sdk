@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource shipments', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.shipments.retrieve('sh_018b3a946651bfb6572b06b2b2');
+    const responsePromise = client.operations.shipments.retrieve('sh_pfygp2gl45y4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource shipments', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.shipments.retrieve(
-        'sh_018b3a946651bfb6572b06b2b2',
+        'sh_pfygp2gl45y4',
         { include: ['lines'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource shipments', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.shipments.update('sh_018b3a946651bfb6572b06b2b2');
+    const responsePromise = client.operations.shipments.update('sh_pfygp2gl45y4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource shipments', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.shipments.update(
-        'sh_018b3a946651bfb6572b06b2b2',
+        'sh_pfygp2gl45y4',
         {
           include: ['lines'],
           carrier_id: 'carrier_id',
@@ -94,7 +94,7 @@ describe('resource shipments', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.shipments.delete('sh_018b3a946651bfb6572b06b2b2');
+    const responsePromise = client.operations.shipments.delete('sh_pfygp2gl45y4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

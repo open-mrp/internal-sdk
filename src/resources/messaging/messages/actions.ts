@@ -11,10 +11,17 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Approves a customer-reply draft and sends it to the customer, promoting the
-   * draft to a sent customer-visible message in place.
+   * Approves a reply draft and sends it to the customer.
    *
-   * Idempotent on `client_message_id`.
+   * The draft becomes the sent message rather than spawning a copy: it takes its
+   * place in the case timeline, and the customer sees it as coming from "Customer
+   * Service". A draft on the email channel goes out as a reply on the case's email
+   * thread; otherwise it appears in the customer's conversation. Sending also moves
+   * the case to waiting on the customer.
+   *
+   * Only the first approval of a draft sends it — approving one that is no longer
+   * open fails, so a concurrent double-approve cannot reach the customer twice.
+   * Customer accounts cannot approve drafts.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -22,7 +29,7 @@ export class Actions extends APIResource {
    * ```ts
    * const message =
    *   await client.messaging.messages.actions.approveSend(
-   *     'mg_01h9z8q1w2e3r4t5y6u7i8mg',
+   *     'mg_fdny8633ebgw',
    *     { client_message_id: 'client_msg_approve_7b1c' },
    *   );
    * ```
@@ -41,7 +48,13 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Cancels a scheduled message the caller created (status becomes `canceled`).
+   * Cancels a message that was scheduled for a future send, so it is never
+   * delivered.
+   *
+   * You can only cancel a message you scheduled yourself, and only while it is still
+   * waiting to go out — once it has been delivered or has otherwise left the
+   * scheduled state, the request fails. The canceled message is kept as a record and
+   * never appears in the conversation.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -49,7 +62,7 @@ export class Actions extends APIResource {
    * ```ts
    * const message =
    *   await client.messaging.messages.actions.cancel(
-   *     'mg_01h9z8q1w2e3r4t5y6u7i8mg',
+   *     'mg_fdny8633ebgw',
    *   );
    * ```
    */
@@ -66,8 +79,11 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Discards an open customer-reply draft without sending it (status becomes
-   * `rejected`).
+   * Discards a reply draft without sending it to the customer.
+   *
+   * The draft is kept as a rejected record for history and can no longer be edited
+   * or approved. Because the customer is still owed an answer, the case moves back
+   * to waiting on your team.
    *
    * This endpoint requires the permission: `messaging:update`.
    *
@@ -75,7 +91,7 @@ export class Actions extends APIResource {
    * ```ts
    * const message =
    *   await client.messaging.messages.actions.reject(
-   *     'mg_01h9z8q1w2e3r4t5y6u7i8mg',
+   *     'mg_fdny8633ebgw',
    *   );
    * ```
    */
@@ -97,15 +113,14 @@ export class Actions extends APIResource {
  */
 export interface ApproveSendDraftRequest {
   /**
-   * Client-supplied dedupe key for the resulting customer-visible message.
+   * A unique client-generated key for this approval, such as a UUID.
    */
   client_message_id: string;
 }
 
 export interface ActionApproveSendParams {
   /**
-   * Body param: Client-supplied dedupe key for the resulting customer-visible
-   * message.
+   * Body param: A unique client-generated key for this approval, such as a UUID.
    */
   client_message_id: string;
 

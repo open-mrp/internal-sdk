@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource messages', () => {
   test('update: only required params', async () => {
-    const responsePromise = client.messaging.messages.update('mg_01h9z8q1w2e3r4t5y6u7i8mg', {
+    const responsePromise = client.messaging.messages.update('mg_fdny8633ebgw', {
       body: 'Hi Joe — good news, your order ships tomorrow.',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -22,7 +22,7 @@ describe('resource messages', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.messaging.messages.update('mg_01h9z8q1w2e3r4t5y6u7i8mg', {
+    const response = await client.messaging.messages.update('mg_fdny8633ebgw', {
       body: 'Hi Joe — good news, your order ships tomorrow.',
       include: ['sender'],
       subject: 'Re: Order #1042',

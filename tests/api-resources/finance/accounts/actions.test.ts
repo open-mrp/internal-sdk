@@ -9,10 +9,9 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('emailReceivables: only required params', async () => {
-    const responsePromise = client.finance.accounts.actions.emailReceivables(
-      'ac_01148680966698341a9c0976db',
-      { recipient_emails: ['jdoe@augno.com'] },
-    );
+    const responsePromise = client.finance.accounts.actions.emailReceivables('ac_ykxoradjoeb3', {
+      recipient_emails: ['jdoe@augno.com'],
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +22,7 @@ describe('resource actions', () => {
   });
 
   test('emailReceivables: required and optional params', async () => {
-    const response = await client.finance.accounts.actions.emailReceivables('ac_01148680966698341a9c0976db', {
+    const response = await client.finance.accounts.actions.emailReceivables('ac_ykxoradjoeb3', {
       recipient_emails: ['jdoe@augno.com'],
     });
   });

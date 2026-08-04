@@ -35,7 +35,7 @@ describe('resource addresses', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.addresses.retrieve('ad_012100950cfaa34aa0e0ad7258');
+    const responsePromise = client.sales.addresses.retrieve('ad_j8cz0b79pwdb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -46,7 +46,7 @@ describe('resource addresses', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.addresses.update('ad_012100950cfaa34aa0e0ad7258');
+    const responsePromise = client.sales.addresses.update('ad_j8cz0b79pwdb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -60,7 +60,7 @@ describe('resource addresses', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.addresses.update(
-        'ad_012100950cfaa34aa0e0ad7258',
+        'ad_j8cz0b79pwdb',
         {
           country: 'US',
           email: 'warehouse@acme.com',
@@ -105,7 +105,7 @@ describe('resource addresses', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.addresses.delete('ad_012100950cfaa34aa0e0ad7258');
+    const responsePromise = client.sales.addresses.delete('ad_j8cz0b79pwdb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

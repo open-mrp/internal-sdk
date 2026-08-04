@@ -47,11 +47,11 @@ describe('resource analytics', () => {
     const response = await client.core.analytics.updateDeliveries({
       end_date: '2026-05-10T00:23:00Z',
       start_date: '2026-05-10T00:00:00Z',
-      customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-      customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
+      customer_group_ids: ['acgp_6p4z57e9alaf'],
+      customer_ids: ['ac_opnlh43ymyee'],
       override_promised_dates: true,
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
-      sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+      product_line_ids: ['pdln_k9bnlgvxhxjh'],
+      sales_rep_ids: ['acus_e5zu8bde0z3h'],
       target_delivery_time_days: 7,
     });
   });
@@ -74,8 +74,8 @@ describe('resource analytics', () => {
         {
           forecast_months: 3,
           history_months: 6,
-          item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-          product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+          item_ids: ['it_pej07ckhvu62'],
+          product_line_ids: ['pdln_k9bnlgvxhxjh'],
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -98,9 +98,9 @@ describe('resource analytics', () => {
     await expect(
       client.core.analytics.updateInventoryReceipts(
         {
-          item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-          location_ids: ['lc_014d187d99b31926f0c74af9d8'],
-          lot_ids: ['lot_01efb5e19625fdc035bb0670df'],
+          item_ids: ['it_pej07ckhvu62'],
+          location_ids: ['lc_yonnys0hx3ju'],
+          lot_ids: ['lot_t1ge2m2qt3cw'],
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -152,10 +152,10 @@ describe('resource analytics', () => {
       comparison_start_date: '2026-04-10T00:00:00Z',
       end_date: '2026-05-10T00:23:00Z',
       start_date: '2026-05-10T00:00:00Z',
-      customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-      customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-      item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+      customer_group_ids: ['acgp_6p4z57e9alaf'],
+      customer_ids: ['ac_opnlh43ymyee'],
+      item_ids: ['it_pej07ckhvu62'],
+      product_line_ids: ['pdln_k9bnlgvxhxjh'],
     });
   });
 
@@ -174,10 +174,7 @@ describe('resource analytics', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.core.analytics.updateMaterials(
-        {
-          sales_order_ids: ['or_01d5034136c3ccc048abecc312'],
-          supplier_ids: ['ac_0177902104bccac5fbb173cd96'],
-        },
+        { sales_order_ids: ['or_9lqo07quiwyb'], supplier_ids: ['ac_gwy8tfbc074f'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
@@ -201,8 +198,8 @@ describe('resource analytics', () => {
     const response = await client.core.analytics.updateNewCustomers({
       end_date: '2026-05-10T00:23:00Z',
       start_date: '2026-05-10T00:00:00Z',
-      customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-      sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+      customer_group_ids: ['acgp_6p4z57e9alaf'],
+      sales_rep_ids: ['acus_e5zu8bde0z3h'],
     });
   });
 
@@ -224,15 +221,15 @@ describe('resource analytics', () => {
     const response = await client.core.analytics.updateOee({
       end_date: '2026-05-10T00:23:00Z',
       start_date: '2026-05-10T00:00:00Z',
-      department_ids: ['dp_01791c25ab59da4704cba61874'],
+      department_ids: ['dp_m0jayebxnkos'],
       planned_time: [{ department_id: 'department_id', planned_hours: 0 }],
     });
   });
 
   test('updateOpenBatches: only required params', async () => {
     const responsePromise = client.core.analytics.updateOpenBatches({
-      item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+      item_ids: ['it_pej07ckhvu62'],
+      product_line_ids: ['pdln_k9bnlgvxhxjh'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -245,8 +242,8 @@ describe('resource analytics', () => {
 
   test('updateOpenBatches: required and optional params', async () => {
     const response = await client.core.analytics.updateOpenBatches({
-      item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+      item_ids: ['it_pej07ckhvu62'],
+      product_line_ids: ['pdln_k9bnlgvxhxjh'],
     });
   });
 
@@ -266,10 +263,10 @@ describe('resource analytics', () => {
     await expect(
       client.core.analytics.updateOrders(
         {
-          customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-          customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-          product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
-          sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+          customer_group_ids: ['acgp_6p4z57e9alaf'],
+          customer_ids: ['ac_opnlh43ymyee'],
+          product_line_ids: ['pdln_k9bnlgvxhxjh'],
+          sales_rep_ids: ['acus_e5zu8bde0z3h'],
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -292,11 +289,11 @@ describe('resource analytics', () => {
     await expect(
       client.core.analytics.updateProductionCosts(
         {
-          category_ids: ['ic_01ae7bd7bfd21ca0ab81e1357e'],
-          department_ids: ['dp_01791c25ab59da4704cba61874'],
+          category_ids: ['ic_d06g9c6yc9ck'],
+          department_ids: ['dp_m0jayebxnkos'],
           end_date: '2026-05-10T00:23:00Z',
-          item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-          product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+          item_ids: ['it_pej07ckhvu62'],
+          product_line_ids: ['pdln_k9bnlgvxhxjh'],
           start_date: '2026-05-10T00:00:00Z',
         },
         { path: '/_stainless_unknown_path' },
@@ -320,11 +317,11 @@ describe('resource analytics', () => {
     await expect(
       client.core.analytics.updateQuarterlyOrders(
         {
-          customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-          customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-          item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-          product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
-          sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+          customer_group_ids: ['acgp_6p4z57e9alaf'],
+          customer_ids: ['ac_opnlh43ymyee'],
+          item_ids: ['it_pej07ckhvu62'],
+          product_line_ids: ['pdln_k9bnlgvxhxjh'],
+          sales_rep_ids: ['acus_e5zu8bde0z3h'],
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -349,11 +346,11 @@ describe('resource analytics', () => {
     const response = await client.core.analytics.updateSales({
       end_date: '2026-05-10T00:23:00Z',
       start_date: '2026-05-10T00:00:00Z',
-      customer_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-      customer_ids: ['ac_0170df1ac58e4d24c66fc89f5f'],
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+      customer_group_ids: ['acgp_6p4z57e9alaf'],
+      customer_ids: ['ac_opnlh43ymyee'],
+      product_line_ids: ['pdln_k9bnlgvxhxjh'],
       query: '6061',
-      sales_rep_ids: ['acus_01ea9983ddb41dacc44ecf997c'],
+      sales_rep_ids: ['acus_e5zu8bde0z3h'],
     });
   });
 

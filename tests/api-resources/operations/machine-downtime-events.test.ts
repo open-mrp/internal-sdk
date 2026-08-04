@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource machineDowntimeEvents', () => {
   test('create: only required params', async () => {
     const responsePromise = client.operations.machineDowntimeEvents.create({
-      machine_id: 'mc_0177d18f55a1615f783d3bf8d0',
+      machine_id: 'mc_ffcfk9dxixis',
       reason: 'breakdown',
       started_at: '2026-05-10T00:00:00Z',
     });
@@ -25,7 +25,7 @@ describe('resource machineDowntimeEvents', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.operations.machineDowntimeEvents.create({
-      machine_id: 'mc_0177d18f55a1615f783d3bf8d0',
+      machine_id: 'mc_ffcfk9dxixis',
       reason: 'breakdown',
       started_at: '2026-05-10T00:00:00Z',
       include: ['machine'],
@@ -39,9 +39,7 @@ describe('resource machineDowntimeEvents', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.machineDowntimeEvents.retrieve(
-      'mcdt_0192a4c17b3e4f8a91c2d05e77',
-    );
+    const responsePromise = client.operations.machineDowntimeEvents.retrieve('mcdt_ff5te1hqttco');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -55,7 +53,7 @@ describe('resource machineDowntimeEvents', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.machineDowntimeEvents.retrieve(
-        'mcdt_0192a4c17b3e4f8a91c2d05e77',
+        'mcdt_ff5te1hqttco',
         { include: ['machine'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -63,7 +61,7 @@ describe('resource machineDowntimeEvents', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.machineDowntimeEvents.update('mcdt_0192a4c17b3e4f8a91c2d05e77');
+    const responsePromise = client.operations.machineDowntimeEvents.update('mcdt_ff5te1hqttco');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -77,7 +75,7 @@ describe('resource machineDowntimeEvents', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.machineDowntimeEvents.update(
-        'mcdt_0192a4c17b3e4f8a91c2d05e77',
+        'mcdt_ff5te1hqttco',
         {
           include: ['machine'],
           batch_id: 'batch_id',
@@ -126,7 +124,7 @@ describe('resource machineDowntimeEvents', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.machineDowntimeEvents.delete('mcdt_0192a4c17b3e4f8a91c2d05e77');
+    const responsePromise = client.operations.machineDowntimeEvents.delete('mcdt_ff5te1hqttco');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

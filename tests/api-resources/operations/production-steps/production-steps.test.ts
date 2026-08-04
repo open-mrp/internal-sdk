@@ -12,25 +12,25 @@ describe('resource productionSteps', () => {
     const responsePromise = client.operations.productionSteps.create({
       allowances: '0.05',
       labor_rate: {
-        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        denominator_unit_id: 'un_82bd37dae5po',
+        numerator_unit_id: 'un_82bd37dae5po',
         value: '25.00',
       },
       labor_time: {
-        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        denominator_unit_id: 'un_82bd37dae5po',
+        numerator_unit_id: 'un_82bd37dae5po',
         value: '1.5',
       },
       leveling_factor: '1.10',
       name: 'Mixing',
       overhead_rate: {
-        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        denominator_unit_id: 'un_82bd37dae5po',
+        numerator_unit_id: 'un_82bd37dae5po',
         value: '15.00',
       },
       production: {
-        item_id: 'it_0131e386ac683e8c29a71f6f1f',
-        quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+        item_id: 'it_pej07ckhvu62',
+        quantity_unit_id: 'un_82bd37dae5po',
         quantity_value: '100',
       },
     });
@@ -47,45 +47,45 @@ describe('resource productionSteps', () => {
     const response = await client.operations.productionSteps.create({
       allowances: '0.05',
       labor_rate: {
-        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        denominator_unit_id: 'un_82bd37dae5po',
+        numerator_unit_id: 'un_82bd37dae5po',
         value: '25.00',
       },
       labor_time: {
-        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        denominator_unit_id: 'un_82bd37dae5po',
+        numerator_unit_id: 'un_82bd37dae5po',
         value: '1.5',
       },
       leveling_factor: '1.10',
       name: 'Mixing',
       overhead_rate: {
-        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        denominator_unit_id: 'un_82bd37dae5po',
+        numerator_unit_id: 'un_82bd37dae5po',
         value: '15.00',
       },
       production: {
-        item_id: 'it_0131e386ac683e8c29a71f6f1f',
-        quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+        item_id: 'it_pej07ckhvu62',
+        quantity_unit_id: 'un_82bd37dae5po',
         quantity_value: '100',
       },
       consumptions: [
         {
-          item_id: 'it_0131e386ac683e8c29a71f6f1f',
-          quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+          item_id: 'it_pej07ckhvu62',
+          quantity_unit_id: 'un_82bd37dae5po',
           quantity_value: '50',
-          waste_quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
+          waste_quantity_unit_id: 'un_82bd37dae5po',
           waste_quantity_value: '2',
           instructions: 'instructions',
         },
       ],
       department_id: 'department_id',
       notes: 'notes',
-      scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
+      scanning_station_id: 'scst_t71bn7lq5yov',
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.productionSteps.retrieve('prst_0159474175bb59f4b1990404ee');
+    const responsePromise = client.operations.productionSteps.retrieve('prst_0ht5mkqx5a6t');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -99,7 +99,7 @@ describe('resource productionSteps', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionSteps.retrieve(
-        'prst_0159474175bb59f4b1990404ee',
+        'prst_0ht5mkqx5a6t',
         { include: ['production'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -107,7 +107,7 @@ describe('resource productionSteps', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.productionSteps.update('prst_0159474175bb59f4b1990404ee');
+    const responsePromise = client.operations.productionSteps.update('prst_0ht5mkqx5a6t');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -121,12 +121,12 @@ describe('resource productionSteps', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionSteps.update(
-        'prst_0159474175bb59f4b1990404ee',
+        'prst_0ht5mkqx5a6t',
         {
           allowances: 'allowances',
           leveling_factor: '1.15',
           name: 'Assembly Step A',
-          scanning_station_id: 'scst_0129335dd6286056a97024fcc1',
+          scanning_station_id: 'scst_t71bn7lq5yov',
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -167,7 +167,7 @@ describe('resource productionSteps', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.productionSteps.delete('prst_0159474175bb59f4b1990404ee');
+    const responsePromise = client.operations.productionSteps.delete('prst_0ht5mkqx5a6t');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

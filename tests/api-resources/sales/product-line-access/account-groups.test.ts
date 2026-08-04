@@ -10,8 +10,8 @@ const client = new Augno({
 describe('resource accountGroups', () => {
   test('create: only required params', async () => {
     const responsePromise = client.sales.productLineAccess.accountGroups.create({
-      account_group_id: 'acgp_018e88072d1320808dc979cfac',
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+      account_group_id: 'acgp_6p4z57e9alaf',
+      product_line_ids: ['pdln_k9bnlgvxhxjh'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -24,15 +24,13 @@ describe('resource accountGroups', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.sales.productLineAccess.accountGroups.create({
-      account_group_id: 'acgp_018e88072d1320808dc979cfac',
-      product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+      account_group_id: 'acgp_6p4z57e9alaf',
+      product_line_ids: ['pdln_k9bnlgvxhxjh'],
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.retrieve(
-      'acgp_018e88072d1320808dc979cfac',
-    );
+    const responsePromise = client.sales.productLineAccess.accountGroups.retrieve('acgp_6p4z57e9alaf');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -43,9 +41,7 @@ describe('resource accountGroups', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.update(
-      'acgp_018e88072d1320808dc979cfac',
-    );
+    const responsePromise = client.sales.productLineAccess.accountGroups.update('acgp_6p4z57e9alaf');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -59,8 +55,8 @@ describe('resource accountGroups', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.productLineAccess.accountGroups.update(
-        'acgp_018e88072d1320808dc979cfac',
-        { product_line_ids: ['pdln_01996357326a0d3f7b129542ea'] },
+        'acgp_6p4z57e9alaf',
+        { product_line_ids: ['pdln_k9bnlgvxhxjh'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
@@ -92,9 +88,7 @@ describe('resource accountGroups', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.productLineAccess.accountGroups.delete(
-      'acgp_018e88072d1320808dc979cfac',
-    );
+    const responsePromise = client.sales.productLineAccess.accountGroups.delete('acgp_6p4z57e9alaf');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

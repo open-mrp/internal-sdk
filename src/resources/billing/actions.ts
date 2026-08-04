@@ -9,7 +9,11 @@ import { RequestOptions } from '../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Submits an enterprise plan inquiry to the sales team.
+   * Asks the Augno sales team to get in touch about an enterprise plan.
+   *
+   * The account, its current plan, and the requesting user's name and email are sent
+   * to sales for follow-up. Nothing about the account's plan, subscription, or
+   * billing changes.
    *
    * This endpoint requires the `admin` role type.
    *
@@ -31,6 +35,10 @@ export class Actions extends APIResource {
 export interface EnterpriseInquiry {
   /**
    * Enterprise inquiry ID.
+   *
+   * Inquiries are handed off to the sales team rather than stored as a queryable
+   * resource, so this identifier is only a reference to the submission you just
+   * made.
    */
   id: string;
 

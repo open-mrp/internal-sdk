@@ -31,10 +31,7 @@ describe('resource actions', () => {
   });
 
   test('emailRecord: only required params', async () => {
-    const responsePromise = client.core.actions.emailRecord({
-      id: 'iv_018b5949ada8abca36358bbea9',
-      type: 'invoice',
-    });
+    const responsePromise = client.core.actions.emailRecord({ id: 'iv_m982ezb0fgp7', type: 'invoice' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,10 +42,7 @@ describe('resource actions', () => {
   });
 
   test('emailRecord: required and optional params', async () => {
-    const response = await client.core.actions.emailRecord({
-      id: 'iv_018b5949ada8abca36358bbea9',
-      type: 'invoice',
-    });
+    const response = await client.core.actions.emailRecord({ id: 'iv_m982ezb0fgp7', type: 'invoice' });
   });
 
   test('requestDemo: only required params', async () => {

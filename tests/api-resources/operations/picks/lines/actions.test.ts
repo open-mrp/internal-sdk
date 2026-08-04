@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource actions', () => {
   test('pick: only required params', async () => {
     const responsePromise = client.operations.picks.lines.actions.pick('example', {
-      pick_id: 'pk_016452192feb7952d8393f0105',
+      pick_id: 'pk_6eilj488bq8d',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,13 +23,13 @@ describe('resource actions', () => {
 
   test('pick: required and optional params', async () => {
     const response = await client.operations.picks.lines.actions.pick('example', {
-      pick_id: 'pk_016452192feb7952d8393f0105',
+      pick_id: 'pk_6eilj488bq8d',
     });
   });
 
   test('void: only required params', async () => {
     const responsePromise = client.operations.picks.lines.actions.void('example', {
-      pick_id: 'pk_016452192feb7952d8393f0105',
+      pick_id: 'pk_6eilj488bq8d',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -42,7 +42,7 @@ describe('resource actions', () => {
 
   test('void: required and optional params', async () => {
     const response = await client.operations.picks.lines.actions.void('example', {
-      pick_id: 'pk_016452192feb7952d8393f0105',
+      pick_id: 'pk_6eilj488bq8d',
     });
   });
 });

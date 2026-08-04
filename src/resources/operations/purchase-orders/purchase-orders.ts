@@ -38,35 +38,49 @@ export class PurchaseOrders extends APIResource {
   /**
    * Creates a purchase order.
    *
-   * The order number is assigned automatically and the order starts in `estimate`
-   * status. Bill-to and ship-to addresses are created from the inline address
-   * fields, and any provided lines and email contacts are created with the order.
+   * The order number is assigned automatically from a per-account sequence and the
+   * order starts in `estimate` status; issue it separately to send it to the
+   * supplier and open it for receiving. Bill-to and ship-to addresses are created as
+   * new address records from the inline address fields, and any provided lines and
+   * email contacts are created with the order.
+   *
+   * A line that references an inventory item also links that item's material to the
+   * supplier, if it is not linked already, so the material shows up as sourced from
+   * them.
    *
    * This endpoint requires the permission: `purchase_orders:create`.
    *
    * @example
    * ```ts
-   * const purchaseOrder = await client.operations.purchaseOrders.create({
-   *   lines: [
-   *     {
-   *       product_id: 'pd_013c29ab3f1518d0004094c316',
-   *       product_sku: 'RAW-100',
-   *       quantity: { ... },
-   *       unit_price: { ... },
-   *     },
-   *   ],
-   *   priority_code: 'normal',
-   *   supplier_account_id: 'ac_0177902104bccac5fbb173cd96',
-   *   carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
-   *   note: 'Urgent restock order',
-   *   service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
-   *   ship_to_country: 'US',
-   *   ship_to_locality: 'San Francisco',
-   *   ship_to_name: 'Acme Inc.',
-   *   ship_to_postal_code: '94105',
-   *   ship_to_state: 'CA',
-   *   ship_to_street_line_1: '123 Main Street',
-   * });
+   * const purchaseOrder =
+   *   await client.operations.purchaseOrders.create({
+   *     lines: [
+   *       {
+   *         product_id: 'pd_07oe0r7adh2w',
+   *         product_sku: 'RAW-100',
+   *         quantity: {
+   *           unit_id: 'un_82bd37dae5po',
+   *           value: '500',
+   *         },
+   *         unit_price: {
+   *           denominator_unit_id: 'un_82bd37dae5po',
+   *           numerator_unit_id: 'un_82bd37dae5po',
+   *           value: '12.50',
+   *         },
+   *       },
+   *     ],
+   *     priority_code: 'normal',
+   *     supplier_account_id: 'ac_gwy8tfbc074f',
+   *     carrier_id: 'cr_tv5vfjtgu1n3',
+   *     note: 'Urgent restock order',
+   *     service_level_id: 'crop_4ilk9p6gccrx',
+   *     ship_to_country: 'US',
+   *     ship_to_locality: 'San Francisco',
+   *     ship_to_name: 'Acme Inc.',
+   *     ship_to_postal_code: '94105',
+   *     ship_to_state: 'CA',
+   *     ship_to_street_line_1: '123 Main Street',
+   *   });
    * ```
    */
   create(
@@ -86,7 +100,7 @@ export class PurchaseOrders extends APIResource {
    * ```ts
    * const purchaseOrder =
    *   await client.operations.purchaseOrders.retrieve(
-   *     'po_0169aa3a722b081b117ac0e44f',
+   *     'po_3ov2ym1pca8m',
    *   );
    * ```
    */
@@ -101,13 +115,17 @@ export class PurchaseOrders extends APIResource {
   /**
    * Partially updates a purchase order.
    *
+   * Only the fields sent are changed. Addresses are repointed at existing address
+   * records here, unlike create, which builds new addresses from inline fields; the
+   * order's lifecycle status is changed through the change-status endpoint instead.
+   *
    * This endpoint requires the permission: `purchase_orders:update`.
    *
    * @example
    * ```ts
    * const purchaseOrder =
    *   await client.operations.purchaseOrders.update(
-   *     'po_0169aa3a722b081b117ac0e44f',
+   *     'po_3ov2ym1pca8m',
    *     {
    *       note: 'Updated delivery notes',
    *       number: 'PO-001',
@@ -131,7 +149,11 @@ export class PurchaseOrders extends APIResource {
   }
 
   /**
-   * Returns a paginated list of purchase orders for the current account.
+   * Returns a paginated list of purchase orders for the current account, newest
+   * first.
+   *
+   * Filters combine with AND, while the values within a single filter combine with
+   * OR. The `q` search term matches on order number and supplier name.
    *
    * This endpoint requires the permission: `purchase_orders:read`.
    *
@@ -149,9 +171,12 @@ export class PurchaseOrders extends APIResource {
   }
 
   /**
-   * Deletes a purchase order and all its related records.
+   * Deletes a purchase order along with its lines, email contacts, and receiving
+   * order.
    *
-   * Orders in `fulfilled` status cannot be deleted.
+   * Orders in `fulfilled` status cannot be deleted; re-open the order first.
+   * Deleting is permanent, and a later request for the same order reports that it
+   * has already been deleted rather than that it was never found.
    *
    * This endpoint requires the permission: `purchase_orders:delete`.
    *
@@ -159,7 +184,7 @@ export class PurchaseOrders extends APIResource {
    * ```ts
    * const purchaseOrder =
    *   await client.operations.purchaseOrders.delete(
-   *     'po_0169aa3a722b081b117ac0e44f',
+   *     'po_3ov2ym1pca8m',
    *   );
    * ```
    */
@@ -168,7 +193,11 @@ export class PurchaseOrders extends APIResource {
   }
 
   /**
-   * Returns a paginated list of available purchase order status values.
+   * Returns a paginated list of purchase order statuses.
+   *
+   * These are the same platform-provided status records that sales orders use, so
+   * they are identical for every account. An order's own status is changed through
+   * the change-status endpoint rather than by referencing one of these records.
    *
    * @example
    * ```ts
@@ -185,7 +214,8 @@ export class PurchaseOrders extends APIResource {
 }
 
 /**
- * Shared fields for a line item on a purchase order or sales order.
+ * Details of a single line item ordered from a supplier, used when creating a
+ * purchase order and when adding a line to an existing one.
  */
 export interface CreatePurchaseOrderLineInput {
   /**
@@ -202,20 +232,29 @@ export interface CreatePurchaseOrderLineInput {
   product_sku: string;
 
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   quantity: CustomersAPI.QuantityInput;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price: SalesOrdersAPI.RateInput;
 
   /**
-   * ID of the inventory item to tie the line to.
+   * ID of the inventory item this line is linked to.
    *
-   * Lines tied to an item have inventory reserved for them when the order is issued.
+   * Stock received against the line is booked into this item, so lines for goods you
+   * hold in inventory should reference one. Supplying an item also records the
+   * item's material as sourced from this order's supplier, with `product_sku` as the
+   * supplier part number, when that link does not exist yet.
    */
   item_id?: string;
 
@@ -225,8 +264,11 @@ export interface CreatePurchaseOrderLineInput {
   product_description?: string;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_cost?: SalesOrdersAPI.RateInput;
 }
@@ -236,7 +278,9 @@ export interface CreatePurchaseOrderLineInput {
  */
 export interface CreatePurchaseOrderRequest {
   /**
-   * Order lines to create.
+   * Order lines to create with the order.
+   *
+   * Lines can also be added afterwards through the create-line endpoint.
    */
   lines: Array<CreatePurchaseOrderLineInput>;
 
@@ -291,7 +335,11 @@ export interface CreatePurchaseOrderRequest {
   carrier_billing_account?: string;
 
   /**
-   * Which party the carrier bills for freight (`sender` or `third_party`).
+   * Which party the carrier bills for freight on this order.
+   *
+   * - `sender`: the carrier bills the party shipping the goods.
+   * - `third_party`: the carrier bills the account given in
+   *   `carrier_billing_account`.
    */
   carrier_billing_type?: string;
 
@@ -309,17 +357,19 @@ export interface CreatePurchaseOrderRequest {
   contact_account_user_ids?: Array<string>;
 
   /**
-   * Order note.
+   * Free-form note to record on the order.
    */
   note?: string;
 
   /**
-   * Payment term ID.
+   * ID of the payment term agreed with the supplier.
    */
   payment_term_id?: string;
 
   /**
    * Promised delivery date in `YYYY-MM-DD` format.
+   *
+   * Returned as `scheduled_at` on the purchase order resource.
    */
   promised_at?: string;
 
@@ -364,13 +414,14 @@ export interface CreatePurchaseOrderRequest {
   ship_to_street_line_2?: string;
 
   /**
-   * Shipping term ID.
+   * ID of the shipping term that applies to the order.
    */
   shipping_term_id?: string;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPurchaseOrder {
   /**
@@ -384,13 +435,20 @@ export interface ListPurchaseOrder {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * Shared fields for a line item on a purchase order or sales order.
+ * Details of a single line item ordered from a supplier, used when creating a
+ * purchase order and when adding a line to an existing one.
  */
 export interface OrderLineInput {
   /**
@@ -407,20 +465,29 @@ export interface OrderLineInput {
   product_sku: string;
 
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   quantity: CustomersAPI.QuantityInput;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price: SalesOrdersAPI.RateInput;
 
   /**
-   * ID of the inventory item to tie the line to.
+   * ID of the inventory item this line is linked to.
    *
-   * Lines tied to an item have inventory reserved for them when the order is issued.
+   * Stock received against the line is booked into this item, so lines for goods you
+   * hold in inventory should reference one. Supplying an item also records the
+   * item's material as sourced from this order's supplier, with `product_sku` as the
+   * supplier part number, when that link does not exist yet.
    */
   item_id?: string;
 
@@ -430,8 +497,11 @@ export interface OrderLineInput {
   product_description?: string;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_cost?: SalesOrdersAPI.RateInput;
 }
@@ -454,14 +524,15 @@ export interface UpdatePurchaseOrderRequest {
   contact_account_user_ids?: Array<string>;
 
   /**
-   * Order note.
+   * Free-form note to record on the order.
    */
   note?: string;
 
   /**
-   * New purchase order number.
+   * New purchase order number, replacing the one assigned at creation.
    *
-   * Must be unique within the account.
+   * Must be unique within the account; a number already used by another order is
+   * rejected.
    */
   number?: string;
 
@@ -487,7 +558,9 @@ export interface PurchaseOrderDeleteResponse {}
 
 export interface PurchaseOrderCreateParams {
   /**
-   * Body param: Order lines to create.
+   * Body param: Order lines to create with the order.
+   *
+   * Lines can also be added afterwards through the create-line endpoint.
    */
   lines: Array<CreatePurchaseOrderLineInput>;
 
@@ -560,8 +633,11 @@ export interface PurchaseOrderCreateParams {
   carrier_billing_account?: string;
 
   /**
-   * Body param: Which party the carrier bills for freight (`sender` or
-   * `third_party`).
+   * Body param: Which party the carrier bills for freight on this order.
+   *
+   * - `sender`: the carrier bills the party shipping the goods.
+   * - `third_party`: the carrier bills the account given in
+   *   `carrier_billing_account`.
    */
   carrier_billing_type?: string;
 
@@ -579,17 +655,19 @@ export interface PurchaseOrderCreateParams {
   contact_account_user_ids?: Array<string>;
 
   /**
-   * Body param: Order note.
+   * Body param: Free-form note to record on the order.
    */
   note?: string;
 
   /**
-   * Body param: Payment term ID.
+   * Body param: ID of the payment term agreed with the supplier.
    */
   payment_term_id?: string;
 
   /**
    * Body param: Promised delivery date in `YYYY-MM-DD` format.
+   *
+   * Returned as `scheduled_at` on the purchase order resource.
    */
   promised_at?: string;
 
@@ -634,7 +712,7 @@ export interface PurchaseOrderCreateParams {
   ship_to_street_line_2?: string;
 
   /**
-   * Body param: Shipping term ID.
+   * Body param: ID of the shipping term that applies to the order.
    */
   shipping_term_id?: string;
 }
@@ -688,14 +766,15 @@ export interface PurchaseOrderUpdateParams {
   contact_account_user_ids?: Array<string>;
 
   /**
-   * Body param: Order note.
+   * Body param: Free-form note to record on the order.
    */
   note?: string;
 
   /**
-   * Body param: New purchase order number.
+   * Body param: New purchase order number, replacing the one assigned at creation.
    *
-   * Must be unique within the account.
+   * Must be unique within the account; a number already used by another order is
+   * rejected.
    */
   number?: string;
 
@@ -729,7 +808,10 @@ export interface PurchaseOrderListParams {
   cursor?: string;
 
   /**
-   * Filter to orders created on or before this date (inclusive).
+   * Filter to orders created up to this date, in `YYYY-MM-DD` format.
+   *
+   * Compared against the start of the given day, so orders created later that same
+   * day are excluded.
    */
   end_date?: string;
 
@@ -757,7 +839,7 @@ export interface PurchaseOrderListParams {
   q?: string;
 
   /**
-   * Filter to orders created on or after this date (inclusive).
+   * Filter to orders created on or after this date, in `YYYY-MM-DD` format.
    */
   start_date?: string;
 

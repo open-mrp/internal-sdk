@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource users', () => {
   test('retrieve', async () => {
-    const responsePromise = client.identity.users.retrieve('us_0151164dcaea4cbded27b50aae');
+    const responsePromise = client.identity.users.retrieve('us_43irtlt2ajz6');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource users', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.identity.users.update('us_0151164dcaea4cbded27b50aae');
+    const responsePromise = client.identity.users.update('us_43irtlt2ajz6');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,10 +34,10 @@ describe('resource users', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.identity.users.update(
-        'us_0151164dcaea4cbded27b50aae',
+        'us_43irtlt2ajz6',
         {
           email_verified: '2019-12-27T18:11:19.117Z',
-          image_url: 'https://cdn.augno.com/avatars/us_0151164dcaea4cbded27b50aae.jpg',
+          image_url: 'https://cdn.augno.com/avatars/us_43irtlt2ajz6.jpg',
           name: 'John Doe',
         },
         { path: '/_stainless_unknown_path' },

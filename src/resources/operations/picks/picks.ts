@@ -26,7 +26,7 @@ export class Picks extends APIResource {
    * @example
    * ```ts
    * const pick = await client.operations.picks.retrieve(
-   *   'pk_016452192feb7952d8393f0105',
+   *   'pk_6eilj488bq8d',
    * );
    * ```
    */
@@ -41,12 +41,16 @@ export class Picks extends APIResource {
   /**
    * Partially updates a pick's metadata.
    *
+   * Only the fields provided in the request are changed. This endpoint edits the
+   * pick record itself; use the pick and pack actions to change what has actually
+   * been picked.
+   *
    * This endpoint requires the permission: `picks:update`.
    *
    * @example
    * ```ts
    * const pick = await client.operations.picks.update(
-   *   'pk_016452192feb7952d8393f0105',
+   *   'pk_6eilj488bq8d',
    *   { number: 'PCK-2025-0042' },
    * );
    * ```
@@ -61,7 +65,10 @@ export class Picks extends APIResource {
   }
 
   /**
-   * Returns a paginated list of picks.
+   * Returns a paginated list of picks, newest first.
+   *
+   * The `q` search term matches the pick number, the sales order number, the
+   * customer PO number, and the customer's name or number.
    *
    * This endpoint requires the permissions: `picks:read`, `customers:read`,
    * `suppliers:read`.
@@ -76,10 +83,12 @@ export class Picks extends APIResource {
   }
 
   /**
-   * Returns the shipment numbers associated with a pick.
+   * Returns the shipment numbers associated with a pick, oldest first.
    *
    * Shipments are matched through the pick's sales order, so the list covers every
-   * shipment created for that order.
+   * shipment created for that order — each partial pack of the pick adds another
+   * one. Only the numbers are returned; retrieve the shipment to get its full
+   * detail.
    *
    * This endpoint requires the permission: `picks:read`.
    *
@@ -87,7 +96,7 @@ export class Picks extends APIResource {
    * ```ts
    * const pickShipmentsResponse =
    *   await client.operations.picks.retrieveShipments(
-   *     'pk_016452192feb7952d8393f0105',
+   *     'pk_6eilj488bq8d',
    *   );
    * ```
    */
@@ -101,7 +110,8 @@ export class Picks extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPick {
   /**
@@ -115,13 +125,19 @@ export interface ListPick {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * PickShipmentsResponse is the result of getting shipments for a pick.
+ * The shipment numbers for the sales order a pick belongs to.
  */
 export interface PickShipmentsResponse {
   /**
@@ -135,24 +151,28 @@ export interface PickShipmentsResponse {
   object: 'pick_shipments_response';
 
   /**
-   * Shipment numbers associated with the pick.
+   * Shipment numbers associated with the pick, oldest first.
    */
   shipment_numbers: Array<string>;
 }
 
 /**
- * UpdatePickRequest is the request to partially update a pick's metadata.
+ * Request to partially update a pick's metadata.
  */
 export interface UpdatePickRequest {
   /**
    * Timestamp when the pick was finished, in RFC 3339 format.
    *
-   * Pass an empty string to clear the value and reopen the pick.
+   * Setting it closes the pick out even if lines are still unpacked; pass an empty
+   * string to clear it and reopen the pick.
    */
   finished_at?: string;
 
   /**
    * New number to assign to the pick.
+   *
+   * Maximum 255 characters. Renaming a pick does not rename the sales order it was
+   * created from.
    */
   number?: string;
 }
@@ -175,12 +195,16 @@ export interface PickUpdateParams {
   /**
    * Body param: Timestamp when the pick was finished, in RFC 3339 format.
    *
-   * Pass an empty string to clear the value and reopen the pick.
+   * Setting it closes the pick out even if lines are still unpacked; pass an empty
+   * string to clear it and reopen the pick.
    */
   finished_at?: string;
 
   /**
    * Body param: New number to assign to the pick.
+   *
+   * Maximum 255 characters. Renaming a pick does not rename the sales order it was
+   * created from.
    */
   number?: string;
 }
@@ -196,7 +220,10 @@ export interface PickListParams {
   cursor?: string;
 
   /**
-   * Filter by customer group IDs.
+   * Filter by customer type group IDs.
+   *
+   * Matches picks whose customer's type group — the account group returned in the
+   * customer's `type` field — is one of the given groups.
    */
   customer_group_ids?: Array<string>;
 
@@ -207,6 +234,8 @@ export interface PickListParams {
 
   /**
    * Filter by department IDs.
+   *
+   * Matches picks assigned to any of the given departments.
    */
   department_ids?: Array<string>;
 
@@ -249,8 +278,8 @@ export interface PickListParams {
   /**
    * Filter by pick status.
    *
-   * - `open`: picks still in progress (not yet finished).
-   * - `closed`: picks that have been finished.
+   * Pass `open` for picks that have not been finished, or `closed` for picks that
+   * have.
    */
   status?: string;
 }

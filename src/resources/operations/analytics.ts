@@ -11,8 +11,13 @@ import { RequestOptions } from '../../internal/request-options';
  */
 export class Analytics extends APIResource {
   /**
-   * Returns aggregated quantities of open (unclosed) batches, grouped by department,
-   * item, and scanning station.
+   * Returns the work in progress currently sitting on the production floor, grouped
+   * by department, item, and scanning station.
+   *
+   * Only batches that have been scanned at a scanning station and are not yet closed
+   * are counted, and each batch contributes its quantity less whatever has already
+   * moved downstream, so the totals show what is still left to work on. Each result
+   * covers one item at one scanning station.
    *
    * This endpoint requires the permission: `batches:read`.
    *
@@ -20,8 +25,8 @@ export class Analytics extends APIResource {
    * ```ts
    * const listOpenBatchSummary =
    *   await client.operations.analytics.updateOpenBatches({
-   *     item_ids: ['it_0131e386ac683e8c29a71f6f1f'],
-   *     product_line_ids: ['pdln_01996357326a0d3f7b129542ea'],
+   *     item_ids: ['it_pej07ckhvu62'],
+   *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
    *   });
    * ```
    */
@@ -34,7 +39,8 @@ export class Analytics extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListOpenBatchSummary {
   /**
@@ -48,7 +54,13 @@ export interface ListOpenBatchSummary {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }

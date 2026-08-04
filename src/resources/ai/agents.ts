@@ -12,10 +12,10 @@ import { path } from '../../internal/utils/path';
  */
 export class Agents extends APIResource {
   /**
-   * Creates a custom agent definition with optional tool configuration.
+   * Creates a custom agent for your account.
    *
-   * The new agent has `definition_type` `custom` and is immediately `active` for the
-   * account.
+   * The new agent is a `custom` definition and is immediately `active`, so it can
+   * start running as soon as it has a role.
    *
    * This endpoint requires the permission: `agents:create`.
    *
@@ -35,7 +35,7 @@ export class Agents extends APIResource {
    *   trigger_type: 'event',
    *   description:
    *     'Monitors inventory levels and creates restock alerts.',
-   *   role_id: 'rl_01c16d2eb637c0d1f3a372937c',
+   *   role_id: 'rl_3xknmfqflhvb',
    *   tools: [
    *     {
    *       tool: 'read_doc',
@@ -52,14 +52,18 @@ export class Agents extends APIResource {
   }
 
   /**
-   * Returns an agent definition by ID.
+   * Retrieves a single agent by ID.
+   *
+   * Resolves both the `system` agents Augno provides and the `custom` agents in your
+   * account; the `status` reflects whether the agent is enabled for your account
+   * specifically.
    *
    * This endpoint requires the permission: `agents:read`.
    *
    * @example
    * ```ts
    * const agentDefinition = await client.ai.agents.retrieve(
-   *   'agdf_01b9ef28feb99e6954201aca63',
+   *   'agdf_ah7tkyfxk8jl',
    * );
    * ```
    */
@@ -72,17 +76,18 @@ export class Agents extends APIResource {
   }
 
   /**
-   * Partially updates a custom agent definition.
+   * Updates a custom agent.
    *
-   * Only the fields provided in the request are changed. System agents cannot be
-   * modified.
+   * Only the fields provided in the request are changed. Augno's `system` agents
+   * cannot be edited — the only thing you can change about them is whether they are
+   * enabled for your account, with the Update Agent Status endpoint.
    *
    * This endpoint requires the permission: `agents:update`.
    *
    * @example
    * ```ts
    * const agentDefinition = await client.ai.agents.update(
-   *   'agdf_01b9ef28feb99e6954201aca63',
+   *   'agdf_ah7tkyfxk8jl',
    *   { name: 'Inventory Monitor' },
    * );
    * ```
@@ -97,7 +102,11 @@ export class Agents extends APIResource {
   }
 
   /**
-   * Returns a paginated list of agent definitions for the current account.
+   * Lists the agents available to your account, newest first.
+   *
+   * Covers both the `system` agents Augno provides to every account and the `custom`
+   * agents created in yours. Deleted agents are never returned. The `q` parameter
+   * matches an agent's name, slug, description, or ID.
    *
    * This endpoint requires the permission: `agents:read`.
    *
@@ -114,17 +123,19 @@ export class Agents extends APIResource {
   }
 
   /**
-   * Deletes a custom agent definition.
+   * Deletes a custom agent.
    *
-   * The agent is soft-deleted and can no longer be run or modified. System agents
-   * cannot be deleted.
+   * The agent is withdrawn from the API: it stops appearing in listings, no longer
+   * resolves by ID, and can no longer be run or modified. Runs it already produced
+   * are kept. Augno's `system` agents cannot be deleted — disable one for your
+   * account with the Update Agent Status endpoint instead.
    *
    * This endpoint requires the permission: `agents:delete`.
    *
    * @example
    * ```ts
    * const agent = await client.ai.agents.delete(
-   *   'agdf_01b9ef28feb99e6954201aca63',
+   *   'agdf_ah7tkyfxk8jl',
    * );
    * ```
    */
@@ -133,18 +144,19 @@ export class Agents extends APIResource {
   }
 
   /**
-   * Enables or disables an agent for the current account.
+   * Enables or disables an agent for your account.
    *
-   * Sets the account-level status without modifying the underlying agent definition,
-   * so it works for both `system` and `custom` agents. Returns the updated agent
-   * definition.
+   * Activation is per-account, so this works for the `system` agents Augno shares
+   * across accounts as well as your own `custom` agents: disabling one here leaves
+   * the underlying agent untouched for everyone else. Triggering an inactive agent
+   * returns a validation error.
    *
    * This endpoint requires the permission: `agents:update`.
    *
    * @example
    * ```ts
    * const agentDefinition = await client.ai.agents.updateStatus(
-   *   'agdf_01b9ef28feb99e6954201aca63',
+   *   'agdf_ah7tkyfxk8jl',
    *   { status: 'active' },
    * );
    * ```
@@ -204,7 +216,7 @@ export interface AgentDefinition {
   description: string | null;
 
   /**
-   * Whether the current user can edit this agent definition.
+   * Whether this agent definition can be edited.
    *
    * Always `read_only` for `system` definitions.
    */
@@ -228,6 +240,8 @@ export interface AgentDefinition {
 
   /**
    * URL-friendly identifier for the agent.
+   *
+   * Unique within the account.
    */
   slug: string;
 
@@ -235,13 +249,14 @@ export interface AgentDefinition {
    * Whether this agent is enabled for the current account.
    *
    * Activation is per-account: a `system` agent shared across accounts can be
-   * `active` for one account and `inactive` for another. An `inactive` agent does
-   * not run.
+   * `active` for one account and `inactive` for another. An `inactive` agent cannot
+   * be triggered.
    */
   status: 'active' | 'inactive';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   tools: ListAgentDefinitionTool | null;
 
@@ -295,12 +310,16 @@ export interface AgentDefinitionConfig {
   object: 'agent_definition_config';
 
   /**
-   * System prompt / instructions for the agent.
+   * Standing instructions that define the agent's role and how it should behave on
+   * every run.
    */
   system_prompt: string | null;
 
   /**
    * LLM sampling temperature between 0 and 1.
+   *
+   * Lower values make the agent's output more repeatable and literal; higher values
+   * make it more varied.
    */
   temperature: number | null;
 
@@ -308,16 +327,23 @@ export interface AgentDefinitionConfig {
    * Intelligence and cost tier for the agent's reasoning.
    *
    * Selects how capable and expensive a model the agent uses without pinning a
-   * specific model; higher tiers reason better but cost more. Leaving it unset uses
-   * the default tier.
+   * specific model; higher tiers reason better but cost more. Each tier resolves to
+   * an ordered chain of equivalent models, so a run automatically fails over to
+   * another provider's model if the preferred one is unavailable.
    *
    * - `frontier`: the most capable tier, for multi-step planning, ambiguous agent
    *   work, and hard coding or architecture tasks.
-   * - `high`: the default tier, for normal planning, code edits, synthesis, and
-   *   customer-facing reasoning.
+   * - `high`: for normal planning, code edits, synthesis, and customer-facing
+   *   reasoning.
    * - `balanced`: for research, summarization, classification, structured
    *   extraction, and light tool use.
    * - `cheap`: for simple transforms, validation, formatting, and routing.
+   * - `legacy`: older-generation models kept for compatibility and regression
+   *   comparison; avoid unless you specifically need them.
+   *
+   * Leaving the tier unset picks one from how the agent is triggered: chat and
+   * manual runs use `high`, while scheduled and event-driven runs use `balanced` so
+   * background work stays cheap.
    */
   tier: 'frontier' | 'high' | 'balanced' | 'cheap' | 'legacy' | null;
 
@@ -362,7 +388,8 @@ export interface AgentDefinitionTool {
    *
    * When `required`, the run pauses in the `awaiting_approval` status each time the
    * agent invokes this tool; approve or allow the tool via the Continue Agent Run
-   * endpoint to proceed.
+   * endpoint to proceed. A tool whose `mutating` flag is true still pauses for
+   * approval even when this is `not_required`.
    */
   review_requirement: 'not_required' | 'required';
 
@@ -372,7 +399,11 @@ export interface AgentDefinitionTool {
   sort_order: number;
 
   /**
-   * Platform tool that can be attached to agents.
+   * A capability an agent can be granted, allowing it to take that action during a
+   * run.
+   *
+   * The catalog of available tools is the same for every account; granting one to an
+   * agent is what makes it callable.
    */
   tool: AIAPI.AvailableTool;
 }
@@ -401,27 +432,37 @@ export interface ConfigInput {
   endpoint_tool_slugs?: Array<string>;
 
   /**
-   * System prompt / instructions for the agent.
+   * Instructions that define the agent's role and how it should behave.
+   *
+   * Sent to the model on every turn of a run, alongside the platform guidance Augno
+   * adds automatically.
    */
   system_prompt?: string;
 
   /**
-   * LLM sampling temperature between 0 and 1.
+   * How much randomness the model uses when generating text.
+   *
+   * Lower values make the agent's output more repeatable; higher values make it more
+   * varied.
    */
   temperature?: number;
 
   /**
-   * Intelligence/cost tier for the agent's reasoning.
+   * Intelligence and cost tier for the agent's reasoning.
    *
-   * Selects how capable (and how expensive) a model the agent uses, without pinning
-   * a specific model:
+   * Selects how capable (and how expensive) a model the agent uses without pinning a
+   * specific model, so the agent keeps working as the underlying model catalog
+   * changes.
    *
-   * - `frontier`: the most capable and most expensive.
-   * - `high`: for normal planning, synthesis, customer-facing reasoning.
-   * - `balanced`: for research, summarization, classification, structured
-   *   extraction, and light tool use.
-   * - `cheap`: for simple transforms, validation, formatting, keyword lookup, and
+   * - `frontier`: the most capable and most expensive; multi-step planning,
+   *   ambiguous work, tool-heavy workflows.
+   * - `high`: normal planning, synthesis, and customer-facing reasoning.
+   * - `balanced`: research, summarization, classification, structured extraction,
+   *   and light tool use.
+   * - `cheap`: simple transforms, validation, formatting, keyword lookup, and
    *   routing.
+   * - `legacy`: older models kept for compatibility and regression comparison; avoid
+   *   unless you specifically need them.
    */
   tier?: 'frontier' | 'high' | 'balanced' | 'cheap' | 'legacy';
 
@@ -432,7 +473,7 @@ export interface ConfigInput {
    *
    * - `scheduled`: `cron_schedule` is required.
    * - `event`: at least one entry in `event_filters` is required.
-   * - `manual`: no trigger configuration is needed.
+   * - `manual` and `chat`: no trigger configuration is needed.
    */
   trigger_config?: TriggerConfigInput;
 }
@@ -459,6 +500,8 @@ export interface CreateAgentRequest {
 
   /**
    * URL-friendly identifier for the agent.
+   *
+   * Must be unique within your account.
    */
   slug: string;
 
@@ -470,6 +513,11 @@ export interface CreateAgentRequest {
    * - `event`: runs in response to platform events; at least one
    *   `config.trigger_config.event_filters` entry is required.
    * - `manual`: runs only when explicitly invoked.
+   * - `chat`: runs when a user messages the agent in a conversation, and the agent's
+   *   reply is posted back into that conversation.
+   *
+   * Whatever the trigger type, a run can always be started by hand with the Trigger
+   * Agent Run endpoint.
    */
   trigger_type: 'scheduled' | 'manual' | 'event' | 'chat';
 
@@ -480,17 +528,22 @@ export interface CreateAgentRequest {
 
   /**
    * ID of the role that defines the permissions the agent operates with.
+   *
+   * Every API call the agent makes is authorized against this role, so it bounds
+   * what the agent can see and change. An agent created without a role cannot
+   * execute — its runs fail immediately — so attach one before triggering it.
    */
   role_id?: string;
 
   /**
-   * Tools to attach to the agent.
+   * Built-in tools to attach to the agent.
    */
   tools?: Array<ToolInput>;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAgentDefinition {
   /**
@@ -504,13 +557,20 @@ export interface ListAgentDefinition {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAgentDefinitionTool {
   /**
@@ -524,7 +584,13 @@ export interface ListAgentDefinitionTool {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -534,10 +600,12 @@ export interface ListAgentDefinitionTool {
  */
 export interface ToolInput {
   /**
-   * The tool to attach.
+   * The built-in tool to attach.
    *
-   * Available tools can be discovered with the List Tools endpoint
-   * (`GET /v1/ai/tools`).
+   * Only Augno's built-in tools are attached here. Access to API-endpoint tools
+   * (creating a customer, listing orders, and so on) is granted separately through
+   * `config.endpoint_tool_slugs`. The List Tools endpoint (`GET /v1/ai/tools`)
+   * returns both kinds, with API-endpoint tools in the `api_endpoint` category.
    */
   tool: 'create_artifact' | 'read_doc' | 'fetch_url' | 'send_email' | 'draft_reply';
 
@@ -550,6 +618,11 @@ export interface ToolInput {
 
   /**
    * Whether actions from this tool require human review before they execute.
+   *
+   * When review is required, a call to this tool pauses the run in
+   * `awaiting_approval` and records an action in `pending_review` until someone
+   * approves or rejects it through the Continue Agent Run endpoint. Approvals are
+   * one-time, so a later call to the same tool pauses again.
    */
   require_review?: boolean;
 
@@ -598,7 +671,7 @@ export interface TriggerConfig {
  *
  * - `scheduled`: `cron_schedule` is required.
  * - `event`: at least one entry in `event_filters` is required.
- * - `manual`: no trigger configuration is needed.
+ * - `manual` and `chat`: no trigger configuration is needed.
  */
 export interface TriggerConfigInput {
   /**
@@ -648,7 +721,8 @@ export interface UpdateAgentRequest {
   /**
    * ID of the role that defines the permissions the agent operates with.
    *
-   * Send `null` to detach the role; omit to leave it unchanged.
+   * Send `null` to detach the role; omit to leave it unchanged. An agent with no
+   * role cannot execute, so detaching the role makes its runs fail immediately.
    */
   role_id?: string | null;
 
@@ -658,7 +732,7 @@ export interface UpdateAgentRequest {
   slug?: string;
 
   /**
-   * Tools to attach to the agent.
+   * Built-in tools to attach to the agent.
    *
    * Replaces the existing tool set when provided.
    */
@@ -679,11 +753,9 @@ export interface UpdateAgentRequest {
  */
 export interface UpdateAgentStatusRequest {
   /**
-   * Account-level status to set: `active` to enable the agent for this account,
-   * `inactive` to disable it.
+   * Account-level status to set for the agent.
    *
-   * This only affects activation for the current account and leaves the shared agent
-   * definition unchanged.
+   * Either `active` or `inactive`.
    */
   status: string;
 }
@@ -709,6 +781,8 @@ export interface AgentCreateParams {
 
   /**
    * Body param: URL-friendly identifier for the agent.
+   *
+   * Must be unique within your account.
    */
   slug: string;
 
@@ -720,6 +794,11 @@ export interface AgentCreateParams {
    * - `event`: runs in response to platform events; at least one
    *   `config.trigger_config.event_filters` entry is required.
    * - `manual`: runs only when explicitly invoked.
+   * - `chat`: runs when a user messages the agent in a conversation, and the agent's
+   *   reply is posted back into that conversation.
+   *
+   * Whatever the trigger type, a run can always be started by hand with the Trigger
+   * Agent Run endpoint.
    */
   trigger_type: 'scheduled' | 'manual' | 'event' | 'chat';
 
@@ -736,11 +815,15 @@ export interface AgentCreateParams {
 
   /**
    * Body param: ID of the role that defines the permissions the agent operates with.
+   *
+   * Every API call the agent makes is authorized against this role, so it bounds
+   * what the agent can see and change. An agent created without a role cannot
+   * execute — its runs fail immediately — so attach one before triggering it.
    */
   role_id?: string;
 
   /**
-   * Body param: Tools to attach to the agent.
+   * Body param: Built-in tools to attach to the agent.
    */
   tools?: Array<ToolInput>;
 }
@@ -786,7 +869,8 @@ export interface AgentUpdateParams {
   /**
    * Body param: ID of the role that defines the permissions the agent operates with.
    *
-   * Send `null` to detach the role; omit to leave it unchanged.
+   * Send `null` to detach the role; omit to leave it unchanged. An agent with no
+   * role cannot execute, so detaching the role makes its runs fail immediately.
    */
   role_id?: string | null;
 
@@ -796,7 +880,7 @@ export interface AgentUpdateParams {
   slug?: string;
 
   /**
-   * Body param: Tools to attach to the agent.
+   * Body param: Built-in tools to attach to the agent.
    *
    * Replaces the existing tool set when provided.
    */
@@ -848,8 +932,7 @@ export interface AgentListParams {
   /**
    * Restricts results to agents with one of the given account-level statuses.
    *
-   * Omit to return agents of every status; repeat the parameter to match more than
-   * one status.
+   * `inactive` also matches agents that have never been enabled for your account.
    */
   statuses?: Array<'active' | 'inactive'>;
 
@@ -861,11 +944,9 @@ export interface AgentListParams {
 
 export interface AgentUpdateStatusParams {
   /**
-   * Body param: Account-level status to set: `active` to enable the agent for this
-   * account, `inactive` to disable it.
+   * Body param: Account-level status to set for the agent.
    *
-   * This only affects activation for the current account and leaves the shared agent
-   * definition unchanged.
+   * Either `active` or `inactive`.
    */
   status: string;
 

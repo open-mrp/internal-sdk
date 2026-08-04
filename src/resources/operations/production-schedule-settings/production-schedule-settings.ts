@@ -26,10 +26,15 @@ export class ProductionScheduleSettings extends APIResource {
    * Settings are replaced wholesale rather than patched, because they are read as
    * one coherent set: a horizon that no longer matches the frozen window, or a
    * capacity headroom that no longer matches the shift pattern, would produce a plan
-   * nobody intended.
+   * nobody intended. Send the full set on every call — a value the request leaves
+   * out is never carried over from what was stored.
    *
-   * Existing schedule versions are unaffected — each one snapshots the assumptions
-   * it was solved under, so changing settings changes future plans only.
+   * The set is validated together, so a frozen window longer than the horizon, a
+   * minimum changeover above the maximum, or an active cadence with no valid
+   * schedule expression is rejected as a whole.
+   *
+   * Existing schedule versions are unaffected — each one records the assumptions it
+   * was solved under, so changing settings changes future plans only.
    *
    * This endpoint requires the permission: `production_schedules:update`.
    *
@@ -77,9 +82,13 @@ export class ProductionScheduleSettings extends APIResource {
   /**
    * Returns the planning assumptions production schedules are solved against.
    *
-   * Always fully populated: an account that has never saved settings gets the
-   * solver's own defaults rather than nulls, so a caller never has to know which
-   * values would otherwise be assumed. `settings_status` distinguishes the two.
+   * The whole set is always returned. An account that has never saved settings reads
+   * back the values the solver would apply anyway, so a caller never has to know
+   * which assumptions are in play; `settings_status` says whether the values were
+   * saved on the account or are those defaults.
+   *
+   * Per-machine, per-department and per-step overrides of these assumptions are read
+   * separately.
    *
    * This endpoint requires the permission: `production_schedules:read`.
    *
@@ -97,46 +106,69 @@ export class ProductionScheduleSettings extends APIResource {
 /**
  * The planning assumptions a production schedule is solved against.
  *
- * Every value here was a hardcoded constant in the scheduling script this feature
- * replaced. The resource is always fully populated: an account that has never
- * saved settings gets the solver's own defaults, so a caller never has to know
- * which values would otherwise be assumed. `settings_status` says which of the two
- * it is looking at.
+ * The whole set is always returned. An account that has never saved settings reads
+ * back the values the solver would apply anyway, so a caller never has to know
+ * which assumptions are in play; `settings_status` says whether the values were
+ * saved on the account or are those defaults.
  */
 export interface ProductionScheduleSettings {
   /**
-   * Whether a generated version is published automatically.
+   * Whether a version produced by the cadence is published automatically.
+   *
+   * While active, a cadence run publishes as soon as it solves, committing its
+   * frozen weeks without anyone reviewing the plan. Otherwise the run leaves a draft
+   * for a planner to publish by hand. Versions generated on request are never
+   * published automatically.
    */
   auto_publish_status: 'active' | 'inactive';
 
   /**
-   * Whether schedules are generated on a timer.
+   * Whether schedules are generated automatically on a recurring cadence.
+   *
+   * While active, each due tick queues a new schedule version; a generation cron
+   * expression is required for the cadence to be saved.
    */
   cadence_status: 'active' | 'inactive';
 
   /**
-   * Share of machine time a plan may fill. The remainder absorbs changeovers, which
-   * are not scheduled as explicit blocks.
+   * Share of machine time a plan may fill.
+   *
+   * Shifts, hours and work days give a machine's raw weekly hours; this trims them
+   * to what may actually be planned. The remainder absorbs changeovers, which are
+   * not scheduled as explicit blocks, so a value of 1 produces a plan that leaves no
+   * time to set anything up.
    */
   capacity_headroom_pct: number;
 
   /**
-   * Typical changeover duration, used to calibrate the changeover model.
+   * Typical changeover duration.
+   *
+   * Changeover time is modelled as rising with the number of new inputs a product
+   * introduces, between the minimum and maximum below. The slope is calibrated from
+   * production history so the model reproduces this average across the transitions
+   * actually observed, which is why the value belongs at the changeover time the
+   * floor typically reports rather than at a worst case.
    */
   changeover_avg_minutes: number;
 
   /**
    * Hourly labor rate charged to a changeover.
+   *
+   * This is a dedicated technician rate rather than an allocated production rate,
+   * because one person works a single machine through a changeover. Together with
+   * the typical changeover duration it prices the setup cost that decides economic
+   * campaign sizes. The constraint department's own labor rate takes precedence when
+   * it has one, leaving this as the fallback.
    */
   changeover_labor_rate: number;
 
   /**
-   * Longest plausible changeover.
+   * Longest plausible changeover, and the ceiling of the changeover model.
    */
   changeover_max_minutes: number;
 
   /**
-   * Shortest plausible changeover.
+   * Shortest plausible changeover, and the floor of the changeover model.
    */
   changeover_min_minutes: number;
 
@@ -151,62 +183,99 @@ export interface ProductionScheduleSettings {
   created_at: string;
 
   /**
-   * Default weeks of lead time at the constraint when an item has no measurement.
+   * Weeks of lead time to assume at the constraint for an item with no measured
+   * history.
+   *
+   * An item's own lead time, measured from production history, is used instead
+   * whenever one can be observed.
    */
   default_constraint_lead_time_weeks: number;
 
   /**
    * Units in a default production lot.
+   *
+   * The last resort in the lot-size chain: a lot set on the item, on its product
+   * line, or on the finished goods an intermediate item becomes all take precedence.
    */
   default_lot_units: number;
 
   /**
-   * How demand is derived.
+   * How the demand a plan is solved against is derived from history.
+   *
+   * - `trailing_12`: the last twelve complete months of orders, spread evenly across
+   *   the coming year.
+   * - `seasonal_ema`: a seasonally adjusted, exponentially smoothed projection that
+   *   weights recent months more heavily. Falls back to the trailing baseline for an
+   *   item with no history.
+   *
+   * Demand overrides are applied on top of whichever baseline is chosen.
    */
   demand_basis: 'trailing_12' | 'seasonal_ema';
 
   /**
-   * Months of order history the demand baseline is drawn from.
+   * Months of production history the solver measures run rates, changeover behavior
+   * and lead times from.
    */
   demand_window_months: number;
 
   /**
-   * Weeks between finishing at the constraint and being sellable.
+   * Weeks between coming off the constraint and being sellable.
+   *
+   * Added to the constraint's own lead time when reorder points are set, so a plan
+   * replenishes early enough for a decision made today to become sellable stock.
    */
   finish_lead_time_weeks: number;
 
   /**
-   * Months of history the forecast is fitted to.
+   * Months of order history the demand baseline is drawn from.
    */
   forecast_history_months: number;
 
   /**
    * Months the forecast projects forward.
+   *
+   * Only applies to the `seasonal_ema` basis. A projection of anything other than
+   * twelve months is scaled to an annual rate, so the plan always reasons about a
+   * year of demand.
    */
   forecast_months: number;
 
   /**
-   * Z-score applied to forecast variability.
+   * Z-score used for the confidence interval around the seasonal demand forecast.
+   *
+   * The plan is solved against the central forecast, so this widens or narrows that
+   * interval without changing what gets scheduled.
    */
   forecast_z: number;
 
   /**
-   * How many leading weeks become a commitment when a version is published.
+   * How many leading weeks of the horizon become a commitment when a version is
+   * published.
+   *
+   * Nothing is frozen while a version is still a draft. Once published, changing a
+   * campaign inside the frozen window requires a reason and is recorded against the
+   * plan. Cannot be longer than the planning horizon.
    */
   frozen_weeks: number;
 
   /**
-   * Cron expression driving the generation cadence.
+   * Standard cron expression driving the generation cadence.
    */
   generation_cron: string | null;
 
   /**
    * Timezone the cadence is interpreted in.
+   *
+   * Decides when "every Wednesday at 6am" actually happens. A timezone the platform
+   * does not recognize falls back to UTC.
    */
   generation_timezone: string;
 
   /**
    * Annual cost of holding stock, as a share of item value.
+   *
+   * Weighed against the cost of a changeover when campaigns are sized: a higher rate
+   * favors shorter, more frequent runs.
    */
   holding_rate_pct: number;
 
@@ -217,16 +286,30 @@ export interface ProductionScheduleSettings {
 
   /**
    * When the cadence last fired.
+   *
+   * Stamped when a run is queued rather than when the plan finishes solving, and the
+   * next due time is measured from it.
    */
   last_generated_at: string | null;
 
   /**
-   * How many steps downstream department work is derived for.
+   * How many steps down the production flow a constraint item is traced to the
+   * finished goods it becomes.
+   *
+   * Demand, stock and lot conventions are pooled onto the constraint item from every
+   * finished good the trace reaches, so anything further down the flow than this
+   * contributes nothing to the plan. The limit is also what stops a routing that
+   * loops back on itself from being traced forever.
    */
   max_flow_depth: number;
 
   /**
    * Ceiling on how far ahead any item is built.
+   *
+   * An item is only rebuilt once its projected stock falls below the lower of its
+   * reorder point and this many weeks of demand, so a slow mover whose statistical
+   * reorder point covers months of demand is not topped up ahead of items that are
+   * actually short.
    */
   max_weeks_supply: number;
 
@@ -241,12 +324,16 @@ export interface ProductionScheduleSettings {
   planning_horizon_weeks: number;
 
   /**
-   * Z-score for the service level safety stock targets.
+   * Z-score behind the safety stock targets.
+   *
+   * A higher value buys more cover against demand variability at both the constraint
+   * and the finished goods stage, at the cost of carrying more stock.
    */
   service_level_z: number;
 
   /**
-   * Whether these are the merchant's saved values or the solver's defaults.
+   * Whether the values returned were saved on the account or are the defaults
+   * applied when nothing has been saved.
    */
   settings_status: 'stored' | 'default';
 
@@ -281,92 +368,151 @@ export interface ProductionScheduleSettings {
  */
 export interface UpdateProductionScheduleSettingsRequest {
   /**
-   * Whether a generated version is published automatically.
+   * Whether a version produced by the cadence is published automatically.
+   *
+   * While active, a cadence run publishes as soon as it solves, committing its
+   * frozen weeks without anyone reviewing the plan. Otherwise the run leaves a draft
+   * for a planner to publish by hand. Versions generated on request are never
+   * published automatically.
    */
   auto_publish_status: 'active' | 'inactive';
 
   /**
-   * Whether schedules are generated on a timer.
+   * Whether schedules are generated automatically on a recurring cadence.
+   *
+   * While active, each due tick queues a new schedule version.
    */
   cadence_status: 'active' | 'inactive';
 
   /**
    * Share of machine time a plan may fill.
+   *
+   * Shifts, hours and work days give a machine's raw weekly hours; this trims them
+   * to what may actually be planned. The remainder absorbs changeovers, which are
+   * not scheduled as explicit blocks, so a value of 1 produces a plan that leaves no
+   * time to set anything up.
    */
   capacity_headroom_pct: number;
 
   /**
    * Typical changeover duration.
+   *
+   * Changeover time is modelled as rising with the number of new inputs a product
+   * introduces, between the minimum and maximum below. The slope is calibrated from
+   * production history so the model reproduces this average across the transitions
+   * actually observed; set it to the changeover time the floor typically reports
+   * rather than to a worst case.
    */
   changeover_avg_minutes: number;
 
   /**
    * Hourly labor rate charged to a changeover.
+   *
+   * This should be a dedicated technician rate rather than an allocated production
+   * rate, because one person works a single machine through a changeover. The
+   * constraint department's own labor rate takes precedence when it has one, leaving
+   * this as the fallback.
    */
   changeover_labor_rate: number;
 
   /**
-   * Longest plausible changeover.
+   * Longest plausible changeover, and the ceiling of the changeover model.
    */
   changeover_max_minutes: number;
 
   /**
-   * Shortest plausible changeover.
+   * Shortest plausible changeover, and the floor of the changeover model.
+   *
+   * Cannot exceed the maximum.
    */
   changeover_min_minutes: number;
 
   /**
-   * Default weeks of lead time at the constraint.
+   * Weeks of lead time to assume at the constraint for an item with no measured
+   * history.
+   *
+   * An item's own lead time, measured from production history, is used instead
+   * whenever one can be observed.
    */
   default_constraint_lead_time_weeks: number;
 
   /**
    * Units in a default production lot.
+   *
+   * The last resort in the lot-size chain: a lot set on the item, on its product
+   * line, or on the finished goods an intermediate item becomes all take precedence.
    */
   default_lot_units: number;
 
   /**
-   * How demand is derived.
+   * How the demand a plan is solved against is derived from history.
+   *
+   * - `trailing_12`: the last twelve complete months of orders, spread evenly across
+   *   the coming year.
+   * - `seasonal_ema`: a seasonally adjusted, exponentially smoothed projection that
+   *   weights recent months more heavily. Falls back to the trailing baseline for an
+   *   item with no history.
+   *
+   * Demand overrides are applied on top of whichever baseline is chosen.
    */
   demand_basis: 'trailing_12' | 'seasonal_ema';
 
   /**
-   * Months of order history the demand baseline is drawn from.
+   * Months of production history the solver measures run rates, changeover behavior
+   * and lead times from.
    */
   demand_window_months: number;
 
   /**
-   * Weeks between finishing at the constraint and being sellable.
+   * Weeks between coming off the constraint and being sellable.
    */
   finish_lead_time_weeks: number;
 
   /**
-   * Months of history the forecast is fitted to.
+   * Months of order history the demand baseline is drawn from.
    */
   forecast_history_months: number;
 
   /**
    * Months the forecast projects forward.
+   *
+   * Only applies to the `seasonal_ema` basis. A projection of anything other than
+   * twelve months is scaled to an annual rate, so the plan always reasons about a
+   * year of demand.
    */
   forecast_months: number;
 
   /**
-   * Z-score applied to forecast variability.
+   * Z-score used for the confidence interval around the seasonal demand forecast.
+   *
+   * The plan is solved against the central forecast, so this widens or narrows that
+   * interval without changing what gets scheduled.
    */
   forecast_z: number;
 
   /**
-   * How many leading weeks become a commitment when a version is published.
+   * How many leading weeks of the horizon become a commitment when a version is
+   * published.
+   *
+   * Cannot be longer than the planning horizon. Once a version is published,
+   * changing a campaign inside the frozen window requires a reason and is recorded
+   * against the plan.
    */
   frozen_weeks: number;
 
   /**
    * Timezone the cadence is interpreted in.
+   *
+   * Decides when "every Wednesday at 6am" actually happens. A timezone the platform
+   * does not recognize falls back to UTC.
    */
   generation_timezone: string;
 
   /**
    * Annual cost of holding stock, as a share of item value.
+   *
+   * Weighed against the cost of a changeover when campaigns are sized: a higher rate
+   * favors shorter, more frequent runs.
    */
   holding_rate_pct: number;
 
@@ -376,12 +522,23 @@ export interface UpdateProductionScheduleSettingsRequest {
   hours_per_shift: number;
 
   /**
-   * How many steps downstream department work is derived for.
+   * How many steps down the production flow a constraint item is traced to the
+   * finished goods it becomes.
+   *
+   * Demand, stock and lot conventions are pooled onto the constraint item from every
+   * finished good the trace reaches, so anything further down the flow than this
+   * contributes nothing to the plan. The limit is also what stops a routing that
+   * loops back on itself from being traced forever.
    */
   max_flow_depth: number;
 
   /**
    * Ceiling on how far ahead any item is built.
+   *
+   * An item is only rebuilt once its projected stock falls below the lower of its
+   * reorder point and this many weeks of demand, so a slow mover whose statistical
+   * reorder point covers months of demand is not topped up ahead of items that are
+   * actually short.
    */
   max_weeks_supply: number;
 
@@ -416,105 +573,173 @@ export interface UpdateProductionScheduleSettingsRequest {
   work_days_per_week: number;
 
   /**
-   * ID of the department that sets the pace of the factory. Every machine in it is
-   * planned, and every step downstream responds.
+   * ID of the department that sets the pace of the factory, and the one campaigns
+   * are planned onto.
+   *
+   * Every machine in the department is planned, and the work of downstream
+   * departments is derived from what those machines are scheduled to run. Sending
+   * null, or leaving the field out of a request that otherwise replaces the
+   * settings, both leave the account with no constraint department — and generation
+   * is refused until one is chosen again.
    */
   constraint_department_id?: string | null;
 
   /**
-   * Cron expression driving the generation cadence.
+   * Standard cron expression driving the generation cadence.
+   *
+   * Must be present and parse as a standard cron expression whenever the cadence is
+   * active, otherwise the whole update is rejected.
    */
   generation_cron?: string | null;
 }
 
 export interface ProductionScheduleSettingUpdateParams {
   /**
-   * Whether a generated version is published automatically.
+   * Whether a version produced by the cadence is published automatically.
+   *
+   * While active, a cadence run publishes as soon as it solves, committing its
+   * frozen weeks without anyone reviewing the plan. Otherwise the run leaves a draft
+   * for a planner to publish by hand. Versions generated on request are never
+   * published automatically.
    */
   auto_publish_status: 'active' | 'inactive';
 
   /**
-   * Whether schedules are generated on a timer.
+   * Whether schedules are generated automatically on a recurring cadence.
+   *
+   * While active, each due tick queues a new schedule version.
    */
   cadence_status: 'active' | 'inactive';
 
   /**
    * Share of machine time a plan may fill.
+   *
+   * Shifts, hours and work days give a machine's raw weekly hours; this trims them
+   * to what may actually be planned. The remainder absorbs changeovers, which are
+   * not scheduled as explicit blocks, so a value of 1 produces a plan that leaves no
+   * time to set anything up.
    */
   capacity_headroom_pct: number;
 
   /**
    * Typical changeover duration.
+   *
+   * Changeover time is modelled as rising with the number of new inputs a product
+   * introduces, between the minimum and maximum below. The slope is calibrated from
+   * production history so the model reproduces this average across the transitions
+   * actually observed; set it to the changeover time the floor typically reports
+   * rather than to a worst case.
    */
   changeover_avg_minutes: number;
 
   /**
    * Hourly labor rate charged to a changeover.
+   *
+   * This should be a dedicated technician rate rather than an allocated production
+   * rate, because one person works a single machine through a changeover. The
+   * constraint department's own labor rate takes precedence when it has one, leaving
+   * this as the fallback.
    */
   changeover_labor_rate: number;
 
   /**
-   * Longest plausible changeover.
+   * Longest plausible changeover, and the ceiling of the changeover model.
    */
   changeover_max_minutes: number;
 
   /**
-   * Shortest plausible changeover.
+   * Shortest plausible changeover, and the floor of the changeover model.
+   *
+   * Cannot exceed the maximum.
    */
   changeover_min_minutes: number;
 
   /**
-   * Default weeks of lead time at the constraint.
+   * Weeks of lead time to assume at the constraint for an item with no measured
+   * history.
+   *
+   * An item's own lead time, measured from production history, is used instead
+   * whenever one can be observed.
    */
   default_constraint_lead_time_weeks: number;
 
   /**
    * Units in a default production lot.
+   *
+   * The last resort in the lot-size chain: a lot set on the item, on its product
+   * line, or on the finished goods an intermediate item becomes all take precedence.
    */
   default_lot_units: number;
 
   /**
-   * How demand is derived.
+   * How the demand a plan is solved against is derived from history.
+   *
+   * - `trailing_12`: the last twelve complete months of orders, spread evenly across
+   *   the coming year.
+   * - `seasonal_ema`: a seasonally adjusted, exponentially smoothed projection that
+   *   weights recent months more heavily. Falls back to the trailing baseline for an
+   *   item with no history.
+   *
+   * Demand overrides are applied on top of whichever baseline is chosen.
    */
   demand_basis: 'trailing_12' | 'seasonal_ema';
 
   /**
-   * Months of order history the demand baseline is drawn from.
+   * Months of production history the solver measures run rates, changeover behavior
+   * and lead times from.
    */
   demand_window_months: number;
 
   /**
-   * Weeks between finishing at the constraint and being sellable.
+   * Weeks between coming off the constraint and being sellable.
    */
   finish_lead_time_weeks: number;
 
   /**
-   * Months of history the forecast is fitted to.
+   * Months of order history the demand baseline is drawn from.
    */
   forecast_history_months: number;
 
   /**
    * Months the forecast projects forward.
+   *
+   * Only applies to the `seasonal_ema` basis. A projection of anything other than
+   * twelve months is scaled to an annual rate, so the plan always reasons about a
+   * year of demand.
    */
   forecast_months: number;
 
   /**
-   * Z-score applied to forecast variability.
+   * Z-score used for the confidence interval around the seasonal demand forecast.
+   *
+   * The plan is solved against the central forecast, so this widens or narrows that
+   * interval without changing what gets scheduled.
    */
   forecast_z: number;
 
   /**
-   * How many leading weeks become a commitment when a version is published.
+   * How many leading weeks of the horizon become a commitment when a version is
+   * published.
+   *
+   * Cannot be longer than the planning horizon. Once a version is published,
+   * changing a campaign inside the frozen window requires a reason and is recorded
+   * against the plan.
    */
   frozen_weeks: number;
 
   /**
    * Timezone the cadence is interpreted in.
+   *
+   * Decides when "every Wednesday at 6am" actually happens. A timezone the platform
+   * does not recognize falls back to UTC.
    */
   generation_timezone: string;
 
   /**
    * Annual cost of holding stock, as a share of item value.
+   *
+   * Weighed against the cost of a changeover when campaigns are sized: a higher rate
+   * favors shorter, more frequent runs.
    */
   holding_rate_pct: number;
 
@@ -524,12 +749,23 @@ export interface ProductionScheduleSettingUpdateParams {
   hours_per_shift: number;
 
   /**
-   * How many steps downstream department work is derived for.
+   * How many steps down the production flow a constraint item is traced to the
+   * finished goods it becomes.
+   *
+   * Demand, stock and lot conventions are pooled onto the constraint item from every
+   * finished good the trace reaches, so anything further down the flow than this
+   * contributes nothing to the plan. The limit is also what stops a routing that
+   * loops back on itself from being traced forever.
    */
   max_flow_depth: number;
 
   /**
    * Ceiling on how far ahead any item is built.
+   *
+   * An item is only rebuilt once its projected stock falls below the lower of its
+   * reorder point and this many weeks of demand, so a slow mover whose statistical
+   * reorder point covers months of demand is not topped up ahead of items that are
+   * actually short.
    */
   max_weeks_supply: number;
 
@@ -564,13 +800,22 @@ export interface ProductionScheduleSettingUpdateParams {
   work_days_per_week: number;
 
   /**
-   * ID of the department that sets the pace of the factory. Every machine in it is
-   * planned, and every step downstream responds.
+   * ID of the department that sets the pace of the factory, and the one campaigns
+   * are planned onto.
+   *
+   * Every machine in the department is planned, and the work of downstream
+   * departments is derived from what those machines are scheduled to run. Sending
+   * null, or leaving the field out of a request that otherwise replaces the
+   * settings, both leave the account with no constraint department — and generation
+   * is refused until one is chosen again.
    */
   constraint_department_id?: string | null;
 
   /**
-   * Cron expression driving the generation cadence.
+   * Standard cron expression driving the generation cadence.
+   *
+   * Must be present and parse as a standard cron expression whenever the cadence is
+   * active, otherwise the whole update is rejected.
    */
   generation_cron?: string | null;
 }

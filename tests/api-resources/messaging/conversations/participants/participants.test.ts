@@ -9,10 +9,9 @@ const client = new Augno({
 
 describe('resource participants', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.messaging.conversations.participants.create(
-      'cv_01h9z8q1w2e3r4t5y6u7i8cv',
-      { account_user_id: 'acus_01ea9983ddb41dacc44ecf997c' },
-    );
+    const responsePromise = client.messaging.conversations.participants.create('cv_w35z4ck68yq7', {
+      account_user_id: 'acus_e5zu8bde0z3h',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,18 +22,17 @@ describe('resource participants', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.messaging.conversations.participants.create('cv_01h9z8q1w2e3r4t5y6u7i8cv', {
-      account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
+    const response = await client.messaging.conversations.participants.create('cv_w35z4ck68yq7', {
+      account_user_id: 'acus_e5zu8bde0z3h',
       include: ['participants'],
       role: 'member',
     });
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.messaging.conversations.participants.delete(
-      'cvpt_01h9z8q1w2e3r4t5y6u7cvpt',
-      { id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv' },
-    );
+    const responsePromise = client.messaging.conversations.participants.delete('cvpt_be2h3ul14cts', {
+      id: 'cv_w35z4ck68yq7',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,9 +43,8 @@ describe('resource participants', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.messaging.conversations.participants.delete(
-      'cvpt_01h9z8q1w2e3r4t5y6u7cvpt',
-      { id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv' },
-    );
+    const response = await client.messaging.conversations.participants.delete('cvpt_be2h3ul14cts', {
+      id: 'cv_w35z4ck68yq7',
+    });
   });
 });

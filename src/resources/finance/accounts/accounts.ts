@@ -19,8 +19,13 @@ export class Accounts extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Returns a paginated list of payment-oriented invoices for a specific customer
-   * account, including invoices billed to its child accounts.
+   * Returns a paginated list of a customer's open invoices, newest first, in the
+   * shape used to apply a payment.
+   *
+   * Only invoices that still owe a balance are returned; invoices marked paid in
+   * full or overpaid are omitted. Invoices billed to the customer's child accounts
+   * are included alongside its own. Each invoice carries the payments already
+   * allocated to it, so the remaining balance can be worked out client-side.
    *
    * This endpoint requires the permissions: `invoices:read`, `customers:read`,
    * `suppliers:read`.
@@ -40,8 +45,11 @@ export class Accounts extends APIResource {
   }
 
   /**
-   * Returns a paginated list of transactions for a customer account, optionally
-   * including child account transactions.
+   * Returns a paginated list of the transactions recorded against one customer
+   * account, newest first.
+   *
+   * Transactions recorded against that customer's child accounts are included by
+   * default. Free-text search matches the transaction number and note.
    *
    * This endpoint requires the permission: `transactions:read`.
    *
@@ -65,8 +73,9 @@ export class Accounts extends APIResource {
 /**
  * A payment-oriented view of an invoice, as returned by List Customer Invoices.
  *
- * Carries the fields needed to apply customer payments: the invoice total,
- * paid-in-full state, and the allocations already applied.
+ * Carries the fields needed to apply a customer payment: the invoice total, the
+ * allocations already applied, and the billing relationship of the customer being
+ * charged. Only invoices that still owe a balance are represented.
  */
 export interface InvoiceForPayment {
   /**
@@ -75,7 +84,8 @@ export interface InvoiceForPayment {
   id: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   allocations: InvoicesAPI.ListInvoiceAllocation | null;
 
@@ -102,12 +112,14 @@ export interface InvoiceForPayment {
   customer_po: string | null;
 
   /**
-   * Total invoiced amount as a decimal string.
+   * Total amount billed by this invoice.
    */
   invoice_total: string;
 
   /**
    * Whether the invoice has been paid in full.
+   *
+   * Always `false` here, because only invoices that still owe a balance are listed.
    */
   is_paid_in_full: boolean;
 
@@ -134,7 +146,11 @@ export interface InvoiceForPayment {
   object: 'invoice_for_payment';
 
   /**
-   * A customer account, including its branding and customer portal sub-resources.
+   * An organization on Augno, including its branding and customer portal
+   * sub-resources.
+   *
+   * Your own account and any customer or supplier account you trade with are both
+   * represented by this object.
    */
   parent_account: APIKeysAPI.Account | null;
 
@@ -145,7 +161,8 @@ export interface InvoiceForPayment {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListInvoiceForPayment {
   /**
@@ -159,13 +176,20 @@ export interface ListInvoiceForPayment {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListTransactionDetail {
   /**
@@ -179,7 +203,13 @@ export interface ListTransactionDetail {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -257,8 +287,8 @@ export interface AccountRetrieveTransactionsParams {
   q?: string;
 
   /**
-   * Filter by allocation status: `allocated` (fully allocated against invoices) or
-   * `unallocated` (has an open balance).
+   * Filter by allocation status: `allocated` (marked fully applied to invoices) or
+   * `unallocated` (still counted as an open credit).
    */
   status?: string;
 

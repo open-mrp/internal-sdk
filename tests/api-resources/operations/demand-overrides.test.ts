@@ -13,7 +13,7 @@ describe('resource demandOverrides', () => {
       adjustment: 'delta_units',
       period_ends_at: '2026-11-30T00:00:00Z',
       period_starts_at: '2026-09-01T00:00:00Z',
-      scope_ref_id: 'it_0131e386ac683e8c29a71f6f1f',
+      scope_ref_id: 'it_pej07ckhvu62',
       scope_type: 'item',
       value: 5000,
     });
@@ -31,7 +31,7 @@ describe('resource demandOverrides', () => {
       adjustment: 'delta_units',
       period_ends_at: '2026-11-30T00:00:00Z',
       period_starts_at: '2026-09-01T00:00:00Z',
-      scope_ref_id: 'it_0131e386ac683e8c29a71f6f1f',
+      scope_ref_id: 'it_pej07ckhvu62',
       scope_type: 'item',
       value: 5000,
       include: ['scope'],
@@ -45,7 +45,7 @@ describe('resource demandOverrides', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.demandOverrides.retrieve('deov_0192b7d38c4f5a9b02d3e16f88');
+    const responsePromise = client.operations.demandOverrides.retrieve('deov_p8roudstrung');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -59,7 +59,7 @@ describe('resource demandOverrides', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.demandOverrides.retrieve(
-        'deov_0192b7d38c4f5a9b02d3e16f88',
+        'deov_p8roudstrung',
         { include: ['scope'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -67,7 +67,7 @@ describe('resource demandOverrides', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.demandOverrides.update('deov_0192b7d38c4f5a9b02d3e16f88');
+    const responsePromise = client.operations.demandOverrides.update('deov_p8roudstrung');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -81,7 +81,7 @@ describe('resource demandOverrides', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.demandOverrides.update(
-        'deov_0192b7d38c4f5a9b02d3e16f88',
+        'deov_p8roudstrung',
         {
           include: ['scope'],
           active: false,
@@ -132,7 +132,7 @@ describe('resource demandOverrides', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.demandOverrides.delete('deov_0192b7d38c4f5a9b02d3e16f88');
+    const responsePromise = client.operations.demandOverrides.delete('deov_p8roudstrung');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -23,7 +23,7 @@ export class Invoices extends APIResource {
    * @example
    * ```ts
    * const invoice = await client.finance.invoices.retrieve(
-   *   'iv_018b5949ada8abca36358bbea9',
+   *   'iv_m982ezb0fgp7',
    * );
    * ```
    */
@@ -36,7 +36,11 @@ export class Invoices extends APIResource {
   }
 
   /**
-   * Partially updates an invoice.
+   * Updates an invoice's note and its sent and paid tracking flags.
+   *
+   * Only the fields supplied in the request are changed. The invoice's lines, its
+   * customer, and the amounts it bills follow the sales order behind the invoice and
+   * cannot be changed here.
    *
    * This endpoint requires the permissions: `invoices:update`, `customers:update`,
    * `suppliers:update`.
@@ -44,7 +48,7 @@ export class Invoices extends APIResource {
    * @example
    * ```ts
    * const invoice = await client.finance.invoices.update(
-   *   'iv_018b5949ada8abca36358bbea9',
+   *   'iv_m982ezb0fgp7',
    *   {
    *     has_been_sent: true,
    *     note: 'Payment received via wire transfer',
@@ -62,7 +66,10 @@ export class Invoices extends APIResource {
   }
 
   /**
-   * Returns a paginated list of invoices for the current account.
+   * Returns a paginated list of invoices for the current account, newest first.
+   *
+   * A free-text search term (`q`) is matched against the invoice number, the invoice
+   * note, and the customer name, and still respects the other filters.
    *
    * This endpoint requires the permissions: `invoices:read`, `customers:read`,
    * `suppliers:read`.
@@ -107,12 +114,17 @@ export interface Invoice {
   id: string;
 
   /**
-   * Whether the billed customer is configured to receive invoices by email.
+   * Whether the sales order behind this invoice has at least one contact set to
+   * receive invoice emails.
+   *
+   * These contacts are the recipients used by Email Record. When no contact is
+   * configured, emailing the invoice marks it sent without delivering anything.
    */
   accepts_invoice_emails: boolean;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   allocations: ListInvoiceAllocation | null;
 
@@ -140,11 +152,17 @@ export interface Invoice {
 
   /**
    * Whether the invoice has been sent to the customer.
+   *
+   * Set automatically when the invoice is emailed through Email Record, and can also
+   * be set directly through Update Invoice.
    */
   has_been_sent: boolean;
 
   /**
    * Whether the invoice has been transmitted to the customer via EDI.
+   *
+   * Nothing in the platform sets this flag; it is recorded through Update Invoice
+   * once the invoice has been transmitted elsewhere.
    */
   is_edi_sent: boolean;
 
@@ -154,7 +172,8 @@ export interface Invoice {
   line_count: number;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lines: ListInvoiceLine | null;
 
@@ -174,18 +193,24 @@ export interface Invoice {
   object: 'invoice';
 
   /**
-   * Full sales order resource.
+   * An order placed by a customer, tracked from estimate through fulfillment.
    */
   order: SalesOrdersAPI.SalesOrder | null;
 
   /**
    * Payment status of the invoice.
    *
-   * Derived from the invoice's paid-in-full and overpaid flags rather than computed
-   * directly from its allocations.
+   * Reported from the invoice's stored paid-in-full and overpaid flags, so marking
+   * an invoice paid through Update Invoice changes this value even when no payment
+   * has been allocated.
    *
-   * - `overpaid`: the applied allocations exceed the invoiced amount.
-   * - `partially_paid`: reserved for a future signal and not currently emitted.
+   * - `unpaid`: the invoice is not marked paid in full, which includes invoices
+   *   carrying partial payments.
+   * - `paid`: the invoice is marked paid in full.
+   * - `overpaid`: the payments applied to the invoice exceed the invoiced amount.
+   *   List Invoices and Update Invoice report such an invoice as `paid`.
+   * - `partially_paid`: not currently returned; an invoice carrying a partial
+   *   payment reports `unpaid`.
    */
   payment_status: 'unpaid' | 'partially_paid' | 'paid' | 'overpaid';
 
@@ -207,7 +232,10 @@ export interface Invoice {
   shipment: Shipment | null;
 
   /**
-   * Total invoiced amount as a decimal string.
+   * Total amount billed by this invoice.
+   *
+   * The sum across the invoice's lines of the billed quantity multiplied by the unit
+   * price on the sales order line.
    */
   total_invoiced: string;
 
@@ -221,9 +249,10 @@ export interface Invoice {
  * A portion of a transaction applied against an invoice.
  *
  * Allocations connect transactions (payments, rebates, adjustments, and credit
- * memos) to the invoices they pay down. The invoice's paid-in-full / overpaid
- * state (and thus `payment_status`) is tracked separately and is not recomputed
- * from these allocations.
+ * memos) to the invoices they pay down. Recording a settlement refreshes the
+ * invoice's paid-in-full and overpaid state — and so its `payment_status` — from
+ * every allocation against it, but that state can also be set directly through
+ * Update Invoice.
  */
 export interface InvoiceAllocation {
   /**
@@ -232,7 +261,11 @@ export interface InvoiceAllocation {
   id: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   amount: AccountUsersAPI.Quantity | null;
 
@@ -278,7 +311,7 @@ export interface InvoiceLine {
   created_at: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
@@ -288,12 +321,16 @@ export interface InvoiceLine {
   object: 'invoice_line';
 
   /**
-   * Full sales order line resource.
+   * A single line item on a sales order.
    */
   order_line: SalesOrdersAPI.SalesOrderLine | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: AccountUsersAPI.Quantity | null;
 
@@ -310,7 +347,8 @@ export interface InvoiceLine {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListDepartment {
   /**
@@ -324,13 +362,20 @@ export interface ListDepartment {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListInvoice {
   /**
@@ -344,13 +389,20 @@ export interface ListInvoice {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListInvoiceAllocation {
   /**
@@ -364,13 +416,20 @@ export interface ListInvoiceAllocation {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListInvoiceLine {
   /**
@@ -384,13 +443,20 @@ export interface ListInvoiceLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListPickLine {
   /**
@@ -404,13 +470,20 @@ export interface ListPickLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListShipmentLine {
   /**
@@ -424,13 +497,20 @@ export interface ListShipmentLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListShippingCaseDetail {
   /**
@@ -444,13 +524,20 @@ export interface ListShippingCaseDetail {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListTransactionAllocation {
   /**
@@ -464,7 +551,13 @@ export interface ListTransactionAllocation {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -472,6 +565,11 @@ export interface ListTransactionAllocation {
 /**
  * A warehouse picking task for a sales order, tracking the quantities to pull from
  * inventory and pack for shipment.
+ *
+ * A pick is created automatically when a sales order is issued, with one line for
+ * each order line whose product is of type `sale` — service, shipping, tax, credit
+ * and return lines are skipped — and nothing picked yet. There is no endpoint that
+ * creates a pick directly.
  */
 export interface Pick {
   /**
@@ -491,26 +589,32 @@ export interface Pick {
   customer: CustomersAPI.Customer | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   departments: ListDepartment | null;
 
   /**
    * Timestamp when the pick was finished.
    *
-   * Unset while the pick is still in progress. Set automatically when packing leaves
-   * no unpacked lines with a remaining quantity to pick, and cleared when the pick
-   * is voided; it can also be set or cleared directly via Update Pick.
+   * Set automatically once every line on the pick has been packed, and cleared
+   * whenever picking work reopens — when the pick is voided, when a shipment for the
+   * order is deleted, or when the order is reopened or its lines change so quantity
+   * is outstanding again. It can also be set or cleared directly with Update Pick.
    */
   finished_at: string | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lines: ListPickLine | null;
 
   /**
    * Human-readable number that identifies the pick, distinct from the `id`.
+   *
+   * Copied from the sales order's number when the pick is created, and can be
+   * renamed with Update Pick.
    */
   number: string;
 
@@ -526,7 +630,7 @@ export interface Pick {
   priority: 'low' | 'normal' | 'high';
 
   /**
-   * Full sales order resource.
+   * An order placed by a customer, tracked from estimate through fulfillment.
    */
   sales_order: SalesOrdersAPI.SalesOrder | null;
 
@@ -557,25 +661,34 @@ export interface PickLine {
   object: 'pick_line';
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   ordered_quantity: AccountUsersAPI.Quantity | null;
 
   /**
    * Timestamp when the line was packed.
    *
-   * Unset until the line has been packed. Once packed, a line can no longer be
-   * picked or voided.
+   * Once packed, a line can no longer be picked or voided. If the sales order line
+   * still has quantity outstanding, packing adds a fresh zero-quantity pick line for
+   * the remainder rather than reopening this one.
    */
   packed_at: string | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: AccountUsersAPI.Quantity | null;
 
   /**
-   * Full sales order line resource.
+   * A single line item on a sales order.
    */
   sales_order_line: SalesOrdersAPI.SalesOrderLine | null;
 
@@ -615,8 +728,7 @@ export interface Shipment {
    * Freight describes the carrier selection and freight billing for a record.
    *
    * It is a generic, reusable sub-resource shared by anything that carries shipping
-   * configuration — for example a sales order's chosen freight, or a customer's
-   * default freight preferences.
+   * configuration — a sales order, a purchase order, or a shipment.
    */
   freight: SalesOrdersAPI.Freight | null;
 
@@ -626,7 +738,8 @@ export interface Shipment {
   invoice: Invoice | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lines: ListShipmentLine | null;
 
@@ -655,18 +768,23 @@ export interface Shipment {
   /**
    * A warehouse picking task for a sales order, tracking the quantities to pull from
    * inventory and pack for shipment.
+   *
+   * A pick is created automatically when a sales order is issued, with one line for
+   * each order line whose product is of type `sale` — service, shipping, tax, credit
+   * and return lines are skipped — and nothing picked yet. There is no endpoint that
+   * creates a pick directly.
    */
   pick: Pick | null;
 
   /**
-   * Full sales order resource.
+   * An order placed by a customer, tracked from estimate through fulfillment.
    */
   sales_order: SalesOrdersAPI.SalesOrder | null;
 
   /**
    * Timestamp when the shipment was shipped.
    *
-   * Null until the shipment is shipped; cleared again if the shipment is voided.
+   * Cleared if the shipment is voided.
    */
   shipped_at: string | null;
 
@@ -674,7 +792,7 @@ export interface Shipment {
    * A user's membership in an account, carrying the account-specific status, role,
    * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * Profile fields (name, email, username, image URL) live on the `user`
    * sub-resource, which is shared across every account the user belongs to.
    */
   shipped_by: AccountUsersAPI.AccountUser | null;
@@ -686,7 +804,8 @@ export interface Shipment {
   shipping_address: APIKeysAPI.Address | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   shipping_cases: ListShippingCaseDetail | null;
 
@@ -720,7 +839,7 @@ export interface ShipmentLine {
   created_at: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
@@ -730,12 +849,16 @@ export interface ShipmentLine {
   object: 'shipment_line';
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: AccountUsersAPI.Quantity | null;
 
   /**
-   * Full sales order line resource.
+   * A single line item on a sales order.
    */
   sales_order_line: SalesOrdersAPI.SalesOrderLine | null;
 
@@ -746,7 +869,8 @@ export interface ShipmentLine {
 }
 
 /**
- * A physical case (package) in a shipment, as shown in shipment detail views.
+ * A physical case (package) within a shipment, with its own tracking number, label
+ * and freight charge.
  */
 export interface ShippingCaseDetail {
   /**
@@ -769,12 +893,20 @@ export interface ShippingCaseDetail {
   created_at: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   freight_amount: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   freight_weight: AccountUsersAPI.Quantity | null;
 
@@ -789,7 +921,7 @@ export interface ShippingCaseDetail {
   object: 'shipping_case';
 
   /**
-   * Timestamp when shipped.
+   * Timestamp when this case was shipped.
    */
   shipped_at: string | null;
 
@@ -808,12 +940,14 @@ export interface ShippingCaseDetail {
    * Serial Shipping Container Code (SSCC) identifying this case.
    *
    * Assigned automatically when the shipment is shipped if the case does not already
-   * have one.
+   * have one, and kept if the shipment is later voided.
    */
   sscc: string | null;
 
   /**
    * Carrier tracking number for this case.
+   *
+   * Cleared when the shipment is voided.
    */
   tracking_number: string | null;
 
@@ -833,7 +967,11 @@ export interface TransactionAllocation {
   id: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   amount: AccountUsersAPI.Quantity | null;
 
@@ -848,7 +986,8 @@ export interface TransactionAllocation {
   invoice: AllocationInvoice | null;
 
   /**
-   * Note attached to this allocation.
+   * Free-form note attached to this allocation, separate from any note on the
+   * underlying transaction.
    */
   note: string | null;
 
@@ -882,8 +1021,8 @@ export interface TransactionDetail {
   /**
    * A category of financial adjustment, such as a discount, fee, or write-off.
    *
-   * Adjustment types classify adjustment transactions recorded against customer
-   * invoices.
+   * Adjustment types classify the `adjustment` transactions recorded against a
+   * customer.
    */
   adjustment_type: FinanceAPI.AdjustmentType | null;
 
@@ -893,12 +1032,17 @@ export interface TransactionDetail {
   allocation_count: number;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   allocations: ListTransactionAllocation | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   amount: AccountUsersAPI.Quantity | null;
 
@@ -914,11 +1058,15 @@ export interface TransactionDetail {
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Whether the full transaction amount has been allocated against invoices.
+   * Whether the full transaction amount has been applied to invoices.
    *
-   * When `false`, some of the amount remains as an open (unapplied) balance and the
-   * transaction appears in the open credits list. This flag is set explicitly (see
-   * Update Transaction); it is not recomputed automatically when allocations change.
+   * Recording a settlement that uses this transaction sets the flag to `true`, and
+   * deleting that settlement resets it to `false`. Editing or deleting an individual
+   * allocation does not recompute it, so it can also be set directly with Update
+   * Transaction.
+   *
+   * While it is `false`, the transaction is treated as an open credit and is
+   * returned by List Open Credits.
    */
   is_fully_allocated: boolean;
 
@@ -944,16 +1092,13 @@ export interface TransactionDetail {
    * A user's membership in an account, carrying the account-specific status, role,
    * and department.
    *
-   * Profile fields (name, email, username, image URL) live on the expandable `user`
+   * Profile fields (name, email, username, image URL) live on the `user`
    * sub-resource, which is shared across every account the user belongs to.
    */
   responsible_user: AccountUsersAPI.AccountUser | null;
 
   /**
-   * Stripe payment ID.
-   *
-   * Set only for transactions collected through Stripe; null for transactions
-   * recorded outside Stripe.
+   * Identifier of the Stripe payment that produced this transaction.
    */
   stripe_payment_id: string | null;
 
@@ -978,21 +1123,27 @@ export interface TransactionDetail {
  */
 export interface UpdateInvoiceRequest {
   /**
-   * Whether the invoice has been sent to the customer.
+   * Records whether the invoice has been sent to the customer.
+   *
+   * Emailing the invoice through Email Record sets this on its own, so it only needs
+   * to be set here when the invoice was delivered outside the platform.
    */
   has_been_sent?: boolean;
 
   /**
-   * Whether the invoice has been sent via EDI.
+   * Records whether the invoice has been transmitted to the customer via EDI.
+   *
+   * A tracking flag only; setting it does not transmit anything.
    */
   is_edi_sent?: boolean;
 
   /**
    * Whether the invoice has been paid in full.
    *
-   * Setting this to `true` marks the invoice as paid regardless of recorded
-   * allocations, which updates the invoice's `payment_status` and removes it from
-   * receivables listings.
+   * Setting this to `true` marks the invoice as paid regardless of the payments
+   * recorded against it, which updates the invoice's `payment_status` and drops it
+   * from receivables listings. Recording a settlement against the invoice later
+   * recalculates the flag from its allocations and can overwrite the value set here.
    */
   is_paid_in_full?: boolean;
 
@@ -1022,21 +1173,28 @@ export interface InvoiceUpdateParams {
   >;
 
   /**
-   * Body param: Whether the invoice has been sent to the customer.
+   * Body param: Records whether the invoice has been sent to the customer.
+   *
+   * Emailing the invoice through Email Record sets this on its own, so it only needs
+   * to be set here when the invoice was delivered outside the platform.
    */
   has_been_sent?: boolean;
 
   /**
-   * Body param: Whether the invoice has been sent via EDI.
+   * Body param: Records whether the invoice has been transmitted to the customer via
+   * EDI.
+   *
+   * A tracking flag only; setting it does not transmit anything.
    */
   is_edi_sent?: boolean;
 
   /**
    * Body param: Whether the invoice has been paid in full.
    *
-   * Setting this to `true` marks the invoice as paid regardless of recorded
-   * allocations, which updates the invoice's `payment_status` and removes it from
-   * receivables listings.
+   * Setting this to `true` marks the invoice as paid regardless of the payments
+   * recorded against it, which updates the invoice's `payment_status` and drops it
+   * from receivables listings. Recording a settlement against the invoice later
+   * recalculates the flag from its allocations and can overwrite the value set here.
    */
   is_paid_in_full?: boolean;
 
@@ -1057,17 +1215,22 @@ export interface InvoiceListParams {
   cursor?: string;
 
   /**
-   * Filter by customer group IDs.
+   * Restricts results to invoices billed to customers belonging to any of these
+   * account groups.
    */
   customer_group_ids?: Array<string>;
 
   /**
-   * Filter by customer account IDs.
+   * Restricts results to invoices billed to any of these customers.
    */
   customer_ids?: Array<string>;
 
   /**
-   * Only return invoices created before this date (`YYYY-MM-DD`).
+   * Latest invoice creation date to include, in `YYYY-MM-DD` format.
+   *
+   * Compared against the creation timestamp at the start of that day, so invoices
+   * created later on the end date itself are excluded; pass the following day to
+   * include them.
    */
   end_date?: string;
 
@@ -1078,7 +1241,7 @@ export interface InvoiceListParams {
   include?: Array<'customer' | 'order' | 'shipment' | 'billing_address' | 'payment_term' | 'lines'>;
 
   /**
-   * Filter by item IDs present in invoice lines.
+   * Restricts results to invoices with at least one line billing any of these items.
    */
   item_ids?: Array<string>;
 
@@ -1088,7 +1251,8 @@ export interface InvoiceListParams {
   limit?: number;
 
   /**
-   * Filter by product line IDs.
+   * Restricts results to invoices with at least one line whose product belongs to
+   * any of these product lines.
    */
   product_line_ids?: Array<string>;
 
@@ -1100,22 +1264,26 @@ export interface InvoiceListParams {
   q?: string;
 
   /**
-   * Filter by sales rep user IDs.
+   * Restricts results to invoices whose sales order is credited to any of these
+   * sales reps.
+   *
+   * These are account user IDs, matching the `sales_rep` on the order.
    */
   sales_rep_ids?: Array<string>;
 
   /**
-   * Only return invoices created on or after this date (`YYYY-MM-DD`).
+   * Earliest invoice creation date to include, in `YYYY-MM-DD` format.
    */
   start_date?: string;
 
   /**
-   * Filter invoices by payment status.
+   * Restricts results to invoices in this payment state.
    *
-   * - `all`: no payment-status filtering (same as omitting the parameter).
-   * - `paid`: only invoices paid in full.
-   * - `unpaid`: only invoices that are neither paid in full nor overpaid.
-   * - `overpaid`: only invoices whose allocations exceed the invoiced amount.
+   * - `all`: no payment-state filtering, the same as omitting the parameter.
+   * - `paid`: only invoices marked paid in full.
+   * - `unpaid`: only invoices that are neither paid in full nor overpaid, including
+   *   invoices carrying partial payments.
+   * - `overpaid`: only invoices whose applied payments exceed the invoiced amount.
    */
   status?: string;
 }

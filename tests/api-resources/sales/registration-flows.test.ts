@@ -29,7 +29,7 @@ describe('resource registrationFlows', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.registrationFlows.retrieve('rgfw_015273c2a7354d6c3e5ae4e90e');
+    const responsePromise = client.sales.registrationFlows.retrieve('rgfw_5jo86wzvfpgn');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -40,7 +40,7 @@ describe('resource registrationFlows', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.registrationFlows.update('rgfw_015273c2a7354d6c3e5ae4e90e', {
+    const responsePromise = client.sales.registrationFlows.update('rgfw_5jo86wzvfpgn', {
       has_customer_group_ids: true,
       has_payment_term_ids: true,
       has_shipping_term_ids: true,
@@ -55,7 +55,7 @@ describe('resource registrationFlows', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.registrationFlows.update('rgfw_015273c2a7354d6c3e5ae4e90e', {
+    const response = await client.sales.registrationFlows.update('rgfw_5jo86wzvfpgn', {
       has_customer_group_ids: true,
       has_payment_term_ids: true,
       has_shipping_term_ids: true,
@@ -92,7 +92,7 @@ describe('resource registrationFlows', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.registrationFlows.delete('rgfw_015273c2a7354d6c3e5ae4e90e');
+    const responsePromise = client.sales.registrationFlows.delete('rgfw_5jo86wzvfpgn');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

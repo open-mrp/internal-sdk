@@ -10,8 +10,8 @@ const client = new Augno({
 describe('resource actions', () => {
   test('link: only required params', async () => {
     const responsePromise = client.settings.integrations.hubspot.sync.companyReviews.actions.link(
-      'igrv_mkhn7eo9qexh',
-      { id: 'igjb_zwfvfjfxl4lj', resolved_hubspot_id: '12345' },
+      'igrv_w88uo6y5g8bu',
+      { id: 'igjb_pbxu4l5ujuym', resolved_hubspot_id: '12345' },
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -24,15 +24,15 @@ describe('resource actions', () => {
 
   test('link: required and optional params', async () => {
     const response = await client.settings.integrations.hubspot.sync.companyReviews.actions.link(
-      'igrv_mkhn7eo9qexh',
-      { id: 'igjb_zwfvfjfxl4lj', resolved_hubspot_id: '12345' },
+      'igrv_w88uo6y5g8bu',
+      { id: 'igjb_pbxu4l5ujuym', resolved_hubspot_id: '12345' },
     );
   });
 
   test('skip: only required params', async () => {
     const responsePromise = client.settings.integrations.hubspot.sync.companyReviews.actions.skip(
-      'igrv_mkhn7eo9qexh',
-      { id: 'igjb_zwfvfjfxl4lj' },
+      'igrv_w88uo6y5g8bu',
+      { id: 'igjb_pbxu4l5ujuym' },
     );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -45,8 +45,8 @@ describe('resource actions', () => {
 
   test('skip: required and optional params', async () => {
     const response = await client.settings.integrations.hubspot.sync.companyReviews.actions.skip(
-      'igrv_mkhn7eo9qexh',
-      { id: 'igjb_zwfvfjfxl4lj' },
+      'igrv_w88uo6y5g8bu',
+      { id: 'igjb_pbxu4l5ujuym' },
     );
   });
 });

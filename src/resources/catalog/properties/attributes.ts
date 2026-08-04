@@ -13,13 +13,17 @@ export class Attributes extends APIResource {
   /**
    * Creates an attribute under a property.
    *
+   * An attribute is one selectable value of the property, such as `Red` under
+   * `Color`, and can then be assigned to items. Returns a conflict error if another
+   * attribute in the account already uses the same value.
+   *
    * This endpoint requires the permission: `properties:create`.
    *
    * @example
    * ```ts
    * const attribute =
    *   await client.catalog.properties.attributes.create(
-   *     'pp_01e21344878064372f69e67093',
+   *     'pp_fhnnvtt3q3ov',
    *     {
    *       value: 'Red',
    *       color: 'red',
@@ -45,8 +49,8 @@ export class Attributes extends APIResource {
    * ```ts
    * const attribute =
    *   await client.catalog.properties.attributes.retrieve(
-   *     'at_01c9493ec0c46bb0ed12708ae4',
-   *     { property_id: 'pp_01e21344878064372f69e67093' },
+   *     'at_rf1w295jt5ia',
+   *     { property_id: 'pp_fhnnvtt3q3ov' },
    *   );
    * ```
    */
@@ -62,15 +66,18 @@ export class Attributes extends APIResource {
   /**
    * Partially updates an attribute.
    *
+   * Items reference attributes by ID, so changing the value renames the attribute
+   * everywhere it is already assigned.
+   *
    * This endpoint requires the permission: `properties:update`.
    *
    * @example
    * ```ts
    * const attribute =
    *   await client.catalog.properties.attributes.update(
-   *     'at_01c9493ec0c46bb0ed12708ae4',
+   *     'at_rf1w295jt5ia',
    *     {
-   *       property_id: 'pp_01e21344878064372f69e67093',
+   *       property_id: 'pp_fhnnvtt3q3ov',
    *       color: 'blue',
    *       sort_order: 2,
    *       value: 'Blue',
@@ -93,13 +100,16 @@ export class Attributes extends APIResource {
   /**
    * Returns a paginated list of attributes for a property.
    *
+   * Attributes come back in the order they are arranged within the property, first
+   * to last. The `q` search term is matched against the attribute value.
+   *
    * This endpoint requires the permission: `properties:read`.
    *
    * @example
    * ```ts
    * const listAttribute =
    *   await client.catalog.properties.attributes.list(
-   *     'pp_01e21344878064372f69e67093',
+   *     'pp_fhnnvtt3q3ov',
    *   );
    * ```
    */
@@ -123,8 +133,8 @@ export class Attributes extends APIResource {
    * ```ts
    * const attribute =
    *   await client.catalog.properties.attributes.delete(
-   *     'at_01c9493ec0c46bb0ed12708ae4',
-   *     { property_id: 'pp_01e21344878064372f69e67093' },
+   *     'at_rf1w295jt5ia',
+   *     { property_id: 'pp_fhnnvtt3q3ov' },
    *   );
    * ```
    */
@@ -228,14 +238,14 @@ export interface AttributeCreateParams {
 
 export interface AttributeRetrieveParams {
   /**
-   * Property ID.
+   * The property the attribute belongs to.
    */
   property_id: string;
 }
 
 export interface AttributeUpdateParams {
   /**
-   * Path param: Property ID.
+   * Path param: The property the attribute belongs to.
    */
   property_id: string;
 
@@ -287,7 +297,7 @@ export interface AttributeListParams {
 
 export interface AttributeDeleteParams {
   /**
-   * Property ID.
+   * The property the attribute belongs to.
    */
   property_id: string;
 }

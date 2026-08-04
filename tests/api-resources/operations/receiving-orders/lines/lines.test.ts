@@ -9,10 +9,9 @@ const client = new Augno({
 
 describe('resource lines', () => {
   test('update: only required params', async () => {
-    const responsePromise = client.operations.receivingOrders.lines.update(
-      'orln_0142f9b74268973450b3a76ce3',
-      { receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e' },
-    );
+    const responsePromise = client.operations.receivingOrders.lines.update('orln_la01fxgrwcnr', {
+      receiving_order_id: 'rcor_iy0usuxcrjj8',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,8 +22,8 @@ describe('resource lines', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.receivingOrders.lines.update('orln_0142f9b74268973450b3a76ce3', {
-      receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e',
+    const response = await client.operations.receivingOrders.lines.update('orln_la01fxgrwcnr', {
+      receiving_order_id: 'rcor_iy0usuxcrjj8',
       quantity_value: '50',
     });
   });

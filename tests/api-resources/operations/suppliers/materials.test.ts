@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource materials', () => {
   test('create: only required params', async () => {
     const responsePromise = client.operations.suppliers.materials.create('example', {
-      material_id: 'ml_014613b8f7959a091d8cc0cef4',
+      material_id: 'ml_ow202v78slbl',
       supplier_part_number: 'SUP-PART-001',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -24,7 +24,7 @@ describe('resource materials', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.operations.suppliers.materials.create('example', {
-      material_id: 'ml_014613b8f7959a091d8cc0cef4',
+      material_id: 'ml_ow202v78slbl',
       supplier_part_number: 'SUP-PART-001',
       is_active: true,
       supplier_description: 'supplier_description',
@@ -32,7 +32,7 @@ describe('resource materials', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.operations.suppliers.materials.retrieve('ml_014613b8f7959a091d8cc0cef4', {
+    const responsePromise = client.operations.suppliers.materials.retrieve('ml_ow202v78slbl', {
       supplier_id: 'example',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -45,14 +45,14 @@ describe('resource materials', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.operations.suppliers.materials.retrieve('ml_014613b8f7959a091d8cc0cef4', {
+    const response = await client.operations.suppliers.materials.retrieve('ml_ow202v78slbl', {
       supplier_id: 'example',
       include: ['material'],
     });
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.suppliers.materials.update('ml_014613b8f7959a091d8cc0cef4', {
+    const responsePromise = client.operations.suppliers.materials.update('ml_ow202v78slbl', {
       supplier_id: 'example',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -65,7 +65,7 @@ describe('resource materials', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.suppliers.materials.update('ml_014613b8f7959a091d8cc0cef4', {
+    const response = await client.operations.suppliers.materials.update('ml_ow202v78slbl', {
       supplier_id: 'example',
       is_active: false,
       supplier_description: 'supplier_description',
@@ -101,7 +101,7 @@ describe('resource materials', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.operations.suppliers.materials.delete('ml_014613b8f7959a091d8cc0cef4', {
+    const responsePromise = client.operations.suppliers.materials.delete('ml_ow202v78slbl', {
       supplier_id: 'example',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -114,7 +114,7 @@ describe('resource materials', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.operations.suppliers.materials.delete('ml_014613b8f7959a091d8cc0cef4', {
+    const response = await client.operations.suppliers.materials.delete('ml_ow202v78slbl', {
       supplier_id: 'example',
     });
   });

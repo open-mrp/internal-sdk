@@ -30,7 +30,7 @@ describe('resource sync', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.settings.integrations.hubspot.sync.retrieve('igjb_zwfvfjfxl4lj');
+    const responsePromise = client.settings.integrations.hubspot.sync.retrieve('igjb_pbxu4l5ujuym');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

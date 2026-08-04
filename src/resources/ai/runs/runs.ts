@@ -27,14 +27,16 @@ export class Runs extends APIResource {
    * Starts a new run of the specified agent.
    *
    * The run is created in the `pending` status and executed asynchronously; poll
-   * Retrieve Agent Run to follow its progress.
+   * Retrieve Agent Run to follow its progress. Any agent can be started this way
+   * regardless of how it is normally triggered, and the resulting run is always
+   * recorded with `trigger_type` `manual`.
    *
    * This endpoint requires the permission: `agent_runs:create`.
    *
    * @example
    * ```ts
    * const agentRun = await client.ai.runs.create({
-   *   agent_definition_id: 'agdf_01b9ef28feb99e6954201aca63',
+   *   agent_definition_id: 'agdf_ah7tkyfxk8jl',
    *   input: 'Process the latest incoming orders.',
    * });
    * ```
@@ -45,14 +47,18 @@ export class Runs extends APIResource {
   }
 
   /**
-   * Returns an agent run by ID.
+   * Retrieves a single agent run by ID.
+   *
+   * A run records one execution of an agent: its current status, the input it
+   * started from, the output it produced, the tools it invoked, and the step-by-step
+   * timeline of how it got there.
    *
    * This endpoint requires the permission: `agent_runs:read`.
    *
    * @example
    * ```ts
    * const agentRun = await client.ai.runs.retrieve(
-   *   'agrn_01502aa6da9bbdbaa595915fa4',
+   *   'agrn_l6ob5relrd7t',
    * );
    * ```
    */
@@ -65,7 +71,10 @@ export class Runs extends APIResource {
   }
 
   /**
-   * Returns a paginated list of agent runs for the current account.
+   * Lists agent runs for your account, newest first.
+   *
+   * The `q` parameter matches a run's ID, its status, or the ID of the agent that
+   * produced it.
    *
    * This endpoint requires the permission: `agent_runs:read`.
    *
@@ -137,15 +146,21 @@ export interface AgentAction {
   /**
    * Result returned by the tool, as JSON.
    *
-   * Recorded when the tool runs, so it is present even while the action is still
-   * `pending_review` or `auto_approved`; the shape depends on `tool`, and it is `{}`
-   * when the tool returned no output. Encoded as a JSON value (object, array,
-   * string, number, boolean, or null), not a JSON-encoded string.
+   * The shape depends on `tool`. An action that has not executed — because it is
+   * still waiting on a review decision, or was rejected — carries `{}`. Encoded as a
+   * JSON value (object, array, string, number, boolean, or null), not a JSON-encoded
+   * string.
    */
   output: unknown | null;
 
   /**
-   * Whether this action must be reviewed by a human before it can execute.
+   * Whether a person must approve this action before it takes effect.
+   *
+   * Fixed when the action is recorded, from the agent's review setting for that
+   * tool; tools that take an externally visible action, such as `send_email`, always
+   * require review and cannot be exempted. When review is required the action starts
+   * in `pending_review` and stays there until someone approves or rejects it;
+   * otherwise it is `auto_approved`.
    */
   review_requirement: 'not_required' | 'required';
 
@@ -206,7 +221,8 @@ export interface AgentRun {
   id: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   actions: ListAgentAction | null;
 
@@ -229,7 +245,7 @@ export interface AgentRun {
   definition: AgentsAPI.AgentDefinition | null;
 
   /**
-   * Duration in milliseconds.
+   * How long the run took, in milliseconds.
    */
   duration_ms: number | null;
 
@@ -239,9 +255,11 @@ export interface AgentRun {
   error_message: string | null;
 
   /**
-   * Input provided to the agent at the start of the run, as JSON. Encoded as a JSON
-   * value (object, array, string, number, boolean, or null), not a JSON-encoded
-   * string.
+   * Input provided to the agent at the start of the run.
+   *
+   * The shape depends on what started the run; a manually triggered run records
+   * `{"message": "<your input>"}`. Encoded as a JSON value (object, array, string,
+   * number, boolean, or null), not a JSON-encoded string.
    */
   input: unknown | null;
 
@@ -251,10 +269,12 @@ export interface AgentRun {
   object: 'agent_run';
 
   /**
-   * Final output produced by the agent, as JSON.
+   * Final output produced by the agent.
    *
-   * Populated only once the run has completed successfully. Encoded as a JSON value
-   * (object, array, string, number, boolean, or null), not a JSON-encoded string.
+   * Present once the agent has produced a result, including on a run that paused for
+   * more input or was cancelled part-way through. A run that has not produced one
+   * yet carries an empty object. Encoded as a JSON value (object, array, string,
+   * number, boolean, or null), not a JSON-encoded string.
    */
   output: unknown | null;
 
@@ -284,7 +304,8 @@ export interface AgentRun {
     | 'awaiting_approval';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   steps: ListAgentRunStep | null;
 
@@ -337,13 +358,16 @@ export interface AgentRunStep {
   created_at: string;
 
   /**
-   * Duration in milliseconds.
+   * How long this step took, in milliseconds.
    */
   duration_ms: number | null;
 
   /**
-   * Additional structured data for the step, as JSON. Encoded as a JSON value
-   * (object, array, string, number, boolean, or null), not a JSON-encoded string.
+   * Additional structured data for the step.
+   *
+   * The shape depends on `step_type` — for example a `tool_call` step carries the
+   * tool's arguments. Encoded as a JSON value (object, array, string, number,
+   * boolean, or null), not a JSON-encoded string.
    */
   metadata: unknown | null;
 
@@ -358,9 +382,13 @@ export interface AgentRunStep {
   sequence: number;
 
   /**
-   * The kind of timeline event (e.g. `trigger_received`, `user_message`,
-   * `assistant_message`, `tool_call`, `tool_result`, `awaiting_approval`,
-   * `completion`, `error`).
+   * The kind of timeline event.
+   *
+   * Common values are `trigger_received`, `user_message`, `thinking`,
+   * `assistant_message`, `tool_call`, `tool_result`, `tool_blocked`,
+   * `awaiting_approval`, `completion`, and `error`. This is an open set — new step
+   * types are added as the agent runtime evolves, so treat unrecognized values as
+   * informational rather than failing on them.
    */
   step_type: string;
 
@@ -371,7 +399,8 @@ export interface AgentRunStep {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAgentAction {
   /**
@@ -385,13 +414,20 @@ export interface ListAgentAction {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAgentRun {
   /**
@@ -405,13 +441,20 @@ export interface ListAgentRun {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAgentRunStep {
   /**
@@ -425,7 +468,13 @@ export interface ListAgentRunStep {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -491,7 +540,7 @@ export interface RunRetrieveParams {
 
 export interface RunListParams {
   /**
-   * Filter to runs of a specific agent definition.
+   * Restricts results to runs of a single agent.
    */
   agent_definition_id?: string;
 
@@ -525,7 +574,10 @@ export interface RunListParams {
   q?: string;
 
   /**
-   * Filter to runs with this status (e.g. `running`, `completed`, `failed`).
+   * Restricts results to runs in this status.
+   *
+   * One of `pending`, `running`, `awaiting_input`, `awaiting_approval`, `completed`,
+   * `failed`, or `cancelled`.
    */
   status?: string;
 }

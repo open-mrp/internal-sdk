@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('cancel', async () => {
-    const responsePromise = client.ai.runs.actions.cancel('agrn_01502aa6da9bbdbaa595915fa4');
+    const responsePromise = client.ai.runs.actions.cancel('agrn_l6ob5relrd7t');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.ai.runs.actions.cancel(
-        'agrn_01502aa6da9bbdbaa595915fa4',
+        'agrn_l6ob5relrd7t',
         { include: ['actions'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource actions', () => {
   });
 
   test('continue: only required params', async () => {
-    const responsePromise = client.ai.runs.actions.continue('agrn_01502aa6da9bbdbaa595915fa4', {
+    const responsePromise = client.ai.runs.actions.continue('agrn_l6ob5relrd7t', {
       message: 'Yes, proceed with creating the order.',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -44,7 +44,7 @@ describe('resource actions', () => {
   });
 
   test('continue: required and optional params', async () => {
-    const response = await client.ai.runs.actions.continue('agrn_01502aa6da9bbdbaa595915fa4', {
+    const response = await client.ai.runs.actions.continue('agrn_l6ob5relrd7t', {
       message: 'Yes, proceed with creating the order.',
       include: ['actions'],
       approved_tool_call_ids: ['string'],
@@ -55,7 +55,7 @@ describe('resource actions', () => {
   });
 
   test('retry', async () => {
-    const responsePromise = client.ai.runs.actions.retry('agrn_01502aa6da9bbdbaa595915fa4');
+    const responsePromise = client.ai.runs.actions.retry('agrn_l6ob5relrd7t');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,7 +69,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.ai.runs.actions.retry(
-        'agrn_01502aa6da9bbdbaa595915fa4',
+        'agrn_l6ob5relrd7t',
         { include: ['actions'] },
         { path: '/_stainless_unknown_path' },
       ),

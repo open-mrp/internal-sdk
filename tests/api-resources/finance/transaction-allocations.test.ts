@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource transactionAllocations', () => {
   test('update', async () => {
-    const responsePromise = client.finance.transactionAllocations.update('txal_016cc92c2d9c0b12801e3160e0');
+    const responsePromise = client.finance.transactionAllocations.update('txal_2o8lu50zvphn');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource transactionAllocations', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.transactionAllocations.update(
-        'txal_016cc92c2d9c0b12801e3160e0',
+        'txal_2o8lu50zvphn',
         { amount: '150.00' },
         { path: '/_stainless_unknown_path' },
       ),
@@ -59,7 +59,7 @@ describe('resource transactionAllocations', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.finance.transactionAllocations.delete('txal_016cc92c2d9c0b12801e3160e0');
+    const responsePromise = client.finance.transactionAllocations.delete('txal_2o8lu50zvphn');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -9,9 +9,7 @@ const client = new Augno({
 
 describe('resource tenancy', () => {
   test('update: only required params', async () => {
-    const responsePromise = client.identity.me.tenancy.update({
-      account_id: 'ac_01148680966698341a9c0976db',
-    });
+    const responsePromise = client.identity.me.tenancy.update({ account_id: 'ac_ykxoradjoeb3' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,7 +20,7 @@ describe('resource tenancy', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.identity.me.tenancy.update({ account_id: 'ac_01148680966698341a9c0976db' });
+    const response = await client.identity.me.tenancy.update({ account_id: 'ac_ykxoradjoeb3' });
   });
 
   test('list', async () => {

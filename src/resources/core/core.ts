@@ -161,8 +161,19 @@ export class Core extends APIResource {
   records: RecordsAPI.Records = new RecordsAPI.Records(this._client);
 
   /**
-   * Search returns lightweight `entity` references matching the query across the
-   * resource types the caller can read.
+   * Searches across multiple resource types at once and returns lightweight `entity`
+   * references to the matches.
+   *
+   * Each result carries the matched record's ID, its resource type, and a display
+   * name and secondary handle, so it can be shown in a picker or turned into a link;
+   * fetch the record itself through its own endpoint for full detail.
+   *
+   * `q` is required unless the search is narrowed with `types`; scoping to one or
+   * more types lets you omit `q` to browse that type's most recent records. Matches
+   * are drawn from every searchable type you can read, then interleaved so no single
+   * type crowds out the others, and the combined result set is capped at `limit`.
+   * Results are not paginated — `limit` is the total you get. If one resource type
+   * fails to respond, it contributes no results instead of failing the whole search.
    *
    * This endpoint requires the permissions: `sales_orders:read`,
    * `purchase_orders:read`, `invoices:read`, `customers:read`, `items:read`,
@@ -493,7 +504,8 @@ export interface Entity {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListEntity {
   /**
@@ -507,7 +519,13 @@ export interface ListEntity {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -527,7 +545,9 @@ export interface CoreRetrieveSearchParams {
    *
    * When set, only resource types that are safe to expose to a customer are searched
    * (their sales orders, invoices, and shipments), and results are limited to
-   * records belonging to that customer.
+   * records belonging to that customer. This is intended for composing
+   * customer-facing replies, so a reference can never point at a record the customer
+   * is not entitled to see.
    */
   customer?: string;
 
@@ -546,8 +566,12 @@ export interface CoreRetrieveSearchParams {
   /**
    * Filter the search to specific resource types.
    *
-   * Attempting to read a type you do not have permission to read will result in a
-   * `403` error. Omit to search every supported type the caller can read.
+   * Only a subset of resource types is searchable: `sales_order`, `purchase_order`,
+   * `invoice`, `customer`, `item`, `product`, `shipment`, `messaging_contact`, and
+   * `agent_definition`. Any other value is rejected. Types you lack read permission
+   * for are silently dropped rather than rejected, so narrowing to a type you cannot
+   * read simply returns no results. Omit to search every searchable type you can
+   * read.
    */
   types?: Array<
     | 'account'

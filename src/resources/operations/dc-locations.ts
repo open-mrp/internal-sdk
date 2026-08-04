@@ -13,13 +13,16 @@ export class DcLocations extends APIResource {
   /**
    * Creates a distribution-center (DC) location for a customer.
    *
+   * The location text is not checked for uniqueness, so one customer can hold
+   * several locations with identical text.
+   *
    * This endpoint requires the permission: `edi_runs:create`.
    *
    * @example
    * ```ts
    * const dcLocation =
    *   await client.operations.dcLocations.create({
-   *     customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+   *     customer_id: 'ac_opnlh43ymyee',
    *     location: 'Warehouse A - Bay 3',
    *   });
    * ```
@@ -37,7 +40,7 @@ export class DcLocations extends APIResource {
    * ```ts
    * const dcLocation =
    *   await client.operations.dcLocations.retrieve(
-   *     'dclo_0191ce9223b21dc31c9ee09b3e',
+   *     'dclo_qucvv7xm6trv',
    *   );
    * ```
    */
@@ -56,7 +59,7 @@ export class DcLocations extends APIResource {
    * ```ts
    * const dcLocation =
    *   await client.operations.dcLocations.update(
-   *     'dclo_0191ce9223b21dc31c9ee09b3e',
+   *     'dclo_qucvv7xm6trv',
    *     { location: 'Warehouse B - Bay 1' },
    *   );
    * ```
@@ -71,6 +74,9 @@ export class DcLocations extends APIResource {
 
   /**
    * Returns a paginated list of DC locations for the target account.
+   *
+   * Locations are ordered by creation time, newest first. The `q` search term
+   * matches the location text and the name of the customer the location belongs to.
    *
    * This endpoint requires the permission: `edi_runs:read`.
    *
@@ -90,13 +96,16 @@ export class DcLocations extends APIResource {
   /**
    * Deletes a DC location.
    *
+   * Deletion is permanent. Deleting the same location again reports that it has
+   * already been deleted rather than succeeding silently.
+   *
    * This endpoint requires the permission: `edi_runs:delete`.
    *
    * @example
    * ```ts
    * const dcLocation =
    *   await client.operations.dcLocations.delete(
-   *     'dclo_0191ce9223b21dc31c9ee09b3e',
+   *     'dclo_qucvv7xm6trv',
    *   );
    * ```
    */
@@ -179,7 +188,8 @@ export interface DcLocationCustomer {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListDcLocation {
   /**
@@ -193,7 +203,13 @@ export interface ListDcLocation {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }

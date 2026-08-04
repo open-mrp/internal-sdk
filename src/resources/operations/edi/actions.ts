@@ -10,9 +10,7 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Triggers the target account's EDI pull-orders operation.
-   *
-   * Returns a confirmation message.
+   * Triggers EDI order intake for the target account.
    *
    * This endpoint requires the permission: `sales_orders:update`.
    *
@@ -27,9 +25,10 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Triggers an EDI resubmission request for an invoice.
+   * Resubmits an invoice over EDI.
    *
-   * Returns a confirmation message.
+   * Use this to send an invoice again when its earlier EDI submission did not reach
+   * the customer.
    *
    * This endpoint requires the permission: `invoices:update`.
    *
@@ -37,7 +36,7 @@ export class Actions extends APIResource {
    * ```ts
    * const messageResource =
    *   await client.operations.edi.actions.resubmitInvoice({
-   *     invoice_id: 'iv_018b5949ada8abca36358bbea9',
+   *     invoice_id: 'iv_m982ezb0fgp7',
    *   });
    * ```
    */

@@ -45,8 +45,12 @@ export class Billing extends APIResource {
   spendingCap: SpendingCapAPI.SpendingCap = new SpendingCapAPI.SpendingCap(this._client);
 
   /**
-   * Creates a Stripe billing portal session and returns a redirect URL for managing
-   * subscriptions.
+   * Creates a Stripe billing portal session for the account and returns the URL to
+   * send an admin to.
+   *
+   * The portal is where the account manages payment methods, invoices, and its
+   * subscription directly in Stripe. The account must already have a Stripe
+   * customer; create one with Ensure Billing Customer first.
    *
    * This endpoint requires the `admin` role type.
    *
@@ -62,7 +66,8 @@ export class Billing extends APIResource {
 }
 
 /**
- * Stripe billing portal session.
+ * A short-lived link into the Stripe billing portal, where an account admin can
+ * manage payment methods, invoices, and the subscription.
  */
 export interface BillingPortalSessionResponse {
   /**
@@ -71,7 +76,11 @@ export interface BillingPortalSessionResponse {
   object: 'billing_portal_session_response';
 
   /**
-   * Redirect URL for the Stripe billing portal.
+   * URL to send the admin to.
+   *
+   * The link is issued by Stripe for a single visit and expires; generate a new
+   * session each time. On leaving the portal the admin is returned to the
+   * dashboard's billing page.
    */
   url: string;
 }

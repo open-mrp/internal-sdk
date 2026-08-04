@@ -13,8 +13,11 @@ export class ScanningStations extends APIResource {
   /**
    * Creates a scanning station and assigns it to a department.
    *
+   * The new station has no production steps connected to it; use Connect Production
+   * Steps to Scanning Station to attach them.
+   *
    * Returns a conflict error if a scanning station with the same name already
-   * exists.
+   * exists, and a not-found error if the department does not exist in your account.
    *
    * This endpoint requires the permission: `scanners:create`.
    *
@@ -22,7 +25,7 @@ export class ScanningStations extends APIResource {
    * ```ts
    * const scanningStation =
    *   await client.operations.scanningStations.create({
-   *     department_id: 'dp_01791c25ab59da4704cba61874',
+   *     department_id: 'dp_m0jayebxnkos',
    *     name: 'Packaging Line 1',
    *     operator_requirement: 'none',
    *     type: 'init_batch',
@@ -49,7 +52,7 @@ export class ScanningStations extends APIResource {
    * ```ts
    * const scanningStation =
    *   await client.operations.scanningStations.retrieve(
-   *     'scst_0129335dd6286056a97024fcc1',
+   *     'scst_t71bn7lq5yov',
    *   );
    * ```
    */
@@ -73,7 +76,7 @@ export class ScanningStations extends APIResource {
    * ```ts
    * const scanningStation =
    *   await client.operations.scanningStations.update(
-   *     'scst_0129335dd6286056a97024fcc1',
+   *     'scst_t71bn7lq5yov',
    *     {
    *       label_size: '1x1',
    *       label_type: 'tag',
@@ -100,6 +103,8 @@ export class ScanningStations extends APIResource {
   /**
    * Returns a paginated list of scanning stations in your account.
    *
+   * The `q` search term matches the station name.
+   *
    * This endpoint requires the permission: `scanners:read`.
    *
    * @example
@@ -118,13 +123,18 @@ export class ScanningStations extends APIResource {
   /**
    * Deletes a scanning station.
    *
+   * Production steps connected to the station are not deleted, but they are left
+   * without a station to scan at until you connect them to another one. Deleting a
+   * station that was already deleted returns an already-deleted error rather than a
+   * not-found error.
+   *
    * This endpoint requires the permission: `scanners:delete`.
    *
    * @example
    * ```ts
    * const scanningStation =
    *   await client.operations.scanningStations.delete(
-   *     'scst_0129335dd6286056a97024fcc1',
+   *     'scst_t71bn7lq5yov',
    *   );
    * ```
    */
@@ -136,11 +146,14 @@ export class ScanningStations extends APIResource {
    * Returns the material demand and current inventory for the operation a scanning
    * station would perform on the given batches.
    *
-   * Demand is calculated from the production step's configured consumptions, scaled
-   * to the batch quantities (or the proposed split quantity). How the step is
-   * determined depends on the station's type: initialize stations derive it from the
-   * station and the batch's item, while move, split, and merge stations use
-   * `production_step_id`.
+   * Use this to preview what a scan will draw from stock, and to compare that
+   * against what is on hand, before committing the operation. Demand is each of the
+   * step's configured material quantities scaled by how much output the operation
+   * produces relative to the step's standard run size, so it grows with the batch
+   * quantities (or the proposed split quantity). How the step is determined depends
+   * on the station's type: `init_batch` stations derive it from the station and the
+   * batch's item, while `move_batch`, `split_batch`, and `merge_batch` stations use
+   * `production_step_id`. Nothing is consumed by this call.
    *
    * This endpoint requires the permission: `batches:read`.
    *
@@ -148,14 +161,14 @@ export class ScanningStations extends APIResource {
    * ```ts
    * const listScanningConsumption =
    *   await client.operations.scanningStations.consumptions(
-   *     'scst_0129335dd6286056a97024fcc1',
+   *     'scst_t71bn7lq5yov',
    *     {
-   *       batch_ids: ['bt_017313a7df2d7ac8d895809747'],
-   *       production_step_id: 'prst_0159474175bb59f4b1990404ee',
+   *       batch_ids: ['bt_fuies8j4pk45'],
+   *       production_step_id: 'prst_0ht5mkqx5a6t',
    *       split_quantity: {
-   *         id: 'bt_017313a7df2d7ac8d895809747',
+   *         id: 'bt_fuies8j4pk45',
    *         measure: '10.5',
-   *         unit_id: 'un_01966263f74a5a0cae356000a1',
+   *         unit_id: 'un_82bd37dae5po',
    *       },
    *     },
    *   );
@@ -170,7 +183,12 @@ export class ScanningStations extends APIResource {
   }
 
   /**
-   * Returns a paginated list of batches for a given scanning station.
+   * Returns a paginated list of the batches scanned at a given scanning station,
+   * most recently scanned first.
+   *
+   * Only batches that have actually been scanned at the station appear. Batches
+   * created there by a move, merge, or split are attached to the station but never
+   * marked as scanned, so they are not listed. The search term matches on item SKU.
    *
    * This endpoint requires the permission: `batches:read`.
    *
@@ -178,7 +196,7 @@ export class ScanningStations extends APIResource {
    * ```ts
    * const listBatch =
    *   await client.operations.scanningStations.retrieveBatches(
-   *     'scst_0129335dd6286056a97024fcc1',
+   *     'scst_t71bn7lq5yov',
    *   );
    * ```
    */
@@ -193,9 +211,14 @@ export class ScanningStations extends APIResource {
   /**
    * Connects production steps to a scanning station by name.
    *
-   * Every production step whose name contains the provided value is connected. A
-   * production step can be connected to at most one scanning station, so matching
-   * steps are moved from any station they were previously connected to.
+   * Every production step in your account whose name contains the provided value is
+   * connected. A production step can be connected to at most one scanning station,
+   * so matching steps are moved off any station they were previously connected to.
+   * Steps already connected to this station that do not match are left connected, so
+   * this adds to the station's steps rather than replacing them.
+   *
+   * Nothing about the station is returned, so retrieve the scanning station
+   * afterward to confirm which steps are now connected.
    *
    * This endpoint requires the permission: `scanners:update`.
    *
@@ -203,7 +226,7 @@ export class ScanningStations extends APIResource {
    * ```ts
    * const response =
    *   await client.operations.scanningStations.updateProductionSteps(
-   *     'scst_0129335dd6286056a97024fcc1',
+   *     'scst_t71bn7lq5yov',
    *     { name: 'Mixing' },
    *   );
    * ```
@@ -227,8 +250,8 @@ export interface ConnectProductionStepsRequest {
   /**
    * Full or partial production step name to match.
    *
-   * Every production step in your account whose name contains this value is
-   * connected to the station.
+   * Matching is a case-insensitive substring match, so a broad value such as a
+   * single letter can capture far more steps than intended.
    */
   name: string;
 }
@@ -239,6 +262,8 @@ export interface ConnectProductionStepsRequest {
 export interface CreateScanningStationRequest {
   /**
    * ID of the department this station belongs to.
+   *
+   * Must be a department in your account, and cannot be changed after creation.
    */
   department_id: string;
 
@@ -258,12 +283,14 @@ export interface CreateScanningStationRequest {
   operator_requirement: 'none' | 'material_check';
 
   /**
-   * Scanning station type, determining which batch operation the station performs.
+   * Scanning station type, determining which batch operation an operator performs
+   * when they scan here.
    *
-   * - `init_batch`: initializes a new batch.
-   * - `merge_batch`: merges multiple batches into one.
-   * - `move_batch`: moves a batch to another location or step.
-   * - `split_batch`: splits a batch into multiple batches.
+   * - `init_batch`: starts a new batch at the beginning of a production flow.
+   * - `merge_batch`: combines several scanned batches into one.
+   * - `move_batch`: advances a batch through a production step connected to this
+   *   station.
+   * - `split_batch`: divides a batch into several batches.
    *
    * The type cannot be changed after creation.
    */
@@ -295,15 +322,20 @@ export interface CreateScanningStationRequest {
  */
 export interface GetScanningStationConsumptionRequest {
   /**
-   * Batch IDs to calculate consumption for.
+   * Batch IDs the scanning operation would be performed on.
+   *
+   * At an `init_batch` station only the first ID is used, since demand comes from
+   * that batch's own item and quantity. At the other station types each ID is
+   * resolved forward through its production flow to the batch that is actually
+   * available at the step, and the demand of all of them is added together.
    */
   batch_ids: Array<string>;
 
   /**
    * Production step ID to scope the consumption calculation.
    *
-   * Required when the scanning station is a move, split, or merge station. Ignored
-   * for initialize stations, where the step is derived from the station and the
+   * Required for `move_batch`, `split_batch`, and `merge_batch` stations. Ignored
+   * for `init_batch` stations, where the step is derived from the station and the
    * batch's item.
    */
   production_step_id?: string;
@@ -315,7 +347,8 @@ export interface GetScanningStationConsumptionRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListBatch {
   /**
@@ -329,13 +362,20 @@ export interface ListBatch {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListScanningConsumption {
   /**
@@ -349,7 +389,13 @@ export interface ListScanningConsumption {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -402,6 +448,9 @@ export interface ScanningConsumption {
 
 /**
  * Request to partially update a scanning station.
+ *
+ * The station's type and department are set at creation and cannot be changed
+ * here.
  */
 export interface UpdateScanningStationRequest {
   /**
@@ -449,6 +498,8 @@ export interface ScanningStationUpdateProductionStepsResponse {}
 export interface ScanningStationCreateParams {
   /**
    * Body param: ID of the department this station belongs to.
+   *
+   * Must be a department in your account, and cannot be changed after creation.
    */
   department_id: string;
 
@@ -468,13 +519,14 @@ export interface ScanningStationCreateParams {
   operator_requirement: 'none' | 'material_check';
 
   /**
-   * Body param: Scanning station type, determining which batch operation the station
-   * performs.
+   * Body param: Scanning station type, determining which batch operation an operator
+   * performs when they scan here.
    *
-   * - `init_batch`: initializes a new batch.
-   * - `merge_batch`: merges multiple batches into one.
-   * - `move_batch`: moves a batch to another location or step.
-   * - `split_batch`: splits a batch into multiple batches.
+   * - `init_batch`: starts a new batch at the beginning of a production flow.
+   * - `merge_batch`: combines several scanned batches into one.
+   * - `move_batch`: advances a batch through a production step connected to this
+   *   station.
+   * - `split_batch`: divides a batch into several batches.
    *
    * The type cannot be changed after creation.
    */
@@ -591,15 +643,20 @@ export interface ScanningStationListParams {
 
 export interface ScanningStationConsumptionsParams {
   /**
-   * Batch IDs to calculate consumption for.
+   * Batch IDs the scanning operation would be performed on.
+   *
+   * At an `init_batch` station only the first ID is used, since demand comes from
+   * that batch's own item and quantity. At the other station types each ID is
+   * resolved forward through its production flow to the batch that is actually
+   * available at the step, and the demand of all of them is added together.
    */
   batch_ids: Array<string>;
 
   /**
    * Production step ID to scope the consumption calculation.
    *
-   * Required when the scanning station is a move, split, or merge station. Ignored
-   * for initialize stations, where the step is derived from the station and the
+   * Required for `move_batch`, `split_batch`, and `merge_batch` stations. Ignored
+   * for `init_batch` stations, where the step is derived from the station and the
    * batch's item.
    */
   production_step_id?: string;
@@ -637,8 +694,8 @@ export interface ScanningStationUpdateProductionStepsParams {
   /**
    * Full or partial production step name to match.
    *
-   * Every production step in your account whose name contains this value is
-   * connected to the station.
+   * Matching is a case-insensitive substring match, so a broad value such as a
+   * single letter can capture far more steps than intended.
    */
   name: string;
 }

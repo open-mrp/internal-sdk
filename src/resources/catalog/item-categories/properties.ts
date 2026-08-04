@@ -10,12 +10,12 @@ import { path } from '../../../internal/utils/path';
  */
 export class Properties extends APIResource {
   /**
-   * Adds a property to an item category, making the property available to items in
-   * that category.
+   * Attaches one of your account's properties to an item category.
    *
-   * Each property name can appear only once per category; adding a property whose
-   * name duplicates one already in the category returns a conflict error. Default
-   * system categories cannot be modified.
+   * The property then appears among the category's properties, including in the
+   * customer-facing catalog, describing a dimension along which the category's items
+   * vary. Each property name can appear only once per category, so attaching a
+   * property whose name duplicates one already there returns a conflict error.
    *
    * This endpoint requires the permission: `item_categories:update`.
    *
@@ -23,8 +23,8 @@ export class Properties extends APIResource {
    * ```ts
    * const property =
    *   await client.catalog.itemCategories.properties.update(
-   *     'pp_01e21344878064372f69e67093',
-   *     { id: 'ic_01ae7bd7bfd21ca0ab81e1357e' },
+   *     'pp_fhnnvtt3q3ov',
+   *     { id: 'ic_d06g9c6yc9ck' },
    *   );
    * ```
    */
@@ -38,9 +38,11 @@ export class Properties extends APIResource {
   }
 
   /**
-   * Removes a property from an item category.
+   * Detaches a property from an item category.
    *
-   * Default system categories cannot be modified.
+   * Only the link between the property and the category is removed; the property
+   * itself and its attributes are left intact and stay available to other
+   * categories. The property must belong to your account.
    *
    * This endpoint requires the permission: `item_categories:update`.
    *
@@ -48,8 +50,8 @@ export class Properties extends APIResource {
    * ```ts
    * const property =
    *   await client.catalog.itemCategories.properties.delete(
-   *     'pp_01e21344878064372f69e67093',
-   *     { id: 'ic_01ae7bd7bfd21ca0ab81e1357e' },
+   *     'pp_fhnnvtt3q3ov',
+   *     { id: 'ic_d06g9c6yc9ck' },
    *   );
    * ```
    */

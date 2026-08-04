@@ -33,7 +33,7 @@ describe('resource accountGroups', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.accountGroups.retrieve('acgp_018e88072d1320808dc979cfac');
+    const responsePromise = client.sales.accountGroups.retrieve('acgp_6p4z57e9alaf');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -44,7 +44,7 @@ describe('resource accountGroups', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.accountGroups.update('acgp_018e88072d1320808dc979cfac');
+    const responsePromise = client.sales.accountGroups.update('acgp_6p4z57e9alaf');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -58,7 +58,7 @@ describe('resource accountGroups', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.accountGroups.update(
-        'acgp_018e88072d1320808dc979cfac',
+        'acgp_6p4z57e9alaf',
         {
           commission_policy: 'commission_exempt',
           description: 'Customers who buy in bulk at wholesale pricing.',
@@ -97,7 +97,7 @@ describe('resource accountGroups', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.accountGroups.delete('acgp_018e88072d1320808dc979cfac');
+    const responsePromise = client.sales.accountGroups.delete('acgp_6p4z57e9alaf');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

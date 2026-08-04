@@ -17,6 +17,9 @@ export class Lines extends APIResource {
   /**
    * Updates a pick line's picked quantity.
    *
+   * Use this to record a short or partial pick; Pick Pick Line fills in the full
+   * outstanding quantity instead.
+   *
    * This endpoint requires the permission: `picks:update`.
    *
    * @example
@@ -24,7 +27,7 @@ export class Lines extends APIResource {
    * const pickLine = await client.operations.picks.lines.update(
    *   'example',
    *   {
-   *     pick_id: 'pk_016452192feb7952d8393f0105',
+   *     pick_id: 'pk_6eilj488bq8d',
    *     quantity_value: '10.000000000000000000000000000000',
    *   },
    * );
@@ -37,13 +40,14 @@ export class Lines extends APIResource {
 }
 
 /**
- * UpdatePickLineRequest is the request to update a pick line's quantity.
+ * Request to update a pick line's picked quantity.
  */
 export interface UpdatePickLineRequest {
   /**
    * New picked quantity for the line, as a decimal string.
    *
-   * Interpreted in the line's existing quantity unit.
+   * Interpreted in the line's existing quantity unit, which this endpoint cannot
+   * change. The value is stored as given and is not capped at the ordered quantity.
    */
   quantity_value?: string;
 }
@@ -57,7 +61,8 @@ export interface LineUpdateParams {
   /**
    * Body param: New picked quantity for the line, as a decimal string.
    *
-   * Interpreted in the line's existing quantity unit.
+   * Interpreted in the line's existing quantity unit, which this endpoint cannot
+   * change. The value is stored as given and is not capped at the ordered quantity.
    */
   quantity_value?: string;
 }

@@ -13,10 +13,15 @@ export class Inventory extends APIResource {
   /**
    * Adjusts or reconciles on-hand inventory for an item.
    *
-   * With `operation` set to `adjust` (the default), `quantity_change` is added to
-   * the current on-hand quantity; with `reconcile`, the on-hand quantity is set to
-   * exactly `quantity_change`. The change is recorded in the item's inventory audit
-   * trail as a user correction.
+   * With `operation` set to `adjust` (the behavior when it is omitted),
+   * `quantity_change` is added to the current on-hand quantity; with `reconcile`,
+   * the on-hand quantity is set to exactly `quantity_change`. Either way it is the
+   * resulting difference that gets written, so a difference of zero moves no stock.
+   *
+   * Added stock is immediately allocated against any unfilled demand for the item,
+   * so an adjustment can settle a shortfall instead of raising the quantity free on
+   * hand. The change is recorded in the item's inventory audit trail as a user
+   * correction attributed to the caller.
    *
    * This endpoint requires the permission: `items:update`.
    *
@@ -24,13 +29,13 @@ export class Inventory extends APIResource {
    * ```ts
    * const inventory =
    *   await client.catalog.items.inventory.update(
-   *     'it_0131e386ac683e8c29a71f6f1f',
+   *     'it_pej07ckhvu62',
    *     {
-   *       customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-   *       location_id: 'lc_014d187d99b31926f0c74af9d8',
+   *       customer_id: 'ac_opnlh43ymyee',
+   *       location_id: 'lc_yonnys0hx3ju',
    *       operation: 'adjust',
    *       quantity_change: 10.5,
-   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       unit_id: 'un_82bd37dae5po',
    *     },
    *   );
    * ```
@@ -44,8 +49,12 @@ export class Inventory extends APIResource {
   }
 
   /**
-   * Returns inventory quantities for an item, including on-hand, reserved,
-   * available-to-promise, and short amounts.
+   * Returns the stock position for an item: what is on hand, what is reserved
+   * against existing orders, what is free to promise, and what is short.
+   *
+   * Stock your account either owns or holds counts toward the on-hand figure, so
+   * customer-supplied material sitting in your facility is included. All four
+   * quantities are reported in the base unit of the item's category.
    *
    * This endpoint requires the permission: `items:read`.
    *
@@ -53,7 +62,7 @@ export class Inventory extends APIResource {
    * ```ts
    * const itemInventory =
    *   await client.catalog.items.inventory.list(
-   *     'it_0131e386ac683e8c29a71f6f1f',
+   *     'it_pej07ckhvu62',
    *   );
    * ```
    */
@@ -67,11 +76,19 @@ export class Inventory extends APIResource {
 }
 
 /**
- * ItemInventory contains inventory quantities for an item.
+ * The stock position for an item: what is in stock, what is already committed, and
+ * what is still free to sell.
+ *
+ * All four quantities are reported in the same unit — the base unit of the item's
+ * category.
  */
 export interface ItemInventory {
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   available_to_promise: AccountUsersAPI.Quantity | null;
 
@@ -81,31 +98,44 @@ export interface ItemInventory {
   object: 'item_inventory';
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   on_hand: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   reserved: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   short: AccountUsersAPI.Quantity | null;
 }
 
 /**
- * UpdateItemInventoryRequest is the request to adjust or reconcile inventory for
- * an item.
+ * Request to adjust or reconcile inventory for an item.
  */
 export interface UpdateItemInventoryRequest {
   /**
    * ID of the customer account that owns the resulting inventory.
    *
-   * When provided, added inventory is recorded as owned by this customer account
-   * instead of your own; requires edit access to that customer.
+   * Use this for stock you hold but do not own, such as customer-supplied material.
+   * It only affects quantity being added: your account stays the holder, the
+   * customer becomes the owner, and the current quantity a `reconcile` measures
+   * against is still your account's. Requires edit access to that customer.
    */
   customer_id?: string;
 
@@ -141,6 +171,10 @@ export interface UpdateItemInventoryRequest {
 
   /**
    * ID of the unit `quantity_change` is expressed in.
+   *
+   * The figure is recorded exactly as sent, with no conversion, so send it in the
+   * base unit of the item's category to keep it comparable with the quantities the
+   * inventory endpoints report.
    */
   unit_id?: string;
 }
@@ -151,8 +185,10 @@ export interface InventoryUpdateParams {
   /**
    * ID of the customer account that owns the resulting inventory.
    *
-   * When provided, added inventory is recorded as owned by this customer account
-   * instead of your own; requires edit access to that customer.
+   * Use this for stock you hold but do not own, such as customer-supplied material.
+   * It only affects quantity being added: your account stays the holder, the
+   * customer becomes the owner, and the current quantity a `reconcile` measures
+   * against is still your account's. Requires edit access to that customer.
    */
   customer_id?: string;
 
@@ -188,6 +224,10 @@ export interface InventoryUpdateParams {
 
   /**
    * ID of the unit `quantity_change` is expressed in.
+   *
+   * The figure is recorded exactly as sent, with no conversion, so send it in the
+   * base unit of the item's category to keep it comparable with the quantities the
+   * inventory endpoints report.
    */
   unit_id?: string;
 }

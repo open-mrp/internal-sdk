@@ -9,8 +9,13 @@ import { RequestOptions } from '../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Checks whether a record number already exists on the account for the given type
-   * (invoice number, sales order number, or customer PO number).
+   * Checks whether a record number is already in use for the given type (invoice
+   * number, sales order number, or customer PO number).
+   *
+   * Use this to warn a user before they submit a number that would collide with an
+   * existing record. The check is read-only: it reports the state at the moment of
+   * the call and does not reserve the number, so a number reported as free can still
+   * be taken by the time you create the record.
    *
    * This endpoint requires the permissions: `invoices:read`, `sales_orders:read`,
    * `customers:read`, `suppliers:read`.
@@ -36,8 +41,10 @@ export class Actions extends APIResource {
    * recipients and marks the record as sent.
    *
    * Delivery is asynchronous: the endpoint returns `202 Accepted` once the email is
-   * queued. If the record has no configured recipients, the request succeeds without
-   * sending an email.
+   * queued, so a `202` means the send was accepted, not that it reached the
+   * recipients. If the record has no configured recipients the request still
+   * succeeds and nothing is sent; in that case a sales order or purchase order is
+   * also left unmarked, while an invoice is still marked as sent.
    *
    * This endpoint requires the permissions: `invoices:read`, `sales_orders:read`,
    * `purchase_orders:read`.
@@ -45,7 +52,7 @@ export class Actions extends APIResource {
    * @example
    * ```ts
    * const response = await client.core.actions.emailRecord({
-   *   id: 'iv_018b5949ada8abca36358bbea9',
+   *   id: 'iv_m982ezb0fgp7',
    *   type: 'invoice',
    * });
    * ```
@@ -58,7 +65,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Submits a demo request from a prospective customer.
+   * Submits a demo request from a prospective customer for the Augno team to follow
+   * up on.
+   *
+   * The request creates no account, user, or other resource, and there is no
+   * endpoint to read it back. The response carries a confirmation message suitable
+   * for display.
    *
    * @example
    * ```ts
@@ -75,7 +87,10 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Submits user feedback for a given question and page.
+   * Submits an answer to an in-product feedback prompt for the Augno team to review.
+   *
+   * The submission creates no resource and cannot be read back through the API. The
+   * response carries a confirmation message suitable for display.
    *
    * @example
    * ```ts
@@ -98,6 +113,9 @@ export class Actions extends APIResource {
 export interface CheckDuplicateRequest {
   /**
    * The record number to check for an existing match.
+   *
+   * Surrounding whitespace is trimmed before the number is compared against existing
+   * records.
    */
   record_number: string;
 
@@ -120,11 +138,16 @@ export interface CheckDuplicateRequest {
 }
 
 /**
- * Result of a duplicate check.
+ * The outcome of checking whether a record number is already in use.
  */
 export interface CheckDuplicateResult {
   /**
-   * Whether a record with the given number already exists on the account.
+   * Whether a record with the submitted number already exists.
+   *
+   * Invoice and sales order numbers are matched across the whole account; a customer
+   * PO number is matched only against the orders of the customer given in the
+   * request, so the same PO number may exist on another customer's orders without
+   * being reported here.
    */
   is_duplicate: boolean;
 
@@ -154,7 +177,8 @@ export interface EmailRecordRequest {
   /**
    * The type of record to email.
    *
-   * - `invoice`: emails the invoice to the invoice's email recipients.
+   * - `invoice`: emails the invoice to the contacts on its sales order that are set
+   *   to receive invoice emails.
    * - `sales_order`: sends an order acknowledgement to the order's acknowledgement
    *   recipients.
    * - `purchase_order`: sends the purchase order submission to the order's
@@ -169,7 +193,10 @@ export interface EmailRecordRequest {
  */
 export interface MessageResource {
   /**
-   * Human-readable message.
+   * Plain-language summary of what the operation did.
+   *
+   * This text is meant for display only. Its wording can change at any time, so do
+   * not parse it or branch on its contents.
    */
   message: string;
 
@@ -180,31 +207,31 @@ export interface MessageResource {
 }
 
 /**
- * Request to submit a demo request.
+ * Request to be contacted for a product demo.
  */
 export interface RequestDemoRequest {
   /**
-   * Company name.
+   * Name of the company the requester represents.
    */
   company: string;
 
   /**
-   * Email address of the requester.
+   * Email address to reach the requester at.
    */
   email: string;
 
   /**
-   * Name of the requester.
+   * Full name of the person requesting the demo.
    */
   name: string;
 
   /**
-   * Message from the requester.
+   * Free-form note from the requester about what they would like to see.
    */
   message?: string;
 
   /**
-   * Phone number.
+   * Phone number to reach the requester at.
    */
   phone_number?: string;
 }
@@ -214,17 +241,18 @@ export interface RequestDemoRequest {
  */
 export interface SubmitFeedbackRequest {
   /**
-   * Answer to the question.
+   * The user's response to the question.
    */
   answer: string;
 
   /**
-   * Question presented to the user.
+   * The question the user was prompted with.
    */
   question: string;
 
   /**
-   * URL of the page where feedback was submitted.
+   * URL of the page the user was on when they answered, recorded so the feedback can
+   * be read in context.
    */
   page_url?: string;
 }
@@ -234,6 +262,9 @@ export interface ActionEmailRecordResponse {}
 export interface ActionCheckDuplicatesParams {
   /**
    * The record number to check for an existing match.
+   *
+   * Surrounding whitespace is trimmed before the number is compared against existing
+   * records.
    */
   record_number: string;
 
@@ -264,7 +295,8 @@ export interface ActionEmailRecordParams {
   /**
    * The type of record to email.
    *
-   * - `invoice`: emails the invoice to the invoice's email recipients.
+   * - `invoice`: emails the invoice to the contacts on its sales order that are set
+   *   to receive invoice emails.
    * - `sales_order`: sends an order acknowledgement to the order's acknowledgement
    *   recipients.
    * - `purchase_order`: sends the purchase order submission to the order's
@@ -275,44 +307,45 @@ export interface ActionEmailRecordParams {
 
 export interface ActionRequestDemoParams {
   /**
-   * Company name.
+   * Name of the company the requester represents.
    */
   company: string;
 
   /**
-   * Email address of the requester.
+   * Email address to reach the requester at.
    */
   email: string;
 
   /**
-   * Name of the requester.
+   * Full name of the person requesting the demo.
    */
   name: string;
 
   /**
-   * Message from the requester.
+   * Free-form note from the requester about what they would like to see.
    */
   message?: string;
 
   /**
-   * Phone number.
+   * Phone number to reach the requester at.
    */
   phone_number?: string;
 }
 
 export interface ActionSubmitFeedbackParams {
   /**
-   * Answer to the question.
+   * The user's response to the question.
    */
   answer: string;
 
   /**
-   * Question presented to the user.
+   * The question the user was prompted with.
    */
   question: string;
 
   /**
-   * URL of the page where feedback was submitted.
+   * URL of the page the user was on when they answered, recorded so the feedback can
+   * be read in context.
    */
   page_url?: string;
 }

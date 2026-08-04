@@ -12,7 +12,10 @@ import { path } from '../../internal/utils/path';
  */
 export class ShippingTerms extends APIResource {
   /**
-   * Creates an account-owned shipping term.
+   * Creates a shipping term owned by your account.
+   *
+   * The new term takes effect on freight quoting once it is assigned as a customer's
+   * default shipping term.
    *
    * This endpoint requires the permission: `shipping_terms:create`.
    *
@@ -24,14 +27,12 @@ export class ShippingTerms extends APIResource {
    *     type: 'flat_rate_freight',
    *     flat_rate: {
    *       value: '15.00',
-   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       unit_id: 'un_82bd37dae5po',
    *     },
-   *     free_shipping_service_level_ids: [
-   *       'crop_01cfaf03f104e90ef9680e2a30',
-   *     ],
+   *     free_shipping_service_level_ids: ['crop_4ilk9p6gccrx'],
    *     minimum_order_value: {
    *       value: '500.00',
-   *       unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       unit_id: 'un_82bd37dae5po',
    *     },
    *   });
    * ```
@@ -50,7 +51,7 @@ export class ShippingTerms extends APIResource {
    * ```ts
    * const shippingTerm =
    *   await client.operations.shippingTerms.retrieve(
-   *     'shtm_014341ab4bb5bf94d5b6936f86',
+   *     'shtm_c5gxy05whw6r',
    *   );
    * ```
    */
@@ -63,9 +64,11 @@ export class ShippingTerms extends APIResource {
   }
 
   /**
-   * Partially updates an account-owned shipping term.
+   * Partially updates a shipping term owned by your account.
    *
-   * System-provided default shipping terms cannot be updated.
+   * System-provided default shipping terms cannot be updated. Changes affect freight
+   * quoted after the update; freight already recorded on existing orders is not
+   * recalculated.
    *
    * This endpoint requires the permission: `shipping_terms:update`.
    *
@@ -73,18 +76,18 @@ export class ShippingTerms extends APIResource {
    * ```ts
    * const shippingTerm =
    *   await client.operations.shippingTerms.update(
-   *     'shtm_014341ab4bb5bf94d5b6936f86',
+   *     'shtm_c5gxy05whw6r',
    *     {
    *       flat_rate: {
    *         value: '15.00',
-   *         unit_id: 'un_01966263f74a5a0cae356000a1',
+   *         unit_id: 'un_82bd37dae5po',
    *       },
    *       free_shipping_service_level_ids: [
-   *         'crop_01cfaf03f104e90ef9680e2a30',
+   *         'crop_4ilk9p6gccrx',
    *       ],
    *       minimum_order_value: {
    *         value: '500.00',
-   *         unit_id: 'un_01966263f74a5a0cae356000a1',
+   *         unit_id: 'un_82bd37dae5po',
    *       },
    *       name: 'Collect',
    *       type: 'flat_rate_freight',
@@ -106,8 +109,10 @@ export class ShippingTerms extends APIResource {
   }
 
   /**
-   * Returns a paginated list of shipping terms for the account, including default
-   * system shipping terms.
+   * Returns a paginated list of shipping terms, newest first.
+   *
+   * Both the terms your account has created and the system-provided default terms
+   * are returned. The `q` parameter matches on the shipping term name.
    *
    * This endpoint requires the permission: `shipping_terms:read`.
    *
@@ -125,9 +130,12 @@ export class ShippingTerms extends APIResource {
   }
 
   /**
-   * Deletes an account-owned shipping term.
+   * Deletes a shipping term owned by your account.
    *
-   * System-provided default shipping terms cannot be deleted.
+   * System-provided default shipping terms cannot be deleted. The term's
+   * free-shipping service level rules, flat rate and minimum order value go with it,
+   * and deleting a term that has already been deleted returns an error rather than
+   * succeeding again.
    *
    * This endpoint requires the permission: `shipping_terms:delete`.
    *
@@ -135,7 +143,7 @@ export class ShippingTerms extends APIResource {
    * ```ts
    * const shippingTerm =
    *   await client.operations.shippingTerms.delete(
-   *     'shtm_014341ab4bb5bf94d5b6936f86',
+   *     'shtm_c5gxy05whw6r',
    *   );
    * ```
    */
@@ -157,33 +165,43 @@ export interface CreateShippingTermRequest {
   /**
    * Freight pricing model applied by this shipping term.
    *
-   * - `free_freight`: no shipping cost to the buyer.
-   * - `flat_rate_freight`: a fixed shipping cost regardless of order details (see
-   *   `flat_rate`).
-   * - `carrier_rate_freight`: shipping cost is determined by the carrier's quoted
-   *   rate.
+   * - `free_freight`: the buyer is never charged for shipping.
+   * - `flat_rate_freight`: the buyer is charged the fixed amount in `flat_rate`,
+   *   regardless of what the carrier would have charged.
+   * - `carrier_rate_freight`: the buyer is charged the rate the carrier quotes for
+   *   the order's carrier and service level.
    */
   type: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
 
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   flat_rate?: CustomersAPI.QuantityInput;
 
   /**
-   * IDs of service levels that ship for free under this term (typically once
-   * `minimum_order_value` is met).
+   * IDs of the service levels that ship for free once an order exceeds
+   * `minimum_order_value`.
+   *
+   * Leave this empty to let every service level ship free above the threshold. The
+   * request is rejected if any ID is not a service level available to your account.
    */
   free_shipping_service_level_ids?: Array<string>;
 
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   minimum_order_value?: CustomersAPI.QuantityInput;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListShippingTerm {
   /**
@@ -197,7 +215,13 @@ export interface ListShippingTerm {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -205,26 +229,34 @@ export interface ListShippingTerm {
 /**
  * Request to partially update a shipping term.
  *
- * All fields are optional and absent fields are left unchanged. Send an explicit
- * JSON `null` for `flat_rate`, `minimum_order_value`, or
- * `free_shipping_service_level_ids` to clear the existing value.
+ * Fields left out of the request keep their current values. Send an explicit JSON
+ * `null` for `flat_rate`, `minimum_order_value`, or
+ * `free_shipping_service_level_ids` to clear the stored value.
  */
 export interface UpdateShippingTermRequest {
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   flat_rate?: CustomersAPI.QuantityInput | null;
 
   /**
-   * IDs of service levels that ship for free under this term (typically once
-   * `minimum_order_value` is met).
+   * IDs of the service levels that ship for free once an order exceeds
+   * `minimum_order_value`.
    *
-   * Replaces the existing list. Send `null` to clear.
+   * Replaces the whole list rather than adding to it, and clearing it lets every
+   * service level ship free above the threshold. The request is rejected if any ID
+   * is not a service level available to your account.
    */
   free_shipping_service_level_ids?: Array<string> | null;
 
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   minimum_order_value?: CustomersAPI.QuantityInput | null;
 
@@ -237,11 +269,11 @@ export interface UpdateShippingTermRequest {
   /**
    * Freight pricing model applied by this shipping term.
    *
-   * - `free_freight`: no shipping cost to the buyer.
-   * - `flat_rate_freight`: a fixed shipping cost regardless of order details (see
-   *   `flat_rate`).
-   * - `carrier_rate_freight`: shipping cost is determined by the carrier's quoted
-   *   rate.
+   * - `free_freight`: the buyer is never charged for shipping.
+   * - `flat_rate_freight`: the buyer is charged the fixed amount in `flat_rate`,
+   *   regardless of what the carrier would have charged.
+   * - `carrier_rate_freight`: the buyer is charged the rate the carrier quotes for
+   *   the order's carrier and service level.
    */
   type?: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
 }
@@ -258,11 +290,11 @@ export interface ShippingTermCreateParams {
   /**
    * Body param: Freight pricing model applied by this shipping term.
    *
-   * - `free_freight`: no shipping cost to the buyer.
-   * - `flat_rate_freight`: a fixed shipping cost regardless of order details (see
-   *   `flat_rate`).
-   * - `carrier_rate_freight`: shipping cost is determined by the carrier's quoted
-   *   rate.
+   * - `free_freight`: the buyer is never charged for shipping.
+   * - `flat_rate_freight`: the buyer is charged the fixed amount in `flat_rate`,
+   *   regardless of what the carrier would have charged.
+   * - `carrier_rate_freight`: the buyer is charged the rate the carrier quotes for
+   *   the order's carrier and service level.
    */
   type: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
 
@@ -275,18 +307,27 @@ export interface ShippingTermCreateParams {
   >;
 
   /**
-   * Body param: A value with an associated unit, used in create and update requests.
+   * Body param: An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   flat_rate?: CustomersAPI.QuantityInput;
 
   /**
-   * Body param: IDs of service levels that ship for free under this term (typically
-   * once `minimum_order_value` is met).
+   * Body param: IDs of the service levels that ship for free once an order exceeds
+   * `minimum_order_value`.
+   *
+   * Leave this empty to let every service level ship free above the threshold. The
+   * request is rejected if any ID is not a service level available to your account.
    */
   free_shipping_service_level_ids?: Array<string>;
 
   /**
-   * Body param: A value with an associated unit, used in create and update requests.
+   * Body param: An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   minimum_order_value?: CustomersAPI.QuantityInput;
 }
@@ -311,20 +352,28 @@ export interface ShippingTermUpdateParams {
   >;
 
   /**
-   * Body param: A value with an associated unit, used in create and update requests.
+   * Body param: An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   flat_rate?: CustomersAPI.QuantityInput | null;
 
   /**
-   * Body param: IDs of service levels that ship for free under this term (typically
-   * once `minimum_order_value` is met).
+   * Body param: IDs of the service levels that ship for free once an order exceeds
+   * `minimum_order_value`.
    *
-   * Replaces the existing list. Send `null` to clear.
+   * Replaces the whole list rather than adding to it, and clearing it lets every
+   * service level ship free above the threshold. The request is rejected if any ID
+   * is not a service level available to your account.
    */
   free_shipping_service_level_ids?: Array<string> | null;
 
   /**
-   * Body param: A value with an associated unit, used in create and update requests.
+   * Body param: An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   minimum_order_value?: CustomersAPI.QuantityInput | null;
 
@@ -337,11 +386,11 @@ export interface ShippingTermUpdateParams {
   /**
    * Body param: Freight pricing model applied by this shipping term.
    *
-   * - `free_freight`: no shipping cost to the buyer.
-   * - `flat_rate_freight`: a fixed shipping cost regardless of order details (see
-   *   `flat_rate`).
-   * - `carrier_rate_freight`: shipping cost is determined by the carrier's quoted
-   *   rate.
+   * - `free_freight`: the buyer is never charged for shipping.
+   * - `flat_rate_freight`: the buyer is charged the fixed amount in `flat_rate`,
+   *   regardless of what the carrier would have charged.
+   * - `carrier_rate_freight`: the buyer is charged the rate the carrier quotes for
+   *   the order's carrier and service level.
    */
   type?: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
 }

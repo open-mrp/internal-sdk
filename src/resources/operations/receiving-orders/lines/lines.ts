@@ -17,8 +17,9 @@ export class Lines extends APIResource {
   /**
    * Updates the received quantity on a receiving order line.
    *
-   * Use this to record the quantity actually received — for example a partial
-   * delivery — before stocking the order.
+   * Use this to record the quantity that actually arrived — a partial delivery, for
+   * example — before stocking the order. Nothing enters inventory until the order is
+   * stocked.
    *
    * This endpoint requires the permission: `receiving_orders:update`.
    *
@@ -26,9 +27,9 @@ export class Lines extends APIResource {
    * ```ts
    * const receivingOrderLine =
    *   await client.operations.receivingOrders.lines.update(
-   *     'orln_0142f9b74268973450b3a76ce3',
+   *     'orln_la01fxgrwcnr',
    *     {
-   *       receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e',
+   *       receiving_order_id: 'rcor_iy0usuxcrjj8',
    *       quantity_value: '50',
    *     },
    *   );

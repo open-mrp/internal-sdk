@@ -11,10 +11,13 @@ import { path } from '../../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Marks a pick line as picked.
+   * Marks a pick line as fully picked.
    *
-   * Sets the line's picked quantity to the quantity still outstanding on its sales
-   * order line. Has no effect on a line that has already been packed.
+   * Sets the line's picked quantity to its sales order line's ordered quantity less
+   * everything already picked for that order line, including whatever this line had
+   * picked before the call. To record a short pick instead, set the quantity
+   * yourself with Update Pick Line. Has no effect on a line that has already been
+   * packed.
    *
    * This endpoint requires the permission: `picks:update`.
    *
@@ -23,7 +26,7 @@ export class Actions extends APIResource {
    * const pickLine =
    *   await client.operations.picks.lines.actions.pick(
    *     'example',
-   *     { pick_id: 'pk_016452192feb7952d8393f0105' },
+   *     { pick_id: 'pk_6eilj488bq8d' },
    *   );
    * ```
    */
@@ -33,10 +36,11 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Voids a pick line.
+   * Voids a pick line, undoing the picking work recorded on it.
    *
-   * Resets the line's picked quantity to zero. Fails if the line has already been
-   * packed.
+   * Resets the line's picked quantity to zero without deleting the line, so the
+   * quantity can be picked again. Returns a validation error if the line has already
+   * been packed.
    *
    * This endpoint requires the permission: `picks:update`.
    *
@@ -45,7 +49,7 @@ export class Actions extends APIResource {
    * const pickLine =
    *   await client.operations.picks.lines.actions.void(
    *     'example',
-   *     { pick_id: 'pk_016452192feb7952d8393f0105' },
+   *     { pick_id: 'pk_6eilj488bq8d' },
    *   );
    * ```
    */

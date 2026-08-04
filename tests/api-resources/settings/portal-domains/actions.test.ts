@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('verify', async () => {
-    const responsePromise = client.settings.portalDomains.actions.verify('podn_018e88072d1320808dc9aab42');
+    const responsePromise = client.settings.portalDomains.actions.verify('podn_ml44z5ggf169');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

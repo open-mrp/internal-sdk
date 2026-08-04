@@ -10,8 +10,8 @@ const client = new Augno({
 describe('resource actions', () => {
   test('connectSteps: only required params', async () => {
     const responsePromise = client.operations.productionFlows.actions.connectSteps({
-      source_production_step_id: 'prst_0159474175bb59f4b1990404ee',
-      target_production_step_id: 'prst_0159474175bb59f4b1990404ee',
+      source_production_step_id: 'prst_0ht5mkqx5a6t',
+      target_production_step_id: 'prst_0ht5mkqx5a6t',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -24,8 +24,8 @@ describe('resource actions', () => {
 
   test('connectSteps: required and optional params', async () => {
     const response = await client.operations.productionFlows.actions.connectSteps({
-      source_production_step_id: 'prst_0159474175bb59f4b1990404ee',
-      target_production_step_id: 'prst_0159474175bb59f4b1990404ee',
+      source_production_step_id: 'prst_0ht5mkqx5a6t',
+      target_production_step_id: 'prst_0ht5mkqx5a6t',
     });
   });
 });

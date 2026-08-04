@@ -30,7 +30,13 @@ export class Me extends APIResource {
   tenancy: TenancyAPI.TenancyResource = new TenancyAPI.TenancyResource(this._client);
 
   /**
-   * Returns the authenticated user's profile information.
+   * Returns the profile of the user the request is authenticated as.
+   *
+   * This can be called before an account is selected, such as immediately after
+   * authentication. Unlike elsewhere, the `image_url` returned here is a short-lived
+   * signed link to the image itself, and it is only produced when the request
+   * targets an account; without one, no `image_url` is returned even for a user who
+   * has uploaded a photo.
    *
    * @example
    * ```ts

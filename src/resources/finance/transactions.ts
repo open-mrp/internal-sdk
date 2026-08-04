@@ -15,7 +15,12 @@ import { path } from '../../internal/utils/path';
  */
 export class Transactions extends APIResource {
   /**
-   * Creates a transaction with an automatically generated transaction number.
+   * Records a financial transaction against a customer, such as a payment received,
+   * a credit memo, an adjustment, or a rebate.
+   *
+   * The transaction number is assigned automatically from the account's transaction
+   * sequence. The new transaction starts out unapplied, so it shows up as an open
+   * credit until it is applied to invoices by recording a settlement.
    *
    * This endpoint requires the permission: `transactions:create`.
    *
@@ -24,7 +29,7 @@ export class Transactions extends APIResource {
    * const transactionDetail =
    *   await client.finance.transactions.create({
    *     amount: '500.00',
-   *     customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+   *     customer_id: 'ac_opnlh43ymyee',
    *     type: 'payment',
    *     method: 'check',
    *     note: 'Q1 invoice payment',
@@ -48,7 +53,7 @@ export class Transactions extends APIResource {
    * ```ts
    * const transactionDetail =
    *   await client.finance.transactions.retrieve(
-   *     'tx_01fc4d4f2b2ee1fa6b6d87257a',
+   *     'tx_hvh9thtzaezn',
    *   );
    * ```
    */
@@ -61,7 +66,12 @@ export class Transactions extends APIResource {
   }
 
   /**
-   * Partially updates a transaction.
+   * Updates a transaction, changing only the fields present in the request body.
+   *
+   * Changing the amount does not re-apply the transaction to invoices: existing
+   * allocations keep their amounts, and neither the transaction's
+   * `is_fully_allocated` flag nor the paid-in-full status of any settled invoice is
+   * recomputed.
    *
    * This endpoint requires the permission: `transactions:update`.
    *
@@ -69,7 +79,7 @@ export class Transactions extends APIResource {
    * ```ts
    * const transactionDetail =
    *   await client.finance.transactions.update(
-   *     'tx_01fc4d4f2b2ee1fa6b6d87257a',
+   *     'tx_hvh9thtzaezn',
    *     {
    *       clear_adjustment_type: false,
    *       clear_responsible_user: false,
@@ -91,7 +101,9 @@ export class Transactions extends APIResource {
   }
 
   /**
-   * Returns a paginated list of transactions for the current account.
+   * Returns a paginated list of transactions for the current account, newest first.
+   *
+   * Free-text search matches the transaction number and note.
    *
    * This endpoint requires the permission: `transactions:read`.
    *
@@ -109,8 +121,13 @@ export class Transactions extends APIResource {
   }
 
   /**
-   * Deletes a transaction along with all of its invoice allocations, and returns the
-   * deleted transaction.
+   * Deletes a transaction along with every allocation that applied it to an invoice,
+   * and returns the deleted transaction.
+   *
+   * Invoice payment status is not recomputed, so an invoice this transaction had
+   * paid off stays marked paid in full until the next settlement against it
+   * recalculates the flag. Deleting a transaction that was already deleted returns
+   * an already-deleted error rather than a not-found error.
    *
    * This endpoint requires the permission: `transactions:delete`.
    *
@@ -118,7 +135,7 @@ export class Transactions extends APIResource {
    * ```ts
    * const transactionDetail =
    *   await client.finance.transactions.delete(
-   *     'tx_01fc4d4f2b2ee1fa6b6d87257a',
+   *     'tx_hvh9thtzaezn',
    *   );
    * ```
    */
@@ -157,14 +174,15 @@ export interface CreateTransactionRequest {
   type: string;
 
   /**
-   * Adjustment type code (see List Adjustment Types for available values).
+   * The kind of correction this transaction represents (see List Adjustment Types
+   * for available values).
    *
    * Typically provided when `type` is `adjustment`.
    */
   adjustment_type?: string;
 
   /**
-   * Payment method code: one of `cash`, `check`, `credit_card`, `gift_card`, or
+   * How the money moved: one of `cash`, `check`, `credit_card`, `gift_card`, or
    * `ach`.
    *
    * Typically provided for payment transactions.
@@ -185,7 +203,8 @@ export interface CreateTransactionRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListTransactionSummary {
   /**
@@ -199,7 +218,13 @@ export interface ListTransactionSummary {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -216,8 +241,8 @@ export interface TransactionSummary {
   /**
    * A category of financial adjustment, such as a discount, fee, or write-off.
    *
-   * Adjustment types classify adjustment transactions recorded against customer
-   * invoices.
+   * Adjustment types classify the `adjustment` transactions recorded against a
+   * customer.
    */
   adjustment_type: FinanceAPI.AdjustmentType | null;
 
@@ -227,7 +252,11 @@ export interface TransactionSummary {
   allocation_count: number;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   amount: AccountUsersAPI.Quantity | null;
 
@@ -243,11 +272,15 @@ export interface TransactionSummary {
   customer: CustomersAPI.Customer | null;
 
   /**
-   * Whether the full transaction amount has been allocated against invoices.
+   * Whether the full transaction amount has been applied to invoices.
    *
-   * When `false`, some of the amount remains as an open (unapplied) balance and the
-   * transaction appears in the open credits list. This flag is set explicitly (see
-   * Update Transaction); it is not recomputed automatically when allocations change.
+   * Recording a settlement that uses this transaction sets the flag to `true`, and
+   * deleting that settlement resets it to `false`. Editing or deleting an individual
+   * allocation does not recompute it, so it can also be set directly with Update
+   * Transaction.
+   *
+   * While it is `false`, the transaction is treated as an open credit and is
+   * returned by List Open Credits.
    */
   is_fully_allocated: boolean;
 
@@ -303,7 +336,8 @@ export interface UpdateTransactionRequest {
   clear_transaction_method: boolean;
 
   /**
-   * Adjustment type code (see List Adjustment Types for available values).
+   * The kind of correction this transaction represents (see List Adjustment Types
+   * for available values).
    */
   adjustment_type?: string;
 
@@ -313,15 +347,16 @@ export interface UpdateTransactionRequest {
   amount?: string;
 
   /**
-   * Whether the full transaction amount has been allocated against invoices.
+   * Whether the full transaction amount has been applied to invoices.
    *
-   * This flag is set explicitly here; it is not recomputed automatically when
-   * allocations change.
+   * Set this to correct the flag by hand: editing or deleting individual allocations
+   * never recomputes it. While it is `false`, the transaction is returned by List
+   * Open Credits.
    */
   is_fully_allocated?: boolean;
 
   /**
-   * Payment method code: one of `cash`, `check`, `credit_card`, `gift_card`, or
+   * How the money moved: one of `cash`, `check`, `credit_card`, `gift_card`, or
    * `ach`.
    */
   method?: string;
@@ -341,6 +376,9 @@ export interface UpdateTransactionRequest {
 
   /**
    * ID of the account user responsible for the transaction.
+   *
+   * A user ID is also accepted; the value is resolved to an account user in the
+   * current account.
    */
   responsible_user_id?: string;
 }
@@ -373,15 +411,15 @@ export interface TransactionCreateParams {
   include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
 
   /**
-   * Body param: Adjustment type code (see List Adjustment Types for available
-   * values).
+   * Body param: The kind of correction this transaction represents (see List
+   * Adjustment Types for available values).
    *
    * Typically provided when `type` is `adjustment`.
    */
   adjustment_type?: string;
 
   /**
-   * Body param: Payment method code: one of `cash`, `check`, `credit_card`,
+   * Body param: How the money moved: one of `cash`, `check`, `credit_card`,
    * `gift_card`, or `ach`.
    *
    * Typically provided for payment transactions.
@@ -438,8 +476,8 @@ export interface TransactionUpdateParams {
   include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
 
   /**
-   * Body param: Adjustment type code (see List Adjustment Types for available
-   * values).
+   * Body param: The kind of correction this transaction represents (see List
+   * Adjustment Types for available values).
    */
   adjustment_type?: string;
 
@@ -449,16 +487,16 @@ export interface TransactionUpdateParams {
   amount?: string;
 
   /**
-   * Body param: Whether the full transaction amount has been allocated against
-   * invoices.
+   * Body param: Whether the full transaction amount has been applied to invoices.
    *
-   * This flag is set explicitly here; it is not recomputed automatically when
-   * allocations change.
+   * Set this to correct the flag by hand: editing or deleting individual allocations
+   * never recomputes it. While it is `false`, the transaction is returned by List
+   * Open Credits.
    */
   is_fully_allocated?: boolean;
 
   /**
-   * Body param: Payment method code: one of `cash`, `check`, `credit_card`,
+   * Body param: How the money moved: one of `cash`, `check`, `credit_card`,
    * `gift_card`, or `ach`.
    */
   method?: string;
@@ -478,13 +516,17 @@ export interface TransactionUpdateParams {
 
   /**
    * Body param: ID of the account user responsible for the transaction.
+   *
+   * A user ID is also accepted; the value is resolved to an account user in the
+   * current account.
    */
   responsible_user_id?: string;
 }
 
 export interface TransactionListParams {
   /**
-   * Filter by adjustment type codes.
+   * Filter by adjustment type codes (see List Adjustment Types for available
+   * values).
    */
   adjustment_types?: Array<string>;
 
@@ -498,7 +540,7 @@ export interface TransactionListParams {
   cursor?: string;
 
   /**
-   * Filter by customer group IDs.
+   * Filter by the account group each customer belongs to.
    */
   customer_group_ids?: Array<string>;
 
@@ -542,8 +584,8 @@ export interface TransactionListParams {
   start_date?: string;
 
   /**
-   * Filter by allocation status: `allocated` (fully allocated against invoices) or
-   * `unallocated` (has an open balance).
+   * Filter by allocation status: `allocated` (marked fully applied to invoices) or
+   * `unallocated` (still counted as an open credit).
    */
   status?: string;
 

@@ -15,10 +15,13 @@ export class OrderDiscounts extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Creates an order discount.
+   * Creates an order discount that buyers can then redeem on a sales order by its
+   * code.
    *
-   * The discount code must be unique within the account; creating a discount with an
-   * existing code returns a conflict error.
+   * The code must be unique within your account; reusing a code that another
+   * discount already holds returns a conflict error. Creating the discount does not
+   * apply it to anything — a discount only affects an order once that order
+   * references it.
    *
    * This endpoint requires the permission: `discounts:create`.
    *
@@ -46,7 +49,7 @@ export class OrderDiscounts extends APIResource {
    * ```ts
    * const orderDiscount =
    *   await client.sales.orderDiscounts.retrieve(
-   *     'ords_01121c5e2f6937a6b896daad3a',
+   *     'ords_qnbrjvq5ih2q',
    *   );
    * ```
    */
@@ -57,8 +60,10 @@ export class OrderDiscounts extends APIResource {
   /**
    * Partially updates an order discount.
    *
-   * Only the provided fields are changed. Changing `code` to one already used by
-   * another discount returns a conflict error.
+   * Only the fields you send are changed; the rest keep their current values.
+   * Changing `code` to one another discount already holds returns a conflict error.
+   * Edits apply to future orders only — orders that already used this discount keep
+   * the reduction they were given.
    *
    * This endpoint requires the permission: `discounts:update`.
    *
@@ -66,7 +71,7 @@ export class OrderDiscounts extends APIResource {
    * ```ts
    * const orderDiscount =
    *   await client.sales.orderDiscounts.update(
-   *     'ords_01121c5e2f6937a6b896daad3a',
+   *     'ords_qnbrjvq5ih2q',
    *     { code: 'SAVE15', name: '15% Off' },
    *   );
    * ```
@@ -80,7 +85,11 @@ export class OrderDiscounts extends APIResource {
   }
 
   /**
-   * Returns a paginated list of order discounts for the current account.
+   * Returns a paginated list of the order discounts defined for the current account,
+   * newest first.
+   *
+   * Pass `q` to narrow the list to discounts whose name or code contains the search
+   * text.
    *
    * This endpoint requires the permissions: `discounts:read`, `customers:read`,
    * `suppliers:read`.
@@ -99,9 +108,13 @@ export class OrderDiscounts extends APIResource {
   }
 
   /**
-   * Deletes an order discount and returns the deleted resource.
+   * Deletes an order discount and returns it as it was just before deletion.
    *
    * Deletion is permanent; further requests against the deleted ID return an error.
+   *
+   * The code can no longer be redeemed, but sales orders that already used the
+   * discount keep the reduction that was applied to them; their totals are not
+   * recalculated.
    *
    * This endpoint requires the permission: `discounts:delete`.
    *
@@ -109,7 +122,7 @@ export class OrderDiscounts extends APIResource {
    * ```ts
    * const orderDiscount =
    *   await client.sales.orderDiscounts.delete(
-   *     'ords_01121c5e2f6937a6b896daad3a',
+   *     'ords_qnbrjvq5ih2q',
    *   );
    * ```
    */
@@ -123,17 +136,18 @@ export class OrderDiscounts extends APIResource {
  */
 export interface CreateOrderDiscountRequest {
   /**
-   * The code entered to apply this discount to an order.
+   * The code a buyer enters to apply this discount to an order.
    *
-   * Must be unique within the account.
+   * Codes are unique within your account and are compared without regard to letter
+   * case, so `SAVE10` collides with `save10`.
    */
   code: string;
 
   /**
    * How the discount is calculated.
    *
-   * - `percentage`: the discount is a percent off, taken from `percentage`.
-   * - `amount`: the discount is a fixed amount off, taken from `amount`.
+   * - `percentage`: the order total is reduced by the fraction in `percentage`.
+   * - `amount`: the order total is reduced by the flat amount in `amount`.
    */
   discount_type: string;
 
@@ -143,22 +157,26 @@ export interface CreateOrderDiscountRequest {
   name: string;
 
   /**
-   * Fixed amount off as a decimal string.
+   * The flat amount to take off the order total, as a decimal string.
    *
-   * Used when `discount_type` is `amount`; otherwise `0`.
+   * Only read when `discount_type` is `amount`. Leaving it out stores `0`, which
+   * produces a discount that takes nothing off.
    */
   amount?: string;
 
   /**
-   * Percent off as a decimal string (e.g. `10` for 10%).
+   * The fraction of the order total to take off, as a decimal string.
    *
-   * Used when `discount_type` is `percentage`; otherwise `0`.
+   * This is a multiplier, not a whole percent: send `0.1` to take 10% off. Only read
+   * when `discount_type` is `percentage`. Leaving it out stores `0`, which produces
+   * a discount that takes nothing off.
    */
   percentage?: string;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListOrderDiscount {
   /**
@@ -172,7 +190,13 @@ export interface ListOrderDiscount {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -181,7 +205,8 @@ export interface ListOrderDiscount {
  * A discount code that can be applied to a sales order.
  *
  * An order discount reduces the order total by either a percentage or a fixed
- * amount, depending on `discount_type`.
+ * amount, depending on `discount_type`. The reduction is capped at the order total
+ * and rounded to the nearest cent.
  */
 export interface OrderDiscount {
   /**
@@ -190,16 +215,17 @@ export interface OrderDiscount {
   id: string;
 
   /**
-   * Fixed amount off as a decimal string.
+   * The flat amount taken off the order total, as a decimal string.
    *
-   * Applies when `discount_type` is `amount`; otherwise `0`.
+   * Only read when `discount_type` is `amount`.
    */
   amount: string;
 
   /**
-   * The code entered to apply this discount to an order.
+   * The code a buyer enters to apply this discount to an order.
    *
-   * Must be unique within the account.
+   * Codes are unique within your account and are matched without regard to letter
+   * case.
    */
   code: string;
 
@@ -209,11 +235,10 @@ export interface OrderDiscount {
   created_at: string;
 
   /**
-   * How the discount is calculated, determining whether `percentage` or `amount` is
-   * used.
+   * How the discount is calculated.
    *
-   * - `percentage`: the discount is a percent off, taken from `percentage`.
-   * - `amount`: the discount is a fixed amount off, taken from `amount`.
+   * - `percentage`: the order total is reduced by the fraction in `percentage`.
+   * - `amount`: the order total is reduced by the flat amount in `amount`.
    */
   discount_type: 'percentage' | 'amount';
 
@@ -228,14 +253,15 @@ export interface OrderDiscount {
   object: 'order_discount';
 
   /**
-   * Number of orders currently using this discount.
+   * How many sales orders this discount has been applied to, across all buyers.
    */
   order_count: number;
 
   /**
-   * Percent off as a decimal string (e.g. `10` for 10%).
+   * The fraction of the order total taken off, as a decimal string.
    *
-   * Applies when `discount_type` is `percentage`; otherwise `0`.
+   * This is a multiplier, not a whole percent: `0.1` takes 10% off. Only read when
+   * `discount_type` is `percentage`.
    */
   percentage: string;
 
@@ -250,24 +276,29 @@ export interface OrderDiscount {
  */
 export interface UpdateOrderDiscountRequest {
   /**
-   * Fixed amount off as a decimal string.
+   * The flat amount to take off the order total, as a decimal string.
    *
-   * Used when `discount_type` is `amount`.
+   * Only read when `discount_type` is `amount`.
    */
   amount?: string;
 
   /**
-   * The code entered to apply this discount to an order.
+   * The code a buyer enters to apply this discount to an order.
    *
-   * Must be unique within the account.
+   * Codes are unique within your account and are compared without regard to letter
+   * case.
    */
   code?: string;
 
   /**
    * How the discount is calculated.
    *
-   * - `percentage`: the discount is a percent off, taken from `percentage`.
-   * - `amount`: the discount is a fixed amount off, taken from `amount`.
+   * - `percentage`: the order total is reduced by the fraction in `percentage`.
+   * - `amount`: the order total is reduced by the flat amount in `amount`.
+   *
+   * Switching the type does not move the stored figure across, so send the matching
+   * `percentage` or `amount` in the same request or the discount will take nothing
+   * off.
    */
   discount_type?: string;
 
@@ -277,26 +308,28 @@ export interface UpdateOrderDiscountRequest {
   name?: string;
 
   /**
-   * Percent off as a decimal string (e.g. `10` for 10%).
+   * The fraction of the order total to take off, as a decimal string.
    *
-   * Used when `discount_type` is `percentage`.
+   * This is a multiplier, not a whole percent: send `0.1` to take 10% off. Only read
+   * when `discount_type` is `percentage`.
    */
   percentage?: string;
 }
 
 export interface OrderDiscountCreateParams {
   /**
-   * The code entered to apply this discount to an order.
+   * The code a buyer enters to apply this discount to an order.
    *
-   * Must be unique within the account.
+   * Codes are unique within your account and are compared without regard to letter
+   * case, so `SAVE10` collides with `save10`.
    */
   code: string;
 
   /**
    * How the discount is calculated.
    *
-   * - `percentage`: the discount is a percent off, taken from `percentage`.
-   * - `amount`: the discount is a fixed amount off, taken from `amount`.
+   * - `percentage`: the order total is reduced by the fraction in `percentage`.
+   * - `amount`: the order total is reduced by the flat amount in `amount`.
    */
   discount_type: string;
 
@@ -306,40 +339,48 @@ export interface OrderDiscountCreateParams {
   name: string;
 
   /**
-   * Fixed amount off as a decimal string.
+   * The flat amount to take off the order total, as a decimal string.
    *
-   * Used when `discount_type` is `amount`; otherwise `0`.
+   * Only read when `discount_type` is `amount`. Leaving it out stores `0`, which
+   * produces a discount that takes nothing off.
    */
   amount?: string;
 
   /**
-   * Percent off as a decimal string (e.g. `10` for 10%).
+   * The fraction of the order total to take off, as a decimal string.
    *
-   * Used when `discount_type` is `percentage`; otherwise `0`.
+   * This is a multiplier, not a whole percent: send `0.1` to take 10% off. Only read
+   * when `discount_type` is `percentage`. Leaving it out stores `0`, which produces
+   * a discount that takes nothing off.
    */
   percentage?: string;
 }
 
 export interface OrderDiscountUpdateParams {
   /**
-   * Fixed amount off as a decimal string.
+   * The flat amount to take off the order total, as a decimal string.
    *
-   * Used when `discount_type` is `amount`.
+   * Only read when `discount_type` is `amount`.
    */
   amount?: string;
 
   /**
-   * The code entered to apply this discount to an order.
+   * The code a buyer enters to apply this discount to an order.
    *
-   * Must be unique within the account.
+   * Codes are unique within your account and are compared without regard to letter
+   * case.
    */
   code?: string;
 
   /**
    * How the discount is calculated.
    *
-   * - `percentage`: the discount is a percent off, taken from `percentage`.
-   * - `amount`: the discount is a fixed amount off, taken from `amount`.
+   * - `percentage`: the order total is reduced by the fraction in `percentage`.
+   * - `amount`: the order total is reduced by the flat amount in `amount`.
+   *
+   * Switching the type does not move the stored figure across, so send the matching
+   * `percentage` or `amount` in the same request or the discount will take nothing
+   * off.
    */
   discount_type?: string;
 
@@ -349,9 +390,10 @@ export interface OrderDiscountUpdateParams {
   name?: string;
 
   /**
-   * Percent off as a decimal string (e.g. `10` for 10%).
+   * The fraction of the order total to take off, as a decimal string.
    *
-   * Used when `discount_type` is `percentage`.
+   * This is a multiplier, not a whole percent: send `0.1` to take 10% off. Only read
+   * when `discount_type` is `percentage`.
    */
   percentage?: string;
 }

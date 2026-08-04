@@ -24,7 +24,7 @@ describe('resource productTypes', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.productTypes.retrieve('prty_01ddca85eedfb6b101a3c2f379');
+    const responsePromise = client.catalog.productTypes.retrieve('prty_bdu6hiasyjl4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -35,7 +35,7 @@ describe('resource productTypes', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.productTypes.update('prty_01ddca85eedfb6b101a3c2f379');
+    const responsePromise = client.catalog.productTypes.update('prty_bdu6hiasyjl4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -49,7 +49,7 @@ describe('resource productTypes', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.productTypes.update(
-        'prty_01ddca85eedfb6b101a3c2f379',
+        'prty_bdu6hiasyjl4',
         { code: 'service', name: 'Service' },
         { path: '/_stainless_unknown_path' },
       ),
@@ -82,7 +82,7 @@ describe('resource productTypes', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.productTypes.delete('prty_01ddca85eedfb6b101a3c2f379');
+    const responsePromise = client.catalog.productTypes.delete('prty_bdu6hiasyjl4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

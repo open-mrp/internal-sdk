@@ -10,7 +10,12 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Exports all matching parts as an Excel file.
+   * Exports the parts matching the given filters as an Excel workbook.
+   *
+   * The workbook holds one row per part with its ID, SKU, description, category, and
+   * unit price and unit cost alongside the units they are quoted in, followed by one
+   * column for each property defined on the exported parts' categories. Every match
+   * is exported in a single file, so this endpoint is not paginated.
    *
    * This endpoint requires the permissions: `parts:read`, `customers:read`,
    * `suppliers:read`.
@@ -31,27 +36,27 @@ export class Actions extends APIResource {
 
 export interface ActionExportParams {
   /**
-   * Filter by attribute IDs.
+   * Only return parts carrying at least one of these attributes.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Filter by category IDs.
+   * Only return parts belonging to any of these item categories.
    */
   category_ids?: Array<string>;
 
   /**
-   * End of creation date range.
+   * Only return parts created at or before this time.
    */
   end_date?: string;
 
   /**
-   * Free-text search query matched against parts.
+   * Free-text search term matched against the part's SKU or description.
    */
   q?: string;
 
   /**
-   * Start of creation date range.
+   * Only return parts created at or after this time.
    */
   start_date?: string;
 }

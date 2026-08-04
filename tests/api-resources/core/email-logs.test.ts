@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource emailLogs', () => {
   test('retrieve', async () => {
-    const responsePromise = client.core.emailLogs.retrieve('eml_017b80707ada92dddff8a2c3a0');
+    const responsePromise = client.core.emailLogs.retrieve('eml_h2j1q1nfibwb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource emailLogs', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.core.emailLogs.retrieve(
-        'eml_017b80707ada92dddff8a2c3a0',
+        'eml_h2j1q1nfibwb',
         { include: ['sent_by'] },
         { path: '/_stainless_unknown_path' },
       ),

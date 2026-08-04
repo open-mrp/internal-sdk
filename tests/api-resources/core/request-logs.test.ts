@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource requestLogs', () => {
   test('retrieve', async () => {
-    const responsePromise = client.core.requestLogs.retrieve('rq_01304bffe90e8cce9690cbefd4');
+    const responsePromise = client.core.requestLogs.retrieve('rq_0lhl3kkhme40');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource requestLogs', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.core.requestLogs.retrieve(
-        'rq_01304bffe90e8cce9690cbefd4',
+        'rq_0lhl3kkhme40',
         { include: ['account'] },
         { path: '/_stainless_unknown_path' },
       ),

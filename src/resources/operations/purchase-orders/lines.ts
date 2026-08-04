@@ -15,8 +15,13 @@ export class Lines extends APIResource {
   /**
    * Creates a line item on a purchase order.
    *
-   * If the order has already been issued, a matching receiving order line is created
-   * as well.
+   * The line number is assigned automatically as the next number on the order. If
+   * the order has already been issued, a matching receiving order line is created as
+   * well, so the added quantity can be received.
+   *
+   * A line that references an inventory item also links that item's material to the
+   * supplier, if it is not linked already, so the material shows up as sourced from
+   * them.
    *
    * This endpoint requires the permissions: `purchase_orders:update`,
    * `suppliers:update`.
@@ -25,21 +30,17 @@ export class Lines extends APIResource {
    * ```ts
    * const purchaseOrderLine =
    *   await client.operations.purchaseOrders.lines.create(
-   *     'po_0169aa3a722b081b117ac0e44f',
+   *     'po_3ov2ym1pca8m',
    *     {
-   *       product_id: 'pd_013c29ab3f1518d0004094c316',
+   *       product_id: 'pd_07oe0r7adh2w',
    *       product_sku: 'ALM-2024-1001',
-   *       quantity: {
-   *         unit_id: 'un_01966263f74a5a0cae356000a1',
-   *         value: '10',
-   *       },
+   *       quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
    *       unit_price: {
-   *         denominator_unit_id:
-   *           'un_01966263f74a5a0cae356000a1',
-   *         numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *         denominator_unit_id: 'un_82bd37dae5po',
+   *         numerator_unit_id: 'un_82bd37dae5po',
    *         value: '25.50',
    *       },
-   *       item_id: 'it_0131e386ac683e8c29a71f6f1f',
+   *       item_id: 'it_pej07ckhvu62',
    *       product_description: '6061-T6 Aluminum Sheet 4x8',
    *     },
    *   );
@@ -56,8 +57,13 @@ export class Lines extends APIResource {
   /**
    * Partially updates a purchase order line item.
    *
-   * If the order has already been issued, the receiving order is updated to reflect
-   * the remaining quantity to receive.
+   * If the order has already been issued and the line has no open receiving order
+   * line, a new one is added for the quantity still outstanding, so an increased
+   * order quantity can be received.
+   *
+   * A line that references an inventory item also links that item's material to the
+   * supplier, if it is not linked already, so the material shows up as sourced from
+   * them.
    *
    * This endpoint requires the permissions: `purchase_orders:update`,
    * `suppliers:update`.
@@ -68,8 +74,8 @@ export class Lines extends APIResource {
    *   await client.operations.purchaseOrders.lines.update(
    *     'example',
    *     {
-   *       id: 'po_0169aa3a722b081b117ac0e44f',
-   *       product_id: 'pd_013c29ab3f1518d0004094c316',
+   *       id: 'po_3ov2ym1pca8m',
+   *       product_id: 'pd_07oe0r7adh2w',
    *       product_sku: 'RAW-100',
    *       quantity_value: '250',
    *       unit_price_value: '15.00',
@@ -92,7 +98,9 @@ export class Lines extends APIResource {
   /**
    * Deletes a purchase order line item and its related records.
    *
-   * Any receiving order lines created for this line are deleted as well.
+   * Any receiving order lines created for this line are deleted as well, so the
+   * quantity can no longer be received. Line numbers on the remaining lines are left
+   * as they are.
    *
    * This endpoint requires the permissions: `purchase_orders:update`,
    * `suppliers:update`.
@@ -102,7 +110,7 @@ export class Lines extends APIResource {
    * const line =
    *   await client.operations.purchaseOrders.lines.delete(
    *     'example',
-   *     { id: 'po_0169aa3a722b081b117ac0e44f' },
+   *     { id: 'po_3ov2ym1pca8m' },
    *   );
    * ```
    */
@@ -113,7 +121,8 @@ export class Lines extends APIResource {
 }
 
 /**
- * Shared fields for a line item on a purchase order or sales order.
+ * Details of a single line item ordered from a supplier, used when creating a
+ * purchase order and when adding a line to an existing one.
  */
 export interface CreatePurchaseOrderLineRequest {
   /**
@@ -130,20 +139,29 @@ export interface CreatePurchaseOrderLineRequest {
   product_sku: string;
 
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   quantity: CustomersAPI.QuantityInput;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price: SalesOrdersAPI.RateInput;
 
   /**
-   * ID of the inventory item to tie the line to.
+   * ID of the inventory item this line is linked to.
    *
-   * Lines tied to an item have inventory reserved for them when the order is issued.
+   * Stock received against the line is booked into this item, so lines for goods you
+   * hold in inventory should reference one. Supplying an item also records the
+   * item's material as sourced from this order's supplier, with `product_sku` as the
+   * supplier part number, when that link does not exist yet.
    */
   item_id?: string;
 
@@ -153,8 +171,11 @@ export interface CreatePurchaseOrderLineRequest {
   product_description?: string;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_cost?: SalesOrdersAPI.RateInput;
 }
@@ -241,20 +262,29 @@ export interface LineCreateParams {
   product_sku: string;
 
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   quantity: CustomersAPI.QuantityInput;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price: SalesOrdersAPI.RateInput;
 
   /**
-   * ID of the inventory item to tie the line to.
+   * ID of the inventory item this line is linked to.
    *
-   * Lines tied to an item have inventory reserved for them when the order is issued.
+   * Stock received against the line is booked into this item, so lines for goods you
+   * hold in inventory should reference one. Supplying an item also records the
+   * item's material as sourced from this order's supplier, with `product_sku` as the
+   * supplier part number, when that link does not exist yet.
    */
   item_id?: string;
 
@@ -264,8 +294,11 @@ export interface LineCreateParams {
   product_description?: string;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_cost?: SalesOrdersAPI.RateInput;
 }

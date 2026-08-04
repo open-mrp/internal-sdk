@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource materials', () => {
   test('create: only required params', async () => {
     const responsePromise = client.catalog.materials.create({
-      category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
+      category_id: 'ic_d06g9c6yc9ck',
       sku: 'MAT-001',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -24,29 +24,29 @@ describe('resource materials', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.catalog.materials.create({
-      category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
+      category_id: 'ic_d06g9c6yc9ck',
       sku: 'MAT-001',
       include: ['item'],
-      attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
+      attribute_ids: ['at_rf1w295jt5ia'],
       description: 'Cold-rolled 304 stainless steel sheet, 1.5mm',
-      lead_time: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '7.00' },
+      lead_time: { unit_id: 'un_82bd37dae5po', value: '7.00' },
       notes: 'Store flat in a dry area to avoid surface oxidation.',
-      order_point: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '100.00' },
+      order_point: { unit_id: 'un_82bd37dae5po', value: '100.00' },
       unit_cost: {
-        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        denominator_unit_id: 'un_82bd37dae5po',
+        numerator_unit_id: 'un_82bd37dae5po',
         value: '8.25',
       },
       unit_price: {
-        denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-        numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+        denominator_unit_id: 'un_82bd37dae5po',
+        numerator_unit_id: 'un_82bd37dae5po',
         value: '12.50',
       },
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.catalog.materials.retrieve('ml_014613b8f7959a091d8cc0cef4');
+    const responsePromise = client.catalog.materials.retrieve('ml_ow202v78slbl');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -60,7 +60,7 @@ describe('resource materials', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.materials.retrieve(
-        'ml_014613b8f7959a091d8cc0cef4',
+        'ml_ow202v78slbl',
         { include: ['item'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -68,7 +68,7 @@ describe('resource materials', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.catalog.materials.update('ml_014613b8f7959a091d8cc0cef4');
+    const responsePromise = client.catalog.materials.update('ml_ow202v78slbl');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -82,17 +82,17 @@ describe('resource materials', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.materials.update(
-        'ml_014613b8f7959a091d8cc0cef4',
+        'ml_ow202v78slbl',
         {
           include: ['item'],
           description: 'Cold-rolled 304 stainless steel sheet, 2.0mm',
-          lead_time: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10.00' },
+          lead_time: { unit_id: 'un_82bd37dae5po', value: '10.00' },
           notes: 'Reorder point raised after Q2 demand spike.',
-          order_point: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '150.00' },
+          order_point: { unit_id: 'un_82bd37dae5po', value: '150.00' },
           sku: 'MAT-001-UPDATED',
           unit_cost: {
-            denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
-            numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+            denominator_unit_id: 'un_82bd37dae5po',
+            numerator_unit_id: 'un_82bd37dae5po',
             value: '9.10',
           },
         },
@@ -132,7 +132,7 @@ describe('resource materials', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.catalog.materials.delete('ml_014613b8f7959a091d8cc0cef4');
+    const responsePromise = client.catalog.materials.delete('ml_ow202v78slbl');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -18,12 +18,14 @@ export class Integrations extends APIResource {
   hubspot: HubspotAPI.Hubspot = new HubspotAPI.Hubspot(this._client);
 
   /**
-   * Creates an account integration, or updates the name and credentials of an
-   * existing one with the same integration code.
+   * Connects a third-party provider to the account, or replaces the name and
+   * credentials of the provider's existing connection.
    *
-   * Credentials are validated for the provider, encrypted at rest, and never
-   * returned in API responses. An account can have at most one integration per
-   * integration code.
+   * An account can have at most one integration per `provider`, so calling this
+   * again for a provider that is already connected rotates its credentials in place
+   * and returns the same integration rather than creating a second one. Credentials
+   * are checked for the provider's expected key format, encrypted at rest, and never
+   * returned in API responses.
    *
    * This endpoint requires the `admin` role type.
    *
@@ -43,11 +45,10 @@ export class Integrations extends APIResource {
   }
 
   /**
-   * Updates an account integration's name and active status.
+   * Renames an account integration, or activates or deactivates it.
    *
-   * Omitted fields are left unchanged. Credentials cannot be changed with this
-   * endpoint; to rotate credentials, call Create Account Integration again with the
-   * same integration code.
+   * Omitted fields are left unchanged. Credentials cannot be changed here; to rotate
+   * them, call Create Account Integration again with the same `provider`.
    *
    * This endpoint requires the `admin` role type.
    *
@@ -55,7 +56,7 @@ export class Integrations extends APIResource {
    * ```ts
    * const accountIntegration =
    *   await client.settings.integrations.update(
-   *     'acig_0177772eae113431f64d473124',
+   *     'acig_5ilahyezrs63',
    *     {
    *       name: 'Updated Stripe Integration',
    *       status: 'active',
@@ -72,7 +73,10 @@ export class Integrations extends APIResource {
   }
 
   /**
-   * Returns a paginated list of account integrations for the target account.
+   * Returns a paginated list of the third-party providers connected to the target
+   * account.
+   *
+   * Stored credentials are never included in the response.
    *
    * This endpoint requires the `admin` role type.
    *
@@ -90,7 +94,14 @@ export class Integrations extends APIResource {
   }
 
   /**
-   * Deletes an account integration and returns the deleted resource.
+   * Disconnects a third-party provider from the account and returns the deleted
+   * integration.
+   *
+   * The stored credentials go with it, so any feature that relies on the provider
+   * stops working until the integration is created again. Deleting an integration
+   * that is already deleted returns an error rather than succeeding silently. To
+   * pause a provider without discarding its credentials, set the integration's
+   * status to `inactive` instead.
    *
    * This endpoint requires the `admin` role type.
    *
@@ -98,7 +109,7 @@ export class Integrations extends APIResource {
    * ```ts
    * const accountIntegration =
    *   await client.settings.integrations.delete(
-   *     'acig_0177772eae113431f64d473124',
+   *     'acig_5ilahyezrs63',
    *   );
    * ```
    */
@@ -109,6 +120,10 @@ export class Integrations extends APIResource {
 
 /**
  * Third-party integration connected to an account.
+ *
+ * An account can have at most one integration per provider. The credentials
+ * supplied when the integration was connected are encrypted at rest and are never
+ * returned by the API.
  */
 export interface AccountIntegration {
   /**
@@ -169,8 +184,9 @@ export interface CreateAccountIntegrationRequest {
    * - `shippo`: `api_key` (`shippo_live_...` or `shippo_test_...`).
    * - `hubspot`: `access_token` (`pat-...`).
    *
-   * Sandbox accounts must use test keys and production accounts must use live keys;
-   * credentials that do not match are rejected.
+   * For Stripe and Shippo, sandbox accounts must supply test keys and production
+   * accounts must supply live keys; credentials that do not match are rejected.
+   * HubSpot tokens make no such distinction.
    */
   credentials: string;
 
@@ -190,7 +206,8 @@ export interface CreateAccountIntegrationRequest {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAccountIntegration {
   /**
@@ -204,7 +221,13 @@ export interface ListAccountIntegration {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -221,8 +244,8 @@ export interface UpdateAccountIntegrationRequest {
   /**
    * Lifecycle status of the integration.
    *
-   * Set to `inactive` to deactivate the integration without deleting its stored
-   * credentials.
+   * Set to `inactive` to stop the provider being used while keeping its stored
+   * credentials, and back to `active` to resume without re-entering them.
    */
   status?: 'active' | 'inactive';
 }
@@ -238,8 +261,9 @@ export interface IntegrationCreateParams {
    * - `shippo`: `api_key` (`shippo_live_...` or `shippo_test_...`).
    * - `hubspot`: `access_token` (`pat-...`).
    *
-   * Sandbox accounts must use test keys and production accounts must use live keys;
-   * credentials that do not match are rejected.
+   * For Stripe and Shippo, sandbox accounts must supply test keys and production
+   * accounts must supply live keys; credentials that do not match are rejected.
+   * HubSpot tokens make no such distinction.
    */
   credentials: string;
 
@@ -267,8 +291,8 @@ export interface IntegrationUpdateParams {
   /**
    * Lifecycle status of the integration.
    *
-   * Set to `inactive` to deactivate the integration without deleting its stored
-   * credentials.
+   * Set to `inactive` to stop the provider being used while keeping its stored
+   * credentials, and back to `active` to resume without re-entering them.
    */
   status?: 'active' | 'inactive';
 }

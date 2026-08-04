@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource picks', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.picks.retrieve('pk_016452192feb7952d8393f0105');
+    const responsePromise = client.operations.picks.retrieve('pk_6eilj488bq8d');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource picks', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.picks.retrieve(
-        'pk_016452192feb7952d8393f0105',
+        'pk_6eilj488bq8d',
         { include: ['sales_order'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource picks', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.picks.update('pk_016452192feb7952d8393f0105');
+    const responsePromise = client.operations.picks.update('pk_6eilj488bq8d');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource picks', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.picks.update(
-        'pk_016452192feb7952d8393f0105',
+        'pk_6eilj488bq8d',
         {
           include: ['lines'],
           finished_at: 'finished_at',
@@ -90,7 +90,7 @@ describe('resource picks', () => {
   });
 
   test('retrieveShipments', async () => {
-    const responsePromise = client.operations.picks.retrieveShipments('pk_016452192feb7952d8393f0105');
+    const responsePromise = client.operations.picks.retrieveShipments('pk_6eilj488bq8d');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -104,7 +104,7 @@ describe('resource picks', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.picks.retrieveShipments(
-        'pk_016452192feb7952d8393f0105',
+        'pk_6eilj488bq8d',
         {
           limit: 0,
           offset: 0,

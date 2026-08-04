@@ -30,7 +30,7 @@ describe('resource stripe', () => {
   });
 
   test('accounts', async () => {
-    const responsePromise = client.webhooks.stripe.accounts('ac_01148680966698341a9c0976db');
+    const responsePromise = client.webhooks.stripe.accounts('ac_ykxoradjoeb3');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -44,7 +44,7 @@ describe('resource stripe', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.webhooks.stripe.accounts(
-        'ac_01148680966698341a9c0976db',
+        'ac_ykxoradjoeb3',
         { 'Stripe-Signature': 'Stripe-Signature' },
         { path: '/_stainless_unknown_path' },
       ),

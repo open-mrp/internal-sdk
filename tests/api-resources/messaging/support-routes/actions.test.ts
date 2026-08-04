@@ -23,7 +23,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.messaging.supportRoutes.actions.clear(
-        { relation_account_id: 'ac_0170df1ac58e4d24c66fc89f5f' },
+        { relation_account_id: 'ac_opnlh43ymyee' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
@@ -31,7 +31,7 @@ describe('resource actions', () => {
 
   test('set: only required params', async () => {
     const responsePromise = client.messaging.supportRoutes.actions.set({
-      group_conversation_id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+      group_conversation_id: 'cv_w35z4ck68yq7',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -44,7 +44,7 @@ describe('resource actions', () => {
 
   test('set: required and optional params', async () => {
     const response = await client.messaging.supportRoutes.actions.set({
-      group_conversation_id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+      group_conversation_id: 'cv_w35z4ck68yq7',
       relation_account_id: 'relation_account_id',
     });
   });

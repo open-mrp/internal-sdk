@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('activate', async () => {
-    const responsePromise = client.identity.accountUsers.actions.activate('acus_01ea9983ddb41dacc44ecf997c');
+    const responsePromise = client.identity.accountUsers.actions.activate('acus_e5zu8bde0z3h');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource actions', () => {
   });
 
   test('disable', async () => {
-    const responsePromise = client.identity.accountUsers.actions.disable('acus_01ea9983ddb41dacc44ecf997c');
+    const responsePromise = client.identity.accountUsers.actions.disable('acus_e5zu8bde0z3h');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -31,7 +31,7 @@ describe('resource actions', () => {
   });
 
   test('remove', async () => {
-    const responsePromise = client.identity.accountUsers.actions.remove('acus_01ea9983ddb41dacc44ecf997c');
+    const responsePromise = client.identity.accountUsers.actions.remove('acus_e5zu8bde0z3h');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

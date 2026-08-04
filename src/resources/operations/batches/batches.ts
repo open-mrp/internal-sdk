@@ -34,15 +34,18 @@ export class Batches extends APIResource {
   /**
    * Deletes a batch by ID and returns the deleted batch.
    *
-   * After deletion, the batch's production run (if any) is closed automatically once
-   * all of its batches are scanned or deleted.
+   * Deleting a batch also removes its links to the batches feeding into and out of
+   * it, breaking the production flow at that point, and detaches it from any
+   * machines. After deletion, the batch's production run is closed automatically
+   * once all of its batches are scanned or deleted. Deleting the same batch twice
+   * reports that it has already been deleted.
    *
    * This endpoint requires the permission: `batches:delete`.
    *
    * @example
    * ```ts
    * const batch = await client.operations.batches.delete(
-   *   'bt_017313a7df2d7ac8d895809747',
+   *   'bt_fuies8j4pk45',
    * );
    * ```
    */
@@ -54,9 +57,12 @@ export class Batches extends APIResource {
    * Returns the production steps a batch can be advanced to from a given scanning
    * station.
    *
-   * The batch's flow is traversed forward and the child steps of each reachable
-   * batch's current step are collected; only steps assigned to the given scanning
-   * station are returned.
+   * Use this to drive the step picker on a scanning terminal after an operator scans
+   * a batch. Traversal starts at the batch: an open batch that has already been
+   * scanned offers the steps that come after its current step, while a closed batch
+   * is followed downstream to the batches it produced and the search continues from
+   * there. Only steps assigned to the given scanning station are returned, so a
+   * batch with nothing left to do at that station comes back with an empty list.
    *
    * This endpoint requires the permission: `batches:read`.
    *
@@ -64,11 +70,8 @@ export class Batches extends APIResource {
    * ```ts
    * const listScanningProductionStepInfo =
    *   await client.operations.batches.nextSteps(
-   *     'bt_017313a7df2d7ac8d895809747',
-   *     {
-   *       scanning_station_id:
-   *         'scst_0129335dd6286056a97024fcc1',
-   *     },
+   *     'bt_fuies8j4pk45',
+   *     { scanning_station_id: 'scst_t71bn7lq5yov' },
    *   );
    * ```
    */
@@ -84,9 +87,12 @@ export class Batches extends APIResource {
    * Returns the remaining quantity available to split from the specified batches at
    * a given production step.
    *
-   * The remaining quantity is the step's expected output for the source batches
-   * minus the quantities already split off into output batches, expressed in the
-   * step's produced unit.
+   * Use this to cap how much an operator can record on the next split. The remaining
+   * quantity is the step's expected output for the source batches minus the
+   * quantities already split off into output batches, expressed in the step's
+   * produced unit. When a single batch ID is supplied, output already recorded as
+   * seconds and waste also counts against the remainder; when several are supplied,
+   * only first-quality output does.
    *
    * This endpoint requires the permission: `batches:read`.
    *
@@ -94,8 +100,8 @@ export class Batches extends APIResource {
    * ```ts
    * const quantity =
    *   await client.operations.batches.remainingQuantities({
-   *     batch_ids: ['bt_017313a7df2d7ac8d895809747'],
-   *     production_step_id: 'prst_0159474175bb59f4b1990404ee',
+   *     batch_ids: ['bt_fuies8j4pk45'],
+   *     production_step_id: 'prst_0ht5mkqx5a6t',
    *   });
    * ```
    */
@@ -110,8 +116,9 @@ export class Batches extends APIResource {
    * Returns the full production flow graph containing a batch.
    *
    * The flow is every batch connected to the given batch through input/output
-   * relationships, in both directions, returned as nodes with their input and output
-   * edges.
+   * relationships, in both directions, including the batch itself. Nodes come back
+   * in no particular order; rebuild the graph from each node's input and output
+   * edges rather than from their position in the list.
    *
    * This endpoint requires the permission: `batches:read`.
    *
@@ -119,7 +126,7 @@ export class Batches extends APIResource {
    * ```ts
    * const listBatchFlowNode =
    *   await client.operations.batches.retrieveFlow(
-   *     'bt_017313a7df2d7ac8d895809747',
+   *     'bt_fuies8j4pk45',
    *   );
    * ```
    */
@@ -142,7 +149,11 @@ export interface Batch {
   id: string;
 
   /**
-   * When the batch was closed; `null` while the batch is still open.
+   * When the batch was closed.
+   *
+   * A batch closes automatically when it reaches the last production step, when it
+   * is moved or merged into a downstream batch, and when everything split off it
+   * accounts for its whole quantity; it can also be closed explicitly.
    */
   closed_at: string | null;
 
@@ -158,22 +169,25 @@ export interface Batch {
   department: AccountUsersAPI.Department | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   input_batches: ListBatchReference | null;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lots: ListBatchLot | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   machines: AccountUsersAPI.ListMachine | null;
 
@@ -183,7 +197,8 @@ export interface Batch {
   object: 'batch';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   output_batches: ListBatchReference | null;
 
@@ -199,13 +214,20 @@ export interface Batch {
   production_step: AccountUsersAPI.ProductionStep | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: AccountUsersAPI.Quantity | null;
 
   /**
-   * When the batch was scanned at its scanning station; `null` if it has not been
-   * scanned yet.
+   * When the batch was scanned at its scanning station.
+   *
+   * Only initializing a batch stamps this timestamp. Batches created by a move,
+   * merge, or split are attached to the station that produced them but are never
+   * marked as scanned.
    */
   scanned_at: string | null;
 
@@ -216,7 +238,11 @@ export interface Batch {
   scanning_station: AccountUsersAPI.ScanningStation | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   seconds: AccountUsersAPI.Quantity | null;
 
@@ -226,7 +252,11 @@ export interface Batch {
   updated_at: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   waste: AccountUsersAPI.Quantity | null;
 }
@@ -245,7 +275,8 @@ export interface BatchFlowNode {
   batch: Batch;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   input_batches: ListBatchReference | null;
 
@@ -255,13 +286,14 @@ export interface BatchFlowNode {
   object: 'batch_flow_node';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   output_batches: ListBatchReference | null;
 }
 
 /**
- * Lot associated with a batch.
+ * A lot number recorded against a batch for traceability.
  */
 export interface BatchLot {
   /**
@@ -316,18 +348,26 @@ export interface GetPossibleNextStepsRequest {
 export interface GetRemainingQuantityToSplitRequest {
   /**
    * Batch IDs to check remaining quantities for.
+   *
+   * Pass a single ID for a single-part step, or one ID per part for a multi-part
+   * step. Each ID is resolved forward through its production flow to the batch that
+   * is actually available at the step, so an operator can scan an earlier batch in
+   * the chain.
    */
   batch_ids: Array<string>;
 
   /**
-   * The production step the split would be performed at; its configuration
-   * determines the expected output quantity and unit.
+   * The production step the split would be performed at.
+   *
+   * Its configuration determines the expected output quantity and the unit the
+   * remainder is expressed in.
    */
   production_step_id: string;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListBatchFlowNode {
   /**
@@ -341,13 +381,20 @@ export interface ListBatchFlowNode {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListBatchLot {
   /**
@@ -361,13 +408,20 @@ export interface ListBatchLot {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListBatchReference {
   /**
@@ -381,13 +435,20 @@ export interface ListBatchReference {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListScanningProductionStepInfo {
   /**
@@ -401,7 +462,13 @@ export interface ListScanningProductionStepInfo {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -438,8 +505,8 @@ export interface ScanningProductionStepInfo {
   /**
    * Whether the step combines multiple distinct part items.
    *
-   * Multi-part steps require one batch per part to be supplied together when moving,
-   * merging, or splitting into the step.
+   * Multi-part steps consume several parts at once, so an operator must scan one
+   * batch per part before merging or splitting into the step.
    */
   is_multi_part: boolean;
 
@@ -464,12 +531,19 @@ export interface BatchNextStepsParams {
 export interface BatchRemainingQuantitiesParams {
   /**
    * Batch IDs to check remaining quantities for.
+   *
+   * Pass a single ID for a single-part step, or one ID per part for a multi-part
+   * step. Each ID is resolved forward through its production flow to the batch that
+   * is actually available at the step, so an operator can scan an earlier batch in
+   * the chain.
    */
   batch_ids: Array<string>;
 
   /**
-   * The production step the split would be performed at; its configuration
-   * determines the expected output quantity and unit.
+   * The production step the split would be performed at.
+   *
+   * Its configuration determines the expected output quantity and the unit the
+   * remainder is expressed in.
    */
   production_step_id: string;
 }

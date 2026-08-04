@@ -19,7 +19,7 @@ export class EmailLogs extends APIResource {
    * @example
    * ```ts
    * const emailLog = await client.core.emailLogs.retrieve(
-   *   'eml_017b80707ada92dddff8a2c3a0',
+   *   'eml_h2j1q1nfibwb',
    * );
    * ```
    */
@@ -32,7 +32,10 @@ export class EmailLogs extends APIResource {
   }
 
   /**
-   * Returns a paginated list of email logs for the current account.
+   * Returns a paginated list of email logs for the current account, most recently
+   * created first.
+   *
+   * The `q` search term matches the subject line or any recipient address.
    *
    * This endpoint requires the permission: `email_logs:read`.
    *
@@ -50,8 +53,11 @@ export class EmailLogs extends APIResource {
 }
 
 /**
- * A record of an email sent on the account's behalf, such as an invoice or a user
- * invitation.
+ * A record of an email the platform sent on the account's behalf, such as an order
+ * acknowledgement or a user invitation.
+ *
+ * An email that never reached the delivery provider is recorded here too, rather
+ * than disappearing.
  */
 export interface EmailLog {
   /**
@@ -65,7 +71,7 @@ export interface EmailLog {
   created_at: string;
 
   /**
-   * Filename of the attached document.
+   * Filename of the document attached to the email.
    */
   filename: string | null;
 
@@ -80,10 +86,12 @@ export interface EmailLog {
   recipients: Array<string>;
 
   /**
-   * Email send status.
+   * Whether the email was handed off to the delivery provider.
    *
-   * - `pending`: the email is queued and has not been sent yet.
-   * - `sent`: the email has been handed off for delivery.
+   * - `sent`: the provider accepted the email for delivery. It does not confirm that
+   *   the recipient's mail server accepted it.
+   * - `pending`: the email was never handed off — the send attempt failed, or it was
+   *   suppressed because the account is in sandbox mode.
    */
   send_status: 'sent' | 'pending';
 
@@ -105,7 +113,8 @@ export interface EmailLog {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListEmailLog {
   /**
@@ -119,7 +128,13 @@ export interface ListEmailLog {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }

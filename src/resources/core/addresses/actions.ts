@@ -10,8 +10,14 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Validates an address and returns whether it is valid, a formatted version, and
-   * any validation messages.
+   * Checks an address against an address validation service and returns a
+   * standardized version of it.
+   *
+   * Nothing is created or modified. Use this before creating or updating an address
+   * to confirm it is complete and to pick up corrected values. When the service can
+   * standardize the address, `formatted_address` and `components` carry the
+   * corrected values, and `validation_messages` explains anything that was inferred,
+   * replaced, or could not be confirmed.
    *
    * @example
    * ```ts
@@ -46,7 +52,10 @@ export interface ValidateAddressRequest {
   city: string;
 
   /**
-   * Country name or two-letter country code (for example `United States` or `US`).
+   * Two-letter country code, such as `US`.
+   *
+   * A full country name such as `United States` is recognized for a handful of
+   * common countries; send the two-letter code for anywhere else.
    */
   country: string;
 
@@ -67,7 +76,8 @@ export interface ValidateAddressRequest {
 }
 
 /**
- * Result of address validation.
+ * The outcome of checking a submitted address against an address validation
+ * service.
  */
 export interface ValidatedAddress {
   /**
@@ -89,7 +99,15 @@ export interface ValidatedAddress {
   object: 'validated_address';
 
   /**
-   * Whether the address could be validated.
+   * Whether the address was confirmed as complete and specific enough to ship to.
+   *
+   * - `valid`: nothing required was missing and the address resolved to a specific
+   *   building or block.
+   * - `invalid`: required components were missing, or the address only resolved to a
+   *   street or a wider area.
+   *
+   * When the status is `invalid`, read `validation_messages` and compare
+   * `components` against what you submitted to see what to correct.
    */
   status: 'valid' | 'invalid';
 
@@ -115,7 +133,10 @@ export interface ActionValidateParams {
   city: string;
 
   /**
-   * Country name or two-letter country code (for example `United States` or `US`).
+   * Two-letter country code, such as `US`.
+   *
+   * A full country name such as `United States` is recognized for a handful of
+   * common countries; send the two-letter code for anywhere else.
    */
   country: string;
 

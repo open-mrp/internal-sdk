@@ -10,8 +10,12 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Looks up units by abbreviation and returns the matches keyed by the original map
-   * keys; keys with no matching unit are omitted from the response.
+   * Resolves a batch of unit abbreviations to the units they refer to.
+   *
+   * Each abbreviation is matched case-insensitively against the account's units,
+   * including shared system units, and returned under the key it was sent with. Keys
+   * whose abbreviation matches no unit are omitted from the response, which is how
+   * invalid abbreviations are identified.
    *
    * This endpoint requires the permissions: `units:read`, `customers:read`,
    * `suppliers:read`.
@@ -34,9 +38,10 @@ export class Actions extends APIResource {
  */
 export interface ValidateUnitsRequest {
   /**
-   * Map of arbitrary keys to unit abbreviations to validate.
+   * Abbreviations to look up, keyed by any identifier you choose.
    *
-   * Abbreviations are matched case-insensitively against the account's units.
+   * The keys are echoed back on the matching units, so a spreadsheet import can use
+   * row numbers or column names to trace each abbreviation back to its source.
    */
   unit_map: { [key: string]: string };
 }
@@ -82,8 +87,8 @@ export namespace ValidateUnitsResponse {
     /**
      * Whether this is the base unit for its dimension.
      *
-     * Conversion ratios are relative to this unit. Base units are platform-defined;
-     * account-created units always have this set to `false`.
+     * Every other unit's conversion ratio is expressed relative to the base unit. Base
+     * units are platform-defined; units created through the API are never base units.
      */
     is_base_unit: boolean;
 
@@ -98,16 +103,18 @@ export namespace ValidateUnitsResponse {
     object: 'unit';
 
     /**
-     * Conversion offset denominator.
+     * Denominator of the conversion offset applied after the ratio.
      *
-     * Typically 1. Cannot be zero.
+     * Never zero; a unit with no offset carries a numerator of `0` over a denominator
+     * of `1`.
      */
     offset_denominator: string;
 
     /**
-     * Conversion offset numerator, used for temperature-like conversions.
+     * Numerator of the conversion offset, applied after the ratio for scales that do
+     * not share a zero point, such as temperature.
      *
-     * Zero for most unit types.
+     * Zero for units that convert by ratio alone.
      */
     offset_numerator: string;
 
@@ -117,19 +124,26 @@ export namespace ValidateUnitsResponse {
     owner: APIKeysAPI.Owner | null;
 
     /**
-     * Conversion ratio denominator relative to the base unit in the same dimension.
+     * Denominator of the ratio that converts a quantity in this unit into the
+     * dimension's base unit.
      *
      * Cannot be zero.
      */
     ratio_denominator: string;
 
     /**
-     * Conversion ratio numerator relative to the base unit in the same dimension.
+     * Numerator of the ratio that converts a quantity in this unit into the
+     * dimension's base unit.
+     *
+     * A quantity is converted with
+     * `value × (ratio_numerator / ratio_denominator) + (offset_numerator / offset_denominator)`,
+     * so a kilogram in a gram-based dimension has a numerator of `1000` and a
+     * denominator of `1`.
      */
     ratio_numerator: string;
 
     /**
-     * Physical dimension the unit measures, such as mass, volume, or currency.
+     * The dimension this unit measures, such as mass, volume, or currency.
      *
      * A unit can only be converted to another unit of the same dimension. The
      * `quantity` dimension is for discrete countable items rather than a physical
@@ -146,9 +160,10 @@ export namespace ValidateUnitsResponse {
 
 export interface ActionValidateParams {
   /**
-   * Map of arbitrary keys to unit abbreviations to validate.
+   * Abbreviations to look up, keyed by any identifier you choose.
    *
-   * Abbreviations are matched case-insensitively against the account's units.
+   * The keys are echoed back on the matching units, so a spreadsheet import can use
+   * row numbers or column names to trace each abbreviation back to its source.
    */
   unit_map: { [key: string]: string };
 }

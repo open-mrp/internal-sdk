@@ -11,9 +11,10 @@ import { path } from '../../internal/utils/path';
  */
 export class Roles extends APIResource {
   /**
-   * Creates a custom role with the specified permissions.
+   * Creates a custom role that can then be assigned to users in your account.
    *
-   * Roles created through the API always have type `user`.
+   * Roles created through the API are always owned by your account and have the type
+   * `user`. Returns a conflict error if a role with the same name already exists.
    *
    * This endpoint requires the permission: `roles:create`.
    *
@@ -36,14 +37,17 @@ export class Roles extends APIResource {
   }
 
   /**
-   * Returns a role by ID, including its permissions.
+   * Retrieves a single role by ID.
+   *
+   * Both the roles your account owns and the system-owned roles shared by every
+   * account can be retrieved.
    *
    * This endpoint requires the permission: `roles:read`.
    *
    * @example
    * ```ts
    * const role = await client.identity.roles.retrieve(
-   *   'rl_01c16d2eb637c0d1f3a372937c',
+   *   'rl_3xknmfqflhvb',
    * );
    * ```
    */
@@ -56,16 +60,18 @@ export class Roles extends APIResource {
   }
 
   /**
-   * Partially updates a custom role's name or permissions.
+   * Updates a role's name or the set of permissions it grants.
    *
-   * Provided permissions replace all existing ones; global roles cannot be modified.
+   * Only roles owned by your account can be updated; the system-owned roles shared
+   * across all accounts are rejected. Permission changes apply to every user already
+   * assigned the role, starting with their next request.
    *
    * This endpoint requires the permission: `roles:update`.
    *
    * @example
    * ```ts
    * const role = await client.identity.roles.update(
-   *   'rl_01c16d2eb637c0d1f3a372937c',
+   *   'rl_3xknmfqflhvb',
    *   {
    *     name: 'Updated Manager',
    *     permissions: ['customers:read', 'customers:update'],
@@ -83,8 +89,10 @@ export class Roles extends APIResource {
   }
 
   /**
-   * Returns a paginated list of roles for the target account, including global
-   * roles.
+   * Lists the roles that can be assigned to users in your account, newest first.
+   *
+   * Results combine the roles your account owns with the system-owned roles shared
+   * by every account. Text search matches the role name.
    *
    * This endpoint requires the permission: `roles:read`.
    *
@@ -98,17 +106,18 @@ export class Roles extends APIResource {
   }
 
   /**
-   * Deletes a role and its associated permissions.
+   * Deletes a role along with the permissions granted through it.
    *
-   * Global roles and roles currently assigned to one or more users cannot be
-   * deleted.
+   * Only roles owned by your account can be deleted; the system-owned roles shared
+   * across all accounts cannot. A role that is still assigned to at least one user
+   * is rejected, so move those users to another role first.
    *
    * This endpoint requires the permission: `roles:delete`.
    *
    * @example
    * ```ts
    * const role = await client.identity.roles.delete(
-   *   'rl_01c16d2eb637c0d1f3a372937c',
+   *   'rl_3xknmfqflhvb',
    * );
    * ```
    */
@@ -118,25 +127,31 @@ export class Roles extends APIResource {
 }
 
 /**
- * CreateRoleRequest is a request to create a role.
+ * Request to create a role.
  */
 export interface CreateRoleRequest {
   /**
-   * Display name for the role, unique within the account.
+   * Display name for the role, such as "Warehouse Manager".
+   *
+   * Must be unique within your account.
    */
   name: string;
 
   /**
-   * Permissions to grant, in `{domain}:{action}` format, such as `customers:read`.
+   * Permissions to grant, in `{permission}:{action}` format, such as
+   * `customers:read`.
    *
-   * The action must be one of `create`, `read`, `update`, or `delete`. Omit to
-   * create a role with no permissions.
+   * The first half is a permission code such as `customers` or `sales_orders`, and
+   * the action must be one of `create`, `read`, `update`, or `delete`. List each
+   * action separately to grant more than one action on the same permission. A role
+   * created without any permissions grants no access until permissions are added.
    */
   permissions?: Array<string>;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListRole {
   /**
@@ -150,28 +165,36 @@ export interface ListRole {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * UpdateRoleRequest is a request to update a role.
+ * Request to update a role.
  */
 export interface UpdateRoleRequest {
   /**
-   * New display name for the role, unique within the account.
+   * New display name for the role.
    *
-   * Omit to leave unchanged.
+   * Returns a conflict error if another role in your account already uses this name.
    */
   name?: string;
 
   /**
-   * Full replacement set of permissions, in `{domain}:{action}` format, such as
+   * Full replacement set of permissions, in `{permission}:{action}` format, such as
    * `customers:read`.
    *
-   * Replaces all existing permissions on the role. Pass an empty array to remove all
-   * permissions, or omit to leave them unchanged.
+   * The role's existing permissions are discarded and replaced with exactly what you
+   * send, so include every permission the role should keep. Sending an empty array
+   * strips the role of all access, while leaving the field out keeps the current
+   * permissions untouched.
    */
   permissions?: Array<string>;
 }
@@ -180,7 +203,9 @@ export interface RoleDeleteResponse {}
 
 export interface RoleCreateParams {
   /**
-   * Body param: Display name for the role, unique within the account.
+   * Body param: Display name for the role, such as "Warehouse Manager".
+   *
+   * Must be unique within your account.
    */
   name: string;
 
@@ -191,11 +216,13 @@ export interface RoleCreateParams {
   include?: Array<'owner' | 'owner.account' | 'permissions'>;
 
   /**
-   * Body param: Permissions to grant, in `{domain}:{action}` format, such as
+   * Body param: Permissions to grant, in `{permission}:{action}` format, such as
    * `customers:read`.
    *
-   * The action must be one of `create`, `read`, `update`, or `delete`. Omit to
-   * create a role with no permissions.
+   * The first half is a permission code such as `customers` or `sales_orders`, and
+   * the action must be one of `create`, `read`, `update`, or `delete`. List each
+   * action separately to grant more than one action on the same permission. A role
+   * created without any permissions grants no access until permissions are added.
    */
   permissions?: Array<string>;
 }
@@ -216,18 +243,20 @@ export interface RoleUpdateParams {
   include?: Array<'owner' | 'owner.account' | 'permissions'>;
 
   /**
-   * Body param: New display name for the role, unique within the account.
+   * Body param: New display name for the role.
    *
-   * Omit to leave unchanged.
+   * Returns a conflict error if another role in your account already uses this name.
    */
   name?: string;
 
   /**
-   * Body param: Full replacement set of permissions, in `{domain}:{action}` format,
-   * such as `customers:read`.
+   * Body param: Full replacement set of permissions, in `{permission}:{action}`
+   * format, such as `customers:read`.
    *
-   * Replaces all existing permissions on the role. Pass an empty array to remove all
-   * permissions, or omit to leave them unchanged.
+   * The role's existing permissions are discarded and replaced with exactly what you
+   * send, so include every permission the role should keep. Sending an empty array
+   * strips the role of all access, while leaving the field out keeps the current
+   * permissions untouched.
    */
   permissions?: Array<string>;
 }

@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource sales', () => {
   test('checkoutSessions: only required params', async () => {
     const responsePromise = client.sales.checkoutSessions({
-      order_id: 'or_01d5034136c3ccc048abecc312',
+      order_id: 'or_9lqo07quiwyb',
       order_number: 'SO-001',
       order_total_cents: 50000,
     });
@@ -25,7 +25,7 @@ describe('resource sales', () => {
 
   test('checkoutSessions: required and optional params', async () => {
     const response = await client.sales.checkoutSessions({
-      order_id: 'or_01d5034136c3ccc048abecc312',
+      order_id: 'or_9lqo07quiwyb',
       order_number: 'SO-001',
       order_total_cents: 50000,
       customer_po: 'PO-4242',

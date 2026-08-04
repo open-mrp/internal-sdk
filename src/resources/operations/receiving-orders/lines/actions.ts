@@ -14,10 +14,11 @@ export class Actions extends APIResource {
    * Records the full outstanding quantity as received on a single receiving order
    * line.
    *
-   * Sets the line's quantity to the quantity still outstanding on its purchase order
-   * line (ordered minus previously received); if nothing is outstanding, the line is
-   * returned unchanged. This does not add inventory — use Stock Receiving Order to
-   * put the received quantity away.
+   * Sets the line's quantity to what is still outstanding on its purchase order line
+   * — the ordered quantity less everything already recorded across the receiving
+   * lines for that order line — and returns the line unchanged when nothing is
+   * outstanding. Nothing enters inventory; use Stock Receiving Order to put the
+   * received quantity away.
    *
    * This endpoint requires the permission: `receiving_orders:update`.
    *
@@ -25,10 +26,8 @@ export class Actions extends APIResource {
    * ```ts
    * const receivingOrderLine =
    *   await client.operations.receivingOrders.lines.actions.receive(
-   *     'orln_0142f9b74268973450b3a76ce3',
-   *     {
-   *       receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e',
-   *     },
+   *     'orln_la01fxgrwcnr',
+   *     { receiving_order_id: 'rcor_iy0usuxcrjj8' },
    *   );
    * ```
    */
@@ -45,10 +44,11 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Voids a receiving order line.
+   * Voids a single receiving order line, resetting its receiving progress.
    *
-   * The line's received quantity is reset to `0` and its stocked state is cleared.
-   * The line itself is not deleted.
+   * The line's received quantity is reset to `0` and its stocked state is cleared,
+   * leaving the rest of the order untouched. The line itself is not deleted, and any
+   * inventory already stocked from it is not reversed.
    *
    * This endpoint requires the permission: `receiving_orders:update`.
    *
@@ -56,10 +56,8 @@ export class Actions extends APIResource {
    * ```ts
    * const receivingOrderLine =
    *   await client.operations.receivingOrders.lines.actions.void(
-   *     'orln_0142f9b74268973450b3a76ce3',
-   *     {
-   *       receiving_order_id: 'rcor_016911ec6c634a298b3dc1798e',
-   *     },
+   *     'orln_la01fxgrwcnr',
+   *     { receiving_order_id: 'rcor_iy0usuxcrjj8' },
    *   );
    * ```
    */

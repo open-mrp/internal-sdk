@@ -41,39 +41,43 @@ export class SalesOrders extends APIResource {
    * Creates a sales order in `estimate` status.
    *
    * The order number is assigned automatically, and a sales rep is auto-assigned
-   * when none is provided. A shipping line is always added to the order, plus a
-   * discount line when an order discount is supplied.
+   * when none is provided. Line prices and costs are resolved server-side from each
+   * product. A shipping line carrying the estimated freight charge is added to the
+   * order, plus a negative-priced discount line when an order discount is supplied.
+   * The order is not committed for fulfillment until it is issued.
    *
    * This endpoint requires the permission: `sales_orders:create`.
    *
    * @example
    * ```ts
    * const salesOrder = await client.sales.salesOrders.create({
-   *   bill_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
-   *   buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+   *   bill_to_address_id: 'ad_npqa5y43q26z',
+   *   buyer_account_id: 'ac_opnlh43ymyee',
    *   lines: [
    *     {
-   *       product_id: 'pd_013c29ab3f1518d0004094c316',
-   *       quantity: { ... },
+   *       product_id: 'pd_07oe0r7adh2w',
+   *       quantity: { value: '10', unit_id: 'un_82bd37dae5po' },
    *     },
    *   ],
    *   priority_code: 'normal',
-   *   ship_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
+   *   ship_to_address_id: 'ad_npqa5y43q26z',
    *   acknowledgement_email_contacts: [
-   *     { account_user_id: 'acus_01ea9983ddb41dacc44ecf997c' },
+   *     { account_user_id: 'acus_e5zu8bde0z3h' },
    *   ],
    *   carrier_billing_account_number: '123456789',
    *   carrier_billing_type: 'sender',
-   *   carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+   *   carrier_id: 'cr_tv5vfjtgu1n3',
    *   customer_purchase_order_number: 'PO-88231',
-   *   invoice_email_contacts: [{ account_user_id: 'acus_01ea9983ddb41dacc44ecf997c' }],
+   *   invoice_email_contacts: [
+   *     { account_user_id: 'acus_e5zu8bde0z3h' },
+   *   ],
    *   note: 'Rush order for trade show',
-   *   order_discount_id: 'ords_01121c5e2f6937a6b896daad3a',
-   *   payment_term_id: 'pytm_018694d6601ea771cd1b52e890',
+   *   order_discount_id: 'ords_qnbrjvq5ih2q',
+   *   payment_term_id: 'pytm_skssmsy21lem',
    *   promised_at: '2026-05-20T00:00:00Z',
-   *   sales_rep_id: 'acus_01ea9983ddb41dacc44ecf997c',
-   *   service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
-   *   shipping_term_id: 'shtm_014341ab4bb5bf94d5b6936f86',
+   *   sales_rep_id: 'acus_e5zu8bde0z3h',
+   *   service_level_id: 'crop_4ilk9p6gccrx',
+   *   shipping_term_id: 'shtm_c5gxy05whw6r',
    * });
    * ```
    */
@@ -91,7 +95,7 @@ export class SalesOrders extends APIResource {
    * @example
    * ```ts
    * const salesOrder = await client.sales.salesOrders.retrieve(
-   *   'or_01d5034136c3ccc048abecc312',
+   *   'or_9lqo07quiwyb',
    * );
    * ```
    */
@@ -106,17 +110,23 @@ export class SalesOrders extends APIResource {
   /**
    * Partially updates a sales order.
    *
+   * Changing the carrier, service level, or ship-to address propagates to the
+   * order's existing shipments, but never re-prices the freight line: request a
+   * fresh estimate from the quote-freight endpoint and apply it to the shipping line
+   * yourself. Order status is changed through the issue, unissue, close, and reopen
+   * actions instead of this endpoint.
+   *
    * This endpoint requires the permission: `sales_orders:update`.
    *
    * @example
    * ```ts
    * const salesOrder = await client.sales.salesOrders.update(
-   *   'or_01d5034136c3ccc048abecc312',
+   *   'or_9lqo07quiwyb',
    *   {
-   *     carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
+   *     carrier_id: 'cr_tv5vfjtgu1n3',
    *     note: 'Updated shipping instructions',
    *     priority_code: 'normal',
-   *     shipping_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
+   *     shipping_address_id: 'ad_npqa5y43q26z',
    *   },
    * );
    * ```
@@ -131,7 +141,11 @@ export class SalesOrders extends APIResource {
   }
 
   /**
-   * Returns a paginated list of sales orders for the current account.
+   * Returns a paginated list of sales orders for the current account, newest first.
+   *
+   * A free-text search term (`q`) is matched as an exact value against the order
+   * number and the customer purchase order number, and still respects the other
+   * filters. Customer accounts calling this endpoint only ever see their own orders.
    *
    * This endpoint requires the permissions: `sales_orders:read`, `customers:read`,
    * `suppliers:read`.
@@ -152,14 +166,15 @@ export class SalesOrders extends APIResource {
   /**
    * Deletes a sales order and all its related records.
    *
-   * Fulfilled orders cannot be deleted.
+   * Removes the order's lines, pick, shipment and invoice lines, and email contacts,
+   * and releases any inventory it had reserved. Fulfilled orders cannot be deleted.
    *
    * This endpoint requires the permission: `sales_orders:delete`.
    *
    * @example
    * ```ts
    * const salesOrder = await client.sales.salesOrders.delete(
-   *   'or_01d5034136c3ccc048abecc312',
+   *   'or_9lqo07quiwyb',
    * );
    * ```
    */
@@ -170,9 +185,11 @@ export class SalesOrders extends APIResource {
   /**
    * Creates a hosted payment checkout session for a sales order.
    *
-   * Requires an active Stripe integration on the account. The checkout is built from
-   * the order's lines, and the checkout link is emailed to the provided address.
-   * Fails with a conflict if the order already has a payment.
+   * Requires an active Stripe integration on the account and a customer that already
+   * exists in Stripe. The customer is charged a single amount covering every line on
+   * the order, including its freight and discount lines, and the checkout link is
+   * emailed to the address provided. Fails with a conflict if the order already has
+   * a payment.
    *
    * This endpoint requires the permission: `sales_orders:update`.
    *
@@ -180,7 +197,7 @@ export class SalesOrders extends APIResource {
    * ```ts
    * const checkoutSalesOrderResponse =
    *   await client.sales.salesOrders.checkout(
-   *     'or_01d5034136c3ccc048abecc312',
+   *     'or_9lqo07quiwyb',
    *     { email: 'operations@acme.example.com' },
    *   );
    * ```
@@ -207,13 +224,13 @@ export class SalesOrders extends APIResource {
    * ```ts
    * const quoteSalesOrderPricesResponse =
    *   await client.sales.salesOrders.priceQuote({
-   *     buyer_account_id: 'ac_0170df1ac58e4d24c66fc89f5f',
+   *     buyer_account_id: 'ac_opnlh43ymyee',
    *     lines: [
    *       {
-   *         product_id: 'pd_013c29ab3f1518d0004094c316',
+   *         product_id: 'pd_07oe0r7adh2w',
    *         quantity: {
    *           value: '10',
-   *           unit_id: 'un_01966263f74a5a0cae356000a1',
+   *           unit_id: 'un_82bd37dae5po',
    *         },
    *       },
    *     ],
@@ -228,7 +245,12 @@ export class SalesOrders extends APIResource {
   }
 
   /**
-   * Returns a paginated list of sales order statuses.
+   * Lists the statuses a sales order can be in.
+   *
+   * The statuses are platform-provided and the same for every account, so the result
+   * is small and stable enough to cache. Use it to label orders in your own
+   * interface; an order moves between statuses through its issue, unissue, close,
+   * and reopen actions rather than by being assigned a status.
    *
    * @example
    * ```ts
@@ -250,8 +272,6 @@ export class SalesOrders extends APIResource {
 export interface CheckoutSalesOrderRequest {
   /**
    * Email address to send the checkout link to.
-   *
-   * Also set as the customer email on the payment provider's checkout session.
    */
   email: string;
 }
@@ -285,7 +305,10 @@ export interface CreateSalesOrderLineInput {
   product_id: string;
 
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   quantity: CustomersAPI.QuantityInput;
 
@@ -304,8 +327,11 @@ export interface CreateSalesOrderLineInput {
   product_sku?: string;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price?: RateInput;
 }
@@ -327,7 +353,10 @@ export interface CreateSalesOrderRequest {
   buyer_account_id: string;
 
   /**
-   * Order lines to create.
+   * The line items to put on the order.
+   *
+   * The freight line, and the discount line when `order_discount_id` is supplied,
+   * are added on top of these automatically.
    */
   lines: Array<CreateSalesOrderLineInput>;
 
@@ -344,12 +373,15 @@ export interface CreateSalesOrderRequest {
   ship_to_address_id: string;
 
   /**
-   * Account users who should receive order acknowledgement emails.
+   * Users who should receive order acknowledgement emails for this order.
+   *
+   * Each must be a user on the customer's account.
    */
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Carrier billing account number.
+   * Carrier billing account number charged when `carrier_billing_type` is
+   * `third_party`.
    */
   carrier_billing_account_number?: string;
 
@@ -363,7 +395,10 @@ export interface CreateSalesOrderRequest {
   carrier_billing_type?: 'sender' | 'third_party';
 
   /**
-   * Carrier ID.
+   * ID of the carrier that will ship the order.
+   *
+   * Falls back to the customer's default carrier; the order is rejected when neither
+   * is available.
    */
   carrier_id?: string;
 
@@ -375,48 +410,62 @@ export interface CreateSalesOrderRequest {
   customer_purchase_order_number?: string;
 
   /**
-   * Account users who should receive invoice emails.
+   * Users who should receive invoice emails for this order.
+   *
+   * Each must be a user on the customer's account.
    */
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Order note.
+   * Free-form note about the order.
    */
   note?: string;
 
   /**
-   * Order discount ID.
+   * The order-level discount to apply, given as either its ID or its unique code.
    *
-   * When supplied, a discount line is added to the order automatically.
+   * The discount is realized as an extra negative-priced line on the order rather
+   * than as a separate total.
    */
   order_discount_id?: string;
 
   /**
-   * Payment term ID.
+   * ID of the payment terms for the order.
+   *
+   * Falls back to the customer's default payment term; the order is rejected when
+   * neither is available.
    */
   payment_term_id?: string;
 
   /**
-   * Promised delivery date.
+   * Date delivery is promised to the customer.
    */
   promised_at?: string;
 
   /**
-   * Sales rep ID.
+   * ID of the account user to credit as the order's sales rep.
    *
    * When omitted, a rep is assigned automatically: the customer's default sales rep
    * first, then the sales territory matching the ship-to postal code, then the
-   * ship-to state.
+   * ship-to state. No rep is assigned when the customer is commission-exempt or
+   * every ordered product belongs to a commission-exempt product line.
    */
   sales_rep_id?: string;
 
   /**
-   * Service level ID.
+   * ID of the carrier service level the order ships on.
+   *
+   * Falls back to the customer's default service level, but only when `carrier_id`
+   * is also omitted — supplying a carrier without a service level leaves the service
+   * level unset.
    */
   service_level_id?: string;
 
   /**
-   * Shipping term ID.
+   * ID of the shipping terms for the order.
+   *
+   * Falls back to the customer's default shipping term; the order is rejected when
+   * neither is available.
    */
   shipping_term_id?: string;
 }
@@ -453,8 +502,7 @@ export interface CreatedBy {
  * Freight describes the carrier selection and freight billing for a record.
  *
  * It is a generic, reusable sub-resource shared by anything that carries shipping
- * configuration — for example a sales order's chosen freight, or a customer's
- * default freight preferences.
+ * configuration — a sales order, a purchase order, or a shipment.
  */
 export interface Freight {
   /**
@@ -487,22 +535,28 @@ export interface Freight {
   /**
    * How freight is arranged and billed for the record.
    *
-   * Populated where a freight policy applies, such as a customer's default
-   * preferences.
-   *
    * - `free_freight`: no shipping cost to the buyer.
    * - `billed_freight`: freight is billed to the buyer.
+   *
+   * Sales orders, purchase orders, and shipments do not carry a policy of their own.
+   * Freight on those records is waived when the customer's freight preferences, the
+   * customer's type group, any of its pricing groups, the customer's shipping term,
+   * or any product line on the order is `free_freight`.
    */
   policy: 'free_freight' | 'billed_freight' | null;
 
   /**
-   * Shipping service level for a carrier.
+   * A shipping speed or method offered by a carrier, such as ground or overnight.
+   *
+   * Carriers connected through Shippo have their service levels synced from the
+   * carrier itself; any carrier can also have service levels you create by hand.
    */
   service_level: CustomersAPI.ServiceLevel | null;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListQuotedSalesOrderLine {
   /**
@@ -516,13 +570,20 @@ export interface ListQuotedSalesOrderLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListRecord {
   /**
@@ -536,13 +597,20 @@ export interface ListRecord {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListSalesOrder {
   /**
@@ -556,13 +624,20 @@ export interface ListSalesOrder {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListSalesOrderLine {
   /**
@@ -576,13 +651,20 @@ export interface ListSalesOrderLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListSalesOrderStatus {
   /**
@@ -596,13 +678,19 @@ export interface ListSalesOrderStatus {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * OrderContact groups a sales order's email recipients by notification purpose.
+ * A sales order's email recipients, grouped by the notification they receive.
  */
 export interface OrderContact {
   /**
@@ -622,8 +710,12 @@ export interface OrderContact {
 }
 
 /**
- * Product pairs an inventory item with how it is sold: its product type, optional
+ * A catalog entry as it is sold: an inventory item together with its product type,
  * product line, and customer portal visibility.
+ *
+ * Every product is backed by exactly one item, which carries the SKU, description,
+ * pricing, attributes, and inventory position. Creating a product creates that
+ * item; deleting the product deletes it.
  */
 export interface Product {
   /**
@@ -637,7 +729,7 @@ export interface Product {
   created_at: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
@@ -652,14 +744,19 @@ export interface Product {
    * - `visible`: buyers can see and order the product in the portal.
    * - `hidden`: the product is concealed from the portal but remains usable
    *   internally.
+   *
+   * Visibility alone is not enough to expose a product: a buyer only sees it if
+   * their account has also been granted access to the product's product line.
    */
   portal_visibility: 'visible' | 'hidden';
 
   /**
-   * Product line resource.
+   * A named grouping of related products in your catalog.
    *
-   * A product line groups related products in your catalog and carries the default
-   * commission policy, freight policy, and unit group for those products.
+   * A product line carries the default commission and freight policies for the
+   * products assigned to it, along with the unit group that determines how those
+   * products are measured. Product lines are also the unit that catalog access is
+   * granted over, for both customers and account groups.
    */
   product_line: AccountPricesAPI.ProductLine | null;
 
@@ -692,7 +789,10 @@ export interface QuoteSalesOrderLineInput {
   product_id: string;
 
   /**
-   * A value with an associated unit, used in create and update requests.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
   quantity: CustomersAPI.QuantityInput;
 }
@@ -717,7 +817,8 @@ export interface QuoteSalesOrderPricesRequest {
  */
 export interface QuoteSalesOrderPricesResponse {
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lines: ListQuotedSalesOrderLine | null;
 
@@ -737,8 +838,12 @@ export interface QuotedSalesOrderLine {
   object: 'sales_order_price_quote_line';
 
   /**
-   * Product pairs an inventory item with how it is sold: its product type, optional
+   * A catalog entry as it is sold: an inventory item together with its product type,
    * product line, and customer portal visibility.
+   *
+   * Every product is backed by exactly one item, which carries the SKU, description,
+   * pricing, attributes, and inventory position. Creating a product creates that
+   * item; deleting the product deletes it.
    */
   product: Product | null;
 
@@ -752,8 +857,11 @@ export interface QuotedSalesOrderLine {
 }
 
 /**
- * A rate value with its numerator and denominator units, used in create and update
+ * A value expressed as a ratio of two units, supplied on create and update
  * requests.
+ *
+ * A unit price, for example, has a currency as its numerator unit and the unit the
+ * product is bought or sold by as its denominator.
  */
 export interface RateInput {
   /**
@@ -777,10 +885,10 @@ export interface RateInput {
  * Record is a lightweight reference to a business record — a sales order, purchase
  * order, pick, shipment, production run, invoice, etc.
  *
- * Like Actor and Entity, it carries just enough to identify and label the
- * referenced record without embedding its full resource. The optional status and
- * metadata fields hold type-specific detail that varies by the kind of record
- * referenced.
+ * Like the `actor` and `entity` references, it carries just enough to identify and
+ * label the referenced record without embedding its full resource. The `status`
+ * and `metadata` fields hold type-specific detail that varies by the kind of
+ * record referenced.
  */
 export interface Record {
   /**
@@ -841,7 +949,7 @@ export interface Record {
 }
 
 /**
- * Full sales order resource.
+ * An order placed by a customer, tracked from estimate through fulfillment.
  */
 export interface SalesOrder {
   /**
@@ -851,6 +959,10 @@ export interface SalesOrder {
 
   /**
    * Whether an order acknowledgment has been sent to the customer.
+   *
+   * Becomes `sent` when the order is issued with customer notification requested and
+   * the order has acknowledgement contacts to send to. It can also be set directly
+   * when an acknowledgement was sent outside Augno.
    */
   acknowledgment_status: 'not_sent' | 'sent';
 
@@ -866,7 +978,7 @@ export interface SalesOrder {
   completed_at: string | null;
 
   /**
-   * OrderContact groups a sales order's email recipients by notification purpose.
+   * A sales order's email recipients, grouped by the notification they receive.
    */
   contacts: OrderContact | null;
 
@@ -910,8 +1022,7 @@ export interface SalesOrder {
    * Freight describes the carrier selection and freight billing for a record.
    *
    * It is a generic, reusable sub-resource shared by anything that carries shipping
-   * configuration — for example a sales order's chosen freight, or a customer's
-   * default freight preferences.
+   * configuration — a sales order, a purchase order, or a shipment.
    */
   freight: Freight | null;
 
@@ -921,18 +1032,18 @@ export interface SalesOrder {
   issued_at: string | null;
 
   /**
-   * Number of order lines on this order, returned even when the `lines` list itself
-   * is not expanded.
+   * Number of lines on this order.
    */
   line_count: number;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lines: ListSalesOrderLine | null;
 
   /**
-   * Order note.
+   * Free-form note about the order.
    */
   note: string | null;
 
@@ -952,7 +1063,8 @@ export interface SalesOrder {
    * A discount code that can be applied to a sales order.
    *
    * An order discount reduces the order total by either a percentage or a fixed
-   * amount, depending on `discount_type`.
+   * amount, depending on `discount_type`. The reduction is capped at the order total
+   * and rounded to the nearest cent.
    */
   order_discount: OrderDiscountsAPI.OrderDiscount | null;
 
@@ -984,10 +1096,10 @@ export interface SalesOrder {
   promised_at: string | null;
 
   /**
-   * SalesOrderRelated groups the records related to a sales order.
+   * The fulfillment records produced from a sales order.
    *
-   * The members are individually expandable (e.g. include[]=related.pick). The group
-   * is null unless at least one of its members is expanded.
+   * The group itself is returned only when at least one of its members has been
+   * expanded.
    */
   related: SalesOrderRelated | null;
 
@@ -1004,7 +1116,12 @@ export interface SalesOrder {
   ship_to_address: APIKeysAPI.Address | null;
 
   /**
-   * A shipping term defining how freight charges are calculated for an order.
+   * A named freight pricing rule that decides what a buyer pays for shipping.
+   *
+   * A customer's default shipping term is evaluated whenever freight is quoted for
+   * one of their orders. Freight exemptions on the customer, its type group, or any
+   * of its price groups are checked first and zero the freight charge before the
+   * shipping term is considered.
    */
   shipping_term: CustomersAPI.ShippingTerm | null;
 
@@ -1022,10 +1139,11 @@ export interface SalesOrder {
   status: 'estimate' | 'issued' | 'fulfilled';
 
   /**
-   * SalesOrderTotals holds the derived monetary totals for a sales order or one of
-   * its lines, following the lifecycle ordered -> picked -> packed -> invoiced. Each
-   * downstream stage carries both its monetary amount and its completion progress
-   * against the ordered baseline.
+   * Derived monetary totals for a sales order or one of its lines.
+   *
+   * Fulfillment runs ordered -> picked -> packed -> invoiced, and each downstream
+   * stage reports both the money that has reached it and its progress against the
+   * ordered baseline.
    */
   totals: SalesOrderTotals | null;
 
@@ -1036,18 +1154,17 @@ export interface SalesOrder {
 }
 
 /**
- * SalesOrderEmailContactInput represents an account user subscribed to a
- * sales-order email notification type.
+ * A user subscribed to one of a sales order's email notifications.
  */
 export interface SalesOrderEmailContactInput {
   /**
-   * Account user ID to receive the notification.
+   * ID of the account user who should receive the notification.
    */
   account_user_id: string;
 }
 
 /**
- * Full sales order line resource.
+ * A single line item on a sales order.
  */
 export interface SalesOrderLine {
   /**
@@ -1063,7 +1180,9 @@ export interface SalesOrderLine {
   /**
    * Position of the line on the order.
    *
-   * Assigned automatically in sequence, starting at `1`.
+   * Assigned automatically in sequence, starting at `1`. Product lines are numbered
+   * first and the automatically generated freight and discount lines always sit at
+   * the bottom; removing a line renumbers the rest so the sequence stays contiguous.
    */
   line_item_number: number;
 
@@ -1073,31 +1192,45 @@ export interface SalesOrderLine {
   object: 'sales_order_line';
 
   /**
-   * Product pairs an inventory item with how it is sold: its product type, optional
+   * A catalog entry as it is sold: an inventory item together with its product type,
    * product line, and customer portal visibility.
+   *
+   * Every product is backed by exactly one item, which carries the SKU, description,
+   * pricing, attributes, and inventory position. Creating a product creates that
+   * item; deleting the product deletes it.
    */
   product: Product | null;
 
   /**
-   * Product description.
+   * Description recorded on this line, taken from the product unless the line
+   * supplies its own.
    */
   product_description: string | null;
 
   /**
-   * Product SKU.
+   * SKU recorded on this line.
+   *
+   * Taken from the product unless the line supplies its own, and editable
+   * afterwards, so it preserves what was sold even if the product's SKU later
+   * changes.
    */
   product_sku: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity_ordered: AccountUsersAPI.Quantity | null;
 
   /**
-   * SalesOrderTotals holds the derived monetary totals for a sales order or one of
-   * its lines, following the lifecycle ordered -> picked -> packed -> invoiced. Each
-   * downstream stage carries both its monetary amount and its completion progress
-   * against the ordered baseline.
+   * Derived monetary totals for a sales order or one of its lines.
+   *
+   * Fulfillment runs ordered -> picked -> packed -> invoiced, and each downstream
+   * stage reports both the money that has reached it and its progress against the
+   * ordered baseline.
    */
   totals: SalesOrderTotals | null;
 
@@ -1149,14 +1282,15 @@ export interface SalesOrderQuoteRate {
 }
 
 /**
- * SalesOrderRelated groups the records related to a sales order.
+ * The fulfillment records produced from a sales order.
  *
- * The members are individually expandable (e.g. include[]=related.pick). The group
- * is null unless at least one of its members is expanded.
+ * The group itself is returned only when at least one of its members has been
+ * expanded.
  */
 export interface SalesOrderRelated {
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   invoices: ListRecord | null;
 
@@ -1169,10 +1303,10 @@ export interface SalesOrderRelated {
    * Record is a lightweight reference to a business record — a sales order, purchase
    * order, pick, shipment, production run, invoice, etc.
    *
-   * Like Actor and Entity, it carries just enough to identify and label the
-   * referenced record without embedding its full resource. The optional status and
-   * metadata fields hold type-specific detail that varies by the kind of record
-   * referenced.
+   * Like the `actor` and `entity` references, it carries just enough to identify and
+   * label the referenced record without embedding its full resource. The `status`
+   * and `metadata` fields hold type-specific detail that varies by the kind of
+   * record referenced.
    */
   pick: Record | null;
 
@@ -1180,33 +1314,37 @@ export interface SalesOrderRelated {
    * Record is a lightweight reference to a business record — a sales order, purchase
    * order, pick, shipment, production run, invoice, etc.
    *
-   * Like Actor and Entity, it carries just enough to identify and label the
-   * referenced record without embedding its full resource. The optional status and
-   * metadata fields hold type-specific detail that varies by the kind of record
-   * referenced.
+   * Like the `actor` and `entity` references, it carries just enough to identify and
+   * label the referenced record without embedding its full resource. The `status`
+   * and `metadata` fields hold type-specific detail that varies by the kind of
+   * record referenced.
    */
   production_run: Record | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   shipments: ListRecord | null;
 }
 
 /**
- * SalesOrderStageTotal pairs a fulfillment stage's monetary amount with its
- * completion progress.
+ * The monetary amount that has reached one fulfillment stage, together with how
+ * far that stage has progressed.
  */
 export interface SalesOrderStageTotal {
   /**
-   * Amount for this stage as a decimal string (unit price x quantity at this stage).
+   * Amount that has reached this stage, as a decimal string (unit price times the
+   * quantity at this stage).
    */
   amount: string;
 
   /**
-   * Progress to completion for this stage, as a fraction between 0 and 1: quantity
-   * at this stage divided by quantity ordered. `0` when nothing has reached this
-   * stage yet.
+   * Progress through this stage, as a fraction between 0 and 1.
+   *
+   * Calculated as the quantity that has reached this stage divided by the quantity
+   * ordered, so `1` means the whole order has cleared the stage and `0` means
+   * nothing has reached it yet.
    */
   completion: number;
 
@@ -1219,6 +1357,11 @@ export interface SalesOrderStageTotal {
 /**
  * A lookup value describing where a sales order is in its lifecycle, from estimate
  * through fulfillment.
+ *
+ * These are the values that appear as a sales order's `status`. The set is
+ * platform-provided and the same for every account, and an order moves between the
+ * statuses through its issue, unissue, close, and reopen actions rather than by
+ * being assigned a status directly.
  */
 export interface SalesOrderStatus {
   /**
@@ -1230,7 +1373,8 @@ export interface SalesOrderStatus {
    * Machine-readable status code.
    *
    * - `estimate`: a draft quote that has not yet been committed.
-   * - `issued`: the order has been issued and is being fulfilled.
+   * - `issued`: the order is committed for fulfillment, with a pick raised against
+   *   it.
    * - `fulfilled`: the order has been completed and closed.
    */
   code: 'estimate' | 'issued' | 'fulfilled';
@@ -1262,15 +1406,16 @@ export interface SalesOrderStatus {
 }
 
 /**
- * SalesOrderTotals holds the derived monetary totals for a sales order or one of
- * its lines, following the lifecycle ordered -> picked -> packed -> invoiced. Each
- * downstream stage carries both its monetary amount and its completion progress
- * against the ordered baseline.
+ * Derived monetary totals for a sales order or one of its lines.
+ *
+ * Fulfillment runs ordered -> picked -> packed -> invoiced, and each downstream
+ * stage reports both the money that has reached it and its progress against the
+ * ordered baseline.
  */
 export interface SalesOrderTotals {
   /**
-   * SalesOrderStageTotal pairs a fulfillment stage's monetary amount with its
-   * completion progress.
+   * The monetary amount that has reached one fulfillment stage, together with how
+   * far that stage has progressed.
    */
   invoiced: SalesOrderStageTotal;
 
@@ -1280,20 +1425,21 @@ export interface SalesOrderTotals {
   object: 'sales_order_totals';
 
   /**
-   * Total ordered amount as a decimal string (unit price x quantity ordered). This
-   * is the baseline the stage completions are measured against.
+   * Total ordered amount as a decimal string (unit price times quantity ordered).
+   *
+   * This is the baseline the stage completions are measured against.
    */
   ordered: string;
 
   /**
-   * SalesOrderStageTotal pairs a fulfillment stage's monetary amount with its
-   * completion progress.
+   * The monetary amount that has reached one fulfillment stage, together with how
+   * far that stage has progressed.
    */
   packed: SalesOrderStageTotal;
 
   /**
-   * SalesOrderStageTotal pairs a fulfillment stage's monetary amount with its
-   * completion progress.
+   * The monetary amount that has reached one fulfillment stage, together with how
+   * far that stage has progressed.
    */
   picked: SalesOrderStageTotal;
 }
@@ -1327,12 +1473,13 @@ export interface UpdateSalesOrderRequest {
   billing_address_id?: string;
 
   /**
-   * Carrier billing account number. Send `null` to clear.
+   * Carrier billing account number charged when `carrier_billing_type` is
+   * `third_party`.
    */
   carrier_billing_account_number?: string | null;
 
   /**
-   * Who is billed for freight. Send `null` to clear.
+   * Who is billed for freight.
    *
    * - `sender`: the sender pays for shipping.
    * - `third_party`: a third party pays for shipping, using the carrier billing
@@ -1341,17 +1488,20 @@ export interface UpdateSalesOrderRequest {
   carrier_billing_type?: 'sender' | 'third_party' | null;
 
   /**
-   * Carrier ID.
+   * ID of the carrier that will ship the order.
    */
   carrier_id?: string;
 
   /**
-   * Customer ID.
+   * Moves the order to a different customer account.
+   *
+   * Existing lines keep the prices they were created with; they are not re-priced
+   * against the new customer.
    */
   customer_id?: string;
 
   /**
-   * Customer's purchase order number. Send `null` to clear.
+   * The customer's own purchase order number, for cross-referencing.
    */
   customer_purchase_order_number?: string | null;
 
@@ -1364,17 +1514,20 @@ export interface UpdateSalesOrderRequest {
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Order note. Send `null` to clear.
+   * Free-form note about the order.
    */
   note?: string | null;
 
   /**
-   * Order discount ID. Send `null` to clear.
+   * ID of the order-level discount recorded on the order.
+   *
+   * Changing this does not add, reprice, or remove the order's discount line; adjust
+   * that line directly.
    */
   order_discount_id?: string | null;
 
   /**
-   * Payment term ID.
+   * ID of the payment terms for the order.
    */
   payment_term_id?: string;
 
@@ -1384,17 +1537,17 @@ export interface UpdateSalesOrderRequest {
   priority_code?: string;
 
   /**
-   * Promised delivery date. Send `null` to clear.
+   * Date delivery is promised to the customer.
    */
   promised_at?: string | null;
 
   /**
-   * Sales rep ID. Send `null` to clear.
+   * ID of the account user to credit as the order's sales rep.
    */
   sales_rep_id?: string | null;
 
   /**
-   * Service level ID. Send `null` to clear.
+   * ID of the carrier service level the order ships on.
    */
   service_level_id?: string | null;
 
@@ -1407,7 +1560,7 @@ export interface UpdateSalesOrderRequest {
   shipping_address_id?: string;
 
   /**
-   * Shipping term ID.
+   * ID of the shipping terms for the order.
    */
   shipping_term_id?: string;
 }
@@ -1428,7 +1581,10 @@ export interface SalesOrderCreateParams {
   buyer_account_id: string;
 
   /**
-   * Body param: Order lines to create.
+   * Body param: The line items to put on the order.
+   *
+   * The freight line, and the discount line when `order_discount_id` is supplied,
+   * are added on top of these automatically.
    */
   lines: Array<CreateSalesOrderLineInput>;
 
@@ -1477,12 +1633,16 @@ export interface SalesOrderCreateParams {
   >;
 
   /**
-   * Body param: Account users who should receive order acknowledgement emails.
+   * Body param: Users who should receive order acknowledgement emails for this
+   * order.
+   *
+   * Each must be a user on the customer's account.
    */
   acknowledgement_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Body param: Carrier billing account number.
+   * Body param: Carrier billing account number charged when `carrier_billing_type`
+   * is `third_party`.
    */
   carrier_billing_account_number?: string;
 
@@ -1496,7 +1656,10 @@ export interface SalesOrderCreateParams {
   carrier_billing_type?: 'sender' | 'third_party';
 
   /**
-   * Body param: Carrier ID.
+   * Body param: ID of the carrier that will ship the order.
+   *
+   * Falls back to the customer's default carrier; the order is rejected when neither
+   * is available.
    */
   carrier_id?: string;
 
@@ -1508,48 +1671,63 @@ export interface SalesOrderCreateParams {
   customer_purchase_order_number?: string;
 
   /**
-   * Body param: Account users who should receive invoice emails.
+   * Body param: Users who should receive invoice emails for this order.
+   *
+   * Each must be a user on the customer's account.
    */
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Body param: Order note.
+   * Body param: Free-form note about the order.
    */
   note?: string;
 
   /**
-   * Body param: Order discount ID.
+   * Body param: The order-level discount to apply, given as either its ID or its
+   * unique code.
    *
-   * When supplied, a discount line is added to the order automatically.
+   * The discount is realized as an extra negative-priced line on the order rather
+   * than as a separate total.
    */
   order_discount_id?: string;
 
   /**
-   * Body param: Payment term ID.
+   * Body param: ID of the payment terms for the order.
+   *
+   * Falls back to the customer's default payment term; the order is rejected when
+   * neither is available.
    */
   payment_term_id?: string;
 
   /**
-   * Body param: Promised delivery date.
+   * Body param: Date delivery is promised to the customer.
    */
   promised_at?: string;
 
   /**
-   * Body param: Sales rep ID.
+   * Body param: ID of the account user to credit as the order's sales rep.
    *
    * When omitted, a rep is assigned automatically: the customer's default sales rep
    * first, then the sales territory matching the ship-to postal code, then the
-   * ship-to state.
+   * ship-to state. No rep is assigned when the customer is commission-exempt or
+   * every ordered product belongs to a commission-exempt product line.
    */
   sales_rep_id?: string;
 
   /**
-   * Body param: Service level ID.
+   * Body param: ID of the carrier service level the order ships on.
+   *
+   * Falls back to the customer's default service level, but only when `carrier_id`
+   * is also omitted — supplying a carrier without a service level leaves the service
+   * level unset.
    */
   service_level_id?: string;
 
   /**
-   * Body param: Shipping term ID.
+   * Body param: ID of the shipping terms for the order.
+   *
+   * Falls back to the customer's default shipping term; the order is rejected when
+   * neither is available.
    */
   shipping_term_id?: string;
 }
@@ -1655,12 +1833,13 @@ export interface SalesOrderUpdateParams {
   billing_address_id?: string;
 
   /**
-   * Body param: Carrier billing account number. Send `null` to clear.
+   * Body param: Carrier billing account number charged when `carrier_billing_type`
+   * is `third_party`.
    */
   carrier_billing_account_number?: string | null;
 
   /**
-   * Body param: Who is billed for freight. Send `null` to clear.
+   * Body param: Who is billed for freight.
    *
    * - `sender`: the sender pays for shipping.
    * - `third_party`: a third party pays for shipping, using the carrier billing
@@ -1669,17 +1848,20 @@ export interface SalesOrderUpdateParams {
   carrier_billing_type?: 'sender' | 'third_party' | null;
 
   /**
-   * Body param: Carrier ID.
+   * Body param: ID of the carrier that will ship the order.
    */
   carrier_id?: string;
 
   /**
-   * Body param: Customer ID.
+   * Body param: Moves the order to a different customer account.
+   *
+   * Existing lines keep the prices they were created with; they are not re-priced
+   * against the new customer.
    */
   customer_id?: string;
 
   /**
-   * Body param: Customer's purchase order number. Send `null` to clear.
+   * Body param: The customer's own purchase order number, for cross-referencing.
    */
   customer_purchase_order_number?: string | null;
 
@@ -1692,17 +1874,20 @@ export interface SalesOrderUpdateParams {
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
-   * Body param: Order note. Send `null` to clear.
+   * Body param: Free-form note about the order.
    */
   note?: string | null;
 
   /**
-   * Body param: Order discount ID. Send `null` to clear.
+   * Body param: ID of the order-level discount recorded on the order.
+   *
+   * Changing this does not add, reprice, or remove the order's discount line; adjust
+   * that line directly.
    */
   order_discount_id?: string | null;
 
   /**
-   * Body param: Payment term ID.
+   * Body param: ID of the payment terms for the order.
    */
   payment_term_id?: string;
 
@@ -1712,17 +1897,17 @@ export interface SalesOrderUpdateParams {
   priority_code?: string;
 
   /**
-   * Body param: Promised delivery date. Send `null` to clear.
+   * Body param: Date delivery is promised to the customer.
    */
   promised_at?: string | null;
 
   /**
-   * Body param: Sales rep ID. Send `null` to clear.
+   * Body param: ID of the account user to credit as the order's sales rep.
    */
   sales_rep_id?: string | null;
 
   /**
-   * Body param: Service level ID. Send `null` to clear.
+   * Body param: ID of the carrier service level the order ships on.
    */
   service_level_id?: string | null;
 
@@ -1735,7 +1920,7 @@ export interface SalesOrderUpdateParams {
   shipping_address_id?: string;
 
   /**
-   * Body param: Shipping term ID.
+   * Body param: ID of the shipping terms for the order.
    */
   shipping_term_id?: string;
 }
@@ -1751,17 +1936,22 @@ export interface SalesOrderListParams {
   cursor?: string;
 
   /**
-   * Filter by customer group IDs.
+   * Restricts results to orders placed by customers belonging to any of these
+   * account groups.
    */
   customer_group_ids?: Array<string>;
 
   /**
-   * Filter by customer IDs.
+   * Restricts results to orders placed by any of these customers.
    */
   customer_ids?: Array<string>;
 
   /**
-   * Latest order creation date to include, in `YYYY-MM-DD` format (inclusive).
+   * Latest order creation date to include, in `YYYY-MM-DD` format.
+   *
+   * Compared against the creation timestamp at the start of that day, so orders
+   * created later on the end date itself are excluded; pass the following day to
+   * include them.
    */
   end_date?: string;
 
@@ -1807,7 +1997,8 @@ export interface SalesOrderListParams {
   >;
 
   /**
-   * Filter by item IDs.
+   * Restricts results to orders that have at least one line for any of these
+   * inventory items.
    */
   item_ids?: Array<string>;
 
@@ -1817,7 +2008,8 @@ export interface SalesOrderListParams {
   limit?: number;
 
   /**
-   * Filter by product line IDs.
+   * Restricts results to orders that have at least one line whose product belongs to
+   * any of these product lines.
    */
   product_line_ids?: Array<string>;
 
@@ -1829,17 +2021,20 @@ export interface SalesOrderListParams {
   q?: string;
 
   /**
-   * Filter by sales rep IDs.
+   * Restricts results to orders credited to any of these sales reps.
+   *
+   * These are account user IDs, matching the `sales_rep` on the order.
    */
   sales_rep_ids?: Array<string>;
 
   /**
-   * Earliest order creation date to include, in `YYYY-MM-DD` format (inclusive).
+   * Earliest order creation date to include, in `YYYY-MM-DD` format.
    */
   start_date?: string;
 
   /**
-   * Filter by status codes.
+   * Restricts results to orders in any of these lifecycle statuses (`estimate`,
+   * `issued`, `fulfilled`).
    */
   status_codes?: Array<string>;
 }
@@ -1847,8 +2042,6 @@ export interface SalesOrderListParams {
 export interface SalesOrderCheckoutParams {
   /**
    * Email address to send the checkout link to.
-   *
-   * Also set as the customer email on the payment provider's checkout session.
    */
   email: string;
 }

@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('cancel', async () => {
-    const responsePromise = client.settings.integrations.hubspot.sync.actions.cancel('igjb_zwfvfjfxl4lj');
+    const responsePromise = client.settings.integrations.hubspot.sync.actions.cancel('igjb_pbxu4l5ujuym');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource actions', () => {
   });
 
   test('execute', async () => {
-    const responsePromise = client.settings.integrations.hubspot.sync.actions.execute('igjb_zwfvfjfxl4lj');
+    const responsePromise = client.settings.integrations.hubspot.sync.actions.execute('igjb_pbxu4l5ujuym');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

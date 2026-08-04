@@ -12,6 +12,10 @@ export class Accounts extends APIResource {
    * Ensures a Stripe billing customer exists for the account, creating one if
    * necessary.
    *
+   * A new customer is created from the account's name and the email address of one
+   * of its admin users. Calling this repeatedly is safe: an account that already has
+   * a Stripe customer gets that customer back untouched.
+   *
    * This endpoint requires the `admin` role type.
    *
    * @example
@@ -25,8 +29,13 @@ export class Accounts extends APIResource {
   }
 
   /**
-   * Returns resource usage for the account, including seats, invoices, batches,
-   * sandboxes, and subscription details.
+   * Returns the account's resource usage against its plan limits, along with
+   * subscription status, plan pricing, and estimated agent spending.
+   *
+   * Seats and sandboxes are current totals, while invoices and batches are counted
+   * from the start of the current billing period. The plan name and base fee come
+   * from the pricing plan configured in Stripe, so they can differ from the name and
+   * price the same plan advertises on the pricing page.
    *
    * This endpoint requires the permission: `self:read`.
    *
@@ -43,6 +52,10 @@ export class Accounts extends APIResource {
 
 /**
  * Account usage metrics across all resource types.
+ *
+ * Per-period counts are measured from the start of the account's current billing
+ * period, which falls back to the start of the calendar month when the account has
+ * no active subscription.
  */
 export interface AccountUsageResponse {
   /**
@@ -109,14 +122,17 @@ export interface AccountUsageResponse {
  */
 export interface AgentSpendInfo {
   /**
-   * Monthly spending cap in cents.
+   * Ceiling in cents on estimated agent spending per billing month.
    *
-   * Null means no cap.
+   * Null means agent spending is uncapped.
    */
   cap_cents: number | null;
 
   /**
    * Estimated spend in cents for the current billing month.
+   *
+   * Priced at the same token rates the account is billed at, and cached briefly, so
+   * it can trail live usage by a short interval.
    */
   estimated_spend_cents: number;
 
@@ -131,7 +147,10 @@ export interface AgentSpendInfo {
  */
 export interface EnsureBillingCustomerResponse {
   /**
-   * Billing profile ID, if one was created.
+   * ID of the account's Stripe billing profile.
+   *
+   * The billing profile and its billing cadence are set up when the account is first
+   * prepared for paid billing, not by creating the Stripe customer.
    */
   billing_profile_id: string | null;
 

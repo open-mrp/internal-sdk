@@ -15,14 +15,18 @@ export class Users extends APIResource {
   photo: PhotoAPI.Photo = new PhotoAPI.Photo(this._client);
 
   /**
-   * Returns a user by ID.
+   * Retrieves a user's global profile.
+   *
+   * The profile is shared across every account the user belongs to; account-specific
+   * details such as their status, role, and department live on the account user
+   * record instead.
    *
    * This endpoint requires the permission: `team:read`.
    *
    * @example
    * ```ts
    * const user = await client.identity.users.retrieve(
-   *   'us_0151164dcaea4cbded27b50aae',
+   *   'us_43irtlt2ajz6',
    * );
    * ```
    */
@@ -31,17 +35,21 @@ export class Users extends APIResource {
   }
 
   /**
-   * Partially updates a user's profile.
+   * Updates a user's global profile.
+   *
+   * Changes apply everywhere the user appears, in every account they belong to.
+   * Account-specific details such as their status, role, and department are changed
+   * on the account user record instead.
    *
    * This endpoint requires the permission: `team:update`.
    *
    * @example
    * ```ts
    * const user = await client.identity.users.update(
-   *   'us_0151164dcaea4cbded27b50aae',
+   *   'us_43irtlt2ajz6',
    *   {
    *     image_url:
-   *       'https://cdn.augno.com/avatars/us_0151164dcaea4cbded27b50aae.jpg',
+   *       'https://cdn.augno.com/avatars/us_43irtlt2ajz6.jpg',
    *     name: 'John Doe',
    *   },
    * );
@@ -61,12 +69,17 @@ export class Users extends APIResource {
  */
 export interface UpdateUserRequest {
   /**
-   * Timestamp recording when the user's email address was verified.
+   * When the user's email address was verified.
+   *
+   * Setting this marks the address as verified outright; no verification email is
+   * sent and no verification link is checked.
    */
   email_verified?: string;
 
   /**
-   * URL of the user's profile image.
+   * Location of the user's profile image.
+   *
+   * Uploading a photo through Upload User Photo overwrites whatever is set here.
    */
   image_url?: string;
 
@@ -78,12 +91,17 @@ export interface UpdateUserRequest {
 
 export interface UserUpdateParams {
   /**
-   * Timestamp recording when the user's email address was verified.
+   * When the user's email address was verified.
+   *
+   * Setting this marks the address as verified outright; no verification email is
+   * sent and no verification link is checked.
    */
   email_verified?: string;
 
   /**
-   * URL of the user's profile image.
+   * Location of the user's profile image.
+   *
+   * Uploading a photo through Upload User Photo overwrites whatever is set here.
    */
   image_url?: string;
 

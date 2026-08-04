@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('verify', async () => {
-    const responsePromise = client.messaging.emailDomains.actions.verify('emdom_018e88072d1320808dc9aaa01');
+    const responsePromise = client.messaging.emailDomains.actions.verify('emdom_2rk3omr8vshb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

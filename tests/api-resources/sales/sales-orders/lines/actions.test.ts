@@ -9,8 +9,8 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('reorder: only required params', async () => {
-    const responsePromise = client.sales.salesOrders.lines.actions.reorder('or_01d5034136c3ccc048abecc312', {
-      line_ids: ['orln_0142f9b74268973450b3a76ce3', 'orln_0142f9b74268973450b3a76ce4'],
+    const responsePromise = client.sales.salesOrders.lines.actions.reorder('or_9lqo07quiwyb', {
+      line_ids: ['orln_la01fxgrwcnr', 'orln_vwp43e1rq2zb'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -22,8 +22,8 @@ describe('resource actions', () => {
   });
 
   test('reorder: required and optional params', async () => {
-    const response = await client.sales.salesOrders.lines.actions.reorder('or_01d5034136c3ccc048abecc312', {
-      line_ids: ['orln_0142f9b74268973450b3a76ce3', 'orln_0142f9b74268973450b3a76ce4'],
+    const response = await client.sales.salesOrders.lines.actions.reorder('or_9lqo07quiwyb', {
+      line_ids: ['orln_la01fxgrwcnr', 'orln_vwp43e1rq2zb'],
     });
   });
 });

@@ -11,7 +11,7 @@ describe('resource emailInboxes', () => {
   test('create: only required params', async () => {
     const responsePromise = client.messaging.emailInboxes.create({
       address: 'support@acme.com',
-      email_domain_id: 'emdom_018e88072d1320808dc9aaa01',
+      email_domain_id: 'emdom_2rk3omr8vshb',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -25,9 +25,9 @@ describe('resource emailInboxes', () => {
   test('create: required and optional params', async () => {
     const response = await client.messaging.emailInboxes.create({
       address: 'support@acme.com',
-      email_domain_id: 'emdom_018e88072d1320808dc9aaa01',
+      email_domain_id: 'emdom_2rk3omr8vshb',
       include: ['email_domain'],
-      agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
+      agent_config_id: 'agdf_ah7tkyfxk8jl',
       agent_trigger_keywords: ['invoice', 'refund'],
       agent_trigger_policy: 'keyword',
       from_name: 'Acme Support',
@@ -36,7 +36,7 @@ describe('resource emailInboxes', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.messaging.emailInboxes.retrieve('eminb_018e88072d1320808dc9bbb02');
+    const responsePromise = client.messaging.emailInboxes.retrieve('eminb_2s9kobr9s7tp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,7 +50,7 @@ describe('resource emailInboxes', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.messaging.emailInboxes.retrieve(
-        'eminb_018e88072d1320808dc9bbb02',
+        'eminb_2s9kobr9s7tp',
         { include: ['email_domain'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -58,9 +58,7 @@ describe('resource emailInboxes', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.messaging.emailInboxes.update('eminb_018e88072d1320808dc9bbb02', {
-      status: 'active',
-    });
+    const responsePromise = client.messaging.emailInboxes.update('eminb_2s9kobr9s7tp', { status: 'active' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -71,10 +69,10 @@ describe('resource emailInboxes', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.messaging.emailInboxes.update('eminb_018e88072d1320808dc9bbb02', {
+    const response = await client.messaging.emailInboxes.update('eminb_2s9kobr9s7tp', {
       status: 'active',
       include: ['email_domain'],
-      agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
+      agent_config_id: 'agdf_ah7tkyfxk8jl',
       agent_trigger_keywords: ['invoice', 'refund'],
       agent_trigger_policy: 'keyword',
       from_name: 'Acme Support',
@@ -101,7 +99,7 @@ describe('resource emailInboxes', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.messaging.emailInboxes.delete('eminb_018e88072d1320808dc9bbb02');
+    const responsePromise = client.messaging.emailInboxes.delete('eminb_2s9kobr9s7tp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

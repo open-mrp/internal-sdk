@@ -110,7 +110,20 @@ export class Messaging extends APIResource {
   supportRoutes: SupportRoutesAPI.SupportRoutes = new SupportRoutesAPI.SupportRoutes(this._client);
 
   /**
-   * Lists the caller's messageable contacts.
+   * Lists the people the caller can start a conversation with.
+   *
+   * For a member of the account, this is everyone active in that account, including
+   * themselves — messaging yourself is allowed. A customer signed in to the portal
+   * instead gets one shared "Customer Service" contact rather than the individual
+   * staff of the account they are dealing with; messages to it are routed by the
+   * account's support routes.
+   *
+   * Blocking is not applied to the directory: someone you have blocked, or who has
+   * blocked you, is still listed even though a direct message with them cannot be
+   * opened.
+   *
+   * The directory is returned as a single unpaginated page capped at 100 names, so
+   * narrow it with `q` in an account with many people.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -146,8 +159,15 @@ export class Messaging extends APIResource {
   }
 
   /**
-   * Returns the calling customer's portal support case (`audience=customer`),
-   * creating it on first contact.
+   * Returns the calling customer's support case with the vendor, opening it on first
+   * contact.
+   *
+   * A customer has exactly one support case, so repeat calls return the same thread
+   * rather than opening another. Opening the first case is refused when the vendor
+   * has not configured a support route with at least one recipient — check Support
+   * Availability before offering the feature. Once the case exists, the vendor's
+   * designated support staff are seated in it so the customer's first message
+   * reaches someone.
    *
    * This endpoint requires the permission: `messaging:create`.
    *
@@ -183,6 +203,10 @@ export interface Conversation {
   /**
    * Whether this is a team-only conversation (`internal`) or a customer-facing case
    * (`customer`).
+   *
+   * A customer never sees an `internal` conversation, even one that is about them;
+   * within a `customer` case they see only the messages that were sent to them, not
+   * the team's internal notes on the case.
    */
   audience: 'internal' | 'customer';
 
@@ -204,20 +228,23 @@ export interface Conversation {
 
   /**
    * A chat message within a conversation.
+   *
+   * One resource covers every stage of a message's life: a delivered timeline
+   * message, a message queued for a future send, and a customer-reply draft awaiting
+   * approval. Read `status` to tell them apart.
    */
   last_message: Message | null;
 
   /**
    * When the most recent message was sent.
-   *
-   * `null` when the conversation has no messages yet.
    */
   last_message_at: string | null;
 
   /**
    * Whether the conversation is under legal hold.
    *
-   * Exempts the conversation from retention purging and redaction.
+   * While held, the conversation is exempt from automatic retention purging and from
+   * redaction until the hold is released.
    */
   legal_hold: 'released' | 'held';
 
@@ -227,23 +254,26 @@ export interface Conversation {
   object: 'conversation';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   participants: ListConversationParticipant | null;
 
   /**
-   * The caller's effective status.
+   * The conversation's state from the caller's point of view.
    *
-   * - `hidden` when the caller has hidden the conversation
-   * - otherwise the account-level lifecycle state
+   * - `active`: a normal, visible conversation.
+   * - `archived`: archived for the whole account.
+   * - `hidden`: the caller dismissed the conversation from their own list while
+   *   everyone else still sees it, which takes precedence over an account-level
+   *   archive.
    */
   status: 'active' | 'archived' | 'hidden';
 
   /**
    * The display title of a group conversation.
    *
-   * `null` for direct messages, where the client derives a title from the
-   * participants.
+   * Direct messages carry no stored title; clients derive one from the participants.
    */
   title: string | null;
 
@@ -275,7 +305,9 @@ export interface Conversation {
   /**
    * The triage lane of a customer-facing case.
    *
-   * Only set for customer-audience conversations.
+   * Only conversations with a `customer` audience have a triage lane. It drives the
+   * support inbox and is independent of `status`, which is about visibility rather
+   * than progress.
    *
    * - `new`: opened but not yet triaged.
    * - `open`: actively being worked.
@@ -310,15 +342,18 @@ export interface ConversationParticipant {
   actor: RequestLogsAPI.Actor | null;
 
   /**
-   * For agent participants with a keyword/mention policy, the keywords that trigger
-   * it.
+   * For agent participants with a keyword or mention policy, the keywords that
+   * trigger it.
+   *
+   * Matching is case-insensitive and looks anywhere in the message body: under
+   * `keyword` the bare word is matched, under `mention` it must appear as
+   * `@keyword`. Replying directly to one of the agent's own messages always reaches
+   * it, so an agent with no keywords still answers replies but nothing else.
    */
   agent_trigger_keywords: Array<string>;
 
   /**
    * For agent participants, when the agent is invoked in response to messages.
-   *
-   * `null` for non-agent participants.
    *
    * - `mention`: only when the agent is @mentioned.
    * - `keyword`: when a message contains one of the agent's trigger keywords.
@@ -333,14 +368,20 @@ export interface ConversationParticipant {
    * - `left`: voluntarily left the conversation.
    * - `removed`: removed by an admin.
    * - `hidden`: still a member but has hidden the conversation from their own list.
+   *
+   * Membership records are kept rather than deleted, so re-adding someone who left
+   * or was removed reactivates their original record and their earlier messages stay
+   * attributed to them.
    */
   membership: 'active' | 'left' | 'removed' | 'hidden';
 
   /**
    * The participant's notification preference for the conversation.
    *
-   * - `unmuted`: receives normal notifications.
-   * - `muted`: notifications are suppressed (mentions may still pierce the mute).
+   * - `unmuted`: receives notifications for new messages.
+   * - `muted`: new-message notifications are suppressed, though a direct @mention
+   *   still raises an in-app alert (never an email), and the conversation still
+   *   counts toward the unread total.
    */
   notifications: 'unmuted' | 'muted';
 
@@ -378,7 +419,8 @@ export interface ConversationParticipant {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListActor {
   /**
@@ -392,13 +434,20 @@ export interface ListActor {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListConversationParticipant {
   /**
@@ -412,13 +461,20 @@ export interface ListConversationParticipant {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListMessageAttachment {
   /**
@@ -432,13 +488,20 @@ export interface ListMessageAttachment {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListMessagingGroupMember {
   /**
@@ -452,13 +515,23 @@ export interface ListMessagingGroupMember {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
  * A chat message within a conversation.
+ *
+ * One resource covers every stage of a message's life: a delivered timeline
+ * message, a message queued for a future send, and a customer-reply draft awaiting
+ * approval. Read `status` to tell them apart.
  */
 export interface Message {
   /**
@@ -467,10 +540,11 @@ export interface Message {
   id: string;
 
   /**
-   * Machine-readable error code for a failed agent reply (e.g.
-   * `agent_spending_cap_reached`).
+   * Machine-readable reason an agent reply failed.
    *
-   * `null` when the reply did not fail or carried no specific code.
+   * A client can react to the specific code rather than just showing the body —
+   * `agent_spending_cap_reached`, for example, is a cue to offer raising the agent
+   * spending limit.
    */
   agent_error_code: string | null;
 
@@ -480,12 +554,15 @@ export interface Message {
   agent_run: RunsAPI.AgentRun | null;
 
   /**
-   * Whether this message is an agent reply that resolved a failed run.
+   * Whether this message is an agent reply reporting that the agent's run failed.
+   *
+   * The body explains the failure to the reader rather than answering the request.
    */
   agent_run_failed: boolean;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   attachments: ListMessageAttachment | null;
 
@@ -498,22 +575,23 @@ export interface Message {
   /**
    * Message body.
    *
-   * `null` for templated or deleted messages.
+   * A message made up of nothing but attachments or a linked record carries no body,
+   * and a deleted message has its body cleared.
    */
   body: string | null;
 
   /**
-   * How the message was delivered (or, for a draft, how it will be on approve).
+   * How the message reached its audience, or how a draft will be sent once it is
+   * approved.
    *
-   * - `message`: delivered as an in-conversation chat message.
-   * - `email`: delivered as email through the conversation's bridged inbox.
+   * - `message`: appears in the conversation itself.
+   * - `email`: goes out as email on the thread of the inbox the case is bridged to.
    */
   channel: 'message' | 'email';
 
   /**
-   * The client-supplied dedupe key echoed back for optimistic-UI reconciliation.
-   *
-   * `null` for server-generated messages.
+   * The dedupe key the client supplied when sending, echoed back so an optimistic
+   * local copy can be matched to the stored message.
    */
   client_message_id: string | null;
 
@@ -528,7 +606,10 @@ export interface Message {
   created_at: string;
 
   /**
-   * When the message was deleted (tombstone).
+   * When the message was deleted.
+   *
+   * A deleted message keeps its place in the timeline with its body cleared, so
+   * surrounding ordering and replies stay intact.
    */
   deleted_at: string | null;
 
@@ -538,15 +619,16 @@ export interface Message {
   edited_at: string | null;
 
   /**
-   * The kind of message.
+   * What this message represents.
    *
-   * - `chat`: a user-authored chat message.
-   * - `system_event`: a system-generated event message.
-   * - `agent`: a message authored by an AI agent participant.
-   * - `scheduled`: a message materialized from a scheduled send.
-   * - `alert`: a system or producer alert rendered as a message.
-   * - `email`: an inbound email materialized into the conversation by the email
-   *   bridge.
+   * - `chat`: written by a person.
+   * - `system_event`: a record of something that happened in the conversation, such
+   *   as someone joining or a record being linked.
+   * - `agent`: written by an AI agent taking part in the conversation.
+   * - `scheduled`: came from a send queued ahead of time.
+   * - `alert`: an automated alert surfaced in the conversation.
+   * - `email`: a message carried over the case's bridged email thread, either one
+   *   that arrived from the customer or a reply sent back out to them.
    */
   kind: 'chat' | 'system_event' | 'agent' | 'scheduled' | 'alert' | 'email';
 
@@ -557,6 +639,10 @@ export interface Message {
 
   /**
    * A chat message within a conversation.
+   *
+   * One resource covers every stage of a message's life: a delivered timeline
+   * message, a message queued for a future send, and a customer-reply draft awaiting
+   * approval. Read `status` to tell them apart.
    */
   reply_to: Message | null;
 
@@ -566,7 +652,7 @@ export interface Message {
   resource: CoreAPI.Entity | null;
 
   /**
-   * When a `scheduled` message is due to be delivered.
+   * When a message queued for a future send is due to go out.
    */
   scheduled_at: string | null;
 
@@ -577,39 +663,45 @@ export interface Message {
   sender: RequestLogsAPI.Actor | null;
 
   /**
-   * Monotonic per-conversation ordering sequence.
+   * The message's position in the conversation timeline, counting up from the first
+   * message.
+   *
+   * A sequence is assigned only when a message is delivered, so a draft or a
+   * not-yet-sent scheduled message reports `0`. Listing a conversation's messages
+   * pages backwards through this ordering.
    */
   sequence: number;
 
   /**
-   * The lifecycle state of the message.
+   * Where the message stands in its life.
    *
-   * - `draft`: an editable customer-reply draft awaiting approval; not in the
-   *   timeline.
-   * - `scheduled`: queued for delivery at a future time; not yet in the timeline.
-   * - `sent`: a delivered timeline message; only `sent` messages carry a `sequence`.
-   * - `canceled`: a scheduled message canceled before delivery.
-   * - `rejected`: a draft discarded without sending.
-   * - `failed`: a scheduled message that exhausted delivery attempts.
-   * - `superseded`: a draft replaced by a newer one for the same source thread.
+   * - `draft`: a proposed reply to the customer, still editable and waiting for
+   *   approval before anyone outside sees it.
+   * - `scheduled`: queued to go out at a future time.
+   * - `sent`: delivered, and part of the conversation everyone reads.
+   * - `canceled`: a scheduled message stopped before it went out.
+   * - `rejected`: a draft discarded instead of being sent.
+   * - `failed`: a scheduled message that could not be delivered.
+   * - `superseded`: a draft replaced by a newer one for the same thread.
+   *
+   * Only a `sent` message occupies a place in the conversation; the others are
+   * records of messages that never reached it.
    */
   status: 'draft' | 'scheduled' | 'sent' | 'canceled' | 'rejected' | 'failed' | 'superseded';
 
   /**
-   * The streaming state of a reply.
+   * The streaming state of an agent reply.
    *
-   * `streaming` while the body is still being generated (it fills in via realtime
-   * updates); `complete` once finalized.
-   *
-   * `null` for ordinary messages.
+   * `streaming` means the body is still being generated and keeps growing as
+   * realtime updates arrive; `complete` means it is final.
    */
   streaming_state: string | null;
 
   /**
-   * The email subject line
+   * The email subject line.
    *
-   * On an email-bridged case, the original subject of an inbound email, or the
-   * subject a customer-reply `draft`/outbound message is sent with.
+   * On an email-bridged case, this is the subject of the inbound email, or the
+   * subject a customer reply is sent out with.
    */
   subject: string | null;
 
@@ -621,13 +713,12 @@ export interface Message {
   /**
    * Who can see this message.
    *
-   * - `internal`: a team-only note.
-   * - `external`: sent to or received from an external party (e.g. the customer on a
-   *   support case).
-   * - `system`: an event shown to both the team and the customer.
+   * - `internal`: a note only your team can see.
+   * - `external`: sent to or received from an outside party, such as the customer on
+   *   a support case, and part of the official record of that exchange.
+   * - `system`: an event both your team and the customer see.
    *
-   * On a customer-facing conversation, customer payloads only ever carry `external`
-   * and `system` messages.
+   * A customer reading their own case is never served `internal` messages.
    */
   visibility: 'internal' | 'external' | 'system';
 }
@@ -642,9 +733,9 @@ export interface MessageAttachment {
   id: string;
 
   /**
-   * The MIME content type for uploaded attachments.
+   * The MIME type of the uploaded content.
    *
-   * `null` for link/resource attachments.
+   * Carried only by `file` and `image` attachments.
    */
   content_type: string | null;
 
@@ -654,9 +745,9 @@ export interface MessageAttachment {
   created_at: string;
 
   /**
-   * The original filename for uploaded attachments.
+   * The filename the attachment was uploaded under.
    *
-   * `null` for link/resource attachments.
+   * Carried only by `file` and `image` attachments.
    */
   filename: string | null;
 
@@ -682,17 +773,20 @@ export interface MessageAttachment {
   resource: CoreAPI.Entity | null;
 
   /**
-   * The size in bytes for uploaded attachments.
+   * The size of the uploaded content in bytes.
    *
-   * `null` when unknown or for link/resource attachments.
+   * Carried only by `file` and `image` attachments, and only when the sender
+   * supplied it with the message.
    */
   size_bytes: number | null;
 
   /**
-   * A time-limited download URL for uploaded (file/image) attachments, or the link
-   * URL.
+   * Where to fetch the attachment: a signed download URL for `file` and `image`
+   * attachments, or the target address for `link` attachments.
    *
-   * `null` for resource attachments.
+   * Download URLs are signed for one hour and regenerated each time the message is
+   * read, so follow the URL promptly instead of persisting it. `resource`
+   * attachments have no URL — use `resource` to resolve them.
    */
   url: string | null;
 }
@@ -718,7 +812,8 @@ export interface MessagingGroup {
   created_at: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   members: ListMessagingGroupMember | null;
 
@@ -744,7 +839,10 @@ export interface MessagingGroup {
  */
 export interface MessagingGroupMember {
   /**
-   * Membership ID (used to remove the member from the roster).
+   * Membership ID.
+   *
+   * This identifies the member's place on the roster, not the user or agent
+   * themselves; it is the id to pass when removing them from the roster.
    */
   id: string;
 
@@ -767,8 +865,6 @@ export interface MessagingGroupMember {
 export interface ReadCursor {
   /**
    * The id of the last message the participant has read.
-   *
-   * `null` if they have not read any message yet.
    */
   message_id: string | null;
 
@@ -779,8 +875,6 @@ export interface ReadCursor {
 
   /**
    * When the participant last advanced their read cursor.
-   *
-   * `null` if they have not read any message yet.
    */
   read_at: string | null;
 
@@ -795,9 +889,9 @@ export interface ReadCursor {
 }
 
 /**
- * Whether the calling customer can currently contact support.
+ * Whether the calling customer can contact support.
  *
- * `available` is true only when the vendor has configured a support route that
+ * Support is available only when the vendor has configured a support route that
  * resolves to at least one recipient. The customer portal gates its
  * contact-support feature on this so customers never open a support thread no one
  * is set up to receive.

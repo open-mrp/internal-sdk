@@ -20,9 +20,9 @@ export class Actions extends APIResource {
    * ```ts
    * const hubspotCompanyReview =
    *   await client.settings.integrations.hubspot.sync.companyReviews.actions.link(
-   *     'igrv_mkhn7eo9qexh',
+   *     'igrv_w88uo6y5g8bu',
    *     {
-   *       id: 'igjb_zwfvfjfxl4lj',
+   *       id: 'igjb_pbxu4l5ujuym',
    *       resolved_hubspot_id: '12345',
    *     },
    *   );
@@ -49,8 +49,8 @@ export class Actions extends APIResource {
    * ```ts
    * const hubspotCompanyReview =
    *   await client.settings.integrations.hubspot.sync.companyReviews.actions.skip(
-   *     'igrv_mkhn7eo9qexh',
-   *     { id: 'igjb_zwfvfjfxl4lj' },
+   *     'igrv_w88uo6y5g8bu',
+   *     { id: 'igjb_pbxu4l5ujuym' },
    *   );
    * ```
    */

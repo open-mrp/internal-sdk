@@ -11,14 +11,17 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Abandons the buyer's in-progress registration session, so it is no longer
-   * resumed. A completed session cannot be abandoned.
+   * Abandons the buyer's in-progress registration session.
+   *
+   * The session moves to `abandoned` and is never resumed, so starting a
+   * registration with the same seller afterwards begins a fresh one. A registration
+   * that has already completed cannot be abandoned.
    *
    * @example
    * ```ts
    * const portalRegistrationSession =
    *   await client.sales.portalRegistrationSessions.actions.abandon(
-   *     'porgse_017513382536fd23a343e958ef',
+   *     'porgse_q1hs0mapqh6x',
    *   );
    * ```
    */
@@ -30,15 +33,25 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Completes the buyer's registration: registers them as a customer of the seller
-   * from the session's saved data, then marks the session complete. Idempotent —
-   * completing an already-complete session returns it unchanged.
+   * Completes the buyer's registration and registers them as a customer of the
+   * seller from the session's saved data.
+   *
+   * What happens depends on the session's `is_existing_customer` flag. When it is
+   * set, the buyer is linked to the seller's existing customer matching the saved
+   * `customer_number`. Otherwise a new customer is created — which requires a
+   * customer name, a billing address, a customer group, a payment term, and a
+   * shipping term in the session data — and is assigned the seller's next customer
+   * number. Either way the buyer's user is attached to that customer and the
+   * seller's customer-service team is notified.
+   *
+   * Completing an already-completed session returns it unchanged; an abandoned
+   * session cannot be completed.
    *
    * @example
    * ```ts
    * const portalRegistrationSession =
    *   await client.sales.portalRegistrationSessions.actions.complete(
-   *     'porgse_017513382536fd23a343e958ef',
+   *     'porgse_q1hs0mapqh6x',
    *   );
    * ```
    */

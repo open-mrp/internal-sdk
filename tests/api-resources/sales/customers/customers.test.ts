@@ -11,10 +11,10 @@ describe('resource customers', () => {
   test('create: only required params', async () => {
     const responsePromise = client.sales.customers.create({
       bill_to_address: { country: 'US', name: 'Acme Inc.' },
-      customer_type_group_id: 'acgp_018e88072d1320808dc979cfac',
-      default_carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
-      default_payment_term_id: 'pytm_018694d6601ea771cd1b52e890',
-      default_shipping_term_id: 'shtm_014341ab4bb5bf94d5b6936f86',
+      customer_type_group_id: 'acgp_6p4z57e9alaf',
+      default_carrier_id: 'cr_tv5vfjtgu1n3',
+      default_payment_term_id: 'pytm_skssmsy21lem',
+      default_shipping_term_id: 'shtm_c5gxy05whw6r',
       name: 'Acme Inc.',
       ship_to_address: { country: 'US', name: 'Acme Inc.' },
     });
@@ -41,10 +41,10 @@ describe('resource customers', () => {
         street_line_2: 'Suite 400',
         type: 'standard',
       },
-      customer_type_group_id: 'acgp_018e88072d1320808dc979cfac',
-      default_carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
-      default_payment_term_id: 'pytm_018694d6601ea771cd1b52e890',
-      default_shipping_term_id: 'shtm_014341ab4bb5bf94d5b6936f86',
+      customer_type_group_id: 'acgp_6p4z57e9alaf',
+      default_carrier_id: 'cr_tv5vfjtgu1n3',
+      default_payment_term_id: 'pytm_skssmsy21lem',
+      default_shipping_term_id: 'shtm_c5gxy05whw6r',
       name: 'Acme Inc.',
       ship_to_address: {
         country: 'US',
@@ -62,11 +62,11 @@ describe('resource customers', () => {
       carrier_billing_account: '123456789',
       carrier_billing_type: 'sender',
       commission_policy: 'commission_applied',
-      credit_limit: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10000.00' },
-      customer_price_group_ids: ['acgp_018e88072d1320808dc979cfac'],
+      credit_limit: { unit_id: 'un_82bd37dae5po', value: '10000.00' },
+      customer_price_group_ids: ['acgp_6p4z57e9alaf'],
       default_priority: 'normal',
-      default_sales_rep_id: 'acus_01ea9983ddb41dacc44ecf997c',
-      default_service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
+      default_sales_rep_id: 'acus_e5zu8bde0z3h',
+      default_service_level_id: 'crop_4ilk9p6gccrx',
       edi_status: 'disabled',
       email: 'orders@acme.com',
       freight_policy: 'billed_freight',
@@ -79,7 +79,7 @@ describe('resource customers', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.customers.retrieve('ac_0170df1ac58e4d24c66fc89f5f');
+    const responsePromise = client.sales.customers.retrieve('ac_opnlh43ymyee');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -93,7 +93,7 @@ describe('resource customers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.customers.retrieve(
-        'ac_0170df1ac58e4d24c66fc89f5f',
+        'ac_opnlh43ymyee',
         { include: ['bill_to_address'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -101,7 +101,7 @@ describe('resource customers', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.customers.update('ac_0170df1ac58e4d24c66fc89f5f');
+    const responsePromise = client.sales.customers.update('ac_opnlh43ymyee');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -115,22 +115,22 @@ describe('resource customers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.customers.update(
-        'ac_0170df1ac58e4d24c66fc89f5f',
+        'ac_opnlh43ymyee',
         {
           include: ['bill_to_address'],
-          bill_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
+          bill_to_address_id: 'ad_npqa5y43q26z',
           carrier_billing_account: '123456789',
           carrier_billing_type: 'sender',
           commission_policy: 'commission_applied',
-          credit_limit: { unit_id: 'un_01966263f74a5a0cae356000a1', value: '10000.00' },
-          customer_price_group_ids: ['acgp_018e88072d1320808dc979cfac'],
-          customer_type_group_id: 'acgp_018e88072d1320808dc979cfac',
-          default_carrier_id: 'cr_01784fd54c9ba197bb4e42f0e6',
-          default_payment_term_id: 'pytm_018694d6601ea771cd1b52e890',
+          credit_limit: { unit_id: 'un_82bd37dae5po', value: '10000.00' },
+          customer_price_group_ids: ['acgp_6p4z57e9alaf'],
+          customer_type_group_id: 'acgp_6p4z57e9alaf',
+          default_carrier_id: 'cr_tv5vfjtgu1n3',
+          default_payment_term_id: 'pytm_skssmsy21lem',
           default_priority: 'normal',
-          default_sales_rep_id: 'acus_01ea9983ddb41dacc44ecf997c',
-          default_service_level_id: 'crop_01cfaf03f104e90ef9680e2a30',
-          default_shipping_term_id: 'shtm_014341ab4bb5bf94d5b6936f86',
+          default_sales_rep_id: 'acus_e5zu8bde0z3h',
+          default_service_level_id: 'crop_4ilk9p6gccrx',
+          default_shipping_term_id: 'shtm_c5gxy05whw6r',
           edi_status: 'disabled',
           email: 'orders@acme.com',
           freight_policy: 'billed_freight',
@@ -138,7 +138,7 @@ describe('resource customers', () => {
           note: 'Updated account notes',
           number: '100042',
           phone: '555-123-4567',
-          ship_to_address_id: 'ad_012c2e4aeeb20f56c1a3d06cc7',
+          ship_to_address_id: 'ad_npqa5y43q26z',
           status: 'normal',
           url: 'https://acme.com',
         },
@@ -190,7 +190,7 @@ describe('resource customers', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.customers.delete('ac_0170df1ac58e4d24c66fc89f5f');
+    const responsePromise = client.sales.customers.delete('ac_opnlh43ymyee');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -240,9 +240,7 @@ describe('resource customers', () => {
   });
 
   test('retrieveFrequentlyOrderedProducts', async () => {
-    const responsePromise = client.sales.customers.retrieveFrequentlyOrderedProducts(
-      'ac_0170df1ac58e4d24c66fc89f5f',
-    );
+    const responsePromise = client.sales.customers.retrieveFrequentlyOrderedProducts('ac_opnlh43ymyee');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

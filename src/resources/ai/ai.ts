@@ -62,7 +62,12 @@ export class AI extends APIResource {
   memories: MemoriesAPI.Memories = new MemoriesAPI.Memories(this._client);
 
   /**
-   * Returns a paginated list of tool groups.
+   * Returns a paginated list of the groups the agent tool catalog is organized into.
+   *
+   * The catalog is platform-defined and identical for every account. Pagination
+   * applies to the groups themselves, so a group requested with `include=tools`
+   * always carries its complete tool list regardless of the page limit. The `q`
+   * search term matches against group names.
    *
    * This endpoint requires the permission: `agents:read`.
    *
@@ -79,7 +84,12 @@ export class AI extends APIResource {
   }
 
   /**
-   * Returns a paginated list of tools that can be assigned to agents.
+   * Returns a paginated list of every capability that can be granted to an agent.
+   *
+   * The catalog is platform-defined and identical for every account, and covers both
+   * built-in runtime capabilities and the API operations agents are allowed to
+   * perform. The `q` search term matches against tool names and the name of the
+   * group a tool belongs to.
    *
    * This endpoint requires the permission: `agents:read`.
    *
@@ -97,52 +107,55 @@ export class AI extends APIResource {
 }
 
 /**
- * Platform tool that can be attached to agents.
+ * A capability an agent can be granted, allowing it to take that action during a
+ * run.
+ *
+ * The catalog of available tools is the same for every account; granting one to an
+ * agent is what makes it callable.
  */
 export interface AvailableTool {
   /**
-   * Category grouping for the tool (e.g. `built_in`).
+   * Where the tool's behavior comes from.
+   *
+   * - `built_in`: a capability implemented by the agent runtime itself, such as
+   *   fetching a web page or drafting a reply for a teammate to approve.
+   * - `api_endpoint`: an operation of this API exposed as a tool, letting the agent
+   *   perform it on the account's behalf.
    */
   category: string;
 
   /**
    * JSON schema describing the configuration options this tool accepts.
    *
-   * Defines the shape of the `config` field on AgentDefinitionTool.
-   *
-   * For example:
-   *
-   * ````json
-   * {
-   *   "type": "object",
-   *   "properties": {
-   *     "max_results": {
-   *       "type": "integer",
-   *       "default": 10
-   *     }
-   *   }
-   * }
-   * ``` Encoded as a JSON value (object, array, string, number, boolean, or null), not a JSON-encoded string.
-   * ````
+   * Defines the shape of the `config` field on AgentDefinitionTool: a schema
+   * declaring a `max_results` integer property means that tool's `config` may set
+   * `max_results`. Encoded as a JSON value (object, array, string, number, boolean,
+   * or null), not a JSON-encoded string.
    */
   config_schema: unknown | null;
 
   /**
-   * Tool description.
+   * Explanation of what the tool does.
+   *
+   * This is also the description the agent's model reads when deciding whether to
+   * call the tool.
    */
   description: string | null;
 
   /**
-   * Whether invoking this tool changes server state.
+   * Whether invoking this tool takes an action rather than only reading data.
    *
-   * True for any `api_endpoint` tool whose underlying operation is not a read
-   * (non-GET); always false for `built_in` tools. The agent-configuration UI uses
-   * this to default such tools to requiring human review.
+   * True for any `api_endpoint` tool whose underlying operation is not a read, and
+   * for `built_in` tools that do something externally visible or hard to undo, such
+   * as sending an email. A mutating `built_in` tool always pauses its run for human
+   * approval and that gate cannot be turned off for an individual agent; for
+   * `api_endpoint` tools the flag is advisory and review stays configurable per
+   * agent.
    */
   mutating: boolean;
 
   /**
-   * Tool name.
+   * Human-readable name for the tool.
    */
   name: string;
 
@@ -170,7 +183,8 @@ export interface AvailableTool {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAvailableTool {
   /**
@@ -184,13 +198,20 @@ export interface ListAvailableTool {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListToolGroup {
   /**
@@ -204,13 +225,20 @@ export interface ListToolGroup {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * Logical grouping of platform tools.
+ * A named grouping of the tools that can be granted to an agent, used to organize
+ * the tool catalog.
  */
 export interface ToolGroup {
   /**
@@ -239,17 +267,18 @@ export interface ToolGroup {
   object: 'tool_group';
 
   /**
-   * URL-friendly slug.
+   * Machine-readable name for the group (e.g. `customer_tools`).
    */
   slug: string;
 
   /**
-   * Display sort order.
+   * Display sort order, lowest first.
    */
   sort_order: number;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   tools: ListAvailableTool | null;
 }

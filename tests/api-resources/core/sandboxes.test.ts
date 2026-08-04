@@ -28,7 +28,7 @@ describe('resource sandboxes', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.core.sandboxes.retrieve('sbac_01ebd87c707b138806f060b9ae');
+    const responsePromise = client.core.sandboxes.retrieve('sbac_d8ci32xggml9');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -42,7 +42,7 @@ describe('resource sandboxes', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.core.sandboxes.retrieve(
-        'sbac_01ebd87c707b138806f060b9ae',
+        'sbac_d8ci32xggml9',
         { include: ['owner_account'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -76,7 +76,7 @@ describe('resource sandboxes', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.core.sandboxes.delete('sbac_01ebd87c707b138806f060b9ae');
+    const responsePromise = client.core.sandboxes.delete('sbac_d8ci32xggml9');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

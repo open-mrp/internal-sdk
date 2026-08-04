@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource ediRuns', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.ediRuns.retrieve('edru_016aa43a99df34b744f6e2b878');
+    const responsePromise = client.operations.ediRuns.retrieve('edru_bpgd8fix7eeh');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

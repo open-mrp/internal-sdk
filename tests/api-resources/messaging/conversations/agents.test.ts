@@ -9,8 +9,8 @@ const client = new Augno({
 
 describe('resource agents', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.messaging.conversations.agents.create('cv_01h9z8q1w2e3r4t5y6u7i8cv', {
-      agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
+    const responsePromise = client.messaging.conversations.agents.create('cv_w35z4ck68yq7', {
+      agent_config_id: 'agdf_ah7tkyfxk8jl',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -22,16 +22,16 @@ describe('resource agents', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.messaging.conversations.agents.create('cv_01h9z8q1w2e3r4t5y6u7i8cv', {
-      agent_config_id: 'agdf_01b9ef28feb99e6954201aca63',
+    const response = await client.messaging.conversations.agents.create('cv_w35z4ck68yq7', {
+      agent_config_id: 'agdf_ah7tkyfxk8jl',
       trigger_keywords: ['forecast'],
       trigger_policy: 'mention',
     });
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.messaging.conversations.agents.delete('cvpt_01h9z8q1w2e3r4t5y6u7cvpt', {
-      id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+    const responsePromise = client.messaging.conversations.agents.delete('cvpt_be2h3ul14cts', {
+      id: 'cv_w35z4ck68yq7',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -43,8 +43,8 @@ describe('resource agents', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.messaging.conversations.agents.delete('cvpt_01h9z8q1w2e3r4t5y6u7cvpt', {
-      id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+    const response = await client.messaging.conversations.agents.delete('cvpt_be2h3ul14cts', {
+      id: 'cv_w35z4ck68yq7',
     });
   });
 });

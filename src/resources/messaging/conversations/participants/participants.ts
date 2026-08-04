@@ -15,7 +15,16 @@ export class Participants extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Adds (or reactivates) a participant in a group conversation.
+   * Adds an account user to a group conversation and returns the updated
+   * conversation.
+   *
+   * Only an owner or admin of the conversation can add someone, and nobody can be
+   * added to a direct message. Adding a user who previously left or was removed
+   * reactivates their original membership with the role given here; adding someone
+   * who is already an active member changes nothing.
+   *
+   * The added user receives a notification that they were added, and a system event
+   * marking the addition is posted to the thread.
    *
    * This endpoint requires the permission: `messaging:create`.
    *
@@ -23,9 +32,9 @@ export class Participants extends APIResource {
    * ```ts
    * const conversation =
    *   await client.messaging.conversations.participants.create(
-   *     'cv_01h9z8q1w2e3r4t5y6u7i8cv',
+   *     'cv_w35z4ck68yq7',
    *     {
-   *       account_user_id: 'acus_01ea9983ddb41dacc44ecf997c',
+   *       account_user_id: 'acus_e5zu8bde0z3h',
    *       role: 'member',
    *     },
    *   );
@@ -47,14 +56,22 @@ export class Participants extends APIResource {
   /**
    * Removes a participant from a group conversation.
    *
+   * Only an owner or admin can remove someone, participants cannot be removed from a
+   * direct message, and callers cannot remove themselves — leave the conversation
+   * instead. Use the remove-agent endpoint for agent participants.
+   *
+   * The removed member immediately loses access to the conversation, but their
+   * earlier messages stay in the thread and a system event records the removal.
+   * Adding them back later reactivates the same membership.
+   *
    * This endpoint requires the permission: `messaging:update`.
    *
    * @example
    * ```ts
    * const participant =
    *   await client.messaging.conversations.participants.delete(
-   *     'cvpt_01h9z8q1w2e3r4t5y6u7cvpt',
-   *     { id: 'cv_01h9z8q1w2e3r4t5y6u7i8cv' },
+   *     'cvpt_be2h3ul14cts',
+   *     { id: 'cv_w35z4ck68yq7' },
    *   );
    * ```
    */
@@ -69,7 +86,7 @@ export class Participants extends APIResource {
 }
 
 /**
- * Request to add a participant to a group (owner/admin).
+ * Request to add an account user to a group conversation.
  */
 export interface AddParticipantRequest {
   /**
@@ -84,8 +101,8 @@ export interface AddParticipantRequest {
    * - `member`: can post, leave, mute, and react.
    * - `viewer`: read-only access.
    *
-   * `owner` is not accepted here; ownership can only be transferred via the set-role
-   * endpoint.
+   * `owner` is not accepted here; use the set-role endpoint to make an existing
+   * participant an owner.
    */
   role?: 'owner' | 'admin' | 'member' | 'viewer';
 }
@@ -119,8 +136,8 @@ export interface ParticipantCreateParams {
    * - `member`: can post, leave, mute, and react.
    * - `viewer`: read-only access.
    *
-   * `owner` is not accepted here; ownership can only be transferred via the set-role
-   * endpoint.
+   * `owner` is not accepted here; use the set-role endpoint to make an existing
+   * participant an owner.
    */
   role?: 'owner' | 'admin' | 'member' | 'viewer';
 }

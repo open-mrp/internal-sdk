@@ -14,11 +14,15 @@ export class Actions extends APIResource {
    * Verifies that a Stripe Setup Intent succeeded and marks the registration
    * session's payment as completed.
    *
+   * A registration on a paid plan cannot be completed until this succeeds.
+   * Confirming a session whose payment is already recorded returns success without
+   * re-checking Stripe.
+   *
    * @example
    * ```ts
    * const confirmPaymentResponse =
    *   await client.auth.registrationSessions.actions.confirmPayment(
-   *     'rgfw_01011dbade766ab524553afb10',
+   *     'rgfw_6xab8u2fun46',
    *     { setup_intent_id: 'seti_1N4kLm2eZvKYlo2C0wFVpSbx' },
    *   );
    * ```
@@ -38,11 +42,13 @@ export class Actions extends APIResource {
    * Resends the verification email for a registration session, generating a new
    * token and invalidating the previous one.
    *
+   * Rejected once the email has been verified or the registration has completed.
+   *
    * @example
    * ```ts
    * const response =
    *   await client.auth.registrationSessions.actions.resendVerificationEmail(
-   *     'rgfw_01011dbade766ab524553afb10',
+   *     'rgfw_6xab8u2fun46',
    *   );
    * ```
    */
@@ -61,14 +67,16 @@ export class Actions extends APIResource {
    * payment method.
    *
    * Returns the Setup Intent client secret and publishable key needed to collect a
-   * payment method with Stripe.js. Safe to retry; an existing Stripe customer is
-   * reused.
+   * payment method with Stripe.js. The Stripe customer is created once and reused on
+   * later calls, but every call issues a new Setup Intent and replaces the one
+   * recorded on the session, so confirm payment with the Setup Intent from the most
+   * recent call. Rejected once the registration has completed.
    *
    * @example
    * ```ts
    * const setupBillingResponse =
    *   await client.auth.registrationSessions.actions.setupBilling(
-   *     'rgfw_01011dbade766ab524553afb10',
+   *     'rgfw_6xab8u2fun46',
    *   );
    * ```
    */
@@ -80,8 +88,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Verifies the email token sent during registration, marking the session as
-   * email-verified and advancing to the next step.
+   * Verifies the token from the registration email, marking the session as
+   * email-verified and advancing it to the `user_details` step.
+   *
+   * A token is only accepted within 24 hours of the session's last update; Resend
+   * Verification Email issues a fresh one. Verifying a session that is already
+   * verified returns it unchanged.
    *
    * @example
    * ```ts
@@ -106,8 +118,8 @@ export interface ConfirmPaymentRequest {
   /**
    * ID of the Stripe Setup Intent to verify.
    *
-   * Must be the Setup Intent created for this session by **Setup Registration
-   * Billing**, and its status must be `succeeded`.
+   * Must be the Setup Intent most recently created for this session by Setup
+   * Registration Billing, and its status must be `succeeded`.
    */
   setup_intent_id: string;
 }
@@ -169,8 +181,8 @@ export interface ActionConfirmPaymentParams {
   /**
    * ID of the Stripe Setup Intent to verify.
    *
-   * Must be the Setup Intent created for this session by **Setup Registration
-   * Billing**, and its status must be `succeeded`.
+   * Must be the Setup Intent most recently created for this session by Setup
+   * Registration Billing, and its status must be `succeeded`.
    */
   setup_intent_id: string;
 }

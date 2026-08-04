@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource deliveries', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.deliveries.retrieve('dlv_0143cbea89e0f17c3d19828a3a');
+    const responsePromise = client.operations.deliveries.retrieve('dlv_9xsjlqx5753y');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource deliveries', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.deliveries.retrieve(
-        'dlv_0143cbea89e0f17c3d19828a3a',
+        'dlv_9xsjlqx5753y',
         { include: ['purchase_order'] },
         { path: '/_stainless_unknown_path' },
       ),

@@ -31,8 +31,11 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Resets a user's password using a password reset token, revoking previous tokens
-   * and setting new ones in cookies.
+   * Sets a new password using a password reset token and signs the user in.
+   *
+   * All of the user's existing refresh tokens are revoked, signing out their other
+   * sessions, and fresh access and refresh tokens are set in cookies. A confirmation
+   * email is sent to the user.
    *
    * @example
    * ```ts
@@ -54,11 +57,18 @@ export class Actions extends APIResource {
 export interface RequestPasswordResetRequest {
   /**
    * Username or email of the user whose password should be reset.
+   *
+   * The reset link is always sent to the email address on file for the matched user,
+   * and no email is sent if that user has no address on file.
    */
   identifier: string;
 
   /**
-   * Account slug for redirecting to the original login portal after password reset.
+   * Slug of the customer portal the request came from.
+   *
+   * Scopes the emailed reset link to that portal so the user sets their new password
+   * there instead of on the generic dashboard. Accounts with a verified custom
+   * portal domain use that domain in the link instead of the slug.
    */
   account_slug?: string;
 }
@@ -68,12 +78,16 @@ export interface RequestPasswordResetRequest {
  */
 export interface ResetPasswordRequest {
   /**
-   * Password reset token from the password reset email.
+   * Password reset token taken from the `t` query parameter of the link in the
+   * password reset email.
+   *
+   * The token expires 15 minutes after the email is sent; after that the user has to
+   * request a new reset email.
    */
   token: string;
 
   /**
-   * New password.
+   * New password to set for the user.
    */
   password: string;
 }
@@ -85,23 +99,34 @@ export interface ActionResetResponse {}
 export interface ActionRequestResetParams {
   /**
    * Username or email of the user whose password should be reset.
+   *
+   * The reset link is always sent to the email address on file for the matched user,
+   * and no email is sent if that user has no address on file.
    */
   identifier: string;
 
   /**
-   * Account slug for redirecting to the original login portal after password reset.
+   * Slug of the customer portal the request came from.
+   *
+   * Scopes the emailed reset link to that portal so the user sets their new password
+   * there instead of on the generic dashboard. Accounts with a verified custom
+   * portal domain use that domain in the link instead of the slug.
    */
   account_slug?: string;
 }
 
 export interface ActionResetParams {
   /**
-   * Password reset token from the password reset email.
+   * Password reset token taken from the `t` query parameter of the link in the
+   * password reset email.
+   *
+   * The token expires 15 minutes after the email is sent; after that the user has to
+   * request a new reset email.
    */
   token: string;
 
   /**
-   * New password.
+   * New password to set for the user.
    */
   password: string;
 }

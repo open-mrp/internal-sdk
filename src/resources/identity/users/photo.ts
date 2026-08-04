@@ -12,8 +12,10 @@ export class Photo extends APIResource {
   /**
    * Uploads a profile photo for a user.
    *
-   * The photo replaces any existing one, and the user's `image_url` is updated to
-   * serve the new photo.
+   * The photo replaces any existing one, and the user's `image_url` is repointed at
+   * an internal path rather than a fetchable image URL. Because the stored image is
+   * not publicly readable, use Get User Photo URL to obtain a temporary link for
+   * displaying it.
    *
    * This endpoint requires the permission: `team:update`.
    *
@@ -21,7 +23,7 @@ export class Photo extends APIResource {
    * ```ts
    * const userPhotoUploadResult =
    *   await client.identity.users.photo.update(
-   *     'us_0151164dcaea4cbded27b50aae',
+   *     'us_43irtlt2ajz6',
    *   );
    * ```
    */
@@ -30,14 +32,17 @@ export class Photo extends APIResource {
   }
 
   /**
-   * Returns a presigned URL for the user's profile photo.
+   * Returns a temporary link that can be used to fetch the user's profile photo
+   * image.
    *
-   * The URL expires one hour after it is issued.
+   * The link expires one hour after it is issued, and no link is returned for a user
+   * who has never uploaded a photo. Users may always fetch their own photo; fetching
+   * another user's photo requires read access to team users.
    *
    * @example
    * ```ts
    * const userPhotoURL = await client.identity.users.photo.list(
-   *   'us_0151164dcaea4cbded27b50aae',
+   *   'us_43irtlt2ajz6',
    * );
    * ```
    */

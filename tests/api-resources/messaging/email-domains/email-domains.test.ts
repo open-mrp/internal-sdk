@@ -24,7 +24,7 @@ describe('resource emailDomains', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.messaging.emailDomains.retrieve('emdom_018e88072d1320808dc9aaa01');
+    const responsePromise = client.messaging.emailDomains.retrieve('emdom_2rk3omr8vshb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -46,7 +46,7 @@ describe('resource emailDomains', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.messaging.emailDomains.delete('emdom_018e88072d1320808dc9aaa01');
+    const responsePromise = client.messaging.emailDomains.delete('emdom_2rk3omr8vshb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

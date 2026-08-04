@@ -11,11 +11,19 @@ import { path } from '../../internal/utils/path';
  */
 export class ChildAccounts extends APIResource {
   /**
-   * Links an existing account as a child of the target account.
+   * Links an existing account as a child of the target account, so the two sit in a
+   * customer hierarchy such as a store location under its head office.
+   *
+   * Both the parent and the child must already be accounts you have a customer
+   * relationship with, and the child must be one you manage on its behalf — an
+   * account that runs its own Augno subscription, or that also trades with other
+   * sellers, is rejected with an authorization error.
    *
    * This call is idempotent: linking an account that is already a child of the
    * target account succeeds without changes. Circular relationships (making an
-   * account a child of its own child) are rejected with a conflict error.
+   * account a child of its own child) are rejected with a conflict error. An account
+   * has at most one parent, so linking a child that already sits under a different
+   * parent moves it.
    *
    * This endpoint requires the permission: `customers:update`.
    *
@@ -23,7 +31,7 @@ export class ChildAccounts extends APIResource {
    * ```ts
    * const childAccount =
    *   await client.identity.childAccounts.update(
-   *     'ac_0170df1ac58e4d24c66fc89f5f',
+   *     'ac_opnlh43ymyee',
    *   );
    * ```
    */
@@ -32,7 +40,12 @@ export class ChildAccounts extends APIResource {
   }
 
   /**
-   * Returns a paginated list of child accounts for the target account.
+   * Returns a paginated list of the accounts linked directly beneath the target
+   * account.
+   *
+   * Only direct children are returned, not children of those children. Results are
+   * ordered by when your customer record for each child was created, newest first,
+   * and the `q` search term matches the child account's name.
    *
    * This endpoint requires the permission: `customers:read`.
    *
@@ -52,9 +65,10 @@ export class ChildAccounts extends APIResource {
   /**
    * Unlinks a child account from the target account.
    *
-   * Only the parent-child relationship is removed; the child account itself is not
-   * deleted. This call is idempotent: removing an account that is not currently a
-   * child succeeds without changes.
+   * Only the parent-child relationship is removed; the child account itself, and
+   * your customer record for it, are left untouched. This call is idempotent:
+   * removing an account that is not currently a child of the target account succeeds
+   * without changes.
    *
    * This endpoint requires the permission: `customers:update`.
    *
@@ -62,7 +76,7 @@ export class ChildAccounts extends APIResource {
    * ```ts
    * const childAccount =
    *   await client.identity.childAccounts.delete(
-   *     'ac_0170df1ac58e4d24c66fc89f5f',
+   *     'ac_opnlh43ymyee',
    *   );
    * ```
    */
@@ -73,6 +87,10 @@ export class ChildAccounts extends APIResource {
 
 /**
  * Child customer account in a parent-child relationship.
+ *
+ * Parent-child links let you model a customer hierarchy, such as a chain's
+ * individual store locations sitting beneath its head office. Both accounts are
+ * customers of your own account, and the hierarchy is visible only to you.
  */
 export interface ChildAccount {
   /**
@@ -84,7 +102,11 @@ export interface ChildAccount {
   id: string;
 
   /**
-   * A customer account, including its branding and customer portal sub-resources.
+   * An organization on Augno, including its branding and customer portal
+   * sub-resources.
+   *
+   * Your own account and any customer or supplier account you trade with are both
+   * represented by this object.
    */
   account: APIKeysAPI.Account | null;
 
@@ -94,13 +116,13 @@ export interface ChildAccount {
   created_at: string;
 
   /**
-   * Support email address copied from the child account's branding.
+   * Support email address published in the child account's branding.
    */
   email: string | null;
 
   /**
-   * Your own identifier for this customer, such as a CRM or ERP customer number,
-   * stored on the parent-child relation rather than on the account.
+   * The customer number for the child account, matching the `number` on your
+   * customer record for it.
    */
   external_number: string | null;
 
@@ -116,7 +138,8 @@ export interface ChildAccount {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListChildAccount {
   /**
@@ -130,7 +153,13 @@ export interface ListChildAccount {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }

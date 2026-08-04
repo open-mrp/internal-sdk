@@ -12,14 +12,17 @@ import { path } from '../../internal/utils/path';
  */
 export class AuditEvents extends APIResource {
   /**
-   * Returns an audit event by ID.
+   * Returns a single audit event by ID.
+   *
+   * The event is readable when your account is either the acting account or the
+   * account that was acted upon.
    *
    * This endpoint requires the permission: `audit_events:read`.
    *
    * @example
    * ```ts
    * const auditEvent = await client.core.auditEvents.retrieve(
-   *   'ae_01b1c07dc3085bbd84111edcbd',
+   *   'ae_emripvn8t1xl',
    * );
    * ```
    */
@@ -32,7 +35,12 @@ export class AuditEvents extends APIResource {
   }
 
   /**
-   * Returns a paginated list of audit events for the current account.
+   * Returns a paginated list of audit events, newest first.
+   *
+   * Results cover every change where your account is either the acting account or
+   * the account that was acted upon, so a customer's or supplier's changes to your
+   * records appear alongside your own. The `q` parameter searches the resource type,
+   * action, resource ID, and originating request ID.
    *
    * This endpoint requires the permission: `audit_events:read`.
    *
@@ -49,10 +57,12 @@ export class AuditEvents extends APIResource {
   }
 
   /**
-   * Returns the full set of resource types that may appear on audit events.
+   * Returns every resource type an audit event can refer to, as plain strings.
    *
-   * Values are plain strings, suitable for the `resource_types` filter when listing
-   * audit events.
+   * This is the accepted vocabulary for the `resource_types` filter when listing
+   * audit events. It is the API's complete resource-type list rather than a list
+   * derived from your account's data, so it includes types you may never have
+   * recorded events for.
    *
    * This endpoint requires the permission: `audit_events:read`.
    *
@@ -68,9 +78,15 @@ export class AuditEvents extends APIResource {
 }
 
 /**
- * Immutable audit event record.
+ * An immutable record of a single change to a resource, capturing who made the
+ * change, what changed, and when.
  *
- * Captures the actor, changed resource, and timestamp.
+ * Audit events are recorded automatically as mutations happen; they cannot be
+ * created, edited, or deleted through the API. Recording is asynchronous, so an
+ * event may take a moment to become readable after the request that caused it has
+ * returned. An update that leaves every tracked field at its existing value
+ * records no event unless the mutation attaches metadata of its own — a password
+ * rotation, for example, records metadata and no field changes.
  */
 export interface AuditEvent {
   /**
@@ -79,7 +95,11 @@ export interface AuditEvent {
   id: string;
 
   /**
-   * A customer account, including its branding and customer portal sub-resources.
+   * An organization on Augno, including its branding and customer portal
+   * sub-resources.
+   *
+   * Your own account and any customer or supplier account you trade with are both
+   * represented by this object.
    */
   account: APIKeysAPI.Account | null;
 
@@ -105,12 +125,16 @@ export interface AuditEvent {
   actor: RequestLogsAPI.Actor | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   changes: ListAuditFieldChange | null;
 
   /**
-   * When the audit event record was created.
+   * When the audit event record was written.
+   *
+   * Slightly later than `occurred_at`, since events are recorded out of band from
+   * the request that caused them.
    */
   created_at: string;
 
@@ -133,11 +157,17 @@ export interface AuditEvent {
 
   /**
    * When the audited mutation occurred.
+   *
+   * Audit events are ordered and date-filtered by this timestamp rather than by
+   * `created_at`.
    */
   occurred_at: string;
 
   /**
    * A log of a single API request, capturing its route, outcome, latency, and actor.
+   *
+   * Logs are written after the response has been sent, so a new entry may take a
+   * moment to become readable.
    */
   request: RequestLogsAPI.RequestLog | null;
 
@@ -438,14 +468,19 @@ export interface AuditEvent {
 export interface AuditFieldChange {
   /**
    * Name of the changed field.
+   *
+   * Field names come from the audited record's stored representation and can differ
+   * slightly from the corresponding field on the API resource — for example
+   * `commission_policy_code` rather than `commission_policy`.
    */
   field: string;
 
   /**
    * New value as a JSON fragment.
    *
-   * `null` for deletion events. Encoded as a JSON value (object, array, string,
-   * number, boolean, or null), not a JSON-encoded string.
+   * `null` on `delete` events, where the field has no remaining value. Encoded as a
+   * JSON value (object, array, string, number, boolean, or null), not a JSON-encoded
+   * string.
    */
   new_value: unknown | null;
 
@@ -457,14 +492,16 @@ export interface AuditFieldChange {
   /**
    * Previous value as a JSON fragment.
    *
-   * `null` for creation events. Encoded as a JSON value (object, array, string,
-   * number, boolean, or null), not a JSON-encoded string.
+   * `null` on `create` events, where the field had no prior value. Encoded as a JSON
+   * value (object, array, string, number, boolean, or null), not a JSON-encoded
+   * string.
    */
   old_value: unknown | null;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAuditEvent {
   /**
@@ -478,13 +515,20 @@ export interface ListAuditEvent {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAuditFieldChange {
   /**
@@ -498,13 +542,20 @@ export interface ListAuditFieldChange {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListObjectType {
   /**
@@ -794,7 +845,13 @@ export interface ListObjectType {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -826,13 +883,16 @@ export interface AuditEventListParams {
   /**
    * Filter by the actor identifier.
    *
-   * Matches the event's `actor.id`: a user ID for `user` actors or an API key ID for
-   * `api_key` actors.
+   * Matches the event's `actor.id`: a user ID for `user` actors, an API key ID for
+   * `api_key` actors, or an agent ID for `agent` actors.
    */
   actor_ids?: Array<string>;
 
   /**
    * Filter by the actor type.
+   *
+   * Events are recorded for actors of type `user`, `api_key`, and `agent` — the last
+   * covering changes an Augno agent made on your account's behalf.
    */
   actor_types?: Array<'user' | 'api_key' | 'agent' | 'group'>;
 
@@ -1158,17 +1218,19 @@ export interface AuditEventListParams {
   >;
 
   /**
-   * Filter by the root resource.
+   * ID of the root record whose history tree to return.
+   *
+   * Only applied when paired with `root_resource_type`.
    */
   root_resource_id?: string;
 
   /**
    * Scope results to a root record's entire history tree.
    *
-   * Every event whose root resource matches, including the root itself and all of
-   * its descendants (for example a sales order together with its lines, picks,
-   * shipments, and invoices). Both `root_resource_type` and `root_resource_id` must
-   * be supplied together.
+   * Returns every event whose root resource matches, covering the root record itself
+   * and all of its descendants — for example a sales order together with its lines,
+   * picks, shipments, and invoices. Both `root_resource_type` and `root_resource_id`
+   * must be supplied together; supplying only one has no effect.
    */
   root_resource_type?:
     | 'account'

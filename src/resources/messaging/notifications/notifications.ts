@@ -23,11 +23,15 @@ export class Notifications extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Sends an in-app notification to a single user or broadcasts it to every user in
-   * an account.
+   * Sends an in-app notification to a single member of an account, or announces it
+   * to everyone in the account.
    *
-   * Delivery is asynchronous: the notification is fanned out to its recipients and
-   * pushed to connected clients in real time.
+   * A send to one member is attributed to the authenticated caller, so the recipient
+   * sees who sent it. It is accepted and then fanned out, so it reaches the
+   * recipient's feed and their connected clients shortly after the response.
+   *
+   * An announcement to the whole account is stored as the request is accepted,
+   * carries no sender, and may only target the account you are currently acting in.
    *
    * This endpoint requires the permission: `alerts:create`.
    *
@@ -38,11 +42,11 @@ export class Notifications extends APIResource {
    *     category: 'order.updated',
    *     target: {
    *       type: 'account_user',
-   *       id: 'acus_01ea9983ddb41dacc44ecf997c',
+   *       id: 'acus_e5zu8bde0z3h',
    *     },
    *     title: 'Order updated',
    *     body: 'Order #1042 was updated.',
-   *     link_resource_id: 'or_01d5034136c3ccc048abecc312',
+   *     link_resource_id: 'or_9lqo07quiwyb',
    *     link_resource_type: 'sales_order',
    *     priority: 'high',
    *   });
@@ -53,7 +57,11 @@ export class Notifications extends APIResource {
   }
 
   /**
-   * Returns one of the caller's notifications by ID.
+   * Retrieves a single notification by ID.
+   *
+   * Only notifications addressed to the current user are visible; another user's
+   * notification is reported as not found. Dismissed notifications remain
+   * retrievable.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -61,7 +69,7 @@ export class Notifications extends APIResource {
    * ```ts
    * const notification =
    *   await client.messaging.notifications.retrieve(
-   *     'nf_01h9z8q1w2e3r4t5y6u7i8o9',
+   *     'nf_yvw2bfj2guyn',
    *   );
    * ```
    */
@@ -74,7 +82,11 @@ export class Notifications extends APIResource {
   }
 
   /**
-   * Returns the current user's notifications, most recent first.
+   * Lists the notifications addressed to the current user, newest first.
+   *
+   * The feed is personal and scoped to the account being acted in, so it never
+   * includes another user's notifications. Callers with no user membership in that
+   * account, such as an API key, get an empty list rather than an error.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -92,7 +104,11 @@ export class Notifications extends APIResource {
   }
 
   /**
-   * Returns the current user's unread notification counts.
+   * Returns the current user's unread tallies for the account they are acting in,
+   * for driving a notification badge.
+   *
+   * The total also counts account announcements the user has not seen, so it can be
+   * higher than the notification count alone.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -107,7 +123,12 @@ export class Notifications extends APIResource {
   }
 
   /**
-   * Returns the caller's unread totals across every account they belong to.
+   * Returns the caller's unread totals broken down by account, covering every
+   * account they belong to and not just the one they are acting in.
+   *
+   * Use it to show a user that activity is waiting for them elsewhere before they
+   * switch accounts. Each tally counts unseen notifications and unseen account
+   * announcements together.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -123,7 +144,8 @@ export class Notifications extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListNotification {
   /**
@@ -137,13 +159,20 @@ export interface ListNotification {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListNotificationUnreadSummaryAccount {
   /**
@@ -157,13 +186,24 @@ export interface ListNotificationUnreadSummaryAccount {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * An in-app notification in the user's bell feed.
+ * An in-app notification addressed to a single user, shown in their notification
+ * (bell) feed.
+ *
+ * A notification belongs to one user in one account, so the feed you read is
+ * always that of the authenticated caller in the account they are acting in.
+ * Announcements broadcast to a whole account are a separate resource.
  */
 export interface Notification {
   /**
@@ -172,7 +212,8 @@ export interface Notification {
   id: string;
 
   /**
-   * Preview/body text.
+   * Supporting detail shown beneath the title, such as a preview of the message that
+   * triggered the notification.
    */
   body: string | null;
 
@@ -189,6 +230,7 @@ export interface Notification {
    * - `agent.run_completed`: an agent run the user triggered finished.
    * - `agent.alert`: an agent raised an alert during a run.
    * - `system.broadcast`: a targeted system message.
+   * - `customer.registered`: a buyer completed registration on your customer portal.
    */
   category:
     | 'chat.message'
@@ -216,7 +258,8 @@ export interface Notification {
   object: 'notification';
 
   /**
-   * Delivery priority.
+   * How prominently the notification should be surfaced, from `low` through
+   * `urgent`.
    */
   priority: 'low' | 'normal' | 'high' | 'urgent';
 
@@ -231,7 +274,7 @@ export interface Notification {
   resource: CoreAPI.Entity | null;
 
   /**
-   * When the notification first appeared in the dropdown.
+   * When the notification was first surfaced to the user.
    */
   seen_at: string | null;
 
@@ -244,15 +287,18 @@ export interface Notification {
   /**
    * Where the notification is in its lifecycle.
    *
-   * - `unseen`: not yet surfaced in the notification dropdown.
-   * - `seen`: surfaced in the dropdown but not yet opened.
+   * - `unseen`: delivered but not yet surfaced to the user.
+   * - `seen`: surfaced in the feed but not yet opened.
    * - `read`: explicitly opened by the user.
    * - `dismissed`: removed from the active feed.
+   *
+   * The status is derived from the seen, read, and dismissed timestamps, and only
+   * ever moves forward — a notification can never become unseen again.
    */
   status: 'unseen' | 'seen' | 'read' | 'dismissed';
 
   /**
-   * Human-readable title.
+   * Short headline shown in the feed.
    */
   title: string;
 
@@ -263,11 +309,16 @@ export interface Notification {
 }
 
 /**
- * NotificationSendResult acknowledges a notification send/fan-out request.
+ * The acknowledgement returned when a notification is accepted for delivery.
  */
 export interface NotificationSendResult {
   /**
-   * Number of recipients the notification was enqueued for.
+   * Number of deliveries accepted for the notification.
+   *
+   * An account broadcast is stored once as a single announcement that serves
+   * everyone in the account, so it reports `1` rather than a per-user count.
+   * Acceptance is not delivery: recipients who cannot be resolved are skipped when
+   * the notification is fanned out.
    */
   enqueued: number;
 
@@ -278,41 +329,45 @@ export interface NotificationSendResult {
 }
 
 /**
- * NotificationTargetInput selects what a notification send is aimed at.
- *
- * The target is a polymorphic reference carrying a `type` and the `id` it refers
- * to. Modeling it this way, rather than a single id or a broadcast flag, lets new
- * target kinds be added without a breaking change to the send API.
- *
- * Supported types:
- *
- * - `account_user`: `id` is an account_user id; delivers a per-user notification.
- * - `account`: `id` is an account id; broadcasts an announcement to every user in
- *   the account.
+ * Who a notification is aimed at.
  */
 export interface NotificationTargetInput {
   /**
-   * The id of the target (an account_user id or an account id, matching `type`).
+   * The id of the recipient, matching `type`: an account user id, or an account id.
+   *
+   * An account target must be the account you are currently acting in — you cannot
+   * broadcast into another account.
    */
   id: string;
 
   /**
-   * The kind of target.
+   * The kind of recipient being addressed.
+   *
+   * - `account_user`: one member of the account, who receives a personal
+   *   notification in their feed.
+   * - `account`: every member of the account, who all receive a single shared
+   *   announcement.
    */
   type: 'account_user' | 'account';
 }
 
 /**
- * NotificationUnreadCount summarizes a user's unread tallies across surfaces.
+ * The caller's unread tallies in one account, used to drive the notification bell
+ * badge.
  */
 export interface NotificationUnreadCount {
   /**
-   * Number of conversations with unread messages (0 until chat ships).
+   * Number of conversations with unread messages.
+   *
+   * Always `0` today — conversation unread counts are not yet folded into the bell.
    */
   conversations: number;
 
   /**
-   * Number of unseen bell notifications.
+   * Number of the caller's notifications that have not been seen yet.
+   *
+   * Dismissed notifications are never counted, and marking all notifications seen
+   * drops this to zero.
    */
   notifications: number;
 
@@ -322,18 +377,23 @@ export interface NotificationUnreadCount {
   object: 'notification_unread_count';
 
   /**
-   * Combined unread total.
+   * Combined unread total for the bell badge.
+   *
+   * This is the unseen notification count plus any account announcements the caller
+   * has not seen, so it can exceed `notifications`. Announcements are cleared
+   * individually rather than by marking all notifications seen.
    */
   total: number;
 }
 
 /**
- * NotificationUnreadSummary is the caller's unread totals across every account
- * they belong to.
+ * The caller's unread totals across every account they belong to, used to show
+ * unread activity waiting in accounts they are not currently working in.
  */
 export interface NotificationUnreadSummary {
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   accounts: ListNotificationUnreadSummaryAccount | null;
 
@@ -349,8 +409,7 @@ export interface NotificationUnreadSummary {
 }
 
 /**
- * NotificationUnreadSummaryAccount is one account's unread tally in the
- * cross-account summary.
+ * One account's unread tally within the caller's cross-account summary.
  */
 export interface NotificationUnreadSummaryAccount {
   /**
@@ -364,7 +423,8 @@ export interface NotificationUnreadSummaryAccount {
   object: 'notification_unread_summary_account';
 
   /**
-   * Number of unread items (notifications + announcements) in this account.
+   * Number of unseen notifications and account announcements the caller has in this
+   * account.
    */
   unread: number;
 }
@@ -372,12 +432,15 @@ export interface NotificationUnreadSummaryAccount {
 /**
  * Request to send an in-app notification.
  *
- * The target determines whether it is delivered to a single user or broadcast to
- * every user in an account. This endpoint is internal/admin only.
+ * The target decides whether the notification goes to one member of the account or
+ * to everyone in it.
  */
 export interface SendNotificationRequest {
   /**
-   * Category of the notification.
+   * The kind of event the notification represents, such as `order.updated`.
+   *
+   * Categories are how clients group and filter the feed, so reuse an existing one
+   * where it fits.
    */
   category:
     | 'chat.message'
@@ -390,40 +453,31 @@ export interface SendNotificationRequest {
     | 'customer.registered';
 
   /**
-   * NotificationTargetInput selects what a notification send is aimed at.
-   *
-   * The target is a polymorphic reference carrying a `type` and the `id` it refers
-   * to. Modeling it this way, rather than a single id or a broadcast flag, lets new
-   * target kinds be added without a breaking change to the send API.
-   *
-   * Supported types:
-   *
-   * - `account_user`: `id` is an account_user id; delivers a per-user notification.
-   * - `account`: `id` is an account id; broadcasts an announcement to every user in
-   *   the account.
+   * Who a notification is aimed at.
    */
   target: NotificationTargetInput;
 
   /**
-   * Human-readable title.
+   * Short headline shown in the recipient's feed.
    */
   title: string;
 
   /**
-   * Preview/body text.
+   * Supporting detail shown beneath the title.
    */
   body?: string;
 
   /**
-   * ID of the resource this notification should link to.
+   * ID of the resource the notification should link to.
    */
   link_resource_id?: string;
 
   /**
-   * Object type of the resource this notification should link to.
+   * Type of the resource the notification should link to, such as `sales_order`.
    *
-   * Set together with `link_resource_id` to point the notification at something the
-   * recipient can open.
+   * Set it together with `link_resource_id` to point the notification at something
+   * the recipient can open; supplying only one of the two produces a notification
+   * with no link.
    */
   link_resource_type?:
     | 'account'
@@ -703,14 +757,18 @@ export interface SendNotificationRequest {
     | 'pack_list_case';
 
   /**
-   * Delivery priority.
+   * How prominently the notification should be surfaced, from `low` through
+   * `urgent`.
    */
   priority?: 'low' | 'normal' | 'high' | 'urgent';
 }
 
 export interface NotificationCreateParams {
   /**
-   * Category of the notification.
+   * The kind of event the notification represents, such as `order.updated`.
+   *
+   * Categories are how clients group and filter the feed, so reuse an existing one
+   * where it fits.
    */
   category:
     | 'chat.message'
@@ -723,40 +781,31 @@ export interface NotificationCreateParams {
     | 'customer.registered';
 
   /**
-   * NotificationTargetInput selects what a notification send is aimed at.
-   *
-   * The target is a polymorphic reference carrying a `type` and the `id` it refers
-   * to. Modeling it this way, rather than a single id or a broadcast flag, lets new
-   * target kinds be added without a breaking change to the send API.
-   *
-   * Supported types:
-   *
-   * - `account_user`: `id` is an account_user id; delivers a per-user notification.
-   * - `account`: `id` is an account id; broadcasts an announcement to every user in
-   *   the account.
+   * Who a notification is aimed at.
    */
   target: NotificationTargetInput;
 
   /**
-   * Human-readable title.
+   * Short headline shown in the recipient's feed.
    */
   title: string;
 
   /**
-   * Preview/body text.
+   * Supporting detail shown beneath the title.
    */
   body?: string;
 
   /**
-   * ID of the resource this notification should link to.
+   * ID of the resource the notification should link to.
    */
   link_resource_id?: string;
 
   /**
-   * Object type of the resource this notification should link to.
+   * Type of the resource the notification should link to, such as `sales_order`.
    *
-   * Set together with `link_resource_id` to point the notification at something the
-   * recipient can open.
+   * Set it together with `link_resource_id` to point the notification at something
+   * the recipient can open; supplying only one of the two produces a notification
+   * with no link.
    */
   link_resource_type?:
     | 'account'
@@ -1036,7 +1085,8 @@ export interface NotificationCreateParams {
     | 'pack_list_case';
 
   /**
-   * Delivery priority.
+   * How prominently the notification should be surfaced, from `low` through
+   * `urgent`.
    */
   priority?: 'low' | 'normal' | 'high' | 'urgent';
 }
@@ -1051,7 +1101,8 @@ export interface NotificationRetrieveParams {
 
 export interface NotificationListParams {
   /**
-   * Filter by category.
+   * Return only notifications of this category, such as `chat.mention` or
+   * `order.updated`.
    */
   category?:
     | 'chat.message'
@@ -1091,20 +1142,27 @@ export interface NotificationListParams {
   q?: string;
 
   /**
-   * Filter by sender id(s).
+   * Return only notifications sent by these actors.
+   *
+   * A notification sent by a person is attributed to their account user id, not
+   * their user id.
    */
   sender_ids?: Array<string>;
 
   /**
-   * Filter by sender type(s).
+   * Return only notifications sent by these kinds of actor.
+   *
+   * Notifications raised by the platform itself are attributed to the `system`
+   * sender type but are returned without a sender.
    */
   sender_types?: Array<'user' | 'group' | 'system' | 'agent' | 'apikey'>;
 
   /**
-   * Filter by lifecycle status.
+   * Return only notifications in this lifecycle state.
    *
-   * When omitted, the feed returns the full active feed — every non-dismissed
-   * notification (seen and unseen alike), newest first.
+   * When omitted, the response is the active feed: every notification that has not
+   * been dismissed, whatever its seen or read state. Pass `dismissed` to review
+   * notifications that were cleared out of the feed.
    */
   status?: 'unseen' | 'seen' | 'read' | 'dismissed';
 }

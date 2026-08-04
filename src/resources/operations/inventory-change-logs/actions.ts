@@ -13,7 +13,8 @@ export class Actions extends APIResource {
    * Exports inventory change logs matching the provided filters as an Excel file.
    *
    * Unlike the list endpoint, results are not paginated — every matching change log
-   * is included in the download.
+   * is included in the download, newest first. The download is named for the date
+   * range you requested, using `all` in place of a bound you left open.
    *
    * This endpoint requires the permission: `inventory_logs:read`.
    *
@@ -33,12 +34,16 @@ export class Actions extends APIResource {
 
 export interface ActionExportParams {
   /**
-   * Filter by the action that produced the change.
+   * Restricts results to these action types (`scan`, `user_action`, `system_action`,
+   * `user_correction`).
    */
   action_type_codes?: Array<string>;
 
   /**
-   * Filter by the user responsible for the change.
+   * Restricts results to changes made by these users.
+   *
+   * Changes that were recorded without a responsible user are excluded whenever this
+   * filter is set.
    */
   changed_by_user_ids?: Array<string>;
 
@@ -48,7 +53,7 @@ export interface ActionExportParams {
   end_date?: string;
 
   /**
-   * Filter by item IDs.
+   * Restricts results to changes affecting these items.
    */
   item_ids?: Array<string>;
 

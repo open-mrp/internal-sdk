@@ -17,12 +17,15 @@ export class Accounts extends APIResource {
   /**
    * Returns an account by ID.
    *
+   * You can only retrieve the account you are acting in; requesting any other
+   * account is rejected.
+   *
    * This endpoint requires the permission: `self:read`.
    *
    * @example
    * ```ts
    * const account = await client.identity.accounts.retrieve(
-   *   'ac_01148680966698341a9c0976db',
+   *   'ac_ykxoradjoeb3',
    * );
    * ```
    */
@@ -38,14 +41,15 @@ export class Accounts extends APIResource {
    * Partially updates an account's name, branding, and portal settings.
    *
    * Only the fields provided in the request are changed. You can only update the
-   * account you are acting in.
+   * account you are acting in. The logo and favicon are not set here; upload them
+   * through their own endpoints.
    *
    * This endpoint requires the permission: `self:update`.
    *
    * @example
    * ```ts
    * const account = await client.identity.accounts.update(
-   *   'ac_01148680966698341a9c0976db',
+   *   'ac_ykxoradjoeb3',
    *   { name: 'Acme Inc.' },
    * );
    * ```
@@ -63,13 +67,14 @@ export class Accounts extends APIResource {
    * Returns a presigned download URL for the account's logo.
    *
    * The URL expires one hour after it is generated, so fetch the logo promptly
-   * rather than caching it.
+   * rather than caching it. The response carries no URL when the account has never
+   * uploaded a logo or the stored image is no longer available.
    *
    * @example
    * ```ts
    * const accountLogoURL =
    *   await client.identity.accounts.retrieveLogo(
-   *     'ac_01148680966698341a9c0976db',
+   *     'ac_ykxoradjoeb3',
    *   );
    * ```
    */
@@ -90,7 +95,7 @@ export class Accounts extends APIResource {
    * ```ts
    * const accountPhotoUploadResult =
    *   await client.identity.accounts.updatePhoto(
-   *     'ac_01148680966698341a9c0976db',
+   *     'ac_ykxoradjoeb3',
    *   );
    * ```
    */
@@ -112,13 +117,14 @@ export interface AccountLogoURL {
    * Presigned URL for downloading the account's logo.
    *
    * The URL expires one hour after it is generated, so fetch the logo promptly
-   * rather than caching this URL.
+   * rather than caching this URL. No URL is returned when the account has never
+   * uploaded a logo or the stored image is no longer available.
    */
   url: string | null;
 }
 
 /**
- * Result of an account photo upload.
+ * Result of an account logo upload.
  */
 export interface AccountPhotoUploadResult {
   /**
@@ -157,7 +163,7 @@ export interface UpdateAccountRequest {
   name?: string;
 
   /**
-   * Support phone number.
+   * The account's public contact phone number.
    */
   phone_number?: string;
 
@@ -165,12 +171,13 @@ export interface UpdateAccountRequest {
    * URL slug for the account's customer portal.
    *
    * The slug is unique across all accounts; updating to one that is already taken
-   * returns a conflict error.
+   * returns a conflict error. Changing it changes the portal address customers use,
+   * so existing portal links stop resolving.
    */
   slug?: string;
 
   /**
-   * Support email address.
+   * The email address customers are directed to for support.
    */
   support_email?: string;
 
@@ -180,7 +187,7 @@ export interface UpdateAccountRequest {
   twitter_handle?: string;
 
   /**
-   * Website URL.
+   * The account's public website.
    */
   website_url?: string;
 }
@@ -221,7 +228,7 @@ export interface AccountUpdateParams {
   name?: string;
 
   /**
-   * Body param: Support phone number.
+   * Body param: The account's public contact phone number.
    */
   phone_number?: string;
 
@@ -229,12 +236,13 @@ export interface AccountUpdateParams {
    * Body param: URL slug for the account's customer portal.
    *
    * The slug is unique across all accounts; updating to one that is already taken
-   * returns a conflict error.
+   * returns a conflict error. Changing it changes the portal address customers use,
+   * so existing portal links stop resolving.
    */
   slug?: string;
 
   /**
-   * Body param: Support email address.
+   * Body param: The email address customers are directed to for support.
    */
   support_email?: string;
 
@@ -244,7 +252,7 @@ export interface AccountUpdateParams {
   twitter_handle?: string;
 
   /**
-   * Body param: Website URL.
+   * Body param: The account's public website.
    */
   website_url?: string;
 }

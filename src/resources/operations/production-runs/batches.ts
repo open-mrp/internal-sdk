@@ -13,7 +13,10 @@ export class Batches extends APIResource {
   /**
    * Adds batches to a production run.
    *
-   * Fails if the run has been completed.
+   * Each batch is created as unscanned work: it belongs to the run immediately but
+   * does not count as produced until it is scanned at a station. Scanning the first
+   * of them starts the run, and the run completes once none are left unscanned.
+   * Batches cannot be added to a run that has already completed.
    *
    * This endpoint requires the permission: `production_runs:update`.
    *
@@ -21,15 +24,14 @@ export class Batches extends APIResource {
    * ```ts
    * const listBatch =
    *   await client.operations.productionRuns.batches.create(
-   *     'prru_0141c28081df4faac0fe726c41',
+   *     'prru_sglzcyflxk59',
    *     {
    *       batches: [
    *         {
-   *           item_id: 'it_0131e386ac683e8c29a71f6f1f',
+   *           item_id: 'it_pej07ckhvu62',
    *           quantity_value: '100',
-   *           quantity_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *           production_step_id:
-   *             'prst_0159474175bb59f4b1990404ee',
+   *           quantity_unit_id: 'un_82bd37dae5po',
+   *           production_step_id: 'prst_0ht5mkqx5a6t',
    *         },
    *       ],
    *     },
@@ -45,7 +47,16 @@ export class Batches extends APIResource {
   }
 
   /**
-   * Returns a paginated list of batches associated with a production run.
+   * Returns a paginated list of the batches that make up a production run, most
+   * recently created first.
+   *
+   * The result is not limited to the batches recorded directly against the run.
+   * Starting from those batches, the batch flow is followed downstream to the
+   * batches they feed and upstream to the batches that feed them while that branch
+   * is still open, so the whole in-progress flow around the run is returned.
+   *
+   * The `q` search term matches a batch ID, item SKU, scanning station name,
+   * department name, production step name, run number, lot number, or machine name.
    *
    * This endpoint requires the permission: `production_runs:read`.
    *
@@ -53,7 +64,7 @@ export class Batches extends APIResource {
    * ```ts
    * const listBatch =
    *   await client.operations.productionRuns.batches.list(
-   *     'prru_0141c28081df4faac0fe726c41',
+   *     'prru_sglzcyflxk59',
    *   );
    * ```
    */
@@ -81,7 +92,7 @@ export interface AddBatchInputRequest {
   quantity_unit_id: string;
 
   /**
-   * Good quantity produced by the batch, as a decimal string.
+   * Good (first-quality) quantity for the batch, as a decimal string.
    */
   quantity_value: string;
 
@@ -91,7 +102,7 @@ export interface AddBatchInputRequest {
   production_step_id?: string;
 
   /**
-   * ID of the scanning station where the batch will be scanned.
+   * ID of the scanning station where the batch is expected to be scanned.
    */
   scanning_station_id?: string;
 
@@ -101,7 +112,7 @@ export interface AddBatchInputRequest {
   seconds_unit_id?: string;
 
   /**
-   * Run time spent on the batch, as a decimal string.
+   * Seconds-quality (B-grade) output recorded for the batch, as a decimal string.
    *
    * Ignored unless `seconds_unit_id` is also provided.
    */
@@ -125,18 +136,14 @@ export interface AddBatchInputRequest {
  */
 export interface AddBatchesToProductionRunRequest {
   /**
-   * Batches to add.
-   *
-   * At least one batch is required.
+   * The batches of work to record against the run.
    */
   batches: Array<AddBatchInputRequest>;
 }
 
 export interface BatchCreateParams {
   /**
-   * Batches to add.
-   *
-   * At least one batch is required.
+   * The batches of work to record against the run.
    */
   batches: Array<AddBatchInputRequest>;
 }

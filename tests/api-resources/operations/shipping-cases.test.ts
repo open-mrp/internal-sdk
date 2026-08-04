@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource shippingCases', () => {
   test('retrieve', async () => {
-    const responsePromise = client.operations.shippingCases.retrieve('shcs_01207a101ea1475c687a39cf76');
+    const responsePromise = client.operations.shippingCases.retrieve('shcs_fgqy1eu256af');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource shippingCases', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.shippingCases.retrieve(
-        'shcs_01207a101ea1475c687a39cf76',
+        'shcs_fgqy1eu256af',
         { include: ['carrier'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -31,7 +31,7 @@ describe('resource shippingCases', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.operations.shippingCases.update('shcs_01207a101ea1475c687a39cf76');
+    const responsePromise = client.operations.shippingCases.update('shcs_fgqy1eu256af');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,7 +45,7 @@ describe('resource shippingCases', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.shippingCases.update(
-        'shcs_01207a101ea1475c687a39cf76',
+        'shcs_fgqy1eu256af',
         {
           include: ['carrier'],
           freight_amount_unit_id: 'freight_amount_unit_id',
@@ -60,7 +60,7 @@ describe('resource shippingCases', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.shippingCases.delete('shcs_01207a101ea1475c687a39cf76');
+    const responsePromise = client.operations.shippingCases.delete('shcs_fgqy1eu256af');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -71,7 +71,7 @@ describe('resource shippingCases', () => {
   });
 
   test('retrieveLabel', async () => {
-    const responsePromise = client.operations.shippingCases.retrieveLabel('shcs_01207a101ea1475c687a39cf76');
+    const responsePromise = client.operations.shippingCases.retrieveLabel('shcs_fgqy1eu256af');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

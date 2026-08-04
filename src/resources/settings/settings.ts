@@ -49,7 +49,8 @@ export class Settings extends APIResource {
    * slug.
    *
    * This endpoint does not require authentication; it is intended for customer
-   * portal branding lookups.
+   * portal branding lookups. The logo and favicon are returned as download URLs that
+   * stay valid for one hour.
    *
    * @example
    * ```ts
@@ -98,10 +99,12 @@ export class Settings extends APIResource {
 }
 
 /**
- * PortalProfile is the authenticated seller portal profile served to logged-in
- * customer-portal pages: the seller's identity plus its public letterhead address.
- * Unlike PublicAccount (public, minimal, for pre-login pages), this requires
- * authentication and includes the address inline as a plain field.
+ * The seller's identity as presented inside a signed-in customer portal: display
+ * name, branding, and letterhead address.
+ *
+ * This is the counterpart to the public branding profile used on pre-login pages,
+ * and it additionally carries the seller's letterhead address for rendering order
+ * documents.
  */
 export interface PortalProfile {
   /**
@@ -116,12 +119,14 @@ export interface PortalProfile {
   address: APIKeysAPI.Address | null;
 
   /**
-   * Customer-portal favicon URL.
+   * Download URL for the seller's customer-portal favicon, valid for one hour after
+   * the response is generated.
    */
   favicon_url: string | null;
 
   /**
-   * Logo URL.
+   * Download URL for the seller's logo, valid for one hour after the response is
+   * generated.
    */
   logo_url: string | null;
 
@@ -136,18 +141,19 @@ export interface PortalProfile {
   object: 'portal_profile';
 
   /**
-   * Portal slug.
+   * The URL slug that identifies the seller's customer portal.
    */
   slug: string;
 
   /**
-   * Support email address.
+   * The email address customers are directed to for support.
    */
   support_email: string | null;
 }
 
 /**
- * Minimal account representation for unauthenticated slug lookups.
+ * The publicly readable branding profile of an account, used to render customer
+ * portal pages before anyone signs in.
  */
 export interface PublicAccount {
   /**
@@ -162,12 +168,14 @@ export interface PublicAccount {
   default_billing_address: APIKeysAPI.Address | null;
 
   /**
-   * Customer-portal favicon URL.
+   * Download URL for the account's customer-portal favicon, valid for one hour after
+   * the response is generated.
    */
   favicon_url: string | null;
 
   /**
-   * Logo URL.
+   * Download URL for the account's logo, valid for one hour after the response is
+   * generated.
    */
   logo_url: string | null;
 
@@ -182,18 +190,20 @@ export interface PublicAccount {
   object: 'public_account';
 
   /**
-   * The account's verified custom portal domain (e.g. shop.acme.com), when one is
-   * connected and verified.
+   * The account's custom portal domain (e.g. shop.acme.com).
+   *
+   * A custom domain only appears here once it has passed verification; until then
+   * the portal is served from its slug URL.
    */
   portal_domain: string | null;
 
   /**
-   * Portal slug.
+   * The URL slug that identifies the account's customer portal.
    */
   slug: string;
 
   /**
-   * Support email address.
+   * The email address customers are directed to for support.
    */
   support_email: string | null;
 }

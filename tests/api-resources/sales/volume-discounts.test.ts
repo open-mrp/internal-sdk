@@ -48,7 +48,7 @@ describe('resource volumeDiscounts', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.volumeDiscounts.retrieve('quds_01b64658b647f3c5266b8f6ae1');
+    const responsePromise = client.sales.volumeDiscounts.retrieve('quds_bn7hto9s10pp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -62,7 +62,7 @@ describe('resource volumeDiscounts', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.sales.volumeDiscounts.retrieve(
-        'quds_01b64658b647f3c5266b8f6ae1',
+        'quds_bn7hto9s10pp',
         { include: ['customer_groups'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -70,7 +70,7 @@ describe('resource volumeDiscounts', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.volumeDiscounts.update('quds_01b64658b647f3c5266b8f6ae1', {
+    const responsePromise = client.sales.volumeDiscounts.update('quds_bn7hto9s10pp', {
       has_attributes: true,
       has_categories: true,
       has_customer_groups: true,
@@ -88,7 +88,7 @@ describe('resource volumeDiscounts', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.volumeDiscounts.update('quds_01b64658b647f3c5266b8f6ae1', {
+    const response = await client.sales.volumeDiscounts.update('quds_bn7hto9s10pp', {
       has_attributes: true,
       has_categories: true,
       has_customer_groups: true,
@@ -139,7 +139,7 @@ describe('resource volumeDiscounts', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.volumeDiscounts.delete('quds_01b64658b647f3c5266b8f6ae1');
+    const responsePromise = client.sales.volumeDiscounts.delete('quds_bn7hto9s10pp');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

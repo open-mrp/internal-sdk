@@ -11,14 +11,19 @@ import { path } from '../../internal/utils/path';
  */
 export class RequestLogs extends APIResource {
   /**
-   * Returns a request log by ID.
+   * Returns a single API request log by ID.
+   *
+   * The log is readable when your account is either the acting account or the
+   * account that was acted upon. This is also the only endpoint that can return the
+   * captured query parameters and request and response bodies, and the only way to
+   * read the high-traffic-endpoint logs that are withheld from the list endpoint.
    *
    * This endpoint requires the permission: `request_logs:read`.
    *
    * @example
    * ```ts
    * const requestLog = await client.core.requestLogs.retrieve(
-   *   'rq_01304bffe90e8cce9690cbefd4',
+   *   'rq_0lhl3kkhme40',
    * );
    * ```
    */
@@ -31,7 +36,18 @@ export class RequestLogs extends APIResource {
   }
 
   /**
-   * Returns a paginated list of request logs for the current account.
+   * Returns a paginated list of API request logs, newest first.
+   *
+   * Results cover every request where your account is either the acting account or
+   * the account that was acted upon, so requests a customer or supplier made against
+   * your data appear alongside your own. The `q` parameter matches a log ID exactly
+   * and otherwise searches the request path, the normalized route, and the error
+   * message.
+   *
+   * Requests to a number of high-traffic endpoints — including these logging
+   * endpoints themselves — are recorded but withheld from this listing so they do
+   * not drown out the rest of your traffic. They can still be fetched individually
+   * by ID.
    *
    * This endpoint requires the permission: `request_logs:read`.
    *
@@ -104,7 +120,8 @@ export interface Actor {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListRequestLog {
   /**
@@ -118,13 +135,22 @@ export interface ListRequestLog {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
  * A log of a single API request, capturing its route, outcome, latency, and actor.
+ *
+ * Logs are written after the response has been sent, so a new entry may take a
+ * moment to become readable.
  */
 export interface RequestLog {
   /**
@@ -133,7 +159,11 @@ export interface RequestLog {
   id: string;
 
   /**
-   * A customer account, including its branding and customer portal sub-resources.
+   * An organization on Augno, including its branding and customer portal
+   * sub-resources.
+   *
+   * Your own account and any customer or supplier account you trade with are both
+   * represented by this object.
    */
   account: APIKeysAPI.Account | null;
 
@@ -144,31 +174,38 @@ export interface RequestLog {
   actor: Actor | null;
 
   /**
-   * API version used.
+   * The API version the request was served with.
+   *
+   * Taken from the `Augno-Version` header the caller sent; requests rejected for
+   * omitting that header record no version.
    */
   api_version: string | null;
 
   /**
-   * Client IP address.
+   * Client IP address the request came from.
+   *
+   * Not recorded for requests an Augno agent made on your behalf, since those
+   * originate inside Augno's own network.
    */
   client_ip: string | null;
 
   /**
-   * When the log entry was created.
+   * When the log entry was written.
    */
   created_at: string;
 
   /**
    * Machine-readable API error code.
    *
-   * Populated only for failed requests.
+   * Matches the `code` of the error response the caller received. Populated only for
+   * failed requests.
    */
   error_code: string | null;
 
   /**
    * Human-readable error message.
    *
-   * Populated only for failed requests.
+   * The same message the caller received. Populated only for failed requests.
    */
   error_message: string | null;
 
@@ -186,6 +223,9 @@ export interface RequestLog {
 
   /**
    * Request latency in microseconds.
+   *
+   * Measured at the API edge, from the moment the request was received until the
+   * response was written, so it excludes network time between your client and Augno.
    */
   latency_us: number;
 
@@ -210,7 +250,10 @@ export interface RequestLog {
   object: 'request_log';
 
   /**
-   * When the request occurred.
+   * When the request was received.
+   *
+   * Request logs are ordered and date-filtered by this timestamp rather than by
+   * `created_at`.
    */
   occurred_at: string;
 
@@ -220,8 +263,9 @@ export interface RequestLog {
   path: string;
 
   /**
-   * Query parameters. Encoded as a JSON value (object, array, string, number,
-   * boolean, or null), not a JSON-encoded string.
+   * Query-string parameters the request was made with, as a JSON object. Encoded as
+   * a JSON value (object, array, string, number, boolean, or null), not a
+   * JSON-encoded string.
    */
   query_params: unknown | null;
 
@@ -231,14 +275,24 @@ export interface RequestLog {
   referrer: string | null;
 
   /**
-   * Request body. Encoded as a JSON value (object, array, string, number, boolean,
-   * or null), not a JSON-encoded string.
+   * The JSON body the request was sent with.
+   *
+   * Sensitive values such as passwords, tokens, and secrets are redacted before the
+   * body is stored. Bodies larger than 256 KB are not stored in full; a small marker
+   * object with `_truncated` set to `true` is stored in their place. Encoded as a
+   * JSON value (object, array, string, number, boolean, or null), not a JSON-encoded
+   * string.
    */
   request_body: unknown | null;
 
   /**
-   * Response body. Encoded as a JSON value (object, array, string, number, boolean,
-   * or null), not a JSON-encoded string.
+   * The JSON body Augno responded with.
+   *
+   * Sensitive values such as generated API key secrets are redacted before the body
+   * is stored. Bodies larger than 256 KB are not stored in full; a small marker
+   * object with `_truncated` set to `true` is stored in their place. Encoded as a
+   * JSON value (object, array, string, number, boolean, or null), not a JSON-encoded
+   * string.
    */
   response_body: unknown | null;
 
@@ -284,13 +338,16 @@ export interface RequestLogListParams {
   /**
    * Filter by the actor identifier.
    *
-   * Matches the log's `actor.id`: a user ID for `user` actors or an API key ID for
-   * `api_key` actors.
+   * Matches the log's `actor.id`: a user ID for `user` actors, an API key ID for
+   * `api_key` actors, or an agent ID for `agent` actors.
    */
   actor_ids?: Array<string>;
 
   /**
    * Filter by the actor type.
+   *
+   * Requests are recorded for actors of type `user`, `api_key`, and `agent` — the
+   * last covering calls an Augno agent made on your account's behalf.
    */
   actor_types?: Array<'user' | 'api_key' | 'agent' | 'group'>;
 
@@ -351,10 +408,10 @@ export interface RequestLogListParams {
    * Exclude request logs whose API error code is in this set.
    *
    * Applied as a negative filter after all other filters. Successful requests (which
-   * have no error code) are always kept. The dashboard uses this to hide routine
-   * `expired_token` 401s — the noise from short-lived access tokens expiring and
-   * clients silently refreshing — while still surfacing genuine auth failures like
-   * `invalid_credentials`.
+   * have no error code) are always kept. The Augno dashboard uses this to hide
+   * routine `expired_token` 401s — the noise from short-lived access tokens expiring
+   * and clients silently refreshing — while still surfacing genuine auth failures
+   * like `invalid_credentials`.
    */
   exclude_error_codes?: Array<
     | 'expired_token'

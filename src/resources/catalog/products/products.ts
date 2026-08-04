@@ -28,30 +28,34 @@ export class Products extends APIResource {
    * zero rates in the category's base unit unless `unit_price` or `unit_cost` is
    * provided.
    *
+   * Only products of type `sale` appear in the product list and export; products
+   * created with any other type are still usable on orders and invoices but must be
+   * retrieved by ID.
+   *
    * This endpoint requires the permission: `items:create`.
    *
    * @example
    * ```ts
    * const product = await client.catalog.products.create({
-   *   category_id: 'ic_01ae7bd7bfd21ca0ab81e1357e',
+   *   category_id: 'ic_d06g9c6yc9ck',
    *   sku: 'ALM-2024-1001',
    *   type: 'sale',
-   *   attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
+   *   attribute_ids: ['at_rf1w295jt5ia'],
    *   description:
    *     'Wireless barcode scanner with charging cradle',
    *   notes:
    *     'Ships with a 2-year warranty; register for extended coverage.',
    *   portal_visibility: 'visible',
-   *   product_line_id: 'pdln_01996357326a0d3f7b129542ea',
+   *   product_line_id: 'pdln_k9bnlgvxhxjh',
    *   unit_cost: {
    *     value: '112.00',
-   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     numerator_unit_id: 'un_82bd37dae5po',
+   *     denominator_unit_id: 'un_82bd37dae5po',
    *   },
    *   unit_price: {
    *     value: '199.00',
-   *     numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *     denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     numerator_unit_id: 'un_82bd37dae5po',
+   *     denominator_unit_id: 'un_82bd37dae5po',
    *   },
    * });
    * ```
@@ -70,7 +74,7 @@ export class Products extends APIResource {
    * @example
    * ```ts
    * const product = await client.catalog.products.retrieve(
-   *   'pd_013c29ab3f1518d0004094c316',
+   *   'pd_07oe0r7adh2w',
    * );
    * ```
    */
@@ -85,12 +89,17 @@ export class Products extends APIResource {
   /**
    * Partially updates a product.
    *
+   * `sku`, `description`, `notes`, and `unit_price` all live on the product's
+   * backing item and are written there, so the change is visible on the item as
+   * well. The product line is reassigned through its own endpoint, and the product
+   * type cannot be changed after creation.
+   *
    * This endpoint requires the permission: `items:update`.
    *
    * @example
    * ```ts
    * const product = await client.catalog.products.update(
-   *   'pd_013c29ab3f1518d0004094c316',
+   *   'pd_07oe0r7adh2w',
    *   {
    *     description:
    *       'Wireless barcode scanner with charging cradle (v2)',
@@ -100,8 +109,8 @@ export class Products extends APIResource {
    *     sku: 'SKU-002',
    *     unit_price: {
    *       value: '219.00',
-   *       numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
-   *       denominator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *       numerator_unit_id: 'un_82bd37dae5po',
+   *       denominator_unit_id: 'un_82bd37dae5po',
    *     },
    *   },
    * );
@@ -117,7 +126,17 @@ export class Products extends APIResource {
   }
 
   /**
-   * Returns a paginated list of products for the target account.
+   * Returns a paginated list of products for the target account, newest first.
+   *
+   * Only products of type `sale` are listed — service, shipping, credit, return, and
+   * tax products are excluded and must be retrieved by ID. A request made by a
+   * customer-portal buyer always returns portal-visible products only, and its
+   * `customer_ids` filter is replaced with the buyer's own account, so the results
+   * reflect what that account is entitled to buy.
+   *
+   * The `q` search term is matched against the SKU and description of each product's
+   * item; when it is supplied, products whose SKU matches are returned ahead of the
+   * rest.
    *
    * This endpoint requires the permissions: `items:read`, `customers:read`,
    * `suppliers:read`.
@@ -132,14 +151,18 @@ export class Products extends APIResource {
   }
 
   /**
-   * Soft-deletes a product and returns the deleted product.
+   * Soft-deletes a product and returns it as it stood at deletion.
+   *
+   * Deletion marks the product's backing item as deleted, so the item and its
+   * inventory drop out of catalog and inventory listings too. Deleting the same
+   * product again returns an error saying it has already been deleted.
    *
    * This endpoint requires the permission: `items:delete`.
    *
    * @example
    * ```ts
    * const product = await client.catalog.products.delete(
-   *   'pd_013c29ab3f1518d0004094c316',
+   *   'pd_07oe0r7adh2w',
    * );
    * ```
    */
@@ -153,7 +176,13 @@ export class Products extends APIResource {
   }
 
   /**
-   * Changes the product line assignment for a product.
+   * Moves a product to a different product line.
+   *
+   * The target product line must be one your account owns or a shared system line;
+   * anything else fails as not found. Because customer accounts are granted access
+   * to whole product lines, moving a product changes which buyers can see and order
+   * it in the customer portal, and which default commission and freight policies
+   * apply to it.
    *
    * This endpoint requires the permission: `items:update`.
    *
@@ -161,8 +190,8 @@ export class Products extends APIResource {
    * ```ts
    * const product =
    *   await client.catalog.products.changeProductLine(
-   *     'pdln_01996357326a0d3f7b129542ea',
-   *     { id: 'pd_013c29ab3f1518d0004094c316' },
+   *     'pdln_k9bnlgvxhxjh',
+   *     { id: 'pd_07oe0r7adh2w' },
    *   );
    * ```
    */
@@ -180,7 +209,7 @@ export class Products extends APIResource {
 }
 
 /**
- * CreateProductRequest is the request to create a product.
+ * Request to create a product.
  */
 export interface CreateProductRequest {
   /**
@@ -213,7 +242,10 @@ export interface CreateProductRequest {
   type: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
 
   /**
-   * Attribute IDs to connect to the product at creation time.
+   * Attribute IDs to link to the product's item at creation time.
+   *
+   * Every ID must already exist in your account; an unknown ID fails the whole
+   * request rather than being skipped.
    */
   attribute_ids?: Array<string>;
 
@@ -241,24 +273,36 @@ export interface CreateProductRequest {
 
   /**
    * ID of the product line to assign the product to.
+   *
+   * The product line must be one your account owns or a shared system line; anything
+   * else fails as not found. Buyers are granted access to whole product lines, so a
+   * product created without one never appears in the customer portal, whatever its
+   * `portal_visibility`.
    */
   product_line_id?: string;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_cost?: SalesOrdersAPI.RateInput;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price?: SalesOrdersAPI.RateInput;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProduct {
   /**
@@ -272,13 +316,19 @@ export interface ListProduct {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * UpdateProductRequest is the request to partially update a product.
+ * Request to partially update a product.
  */
 export interface UpdateProductRequest {
   /**
@@ -313,8 +363,11 @@ export interface UpdateProductRequest {
   sku?: string;
 
   /**
-   * A rate value with its numerator and denominator units, used in create and update
+   * A value expressed as a ratio of two units, supplied on create and update
    * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price?: SalesOrdersAPI.RateInput;
 }
@@ -373,7 +426,10 @@ export interface ProductCreateParams {
   >;
 
   /**
-   * Body param: Attribute IDs to connect to the product at creation time.
+   * Body param: Attribute IDs to link to the product's item at creation time.
+   *
+   * Every ID must already exist in your account; an unknown ID fails the whole
+   * request rather than being skipped.
    */
   attribute_ids?: Array<string>;
 
@@ -401,18 +457,29 @@ export interface ProductCreateParams {
 
   /**
    * Body param: ID of the product line to assign the product to.
+   *
+   * The product line must be one your account owns or a shared system line; anything
+   * else fails as not found. Buyers are granted access to whole product lines, so a
+   * product created without one never appears in the customer portal, whatever its
+   * `portal_visibility`.
    */
   product_line_id?: string;
 
   /**
-   * Body param: A rate value with its numerator and denominator units, used in
-   * create and update requests.
+   * Body param: A value expressed as a ratio of two units, supplied on create and
+   * update requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_cost?: SalesOrdersAPI.RateInput;
 
   /**
-   * Body param: A rate value with its numerator and denominator units, used in
-   * create and update requests.
+   * Body param: A value expressed as a ratio of two units, supplied on create and
+   * update requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price?: SalesOrdersAPI.RateInput;
 }
@@ -498,20 +565,23 @@ export interface ProductUpdateParams {
   sku?: string;
 
   /**
-   * Body param: A rate value with its numerator and denominator units, used in
-   * create and update requests.
+   * Body param: A value expressed as a ratio of two units, supplied on create and
+   * update requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
   unit_price?: SalesOrdersAPI.RateInput;
 }
 
 export interface ProductListParams {
   /**
-   * Filter by attribute IDs.
+   * Filter to products whose item carries at least one of these attributes.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Filter by category IDs.
+   * Filter by the item category the product's item belongs to.
    */
   category_ids?: Array<string>;
 
@@ -525,7 +595,13 @@ export interface ProductListParams {
   cursor?: string;
 
   /**
-   * Filter by customer IDs.
+   * Restrict results to products these customer accounts are entitled to buy.
+   *
+   * A product matches when its product line has been granted to the customer
+   * directly, through the customer's account group, or through the account group
+   * used for the customer's pricing. Combined with `product_line_ids` this widens
+   * the results rather than narrowing them: products matching either filter are
+   * returned.
    */
   customer_ids?: Array<string>;
 
@@ -569,6 +645,8 @@ export interface ProductListParams {
 
   /**
    * Filter by product line IDs.
+   *
+   * Combined with `customer_ids`, products matching either filter are returned.
    */
   product_line_ids?: Array<string>;
 

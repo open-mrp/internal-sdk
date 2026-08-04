@@ -24,9 +24,7 @@ describe('resource portalRegistrationSessions', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.portalRegistrationSessions.retrieve(
-      'porgse_017513382536fd23a343e958ef',
-    );
+    const responsePromise = client.sales.portalRegistrationSessions.retrieve('porgse_q1hs0mapqh6x');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -37,10 +35,9 @@ describe('resource portalRegistrationSessions', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.sales.portalRegistrationSessions.update(
-      'porgse_017513382536fd23a343e958ef',
-      { step: 'customer_details' },
-    );
+    const responsePromise = client.sales.portalRegistrationSessions.update('porgse_q1hs0mapqh6x', {
+      step: 'customer_details',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -51,28 +48,25 @@ describe('resource portalRegistrationSessions', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.sales.portalRegistrationSessions.update(
-      'porgse_017513382536fd23a343e958ef',
-      {
-        step: 'customer_details',
-        is_existing_customer: false,
-        session_data: {
-          address_country: 'address_country',
-          address_locality: 'address_locality',
-          address_name: 'address_name',
-          address_postal_code: 'address_postal_code',
-          address_state: 'address_state',
-          address_street_1: 'address_street_1',
-          address_street_2: 'address_street_2',
-          customer_group_id: 'customer_group_id',
-          customer_name: 'customer_name',
-          customer_number: 'customer_number',
-          payment_term_id: 'payment_term_id',
-          phone: 'phone',
-          shipping_term_id: 'shipping_term_id',
-        },
+    const response = await client.sales.portalRegistrationSessions.update('porgse_q1hs0mapqh6x', {
+      step: 'customer_details',
+      is_existing_customer: false,
+      session_data: {
+        address_country: 'address_country',
+        address_locality: 'address_locality',
+        address_name: 'address_name',
+        address_postal_code: 'address_postal_code',
+        address_state: 'address_state',
+        address_street_1: 'address_street_1',
+        address_street_2: 'address_street_2',
+        customer_group_id: 'customer_group_id',
+        customer_name: 'customer_name',
+        customer_number: 'customer_number',
+        payment_term_id: 'payment_term_id',
+        phone: 'phone',
+        shipping_term_id: 'shipping_term_id',
       },
-    );
+    });
   });
 
   test('list', async () => {

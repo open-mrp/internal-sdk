@@ -13,11 +13,11 @@ describe('resource settlements', () => {
       allocations: [
         {
           amount: '150.00',
-          invoice_id: 'iv_018b5949ada8abca36358bbea9',
-          transaction_id: 'tx_01fc4d4f2b2ee1fa6b6d87257a',
+          invoice_id: 'iv_m982ezb0fgp7',
+          transaction_id: 'tx_hvh9thtzaezn',
         },
       ],
-      responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+      responsible_user_id: 'us_43irtlt2ajz6',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -33,17 +33,17 @@ describe('resource settlements', () => {
       allocations: [
         {
           amount: '150.00',
-          invoice_id: 'iv_018b5949ada8abca36358bbea9',
-          transaction_id: 'tx_01fc4d4f2b2ee1fa6b6d87257a',
+          invoice_id: 'iv_m982ezb0fgp7',
+          transaction_id: 'tx_hvh9thtzaezn',
           note: 'note',
         },
       ],
-      responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+      responsible_user_id: 'us_43irtlt2ajz6',
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.finance.settlements.retrieve('sl_014f3f9af18ff1c8ded3205149');
+    const responsePromise = client.finance.settlements.retrieve('sl_2k5juz0yf5a7');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -57,7 +57,7 @@ describe('resource settlements', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.settlements.retrieve(
-        'sl_014f3f9af18ff1c8ded3205149',
+        'sl_2k5juz0yf5a7',
         { include: ['responsible_user'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -65,7 +65,7 @@ describe('resource settlements', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.finance.settlements.update('sl_014f3f9af18ff1c8ded3205149');
+    const responsePromise = client.finance.settlements.update('sl_2k5juz0yf5a7');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -79,11 +79,11 @@ describe('resource settlements', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.finance.settlements.update(
-        'sl_014f3f9af18ff1c8ded3205149',
+        'sl_2k5juz0yf5a7',
         {
           note: 'Partial payment applied',
           number: 'number',
-          responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+          responsible_user_id: 'us_43irtlt2ajz6',
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -120,7 +120,7 @@ describe('resource settlements', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.finance.settlements.delete('sl_014f3f9af18ff1c8ded3205149');
+    const responsePromise = client.finance.settlements.delete('sl_2k5juz0yf5a7');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

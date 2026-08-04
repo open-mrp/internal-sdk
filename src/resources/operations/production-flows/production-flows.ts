@@ -48,7 +48,8 @@ export class ProductionFlows extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductionFlowConsumption {
   /**
@@ -62,13 +63,20 @@ export interface ListProductionFlowConsumption {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListProductionFlowStep {
   /**
@@ -82,13 +90,19 @@ export interface ListProductionFlowStep {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * ProductionFlow is the production flow graph for an item.
+ * The production flow graph for an item.
  *
  * Contains the step(s) that produce the item, every upstream step that feeds them,
  * and any connected downstream steps.
@@ -100,13 +114,15 @@ export interface ProductionFlow {
   object: 'production_flow';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   steps: ListProductionFlowStep | null;
 }
 
 /**
- * ProductionFlowConsumption is a consumption input of a flow step.
+ * A material consumed by a step in the production flow, with its quantity and
+ * expected waste.
  */
 export interface ProductionFlowConsumption {
   /**
@@ -115,7 +131,7 @@ export interface ProductionFlowConsumption {
   id: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   consumed_item: AccountUsersAPI.Item | null;
 
@@ -135,7 +151,11 @@ export interface ProductionFlowConsumption {
   object: 'consumption';
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: AccountUsersAPI.Quantity | null;
 
@@ -145,13 +165,17 @@ export interface ProductionFlowConsumption {
   updated_at: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   waste_quantity: AccountUsersAPI.Quantity | null;
 }
 
 /**
- * ProductionFlowProduction is the production output of a flow step.
+ * The item and quantity produced by a step in the production flow.
  */
 export interface ProductionFlowProduction {
   /**
@@ -170,12 +194,16 @@ export interface ProductionFlowProduction {
   object: 'production';
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   produced_item: AccountUsersAPI.Item | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   quantity: AccountUsersAPI.Quantity | null;
 
@@ -186,7 +214,8 @@ export interface ProductionFlowProduction {
 }
 
 /**
- * ProductionFlowStep is a step in the production flow.
+ * A stage of work within an item's production flow, with its output, material
+ * inputs, cost rates, and links to the steps around it.
  */
 export interface ProductionFlowStep {
   /**
@@ -204,7 +233,8 @@ export interface ProductionFlowStep {
   allowances: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   consumptions: ListProductionFlowConsumption | null;
 
@@ -220,7 +250,8 @@ export interface ProductionFlowStep {
   department: AccountUsersAPI.Department | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   in_steps: AccountUsersAPI.ListProductionStep | null;
 
@@ -246,12 +277,13 @@ export interface ProductionFlowStep {
   leveling_factor: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   machines: AccountUsersAPI.ListMachine | null;
 
   /**
-   * Production step name.
+   * Display name of the step.
    */
   name: string;
 
@@ -266,7 +298,8 @@ export interface ProductionFlowStep {
   object: 'production_step';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   out_steps: AccountUsersAPI.ListProductionStep | null;
 
@@ -277,7 +310,7 @@ export interface ProductionFlowStep {
   overhead_rate: AccountUsersAPI.Rate | null;
 
   /**
-   * ProductionFlowProduction is the production output of a flow step.
+   * The item and quantity produced by a step in the production flow.
    */
   production: ProductionFlowProduction | null;
 

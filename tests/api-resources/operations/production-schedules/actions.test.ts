@@ -9,9 +9,7 @@ const client = new Augno({
 
 describe('resource actions', () => {
   test('archive', async () => {
-    const responsePromise = client.operations.productionSchedules.actions.archive(
-      'pnsc_0192a4c17b3e4f8a91c2d0',
-    );
+    const responsePromise = client.operations.productionSchedules.actions.archive('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -47,9 +45,8 @@ describe('resource actions', () => {
   });
 
   test('previewRegenerate', async () => {
-    const responsePromise = client.operations.productionSchedules.actions.previewRegenerate(
-      'pnsc_0192a4c17b3e4f8a91c2d0',
-    );
+    const responsePromise =
+      client.operations.productionSchedules.actions.previewRegenerate('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -63,7 +60,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionSchedules.actions.previewRegenerate(
-        'pnsc_0192a4c17b3e4f8a91c2d0',
+        'pnsc_m4zt3z8g8src',
         {
           demand_basis: 'trailing_12',
           horizon_weeks: 13,
@@ -75,9 +72,7 @@ describe('resource actions', () => {
   });
 
   test('publish', async () => {
-    const responsePromise = client.operations.productionSchedules.actions.publish(
-      'pnsc_0192a4c17b3e4f8a91c2d0',
-    );
+    const responsePromise = client.operations.productionSchedules.actions.publish('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -88,9 +83,7 @@ describe('resource actions', () => {
   });
 
   test('regenerate', async () => {
-    const responsePromise = client.operations.productionSchedules.actions.regenerate(
-      'pnsc_0192a4c17b3e4f8a91c2d0',
-    );
+    const responsePromise = client.operations.productionSchedules.actions.regenerate('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -104,7 +97,7 @@ describe('resource actions', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.productionSchedules.actions.regenerate(
-        'pnsc_0192a4c17b3e4f8a91c2d0',
+        'pnsc_m4zt3z8g8src',
         {
           demand_basis: 'trailing_12',
           horizon_weeks: 0,
@@ -117,10 +110,10 @@ describe('resource actions', () => {
   });
 
   test('releaseWeek: only required params', async () => {
-    const responsePromise = client.operations.productionSchedules.actions.releaseWeek(
-      'pnsc_0192a4c17b3e4f8a91c2d0',
-      { responsible_user_id: 'us_0151164dcaea4cbded27b50aae', week_index: 0 },
-    );
+    const responsePromise = client.operations.productionSchedules.actions.releaseWeek('pnsc_m4zt3z8g8src', {
+      responsible_user_id: 'us_43irtlt2ajz6',
+      week_index: 0,
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -131,13 +124,10 @@ describe('resource actions', () => {
   });
 
   test('releaseWeek: required and optional params', async () => {
-    const response = await client.operations.productionSchedules.actions.releaseWeek(
-      'pnsc_0192a4c17b3e4f8a91c2d0',
-      {
-        responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
-        week_index: 0,
-        scanning_station_id: 'scanning_station_id',
-      },
-    );
+    const response = await client.operations.productionSchedules.actions.releaseWeek('pnsc_m4zt3z8g8src', {
+      responsible_user_id: 'us_43irtlt2ajz6',
+      week_index: 0,
+      scanning_station_id: 'scanning_station_id',
+    });
   });
 });

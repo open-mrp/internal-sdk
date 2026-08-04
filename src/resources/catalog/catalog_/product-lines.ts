@@ -12,9 +12,14 @@ import { path } from '../../../internal/utils/path';
  */
 export class ProductLines extends APIResource {
   /**
-   * Returns a paginated list of product lines available in the catalog.
+   * Returns the product lines available in the catalog, ordered by name.
    *
-   * Customers only see product lines they have access to.
+   * A product line only appears once it holds at least one product whose
+   * `portal_visibility` is `visible`. When the caller is a customer user, the list
+   * is narrowed further to the product lines that customer has been granted access
+   * to, either directly, through an account group, or through the account group used
+   * as their price group. The `q` search term is matched against the product line
+   * name.
    *
    * This endpoint requires the permissions: `products:read`, `customers:read`,
    * `suppliers:read`.
@@ -36,8 +41,13 @@ export class ProductLines extends APIResource {
    * Returns the products in a product line, grouped by item category.
    *
    * Each category lists the properties its products vary along and the products
-   * themselves. Customers only see products they have access to. Pagination applies
-   * to categories, not to the products within them.
+   * themselves, with categories ordered by name and products ordered by SKU. Only
+   * products whose `portal_visibility` is `visible` are included, and a customer
+   * user additionally only sees product lines they have been granted access to.
+   *
+   * Pagination and the `q` search term apply to the categories — `q` is matched
+   * against the category name, and a page returns whole categories with all of their
+   * products.
    *
    * This endpoint requires the permissions: `products:read`, `customers:read`,
    * `suppliers:read`.
@@ -46,7 +56,7 @@ export class ProductLines extends APIResource {
    * ```ts
    * const listCatalogCategory =
    *   await client.catalog.catalog.productLines.retrieveProducts(
-   *     'pdln_01996357326a0d3f7b129542ea',
+   *     'pdln_k9bnlgvxhxjh',
    *   );
    * ```
    */
@@ -110,12 +120,14 @@ export interface CatalogCategory {
   object: 'catalog_category';
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   products: ListCatalogProduct | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   properties: ListCatalogProperty | null;
 }
@@ -128,7 +140,8 @@ export interface CatalogCategory {
  */
 export interface CatalogProduct {
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   attributes: ListCatalogAttribute | null;
 
@@ -138,7 +151,7 @@ export interface CatalogProduct {
   description: string;
 
   /**
-   * Item is an inventory item (product, material, or part).
+   * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;
 
@@ -195,7 +208,8 @@ export interface CatalogProperty {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListCatalogAttribute {
   /**
@@ -209,13 +223,20 @@ export interface ListCatalogAttribute {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListCatalogCategory {
   /**
@@ -229,13 +250,20 @@ export interface ListCatalogCategory {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListCatalogProduct {
   /**
@@ -249,13 +277,20 @@ export interface ListCatalogProduct {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListCatalogProductLine {
   /**
@@ -269,13 +304,20 @@ export interface ListCatalogProductLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListCatalogProperty {
   /**
@@ -289,7 +331,13 @@ export interface ListCatalogProperty {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }

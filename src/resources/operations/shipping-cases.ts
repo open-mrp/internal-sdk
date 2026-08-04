@@ -21,7 +21,7 @@ export class ShippingCases extends APIResource {
    * ```ts
    * const shippingCase =
    *   await client.operations.shippingCases.retrieve(
-   *     'shcs_01207a101ea1475c687a39cf76',
+   *     'shcs_fgqy1eu256af',
    *   );
    * ```
    */
@@ -36,13 +36,17 @@ export class ShippingCases extends APIResource {
   /**
    * Partially updates a shipping case's tracking number and freight quantities.
    *
+   * Fields left out of the request keep their current values. The freight cost and
+   * weight recorded here are the case's own actual charge and weight; they do not
+   * change the freight billed on the sales order.
+   *
    * This endpoint requires the permission: `shipments:update`.
    *
    * @example
    * ```ts
    * const shippingCase =
    *   await client.operations.shippingCases.update(
-   *     'shcs_01207a101ea1475c687a39cf76',
+   *     'shcs_fgqy1eu256af',
    *     { tracking_number: '1Z999AA10123456784' },
    *   );
    * ```
@@ -63,13 +67,17 @@ export class ShippingCases extends APIResource {
   /**
    * Permanently deletes a shipping case.
    *
+   * Only the case is removed; its shipment, the shipment's lines, and the shipment's
+   * other cases are left untouched. Deleting a case that has already been deleted
+   * returns an error rather than succeeding again.
+   *
    * This endpoint requires the permission: `shipments:delete`.
    *
    * @example
    * ```ts
    * const shippingCase =
    *   await client.operations.shippingCases.delete(
-   *     'shcs_01207a101ea1475c687a39cf76',
+   *     'shcs_fgqy1eu256af',
    *   );
    * ```
    */
@@ -78,9 +86,10 @@ export class ShippingCases extends APIResource {
   }
 
   /**
-   * Returns a presigned URL for the shipping case's label image.
+   * Returns a temporary download link for the shipping case's label image.
    *
-   * The returned URL expires one hour after it is issued, and is null when no label
+   * The link expires one hour after it is issued, so fetch it when the label is
+   * about to be printed rather than storing it. No link is returned until a label
    * has been generated for the case.
    *
    * This endpoint requires the permission: `shipments:read`.
@@ -89,7 +98,7 @@ export class ShippingCases extends APIResource {
    * ```ts
    * const shippingCaseLabelURL =
    *   await client.operations.shippingCases.retrieveLabel(
-   *     'shcs_01207a101ea1475c687a39cf76',
+   *     'shcs_fgqy1eu256af',
    *   );
    * ```
    */
@@ -101,8 +110,9 @@ export class ShippingCases extends APIResource {
 /**
  * A physical case packed within a shipment.
  *
- * Each case carries its own SSCC, carrier tracking number, shipping label, and
- * freight cost and weight.
+ * Cases are created when a pick is packed, one for each case counted on the pack,
+ * and each carries its own SSCC, carrier tracking number, shipping label, freight
+ * cost and shipping weight.
  */
 export interface ShippingCase {
   /**
@@ -125,17 +135,28 @@ export interface ShippingCase {
   created_at: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   freight_amount: AccountUsersAPI.Quantity | null;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   freight_weight: AccountUsersAPI.Quantity | null;
 
   /**
    * Human-readable case number.
+   *
+   * Built from the shipment's number and the case's position within that shipment
+   * when the case is created.
    */
   number: string;
 
@@ -152,18 +173,26 @@ export interface ShippingCase {
 
   /**
    * When the case shipped.
+   *
+   * Stamped on every case in the shipment when the shipment ships, and cleared if
+   * the shipment is voided.
    */
   shipped_at: string | null;
 
   /**
-   * Serial Shipping Container Code.
+   * Serial Shipping Container Code (SSCC) identifying this case.
    *
-   * A GS1 SSCC-18 identifier assigned automatically when the shipment ships.
+   * An 18-digit code assigned automatically when the shipment ships, if the case
+   * does not already have one. It is kept when the shipment is voided, so a case
+   * that ships again keeps the same code.
    */
   sscc: string | null;
 
   /**
    * Carrier tracking number.
+   *
+   * Recorded when a label is purchased for the case, can be overwritten manually,
+   * and is cleared if the shipment is voided.
    */
   tracking_number: string | null;
 
@@ -174,7 +203,7 @@ export interface ShippingCase {
 }
 
 /**
- * Presigned link to a shipping case's label image.
+ * A temporary download link for a shipping case's label image.
  */
 export interface ShippingCaseLabelURL {
   /**
@@ -185,7 +214,8 @@ export interface ShippingCaseLabelURL {
   /**
    * Presigned link to the shipping case's label image.
    *
-   * The URL expires one hour after it is issued.
+   * The link expires one hour after it is issued, and is absent until a label has
+   * been generated for the case.
    */
   url: string | null;
 }
@@ -195,7 +225,11 @@ export interface ShippingCaseLabelURL {
  */
 export interface UpdateShippingCaseRequest {
   /**
-   * ID of the unit for the case's freight cost.
+   * ID of the currency unit the case's freight cost is expressed in.
+   *
+   * Changing the unit relabels the stored freight cost; the number itself is never
+   * converted, so send `freight_amount_value` alongside it when the amount should
+   * change too.
    */
   freight_amount_unit_id?: string;
 
@@ -205,7 +239,11 @@ export interface UpdateShippingCaseRequest {
   freight_amount_value?: string;
 
   /**
-   * ID of the unit for the case's freight weight.
+   * ID of the unit the case's freight weight is expressed in.
+   *
+   * Changing the unit relabels the stored weight; the number itself is never
+   * converted, so send `freight_weight_value` alongside it when the weight should
+   * change too.
    */
   freight_weight_unit_id?: string;
 
@@ -215,7 +253,8 @@ export interface UpdateShippingCaseRequest {
   freight_weight_value?: string;
 
   /**
-   * Carrier tracking number to set on the case.
+   * Carrier tracking number to set on the case, replacing any number already
+   * recorded.
    */
   tracking_number?: string;
 }
@@ -238,7 +277,11 @@ export interface ShippingCaseUpdateParams {
   include?: Array<'carrier' | 'shipment' | 'freight_amount.unit' | 'freight_weight.unit'>;
 
   /**
-   * Body param: ID of the unit for the case's freight cost.
+   * Body param: ID of the currency unit the case's freight cost is expressed in.
+   *
+   * Changing the unit relabels the stored freight cost; the number itself is never
+   * converted, so send `freight_amount_value` alongside it when the amount should
+   * change too.
    */
   freight_amount_unit_id?: string;
 
@@ -248,7 +291,11 @@ export interface ShippingCaseUpdateParams {
   freight_amount_value?: string;
 
   /**
-   * Body param: ID of the unit for the case's freight weight.
+   * Body param: ID of the unit the case's freight weight is expressed in.
+   *
+   * Changing the unit relabels the stored weight; the number itself is never
+   * converted, so send `freight_weight_value` alongside it when the weight should
+   * change too.
    */
   freight_weight_unit_id?: string;
 
@@ -258,7 +305,8 @@ export interface ShippingCaseUpdateParams {
   freight_weight_value?: string;
 
   /**
-   * Body param: Carrier tracking number to set on the case.
+   * Body param: Carrier tracking number to set on the case, replacing any number
+   * already recorded.
    */
   tracking_number?: string;
 }

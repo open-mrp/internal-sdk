@@ -16,8 +16,14 @@ export class Actions extends APIResource {
   /**
    * Archives a schedule version, retiring it without discarding its history.
    *
-   * This is how a published version is taken out of use: it stays readable and still
-   * backs any attainment already measured against it.
+   * Any version that is not already archived can be archived, including a draft that
+   * was never published. The version stays readable — its campaigns, policy snapshot
+   * and deviation log are kept — and it still backs any attainment already measured
+   * against it.
+   *
+   * Archiving does not supersede anything or promote another version in its place.
+   * To take a published version out of use by replacing it, generate and publish a
+   * newer one instead.
    *
    * This endpoint requires the permission: `production_schedules:update`.
    *
@@ -25,7 +31,7 @@ export class Actions extends APIResource {
    * ```ts
    * const productionSchedule =
    *   await client.operations.productionSchedules.actions.archive(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *   );
    * ```
    */
@@ -38,9 +44,13 @@ export class Actions extends APIResource {
    *
    * This is the inspection surface for the scheduler: it takes the same path a
    * generated schedule will take, minus the write, so a plan can be reviewed and
-   * compared before anything depends on it. Machines must be marked as the planning
-   * constraint in production schedule settings, otherwise there is nothing to
-   * schedule.
+   * compared before anything depends on it. No version is created and nothing is
+   * numbered, so this can be called as often as needed.
+   *
+   * The solver plans the constraint department — the room that sets the pace of the
+   * factory — so production schedule settings must name one and it must have
+   * machines that are included in planning. Without that there is nothing to
+   * schedule and the request is rejected rather than returning an empty plan.
    *
    * This endpoint requires the permission: `production_schedules:read`.
    *
@@ -63,14 +73,18 @@ export class Actions extends APIResource {
    * Returns what regenerating this draft would change, without changing it.
    *
    * Every campaign either plan holds is listed, including the ones both agree on, so
-   * the caller can render a full side-by-side rather than a list of surprises.
-   * `discarded_manual_count` is what `replace_all` would destroy — a regenerate that
-   * silently eats hand-work is abandoned within two cycles, so the destructive mode
-   * has to be able to state its cost before it runs.
+   * the caller can render a full side-by-side rather than a list of surprises. Only
+   * a draft can be previewed, for the same reason only a draft can be regenerated.
    *
-   * Planning inputs default to the ones the version was generated with, so a plain
-   * preview answers "what would the solver say now" rather than answering a
-   * different question with a different horizon.
+   * The comparison is run the way a regenerate runs by default — hand-edited
+   * campaigns are kept, and the fresh solve plans around them — so they read as
+   * unchanged rather than as work the solver wants to take away. `manual_line_count`
+   * is how many campaigns on the draft were placed or edited by hand, which is the
+   * work a `replace_all` regenerate is putting at risk.
+   *
+   * The horizon and demand basis default to the ones this version already has, so a
+   * plain call changes only how current the plan is, not what question is being
+   * asked.
    *
    * This endpoint requires the permission: `production_schedules:read`.
    *
@@ -78,7 +92,7 @@ export class Actions extends APIResource {
    * ```ts
    * const productionScheduleRegeneratePreview =
    *   await client.operations.productionSchedules.actions.previewRegenerate(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *     { horizon_weeks: 13 },
    *   );
    * ```
@@ -99,9 +113,13 @@ export class Actions extends APIResource {
    *
    * Publishing is what makes a plan a commitment: the frozen weeks' lines are marked
    * frozen, the frozen line count and quantity are captured onto the version, and
-   * any published version covering the same horizon is superseded rather than
-   * rewritten. After this, changes inside the frozen window require a reason and are
-   * recorded as deviations.
+   * any published version whose horizon overlaps this one's is superseded rather
+   * than rewritten. After this, a change inside the frozen window has to state a
+   * reason.
+   *
+   * Only a draft can be published. How many weeks freeze comes from the account's
+   * frozen-weeks setting as it stood when the version was generated, and a version
+   * generated with zero frozen weeks publishes without committing to anything.
    *
    * The frozen counts are snapshotted here and never recomputed, so adherence keeps
    * the denominator it was committed to.
@@ -112,7 +130,7 @@ export class Actions extends APIResource {
    * ```ts
    * const productionSchedule =
    *   await client.operations.productionSchedules.actions.publish(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *   );
    * ```
    */
@@ -133,10 +151,14 @@ export class Actions extends APIResource {
    * re-solve would fill the list with drafts nobody asked for and make the version
    * number meaningless as a count of the plans actually considered.
    *
-   * `preserve_manual` keeps every hand-edited campaign and replaces the rest.
-   * `replace_all` takes the fresh solve whole, and each hand edit it destroys is
-   * written to the deviation log first — "where did my change go" has to stay
-   * answerable. Call `preview-regenerate` first to see the cost as a number.
+   * Every hand edit a `replace_all` destroys is written to the deviation log before
+   * it goes, so "where did my change go" stays answerable. Call `preview-regenerate`
+   * first to see what a re-solve would change.
+   *
+   * Aside from the hand edits a `preserve_manual` run keeps, the version's
+   * campaigns, policy snapshot, derived department work, solver diagnostics and
+   * settings snapshot are all replaced with the fresh solve's, so the plan can still
+   * explain itself afterwards.
    *
    * This endpoint requires the permission: `production_schedules:update`.
    *
@@ -144,7 +166,7 @@ export class Actions extends APIResource {
    * ```ts
    * const productionSchedule =
    *   await client.operations.productionSchedules.actions.regenerate(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *     { merge_mode: 'preserve_manual' },
    *   );
    * ```
@@ -176,6 +198,11 @@ export class Actions extends APIResource {
    * released line records the run now carrying it, and a line that is already
    * released is never re-pointed.
    *
+   * Cancelled campaigns and campaigns planned at zero are left behind rather than
+   * released. A week that would produce an implausible number of batches is rejected
+   * outright, since that is far more likely to be a misconfigured lot size than a
+   * real week's work.
+   *
    * This endpoint requires the permissions: `production_schedules:update`,
    * `production_runs:create`.
    *
@@ -183,9 +210,9 @@ export class Actions extends APIResource {
    * ```ts
    * const releaseScheduleWeekResult =
    *   await client.operations.productionSchedules.actions.releaseWeek(
-   *     'pnsc_0192a4c17b3e4f8a91c2d0',
+   *     'pnsc_m4zt3z8g8src',
    *     {
-   *       responsible_user_id: 'us_0151164dcaea4cbded27b50aae',
+   *       responsible_user_id: 'us_43irtlt2ajz6',
    *       week_index: 0,
    *     },
    *   );
@@ -204,7 +231,8 @@ export class Actions extends APIResource {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListScheduleCampaign {
   /**
@@ -218,13 +246,20 @@ export interface ListScheduleCampaign {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListScheduleDiffLine {
   /**
@@ -238,13 +273,20 @@ export interface ListScheduleDiffLine {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListSchedulePolicy {
   /**
@@ -258,13 +300,20 @@ export interface ListSchedulePolicy {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListScheduleProjection {
   /**
@@ -278,7 +327,13 @@ export interface ListScheduleProjection {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -288,17 +343,28 @@ export interface ListScheduleProjection {
  */
 export interface PreviewProductionScheduleRequest {
   /**
-   * Overrides the configured demand basis for this preview only.
+   * How future demand is derived, overriding the account's configured basis for this
+   * preview only.
+   *
+   * - `trailing_12`: demand is the trailing twelve months of orders.
+   * - `seasonal_ema`: demand is a seasonal exponential moving average, which follows
+   *   a season arriving early or late rather than flattening it.
    */
   demand_basis?: 'trailing_12' | 'seasonal_ema';
 
   /**
-   * Overrides the configured horizon for this preview only.
+   * Number of weeks the plan should cover, overriding the account's configured
+   * horizon for this preview only.
    */
   horizon_weeks?: number;
 
   /**
-   * The instant to plan against. Defaults to now.
+   * The instant to plan against, which is what stock, demand history and active
+   * demand overrides are read as of.
+   *
+   * Left unset, the preview is solved against the moment the request arrives. The
+   * horizon starts on the account's configured week-start day on or before this
+   * instant, so backdating this shifts the whole week grid.
    */
   planning_as_of?: string;
 }
@@ -308,17 +374,29 @@ export interface PreviewProductionScheduleRequest {
  */
 export interface PreviewRegenerateProductionScheduleRequest {
   /**
-   * How demand is derived. Defaults to the version's own basis.
+   * How future demand is derived, defaulting to the basis this version was solved
+   * with.
+   *
+   * - `trailing_12`: demand is the trailing twelve months of orders.
+   * - `seasonal_ema`: demand is a seasonal exponential moving average, which follows
+   *   a season arriving early or late rather than flattening it.
    */
   demand_basis?: 'trailing_12' | 'seasonal_ema';
 
   /**
-   * Weeks the plan should cover. Defaults to the version's own horizon.
+   * Number of weeks the re-solve should cover, defaulting to the horizon this
+   * version already has.
    */
   horizon_weeks?: number;
 
   /**
-   * Date to plan from. Defaults to the date the version was generated for.
+   * The instant to plan against, which is what stock, demand history and active
+   * demand overrides are read as of.
+   *
+   * Defaults to now rather than to the instant the version was first generated, so a
+   * plain call answers "what would the solver say today". Because the horizon
+   * re-anchors to the week containing this instant, a campaign can appear under a
+   * different `week_index` than the one stored on the draft.
    */
   planning_as_of?: string;
 }
@@ -328,7 +406,8 @@ export interface PreviewRegenerateProductionScheduleRequest {
  */
 export interface ProductionSchedulePreview {
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   campaigns: ListScheduleCampaign | null;
 
@@ -348,12 +427,14 @@ export interface ProductionSchedulePreview {
   planning_as_of_at: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   policies: ListSchedulePolicy | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   projections: ListScheduleProjection | null;
 
@@ -388,7 +469,8 @@ export interface ProductionScheduleRegeneratePreview {
   discarded_manual_count: number;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lines: ListScheduleDiffLine | null;
 
@@ -404,6 +486,10 @@ export interface ProductionScheduleRegeneratePreview {
 
   /**
    * The instant the fresh solve planned from.
+   *
+   * Unless the caller names an instant, a regenerate plans from now rather than
+   * replaying the one the draft was first generated against, so demand overrides
+   * added since then are taken into account and the horizon re-anchors to today.
    */
   planning_as_of_at: string;
 
@@ -428,22 +514,41 @@ export interface ProductionScheduleRegeneratePreview {
  */
 export interface RegenerateProductionScheduleRequest {
   /**
-   * How demand is derived. Defaults to the version's own basis.
+   * How future demand is derived, defaulting to the basis this version was solved
+   * with.
+   *
+   * - `trailing_12`: demand is the trailing twelve months of orders.
+   * - `seasonal_ema`: demand is a seasonal exponential moving average, which follows
+   *   a season arriving early or late rather than flattening it.
    */
   demand_basis?: 'trailing_12' | 'seasonal_ema';
 
   /**
-   * Weeks the plan should cover. Defaults to the version's own horizon.
+   * Number of weeks the re-solve should cover, defaulting to the horizon this
+   * version already has.
    */
   horizon_weeks?: number;
 
   /**
-   * What happens to hand-edited campaigns. Defaults to keeping them.
+   * What happens to the campaigns someone placed or edited by hand.
+   *
+   * - `preserve_manual`: hand-edited campaigns are kept, and the fresh solve plans
+   *   around them — their stock and machine time are facts the rest of the plan
+   *   responds to.
+   * - `replace_all`: hand edits are discarded and the fresh solve is taken whole.
+   *
+   * Omitting this keeps hand edits, because the alternative destroys work silently.
    */
   merge_mode?: 'preserve_manual' | 'replace_all';
 
   /**
-   * Date to plan from. Defaults to the date the version was generated for.
+   * The instant to plan against, which is what stock, demand history and active
+   * demand overrides are read as of.
+   *
+   * Defaults to now rather than to the instant the version was first generated, so a
+   * plain call answers "what would the solver say today". Because the horizon
+   * re-anchors to the week containing this instant, a kept campaign keeps the
+   * calendar week it was planned in but can end up under a different `week_index`.
    */
   planning_as_of?: string;
 }
@@ -467,6 +572,8 @@ export interface ReleaseProductionScheduleWeekRequest {
 
   /**
    * ID of the scanning station the batches will be scanned at.
+   *
+   * Applied to every batch this release creates, across all machines in the week.
    */
   scanning_station_id?: string;
 }
@@ -484,7 +591,8 @@ export interface ReleaseScheduleWeekResult {
   batch_count: number;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   lines: ProductionSchedulesAPI.ListReleasedScheduleLine | null;
 
@@ -494,7 +602,8 @@ export interface ReleaseScheduleWeekResult {
   object: 'production_schedule_week_release';
 
   /**
-   * Production run resource.
+   * A production run: the group of shop-floor batches that are executed together,
+   * tracked from the first batch scan through to completion.
    */
   production_run: SalesOrdersActionsAPI.ProductionRun | null;
 
@@ -565,6 +674,11 @@ export interface ScheduleCampaign {
 export interface ScheduleDiffLine {
   /**
    * What the regenerate would do to this campaign.
+   *
+   * - `added`: the fresh solve wants a campaign the current plan does not have.
+   * - `removed`: the current plan holds a campaign the fresh solve does not want.
+   * - `changed`: both hold the campaign, in different quantities.
+   * - `unchanged`: both agree on it.
    */
   change: 'added' | 'removed' | 'changed' | 'unchanged';
 
@@ -574,7 +688,9 @@ export interface ScheduleDiffLine {
   current_is_manual: boolean;
 
   /**
-   * Units the current plan asks for. Zero when the campaign is being added.
+   * Units the current plan asks for.
+   *
+   * Zero when the campaign is being added.
    */
   current_quantity: number;
 
@@ -589,7 +705,9 @@ export interface ScheduleDiffLine {
   machine: CoreAPI.Entity | null;
 
   /**
-   * Units the fresh solve asks for. Zero when the campaign is being removed.
+   * Units the fresh solve asks for.
+   *
+   * Zero when the campaign is being removed.
    */
   proposed_quantity: number;
 
@@ -610,6 +728,10 @@ export interface ScheduleDiffLine {
 export interface SchedulePolicy {
   /**
    * ABC class by share of constraint run hours.
+   *
+   * - `a`: consumes the largest share of constraint capacity.
+   * - `b`: moderate constraint consumption.
+   * - `c`: consumes little constraint capacity.
    */
   abc_class: 'a' | 'b' | 'c' | null;
 
@@ -634,7 +756,8 @@ export interface SchedulePolicy {
   constraint_lead_time_weeks: number;
 
   /**
-   * Economic order quantity.
+   * Economic order quantity: the campaign size that balances the cost of a
+   * changeover against the cost of holding what it produces.
    */
   eoq_units: number;
 
@@ -736,56 +859,98 @@ export interface ScheduleProjection {
 
 export interface ActionPreviewParams {
   /**
-   * Overrides the configured demand basis for this preview only.
+   * How future demand is derived, overriding the account's configured basis for this
+   * preview only.
+   *
+   * - `trailing_12`: demand is the trailing twelve months of orders.
+   * - `seasonal_ema`: demand is a seasonal exponential moving average, which follows
+   *   a season arriving early or late rather than flattening it.
    */
   demand_basis?: 'trailing_12' | 'seasonal_ema';
 
   /**
-   * Overrides the configured horizon for this preview only.
+   * Number of weeks the plan should cover, overriding the account's configured
+   * horizon for this preview only.
    */
   horizon_weeks?: number;
 
   /**
-   * The instant to plan against. Defaults to now.
+   * The instant to plan against, which is what stock, demand history and active
+   * demand overrides are read as of.
+   *
+   * Left unset, the preview is solved against the moment the request arrives. The
+   * horizon starts on the account's configured week-start day on or before this
+   * instant, so backdating this shifts the whole week grid.
    */
   planning_as_of?: string;
 }
 
 export interface ActionPreviewRegenerateParams {
   /**
-   * How demand is derived. Defaults to the version's own basis.
+   * How future demand is derived, defaulting to the basis this version was solved
+   * with.
+   *
+   * - `trailing_12`: demand is the trailing twelve months of orders.
+   * - `seasonal_ema`: demand is a seasonal exponential moving average, which follows
+   *   a season arriving early or late rather than flattening it.
    */
   demand_basis?: 'trailing_12' | 'seasonal_ema';
 
   /**
-   * Weeks the plan should cover. Defaults to the version's own horizon.
+   * Number of weeks the re-solve should cover, defaulting to the horizon this
+   * version already has.
    */
   horizon_weeks?: number;
 
   /**
-   * Date to plan from. Defaults to the date the version was generated for.
+   * The instant to plan against, which is what stock, demand history and active
+   * demand overrides are read as of.
+   *
+   * Defaults to now rather than to the instant the version was first generated, so a
+   * plain call answers "what would the solver say today". Because the horizon
+   * re-anchors to the week containing this instant, a campaign can appear under a
+   * different `week_index` than the one stored on the draft.
    */
   planning_as_of?: string;
 }
 
 export interface ActionRegenerateParams {
   /**
-   * How demand is derived. Defaults to the version's own basis.
+   * How future demand is derived, defaulting to the basis this version was solved
+   * with.
+   *
+   * - `trailing_12`: demand is the trailing twelve months of orders.
+   * - `seasonal_ema`: demand is a seasonal exponential moving average, which follows
+   *   a season arriving early or late rather than flattening it.
    */
   demand_basis?: 'trailing_12' | 'seasonal_ema';
 
   /**
-   * Weeks the plan should cover. Defaults to the version's own horizon.
+   * Number of weeks the re-solve should cover, defaulting to the horizon this
+   * version already has.
    */
   horizon_weeks?: number;
 
   /**
-   * What happens to hand-edited campaigns. Defaults to keeping them.
+   * What happens to the campaigns someone placed or edited by hand.
+   *
+   * - `preserve_manual`: hand-edited campaigns are kept, and the fresh solve plans
+   *   around them — their stock and machine time are facts the rest of the plan
+   *   responds to.
+   * - `replace_all`: hand edits are discarded and the fresh solve is taken whole.
+   *
+   * Omitting this keeps hand edits, because the alternative destroys work silently.
    */
   merge_mode?: 'preserve_manual' | 'replace_all';
 
   /**
-   * Date to plan from. Defaults to the date the version was generated for.
+   * The instant to plan against, which is what stock, demand history and active
+   * demand overrides are read as of.
+   *
+   * Defaults to now rather than to the instant the version was first generated, so a
+   * plain call answers "what would the solver say today". Because the horizon
+   * re-anchors to the week containing this instant, a kept campaign keeps the
+   * calendar week it was planned in but can end up under a different `week_index`.
    */
   planning_as_of?: string;
 }
@@ -806,6 +971,8 @@ export interface ActionReleaseWeekParams {
 
   /**
    * ID of the scanning station the batches will be scanned at.
+   *
+   * Applied to every batch this release creates, across all machines in the week.
    */
   scanning_station_id?: string;
 }

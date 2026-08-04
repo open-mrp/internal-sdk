@@ -9,7 +9,7 @@ const client = new Augno({
 
 describe('resource inventory', () => {
   test('update', async () => {
-    const responsePromise = client.catalog.items.inventory.update('it_0131e386ac683e8c29a71f6f1f');
+    const responsePromise = client.catalog.items.inventory.update('it_pej07ckhvu62');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,14 +23,14 @@ describe('resource inventory', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.items.inventory.update(
-        'it_0131e386ac683e8c29a71f6f1f',
+        'it_pej07ckhvu62',
         {
-          customer_id: 'ac_0170df1ac58e4d24c66fc89f5f',
-          location_id: 'lc_014d187d99b31926f0c74af9d8',
+          customer_id: 'ac_opnlh43ymyee',
+          location_id: 'lc_yonnys0hx3ju',
           lot_number: 'lot_number',
           operation: 'adjust',
           quantity_change: 10.5,
-          unit_id: 'un_01966263f74a5a0cae356000a1',
+          unit_id: 'un_82bd37dae5po',
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -38,7 +38,7 @@ describe('resource inventory', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.catalog.items.inventory.list('it_0131e386ac683e8c29a71f6f1f');
+    const responsePromise = client.catalog.items.inventory.list('it_pej07ckhvu62');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -52,7 +52,7 @@ describe('resource inventory', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.catalog.items.inventory.list(
-        'it_0131e386ac683e8c29a71f6f1f',
+        'it_pej07ckhvu62',
         { include: ['on_hand'] },
         { path: '/_stainless_unknown_path' },
       ),

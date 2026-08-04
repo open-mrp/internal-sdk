@@ -55,7 +55,7 @@ describe('resource suppliers', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.operations.suppliers.retrieve('ac_0177902104bccac5fbb173cd96');
+    const responsePromise = client.operations.suppliers.retrieve('ac_gwy8tfbc074f');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,7 +69,7 @@ describe('resource suppliers', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.operations.suppliers.retrieve(
-        'ac_0177902104bccac5fbb173cd96',
+        'ac_gwy8tfbc074f',
         { include: ['bill_to_address'] },
         { path: '/_stainless_unknown_path' },
       ),
@@ -77,9 +77,7 @@ describe('resource suppliers', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.operations.suppliers.update('ac_0177902104bccac5fbb173cd96', {
-      update_note: true,
-    });
+    const responsePromise = client.operations.suppliers.update('ac_gwy8tfbc074f', { update_note: true });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -90,7 +88,7 @@ describe('resource suppliers', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.operations.suppliers.update('ac_0177902104bccac5fbb173cd96', {
+    const response = await client.operations.suppliers.update('ac_gwy8tfbc074f', {
       update_note: true,
       bill_to_address_id: 'bill_to_address_id',
       name: 'Acme Supplies LLC',
@@ -129,7 +127,7 @@ describe('resource suppliers', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.operations.suppliers.delete('ac_0177902104bccac5fbb173cd96');
+    const responsePromise = client.operations.suppliers.delete('ac_gwy8tfbc074f');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

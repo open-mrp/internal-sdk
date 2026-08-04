@@ -9,12 +9,15 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Connects two production steps in the production flow DAG.
+   * Connects two production steps so that work flows from the source step into the
+   * target step.
    *
-   * The source step becomes an upstream dependency of the target step; connecting an
-   * already-connected pair has no effect. Connections are also maintained
-   * automatically from item relationships, so manual connections may be rebuilt when
-   * a step's produced or consumed items change.
+   * The source step becomes an upstream dependency of the target step, and
+   * connecting a pair that is already connected has no effect.
+   *
+   * Connections are otherwise derived from item relationships: changing which items
+   * a step produces or consumes recomputes every connection on that step, which
+   * discards connections made here.
    *
    * This endpoint requires the permission: `production_steps:update`.
    *
@@ -23,10 +26,8 @@ export class Actions extends APIResource {
    * const response =
    *   await client.operations.productionFlows.actions.connectSteps(
    *     {
-   *       source_production_step_id:
-   *         'prst_0159474175bb59f4b1990404ee',
-   *       target_production_step_id:
-   *         'prst_0159474175bb59f4b1990404ee',
+   *       source_production_step_id: 'prst_0ht5mkqx5a6t',
+   *       target_production_step_id: 'prst_0ht5mkqx5a6t',
    *     },
    *   );
    * ```
@@ -40,8 +41,7 @@ export class Actions extends APIResource {
 }
 
 /**
- * ConnectStepsRequest is the request to connect two steps in the production flow
- * DAG.
+ * Request to connect two production steps.
  */
 export interface ConnectStepsRequest {
   /**

@@ -15,10 +15,15 @@ export class EmailDomains extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Registers a customer-owned domain with the email bridge and returns the DKIM
-   * records to publish.
+   * Registers a domain you own with the email bridge and returns the DKIM tokens to
+   * publish.
    *
-   * The domain starts in `pending` until verified.
+   * The domain starts in `pending`. Publish each returned token as a CNAME record in
+   * the domain's DNS, then call the verify action to move it to `verified`; only
+   * then can inboxes be created on it.
+   *
+   * A domain can only be registered once across the platform, so registering one
+   * that is already in use returns a conflict error.
    *
    * This endpoint requires the permission: `messaging:create`.
    *
@@ -43,7 +48,7 @@ export class EmailDomains extends APIResource {
    * ```ts
    * const emailDomain =
    *   await client.messaging.emailDomains.retrieve(
-   *     'emdom_018e88072d1320808dc9aaa01',
+   *     'emdom_2rk3omr8vshb',
    *   );
    * ```
    */
@@ -53,6 +58,8 @@ export class EmailDomains extends APIResource {
 
   /**
    * Returns the account's registered email domains.
+   *
+   * Every domain is returned in a single response; this list is not paginated.
    *
    * This endpoint requires the permission: `messaging:read`.
    *
@@ -67,10 +74,11 @@ export class EmailDomains extends APIResource {
   }
 
   /**
-   * Deregisters a customer-owned domain from the email bridge.
+   * Deregisters a domain from the email bridge and removes its sending identity from
+   * the mail provider.
    *
-   * The domain's SES identity is removed. The domain must have no inboxes bound to
-   * it.
+   * Delete the domain's inboxes first: while any inbox still exists on it, this
+   * returns a conflict error.
    *
    * This endpoint requires the permission: `messaging:delete`.
    *
@@ -78,7 +86,7 @@ export class EmailDomains extends APIResource {
    * ```ts
    * const emailDomain =
    *   await client.messaging.emailDomains.delete(
-   *     'emdom_018e88072d1320808dc9aaa01',
+   *     'emdom_2rk3omr8vshb',
    *   );
    * ```
    */
@@ -93,6 +101,9 @@ export class EmailDomains extends APIResource {
 export interface CreateEmailDomainRequest {
   /**
    * The fully-qualified domain name to register (e.g. `support.acme.com`).
+   *
+   * Supply a bare domain, not an email address; the value is lowercased before it is
+   * stored.
    */
   domain: string;
 }
@@ -115,7 +126,11 @@ export interface EmailDomain {
   created_at: string;
 
   /**
-   * The DKIM CNAME tokens the customer must publish in DNS to verify the domain.
+   * The DKIM tokens that must be published in your DNS before the domain can be
+   * verified.
+   *
+   * Publish each token as a CNAME record on the domain, then call the verify action
+   * to confirm them.
    */
   dkim_tokens: Array<string>;
 
@@ -133,8 +148,10 @@ export interface EmailDomain {
    * Verification status.
    *
    * - `pending`: registered and awaiting DKIM confirmation.
-   * - `verified`: DKIM confirmed; the domain can send and receive mail.
+   * - `verified`: DKIM confirmed; the domain can send mail.
    * - `failed`: verification could not be completed.
+   *
+   * Inboxes can only be created on a `verified` domain.
    */
   status: string;
 
@@ -150,7 +167,8 @@ export interface EmailDomain {
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListEmailDomain {
   /**
@@ -164,7 +182,13 @@ export interface ListEmailDomain {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
@@ -174,6 +198,9 @@ export interface EmailDomainDeleteResponse {}
 export interface EmailDomainCreateParams {
   /**
    * The fully-qualified domain name to register (e.g. `support.acme.com`).
+   *
+   * Supply a bare domain, not an email address; the value is lowercased before it is
+   * stored.
    */
   domain: string;
 }

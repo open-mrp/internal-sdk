@@ -15,8 +15,10 @@ export class AccountPrices extends APIResource {
   /**
    * Creates a customer-specific price for a product line.
    *
-   * When an order line matches the price's product line and constraints, the account
-   * price overrides standard pricing for the recipient customer.
+   * When a sales order line for the recipient matches the price's product line and
+   * attributes, this price replaces the unit price the line would otherwise be
+   * given, including the effect of any volume discount. If more than one account
+   * price matches a line, the most recently created one wins.
    *
    * This endpoint requires the permission: `discounts:create`.
    *
@@ -24,14 +26,13 @@ export class AccountPrices extends APIResource {
    * ```ts
    * const accountPrice =
    *   await client.sales.accountPrices.create({
-   *     product_line_id: 'pdln_01996357326a0d3f7b129542ea',
-   *     rate_denominator_unit_id:
-   *       'un_01966263f74a5a0cae356000a1',
-   *     rate_numerator_unit_id: 'un_01966263f74a5a0cae356000a1',
+   *     product_line_id: 'pdln_k9bnlgvxhxjh',
+   *     rate_denominator_unit_id: 'un_82bd37dae5po',
+   *     rate_numerator_unit_id: 'un_82bd37dae5po',
    *     rate_value: '25.50',
-   *     recipient_account_id: 'ac_01148680966698341a9c0976db',
-   *     attribute_ids: ['at_01c9493ec0c46bb0ed12708ae4'],
-   *     category_ids: ['ic_01ae7bd7bfd21ca0ab81e1357e'],
+   *     recipient_account_id: 'ac_ykxoradjoeb3',
+   *     attribute_ids: ['at_rf1w295jt5ia'],
+   *     category_ids: ['ic_d06g9c6yc9ck'],
    *   });
    * ```
    */
@@ -43,6 +44,9 @@ export class AccountPrices extends APIResource {
   /**
    * Returns an account price by ID.
    *
+   * A customer portal user can only retrieve a price where their own account is the
+   * recipient; any other price is reported as not found.
+   *
    * This endpoint requires the permissions: `discounts:read`, `customers:read`,
    * `suppliers:read`.
    *
@@ -50,7 +54,7 @@ export class AccountPrices extends APIResource {
    * ```ts
    * const accountPrice =
    *   await client.sales.accountPrices.retrieve(
-   *     'acpr_01dfc47cc46b1e0b66ca8eec0a',
+   *     'acpr_7l4j483kf32p',
    *   );
    * ```
    */
@@ -68,13 +72,16 @@ export class AccountPrices extends APIResource {
    * Only the provided fields are changed. If `category_ids` or `attribute_ids` are
    * provided, they replace the existing set entirely.
    *
+   * Order lines that have already been priced keep the unit price they were given;
+   * the new price applies to lines priced after the change.
+   *
    * This endpoint requires the permission: `discounts:update`.
    *
    * @example
    * ```ts
    * const accountPrice =
    *   await client.sales.accountPrices.update(
-   *     'acpr_01dfc47cc46b1e0b66ca8eec0a',
+   *     'acpr_7l4j483kf32p',
    *     { rate_value: '30.000000000000000000000000000000' },
    *   );
    * ```
@@ -89,7 +96,11 @@ export class AccountPrices extends APIResource {
   }
 
   /**
-   * Returns a paginated list of account prices for the current account.
+   * Returns a paginated list of account prices, newest first.
+   *
+   * The search term matches the recipient customer's name or their customer number.
+   * Customer portal users always see only the prices where their own account is the
+   * recipient, whatever `recipient_account_id` is set to.
    *
    * This endpoint requires the permissions: `discounts:read`, `customers:read`,
    * `suppliers:read`.
@@ -110,9 +121,12 @@ export class AccountPrices extends APIResource {
   /**
    * Deletes an account price.
    *
-   * Associated category constraints, attribute constraints, and the rate record are
-   * also removed. Deletion is permanent; further requests against the deleted ID
-   * return an error.
+   * The price's category and attribute associations and its rate record are removed
+   * with it. Deletion is permanent; further requests against the deleted ID return
+   * an error.
+   *
+   * Order lines that have already been priced keep the unit price they were given;
+   * only lines priced after the deletion revert to standard pricing.
    *
    * This endpoint requires the permission: `discounts:delete`.
    *
@@ -120,7 +134,7 @@ export class AccountPrices extends APIResource {
    * ```ts
    * const accountPrice =
    *   await client.sales.accountPrices.delete(
-   *     'acpr_01dfc47cc46b1e0b66ca8eec0a',
+   *     'acpr_7l4j483kf32p',
    *   );
    * ```
    */
@@ -132,9 +146,10 @@ export class AccountPrices extends APIResource {
 /**
  * A customer-specific price for a product line.
  *
- * When an order line matches an account price's product line and constraints, the
- * account price replaces the standard product line pricing for the recipient
- * customer.
+ * When a sales order line matches an account price, that price replaces the unit
+ * price the line would otherwise be given — including the effect of any volume
+ * discount — rather than discounting it. If more than one account price matches a
+ * line, the most recently created one wins.
  */
 export interface AccountPrice {
   /**
@@ -143,12 +158,14 @@ export interface AccountPrice {
   id: string;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   attributes: AccountUsersAPI.ListAttribute | null;
 
   /**
-   * List represents a paginated list of resources.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
   categories: ListItemCategory | null;
 
@@ -163,10 +180,12 @@ export interface AccountPrice {
   object: 'account_price';
 
   /**
-   * Product line resource.
+   * A named grouping of related products in your catalog.
    *
-   * A product line groups related products in your catalog and carries the default
-   * commission policy, freight policy, and unit group for those products.
+   * A product line carries the default commission and freight policies for the
+   * products assigned to it, along with the unit group that determines how those
+   * products are measured. Product lines are also the unit that catalog access is
+   * granted over, for both customers and account groups.
    */
   product_line: ProductLine | null;
 
@@ -193,7 +212,7 @@ export interface AccountPrice {
  */
 export interface CreateAccountPriceRequest {
   /**
-   * Product line ID.
+   * ID of the product line whose products this price applies to.
    */
   product_line_id: string;
 
@@ -208,12 +227,15 @@ export interface CreateAccountPriceRequest {
   rate_numerator_unit_id: string;
 
   /**
-   * Rate value as a decimal string.
+   * The price the recipient pays, as a decimal string.
    */
   rate_value: string;
 
   /**
-   * Recipient customer account ID.
+   * ID of the customer this price is offered to.
+   *
+   * A price recorded against a parent customer account also applies to orders placed
+   * by its child accounts.
    */
   recipient_account_id: string;
 
@@ -225,15 +247,17 @@ export interface CreateAccountPriceRequest {
   attribute_ids?: Array<string>;
 
   /**
-   * Item category IDs to constrain this price to.
+   * Item category IDs to record on this price.
    *
-   * When empty, the price is not restricted by item category.
+   * Order pricing matches an account price on its product line and attributes only,
+   * so categories recorded here do not narrow which products the price applies to.
    */
   category_ids?: Array<string>;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListAccountPrice {
   /**
@@ -247,13 +271,20 @@ export interface ListAccountPrice {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * List represents a paginated list of resources.
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
  */
 export interface ListItemCategory {
   /**
@@ -267,16 +298,24 @@ export interface ListItemCategory {
   object: 'list';
 
   /**
-   * PageInfo contains URL-based pagination metadata.
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
 }
 
 /**
- * Product line resource.
+ * A named grouping of related products in your catalog.
  *
- * A product line groups related products in your catalog and carries the default
- * commission policy, freight policy, and unit group for those products.
+ * A product line carries the default commission and freight policies for the
+ * products assigned to it, along with the unit group that determines how those
+ * products are measured. Product lines are also the unit that catalog access is
+ * granted over, for both customers and account groups.
  */
 export interface ProductLine {
   /**
@@ -299,7 +338,11 @@ export interface ProductLine {
   created_at: string;
 
   /**
-   * Value with an associated unit.
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
    */
   default_lot: AccountUsersAPI.Quantity | null;
 
@@ -319,6 +362,9 @@ export interface ProductLine {
 
   /**
    * Display name of the product line.
+   *
+   * Unique among the product lines visible to your account, which includes the
+   * shared system lines.
    */
   name: string;
 
@@ -338,8 +384,12 @@ export interface ProductLine {
   owner: APIKeysAPI.Owner | null;
 
   /**
-   * Named collection of units sharing one dimension, defining which units products
-   * can be ordered in along with per-unit discounts and customer portal visibility.
+   * A named collection of units that share one dimension, defining which units a
+   * product can be ordered in.
+   *
+   * Each associated unit carries its own discount and customer portal visibility,
+   * applied when an order line is priced in that unit. A product takes its unit
+   * group from its product line, falling back to its item category.
    */
   unit_group: AccountUsersAPI.UnitGroup | null;
 
@@ -362,15 +412,16 @@ export interface UpdateAccountPriceRequest {
   attribute_ids?: Array<string>;
 
   /**
-   * Item category IDs to constrain this price to.
+   * Item category IDs to record on this price.
    *
    * When provided, replaces the existing set of categories entirely; an empty list
-   * removes all category constraints.
+   * removes them all. Categories are recorded only — they do not narrow which
+   * products the price applies to.
    */
   category_ids?: Array<string>;
 
   /**
-   * Product line ID.
+   * ID of the product line whose products this price applies to.
    */
   product_line_id?: string;
 
@@ -385,12 +436,12 @@ export interface UpdateAccountPriceRequest {
   rate_numerator_unit_id?: string;
 
   /**
-   * Rate value as a decimal string.
+   * The price the recipient pays, as a decimal string.
    */
   rate_value?: string;
 
   /**
-   * Recipient customer account ID.
+   * ID of the customer this price is offered to.
    */
   recipient_account_id?: string;
 }
@@ -399,7 +450,7 @@ export interface AccountPriceDeleteResponse {}
 
 export interface AccountPriceCreateParams {
   /**
-   * Body param: Product line ID.
+   * Body param: ID of the product line whose products this price applies to.
    */
   product_line_id: string;
 
@@ -415,12 +466,15 @@ export interface AccountPriceCreateParams {
   rate_numerator_unit_id: string;
 
   /**
-   * Body param: Rate value as a decimal string.
+   * Body param: The price the recipient pays, as a decimal string.
    */
   rate_value: string;
 
   /**
-   * Body param: Recipient customer account ID.
+   * Body param: ID of the customer this price is offered to.
+   *
+   * A price recorded against a parent customer account also applies to orders placed
+   * by its child accounts.
    */
   recipient_account_id: string;
 
@@ -438,9 +492,10 @@ export interface AccountPriceCreateParams {
   attribute_ids?: Array<string>;
 
   /**
-   * Body param: Item category IDs to constrain this price to.
+   * Body param: Item category IDs to record on this price.
    *
-   * When empty, the price is not restricted by item category.
+   * Order pricing matches an account price on its product line and attributes only,
+   * so categories recorded here do not narrow which products the price applies to.
    */
   category_ids?: Array<string>;
 }
@@ -469,15 +524,16 @@ export interface AccountPriceUpdateParams {
   attribute_ids?: Array<string>;
 
   /**
-   * Body param: Item category IDs to constrain this price to.
+   * Body param: Item category IDs to record on this price.
    *
    * When provided, replaces the existing set of categories entirely; an empty list
-   * removes all category constraints.
+   * removes them all. Categories are recorded only — they do not narrow which
+   * products the price applies to.
    */
   category_ids?: Array<string>;
 
   /**
-   * Body param: Product line ID.
+   * Body param: ID of the product line whose products this price applies to.
    */
   product_line_id?: string;
 
@@ -493,12 +549,12 @@ export interface AccountPriceUpdateParams {
   rate_numerator_unit_id?: string;
 
   /**
-   * Body param: Rate value as a decimal string.
+   * Body param: The price the recipient pays, as a decimal string.
    */
   rate_value?: string;
 
   /**
-   * Body param: Recipient customer account ID.
+   * Body param: ID of the customer this price is offered to.
    */
   recipient_account_id?: string;
 }

@@ -20,9 +20,7 @@ describe('resource actions', () => {
   });
 
   test('resubmitInvoice: only required params', async () => {
-    const responsePromise = client.operations.edi.actions.resubmitInvoice({
-      invoice_id: 'iv_018b5949ada8abca36358bbea9',
-    });
+    const responsePromise = client.operations.edi.actions.resubmitInvoice({ invoice_id: 'iv_m982ezb0fgp7' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -33,8 +31,6 @@ describe('resource actions', () => {
   });
 
   test('resubmitInvoice: required and optional params', async () => {
-    const response = await client.operations.edi.actions.resubmitInvoice({
-      invoice_id: 'iv_018b5949ada8abca36358bbea9',
-    });
+    const response = await client.operations.edi.actions.resubmitInvoice({ invoice_id: 'iv_m982ezb0fgp7' });
   });
 });

@@ -22,7 +22,10 @@ export class ItemCategories extends APIResource {
   properties: PropertiesAPI.Properties = new PropertiesAPI.Properties(this._client);
 
   /**
-   * Creates an account-owned item category.
+   * Creates an item category owned by your account.
+   *
+   * The new category starts with no properties; attach them afterwards with the Add
+   * Item Category Property endpoint.
    *
    * This endpoint requires the permission: `item_categories:create`.
    *
@@ -32,7 +35,7 @@ export class ItemCategories extends APIResource {
    *   await client.catalog.itemCategories.create({
    *     name: 'Electronics',
    *     type: 'material_category',
-   *     unit_group_id: 'ug_01aad07abb8e41fd392d2d7013',
+   *     unit_group_id: 'ug_andst6m79n41',
    *   });
    * ```
    */
@@ -55,7 +58,7 @@ export class ItemCategories extends APIResource {
    * ```ts
    * const itemCategory =
    *   await client.catalog.itemCategories.retrieve(
-   *     'ic_01ae7bd7bfd21ca0ab81e1357e',
+   *     'ic_d06g9c6yc9ck',
    *   );
    * ```
    */
@@ -68,10 +71,11 @@ export class ItemCategories extends APIResource {
   }
 
   /**
-   * Partially updates an account-owned item category.
+   * Updates the name or notes of an item category owned by your account.
    *
-   * Only the fields provided in the request body are changed. Default system
-   * categories cannot be updated.
+   * Only the fields present in the request body are changed. A category's type is
+   * fixed at creation, and its unit group is changed through the Change Item
+   * Category Unit Group endpoint. System-owned categories cannot be updated.
    *
    * This endpoint requires the permission: `item_categories:update`.
    *
@@ -79,7 +83,7 @@ export class ItemCategories extends APIResource {
    * ```ts
    * const itemCategory =
    *   await client.catalog.itemCategories.update(
-   *     'ic_01ae7bd7bfd21ca0ab81e1357e',
+   *     'ic_d06g9c6yc9ck',
    *     {
    *       name: 'Electronic Components',
    *       notes:
@@ -102,8 +106,11 @@ export class ItemCategories extends APIResource {
   }
 
   /**
-   * Returns a paginated list of item categories for the current account, including
-   * account-specific and global system categories.
+   * Returns a paginated list of the item categories available to the current
+   * account, newest first.
+   *
+   * Both the account's own categories and the platform-provided system categories
+   * are included. The `q` search term is matched against the category name.
    *
    * This endpoint requires the permission: `item_categories:read`.
    *
@@ -121,9 +128,10 @@ export class ItemCategories extends APIResource {
   }
 
   /**
-   * Deletes an account-owned item category.
+   * Deletes an item category owned by your account.
    *
-   * Default system categories cannot be deleted.
+   * System-owned categories cannot be deleted. Deleting a category that was already
+   * deleted returns an already-deleted error rather than a not-found error.
    *
    * This endpoint requires the permission: `item_categories:delete`.
    *
@@ -131,7 +139,7 @@ export class ItemCategories extends APIResource {
    * ```ts
    * const itemCategory =
    *   await client.catalog.itemCategories.delete(
-   *     'ic_01ae7bd7bfd21ca0ab81e1357e',
+   *     'ic_d06g9c6yc9ck',
    *   );
    * ```
    */
@@ -140,11 +148,12 @@ export class ItemCategories extends APIResource {
   }
 
   /**
-   * Changes the unit group associated with an item category.
+   * Changes the unit group of an item category, and with it the units its items can
+   * be ordered in.
    *
    * The new unit group must have the same unit type as the current one — for
    * example, a category measured in `mass` units can only switch to another `mass`
-   * unit group. Default system categories cannot be modified.
+   * unit group. System-owned categories cannot be modified.
    *
    * This endpoint requires the permission: `item_categories:update`.
    *
@@ -152,8 +161,8 @@ export class ItemCategories extends APIResource {
    * ```ts
    * const response =
    *   await client.catalog.itemCategories.changeUnitGroup(
-   *     'ug_01aad07abb8e41fd392d2d7013',
-   *     { id: 'ic_01ae7bd7bfd21ca0ab81e1357e' },
+   *     'ug_andst6m79n41',
+   *     { id: 'ic_d06g9c6yc9ck' },
    *   );
    * ```
    */
@@ -183,6 +192,8 @@ export interface CreateItemCategoryRequest {
    *   `material`).
    * - `product_category`: groups finished products and parts (items of type
    *   `product` or `part`).
+   *
+   * The type is fixed once the category is created.
    */
   type: 'material_category' | 'product_category';
 
@@ -190,8 +201,9 @@ export interface CreateItemCategoryRequest {
    * ID of the unit group that determines the units of measure available to items in
    * this category.
    *
-   * After creation, the unit group can only be replaced by another unit group of the
-   * same unit type via the Change Item Category Unit Group endpoint.
+   * Must be one of your account's unit groups or a platform-provided one. After
+   * creation the unit group can only be replaced by another unit group of the same
+   * unit type, through the Change Item Category Unit Group endpoint.
    */
   unit_group_id: string;
 }
@@ -228,6 +240,8 @@ export interface ItemCategoryCreateParams {
    *   `material`).
    * - `product_category`: groups finished products and parts (items of type
    *   `product` or `part`).
+   *
+   * The type is fixed once the category is created.
    */
   type: 'material_category' | 'product_category';
 
@@ -235,8 +249,9 @@ export interface ItemCategoryCreateParams {
    * Body param: ID of the unit group that determines the units of measure available
    * to items in this category.
    *
-   * After creation, the unit group can only be replaced by another unit group of the
-   * same unit type via the Change Item Category Unit Group endpoint.
+   * Must be one of your account's unit groups or a platform-provided one. After
+   * creation the unit group can only be replaced by another unit group of the same
+   * unit type, through the Change Item Category Unit Group endpoint.
    */
   unit_group_id: string;
 
