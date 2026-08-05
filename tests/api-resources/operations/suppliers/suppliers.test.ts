@@ -115,11 +115,11 @@ describe('resource suppliers', () => {
       client.operations.suppliers.list(
         {
           cursor: 'cursor',
-          end_date: '2019-12-27T18:11:19.117Z',
+          ends_at: '2019-12-27T18:11:19.117Z',
           item_ids: ['string'],
           limit: 0,
           q: 'q',
-          start_date: '2019-12-27T18:11:19.117Z',
+          starts_at: '2019-12-27T18:11:19.117Z',
         },
         { path: '/_stainless_unknown_path' },
       ),

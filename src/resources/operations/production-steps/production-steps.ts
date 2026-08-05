@@ -508,7 +508,7 @@ export interface ProductionStepListParams {
   /**
    * Only return steps created on or before this timestamp (inclusive).
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -568,7 +568,7 @@ export interface ProductionStepListParams {
   /**
    * Only return steps created on or after this timestamp (inclusive).
    */
-  start_date?: string;
+  starts_at?: string;
 }
 
 ProductionSteps.Consumptions = Consumptions;

@@ -57,7 +57,7 @@ export interface AccountRetrieveParams {
    * before the cutoff are subtracted from each remaining balance. When omitted,
    * current balances are returned.
    */
-  cutoff_date?: string;
+  cutoff_at?: string;
 
   /**
    * Maximum number of results to return in a single page.

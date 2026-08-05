@@ -111,7 +111,7 @@ export interface ReceivableEntry {
    * Remaining unpaid balance on the invoice.
    *
    * Calculated as the invoiced total minus all transaction allocations applied to
-   * the invoice. When a `cutoff_date` is supplied to the listing endpoint, only
+   * the invoice. When a `cutoff_at` is supplied to the listing endpoint, only
    * allocations made before that date are subtracted.
    */
   remaining_balance: string;
@@ -134,7 +134,7 @@ export interface ReceivableListParams {
    * before the cutoff are subtracted from each remaining balance. When omitted,
    * current balances are returned.
    */
-  cutoff_date?: string;
+  cutoff_at?: string;
 
   /**
    * Maximum number of results to return in a single page.

@@ -107,11 +107,11 @@ describe('resource settlements', () => {
       client.finance.settlements.list(
         {
           cursor: 'cursor',
-          end_date: 'end_date',
+          ends_at: 'ends_at',
           invoice_ids: ['string'],
           limit: 0,
           q: 'q',
-          start_date: 'start_date',
+          starts_at: 'starts_at',
           transaction_ids: ['string'],
         },
         { path: '/_stainless_unknown_path' },

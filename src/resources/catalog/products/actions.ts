@@ -193,7 +193,7 @@ export interface ActionExportParams {
   /**
    * End of creation date range.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Filter by product line IDs.
@@ -210,7 +210,7 @@ export interface ActionExportParams {
   /**
    * Start of creation date range.
    */
-  start_date?: string;
+  starts_at?: string;
 }
 
 export interface ActionValidateParams {

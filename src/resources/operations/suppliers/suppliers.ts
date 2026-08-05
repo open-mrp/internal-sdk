@@ -466,7 +466,7 @@ export interface SupplierListParams {
   /**
    * Only return suppliers created at or before this timestamp.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Filter to suppliers that can source any of these items.
@@ -491,7 +491,7 @@ export interface SupplierListParams {
   /**
    * Only return suppliers created at or after this timestamp.
    */
-  start_date?: string;
+  starts_at?: string;
 }
 
 Suppliers.Materials = Materials;

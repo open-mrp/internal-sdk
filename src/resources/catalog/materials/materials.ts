@@ -542,7 +542,7 @@ export interface MaterialListParams {
   /**
    * Filter to materials created on or before this date.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -574,7 +574,7 @@ export interface MaterialListParams {
   /**
    * Filter to materials created on or after this date.
    */
-  start_date?: string;
+  starts_at?: string;
 }
 
 Materials.Actions = Actions;

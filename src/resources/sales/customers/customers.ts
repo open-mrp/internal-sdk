@@ -2004,7 +2004,7 @@ export interface CustomerListParams {
   /**
    * Filter to customers created at or before this timestamp (inclusive).
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Filter by the freight policy set on the customer itself.
@@ -2091,7 +2091,7 @@ export interface CustomerListParams {
   /**
    * Filter to customers created at or after this timestamp (inclusive).
    */
-  start_date?: string;
+  starts_at?: string;
 
   /**
    * Filter to customers with any address in this state (exact match).

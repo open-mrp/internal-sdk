@@ -26,9 +26,9 @@ describe('resource actions', () => {
         {
           attribute_ids: ['string'],
           category_ids: ['string'],
-          end_date: '2019-12-27T18:11:19.117Z',
+          ends_at: '2019-12-27T18:11:19.117Z',
           q: 'q',
-          start_date: '2019-12-27T18:11:19.117Z',
+          starts_at: '2019-12-27T18:11:19.117Z',
         },
         { path: '/_stainless_unknown_path' },
       ),

@@ -411,7 +411,7 @@ export interface PartListParams {
   /**
    * Only return parts created at or before this time.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -443,7 +443,7 @@ export interface PartListParams {
   /**
    * Only return parts created at or after this time.
    */
-  start_date?: string;
+  starts_at?: string;
 }
 
 Parts.Actions = Actions;

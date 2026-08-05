@@ -439,7 +439,7 @@ export interface SettlementListParams {
    * Settlements created later on that day are excluded, so pass the following day to
    * cover a full day.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Only return settlements that allocate to at least one of these invoices.
@@ -462,7 +462,7 @@ export interface SettlementListParams {
    * Only return settlements created on or after the start of this date
    * (`YYYY-MM-DD`, UTC).
    */
-  start_date?: string;
+  starts_at?: string;
 
   /**
    * Only return settlements that allocate at least one of these transactions.

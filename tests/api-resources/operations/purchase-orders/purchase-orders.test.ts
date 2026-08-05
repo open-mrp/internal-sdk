@@ -154,12 +154,12 @@ describe('resource purchaseOrders', () => {
       client.operations.purchaseOrders.list(
         {
           cursor: 'cursor',
-          end_date: 'end_date',
+          ends_at: 'ends_at',
           include: ['supplier'],
           item_ids: ['string'],
           limit: 0,
           q: 'q',
-          start_date: 'start_date',
+          starts_at: 'starts_at',
           status_codes: ['string'],
           supplier_ids: ['string'],
         },

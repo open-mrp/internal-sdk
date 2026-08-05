@@ -242,7 +242,7 @@ export interface PickListParams {
   /**
    * Only return picks created before this date (`YYYY-MM-DD`).
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -273,7 +273,7 @@ export interface PickListParams {
   /**
    * Only return picks created on or after this date (`YYYY-MM-DD`).
    */
-  start_date?: string;
+  starts_at?: string;
 
   /**
    * Filter by pick status.

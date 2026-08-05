@@ -26,9 +26,9 @@ describe('resource actions', () => {
         {
           action_type_codes: ['string'],
           changed_by_user_ids: ['string'],
-          end_date: '2019-12-27T18:11:19.117Z',
+          ends_at: '2019-12-27T18:11:19.117Z',
           item_ids: ['string'],
-          start_date: '2019-12-27T18:11:19.117Z',
+          starts_at: '2019-12-27T18:11:19.117Z',
         },
         { path: '/_stainless_unknown_path' },
       ),

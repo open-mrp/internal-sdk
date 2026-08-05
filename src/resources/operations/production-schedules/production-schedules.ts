@@ -854,14 +854,18 @@ export interface ProductionScheduleDeviation {
   actor: RequestLogsAPI.Actor | null;
 
   /**
-   * Snapshot of the line after the change.
+   * Snapshot of the line after the change, null when the change removed it. Encoded
+   * as a JSON value (object, array, string, number, boolean, or null), not a
+   * JSON-encoded string.
    */
-  after: { [key: string]: unknown };
+  after: unknown | null;
 
   /**
-   * Snapshot of the line before the change.
+   * Snapshot of the line before the change, null when the change created it. Encoded
+   * as a JSON value (object, array, string, number, boolean, or null), not a
+   * JSON-encoded string.
    */
-  before: { [key: string]: unknown };
+  before: unknown | null;
 
   /**
    * When the change was made.

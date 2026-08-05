@@ -247,7 +247,7 @@ export interface TransactionAllocationListParams {
   /**
    * Only include allocations created before this date (`YYYY-MM-DD`).
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Maximum number of results to return in a single page.
@@ -264,7 +264,7 @@ export interface TransactionAllocationListParams {
   /**
    * Only include allocations created on or after this date (`YYYY-MM-DD`).
    */
-  start_date?: string;
+  starts_at?: string;
 
   /**
    * Filter by the underlying transaction's type code (`payment`, `credit_memo`,

@@ -40,8 +40,8 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeDeliveriesResponse =
    *   await client.core.analytics.updateDeliveries({
-   *     end_date: '2026-05-10T00:23:00Z',
-   *     start_date: '2026-05-10T00:00:00Z',
+   *     ends_at: '2026-05-10T00:23:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
    *     customer_group_ids: ['acgp_6p4z57e9alaf'],
    *     customer_ids: ['ac_opnlh43ymyee'],
    *     override_promised_dates: true,
@@ -115,8 +115,8 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeManufacturingResponse =
    *   await client.core.analytics.updateManufacturing({
-   *     end_date: '2026-05-10T00:23:00Z',
-   *     start_date: '2026-05-10T00:00:00Z',
+   *     ends_at: '2026-05-10T00:23:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
    *     type: 'production',
    *   });
    * ```
@@ -139,10 +139,10 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeManufacturingBatchResponse =
    *   await client.core.analytics.updateManufacturingBatch({
-   *     comparison_end_date: '2026-04-10T00:23:00Z',
-   *     comparison_start_date: '2026-04-10T00:00:00Z',
-   *     end_date: '2026-05-10T00:23:00Z',
-   *     start_date: '2026-05-10T00:00:00Z',
+   *     comparison_ends_at: '2026-04-10T00:23:00Z',
+   *     comparison_starts_at: '2026-04-10T00:00:00Z',
+   *     ends_at: '2026-05-10T00:23:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
    *     customer_group_ids: ['acgp_6p4z57e9alaf'],
    *     customer_ids: ['ac_opnlh43ymyee'],
    *     item_ids: ['it_pej07ckhvu62'],
@@ -189,8 +189,8 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeNewCustomersResponse =
    *   await client.core.analytics.updateNewCustomers({
-   *     end_date: '2026-05-10T00:23:00Z',
-   *     start_date: '2026-05-10T00:00:00Z',
+   *     ends_at: '2026-05-10T00:23:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
    *     customer_group_ids: ['acgp_6p4z57e9alaf'],
    *     sales_rep_ids: ['acus_e5zu8bde0z3h'],
    *   });
@@ -217,14 +217,46 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeOeeResponse =
    *   await client.core.analytics.updateOee({
-   *     end_date: '2026-05-10T00:23:00Z',
-   *     start_date: '2026-05-10T00:00:00Z',
+   *     ends_at: '2026-05-10T00:23:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
    *     department_ids: ['dp_m0jayebxnkos'],
    *   });
    * ```
    */
   updateOee(body: AnalyticsUpdateOeeParams, options?: RequestOptions): APIPromise<AnalyzeOeeResponse> {
     return this._client.put('/v1/core/analytics/oee', { body, ...options });
+  }
+
+  /**
+   * Returns Overall Equipment Effectiveness (OEE) by production week.
+   *
+   * Each period carries the same four terms `/v1/core/analytics/oee` reports for a
+   * single window, rolled up across departments and weighted by seconds rather than
+   * averaged, so a department that ran for an hour does not weigh as heavily as one
+   * that ran all week. Weeks start on Monday, and the first and last period of a
+   * window are clipped to the window itself.
+   *
+   * Only departments with scheduled time take part: a department with no machines
+   * has no availability, so counting its output in quality would leave the three
+   * terms describing different plants. Compare two windows by calling this twice.
+   *
+   * This endpoint requires the permission: `machine_downtime:read`.
+   *
+   * @example
+   * ```ts
+   * const analyzeOeeTrendResponse =
+   *   await client.core.analytics.updateOeeTrend({
+   *     ends_at: '2026-05-10T00:23:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
+   *     department_ids: ['dp_m0jayebxnkos'],
+   *   });
+   * ```
+   */
+  updateOeeTrend(
+    body: AnalyticsUpdateOeeTrendParams,
+    options?: RequestOptions,
+  ): APIPromise<AnalyzeOeeTrendResponse> {
+    return this._client.put('/v1/core/analytics/oee-trend', { body, ...options });
   }
 
   /**
@@ -282,10 +314,10 @@ export class Analytics extends APIResource {
    *   await client.core.analytics.updateProductionCosts({
    *     category_ids: ['ic_d06g9c6yc9ck'],
    *     department_ids: ['dp_m0jayebxnkos'],
-   *     end_date: '2026-05-10T00:23:00Z',
+   *     ends_at: '2026-05-10T00:23:00Z',
    *     item_ids: ['it_pej07ckhvu62'],
    *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
-   *     start_date: '2026-05-10T00:00:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
    *   });
    * ```
    */
@@ -329,8 +361,8 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeSalesResponse =
    *   await client.core.analytics.updateSales({
-   *     end_date: '2026-05-10T00:23:00Z',
-   *     start_date: '2026-05-10T00:00:00Z',
+   *     ends_at: '2026-05-10T00:23:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
    *     customer_group_ids: ['acgp_6p4z57e9alaf'],
    *     customer_ids: ['ac_opnlh43ymyee'],
    *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
@@ -366,8 +398,8 @@ export class Analytics extends APIResource {
    * ```ts
    * const analyzeScheduleAttainmentResponse =
    *   await client.core.analytics.updateScheduleAttainment({
-   *     end_date: '2026-05-10T00:23:00Z',
-   *     start_date: '2026-05-10T00:00:00Z',
+   *     ends_at: '2026-05-10T00:23:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
    *     group_by: 'week',
    *   });
    * ```
@@ -505,12 +537,12 @@ export interface AnalyzeDeliveriesRequest {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Optional customer group IDs to filter by.
@@ -655,22 +687,22 @@ export interface AnalyzeManufacturingBatchRequest {
   /**
    * The end date for the comparison period.
    */
-  comparison_end_date: string;
+  comparison_ends_at: string;
 
   /**
    * The start date for the comparison period.
    */
-  comparison_start_date: string;
+  comparison_starts_at: string;
 
   /**
    * The end date for the current analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the current analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Optional customer group IDs to filter by.
@@ -722,12 +754,12 @@ export interface AnalyzeManufacturingRequest {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * The type of manufacturing analytics to compute.
@@ -789,12 +821,12 @@ export interface AnalyzeNewCustomersRequest {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Optional customer group IDs to filter by.
@@ -831,12 +863,12 @@ export interface AnalyzeOeeRequest {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Optional department IDs to filter by.
@@ -864,6 +896,43 @@ export interface AnalyzeOeeResponse {
    * Resource type identifier.
    */
   object: 'analyze_oee_response';
+}
+
+/**
+ * AnalyzeOeeTrendRequest is the request to analyze Overall Equipment Effectiveness
+ * (OEE) over time.
+ */
+export interface AnalyzeOeeTrendRequest {
+  /**
+   * The end date for the analysis period.
+   */
+  ends_at: string;
+
+  /**
+   * The start date for the analysis period.
+   */
+  starts_at: string;
+
+  /**
+   * Restrict the analysis to these departments.
+   */
+  department_ids?: Array<string>;
+}
+
+/**
+ * AnalyzeOeeTrendResponse represents the response from the OEE trend endpoint.
+ */
+export interface AnalyzeOeeTrendResponse {
+  /**
+   * Resource type identifier.
+   */
+  object: 'analyze_oee_trend_response';
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  periods: ListOeeTrendPeriod | null;
 }
 
 /**
@@ -955,7 +1024,7 @@ export interface AnalyzeProductionCostsRequest {
   /**
    * Optional end date for the analysis period.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Optional item IDs to filter by.
@@ -970,7 +1039,7 @@ export interface AnalyzeProductionCostsRequest {
   /**
    * Optional start date for the analysis period.
    */
-  start_date?: string;
+  starts_at?: string;
 }
 
 /**
@@ -1074,12 +1143,12 @@ export interface AnalyzeSalesRequest {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Optional customer group IDs to filter by.
@@ -1130,12 +1199,12 @@ export interface AnalyzeScheduleAttainmentRequest {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Only measure production in these departments.
@@ -1873,6 +1942,33 @@ export interface ListOeeDowntimeReason {
 }
 
 /**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListOeeTrendPeriod {
+  /**
+   * Resources in this page.
+   */
+  data: Array<OeeTrendPeriod>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
  * ManufacturingMetrics represents manufacturing performance metrics for a period.
  */
 export interface ManufacturingMetrics {
@@ -2159,6 +2255,98 @@ export interface OeeDowntimeReason {
     | 'minor_stop'
     | 'quality_hold'
     | 'no_schedule';
+}
+
+/**
+ * OeeTrendPeriod represents one production week of OEE, rolled up across the
+ * departments that had scheduled time in it. Departments with no scheduled time
+ * have no OEE and take no part in the roll-up, so their output is not counted here
+ * either.
+ */
+export interface OeeTrendPeriod {
+  /**
+   * Logged downtime charged against availability, in seconds.
+   */
+  availability_loss_seconds: number;
+
+  /**
+   * Run time divided by scheduled time.
+   */
+  availability_pct: number | null;
+
+  /**
+   * Number of downtime events overlapping this period.
+   */
+  downtime_event_count: number;
+
+  /**
+   * The instant this period ends, exclusive.
+   */
+  ends_at: string;
+
+  /**
+   * The number of good units produced.
+   */
+  good_units: number;
+
+  /**
+   * Whether availability was measured from logged downtime or estimated from
+   * runtime.
+   */
+  measurement_status: 'measured' | 'estimated';
+
+  /**
+   * Time nobody planned to run, removed from the denominator rather than counted as
+   * a loss.
+   */
+  not_scheduled_seconds: number;
+
+  /**
+   * Availability multiplied by performance multiplied by quality.
+   */
+  oee_pct: number | null;
+
+  /**
+   * Standard seconds earned divided by run time.
+   */
+  performance_pct: number | null;
+
+  /**
+   * Good units divided by total units produced.
+   */
+  quality_pct: number | null;
+
+  /**
+   * Scheduled time net of availability losses, in seconds.
+   */
+  run_time_seconds: number;
+
+  /**
+   * Planned time net of not-scheduled downtime, in seconds.
+   */
+  scheduled_seconds: number;
+
+  /**
+   * The number of seconds units.
+   */
+  seconds_units: number;
+
+  /**
+   * The time this output should have taken at each production step's own labor rate:
+   * ideal cycle time multiplied by the units produced.
+   */
+  standard_seconds_earned: number;
+
+  /**
+   * The first instant this period covers. Weeks start on Monday; the first and last
+   * periods of a window are clipped to the window itself.
+   */
+  starts_at: string;
+
+  /**
+   * The number of waste units.
+   */
+  waste_units: number;
 }
 
 /**
@@ -2712,12 +2900,12 @@ export interface AnalyticsUpdateDeliveriesParams {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Optional customer group IDs to filter by.
@@ -2793,12 +2981,12 @@ export interface AnalyticsUpdateManufacturingParams {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * The type of manufacturing analytics to compute.
@@ -2810,22 +2998,22 @@ export interface AnalyticsUpdateManufacturingBatchParams {
   /**
    * The end date for the comparison period.
    */
-  comparison_end_date: string;
+  comparison_ends_at: string;
 
   /**
    * The start date for the comparison period.
    */
-  comparison_start_date: string;
+  comparison_starts_at: string;
 
   /**
    * The end date for the current analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the current analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Optional customer group IDs to filter by.
@@ -2864,12 +3052,12 @@ export interface AnalyticsUpdateNewCustomersParams {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Optional customer group IDs to filter by.
@@ -2886,12 +3074,12 @@ export interface AnalyticsUpdateOeeParams {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Optional department IDs to filter by.
@@ -2903,6 +3091,23 @@ export interface AnalyticsUpdateOeeParams {
    * performance and OEE are only returned for departments this covers.
    */
   planned_time?: Array<OeeDepartmentPlannedTime>;
+}
+
+export interface AnalyticsUpdateOeeTrendParams {
+  /**
+   * The end date for the analysis period.
+   */
+  ends_at: string;
+
+  /**
+   * The start date for the analysis period.
+   */
+  starts_at: string;
+
+  /**
+   * Restrict the analysis to these departments.
+   */
+  department_ids?: Array<string>;
 }
 
 export interface AnalyticsUpdateOpenBatchesParams {
@@ -2954,7 +3159,7 @@ export interface AnalyticsUpdateProductionCostsParams {
   /**
    * Optional end date for the analysis period.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Optional item IDs to filter by.
@@ -2969,7 +3174,7 @@ export interface AnalyticsUpdateProductionCostsParams {
   /**
    * Optional start date for the analysis period.
    */
-  start_date?: string;
+  starts_at?: string;
 }
 
 export interface AnalyticsUpdateQuarterlyOrdersParams {
@@ -3003,12 +3208,12 @@ export interface AnalyticsUpdateSalesParams {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Optional customer group IDs to filter by.
@@ -3040,12 +3245,12 @@ export interface AnalyticsUpdateScheduleAttainmentParams {
   /**
    * The end date for the analysis period.
    */
-  end_date: string;
+  ends_at: string;
 
   /**
    * The start date for the analysis period.
    */
-  start_date: string;
+  starts_at: string;
 
   /**
    * Only measure production in these departments.
@@ -3086,6 +3291,8 @@ export declare namespace Analytics {
     type AnalyzeNewCustomersResponse as AnalyzeNewCustomersResponse,
     type AnalyzeOeeRequest as AnalyzeOeeRequest,
     type AnalyzeOeeResponse as AnalyzeOeeResponse,
+    type AnalyzeOeeTrendRequest as AnalyzeOeeTrendRequest,
+    type AnalyzeOeeTrendResponse as AnalyzeOeeTrendResponse,
     type AnalyzeOpenBatchesRequest as AnalyzeOpenBatchesRequest,
     type AnalyzeOpenBatchesResponse as AnalyzeOpenBatchesResponse,
     type AnalyzeOrdersRequest as AnalyzeOrdersRequest,
@@ -3116,12 +3323,14 @@ export declare namespace Analytics {
     type ListFrozenAdherence as ListFrozenAdherence,
     type ListOeeDepartment as ListOeeDepartment,
     type ListOeeDowntimeReason as ListOeeDowntimeReason,
+    type ListOeeTrendPeriod as ListOeeTrendPeriod,
     type ManufacturingMetrics as ManufacturingMetrics,
     type MaterialAnalyticsEntry as MaterialAnalyticsEntry,
     type NewCustomersData as NewCustomersData,
     type OeeDepartment as OeeDepartment,
     type OeeDepartmentPlannedTime as OeeDepartmentPlannedTime,
     type OeeDowntimeReason as OeeDowntimeReason,
+    type OeeTrendPeriod as OeeTrendPeriod,
     type OpenBatchSummary as OpenBatchSummary,
     type OrderEntry as OrderEntry,
     type ProductionCostItem as ProductionCostItem,
@@ -3137,6 +3346,7 @@ export declare namespace Analytics {
     type AnalyticsUpdateMaterialsParams as AnalyticsUpdateMaterialsParams,
     type AnalyticsUpdateNewCustomersParams as AnalyticsUpdateNewCustomersParams,
     type AnalyticsUpdateOeeParams as AnalyticsUpdateOeeParams,
+    type AnalyticsUpdateOeeTrendParams as AnalyticsUpdateOeeTrendParams,
     type AnalyticsUpdateOpenBatchesParams as AnalyticsUpdateOpenBatchesParams,
     type AnalyticsUpdateOrdersParams as AnalyticsUpdateOrdersParams,
     type AnalyticsUpdateProductionCostsParams as AnalyticsUpdateProductionCostsParams,

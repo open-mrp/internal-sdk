@@ -33,6 +33,7 @@ import {
   AnalyticsUpdateMaterialsParams,
   AnalyticsUpdateNewCustomersParams,
   AnalyticsUpdateOeeParams,
+  AnalyticsUpdateOeeTrendParams,
   AnalyticsUpdateOpenBatchesParams,
   AnalyticsUpdateOrdersParams,
   AnalyticsUpdateProductionCostsParams,
@@ -55,6 +56,8 @@ import {
   AnalyzeNewCustomersResponse,
   AnalyzeOeeRequest,
   AnalyzeOeeResponse,
+  AnalyzeOeeTrendRequest,
+  AnalyzeOeeTrendResponse,
   AnalyzeOpenBatchesRequest,
   AnalyzeOpenBatchesResponse,
   AnalyzeOrdersRequest,
@@ -85,12 +88,14 @@ import {
   ListFrozenAdherence,
   ListOeeDepartment,
   ListOeeDowntimeReason,
+  ListOeeTrendPeriod,
   ManufacturingMetrics,
   MaterialAnalyticsEntry,
   NewCustomersData,
   OeeDepartment,
   OeeDepartmentPlannedTime,
   OeeDowntimeReason,
+  OeeTrendPeriod,
   OpenBatchSummary,
   OrderEntry,
   ProductionCostItem,
@@ -444,6 +449,7 @@ export interface Entity {
     | 'analyze_new_customers_response'
     | 'analyze_demand_forecast_response'
     | 'analyze_oee_response'
+    | 'analyze_oee_trend_response'
     | 'analyze_schedule_attainment_response'
     | 'catalog_product_line'
     | 'catalog_category'
@@ -792,6 +798,7 @@ export interface CoreRetrieveSearchParams {
     | 'analyze_new_customers_response'
     | 'analyze_demand_forecast_response'
     | 'analyze_oee_response'
+    | 'analyze_oee_trend_response'
     | 'analyze_schedule_attainment_response'
     | 'catalog_product_line'
     | 'catalog_category'
@@ -940,6 +947,8 @@ export declare namespace Core {
     type AnalyzeNewCustomersResponse as AnalyzeNewCustomersResponse,
     type AnalyzeOeeRequest as AnalyzeOeeRequest,
     type AnalyzeOeeResponse as AnalyzeOeeResponse,
+    type AnalyzeOeeTrendRequest as AnalyzeOeeTrendRequest,
+    type AnalyzeOeeTrendResponse as AnalyzeOeeTrendResponse,
     type AnalyzeOpenBatchesRequest as AnalyzeOpenBatchesRequest,
     type AnalyzeOpenBatchesResponse as AnalyzeOpenBatchesResponse,
     type AnalyzeOrdersRequest as AnalyzeOrdersRequest,
@@ -970,12 +979,14 @@ export declare namespace Core {
     type ListFrozenAdherence as ListFrozenAdherence,
     type ListOeeDepartment as ListOeeDepartment,
     type ListOeeDowntimeReason as ListOeeDowntimeReason,
+    type ListOeeTrendPeriod as ListOeeTrendPeriod,
     type ManufacturingMetrics as ManufacturingMetrics,
     type MaterialAnalyticsEntry as MaterialAnalyticsEntry,
     type NewCustomersData as NewCustomersData,
     type OeeDepartment as OeeDepartment,
     type OeeDepartmentPlannedTime as OeeDepartmentPlannedTime,
     type OeeDowntimeReason as OeeDowntimeReason,
+    type OeeTrendPeriod as OeeTrendPeriod,
     type OpenBatchSummary as OpenBatchSummary,
     type OrderEntry as OrderEntry,
     type ProductionCostItem as ProductionCostItem,
@@ -991,6 +1002,7 @@ export declare namespace Core {
     type AnalyticsUpdateMaterialsParams as AnalyticsUpdateMaterialsParams,
     type AnalyticsUpdateNewCustomersParams as AnalyticsUpdateNewCustomersParams,
     type AnalyticsUpdateOeeParams as AnalyticsUpdateOeeParams,
+    type AnalyticsUpdateOeeTrendParams as AnalyticsUpdateOeeTrendParams,
     type AnalyticsUpdateOpenBatchesParams as AnalyticsUpdateOpenBatchesParams,
     type AnalyticsUpdateOrdersParams as AnalyticsUpdateOrdersParams,
     type AnalyticsUpdateProductionCostsParams as AnalyticsUpdateProductionCostsParams,

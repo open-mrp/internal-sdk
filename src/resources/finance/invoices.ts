@@ -1232,7 +1232,7 @@ export interface InvoiceListParams {
    * created later on the end date itself are excluded; pass the following day to
    * include them.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -1274,7 +1274,7 @@ export interface InvoiceListParams {
   /**
    * Earliest invoice creation date to include, in `YYYY-MM-DD` format.
    */
-  start_date?: string;
+  starts_at?: string;
 
   /**
    * Restricts results to invoices in this payment state.

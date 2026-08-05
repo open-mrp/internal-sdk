@@ -267,7 +267,7 @@ export interface ProductionRunListParams {
    * The cutoff is the start of the given day, so runs created during that day are
    * not returned; pass the following day to include them.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -300,7 +300,7 @@ export interface ProductionRunListParams {
   /**
    * Only return runs created on or after this date, formatted as `YYYY-MM-DD`.
    */
-  start_date?: string;
+  starts_at?: string;
 
   /**
    * Filter by run status.

@@ -150,7 +150,7 @@ describe('resource productionSteps', () => {
       client.operations.productionSteps.list(
         {
           cursor: 'cursor',
-          end_date: '2019-12-27T18:11:19.117Z',
+          ends_at: '2019-12-27T18:11:19.117Z',
           include: ['production'],
           input_step_ids: ['string'],
           item_ids: ['string'],
@@ -159,7 +159,7 @@ describe('resource productionSteps', () => {
           output_step_ids: ['string'],
           q: 'q',
           scanning_station_ids: ['string'],
-          start_date: '2019-12-27T18:11:19.117Z',
+          starts_at: '2019-12-27T18:11:19.117Z',
         },
         { path: '/_stainless_unknown_path' },
       ),

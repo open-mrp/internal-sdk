@@ -452,7 +452,7 @@ export interface ItemListParams {
   /**
    * Filter to items created on or before this date.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -491,7 +491,7 @@ export interface ItemListParams {
   /**
    * Filter to items created on or after this date.
    */
-  start_date?: string;
+  starts_at?: string;
 
   /**
    * Restricts results based on where the item is produced in its production flow.

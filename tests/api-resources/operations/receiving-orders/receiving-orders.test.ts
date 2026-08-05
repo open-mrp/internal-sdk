@@ -47,12 +47,12 @@ describe('resource receivingOrders', () => {
       client.operations.receivingOrders.list(
         {
           cursor: 'cursor',
-          end_date: 'end_date',
+          ends_at: 'ends_at',
           include: ['supplier'],
           item_ids: ['string'],
           limit: 0,
           q: 'q',
-          start_date: 'start_date',
+          starts_at: 'starts_at',
           status: 'status',
           supplier_ids: ['string'],
         },

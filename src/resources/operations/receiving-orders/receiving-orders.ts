@@ -119,7 +119,7 @@ export interface ReceivingOrderListParams {
    * Compared against the start of the given day, so orders created later that same
    * day are excluded.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -147,7 +147,7 @@ export interface ReceivingOrderListParams {
   /**
    * Only return orders created on or after this date (`YYYY-MM-DD`).
    */
-  start_date?: string;
+  starts_at?: string;
 
   /**
    * Filter by completion status.

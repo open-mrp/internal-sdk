@@ -813,7 +813,7 @@ export interface PurchaseOrderListParams {
    * Compared against the start of the given day, so orders created later that same
    * day are excluded.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -841,7 +841,7 @@ export interface PurchaseOrderListParams {
   /**
    * Filter to orders created on or after this date, in `YYYY-MM-DD` format.
    */
-  start_date?: string;
+  starts_at?: string;
 
   /**
    * Filter to orders with any of these statuses (`estimate`, `issued`, `fulfilled`).

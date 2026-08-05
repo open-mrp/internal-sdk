@@ -192,7 +192,7 @@ export interface InventoryChangeLogListParams {
   /**
    * Restricts results to change logs created on or before this timestamp.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -222,7 +222,7 @@ export interface InventoryChangeLogListParams {
   /**
    * Restricts results to change logs created on or after this timestamp.
    */
-  start_date?: string;
+  starts_at?: string;
 }
 
 InventoryChangeLogs.Actions = Actions;

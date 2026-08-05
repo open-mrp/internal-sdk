@@ -290,7 +290,7 @@ export interface ShipmentListParams {
    *
    * Filters on when the shipment was created, not on when it was shipped.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -331,7 +331,7 @@ export interface ShipmentListParams {
    *
    * Filters on when the shipment was created, not on when it was shipped.
    */
-  start_date?: string;
+  starts_at?: string;
 
   /**
    * Only include shipments with this status, either `packed` or `shipped`.

@@ -552,7 +552,7 @@ export interface TransactionListParams {
   /**
    * Only include transactions created before this date (`YYYY-MM-DD`).
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -581,7 +581,7 @@ export interface TransactionListParams {
   /**
    * Only include transactions created on or after this date (`YYYY-MM-DD`).
    */
-  start_date?: string;
+  starts_at?: string;
 
   /**
    * Filter by allocation status: `allocated` (marked fully applied to invoices) or

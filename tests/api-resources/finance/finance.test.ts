@@ -52,10 +52,10 @@ describe('resource finance', () => {
         {
           cursor: 'cursor',
           customer_ids: ['string'],
-          end_date: 'end_date',
+          ends_at: 'ends_at',
           limit: 0,
           q: 'q',
-          start_date: 'start_date',
+          starts_at: 'starts_at',
         },
         { path: '/_stainless_unknown_path' },
       ),

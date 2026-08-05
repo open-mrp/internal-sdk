@@ -48,7 +48,7 @@ export interface ActionExportParams {
   /**
    * Only return parts created at or before this time.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Free-text search term matched against the part's SKU or description.
@@ -58,7 +58,7 @@ export interface ActionExportParams {
   /**
    * Only return parts created at or after this time.
    */
-  start_date?: string;
+  starts_at?: string;
 }
 
 export declare namespace Actions {

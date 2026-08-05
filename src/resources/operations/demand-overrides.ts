@@ -741,6 +741,12 @@ export interface DemandOverrideListParams {
   cursor?: string;
 
   /**
+   * The end of the window to match against. Only return overrides whose period
+   * starts on or before this timestamp, formatted as RFC3339.
+   */
+  ends_at?: string;
+
+  /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
@@ -750,18 +756,6 @@ export interface DemandOverrideListParams {
    * Maximum number of results to return in a single page.
    */
   limit?: number;
-
-  /**
-   * Only return overrides whose period starts on or before this timestamp, formatted
-   * as RFC3339.
-   */
-  period_end?: string;
-
-  /**
-   * Only return overrides whose period ends on or after this timestamp, formatted as
-   * RFC3339.
-   */
-  period_start?: string;
 
   /**
    * Free-text search term used to filter results.
@@ -779,6 +773,12 @@ export interface DemandOverrideListParams {
    * Only return overrides with these kinds of target.
    */
   scope_types?: Array<'item' | 'product_line' | 'account'>;
+
+  /**
+   * The start of the window to match against. Only return overrides whose period
+   * ends on or after this timestamp, formatted as RFC3339.
+   */
+  starts_at?: string;
 
   /**
    * Only return overrides in these activation states.

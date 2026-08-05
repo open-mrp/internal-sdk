@@ -47,10 +47,10 @@ describe('resource transactionAllocations', () => {
       client.finance.transactionAllocations.list(
         {
           cursor: 'cursor',
-          end_date: 'end_date',
+          ends_at: 'ends_at',
           limit: 0,
           q: 'q',
-          start_date: 'start_date',
+          starts_at: 'starts_at',
           transaction_type: 'transaction_type',
         },
         { path: '/_stainless_unknown_path' },

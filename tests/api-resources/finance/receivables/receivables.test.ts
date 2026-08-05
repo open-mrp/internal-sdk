@@ -25,7 +25,7 @@ describe('resource receivables', () => {
       client.finance.receivables.list(
         {
           cursor: 'cursor',
-          cutoff_date: '2019-12-27T18:11:19.117Z',
+          cutoff_at: '2019-12-27T18:11:19.117Z',
           limit: 0,
           q: 'q',
         },

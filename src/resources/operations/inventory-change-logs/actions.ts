@@ -50,7 +50,7 @@ export interface ActionExportParams {
   /**
    * Restricts results to change logs created on or before this timestamp.
    */
-  end_date?: string;
+  ends_at?: string;
 
   /**
    * Restricts results to changes affecting these items.
@@ -60,7 +60,7 @@ export interface ActionExportParams {
   /**
    * Restricts results to change logs created on or after this timestamp.
    */
-  start_date?: string;
+  starts_at?: string;
 }
 
 export declare namespace Actions {

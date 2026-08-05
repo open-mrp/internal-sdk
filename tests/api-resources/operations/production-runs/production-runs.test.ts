@@ -93,13 +93,13 @@ describe('resource productionRuns', () => {
       client.operations.productionRuns.list(
         {
           cursor: 'cursor',
-          end_date: 'end_date',
+          ends_at: 'ends_at',
           include: ['responsible_user'],
           item_ids: ['string'],
           limit: 0,
           machine_ids: ['string'],
           q: 'q',
-          start_date: 'start_date',
+          starts_at: 'starts_at',
           status: 'status',
         },
         { path: '/_stainless_unknown_path' },

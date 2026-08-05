@@ -48,7 +48,7 @@ export interface ActionExportParams {
    * before the cutoff are subtracted from each remaining balance. When omitted,
    * current balances are returned.
    */
-  cutoff_date?: string;
+  cutoff_at?: string;
 }
 
 export declare namespace Actions {
