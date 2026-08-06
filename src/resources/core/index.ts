@@ -127,6 +127,15 @@ export {
   type EmailLogRetrieveParams,
   type EmailLogListParams,
 } from './email-logs';
+export {
+  Jobs,
+  type Job,
+  type JobExport,
+  type JobResult,
+  type QuotaInfo,
+  type ResponseError,
+  type RowError,
+} from './jobs';
 export { Records } from './records/index';
 export {
   RequestLogs,

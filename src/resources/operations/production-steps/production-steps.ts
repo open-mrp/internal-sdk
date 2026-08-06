@@ -5,6 +5,8 @@ import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as ActionsAPI from './actions';
 import {
   ActionBulkCreateParams,
+  ActionBulkUpsertParams,
+  ActionExportParams,
   Actions,
   BulkCreateConsumptionInput,
   BulkCreateProductionOutputInput,
@@ -12,6 +14,13 @@ import {
   BulkCreateProductionStepResult,
   BulkCreateProductionStepsRequest,
   BulkCreateProductionStepsResponse,
+  BulkUpsertProductionStepsRequest,
+  ExportProductionStepsRequest,
+  ItemIdentifier,
+  UpsertProductionStepInput,
+  UpsertRateInput,
+  UpsertStepConsumptionInput,
+  UpsertStepProductionInput,
 } from './actions';
 import * as ConsumptionsAPI from './consumptions';
 import {
@@ -614,6 +623,15 @@ export declare namespace ProductionSteps {
     type BulkCreateProductionStepResult as BulkCreateProductionStepResult,
     type BulkCreateProductionStepsRequest as BulkCreateProductionStepsRequest,
     type BulkCreateProductionStepsResponse as BulkCreateProductionStepsResponse,
+    type BulkUpsertProductionStepsRequest as BulkUpsertProductionStepsRequest,
+    type ExportProductionStepsRequest as ExportProductionStepsRequest,
+    type ItemIdentifier as ItemIdentifier,
+    type UpsertProductionStepInput as UpsertProductionStepInput,
+    type UpsertRateInput as UpsertRateInput,
+    type UpsertStepConsumptionInput as UpsertStepConsumptionInput,
+    type UpsertStepProductionInput as UpsertStepProductionInput,
     type ActionBulkCreateParams as ActionBulkCreateParams,
+    type ActionBulkUpsertParams as ActionBulkUpsertParams,
+    type ActionExportParams as ActionExportParams,
   };
 }

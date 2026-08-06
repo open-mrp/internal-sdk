@@ -1,6 +1,16 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as ActionsAPI from './actions';
+import {
+  ActionBulkUpsertParams,
+  ActionExportParams,
+  Actions,
+  BulkUpsertPropertiesRequest,
+  ExportPropertiesRequest,
+  UpsertPropertyAttributeInput,
+  UpsertPropertyInput,
+} from './actions';
 import * as AttributesAPI from './attributes';
 import {
   AttributeCreateParams,
@@ -23,6 +33,7 @@ import { path } from '../../../internal/utils/path';
  */
 export class Properties extends APIResource {
   attributes: AttributesAPI.Attributes = new AttributesAPI.Attributes(this._client);
+  actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
    * Creates a property.
@@ -220,6 +231,7 @@ export interface PropertyListParams {
 }
 
 Properties.Attributes = Attributes;
+Properties.Actions = Actions;
 
 export declare namespace Properties {
   export {
@@ -242,5 +254,15 @@ export declare namespace Properties {
     type AttributeUpdateParams as AttributeUpdateParams,
     type AttributeListParams as AttributeListParams,
     type AttributeDeleteParams as AttributeDeleteParams,
+  };
+
+  export {
+    Actions as Actions,
+    type BulkUpsertPropertiesRequest as BulkUpsertPropertiesRequest,
+    type ExportPropertiesRequest as ExportPropertiesRequest,
+    type UpsertPropertyAttributeInput as UpsertPropertyAttributeInput,
+    type UpsertPropertyInput as UpsertPropertyInput,
+    type ActionBulkUpsertParams as ActionBulkUpsertParams,
+    type ActionExportParams as ActionExportParams,
   };
 }

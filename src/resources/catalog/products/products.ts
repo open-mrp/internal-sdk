@@ -4,9 +4,14 @@ import { APIResource } from '../../../core/resource';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as ActionsAPI from './actions';
 import {
+  ActionBulkUpsertParams,
   ActionExportParams,
   ActionValidateParams,
   Actions,
+  BulkUpsertProductsRequest,
+  ExportProductsRequest,
+  UpsertProductInput,
+  UpsertProductProperty,
   ValidateProductsRequest,
   ValidateProductsResponse,
 } from './actions';
@@ -735,8 +740,13 @@ export declare namespace Products {
 
   export {
     Actions as Actions,
+    type BulkUpsertProductsRequest as BulkUpsertProductsRequest,
+    type ExportProductsRequest as ExportProductsRequest,
+    type UpsertProductInput as UpsertProductInput,
+    type UpsertProductProperty as UpsertProductProperty,
     type ValidateProductsRequest as ValidateProductsRequest,
     type ValidateProductsResponse as ValidateProductsResponse,
+    type ActionBulkUpsertParams as ActionBulkUpsertParams,
     type ActionExportParams as ActionExportParams,
     type ActionValidateParams as ActionValidateParams,
   };

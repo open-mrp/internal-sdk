@@ -755,7 +755,8 @@ export interface SendNotificationRequest {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 
   /**
    * How prominently the notification should be surfaced, from `low` through
@@ -1084,7 +1085,8 @@ export interface NotificationCreateParams {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 
   /**
    * How prominently the notification should be surfaced, from `low` through

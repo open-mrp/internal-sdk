@@ -2,6 +2,16 @@
 
 import { APIResource } from '../../../core/resource';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
+import * as ActionsAPI from './actions';
+import {
+  ActionBulkCreateParams,
+  ActionExportParams,
+  Actions,
+  BulkCreateBatchInput,
+  BulkCreateProductionRunInput,
+  BulkCreateProductionRunsRequest,
+  ExportProductionRunsRequest,
+} from './actions';
 import * as BatchesAPI from './batches';
 import {
   AddBatchInputRequest,
@@ -10,7 +20,7 @@ import {
   BatchListParams,
   Batches,
 } from './batches';
-import * as ActionsAPI from '../../sales/sales-orders/actions';
+import * as SalesOrdersActionsAPI from '../../sales/sales-orders/actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -20,6 +30,7 @@ import { path } from '../../../internal/utils/path';
  */
 export class ProductionRuns extends APIResource {
   batches: BatchesAPI.Batches = new BatchesAPI.Batches(this._client);
+  actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
    * Creates a production run.
@@ -38,7 +49,10 @@ export class ProductionRuns extends APIResource {
    *   });
    * ```
    */
-  create(params: ProductionRunCreateParams, options?: RequestOptions): APIPromise<ActionsAPI.ProductionRun> {
+  create(
+    params: ProductionRunCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<SalesOrdersActionsAPI.ProductionRun> {
     const { include, ...body } = params;
     return this._client.post('/v1/operations/production-runs', { query: { include }, body, ...options });
   }
@@ -60,7 +74,7 @@ export class ProductionRuns extends APIResource {
     id: string,
     query: ProductionRunRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionsAPI.ProductionRun> {
+  ): APIPromise<SalesOrdersActionsAPI.ProductionRun> {
     return this._client.get(path`/v1/operations/production-runs/${id}`, { query, ...options });
   }
 
@@ -88,7 +102,7 @@ export class ProductionRuns extends APIResource {
     id: string,
     params: ProductionRunUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ActionsAPI.ProductionRun> {
+  ): APIPromise<SalesOrdersActionsAPI.ProductionRun> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/production-runs/${id}`, {
       query: { include },
@@ -161,7 +175,7 @@ export interface ListProductionRun {
   /**
    * Resources in this page.
    */
-  data: Array<ActionsAPI.ProductionRun>;
+  data: Array<SalesOrdersActionsAPI.ProductionRun>;
 
   /**
    * Resource type identifier.
@@ -313,6 +327,7 @@ export interface ProductionRunListParams {
 }
 
 ProductionRuns.Batches = Batches;
+ProductionRuns.Actions = Actions;
 
 export declare namespace ProductionRuns {
   export {
@@ -332,5 +347,15 @@ export declare namespace ProductionRuns {
     type AddBatchesToProductionRunRequest as AddBatchesToProductionRunRequest,
     type BatchCreateParams as BatchCreateParams,
     type BatchListParams as BatchListParams,
+  };
+
+  export {
+    Actions as Actions,
+    type BulkCreateBatchInput as BulkCreateBatchInput,
+    type BulkCreateProductionRunInput as BulkCreateProductionRunInput,
+    type BulkCreateProductionRunsRequest as BulkCreateProductionRunsRequest,
+    type ExportProductionRunsRequest as ExportProductionRunsRequest,
+    type ActionBulkCreateParams as ActionBulkCreateParams,
+    type ActionExportParams as ActionExportParams,
   };
 }

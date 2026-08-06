@@ -3,7 +3,15 @@
 import { APIResource } from '../../../core/resource';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as ActionsAPI from './actions';
-import { ActionExportParams, Actions } from './actions';
+import {
+  ActionBulkUpsertParams,
+  ActionExportParams,
+  Actions,
+  BulkUpsertPartsRequest,
+  ExportPartsRequest,
+  UpsertPartInput,
+  UpsertPartProperty,
+} from './actions';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
@@ -460,5 +468,13 @@ export declare namespace Parts {
     type PartListParams as PartListParams,
   };
 
-  export { Actions as Actions, type ActionExportParams as ActionExportParams };
+  export {
+    Actions as Actions,
+    type BulkUpsertPartsRequest as BulkUpsertPartsRequest,
+    type ExportPartsRequest as ExportPartsRequest,
+    type UpsertPartInput as UpsertPartInput,
+    type UpsertPartProperty as UpsertPartProperty,
+    type ActionBulkUpsertParams as ActionBulkUpsertParams,
+    type ActionExportParams as ActionExportParams,
+  };
 }

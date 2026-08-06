@@ -116,7 +116,7 @@ export interface AuditEvent {
    * - `deny`: a human denied a gated action, such as rejecting a review-gated agent
    *   tool.
    */
-  action: 'create' | 'update' | 'delete' | 'restore' | 'archive' | 'approve' | 'deny';
+  action: 'create' | 'update' | 'upsert' | 'delete' | 'restore' | 'archive' | 'approve' | 'deny';
 
   /**
    * Reference to an actor — the user, API key, agent, or group identity associated
@@ -455,7 +455,8 @@ export interface AuditEvent {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 
   /**
    * Originating client IP address.
@@ -839,6 +840,7 @@ export interface ListObjectType {
     | 'pack_list_line_item'
     | 'pack_list_back_order'
     | 'pack_list_case'
+    | 'job'
   >;
 
   /**
@@ -870,7 +872,7 @@ export interface AuditEventListParams {
   /**
    * Filter by the mutation type recorded on the event.
    */
-  actions?: Array<'create' | 'update' | 'delete' | 'restore' | 'archive' | 'approve' | 'deny'>;
+  actions?: Array<'create' | 'update' | 'upsert' | 'delete' | 'restore' | 'archive' | 'approve' | 'deny'>;
 
   /**
    * Filter by the _acting_ account: the account that performed the mutation.
@@ -1218,6 +1220,7 @@ export interface AuditEventListParams {
     | 'pack_list_line_item'
     | 'pack_list_back_order'
     | 'pack_list_case'
+    | 'job'
   >;
 
   /**
@@ -1511,7 +1514,8 @@ export interface AuditEventListParams {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 
   /**
    * Restricts results to audit events on or after this timestamp.

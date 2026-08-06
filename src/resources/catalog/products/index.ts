@@ -2,8 +2,13 @@
 
 export {
   Actions,
+  type BulkUpsertProductsRequest,
+  type ExportProductsRequest,
+  type UpsertProductInput,
+  type UpsertProductProperty,
   type ValidateProductsRequest,
   type ValidateProductsResponse,
+  type ActionBulkUpsertParams,
   type ActionExportParams,
   type ActionValidateParams,
 } from './actions';

@@ -1,6 +1,15 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
+  Actions,
+  type BulkCreateBatchInput,
+  type BulkCreateProductionRunInput,
+  type BulkCreateProductionRunsRequest,
+  type ExportProductionRunsRequest,
+  type ActionBulkCreateParams,
+  type ActionExportParams,
+} from './actions';
+export {
   Batches,
   type AddBatchInputRequest,
   type AddBatchesToProductionRunRequest,

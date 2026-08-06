@@ -514,7 +514,8 @@ export interface CreateConversationRequest {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 }
 
 /**
@@ -901,7 +902,8 @@ export interface ConversationCreateParams {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 }
 
 export interface ConversationRetrieveParams {
@@ -1305,7 +1307,8 @@ export interface ConversationListParams {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 
   /**
    * Filter by conversation type.

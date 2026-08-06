@@ -3,7 +3,17 @@
 import { APIResource } from '../../../core/resource';
 import * as VolumeDiscountsAPI from '../../sales/volume-discounts';
 import * as ActionsAPI from './actions';
-import { ActionValidateParams, Actions, ValidateUnitsRequest, ValidateUnitsResponse } from './actions';
+import {
+  ActionBulkUpsertParams,
+  ActionExportParams,
+  ActionValidateParams,
+  Actions,
+  BulkUpsertUnitsRequest,
+  ExportUnitsRequest,
+  UpsertUnitInput,
+  ValidateUnitsRequest,
+  ValidateUnitsResponse,
+} from './actions';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
@@ -423,8 +433,13 @@ export declare namespace Units {
 
   export {
     Actions as Actions,
+    type BulkUpsertUnitsRequest as BulkUpsertUnitsRequest,
+    type ExportUnitsRequest as ExportUnitsRequest,
+    type UpsertUnitInput as UpsertUnitInput,
     type ValidateUnitsRequest as ValidateUnitsRequest,
     type ValidateUnitsResponse as ValidateUnitsResponse,
+    type ActionBulkUpsertParams as ActionBulkUpsertParams,
+    type ActionExportParams as ActionExportParams,
     type ActionValidateParams as ActionValidateParams,
   };
 }

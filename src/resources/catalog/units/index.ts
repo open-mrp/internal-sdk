@@ -2,8 +2,13 @@
 
 export {
   Actions,
+  type BulkUpsertUnitsRequest,
+  type ExportUnitsRequest,
+  type UpsertUnitInput,
   type ValidateUnitsRequest,
   type ValidateUnitsResponse,
+  type ActionBulkUpsertParams,
+  type ActionExportParams,
   type ActionValidateParams,
 } from './actions';
 export {

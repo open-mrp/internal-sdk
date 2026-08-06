@@ -95,14 +95,14 @@ export interface WebhookResponse {
 
 export interface StripeCreateParams {
   /**
-   * Header parameter: Stripe-Signature for Process Stripe Webhook
+   * Stripe-Signature header value for payload verification.
    */
   'Stripe-Signature'?: string;
 }
 
 export interface StripeAccountsParams {
   /**
-   * Header parameter: Stripe-Signature for Process Account Stripe Webhook
+   * Stripe-Signature header value for payload verification.
    */
   'Stripe-Signature'?: string;
 }

@@ -1,9 +1,11 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as JobsAPI from '../../core/jobs';
 import * as AccountPricesAPI from '../../sales/account-prices';
-import * as ActionsAPI from '../items/actions';
+import * as ActionsAPI from '../item-categories/actions';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
+import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 
@@ -12,28 +14,46 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Exports matching products as an Excel workbook.
-   *
-   * The response is a file download, not JSON, and it is not paginated: every
-   * product matching the filters is written to a single sheet, one row per product,
-   * with columns for the product ID, SKU, description, category, product line, and
-   * unit price and cost with their units, plus one column for each category property
-   * in use. As with the product list, only products of type `sale` are exported.
-   *
-   * This endpoint requires the permissions: `items:read`, `customers:read`,
-   * `suppliers:read`.
+   * Creates or updates multiple products for the account, matched by SKU. Validates
+   * and resolves synchronously, then writes asynchronously — 202 with a job to poll.
    *
    * @example
    * ```ts
-   * const fileDownload =
-   *   await client.catalog.products.actions.export();
+   * const job =
+   *   await client.catalog.products.actions.bulkUpsert({
+   *     products: [
+   *       {
+   *         sku: 'ALM-2024-1001',
+   *         category: { id: 'ic_d06g9c6yc9ck' },
+   *         properties: [],
+   *       },
+   *     ],
+   *   });
    * ```
    */
-  export(
-    query: ActionExportParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<ActionsAPI.FileDownload> {
-    return this._client.get('/v1/catalog/products/actions/export', { query, ...options });
+  bulkUpsert(body: ActionBulkUpsertParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    return this._client.post('/v1/catalog/products/actions/bulk-upsert', { body, ...options });
+  }
+
+  /**
+   * Starts an export of every matching product and returns the job that tracks it;
+   * as with the product list, only products of type `sale` are exported.
+   *
+   * @example
+   * ```ts
+   * const job = await client.catalog.products.actions.export({
+   *   attribute_ids: [],
+   *   category_ids: [],
+   *   customer_ids: [],
+   *   ends_at: null,
+   *   product_line_ids: [],
+   *   q: null,
+   *   starts_at: null,
+   * });
+   * ```
+   */
+  export(body: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    return this._client.post('/v1/catalog/products/actions/export', { body, ...options });
   }
 
   /**
@@ -64,6 +84,149 @@ export class Actions extends APIResource {
       ...options,
     });
   }
+}
+
+/**
+ * Request to bulk upsert products.
+ */
+export interface BulkUpsertProductsRequest {
+  /**
+   * Products to create or update, matched by SKU within the account.
+   */
+  products: Array<UpsertProductInput>;
+}
+
+/**
+ * Filters which products land in the exported file.
+ */
+export interface ExportProductsRequest {
+  /**
+   * Filter to products whose item carries at least one of these attributes.
+   */
+  attribute_ids: Array<string>;
+
+  /**
+   * Filter by the item category the product's item belongs to.
+   */
+  category_ids: Array<string>;
+
+  /**
+   * Restrict the export to products these customer accounts are entitled to buy.
+   *
+   * A product matches when its product line has been granted to the customer
+   * directly, through the customer's account group, or through the account group
+   * used for the customer's pricing.
+   */
+  customer_ids: Array<string>;
+
+  /**
+   * End of creation date range.
+   */
+  ends_at: string | null;
+
+  /**
+   * Filter by product line IDs.
+   *
+   * Combined with `customer_ids`, products matching either filter are exported.
+   */
+  product_line_ids: Array<string>;
+
+  /**
+   * Free-text search matched against the SKU and description of each product's item.
+   */
+  q: string | null;
+
+  /**
+   * Start of creation date range.
+   */
+  starts_at: string | null;
+}
+
+/**
+ * Input for a single product in a bulk upsert operation.
+ */
+export interface UpsertProductInput {
+  /**
+   * -------------------------- Named Object -------------------------- Identifies an
+   * object by its id or its name. An id wins when both are given.
+   */
+  category: ActionsAPI.ObjectIdentifier;
+
+  /**
+   * Properties to attach to the product, matched/created by name + value. Additive —
+   * existing attributes are not removed.
+   */
+  properties: Array<UpsertProductProperty>;
+
+  /**
+   * SKU for the product, used to match an existing product within the account. If it
+   * exists the product is updated in place; otherwise a new product is created. A
+   * SKU already used by a non-product item fails that row.
+   */
+  sku: string;
+
+  /**
+   * Product description.
+   */
+  description?: string;
+
+  /**
+   * Product notes.
+   */
+  notes?: string;
+
+  /**
+   * Whether the product is shown to buyers in the customer portal. Defaults to
+   * `hidden` on create; preserved when omitted on update.
+   */
+  portal_visibility?: 'visible' | 'hidden';
+
+  /**
+   * -------------------------- Named Object -------------------------- Identifies an
+   * object by its id or its name. An id wins when both are given.
+   */
+  product_line?: ActionsAPI.ObjectIdentifier;
+
+  /**
+   * Product type. Create-only; defaults to `sale` when omitted.
+   */
+  type?: 'sale' | 'service' | 'shipping' | 'credit' | 'return' | 'tax';
+
+  /**
+   * A value expressed as a ratio of two units, supplied on create and update
+   * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
+   */
+  unit_cost?: SalesOrdersAPI.RateInput;
+
+  /**
+   * A value expressed as a ratio of two units, supplied on create and update
+   * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
+   */
+  unit_price?: SalesOrdersAPI.RateInput;
+}
+
+/**
+ * Property name + value pair attached to a product. The property and its value (an
+ * attribute) are created if they do not yet exist.
+ */
+export interface UpsertProductProperty {
+  /**
+   * Property name (e.g. "Color"). Matched case-insensitively; created if missing.
+   */
+  name: string;
+
+  /**
+   * Property value (e.g. "Red"). Matched case-insensitively; created under the
+   * property if missing. A value already in use under a different property fails the
+   * whole job.
+   */
+  value: string;
 }
 
 /**
@@ -170,16 +333,23 @@ export namespace ValidateProductsResponse {
   }
 }
 
+export interface ActionBulkUpsertParams {
+  /**
+   * Products to create or update, matched by SKU within the account.
+   */
+  products: Array<UpsertProductInput>;
+}
+
 export interface ActionExportParams {
   /**
    * Filter to products whose item carries at least one of these attributes.
    */
-  attribute_ids?: Array<string>;
+  attribute_ids: Array<string>;
 
   /**
    * Filter by the item category the product's item belongs to.
    */
-  category_ids?: Array<string>;
+  category_ids: Array<string>;
 
   /**
    * Restrict the export to products these customer accounts are entitled to buy.
@@ -188,29 +358,29 @@ export interface ActionExportParams {
    * directly, through the customer's account group, or through the account group
    * used for the customer's pricing.
    */
-  customer_ids?: Array<string>;
+  customer_ids: Array<string>;
 
   /**
    * End of creation date range.
    */
-  ends_at?: string;
+  ends_at: string | null;
 
   /**
    * Filter by product line IDs.
    *
    * Combined with `customer_ids`, products matching either filter are exported.
    */
-  product_line_ids?: Array<string>;
+  product_line_ids: Array<string>;
 
   /**
    * Free-text search matched against the SKU and description of each product's item.
    */
-  q?: string;
+  q: string | null;
 
   /**
    * Start of creation date range.
    */
-  starts_at?: string;
+  starts_at: string | null;
 }
 
 export interface ActionValidateParams {
@@ -248,8 +418,13 @@ export interface ActionValidateParams {
 
 export declare namespace Actions {
   export {
+    type BulkUpsertProductsRequest as BulkUpsertProductsRequest,
+    type ExportProductsRequest as ExportProductsRequest,
+    type UpsertProductInput as UpsertProductInput,
+    type UpsertProductProperty as UpsertProductProperty,
     type ValidateProductsRequest as ValidateProductsRequest,
     type ValidateProductsResponse as ValidateProductsResponse,
+    type ActionBulkUpsertParams as ActionBulkUpsertParams,
     type ActionExportParams as ActionExportParams,
     type ActionValidateParams as ActionValidateParams,
   };

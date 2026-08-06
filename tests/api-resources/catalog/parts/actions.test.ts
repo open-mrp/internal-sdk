@@ -8,8 +8,16 @@ const client = new Augno({
 });
 
 describe('resource actions', () => {
-  test('export', async () => {
-    const responsePromise = client.catalog.parts.actions.export();
+  test('bulkUpsert: only required params', async () => {
+    const responsePromise = client.catalog.parts.actions.bulkUpsert({
+      parts: [
+        {
+          category: { id: 'ic_d06g9c6yc9ck', name: 'name' },
+          properties: [{ name: 'name', value: 'value' }],
+          sku: 'BRG-6204-2RS',
+        },
+      ],
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,19 +27,54 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('export: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.catalog.parts.actions.export(
+  test('bulkUpsert: required and optional params', async () => {
+    const response = await client.catalog.parts.actions.bulkUpsert({
+      parts: [
         {
-          attribute_ids: ['string'],
-          category_ids: ['string'],
-          ends_at: '2019-12-27T18:11:19.117Z',
-          q: 'q',
-          starts_at: '2019-12-27T18:11:19.117Z',
+          category: { id: 'ic_d06g9c6yc9ck', name: 'name' },
+          properties: [{ name: 'name', value: 'value' }],
+          sku: 'BRG-6204-2RS',
+          description: 'description',
+          notes: 'notes',
+          unit_cost: {
+            denominator_unit_id: 'denominator_unit_id',
+            numerator_unit_id: 'numerator_unit_id',
+            value: 'value',
+          },
+          unit_price: {
+            denominator_unit_id: 'denominator_unit_id',
+            numerator_unit_id: 'numerator_unit_id',
+            value: 'value',
+          },
         },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Augno.NotFoundError);
+      ],
+    });
+  });
+
+  test('export: only required params', async () => {
+    const responsePromise = client.catalog.parts.actions.export({
+      attribute_ids: ['string'],
+      category_ids: ['string'],
+      ends_at: null,
+      q: null,
+      starts_at: null,
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('export: required and optional params', async () => {
+    const response = await client.catalog.parts.actions.export({
+      attribute_ids: ['string'],
+      category_ids: ['string'],
+      ends_at: null,
+      q: null,
+      starts_at: null,
+    });
   });
 });

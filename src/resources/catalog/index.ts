@@ -59,7 +59,7 @@ export {
   type ProductLineRetrieveParams,
   type ProductLineUpdateParams,
   type ProductLineListParams,
-} from './product-lines';
+} from './product-lines/index';
 export {
   ProductTypes,
   type CreateProductTypeRequest,

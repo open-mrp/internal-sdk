@@ -2,6 +2,17 @@
 
 import { APIResource } from '../../../core/resource';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
+import * as ActionsAPI from './actions';
+import {
+  ActionBulkUpsertParams,
+  ActionExportParams,
+  Actions,
+  BulkUpsertUnitGroupsRequest,
+  ExportUnitGroupsRequest,
+  UnitIdentifier,
+  UpsertUnitGroupConversionInput,
+  UpsertUnitGroupInput,
+} from './actions';
 import * as UnitsAPI from './units';
 import {
   CreateUnitGroupUnitRequest,
@@ -24,6 +35,7 @@ import { path } from '../../../internal/utils/path';
  */
 export class UnitGroups extends APIResource {
   units: UnitsAPI.Units = new UnitsAPI.Units(this._client);
+  actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
    * Creates a unit group, optionally associating units with it in the same request.
@@ -413,6 +425,7 @@ export interface UnitGroupListParams {
 }
 
 UnitGroups.Units = Units;
+UnitGroups.Actions = Actions;
 
 export declare namespace UnitGroups {
   export {
@@ -437,5 +450,16 @@ export declare namespace UnitGroups {
     type UnitUpdateParams as UnitUpdateParams,
     type UnitListParams as UnitListParams,
     type UnitDeleteParams as UnitDeleteParams,
+  };
+
+  export {
+    Actions as Actions,
+    type BulkUpsertUnitGroupsRequest as BulkUpsertUnitGroupsRequest,
+    type ExportUnitGroupsRequest as ExportUnitGroupsRequest,
+    type UnitIdentifier as UnitIdentifier,
+    type UpsertUnitGroupConversionInput as UpsertUnitGroupConversionInput,
+    type UpsertUnitGroupInput as UpsertUnitGroupInput,
+    type ActionBulkUpsertParams as ActionBulkUpsertParams,
+    type ActionExportParams as ActionExportParams,
   };
 }

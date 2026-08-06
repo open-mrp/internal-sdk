@@ -1,6 +1,15 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
+  Actions,
+  type BulkUpsertPropertiesRequest,
+  type ExportPropertiesRequest,
+  type UpsertPropertyAttributeInput,
+  type UpsertPropertyInput,
+  type ActionBulkUpsertParams,
+  type ActionExportParams,
+} from './actions';
+export {
   Attributes,
   type CreateAttributeRequest,
   type UpdateAttributeRequest,

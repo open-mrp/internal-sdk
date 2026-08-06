@@ -1,6 +1,15 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
+  Actions,
+  type BulkUpsertItemCategoriesRequest,
+  type ExportItemCategoriesRequest,
+  type ObjectIdentifier,
+  type UpsertItemCategoryInput,
+  type ActionBulkUpsertParams,
+  type ActionExportParams,
+} from './actions';
+export {
   ItemCategories,
   type CreateItemCategoryRequest,
   type UpdateItemCategoryRequest,

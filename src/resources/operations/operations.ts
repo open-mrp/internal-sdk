@@ -50,33 +50,10 @@ import {
   ListDemandOverride,
   UpdateDemandOverrideRequest,
 } from './demand-overrides';
-import * as DepartmentsAPI from './departments';
-import {
-  CreateDepartmentRequest,
-  DepartmentCreateParams,
-  DepartmentDeleteResponse,
-  DepartmentListParams,
-  DepartmentRateInput,
-  DepartmentRetrieveParams,
-  DepartmentUpdateParams,
-  Departments,
-  UpdateDepartmentRequest,
-} from './departments';
 import * as EdiRunsAPI from './edi-runs';
 import { EdiRun, EdiRunListParams, EdiRuns, ListEdiRun } from './edi-runs';
 import * as LocationTypesAPI from './location-types';
 import { ListLocationType, LocationType, LocationTypeListParams, LocationTypes } from './location-types';
-import * as LocationsAPI from './locations';
-import {
-  CreateLocationRequest,
-  LocationCreateParams,
-  LocationDeleteResponse,
-  LocationListParams,
-  LocationRetrieveParams,
-  LocationUpdateParams,
-  Locations,
-  UpdateLocationRequest,
-} from './locations';
 import * as MachineDowntimeEventsAPI from './machine-downtime-events';
 import {
   CreateMachineDowntimeEventRequest,
@@ -90,37 +67,6 @@ import {
   MachineDowntimeEvents,
   UpdateMachineDowntimeEventRequest,
 } from './machine-downtime-events';
-import * as MachinesAPI from './machines';
-import {
-  CreateMachineRequest,
-  MachineCreateParams,
-  MachineDeleteResponse,
-  MachineListParams,
-  MachineRetrieveParams,
-  MachineUpdateParams,
-  Machines,
-  UpdateMachineRequest,
-} from './machines';
-import * as ScanningStationsAPI from './scanning-stations';
-import {
-  ConnectProductionStepsRequest,
-  CreateScanningStationRequest,
-  GetScanningStationConsumptionRequest,
-  ListBatch,
-  ListScanningConsumption,
-  ScanningConsumption,
-  ScanningStationConsumptionsParams,
-  ScanningStationCreateParams,
-  ScanningStationDeleteResponse,
-  ScanningStationListParams,
-  ScanningStationRetrieveBatchesParams,
-  ScanningStationRetrieveParams,
-  ScanningStationUpdateParams,
-  ScanningStationUpdateProductionStepsParams,
-  ScanningStationUpdateProductionStepsResponse,
-  ScanningStations,
-  UpdateScanningStationRequest,
-} from './scanning-stations';
 import * as ShippingCasesAPI from './shipping-cases';
 import {
   ShippingCase,
@@ -176,6 +122,18 @@ import {
   OAuthStatusResponse,
   UpdateCarrierRequest,
 } from './carriers/carriers';
+import * as DepartmentsAPI from './departments/departments';
+import {
+  CreateDepartmentRequest,
+  DepartmentCreateParams,
+  DepartmentDeleteResponse,
+  DepartmentListParams,
+  DepartmentRateInput,
+  DepartmentRetrieveParams,
+  DepartmentUpdateParams,
+  Departments,
+  UpdateDepartmentRequest,
+} from './departments/departments';
 import * as EdiAPI from './edi/edi';
 import { Edi } from './edi/edi';
 import * as InventoryChangeLogsAPI from './inventory-change-logs/inventory-change-logs';
@@ -186,6 +144,28 @@ import {
   InventoryChangeLogs,
   ListInventoryChangeLog,
 } from './inventory-change-logs/inventory-change-logs';
+import * as LocationsAPI from './locations/locations';
+import {
+  CreateLocationRequest,
+  LocationCreateParams,
+  LocationDeleteResponse,
+  LocationListParams,
+  LocationRetrieveParams,
+  LocationUpdateParams,
+  Locations,
+  UpdateLocationRequest,
+} from './locations/locations';
+import * as MachinesAPI from './machines/machines';
+import {
+  CreateMachineRequest,
+  MachineCreateParams,
+  MachineDeleteResponse,
+  MachineListParams,
+  MachineRetrieveParams,
+  MachineUpdateParams,
+  Machines,
+  UpdateMachineRequest,
+} from './machines/machines';
 import * as PicksAPI from './picks/picks';
 import {
   ListPick,
@@ -291,6 +271,26 @@ import {
   ReceivingOrderRetrieveParams,
   ReceivingOrders,
 } from './receiving-orders/receiving-orders';
+import * as ScanningStationsAPI from './scanning-stations/scanning-stations';
+import {
+  ConnectProductionStepsRequest,
+  CreateScanningStationRequest,
+  GetScanningStationConsumptionRequest,
+  ListBatch,
+  ListScanningConsumption,
+  ScanningConsumption,
+  ScanningStationConsumptionsParams,
+  ScanningStationCreateParams,
+  ScanningStationDeleteResponse,
+  ScanningStationListParams,
+  ScanningStationRetrieveBatchesParams,
+  ScanningStationRetrieveParams,
+  ScanningStationUpdateParams,
+  ScanningStationUpdateProductionStepsParams,
+  ScanningStationUpdateProductionStepsResponse,
+  ScanningStations,
+  UpdateScanningStationRequest,
+} from './scanning-stations/scanning-stations';
 import * as ShipmentsAPI from './shipments/shipments';
 import {
   ListShipment,

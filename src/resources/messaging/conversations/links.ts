@@ -374,7 +374,8 @@ export interface AddConversationLinkRequest {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 }
 
 /**
@@ -727,7 +728,8 @@ export interface LinkCreateParams {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 
   /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects

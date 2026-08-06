@@ -2,6 +2,16 @@
 
 import { APIResource } from '../../../core/resource';
 import * as AccountPricesAPI from '../../sales/account-prices';
+import * as ActionsAPI from './actions';
+import {
+  ActionBulkUpsertParams,
+  ActionExportParams,
+  Actions,
+  BulkUpsertItemCategoriesRequest,
+  ExportItemCategoriesRequest,
+  ObjectIdentifier,
+  UpsertItemCategoryInput,
+} from './actions';
 import * as PropertiesAPI from './properties';
 import {
   Properties,
@@ -20,6 +30,7 @@ import { path } from '../../../internal/utils/path';
  */
 export class ItemCategories extends APIResource {
   properties: PropertiesAPI.Properties = new PropertiesAPI.Properties(this._client);
+  actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
    * Creates an item category owned by your account.
@@ -362,6 +373,7 @@ export interface ItemCategoryChangeUnitGroupParams {
 }
 
 ItemCategories.Properties = Properties;
+ItemCategories.Actions = Actions;
 
 export declare namespace ItemCategories {
   export {
@@ -382,5 +394,15 @@ export declare namespace ItemCategories {
     type PropertyDeleteResponse as PropertyDeleteResponse,
     type PropertyUpdateParams as PropertyUpdateParams,
     type PropertyDeleteParams as PropertyDeleteParams,
+  };
+
+  export {
+    Actions as Actions,
+    type BulkUpsertItemCategoriesRequest as BulkUpsertItemCategoriesRequest,
+    type ExportItemCategoriesRequest as ExportItemCategoriesRequest,
+    type ObjectIdentifier as ObjectIdentifier,
+    type UpsertItemCategoryInput as UpsertItemCategoryInput,
+    type ActionBulkUpsertParams as ActionBulkUpsertParams,
+    type ActionExportParams as ActionExportParams,
   };
 }

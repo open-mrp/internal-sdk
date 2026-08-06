@@ -1,17 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as ProductLinesAPI from './product-lines';
-import {
-  CreateProductLineRequest,
-  ProductLineCreateParams,
-  ProductLineDeleteResponse,
-  ProductLineListParams,
-  ProductLineRetrieveParams,
-  ProductLineUpdateParams,
-  ProductLines,
-  UpdateProductLineRequest,
-} from './product-lines';
 import * as ProductTypesAPI from './product-types';
 import {
   CreateProductTypeRequest,
@@ -79,6 +68,17 @@ import {
   Parts,
   UpdatePartRequest,
 } from './parts/parts';
+import * as ProductLinesAPI from './product-lines/product-lines';
+import {
+  CreateProductLineRequest,
+  ProductLineCreateParams,
+  ProductLineDeleteResponse,
+  ProductLineListParams,
+  ProductLineRetrieveParams,
+  ProductLineUpdateParams,
+  ProductLines,
+  UpdateProductLineRequest,
+} from './product-lines/product-lines';
 import * as ProductsAPI from './products/products';
 import {
   CreateProductRequest,

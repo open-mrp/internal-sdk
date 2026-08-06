@@ -1,6 +1,16 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
+  Actions,
+  type BulkUpsertUnitGroupsRequest,
+  type ExportUnitGroupsRequest,
+  type UnitIdentifier,
+  type UpsertUnitGroupConversionInput,
+  type UpsertUnitGroupInput,
+  type ActionBulkUpsertParams,
+  type ActionExportParams,
+} from './actions';
+export {
   UnitGroups,
   type CreateUnitGroupRequest,
   type CreateUnitGroupUnitParam,

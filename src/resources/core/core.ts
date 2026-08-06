@@ -116,6 +116,8 @@ import {
 } from './audit-events';
 import * as EmailLogsAPI from './email-logs';
 import { EmailLog, EmailLogListParams, EmailLogRetrieveParams, EmailLogs, ListEmailLog } from './email-logs';
+import * as JobsAPI from './jobs';
+import { Job, JobExport, JobResult, Jobs, QuotaInfo, ResponseError, RowError } from './jobs';
 import * as RequestLogsAPI from './request-logs';
 import {
   Actor,
@@ -161,6 +163,7 @@ export class Core extends APIResource {
   auditEvents: AuditEventsAPI.AuditEvents = new AuditEventsAPI.AuditEvents(this._client);
   addresses: AddressesAPI.Addresses = new AddressesAPI.Addresses(this._client);
   emailLogs: EmailLogsAPI.EmailLogs = new EmailLogsAPI.EmailLogs(this._client);
+  jobs: JobsAPI.Jobs = new JobsAPI.Jobs(this._client);
   analytics: AnalyticsAPI.Analytics = new AnalyticsAPI.Analytics(this._client);
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
   records: RecordsAPI.Records = new RecordsAPI.Records(this._client);
@@ -506,7 +509,8 @@ export interface Entity {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 }
 
 /**
@@ -856,6 +860,7 @@ export interface CoreRetrieveSearchParams {
     | 'pack_list_line_item'
     | 'pack_list_back_order'
     | 'pack_list_case'
+    | 'job'
   >;
 }
 
@@ -864,6 +869,7 @@ Core.RequestLogs = RequestLogs;
 Core.AuditEvents = AuditEvents;
 Core.Addresses = Addresses;
 Core.EmailLogs = EmailLogs;
+Core.Jobs = Jobs;
 Core.Analytics = Analytics;
 Core.Actions = Actions;
 Core.Records = Records;
@@ -922,6 +928,16 @@ export declare namespace Core {
     type ListEmailLog as ListEmailLog,
     type EmailLogRetrieveParams as EmailLogRetrieveParams,
     type EmailLogListParams as EmailLogListParams,
+  };
+
+  export {
+    Jobs as Jobs,
+    type Job as Job,
+    type JobExport as JobExport,
+    type JobResult as JobResult,
+    type QuotaInfo as QuotaInfo,
+    type ResponseError as ResponseError,
+    type RowError as RowError,
   };
 
   export {

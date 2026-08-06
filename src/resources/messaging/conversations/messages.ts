@@ -525,7 +525,8 @@ export interface SendMessageRequest {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 
   /**
    * Account user ids explicitly @mentioned in the message.
@@ -941,7 +942,8 @@ export interface MessageCreateParams {
     | 'pack_list_party'
     | 'pack_list_line_item'
     | 'pack_list_back_order'
-    | 'pack_list_case';
+    | 'pack_list_case'
+    | 'job';
 
   /**
    * Body param: Account user ids explicitly @mentioned in the message.

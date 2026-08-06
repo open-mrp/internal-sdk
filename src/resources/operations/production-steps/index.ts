@@ -8,7 +8,16 @@ export {
   type BulkCreateProductionStepResult,
   type BulkCreateProductionStepsRequest,
   type BulkCreateProductionStepsResponse,
+  type BulkUpsertProductionStepsRequest,
+  type ExportProductionStepsRequest,
+  type ItemIdentifier,
+  type UpsertProductionStepInput,
+  type UpsertRateInput,
+  type UpsertStepConsumptionInput,
+  type UpsertStepProductionInput,
   type ActionBulkCreateParams,
+  type ActionBulkUpsertParams,
+  type ActionExportParams,
 } from './actions';
 export {
   Consumptions,

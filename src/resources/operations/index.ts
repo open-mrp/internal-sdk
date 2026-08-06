@@ -83,7 +83,7 @@ export {
   type DepartmentRetrieveParams,
   type DepartmentUpdateParams,
   type DepartmentListParams,
-} from './departments';
+} from './departments/index';
 export { Edi } from './edi/index';
 export { EdiRuns, type EdiRun, type ListEdiRun, type EdiRunListParams } from './edi-runs';
 export {
@@ -108,7 +108,7 @@ export {
   type LocationRetrieveParams,
   type LocationUpdateParams,
   type LocationListParams,
-} from './locations';
+} from './locations/index';
 export {
   MachineDowntimeEvents,
   type CreateMachineDowntimeEventRequest,
@@ -130,7 +130,7 @@ export {
   type MachineRetrieveParams,
   type MachineUpdateParams,
   type MachineListParams,
-} from './machines';
+} from './machines/index';
 export {
   Operations,
   type DemandOverrideType,
@@ -268,7 +268,7 @@ export {
   type ScanningStationConsumptionsParams,
   type ScanningStationRetrieveBatchesParams,
   type ScanningStationUpdateProductionStepsParams,
-} from './scanning-stations';
+} from './scanning-stations/index';
 export {
   Shipments,
   type ListShipment,
