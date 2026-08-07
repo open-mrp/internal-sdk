@@ -8,6 +8,7 @@ import * as ActionsAPI from './actions';
 import {
   ActionPreviewParams,
   ActionPreviewRegenerateParams,
+  ActionQuotePromiseDateParams,
   ActionRegenerateParams,
   ActionReleaseWeekParams,
   Actions,
@@ -19,6 +20,8 @@ import {
   PreviewRegenerateProductionScheduleRequest,
   ProductionSchedulePreview,
   ProductionScheduleRegeneratePreview,
+  PromiseDateQuote,
+  QuotePromiseDateRequest,
   RegenerateProductionScheduleRequest,
   ReleaseProductionScheduleWeekRequest,
   ReleaseScheduleWeekResult,
@@ -140,6 +143,36 @@ export class ProductionSchedules extends APIResource {
    */
   delete(id: string, options?: RequestOptions): APIPromise<ProductionScheduleDeleteResponse> {
     return this._client.delete(path`/v1/operations/production-schedules/${id}`, options);
+  }
+
+  /**
+   * Returns the customer commitments this schedule version does not meet, soonest
+   * first.
+   *
+   * Three ways an order lands here. `past_due` means the constraint stage needed to
+   * start before this plan begins. `undated` means the order carries no ship-by
+   * commitment at all, so it is treated as owed now. `short` means the plan simply
+   * does not build enough of it in time — the campaigns it does allocate are listed
+   * alongside, because building three hundred of five hundred is a different
+   * conversation from building none.
+   *
+   * Read from the version's own record rather than re-solved, so what comes back is
+   * what was decided when the plan was made. A version generated before commitments
+   * were tracked reports nothing, which is correct: it made no promises it could
+   * break.
+   *
+   * This endpoint requires the permission: `production_schedules:read`.
+   *
+   * @example
+   * ```ts
+   * const listScheduleOrderCoverage =
+   *   await client.operations.productionSchedules.retrieveAtRiskOrders(
+   *     'pnsc_m4zt3z8g8src',
+   *   );
+   * ```
+   */
+  retrieveAtRiskOrders(id: string, options?: RequestOptions): APIPromise<ListScheduleOrderCoverage> {
+    return this._client.get(path`/v1/operations/production-schedules/${id}/at-risk-orders`, options);
   }
 
   /**
@@ -552,6 +585,87 @@ export interface ListScheduleAppliedOverride {
    * Resources in this page.
    */
   data: Array<ScheduleAppliedOverride>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListScheduleAtRiskOrder {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ScheduleAtRiskOrder>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListScheduleOrderCoverage {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ScheduleOrderCoverage>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListScheduleOrderCoverageLine {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ScheduleOrderCoverageLine>;
 
   /**
    * Resource type identifier.
@@ -1141,6 +1255,26 @@ export interface ProductionScheduleItemPolicy {
   finish_lead_time_weeks: number;
 
   /**
+   * Outstanding quantity the order book already owed for this item over the horizon.
+   */
+  firm_demand_units: number;
+
+  /**
+   * Quantity the forecast projected for the same window.
+   */
+  forecast_demand_units: number;
+
+  /**
+   * How this item was planned.
+   *
+   * - `make_to_stock`: built to the forecast, holding a safety stock against its
+   *   variability.
+   * - `make_to_order`: built only against orders already on the book, holding no
+   *   buffer, so its safety stocks and reorder point are all zero.
+   */
+  fulfillment_policy: 'make_to_stock' | 'make_to_order';
+
+  /**
    * Annual cost of holding one unit.
    */
   holding_cost: number;
@@ -1180,6 +1314,12 @@ export interface ProductionScheduleItemPolicy {
    * Ceiling on how far ahead this item is built.
    */
   order_up_to: number;
+
+  /**
+   * Which rule decided that policy: the item itself, its product line, or the
+   * account default.
+   */
+  policy_source: 'item' | 'product_line' | 'account_default';
 
   /**
    * Entity is a polymorphic reference to any resource in the system.
@@ -1480,6 +1620,53 @@ export interface ScheduleAppliedOverride {
 }
 
 /**
+ * An order commitment the plan does not meet.
+ */
+export interface ScheduleAtRiskOrder {
+  /**
+   * Horizon week the constraint stage has to finish in for the order to ship on
+   * time.
+   */
+  due_week: number;
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  item: CoreAPI.Entity | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'schedule_at_risk_order';
+
+  /**
+   * Why the commitment is at risk.
+   *
+   * - `past_due`: production needed to start before this plan begins.
+   * - `undated`: the order carries no ship-by commitment, so it is treated as owed
+   *   now.
+   * - `short`: the plan projects less stock than the order needs in the week it is
+   *   needed.
+   */
+  reason: 'past_due' | 'undated' | 'short';
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  sales_order: CoreAPI.Entity | null;
+
+  /**
+   * SKU of that item.
+   */
+  sku: string;
+
+  /**
+   * Outstanding quantity still owed.
+   */
+  units: number;
+}
+
+/**
  * What the solver could not do, and why the plan differs from raw history.
  */
 export interface ScheduleDiagnostics {
@@ -1488,6 +1675,12 @@ export interface ScheduleDiagnostics {
    * the rest of the result set.
    */
   applied_overrides: ListScheduleAppliedOverride | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  at_risk_orders: ListScheduleAtRiskOrder | null;
 
   /**
    * Average inputs a product transition introduces, measured from history.
@@ -1528,6 +1721,14 @@ export interface ScheduleDiagnostics {
   excluded_item_count: number;
 
   /**
+   * Outstanding order quantity this plan owes, expressed in the constraint item's
+   * own unit.
+   *
+   * Zero means nothing is on order and the plan is driven purely by the forecast.
+   */
+  firm_demand_units: number;
+
+  /**
    * Items with no measured run rate, which cannot be scheduled because their machine
    * time is unknown.
    */
@@ -1541,6 +1742,11 @@ export interface ScheduleDiagnostics {
   machines_without_step: number;
 
   /**
+   * Planned items built only against the order book rather than to a forecast.
+   */
+  make_to_order_item_count: number;
+
+  /**
    * Batches found on those machines in the demand window.
    *
    * Zero means nothing has been scanned there, which is why a plan can be empty even
@@ -1549,10 +1755,105 @@ export interface ScheduleDiagnostics {
   measured_batch_count: number;
 
   /**
+   * Open orders carrying no ship-by commitment, dated at the front of the horizon
+   * because they are issued and unshipped.
+   *
+   * A non-zero count means orders placed before commitments were tracked still need
+   * a ship-by date.
+   */
+  undated_firm_order_count: number;
+
+  /**
    * Items that cannot fit even a single lot into a machine-week and are therefore
    * never scheduled.
    */
   unschedulable_skus: Array<string>;
+}
+
+/**
+ * An order this schedule does not build in time, with the campaigns covering the
+ * part it does.
+ */
+export interface ScheduleOrderCoverage {
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  covering_lines: ListScheduleOrderCoverageLine | null;
+
+  /**
+   * Horizon week the constraint stage has to finish in for the order to ship on
+   * time.
+   */
+  due_week: number;
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  item: CoreAPI.Entity | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'schedule_order_coverage';
+
+  /**
+   * Why the commitment is at risk.
+   */
+  reason: 'past_due' | 'undated' | 'short';
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  sales_order: CoreAPI.Entity | null;
+
+  /**
+   * The date this order is contractually due to ship.
+   */
+  ship_by_date: string | null;
+
+  /**
+   * SKU of that item.
+   */
+  sku: string;
+
+  /**
+   * Quantity the plan does not build in time.
+   *
+   * Less than the whole order when the plan builds part of it — a mostly-built order
+   * is mostly built, and reporting the full quantity would read as a total miss.
+   */
+  units_at_risk: number;
+}
+
+/**
+ * One campaign earmarked for an order.
+ */
+export interface ScheduleOrderCoverageLine {
+  /**
+   * Quantity of that campaign earmarked for this order.
+   */
+  allocated_quantity: number;
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  machine: CoreAPI.Entity | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'schedule_order_coverage_line';
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  production_schedule_line: CoreAPI.Entity | null;
+
+  /**
+   * Horizon week it runs in.
+   */
+  week_index: number;
 }
 
 export interface ProductionScheduleDeleteResponse {}
@@ -1693,6 +1994,9 @@ export declare namespace ProductionSchedules {
     type ListReleaseScheduleBatch as ListReleaseScheduleBatch,
     type ListReleasedScheduleLine as ListReleasedScheduleLine,
     type ListScheduleAppliedOverride as ListScheduleAppliedOverride,
+    type ListScheduleAtRiskOrder as ListScheduleAtRiskOrder,
+    type ListScheduleOrderCoverage as ListScheduleOrderCoverage,
+    type ListScheduleOrderCoverageLine as ListScheduleOrderCoverageLine,
     type ProductionSchedule as ProductionSchedule,
     type ProductionScheduleDerivedLine as ProductionScheduleDerivedLine,
     type ProductionScheduleDeviation as ProductionScheduleDeviation,
@@ -1702,7 +2006,10 @@ export declare namespace ProductionSchedules {
     type ReleaseScheduleWeekPreview as ReleaseScheduleWeekPreview,
     type ReleasedScheduleLine as ReleasedScheduleLine,
     type ScheduleAppliedOverride as ScheduleAppliedOverride,
+    type ScheduleAtRiskOrder as ScheduleAtRiskOrder,
     type ScheduleDiagnostics as ScheduleDiagnostics,
+    type ScheduleOrderCoverage as ScheduleOrderCoverage,
+    type ScheduleOrderCoverageLine as ScheduleOrderCoverageLine,
     type ProductionScheduleDeleteResponse as ProductionScheduleDeleteResponse,
     type ProductionScheduleCreateParams as ProductionScheduleCreateParams,
     type ProductionScheduleListParams as ProductionScheduleListParams,
@@ -1734,6 +2041,8 @@ export declare namespace ProductionSchedules {
     type PreviewRegenerateProductionScheduleRequest as PreviewRegenerateProductionScheduleRequest,
     type ProductionSchedulePreview as ProductionSchedulePreview,
     type ProductionScheduleRegeneratePreview as ProductionScheduleRegeneratePreview,
+    type PromiseDateQuote as PromiseDateQuote,
+    type QuotePromiseDateRequest as QuotePromiseDateRequest,
     type RegenerateProductionScheduleRequest as RegenerateProductionScheduleRequest,
     type ReleaseProductionScheduleWeekRequest as ReleaseProductionScheduleWeekRequest,
     type ReleaseScheduleWeekResult as ReleaseScheduleWeekResult,
@@ -1743,6 +2052,7 @@ export declare namespace ProductionSchedules {
     type ScheduleProjection as ScheduleProjection,
     type ActionPreviewParams as ActionPreviewParams,
     type ActionPreviewRegenerateParams as ActionPreviewRegenerateParams,
+    type ActionQuotePromiseDateParams as ActionQuotePromiseDateParams,
     type ActionRegenerateParams as ActionRegenerateParams,
     type ActionReleaseWeekParams as ActionReleaseWeekParams,
   };

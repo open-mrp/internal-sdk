@@ -1032,6 +1032,16 @@ export interface SalesOrder {
   issued_at: string | null;
 
   /**
+   * Calendar days between issue and the ship-by date.
+   */
+  lead_time_days: number | null;
+
+  /**
+   * Which rule produced the ship-by date.
+   */
+  lead_time_source: 'customer' | 'account_group' | 'account' | 'manual' | null;
+
+  /**
    * Number of lines on this order.
    */
   line_count: number;
@@ -1108,6 +1118,16 @@ export interface SalesOrder {
    * with an action.
    */
   sales_rep: RequestLogsAPI.Actor | null;
+
+  /**
+   * Date this order is contractually due to ship.
+   *
+   * Stamped when the order is issued, from the promised date if one was set,
+   * otherwise from the lead time on the customer, its account group, or the account.
+   * It is not recomputed afterwards, so renegotiating a customer's lead time leaves
+   * commitments already made where they are. Cleared if the order is unissued.
+   */
+  ship_by_date: string | null;
 
   /**
    * A saved address that can be used for billing and shipping on sales orders,
@@ -2008,6 +2028,15 @@ export interface SalesOrderListParams {
   limit?: number;
 
   /**
+   * Restricts results to orders that are, or are not, past their ship-by date.
+   *
+   * An order is past due when it is still `issued` and its ship-by date has passed.
+   * A fulfilled order that shipped late is not past due — it is delivered, and how
+   * late it was is a delivery-performance question rather than a backlog one.
+   */
+  past_due?: boolean;
+
+  /**
    * Restricts results to orders that have at least one line whose product belongs to
    * any of these product lines.
    */
@@ -2026,6 +2055,18 @@ export interface SalesOrderListParams {
    * These are account user IDs, matching the `sales_rep` on the order.
    */
   sales_rep_ids?: Array<string>;
+
+  /**
+   * Earliest ship-by date to include, in `YYYY-MM-DD` format. Inclusive of the date
+   * itself.
+   */
+  ship_by_after?: string;
+
+  /**
+   * Latest ship-by date to include, in `YYYY-MM-DD` format. Inclusive of the date
+   * itself.
+   */
+  ship_by_before?: string;
 
   /**
    * Earliest order creation date to include, in `YYYY-MM-DD` format.

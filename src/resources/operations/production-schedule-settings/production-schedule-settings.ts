@@ -2,6 +2,15 @@
 
 import { APIResource } from '../../../core/resource';
 import * as CoreAPI from '../../core/core';
+import * as ItemsAPI from './items';
+import {
+  ItemDeleteResponse,
+  ItemUpdateParams,
+  Items,
+  ListProductionScheduleItemSetting,
+  ProductionScheduleItemSetting,
+  UpsertItemSettingRequest,
+} from './items';
 import * as ResourcesAPI from './resources';
 import {
   ListProductionScheduleResourceSetting,
@@ -19,6 +28,7 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class ProductionScheduleSettings extends APIResource {
   resources: ResourcesAPI.Resources = new ResourcesAPI.Resources(this._client);
+  items: ItemsAPI.Items = new ItemsAPI.Items(this._client);
 
   /**
    * Replaces the planning assumptions production schedules are solved against.
@@ -50,6 +60,8 @@ export class ProductionScheduleSettings extends APIResource {
    *     changeover_max_minutes: 0,
    *     changeover_min_minutes: 0,
    *     default_constraint_lead_time_weeks: 0,
+   *     default_customer_lead_time_days: 30,
+   *     default_fulfillment_policy: 'make_to_stock',
    *     default_lot_units: 60,
    *     demand_basis: 'trailing_12',
    *     demand_window_months: 12,
@@ -190,6 +202,24 @@ export interface ProductionScheduleSettings {
    * whenever one can be observed.
    */
   default_constraint_lead_time_weeks: number;
+
+  /**
+   * Calendar days between an order being issued and it being due to ship.
+   *
+   * The last resort in the ship-by chain: a lead time set on the customer, or on the
+   * customer's account group, takes precedence. Zero means same-day shipping.
+   */
+  default_customer_lead_time_days: number;
+
+  /**
+   * How a SKU is produced when neither it nor its product line says.
+   *
+   * - `make_to_stock`: built to the forecast, holding a safety stock against its
+   *   variability.
+   * - `make_to_order`: built only against orders already on the book, holding no
+   *   buffer.
+   */
+  default_fulfillment_policy: 'make_to_stock' | 'make_to_order';
 
   /**
    * Units in a default production lot.
@@ -437,6 +467,27 @@ export interface UpdateProductionScheduleSettingsRequest {
   default_constraint_lead_time_weeks: number;
 
   /**
+   * Calendar days between an order being issued and it being due to ship.
+   *
+   * The last resort in the ship-by chain: a lead time set on the customer, or on the
+   * customer's account group, takes precedence. Zero commits the account to same-day
+   * shipping on every order that falls through to it, so this update replaces the
+   * whole settings object and omitting the field is not the same as leaving it
+   * alone.
+   */
+  default_customer_lead_time_days: number;
+
+  /**
+   * How a SKU is produced when neither it nor its product line says.
+   *
+   * - `make_to_stock`: built to the forecast, holding a safety stock against its
+   *   variability.
+   * - `make_to_order`: built only against orders already on the book, holding no
+   *   buffer.
+   */
+  default_fulfillment_policy: 'make_to_stock' | 'make_to_order';
+
+  /**
    * Units in a default production lot.
    *
    * The last resort in the lot-size chain: a lot set on the item, on its product
@@ -664,6 +715,27 @@ export interface ProductionScheduleSettingUpdateParams {
   default_constraint_lead_time_weeks: number;
 
   /**
+   * Calendar days between an order being issued and it being due to ship.
+   *
+   * The last resort in the ship-by chain: a lead time set on the customer, or on the
+   * customer's account group, takes precedence. Zero commits the account to same-day
+   * shipping on every order that falls through to it, so this update replaces the
+   * whole settings object and omitting the field is not the same as leaving it
+   * alone.
+   */
+  default_customer_lead_time_days: number;
+
+  /**
+   * How a SKU is produced when neither it nor its product line says.
+   *
+   * - `make_to_stock`: built to the forecast, holding a safety stock against its
+   *   variability.
+   * - `make_to_order`: built only against orders already on the book, holding no
+   *   buffer.
+   */
+  default_fulfillment_policy: 'make_to_stock' | 'make_to_order';
+
+  /**
    * Units in a default production lot.
    *
    * The last resort in the lot-size chain: a lot set on the item, on its product
@@ -821,6 +893,7 @@ export interface ProductionScheduleSettingUpdateParams {
 }
 
 ProductionScheduleSettings.Resources = Resources;
+ProductionScheduleSettings.Items = Items;
 
 export declare namespace ProductionScheduleSettings {
   export {
@@ -836,5 +909,14 @@ export declare namespace ProductionScheduleSettings {
     type UpsertResourceSettingRequest as UpsertResourceSettingRequest,
     type ResourceDeleteResponse as ResourceDeleteResponse,
     type ResourceUpdateParams as ResourceUpdateParams,
+  };
+
+  export {
+    Items as Items,
+    type ListProductionScheduleItemSetting as ListProductionScheduleItemSetting,
+    type ProductionScheduleItemSetting as ProductionScheduleItemSetting,
+    type UpsertItemSettingRequest as UpsertItemSettingRequest,
+    type ItemDeleteResponse as ItemDeleteResponse,
+    type ItemUpdateParams as ItemUpdateParams,
   };
 }

@@ -361,6 +361,18 @@ export interface ProductLine {
   freight_policy: 'free_freight' | 'billed_freight';
 
   /**
+   * How products in this line are produced when they do not say for themselves.
+   *
+   * - `make_to_stock`: built to the forecast, holding a safety stock against its
+   *   variability.
+   * - `make_to_order`: built only against orders already on the book, holding no
+   *   buffer.
+   *
+   * Null falls through to the account default.
+   */
+  fulfillment_policy: 'make_to_stock' | 'make_to_order' | null;
+
+  /**
    * Display name of the product line.
    *
    * Unique among the product lines visible to your account, which includes the

@@ -32,6 +32,7 @@ describe('resource productLines', () => {
       unit_group_id: 'ug_andst6m79n41',
       include: ['owner'],
       default_lot: { unit_id: 'unit_id', value: 'value' },
+      fulfillment_policy: 'make_to_stock',
     });
   });
 
@@ -78,6 +79,7 @@ describe('resource productLines', () => {
           commission_policy: 'commission_applied',
           default_lot: { unit_id: 'unit_id', value: 'value' },
           freight_policy: 'billed_freight',
+          fulfillment_policy: 'make_to_stock',
           name: 'Updated Product Line',
           unit_group_id: 'ug_andst6m79n41',
         },

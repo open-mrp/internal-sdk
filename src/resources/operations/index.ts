@@ -87,6 +87,11 @@ export {
 export { Edi } from './edi/index';
 export { EdiRuns, type EdiRun, type ListEdiRun, type EdiRunListParams } from './edi-runs';
 export {
+  FulfillmentRecommendations,
+  type FulfillmentRecommendation,
+  type ListFulfillmentRecommendation,
+} from './fulfillment-recommendations/index';
+export {
   InventoryChangeLogs,
   type InventoryChangeLog,
   type ListInventoryChangeLog,
@@ -200,6 +205,9 @@ export {
   type ListReleaseScheduleBatch,
   type ListReleasedScheduleLine,
   type ListScheduleAppliedOverride,
+  type ListScheduleAtRiskOrder,
+  type ListScheduleOrderCoverage,
+  type ListScheduleOrderCoverageLine,
   type ProductionSchedule,
   type ProductionScheduleDerivedLine,
   type ProductionScheduleDeviation,
@@ -209,7 +217,10 @@ export {
   type ReleaseScheduleWeekPreview,
   type ReleasedScheduleLine,
   type ScheduleAppliedOverride,
+  type ScheduleAtRiskOrder,
   type ScheduleDiagnostics,
+  type ScheduleOrderCoverage,
+  type ScheduleOrderCoverageLine,
   type ProductionScheduleDeleteResponse,
   type ProductionScheduleCreateParams,
   type ProductionScheduleListParams,

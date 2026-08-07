@@ -440,6 +440,8 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">AnalyticsUnitGroupUnit</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeDeliveriesRequest</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeDeliveriesResponse</a></code>
+- <code><a href="./src/resources/core/analytics.ts">AnalyzeDeliveryPerformanceRequest</a></code>
+- <code><a href="./src/resources/core/analytics.ts">AnalyzeDeliveryPerformanceResponse</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeDemandForecastRequest</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeDemandForecastResponse</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeInventoryReceiptsRequest</a></code>
@@ -474,7 +476,9 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">Coordinate</a></code>
 - <code><a href="./src/resources/core/analytics.ts">CostBreakdown</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DateTimeCoordinate</a></code>
+- <code><a href="./src/resources/core/analytics.ts">DeliveryBacklogBucket</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DeliveryChartData</a></code>
+- <code><a href="./src/resources/core/analytics.ts">DeliveryPerformance</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DeliveryStatistics</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastForecastPoint</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastPoint</a></code>
@@ -482,6 +486,8 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">FrozenAdherence</a></code>
 - <code><a href="./src/resources/core/analytics.ts">InventoryReceiptSummaryEntry</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListAttainmentBucket</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ListDeliveryBacklogBucket</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ListDeliveryPerformance</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListDemandForecastRow</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListFrozenAdherence</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListOeeDepartment</a></code>
@@ -505,6 +511,7 @@ Methods:
 
 - <code title="get /v1/core/analytics/weeks-of-sales">client.core.analytics.<a href="./src/resources/core/analytics.ts">retrieveWeeksOfSales</a>({ ...params }) -> AnalyzeWeeksOfSalesResponse</code>
 - <code title="put /v1/core/analytics/deliveries">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateDeliveries</a>({ ...params }) -> AnalyzeDeliveriesResponse</code>
+- <code title="put /v1/core/analytics/delivery-performance">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateDeliveryPerformance</a>({ ...params }) -> AnalyzeDeliveryPerformanceResponse</code>
 - <code title="put /v1/core/analytics/demand-forecast">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateDemandForecast</a>({ ...params }) -> AnalyzeDemandForecastResponse</code>
 - <code title="put /v1/core/analytics/inventory-receipts">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateInventoryReceipts</a>({ ...params }) -> AnalyzeInventoryReceiptsResponse</code>
 - <code title="put /v1/core/analytics/manufacturing">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateManufacturing</a>({ ...params }) -> AnalyzeManufacturingResponse</code>
@@ -669,6 +676,7 @@ Types:
 - <code><a href="./src/resources/sales/customers/customers.ts">CustomerContactInfo</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">CustomerDefaults</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">CustomerFreightPreferences</a></code>
+- <code><a href="./src/resources/sales/customers/customers.ts">CustomerLeadTime</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">CustomerNotificationPreferences</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">FrequentlyOrderedProduct</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">ListAccountGroup</a></code>
@@ -694,6 +702,7 @@ Methods:
 - <code title="delete /v1/sales/customers/{id}">client.sales.customers.<a href="./src/resources/sales/customers/customers.ts">delete</a>(id) -> CustomerDeleteResponse</code>
 - <code title="post /v1/sales/customers/registration">client.sales.customers.<a href="./src/resources/sales/customers/customers.ts">registration</a>({ ...params }) -> CustomerRegistrationResponse</code>
 - <code title="get /v1/sales/customers/{id}/frequently-ordered-products">client.sales.customers.<a href="./src/resources/sales/customers/customers.ts">retrieveFrequentlyOrderedProducts</a>(id) -> ListFrequentlyOrderedProduct</code>
+- <code title="get /v1/sales/customers/{id}/lead-time">client.sales.customers.<a href="./src/resources/sales/customers/customers.ts">retrieveLeadTime</a>(id) -> CustomerLeadTime</code>
 
 ### Actions
 
@@ -2761,6 +2770,9 @@ Types:
 - <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ListReleaseScheduleBatch</a></code>
 - <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ListReleasedScheduleLine</a></code>
 - <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ListScheduleAppliedOverride</a></code>
+- <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ListScheduleAtRiskOrder</a></code>
+- <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ListScheduleOrderCoverage</a></code>
+- <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ListScheduleOrderCoverageLine</a></code>
 - <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ProductionSchedule</a></code>
 - <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ProductionScheduleDerivedLine</a></code>
 - <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ProductionScheduleDeviation</a></code>
@@ -2770,7 +2782,10 @@ Types:
 - <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ReleaseScheduleWeekPreview</a></code>
 - <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ReleasedScheduleLine</a></code>
 - <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ScheduleAppliedOverride</a></code>
+- <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ScheduleAtRiskOrder</a></code>
 - <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ScheduleDiagnostics</a></code>
+- <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ScheduleOrderCoverage</a></code>
+- <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ScheduleOrderCoverageLine</a></code>
 - <code><a href="./src/resources/operations/production-schedules/production-schedules.ts">ProductionScheduleDeleteResponse</a></code>
 
 Methods:
@@ -2779,6 +2794,7 @@ Methods:
 - <code title="get /v1/operations/production-schedules/{id}">client.operations.productionSchedules.<a href="./src/resources/operations/production-schedules/production-schedules.ts">retrieve</a>(id) -> ProductionSchedule</code>
 - <code title="get /v1/operations/production-schedules">client.operations.productionSchedules.<a href="./src/resources/operations/production-schedules/production-schedules.ts">list</a>({ ...params }) -> ListProductionSchedule</code>
 - <code title="delete /v1/operations/production-schedules/{id}">client.operations.productionSchedules.<a href="./src/resources/operations/production-schedules/production-schedules.ts">delete</a>(id) -> ProductionScheduleDeleteResponse</code>
+- <code title="get /v1/operations/production-schedules/{id}/at-risk-orders">client.operations.productionSchedules.<a href="./src/resources/operations/production-schedules/production-schedules.ts">retrieveAtRiskOrders</a>(id) -> ListScheduleOrderCoverage</code>
 - <code title="get /v1/operations/production-schedules/current">client.operations.productionSchedules.<a href="./src/resources/operations/production-schedules/production-schedules.ts">retrieveCurrent</a>() -> ProductionSchedule</code>
 - <code title="get /v1/operations/production-schedules/{id}/derived-lines">client.operations.productionSchedules.<a href="./src/resources/operations/production-schedules/production-schedules.ts">retrieveDerivedLines</a>(id, { ...params }) -> ListProductionScheduleDerivedLine</code>
 - <code title="get /v1/operations/production-schedules/{id}/deviations">client.operations.productionSchedules.<a href="./src/resources/operations/production-schedules/production-schedules.ts">retrieveDeviations</a>(id, { ...params }) -> ListProductionScheduleDeviation</code>
@@ -2815,6 +2831,8 @@ Types:
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">PreviewRegenerateProductionScheduleRequest</a></code>
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">ProductionSchedulePreview</a></code>
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">ProductionScheduleRegeneratePreview</a></code>
+- <code><a href="./src/resources/operations/production-schedules/actions.ts">PromiseDateQuote</a></code>
+- <code><a href="./src/resources/operations/production-schedules/actions.ts">QuotePromiseDateRequest</a></code>
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">RegenerateProductionScheduleRequest</a></code>
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">ReleaseProductionScheduleWeekRequest</a></code>
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">ReleaseScheduleWeekResult</a></code>
@@ -2829,6 +2847,7 @@ Methods:
 - <code title="put /v1/operations/production-schedules/actions/preview">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">preview</a>({ ...params }) -> ProductionSchedulePreview</code>
 - <code title="put /v1/operations/production-schedules/{id}/actions/preview-regenerate">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">previewRegenerate</a>(id, { ...params }) -> ProductionScheduleRegeneratePreview</code>
 - <code title="put /v1/operations/production-schedules/{id}/actions/publish">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">publish</a>(id) -> ProductionSchedule</code>
+- <code title="post /v1/operations/production-schedules/actions/quote-promise-date">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">quotePromiseDate</a>({ ...params }) -> PromiseDateQuote</code>
 - <code title="put /v1/operations/production-schedules/{id}/actions/regenerate">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">regenerate</a>(id, { ...params }) -> ProductionSchedule</code>
 - <code title="post /v1/operations/production-schedules/{id}/actions/release-week">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">releaseWeek</a>(id, { ...params }) -> ReleaseScheduleWeekResult</code>
 
@@ -2858,6 +2877,43 @@ Methods:
 - <code title="put /v1/operations/production-schedule-settings/resources">client.operations.productionScheduleSettings.resources.<a href="./src/resources/operations/production-schedule-settings/resources.ts">update</a>({ ...params }) -> ProductionScheduleResourceSetting</code>
 - <code title="get /v1/operations/production-schedule-settings/resources">client.operations.productionScheduleSettings.resources.<a href="./src/resources/operations/production-schedule-settings/resources.ts">list</a>() -> ListProductionScheduleResourceSetting</code>
 - <code title="delete /v1/operations/production-schedule-settings/resources/{id}">client.operations.productionScheduleSettings.resources.<a href="./src/resources/operations/production-schedule-settings/resources.ts">delete</a>(id) -> ResourceDeleteResponse</code>
+
+### Items
+
+Types:
+
+- <code><a href="./src/resources/operations/production-schedule-settings/items.ts">ListProductionScheduleItemSetting</a></code>
+- <code><a href="./src/resources/operations/production-schedule-settings/items.ts">ProductionScheduleItemSetting</a></code>
+- <code><a href="./src/resources/operations/production-schedule-settings/items.ts">UpsertItemSettingRequest</a></code>
+- <code><a href="./src/resources/operations/production-schedule-settings/items.ts">ItemDeleteResponse</a></code>
+
+Methods:
+
+- <code title="get /v1/operations/production-schedule-settings/items/{item_id}">client.operations.productionScheduleSettings.items.<a href="./src/resources/operations/production-schedule-settings/items.ts">retrieve</a>(itemID) -> ProductionScheduleItemSetting</code>
+- <code title="put /v1/operations/production-schedule-settings/items/{item_id}">client.operations.productionScheduleSettings.items.<a href="./src/resources/operations/production-schedule-settings/items.ts">update</a>(itemID, { ...params }) -> ProductionScheduleItemSetting</code>
+- <code title="get /v1/operations/production-schedule-settings/items">client.operations.productionScheduleSettings.items.<a href="./src/resources/operations/production-schedule-settings/items.ts">list</a>() -> ListProductionScheduleItemSetting</code>
+- <code title="delete /v1/operations/production-schedule-settings/items/{item_id}">client.operations.productionScheduleSettings.items.<a href="./src/resources/operations/production-schedule-settings/items.ts">delete</a>(itemID) -> ItemDeleteResponse</code>
+
+## FulfillmentRecommendations
+
+Types:
+
+- <code><a href="./src/resources/operations/fulfillment-recommendations/fulfillment-recommendations.ts">FulfillmentRecommendation</a></code>
+- <code><a href="./src/resources/operations/fulfillment-recommendations/fulfillment-recommendations.ts">ListFulfillmentRecommendation</a></code>
+
+Methods:
+
+- <code title="get /v1/operations/fulfillment-recommendations">client.operations.fulfillmentRecommendations.<a href="./src/resources/operations/fulfillment-recommendations/fulfillment-recommendations.ts">list</a>() -> ListFulfillmentRecommendation</code>
+
+### Actions
+
+Types:
+
+- <code><a href="./src/resources/operations/fulfillment-recommendations/actions.ts">ApplyFulfillmentRecommendationsRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/operations/fulfillment-recommendations/actions/apply">client.operations.fulfillmentRecommendations.actions.<a href="./src/resources/operations/fulfillment-recommendations/actions.ts">apply</a>({ ...params }) -> ListFulfillmentRecommendation</code>
 
 ## PurchaseOrders
 

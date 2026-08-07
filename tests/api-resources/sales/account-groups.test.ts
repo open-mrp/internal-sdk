@@ -27,6 +27,7 @@ describe('resource accountGroups', () => {
       name: 'Wholesale Customers',
       type: 'type_group',
       commission_policy: 'commission_exempt',
+      default_lead_time_days: 0,
       description: 'Customers who buy in bulk at wholesale pricing.',
       freight_policy: 'billed_freight',
     });
@@ -61,6 +62,7 @@ describe('resource accountGroups', () => {
         'acgp_6p4z57e9alaf',
         {
           commission_policy: 'commission_exempt',
+          default_lead_time_days: 0,
           description: 'Customers who buy in bulk at wholesale pricing.',
           freight_policy: 'billed_freight',
           name: 'Updated Wholesale Customers',

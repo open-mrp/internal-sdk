@@ -26,6 +26,7 @@ import {
   AnalyticsUnitGroup,
   AnalyticsUnitGroupUnit,
   AnalyticsUpdateDeliveriesParams,
+  AnalyticsUpdateDeliveryPerformanceParams,
   AnalyticsUpdateDemandForecastParams,
   AnalyticsUpdateInventoryReceiptsParams,
   AnalyticsUpdateManufacturingBatchParams,
@@ -42,6 +43,8 @@ import {
   AnalyticsUpdateScheduleAttainmentParams,
   AnalyzeDeliveriesRequest,
   AnalyzeDeliveriesResponse,
+  AnalyzeDeliveryPerformanceRequest,
+  AnalyzeDeliveryPerformanceResponse,
   AnalyzeDemandForecastRequest,
   AnalyzeDemandForecastResponse,
   AnalyzeInventoryReceiptsRequest,
@@ -76,7 +79,9 @@ import {
   Coordinate,
   CostBreakdown,
   DateTimeCoordinate,
+  DeliveryBacklogBucket,
   DeliveryChartData,
+  DeliveryPerformance,
   DeliveryStatistics,
   DemandForecastForecastPoint,
   DemandForecastPoint,
@@ -84,6 +89,8 @@ import {
   FrozenAdherence,
   InventoryReceiptSummaryEntry,
   ListAttainmentBucket,
+  ListDeliveryBacklogBucket,
+  ListDeliveryPerformance,
   ListDemandForecastRow,
   ListFrozenAdherence,
   ListOeeDepartment,
@@ -343,7 +350,16 @@ export interface Entity {
     | 'production_schedule_derived_line'
     | 'production_schedule_settings'
     | 'production_schedule_resource_setting'
+    | 'production_schedule_item_setting'
+    | 'fulfillment_recommendation'
+    | 'analyze_delivery_performance_response'
+    | 'delivery_performance'
+    | 'delivery_backlog_bucket'
+    | 'schedule_order_coverage'
+    | 'schedule_order_coverage_line'
+    | 'promise_date_quote'
     | 'schedule_deviation_type'
+    | 'schedule_at_risk_order'
     | 'production_schedule_finished_policy'
     | 'production_schedule_week_release'
     | 'production_schedule_week_release_preview'
@@ -416,6 +432,7 @@ export interface Entity {
     | 'customer_contact_info'
     | 'customer_freight_preferences'
     | 'customer_defaults'
+    | 'customer_lead_time'
     | 'customer_notification_preferences'
     | 'order_notification_recipient'
     | 'order_discount'
@@ -693,7 +710,16 @@ export interface CoreRetrieveSearchParams {
     | 'production_schedule_derived_line'
     | 'production_schedule_settings'
     | 'production_schedule_resource_setting'
+    | 'production_schedule_item_setting'
+    | 'fulfillment_recommendation'
+    | 'analyze_delivery_performance_response'
+    | 'delivery_performance'
+    | 'delivery_backlog_bucket'
+    | 'schedule_order_coverage'
+    | 'schedule_order_coverage_line'
+    | 'promise_date_quote'
     | 'schedule_deviation_type'
+    | 'schedule_at_risk_order'
     | 'production_schedule_finished_policy'
     | 'production_schedule_week_release'
     | 'production_schedule_week_release_preview'
@@ -766,6 +792,7 @@ export interface CoreRetrieveSearchParams {
     | 'customer_contact_info'
     | 'customer_freight_preferences'
     | 'customer_defaults'
+    | 'customer_lead_time'
     | 'customer_notification_preferences'
     | 'order_notification_recipient'
     | 'order_discount'
@@ -949,6 +976,8 @@ export declare namespace Core {
     type AnalyticsUnitGroupUnit as AnalyticsUnitGroupUnit,
     type AnalyzeDeliveriesRequest as AnalyzeDeliveriesRequest,
     type AnalyzeDeliveriesResponse as AnalyzeDeliveriesResponse,
+    type AnalyzeDeliveryPerformanceRequest as AnalyzeDeliveryPerformanceRequest,
+    type AnalyzeDeliveryPerformanceResponse as AnalyzeDeliveryPerformanceResponse,
     type AnalyzeDemandForecastRequest as AnalyzeDemandForecastRequest,
     type AnalyzeDemandForecastResponse as AnalyzeDemandForecastResponse,
     type AnalyzeInventoryReceiptsRequest as AnalyzeInventoryReceiptsRequest,
@@ -983,7 +1012,9 @@ export declare namespace Core {
     type Coordinate as Coordinate,
     type CostBreakdown as CostBreakdown,
     type DateTimeCoordinate as DateTimeCoordinate,
+    type DeliveryBacklogBucket as DeliveryBacklogBucket,
     type DeliveryChartData as DeliveryChartData,
+    type DeliveryPerformance as DeliveryPerformance,
     type DeliveryStatistics as DeliveryStatistics,
     type DemandForecastForecastPoint as DemandForecastForecastPoint,
     type DemandForecastPoint as DemandForecastPoint,
@@ -991,6 +1022,8 @@ export declare namespace Core {
     type FrozenAdherence as FrozenAdherence,
     type InventoryReceiptSummaryEntry as InventoryReceiptSummaryEntry,
     type ListAttainmentBucket as ListAttainmentBucket,
+    type ListDeliveryBacklogBucket as ListDeliveryBacklogBucket,
+    type ListDeliveryPerformance as ListDeliveryPerformance,
     type ListDemandForecastRow as ListDemandForecastRow,
     type ListFrozenAdherence as ListFrozenAdherence,
     type ListOeeDepartment as ListOeeDepartment,
@@ -1011,6 +1044,7 @@ export declare namespace Core {
     type WeeksOfSalesItem as WeeksOfSalesItem,
     type AnalyticsRetrieveWeeksOfSalesParams as AnalyticsRetrieveWeeksOfSalesParams,
     type AnalyticsUpdateDeliveriesParams as AnalyticsUpdateDeliveriesParams,
+    type AnalyticsUpdateDeliveryPerformanceParams as AnalyticsUpdateDeliveryPerformanceParams,
     type AnalyticsUpdateDemandForecastParams as AnalyticsUpdateDemandForecastParams,
     type AnalyticsUpdateInventoryReceiptsParams as AnalyticsUpdateInventoryReceiptsParams,
     type AnalyticsUpdateManufacturingParams as AnalyticsUpdateManufacturingParams,

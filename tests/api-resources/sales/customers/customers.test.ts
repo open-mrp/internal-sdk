@@ -70,6 +70,7 @@ describe('resource customers', () => {
       edi_status: 'disabled',
       email: 'orders@acme.com',
       freight_policy: 'billed_freight',
+      lead_time_days: 0,
       note: 'Key enterprise account',
       number: '100042',
       phone: '555-123-4567',
@@ -134,6 +135,7 @@ describe('resource customers', () => {
           edi_status: 'disabled',
           email: 'orders@acme.com',
           freight_policy: 'billed_freight',
+          lead_time_days: 0,
           name: 'Acme Corp Updated',
           note: 'Updated account notes',
           number: '100042',
@@ -241,6 +243,17 @@ describe('resource customers', () => {
 
   test('retrieveFrequentlyOrderedProducts', async () => {
     const responsePromise = client.sales.customers.retrieveFrequentlyOrderedProducts('ac_opnlh43ymyee');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('retrieveLeadTime', async () => {
+    const responsePromise = client.sales.customers.retrieveLeadTime('ac_opnlh43ymyee');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as CoreAPI from '../../core/core';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as ActionsAPI from './actions';
@@ -254,6 +255,34 @@ export class Customers extends APIResource {
   ): APIPromise<ListFrequentlyOrderedProduct> {
     return this._client.get(path`/v1/sales/customers/${id}/frequently-ordered-products`, options);
   }
+
+  /**
+   * Returns the ship-by lead time a new order for this customer would be committed
+   * to.
+   *
+   * Resolved through the same chain the issue path stamps onto an order, most
+   * specific first: a lead time set on the customer, then on the customer's account
+   * group, then the account-wide default. `source` names which rule applied, so a
+   * form can show where the number came from rather than leaving a rep to guess.
+   *
+   * This is a preview of a commitment, not the commitment itself. An order takes its
+   * own `ship_by_date` when it is issued and keeps it afterwards, so changing a lead
+   * time here moves what future orders will promise and leaves promises already made
+   * alone.
+   *
+   * This endpoint requires the permission: `customers:read`.
+   *
+   * @example
+   * ```ts
+   * const customerLeadTime =
+   *   await client.sales.customers.retrieveLeadTime(
+   *     'ac_opnlh43ymyee',
+   *   );
+   * ```
+   */
+  retrieveLeadTime(id: string, options?: RequestOptions): APIPromise<CustomerLeadTime> {
+    return this._client.get(path`/v1/sales/customers/${id}/lead-time`, options);
+  }
 }
 
 /**
@@ -285,6 +314,12 @@ export interface AccountGroup {
    * Creation timestamp.
    */
   created_at: string;
+
+  /**
+   * Calendar days between an order being issued and it being due to ship, inherited
+   * by every customer in this group that has not set its own.
+   */
+  default_lead_time_days: number | null;
 
   /**
    * Free-form description of the account group.
@@ -601,6 +636,14 @@ export interface CreateCustomerRequest {
   freight_policy?: 'free_freight' | 'billed_freight';
 
   /**
+   * Calendar days between an order being issued and it being due to ship.
+   *
+   * Sets each order's `ship_by_date` when it is issued. Leave unset to inherit the
+   * customer's account group lead time, then the account default.
+   */
+  lead_time_days?: number;
+
+  /**
    * Free-form note about the customer.
    */
   note?: string;
@@ -825,6 +868,14 @@ export interface CustomerContactInfo {
  */
 export interface CustomerDefaults {
   /**
+   * Calendar days between an order being issued and it being due to ship.
+   *
+   * Sets each order's `ship_by_date` when it is issued. With none set here the
+   * customer inherits its account group's lead time, then the account default.
+   */
+  lead_time_days: number | null;
+
+  /**
    * Resource type identifier.
    */
   object: 'customer_defaults';
@@ -915,6 +966,46 @@ export interface CustomerFreightPreferences {
    * is `billed_freight`.
    */
   status: 'free_freight' | 'billed_freight';
+}
+
+/**
+ * The ship-by lead time a new order for this customer would be committed to.
+ */
+export interface CustomerLeadTime {
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  account_group: CoreAPI.Entity | null;
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  customer: CoreAPI.Entity | null;
+
+  /**
+   * Calendar days between an order being issued and it being due to ship.
+   *
+   * `0` means same-day: an order issued today would be due to ship today.
+   */
+  days: number;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'customer_lead_time';
+
+  /**
+   * Which rule in the chain produced this lead time.
+   *
+   * - `customer`: a lead time set on the customer itself.
+   * - `account_group`: inherited from the customer's account group.
+   * - `account`: the account-wide fallback.
+   *
+   * The shared `manual` value cannot appear here: it means a promised date was set
+   * on one specific order, which is a fact about that order rather than about the
+   * customer.
+   */
+  source: 'customer' | 'account_group' | 'account' | 'manual';
 }
 
 /**
@@ -1508,6 +1599,14 @@ export interface UpdateCustomerRequest {
   freight_policy?: 'free_freight' | 'billed_freight';
 
   /**
+   * Calendar days between an order being issued and it being due to ship.
+   *
+   * Sets each order's `ship_by_date` when it is issued. Leave unset to inherit the
+   * customer's account group lead time, then the account default.
+   */
+  lead_time_days?: number | null;
+
+  /**
    * The customer's business name, as shown throughout the app and on documents.
    */
   name?: string;
@@ -1713,6 +1812,15 @@ export interface CustomerCreateParams {
   freight_policy?: 'free_freight' | 'billed_freight';
 
   /**
+   * Body param: Calendar days between an order being issued and it being due to
+   * ship.
+   *
+   * Sets each order's `ship_by_date` when it is issued. Leave unset to inherit the
+   * customer's account group lead time, then the account default.
+   */
+  lead_time_days?: number;
+
+  /**
    * Body param: Free-form note about the customer.
    */
   note?: string;
@@ -1915,6 +2023,15 @@ export interface CustomerUpdateParams {
    * or a product line the ordered products belong to is `free_freight`.
    */
   freight_policy?: 'free_freight' | 'billed_freight';
+
+  /**
+   * Body param: Calendar days between an order being issued and it being due to
+   * ship.
+   *
+   * Sets each order's `ship_by_date` when it is issued. Leave unset to inherit the
+   * customer's account group lead time, then the account default.
+   */
+  lead_time_days?: number | null;
 
   /**
    * Body param: The customer's business name, as shown throughout the app and on
@@ -2184,6 +2301,7 @@ export declare namespace Customers {
     type CustomerContactInfo as CustomerContactInfo,
     type CustomerDefaults as CustomerDefaults,
     type CustomerFreightPreferences as CustomerFreightPreferences,
+    type CustomerLeadTime as CustomerLeadTime,
     type CustomerNotificationPreferences as CustomerNotificationPreferences,
     type FrequentlyOrderedProduct as FrequentlyOrderedProduct,
     type ListAccountGroup as ListAccountGroup,

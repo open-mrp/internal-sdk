@@ -82,6 +82,17 @@ describe('resource productionSchedules', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieveAtRiskOrders', async () => {
+    const responsePromise = client.operations.productionSchedules.retrieveAtRiskOrders('pnsc_m4zt3z8g8src');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
   test('retrieveCurrent', async () => {
     const responsePromise = client.operations.productionSchedules.retrieveCurrent();
     const rawResponse = await responsePromise.asResponse();

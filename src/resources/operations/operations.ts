@@ -136,6 +136,12 @@ import {
 } from './departments/departments';
 import * as EdiAPI from './edi/edi';
 import { Edi } from './edi/edi';
+import * as FulfillmentRecommendationsAPI from './fulfillment-recommendations/fulfillment-recommendations';
+import {
+  FulfillmentRecommendation,
+  FulfillmentRecommendations,
+  ListFulfillmentRecommendation,
+} from './fulfillment-recommendations/fulfillment-recommendations';
 import * as InventoryChangeLogsAPI from './inventory-change-logs/inventory-change-logs';
 import {
   InventoryChangeLog,
@@ -217,6 +223,9 @@ import {
   ListReleaseScheduleBatch,
   ListReleasedScheduleLine,
   ListScheduleAppliedOverride,
+  ListScheduleAtRiskOrder,
+  ListScheduleOrderCoverage,
+  ListScheduleOrderCoverageLine,
   ProductionSchedule,
   ProductionScheduleCreateParams,
   ProductionScheduleDeleteResponse,
@@ -233,7 +242,10 @@ import {
   ReleaseScheduleWeekPreview,
   ReleasedScheduleLine,
   ScheduleAppliedOverride,
+  ScheduleAtRiskOrder,
   ScheduleDiagnostics,
+  ScheduleOrderCoverage,
+  ScheduleOrderCoverageLine,
 } from './production-schedules/production-schedules';
 import * as ProductionStepsAPI from './production-steps/production-steps';
 import {
@@ -343,6 +355,8 @@ export class Operations extends APIResource {
     new ProductionSchedulesAPI.ProductionSchedules(this._client);
   productionScheduleSettings: ProductionScheduleSettingsAPI.ProductionScheduleSettings =
     new ProductionScheduleSettingsAPI.ProductionScheduleSettings(this._client);
+  fulfillmentRecommendations: FulfillmentRecommendationsAPI.FulfillmentRecommendations =
+    new FulfillmentRecommendationsAPI.FulfillmentRecommendations(this._client);
   purchaseOrders: PurchaseOrdersAPI.PurchaseOrders = new PurchaseOrdersAPI.PurchaseOrders(this._client);
   picks: PicksAPI.Picks = new PicksAPI.Picks(this._client);
   locations: LocationsAPI.Locations = new LocationsAPI.Locations(this._client);
@@ -1284,6 +1298,7 @@ Operations.ProductionRuns = ProductionRuns;
 Operations.MachineDowntimeEvents = MachineDowntimeEvents;
 Operations.DemandOverrides = DemandOverrides;
 Operations.ProductionSchedules = ProductionSchedules;
+Operations.FulfillmentRecommendations = FulfillmentRecommendations;
 Operations.PurchaseOrders = PurchaseOrders;
 Operations.Picks = Picks;
 Operations.Locations = Locations;
@@ -1531,6 +1546,9 @@ export declare namespace Operations {
     type ListReleaseScheduleBatch as ListReleaseScheduleBatch,
     type ListReleasedScheduleLine as ListReleasedScheduleLine,
     type ListScheduleAppliedOverride as ListScheduleAppliedOverride,
+    type ListScheduleAtRiskOrder as ListScheduleAtRiskOrder,
+    type ListScheduleOrderCoverage as ListScheduleOrderCoverage,
+    type ListScheduleOrderCoverageLine as ListScheduleOrderCoverageLine,
     type ProductionSchedule as ProductionSchedule,
     type ProductionScheduleDerivedLine as ProductionScheduleDerivedLine,
     type ProductionScheduleDeviation as ProductionScheduleDeviation,
@@ -1540,7 +1558,10 @@ export declare namespace Operations {
     type ReleaseScheduleWeekPreview as ReleaseScheduleWeekPreview,
     type ReleasedScheduleLine as ReleasedScheduleLine,
     type ScheduleAppliedOverride as ScheduleAppliedOverride,
+    type ScheduleAtRiskOrder as ScheduleAtRiskOrder,
     type ScheduleDiagnostics as ScheduleDiagnostics,
+    type ScheduleOrderCoverage as ScheduleOrderCoverage,
+    type ScheduleOrderCoverageLine as ScheduleOrderCoverageLine,
     type ProductionScheduleDeleteResponse as ProductionScheduleDeleteResponse,
     type ProductionScheduleCreateParams as ProductionScheduleCreateParams,
     type ProductionScheduleListParams as ProductionScheduleListParams,
@@ -1553,6 +1574,12 @@ export declare namespace Operations {
     type ProductionScheduleSettings as ProductionScheduleSettings,
     type UpdateProductionScheduleSettingsRequest as UpdateProductionScheduleSettingsRequest,
     type ProductionScheduleSettingUpdateParams as ProductionScheduleSettingUpdateParams,
+  };
+
+  export {
+    FulfillmentRecommendations as FulfillmentRecommendations,
+    type FulfillmentRecommendation as FulfillmentRecommendation,
+    type ListFulfillmentRecommendation as ListFulfillmentRecommendation,
   };
 
   export {
