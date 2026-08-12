@@ -1367,6 +1367,16 @@ export interface ServiceLevel {
   customer_portal_visibility: 'visible' | 'hidden';
 
   /**
+   * Business days this service typically takes in transit, used to work an order's
+   * ship-by date back from a promised delivery date.
+   *
+   * A fallback for lanes the carrier has not quoted. Null means transit is unknown
+   * for this service rather than instant, so a ship-by date falls back to the
+   * promised delivery date itself.
+   */
+  default_transit_days: number | null;
+
+  /**
    * Whether this is the carrier's default service level, pre-selected when the
    * carrier is chosen.
    *

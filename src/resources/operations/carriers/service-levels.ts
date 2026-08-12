@@ -29,6 +29,7 @@ export class ServiceLevels extends APIResource {
    *       is_default: false,
    *       name: 'Ground Shipping',
    *       customer_portal_visibility: 'visible',
+   *       default_transit_days: 3,
    *     },
    *   );
    * ```
@@ -195,6 +196,16 @@ export interface CreateServiceLevelRequest {
    * customer portal.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
+
+  /**
+   * Business days this service typically takes in transit, used to work an order's
+   * ship-by date back from a promised delivery date.
+   *
+   * A fallback: when a carrier can rate the lane, the transit it quotes is used
+   * instead. Leave unset for carriers that can be rated, and set it for those that
+   * cannot (freight, will-call), where it is the only transit the system will have.
+   */
+  default_transit_days?: number;
 }
 
 /**
@@ -216,6 +227,16 @@ export interface UpdateServiceLevelRequest {
    * customer portal.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
+
+  /**
+   * Business days this service typically takes in transit, used to work an order's
+   * ship-by date back from a promised delivery date.
+   *
+   * A fallback: when a carrier can rate the lane, the transit it quotes is used
+   * instead. Set to null to remove it, which leaves transit unknown for lanes the
+   * carrier cannot rate.
+   */
+  default_transit_days?: number | null;
 
   /**
    * Whether this is the carrier's default service level, pre-selected when the
@@ -271,6 +292,16 @@ export interface ServiceLevelCreateParams {
    * in the customer portal.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
+
+  /**
+   * Body param: Business days this service typically takes in transit, used to work
+   * an order's ship-by date back from a promised delivery date.
+   *
+   * A fallback: when a carrier can rate the lane, the transit it quotes is used
+   * instead. Leave unset for carriers that can be rated, and set it for those that
+   * cannot (freight, will-call), where it is the only transit the system will have.
+   */
+  default_transit_days?: number;
 }
 
 export interface ServiceLevelRetrieveParams {
@@ -314,6 +345,16 @@ export interface ServiceLevelUpdateParams {
    * in the customer portal.
    */
   customer_portal_visibility?: 'visible' | 'hidden';
+
+  /**
+   * Body param: Business days this service typically takes in transit, used to work
+   * an order's ship-by date back from a promised delivery date.
+   *
+   * A fallback: when a carrier can rate the lane, the transit it quotes is used
+   * instead. Set to null to remove it, which leaves transit unknown for lanes the
+   * carrier cannot rate.
+   */
+  default_transit_days?: number | null;
 
   /**
    * Body param: Whether this is the carrier's default service level, pre-selected
