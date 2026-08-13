@@ -1180,10 +1180,15 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">BulkResolveHubspotCompanyReviewsRequest</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">ExportHubspotCompanyReviewsRequest</a></code>
+- <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">HubspotCompanyReviewResolutionInput</a></code>
 - <code><a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">LinkHubspotCompanyReviewRequest</a></code>
 
 Methods:
 
+- <code title="post /v1/settings/integrations/hubspot/sync/{id}/company-reviews/actions/bulk-resolve">client.settings.integrations.hubspot.sync.companyReviews.actions.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">bulkResolve</a>(id, { ...params }) -> Job</code>
+- <code title="post /v1/settings/integrations/hubspot/sync/{id}/company-reviews/actions/export">client.settings.integrations.hubspot.sync.companyReviews.actions.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">export</a>(id, { ...params }) -> Job</code>
 - <code title="post /v1/settings/integrations/hubspot/sync/{id}/company-reviews/{review_id}/actions/link">client.settings.integrations.hubspot.sync.companyReviews.actions.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">link</a>(reviewID, { ...params }) -> HubspotCompanyReview</code>
 - <code title="post /v1/settings/integrations/hubspot/sync/{id}/company-reviews/{review_id}/actions/skip">client.settings.integrations.hubspot.sync.companyReviews.actions.<a href="./src/resources/settings/integrations/hubspot/sync/company-reviews/actions.ts">skip</a>(reviewID, { ...params }) -> HubspotCompanyReview</code>
 

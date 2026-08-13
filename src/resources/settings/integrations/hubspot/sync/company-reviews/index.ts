@@ -2,7 +2,12 @@
 
 export {
   Actions,
+  type BulkResolveHubspotCompanyReviewsRequest,
+  type ExportHubspotCompanyReviewsRequest,
+  type HubspotCompanyReviewResolutionInput,
   type LinkHubspotCompanyReviewRequest,
+  type ActionBulkResolveParams,
+  type ActionExportParams,
   type ActionLinkParams,
   type ActionSkipParams,
 } from './actions';

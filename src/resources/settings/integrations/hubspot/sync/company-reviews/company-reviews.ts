@@ -5,7 +5,17 @@ import * as APIKeysAPI from '../../../../../auth/api-keys/api-keys';
 import * as CustomersAPI from '../../../../../sales/customers/customers';
 import * as SyncAPI from '../sync';
 import * as ActionsAPI from './actions';
-import { ActionLinkParams, ActionSkipParams, Actions, LinkHubspotCompanyReviewRequest } from './actions';
+import {
+  ActionBulkResolveParams,
+  ActionExportParams,
+  ActionLinkParams,
+  ActionSkipParams,
+  Actions,
+  BulkResolveHubspotCompanyReviewsRequest,
+  ExportHubspotCompanyReviewsRequest,
+  HubspotCompanyReviewResolutionInput,
+  LinkHubspotCompanyReviewRequest,
+} from './actions';
 import { APIPromise } from '../../../../../../core/api-promise';
 import { RequestOptions } from '../../../../../../internal/request-options';
 import { path } from '../../../../../../internal/utils/path';
@@ -123,6 +133,22 @@ export interface HubspotCompanyReview {
    * and order policies.
    */
   customer: CustomersAPI.Customer | null;
+
+  /**
+   * The customer's email address as it stood when the review was raised.
+   *
+   * Snapshotted on the review rather than read from the customer, because matching a
+   * company means comparing what Augno held at match time against what HubSpot holds
+   * — a later edit to the customer must not silently change what a reviewer is
+   * deciding on.
+   */
+  customer_email: string | null;
+
+  /**
+   * The customer's website as it stood when the review was raised — the field the
+   * domain match was derived from.
+   */
+  customer_url: string | null;
 
   /**
    * A one-time run that brings the account's existing customers, contacts, and
@@ -251,7 +277,12 @@ export declare namespace CompanyReviews {
 
   export {
     Actions as Actions,
+    type BulkResolveHubspotCompanyReviewsRequest as BulkResolveHubspotCompanyReviewsRequest,
+    type ExportHubspotCompanyReviewsRequest as ExportHubspotCompanyReviewsRequest,
+    type HubspotCompanyReviewResolutionInput as HubspotCompanyReviewResolutionInput,
     type LinkHubspotCompanyReviewRequest as LinkHubspotCompanyReviewRequest,
+    type ActionBulkResolveParams as ActionBulkResolveParams,
+    type ActionExportParams as ActionExportParams,
     type ActionLinkParams as ActionLinkParams,
     type ActionSkipParams as ActionSkipParams,
   };

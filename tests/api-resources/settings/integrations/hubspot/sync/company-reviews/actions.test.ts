@@ -8,6 +8,64 @@ const client = new Augno({
 });
 
 describe('resource actions', () => {
+  test('bulkResolve: only required params', async () => {
+    const responsePromise = client.settings.integrations.hubspot.sync.companyReviews.actions.bulkResolve(
+      'igjb_pbxu4l5ujuym',
+      {
+        reviews: [
+          {
+            action: 'link',
+            resolved_hubspot_id: '12345',
+            review_id: 'igrv_w88uo6y5g8bu',
+          },
+        ],
+      },
+    );
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('bulkResolve: required and optional params', async () => {
+    const response = await client.settings.integrations.hubspot.sync.companyReviews.actions.bulkResolve(
+      'igjb_pbxu4l5ujuym',
+      {
+        reviews: [
+          {
+            action: 'link',
+            resolved_hubspot_id: '12345',
+            review_id: 'igrv_w88uo6y5g8bu',
+          },
+        ],
+      },
+    );
+  });
+
+  test('export: only required params', async () => {
+    const responsePromise = client.settings.integrations.hubspot.sync.companyReviews.actions.export(
+      'igjb_pbxu4l5ujuym',
+      { status: null },
+    );
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('export: required and optional params', async () => {
+    const response = await client.settings.integrations.hubspot.sync.companyReviews.actions.export(
+      'igjb_pbxu4l5ujuym',
+      { status: null },
+    );
+  });
+
   test('link: only required params', async () => {
     const responsePromise = client.settings.integrations.hubspot.sync.companyReviews.actions.link(
       'igrv_w88uo6y5g8bu',
