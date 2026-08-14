@@ -785,11 +785,11 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/sales/account-prices/actions.ts">FileDownload</a></code>
+- <code><a href="./src/resources/sales/account-prices/actions.ts">ExportPriceListRequest</a></code>
 
 Methods:
 
-- <code title="get /v1/sales/account-prices/actions/export-price-list">client.sales.accountPrices.actions.<a href="./src/resources/sales/account-prices/actions.ts">exportPriceList</a>({ ...params }) -> FileDownload</code>
+- <code title="post /v1/sales/account-prices/actions/export-price-list">client.sales.accountPrices.actions.<a href="./src/resources/sales/account-prices/actions.ts">exportPriceList</a>({ ...params }) -> Job</code>
 
 ## Addresses
 
@@ -978,7 +978,6 @@ Types:
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrder</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderEmailContactInput</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderLine</a></code>
-- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderQuoteRate</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderRelated</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderStageTotal</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderStatus</a></code>
@@ -1396,6 +1395,7 @@ Types:
 - <code><a href="./src/resources/catalog/items/actions.ts">BulkReconcileItemInput</a></code>
 - <code><a href="./src/resources/catalog/items/actions.ts">BulkReconcileItemsRequest</a></code>
 - <code><a href="./src/resources/catalog/items/actions.ts">BulkReconcileItemsResponse</a></code>
+- <code><a href="./src/resources/catalog/items/actions.ts">FileDownload</a></code>
 - <code><a href="./src/resources/catalog/items/actions.ts">ListReconcileErrorResult</a></code>
 - <code><a href="./src/resources/catalog/items/actions.ts">ListReconciledItemResult</a></code>
 - <code><a href="./src/resources/catalog/items/actions.ts">ListSkippedItemResult</a></code>

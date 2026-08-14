@@ -13,4 +13,4 @@ export {
   type AccountPriceUpdateParams,
   type AccountPriceListParams,
 } from './account-prices';
-export { Actions, type FileDownload, type ActionExportPriceListParams } from './actions';
+export { Actions, type ExportPriceListRequest, type ActionExportPriceListParams } from './actions';

@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AccountPricesActionsAPI from '../../sales/account-prices/actions';
+import * as ActionsAPI from '../../catalog/items/actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 
@@ -27,7 +27,7 @@ export class Actions extends APIResource {
   export(
     query: ActionExportParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<AccountPricesActionsAPI.FileDownload> {
+  ): APIPromise<ActionsAPI.FileDownload> {
     return this._client.get('/v1/operations/inventory-change-logs/actions/export', { query, ...options });
   }
 }

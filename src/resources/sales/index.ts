@@ -131,7 +131,6 @@ export {
   type SalesOrder,
   type SalesOrderEmailContactInput,
   type SalesOrderLine,
-  type SalesOrderQuoteRate,
   type SalesOrderRelated,
   type SalesOrderStageTotal,
   type SalesOrderStatus,

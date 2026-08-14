@@ -5,7 +5,7 @@ import * as AnalyticsAPI from '../../core/analytics';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as ActionsAPI from './actions';
-import { ActionExportPriceListParams, Actions, FileDownload } from './actions';
+import { ActionExportPriceListParams, Actions, ExportPriceListRequest } from './actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -519,7 +519,7 @@ export declare namespace AccountPrices {
 
   export {
     Actions as Actions,
-    type FileDownload as FileDownload,
+    type ExportPriceListRequest as ExportPriceListRequest,
     type ActionExportPriceListParams as ActionExportPriceListParams,
   };
 }

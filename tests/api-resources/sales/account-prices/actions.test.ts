@@ -10,7 +10,7 @@ const client = new Augno({
 describe('resource actions', () => {
   test('exportPriceList: only required params', async () => {
     const responsePromise = client.sales.accountPrices.actions.exportPriceList({
-      customer_id: 'customer_id',
+      customer_id: 'ac_opnlh43ymyee',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -22,6 +22,8 @@ describe('resource actions', () => {
   });
 
   test('exportPriceList: required and optional params', async () => {
-    const response = await client.sales.accountPrices.actions.exportPriceList({ customer_id: 'customer_id' });
+    const response = await client.sales.accountPrices.actions.exportPriceList({
+      customer_id: 'ac_opnlh43ymyee',
+    });
   });
 });

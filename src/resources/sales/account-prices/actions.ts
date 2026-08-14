@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as JobsAPI from '../../core/jobs';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 
@@ -9,7 +10,7 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Downloads a customer's price list as a PDF.
+   * Starts a customer's price list and returns the job that tracks it.
    *
    * The document covers every product the customer may order, grouped by product
    * line and then by the SKUs that share a price, with the attributes that vary
@@ -18,27 +19,34 @@ export class Actions extends APIResource {
    * they qualify for; a volume break becomes its own price column only where it
    * actually changes a price.
    *
+   * Pricing a whole catalog takes too long to hold a request open for, so the PDF is
+   * rendered in the background. Poll the returned job and download the file it names
+   * once it completes.
+   *
    * This endpoint requires the permission: `discounts:read`.
    *
    * @example
    * ```ts
-   * const fileDownload =
+   * const job =
    *   await client.sales.accountPrices.actions.exportPriceList({
-   *     customer_id: 'customer_id',
+   *     customer_id: 'ac_opnlh43ymyee',
    *   });
    * ```
    */
-  exportPriceList(query: ActionExportPriceListParams, options?: RequestOptions): APIPromise<FileDownload> {
-    return this._client.get('/v1/sales/account-prices/actions/export-price-list', { query, ...options });
+  exportPriceList(body: ActionExportPriceListParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    return this._client.post('/v1/sales/account-prices/actions/export-price-list', { body, ...options });
   }
 }
 
 /**
- * FileDownload is a response type for endpoints that return a file (e.g. Excel
- * export). When the service returns \*FileDownload, the handler writes the body
- * with Content-Type and Content-Disposition.
+ * Request to export a customer's price list.
  */
-export interface FileDownload {}
+export interface ExportPriceListRequest {
+  /**
+   * ID of the customer whose prices are listed.
+   */
+  customer_id: string;
+}
 
 export interface ActionExportPriceListParams {
   /**
@@ -49,7 +57,7 @@ export interface ActionExportPriceListParams {
 
 export declare namespace Actions {
   export {
-    type FileDownload as FileDownload,
+    type ExportPriceListRequest as ExportPriceListRequest,
     type ActionExportPriceListParams as ActionExportPriceListParams,
   };
 }
