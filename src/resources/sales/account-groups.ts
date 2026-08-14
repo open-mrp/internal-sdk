@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as CustomersAPI from './customers/customers';
+import * as AnalyticsAPI from '../core/analytics';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -30,7 +30,7 @@ export class AccountGroups extends APIResource {
    *   });
    * ```
    */
-  create(body: AccountGroupCreateParams, options?: RequestOptions): APIPromise<CustomersAPI.AccountGroup> {
+  create(body: AccountGroupCreateParams, options?: RequestOptions): APIPromise<AnalyticsAPI.AccountGroup> {
     return this._client.post('/v1/sales/account-groups', { body, ...options });
   }
 
@@ -47,7 +47,7 @@ export class AccountGroups extends APIResource {
    *   );
    * ```
    */
-  retrieve(id: string, options?: RequestOptions): APIPromise<CustomersAPI.AccountGroup> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<AnalyticsAPI.AccountGroup> {
     return this._client.get(path`/v1/sales/account-groups/${id}`, options);
   }
 
@@ -82,7 +82,7 @@ export class AccountGroups extends APIResource {
     id: string,
     body: AccountGroupUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.AccountGroup> {
+  ): APIPromise<AnalyticsAPI.AccountGroup> {
     return this._client.patch(path`/v1/sales/account-groups/${id}`, { body, ...options });
   }
 
@@ -102,7 +102,7 @@ export class AccountGroups extends APIResource {
   list(
     query: AccountGroupListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.ListAccountGroup> {
+  ): APIPromise<AnalyticsAPI.ListAccountGroup> {
     return this._client.get('/v1/sales/account-groups', { query, ...options });
   }
 

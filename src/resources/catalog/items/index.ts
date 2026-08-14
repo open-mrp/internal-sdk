@@ -9,7 +9,6 @@ export {
   type BulkReconcileItemInput,
   type BulkReconcileItemsRequest,
   type BulkReconcileItemsResponse,
-  type FileDownload,
   type ListReconcileErrorResult,
   type ListReconciledItemResult,
   type ListSkippedItemResult,

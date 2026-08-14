@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as CustomersAPI from '../../sales/customers/customers';
+import * as AnalyticsAPI from '../../core/analytics';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -65,7 +65,7 @@ export class Actions extends APIResource {
     id: string,
     params: ActionSyncOptionsParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.Carrier> {
+  ): APIPromise<AnalyticsAPI.Carrier> {
     const { include } = params ?? {};
     return this._client.post(path`/v1/operations/carriers/${id}/actions/sync-options`, {
       query: { include },

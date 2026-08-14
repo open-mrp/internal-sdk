@@ -1,9 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AccountPricesAPI from '../account-prices';
+import * as AnalyticsAPI from '../../core/analytics';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
-import * as CustomersAPI from '../customers/customers';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -154,7 +153,7 @@ export interface AccountGroupProductLineAccess {
    * scope a volume discount to the customer and open up product lines for it to
    * order from.
    */
-  account_group: CustomersAPI.AccountGroup | null;
+  account_group: AnalyticsAPI.AccountGroup | null;
 
   /**
    * When the account group was created.
@@ -231,7 +230,7 @@ export interface ListProductLine {
   /**
    * Resources in this page.
    */
-  data: Array<AccountPricesAPI.ProductLine>;
+  data: Array<AnalyticsAPI.ProductLine>;
 
   /**
    * Resource type identifier.

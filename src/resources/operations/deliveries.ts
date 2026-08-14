@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as AnalyticsAPI from '../core/analytics';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../identity/account-users/account-users';
-import * as CustomersAPI from '../sales/customers/customers';
 import * as SalesOrdersAPI from '../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
@@ -480,7 +480,7 @@ export interface PurchaseOrder {
    * A payment term describing when payment is due (e.g. `Net 30`), assignable to
    * customers, sales orders, purchase orders, and invoices.
    */
-  payment_term: CustomersAPI.PaymentTerm | null;
+  payment_term: AnalyticsAPI.PaymentTerm | null;
 
   /**
    * Priority level for fulfilling the order, relative to other open orders.
@@ -519,7 +519,7 @@ export interface PurchaseOrder {
    * of its price groups are checked first and zero the freight charge before the
    * shipping term is considered.
    */
-  shipping_term: CustomersAPI.ShippingTerm | null;
+  shipping_term: AnalyticsAPI.ShippingTerm | null;
 
   /**
    * Lifecycle status of the order.

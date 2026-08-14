@@ -1,11 +1,11 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as AnalyticsAPI from '../core/analytics';
 import * as FinanceAPI from './finance';
 import * as InvoicesAPI from './invoices';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../identity/account-users/account-users';
-import * as CustomersAPI from '../sales/customers/customers';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -269,7 +269,7 @@ export interface TransactionSummary {
    * A business you sell to, with its contact details, default fulfillment settings,
    * and order policies.
    */
-  customer: CustomersAPI.Customer | null;
+  customer: AnalyticsAPI.Customer | null;
 
   /**
    * Whether the full transaction amount has been applied to invoices.

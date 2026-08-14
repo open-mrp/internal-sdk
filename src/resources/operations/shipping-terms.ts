@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as AnalyticsAPI from '../core/analytics';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import * as CustomersAPI from '../sales/customers/customers';
 import { APIPromise } from '../../core/api-promise';
@@ -37,7 +38,7 @@ export class ShippingTerms extends APIResource {
    *   });
    * ```
    */
-  create(params: ShippingTermCreateParams, options?: RequestOptions): APIPromise<CustomersAPI.ShippingTerm> {
+  create(params: ShippingTermCreateParams, options?: RequestOptions): APIPromise<AnalyticsAPI.ShippingTerm> {
     const { include, ...body } = params;
     return this._client.post('/v1/operations/shipping-terms', { query: { include }, body, ...options });
   }
@@ -59,7 +60,7 @@ export class ShippingTerms extends APIResource {
     id: string,
     query: ShippingTermRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.ShippingTerm> {
+  ): APIPromise<AnalyticsAPI.ShippingTerm> {
     return this._client.get(path`/v1/operations/shipping-terms/${id}`, { query, ...options });
   }
 
@@ -99,7 +100,7 @@ export class ShippingTerms extends APIResource {
     id: string,
     params: ShippingTermUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.ShippingTerm> {
+  ): APIPromise<AnalyticsAPI.ShippingTerm> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/shipping-terms/${id}`, {
       query: { include },
@@ -207,7 +208,7 @@ export interface ListShippingTerm {
   /**
    * Resources in this page.
    */
-  data: Array<CustomersAPI.ShippingTerm>;
+  data: Array<AnalyticsAPI.ShippingTerm>;
 
   /**
    * Resource type identifier.

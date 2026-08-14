@@ -18,6 +18,7 @@ import {
 } from './actions';
 import * as AnalyticsAPI from './analytics';
 import {
+  AccountGroup,
   Analytics,
   AnalyticsItem,
   AnalyticsLot,
@@ -25,6 +26,7 @@ import {
   AnalyticsRetrieveWeeksOfSalesParams,
   AnalyticsUnitGroup,
   AnalyticsUnitGroupUnit,
+  AnalyticsUpdateCustomerPricingParams,
   AnalyticsUpdateDeliveriesParams,
   AnalyticsUpdateDeliveryPerformanceParams,
   AnalyticsUpdateDemandForecastParams,
@@ -39,8 +41,11 @@ import {
   AnalyticsUpdateOrdersParams,
   AnalyticsUpdateProductionCostsParams,
   AnalyticsUpdateQuarterlyOrdersParams,
+  AnalyticsUpdateRealizedMarginsParams,
   AnalyticsUpdateSalesParams,
   AnalyticsUpdateScheduleAttainmentParams,
+  AnalyzeCustomerPricingRequest,
+  AnalyzeCustomerPricingResponse,
   AnalyzeDeliveriesRequest,
   AnalyzeDeliveriesResponse,
   AnalyzeDeliveryPerformanceRequest,
@@ -69,15 +74,27 @@ import {
   AnalyzeProductionCostsResponse,
   AnalyzeQuarterlyOrdersRequest,
   AnalyzeQuarterlyOrdersResponse,
+  AnalyzeRealizedMarginsRequest,
+  AnalyzeRealizedMarginsResponse,
   AnalyzeSalesRequest,
   AnalyzeSalesResponse,
   AnalyzeScheduleAttainmentRequest,
   AnalyzeScheduleAttainmentResponse,
   AnalyzeWeeksOfSalesResponse,
   AttainmentBucket,
+  Carrier,
   ChartData,
+  ComputedQuantity,
+  ComputedRate,
   Coordinate,
   CostBreakdown,
+  Customer,
+  CustomerContactInfo,
+  CustomerDefaults,
+  CustomerFreightPreferences,
+  CustomerNotificationPreferences,
+  CustomerPricingFinding,
+  CustomerPricingSummary,
   DateTimeCoordinate,
   DeliveryBacklogBucket,
   DeliveryChartData,
@@ -88,7 +105,10 @@ import {
   DemandForecastRow,
   FrozenAdherence,
   InventoryReceiptSummaryEntry,
+  ListAccountGroup,
   ListAttainmentBucket,
+  ListCustomer,
+  ListCustomerPricingFinding,
   ListDeliveryBacklogBucket,
   ListDeliveryPerformance,
   ListDemandForecastRow,
@@ -96,6 +116,8 @@ import {
   ListOeeDepartment,
   ListOeeDowntimeReason,
   ListOeeTrendPeriod,
+  ListRealizedMarginFinding,
+  ListServiceLevel,
   ManufacturingMetrics,
   MaterialAnalyticsEntry,
   NewCustomersData,
@@ -105,9 +127,16 @@ import {
   OeeTrendPeriod,
   OpenBatchSummary,
   OrderEntry,
+  PaymentTerm,
+  Priority,
+  ProductLine,
   ProductionCostItem,
+  RealizedMarginFinding,
+  RealizedMarginSummary,
   RevenueForecastPoint,
   SalesEntry,
+  ServiceLevel,
+  ShippingTerm,
   WeeksOfSalesItem,
 } from './analytics';
 import * as AuditEventsAPI from './audit-events';
@@ -527,7 +556,15 @@ export interface Entity {
     | 'pack_list_line_item'
     | 'pack_list_back_order'
     | 'pack_list_case'
-    | 'job';
+    | 'job'
+    | 'analyze_customer_pricing_response'
+    | 'customer_pricing_finding'
+    | 'customer_pricing_summary'
+    | 'computed_rate'
+    | 'computed_quantity'
+    | 'analyze_realized_margins_response'
+    | 'realized_margin_finding'
+    | 'realized_margin_summary';
 }
 
 /**
@@ -888,6 +925,14 @@ export interface CoreRetrieveSearchParams {
     | 'pack_list_back_order'
     | 'pack_list_case'
     | 'job'
+    | 'analyze_customer_pricing_response'
+    | 'customer_pricing_finding'
+    | 'customer_pricing_summary'
+    | 'computed_rate'
+    | 'computed_quantity'
+    | 'analyze_realized_margins_response'
+    | 'realized_margin_finding'
+    | 'realized_margin_summary'
   >;
 }
 
@@ -969,11 +1014,14 @@ export declare namespace Core {
 
   export {
     Analytics as Analytics,
+    type AccountGroup as AccountGroup,
     type AnalyticsItem as AnalyticsItem,
     type AnalyticsLot as AnalyticsLot,
     type AnalyticsRate as AnalyticsRate,
     type AnalyticsUnitGroup as AnalyticsUnitGroup,
     type AnalyticsUnitGroupUnit as AnalyticsUnitGroupUnit,
+    type AnalyzeCustomerPricingRequest as AnalyzeCustomerPricingRequest,
+    type AnalyzeCustomerPricingResponse as AnalyzeCustomerPricingResponse,
     type AnalyzeDeliveriesRequest as AnalyzeDeliveriesRequest,
     type AnalyzeDeliveriesResponse as AnalyzeDeliveriesResponse,
     type AnalyzeDeliveryPerformanceRequest as AnalyzeDeliveryPerformanceRequest,
@@ -1002,15 +1050,27 @@ export declare namespace Core {
     type AnalyzeProductionCostsResponse as AnalyzeProductionCostsResponse,
     type AnalyzeQuarterlyOrdersRequest as AnalyzeQuarterlyOrdersRequest,
     type AnalyzeQuarterlyOrdersResponse as AnalyzeQuarterlyOrdersResponse,
+    type AnalyzeRealizedMarginsRequest as AnalyzeRealizedMarginsRequest,
+    type AnalyzeRealizedMarginsResponse as AnalyzeRealizedMarginsResponse,
     type AnalyzeSalesRequest as AnalyzeSalesRequest,
     type AnalyzeSalesResponse as AnalyzeSalesResponse,
     type AnalyzeScheduleAttainmentRequest as AnalyzeScheduleAttainmentRequest,
     type AnalyzeScheduleAttainmentResponse as AnalyzeScheduleAttainmentResponse,
     type AnalyzeWeeksOfSalesResponse as AnalyzeWeeksOfSalesResponse,
     type AttainmentBucket as AttainmentBucket,
+    type Carrier as Carrier,
     type ChartData as ChartData,
+    type ComputedQuantity as ComputedQuantity,
+    type ComputedRate as ComputedRate,
     type Coordinate as Coordinate,
     type CostBreakdown as CostBreakdown,
+    type Customer as Customer,
+    type CustomerContactInfo as CustomerContactInfo,
+    type CustomerDefaults as CustomerDefaults,
+    type CustomerFreightPreferences as CustomerFreightPreferences,
+    type CustomerNotificationPreferences as CustomerNotificationPreferences,
+    type CustomerPricingFinding as CustomerPricingFinding,
+    type CustomerPricingSummary as CustomerPricingSummary,
     type DateTimeCoordinate as DateTimeCoordinate,
     type DeliveryBacklogBucket as DeliveryBacklogBucket,
     type DeliveryChartData as DeliveryChartData,
@@ -1021,7 +1081,10 @@ export declare namespace Core {
     type DemandForecastRow as DemandForecastRow,
     type FrozenAdherence as FrozenAdherence,
     type InventoryReceiptSummaryEntry as InventoryReceiptSummaryEntry,
+    type ListAccountGroup as ListAccountGroup,
     type ListAttainmentBucket as ListAttainmentBucket,
+    type ListCustomer as ListCustomer,
+    type ListCustomerPricingFinding as ListCustomerPricingFinding,
     type ListDeliveryBacklogBucket as ListDeliveryBacklogBucket,
     type ListDeliveryPerformance as ListDeliveryPerformance,
     type ListDemandForecastRow as ListDemandForecastRow,
@@ -1029,6 +1092,8 @@ export declare namespace Core {
     type ListOeeDepartment as ListOeeDepartment,
     type ListOeeDowntimeReason as ListOeeDowntimeReason,
     type ListOeeTrendPeriod as ListOeeTrendPeriod,
+    type ListRealizedMarginFinding as ListRealizedMarginFinding,
+    type ListServiceLevel as ListServiceLevel,
     type ManufacturingMetrics as ManufacturingMetrics,
     type MaterialAnalyticsEntry as MaterialAnalyticsEntry,
     type NewCustomersData as NewCustomersData,
@@ -1038,11 +1103,19 @@ export declare namespace Core {
     type OeeTrendPeriod as OeeTrendPeriod,
     type OpenBatchSummary as OpenBatchSummary,
     type OrderEntry as OrderEntry,
+    type PaymentTerm as PaymentTerm,
+    type Priority as Priority,
+    type ProductLine as ProductLine,
     type ProductionCostItem as ProductionCostItem,
+    type RealizedMarginFinding as RealizedMarginFinding,
+    type RealizedMarginSummary as RealizedMarginSummary,
     type RevenueForecastPoint as RevenueForecastPoint,
     type SalesEntry as SalesEntry,
+    type ServiceLevel as ServiceLevel,
+    type ShippingTerm as ShippingTerm,
     type WeeksOfSalesItem as WeeksOfSalesItem,
     type AnalyticsRetrieveWeeksOfSalesParams as AnalyticsRetrieveWeeksOfSalesParams,
+    type AnalyticsUpdateCustomerPricingParams as AnalyticsUpdateCustomerPricingParams,
     type AnalyticsUpdateDeliveriesParams as AnalyticsUpdateDeliveriesParams,
     type AnalyticsUpdateDeliveryPerformanceParams as AnalyticsUpdateDeliveryPerformanceParams,
     type AnalyticsUpdateDemandForecastParams as AnalyticsUpdateDemandForecastParams,
@@ -1057,6 +1130,7 @@ export declare namespace Core {
     type AnalyticsUpdateOrdersParams as AnalyticsUpdateOrdersParams,
     type AnalyticsUpdateProductionCostsParams as AnalyticsUpdateProductionCostsParams,
     type AnalyticsUpdateQuarterlyOrdersParams as AnalyticsUpdateQuarterlyOrdersParams,
+    type AnalyticsUpdateRealizedMarginsParams as AnalyticsUpdateRealizedMarginsParams,
     type AnalyticsUpdateSalesParams as AnalyticsUpdateSalesParams,
     type AnalyticsUpdateScheduleAttainmentParams as AnalyticsUpdateScheduleAttainmentParams,
   };

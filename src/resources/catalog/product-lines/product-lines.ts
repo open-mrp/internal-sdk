@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AccountPricesAPI from '../../sales/account-prices';
+import * as AnalyticsAPI from '../../core/analytics';
 import * as ActionsAPI from './actions';
 import {
   ActionBulkUpsertParams,
@@ -44,10 +44,7 @@ export class ProductLines extends APIResource {
    *   });
    * ```
    */
-  create(
-    params: ProductLineCreateParams,
-    options?: RequestOptions,
-  ): APIPromise<AccountPricesAPI.ProductLine> {
+  create(params: ProductLineCreateParams, options?: RequestOptions): APIPromise<AnalyticsAPI.ProductLine> {
     const { include, ...body } = params;
     return this._client.post('/v1/catalog/product-lines', { query: { include }, body, ...options });
   }
@@ -73,7 +70,7 @@ export class ProductLines extends APIResource {
     id: string,
     query: ProductLineRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<AccountPricesAPI.ProductLine> {
+  ): APIPromise<AnalyticsAPI.ProductLine> {
     return this._client.get(path`/v1/catalog/product-lines/${id}`, { query, ...options });
   }
 
@@ -104,7 +101,7 @@ export class ProductLines extends APIResource {
     id: string,
     params: ProductLineUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<AccountPricesAPI.ProductLine> {
+  ): APIPromise<AnalyticsAPI.ProductLine> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/catalog/product-lines/${id}`, {
       query: { include },

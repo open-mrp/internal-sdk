@@ -29,6 +29,33 @@ describe('resource analytics', () => {
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
+  test('updateCustomerPricing', async () => {
+    const responsePromise = client.core.analytics.updateCustomerPricing();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('updateCustomerPricing: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.core.analytics.updateCustomerPricing(
+        {
+          include: ['customer'],
+          customer_group_ids: ['acgp_6p4z57e9alaf'],
+          customer_ids: ['ac_opnlh43ymyee'],
+          outlier_tolerance: '0.15',
+          target_gross_margin: '0.30',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
+  });
+
   test('updateDeliveries: only required params', async () => {
     const responsePromise = client.core.analytics.updateDeliveries({
       ends_at: '2026-05-10T00:23:00Z',
@@ -370,6 +397,33 @@ describe('resource analytics', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
+  });
+
+  test('updateRealizedMargins: only required params', async () => {
+    const responsePromise = client.core.analytics.updateRealizedMargins({
+      ends_at: '2026-05-10T00:23:00Z',
+      starts_at: '2026-05-10T00:00:00Z',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('updateRealizedMargins: required and optional params', async () => {
+    const response = await client.core.analytics.updateRealizedMargins({
+      ends_at: '2026-05-10T00:23:00Z',
+      starts_at: '2026-05-10T00:00:00Z',
+      include: ['customer'],
+      customer_group_ids: ['acgp_6p4z57e9alaf'],
+      customer_ids: ['ac_opnlh43ymyee'],
+      outlier_tolerance: '0.15',
+      product_line_ids: ['pdln_k9bnlgvxhxjh'],
+      target_gross_margin: '0.30',
+    });
   });
 
   test('updateSales: only required params', async () => {

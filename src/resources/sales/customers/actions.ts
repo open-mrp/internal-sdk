@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as CustomersAPI from './customers';
+import * as AnalyticsAPI from '../../core/analytics';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -53,7 +53,7 @@ export class Actions extends APIResource {
    * );
    * ```
    */
-  merge(id: string, params: ActionMergeParams, options?: RequestOptions): APIPromise<CustomersAPI.Customer> {
+  merge(id: string, params: ActionMergeParams, options?: RequestOptions): APIPromise<AnalyticsAPI.Customer> {
     const { include, ...body } = params;
     return this._client.post(path`/v1/sales/customers/${id}/actions/merge`, {
       query: { include },

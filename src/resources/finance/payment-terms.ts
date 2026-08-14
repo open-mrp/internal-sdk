@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as AnalyticsAPI from '../core/analytics';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
-import * as CustomersAPI from '../sales/customers/customers';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -26,7 +26,7 @@ export class PaymentTerms extends APIResource {
    *   });
    * ```
    */
-  create(params: PaymentTermCreateParams, options?: RequestOptions): APIPromise<CustomersAPI.PaymentTerm> {
+  create(params: PaymentTermCreateParams, options?: RequestOptions): APIPromise<AnalyticsAPI.PaymentTerm> {
     const { include, ...body } = params;
     return this._client.post('/v1/finance/payment-terms', { query: { include }, body, ...options });
   }
@@ -51,7 +51,7 @@ export class PaymentTerms extends APIResource {
     id: string,
     query: PaymentTermRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.PaymentTerm> {
+  ): APIPromise<AnalyticsAPI.PaymentTerm> {
     return this._client.get(path`/v1/finance/payment-terms/${id}`, { query, ...options });
   }
 
@@ -76,7 +76,7 @@ export class PaymentTerms extends APIResource {
     id: string,
     params: PaymentTermUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.PaymentTerm> {
+  ): APIPromise<AnalyticsAPI.PaymentTerm> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/finance/payment-terms/${id}`, {
       query: { include },
@@ -148,7 +148,7 @@ export interface ListPaymentTerm {
   /**
    * Resources in this page.
    */
-  data: Array<CustomersAPI.PaymentTerm>;
+  data: Array<AnalyticsAPI.PaymentTerm>;
 
   /**
    * Resource type identifier.

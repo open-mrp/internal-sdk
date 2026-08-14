@@ -385,7 +385,15 @@ export interface AddConversationLinkRequest {
     | 'pack_list_line_item'
     | 'pack_list_back_order'
     | 'pack_list_case'
-    | 'job';
+    | 'job'
+    | 'analyze_customer_pricing_response'
+    | 'customer_pricing_finding'
+    | 'customer_pricing_summary'
+    | 'computed_rate'
+    | 'computed_quantity'
+    | 'analyze_realized_margins_response'
+    | 'realized_margin_finding'
+    | 'realized_margin_summary';
 }
 
 /**
@@ -749,7 +757,15 @@ export interface LinkCreateParams {
     | 'pack_list_line_item'
     | 'pack_list_back_order'
     | 'pack_list_case'
-    | 'job';
+    | 'job'
+    | 'analyze_customer_pricing_response'
+    | 'customer_pricing_finding'
+    | 'customer_pricing_summary'
+    | 'computed_rate'
+    | 'computed_quantity'
+    | 'analyze_realized_margins_response'
+    | 'realized_margin_finding'
+    | 'realized_margin_summary';
 
   /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects

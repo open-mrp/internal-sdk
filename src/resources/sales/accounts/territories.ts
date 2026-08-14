@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AccountPricesAPI from '../account-prices';
+import * as AnalyticsAPI from '../../core/analytics';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import { APIPromise } from '../../../core/api-promise';
@@ -256,7 +256,7 @@ export interface Territory {
    * products are measured. Product lines are also the unit that catalog access is
    * granted over, for both customers and account groups.
    */
-  product_line: AccountPricesAPI.ProductLine | null;
+  product_line: AnalyticsAPI.ProductLine | null;
 
   /**
    * A user's membership in an account, carrying the account-specific status, role,

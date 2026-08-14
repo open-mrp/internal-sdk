@@ -433,11 +433,14 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/core/analytics.ts">AccountGroup</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyticsItem</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyticsLot</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyticsRate</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyticsUnitGroup</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyticsUnitGroupUnit</a></code>
+- <code><a href="./src/resources/core/analytics.ts">AnalyzeCustomerPricingRequest</a></code>
+- <code><a href="./src/resources/core/analytics.ts">AnalyzeCustomerPricingResponse</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeDeliveriesRequest</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeDeliveriesResponse</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeDeliveryPerformanceRequest</a></code>
@@ -466,15 +469,27 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeProductionCostsResponse</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeQuarterlyOrdersRequest</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeQuarterlyOrdersResponse</a></code>
+- <code><a href="./src/resources/core/analytics.ts">AnalyzeRealizedMarginsRequest</a></code>
+- <code><a href="./src/resources/core/analytics.ts">AnalyzeRealizedMarginsResponse</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeSalesRequest</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeSalesResponse</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeScheduleAttainmentRequest</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeScheduleAttainmentResponse</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AnalyzeWeeksOfSalesResponse</a></code>
 - <code><a href="./src/resources/core/analytics.ts">AttainmentBucket</a></code>
+- <code><a href="./src/resources/core/analytics.ts">Carrier</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ChartData</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ComputedQuantity</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ComputedRate</a></code>
 - <code><a href="./src/resources/core/analytics.ts">Coordinate</a></code>
 - <code><a href="./src/resources/core/analytics.ts">CostBreakdown</a></code>
+- <code><a href="./src/resources/core/analytics.ts">Customer</a></code>
+- <code><a href="./src/resources/core/analytics.ts">CustomerContactInfo</a></code>
+- <code><a href="./src/resources/core/analytics.ts">CustomerDefaults</a></code>
+- <code><a href="./src/resources/core/analytics.ts">CustomerFreightPreferences</a></code>
+- <code><a href="./src/resources/core/analytics.ts">CustomerNotificationPreferences</a></code>
+- <code><a href="./src/resources/core/analytics.ts">CustomerPricingFinding</a></code>
+- <code><a href="./src/resources/core/analytics.ts">CustomerPricingSummary</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DateTimeCoordinate</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DeliveryBacklogBucket</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DeliveryChartData</a></code>
@@ -485,7 +500,10 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastRow</a></code>
 - <code><a href="./src/resources/core/analytics.ts">FrozenAdherence</a></code>
 - <code><a href="./src/resources/core/analytics.ts">InventoryReceiptSummaryEntry</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ListAccountGroup</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListAttainmentBucket</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ListCustomer</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ListCustomerPricingFinding</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListDeliveryBacklogBucket</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListDeliveryPerformance</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListDemandForecastRow</a></code>
@@ -493,6 +511,8 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">ListOeeDepartment</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListOeeDowntimeReason</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListOeeTrendPeriod</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ListRealizedMarginFinding</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ListServiceLevel</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ManufacturingMetrics</a></code>
 - <code><a href="./src/resources/core/analytics.ts">MaterialAnalyticsEntry</a></code>
 - <code><a href="./src/resources/core/analytics.ts">NewCustomersData</a></code>
@@ -502,14 +522,22 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">OeeTrendPeriod</a></code>
 - <code><a href="./src/resources/core/analytics.ts">OpenBatchSummary</a></code>
 - <code><a href="./src/resources/core/analytics.ts">OrderEntry</a></code>
+- <code><a href="./src/resources/core/analytics.ts">PaymentTerm</a></code>
+- <code><a href="./src/resources/core/analytics.ts">Priority</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ProductLine</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ProductionCostItem</a></code>
+- <code><a href="./src/resources/core/analytics.ts">RealizedMarginFinding</a></code>
+- <code><a href="./src/resources/core/analytics.ts">RealizedMarginSummary</a></code>
 - <code><a href="./src/resources/core/analytics.ts">RevenueForecastPoint</a></code>
 - <code><a href="./src/resources/core/analytics.ts">SalesEntry</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ServiceLevel</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ShippingTerm</a></code>
 - <code><a href="./src/resources/core/analytics.ts">WeeksOfSalesItem</a></code>
 
 Methods:
 
 - <code title="get /v1/core/analytics/weeks-of-sales">client.core.analytics.<a href="./src/resources/core/analytics.ts">retrieveWeeksOfSales</a>({ ...params }) -> AnalyzeWeeksOfSalesResponse</code>
+- <code title="put /v1/core/analytics/customer-pricing">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateCustomerPricing</a>({ ...params }) -> AnalyzeCustomerPricingResponse</code>
 - <code title="put /v1/core/analytics/deliveries">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateDeliveries</a>({ ...params }) -> AnalyzeDeliveriesResponse</code>
 - <code title="put /v1/core/analytics/delivery-performance">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateDeliveryPerformance</a>({ ...params }) -> AnalyzeDeliveryPerformanceResponse</code>
 - <code title="put /v1/core/analytics/demand-forecast">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateDemandForecast</a>({ ...params }) -> AnalyzeDemandForecastResponse</code>
@@ -524,6 +552,7 @@ Methods:
 - <code title="put /v1/core/analytics/orders">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateOrders</a>({ ...params }) -> AnalyzeOrdersResponse</code>
 - <code title="put /v1/core/analytics/production-costs">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateProductionCosts</a>({ ...params }) -> AnalyzeProductionCostsResponse</code>
 - <code title="put /v1/core/analytics/quarterly-orders">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateQuarterlyOrders</a>({ ...params }) -> AnalyzeQuarterlyOrdersResponse</code>
+- <code title="put /v1/core/analytics/realized-margins">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateRealizedMargins</a>({ ...params }) -> AnalyzeRealizedMarginsResponse</code>
 - <code title="put /v1/core/analytics/sales">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateSales</a>({ ...params }) -> AnalyzeSalesResponse</code>
 - <code title="put /v1/core/analytics/schedule-attainment">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateScheduleAttainment</a>({ ...params }) -> AnalyzeScheduleAttainmentResponse</code>
 
@@ -668,27 +697,13 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/sales/customers/customers.ts">AccountGroup</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">AddressInput</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">Carrier</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">CreateCustomerRequest</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">Customer</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">CustomerContactInfo</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">CustomerDefaults</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">CustomerFreightPreferences</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">CustomerLeadTime</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">CustomerNotificationPreferences</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">FrequentlyOrderedProduct</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">ListAccountGroup</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">ListCustomer</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">ListFrequentlyOrderedProduct</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">ListServiceLevel</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">PaymentTerm</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">Priority</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">QuantityInput</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">RegisterCustomerRequest</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">ServiceLevel</a></code>
-- <code><a href="./src/resources/sales/customers/customers.ts">ShippingTerm</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">UpdateCustomerRequest</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">CustomerDeleteResponse</a></code>
 - <code><a href="./src/resources/sales/customers/customers.ts">CustomerRegistrationResponse</a></code>
@@ -751,21 +766,30 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/sales/account-prices.ts">AccountPrice</a></code>
-- <code><a href="./src/resources/sales/account-prices.ts">CreateAccountPriceRequest</a></code>
-- <code><a href="./src/resources/sales/account-prices.ts">ListAccountPrice</a></code>
-- <code><a href="./src/resources/sales/account-prices.ts">ListItemCategory</a></code>
-- <code><a href="./src/resources/sales/account-prices.ts">ProductLine</a></code>
-- <code><a href="./src/resources/sales/account-prices.ts">UpdateAccountPriceRequest</a></code>
-- <code><a href="./src/resources/sales/account-prices.ts">AccountPriceDeleteResponse</a></code>
+- <code><a href="./src/resources/sales/account-prices/account-prices.ts">AccountPrice</a></code>
+- <code><a href="./src/resources/sales/account-prices/account-prices.ts">CreateAccountPriceRequest</a></code>
+- <code><a href="./src/resources/sales/account-prices/account-prices.ts">ListAccountPrice</a></code>
+- <code><a href="./src/resources/sales/account-prices/account-prices.ts">ListItemCategory</a></code>
+- <code><a href="./src/resources/sales/account-prices/account-prices.ts">UpdateAccountPriceRequest</a></code>
+- <code><a href="./src/resources/sales/account-prices/account-prices.ts">AccountPriceDeleteResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/sales/account-prices">client.sales.accountPrices.<a href="./src/resources/sales/account-prices.ts">create</a>({ ...params }) -> AccountPrice</code>
-- <code title="get /v1/sales/account-prices/{id}">client.sales.accountPrices.<a href="./src/resources/sales/account-prices.ts">retrieve</a>(id, { ...params }) -> AccountPrice</code>
-- <code title="patch /v1/sales/account-prices/{id}">client.sales.accountPrices.<a href="./src/resources/sales/account-prices.ts">update</a>(id, { ...params }) -> AccountPrice</code>
-- <code title="get /v1/sales/account-prices">client.sales.accountPrices.<a href="./src/resources/sales/account-prices.ts">list</a>({ ...params }) -> ListAccountPrice</code>
-- <code title="delete /v1/sales/account-prices/{id}">client.sales.accountPrices.<a href="./src/resources/sales/account-prices.ts">delete</a>(id) -> AccountPriceDeleteResponse</code>
+- <code title="post /v1/sales/account-prices">client.sales.accountPrices.<a href="./src/resources/sales/account-prices/account-prices.ts">create</a>({ ...params }) -> AccountPrice</code>
+- <code title="get /v1/sales/account-prices/{id}">client.sales.accountPrices.<a href="./src/resources/sales/account-prices/account-prices.ts">retrieve</a>(id, { ...params }) -> AccountPrice</code>
+- <code title="patch /v1/sales/account-prices/{id}">client.sales.accountPrices.<a href="./src/resources/sales/account-prices/account-prices.ts">update</a>(id, { ...params }) -> AccountPrice</code>
+- <code title="get /v1/sales/account-prices">client.sales.accountPrices.<a href="./src/resources/sales/account-prices/account-prices.ts">list</a>({ ...params }) -> ListAccountPrice</code>
+- <code title="delete /v1/sales/account-prices/{id}">client.sales.accountPrices.<a href="./src/resources/sales/account-prices/account-prices.ts">delete</a>(id) -> AccountPriceDeleteResponse</code>
+
+### Actions
+
+Types:
+
+- <code><a href="./src/resources/sales/account-prices/actions.ts">FileDownload</a></code>
+
+Methods:
+
+- <code title="get /v1/sales/account-prices/actions/export-price-list">client.sales.accountPrices.actions.<a href="./src/resources/sales/account-prices/actions.ts">exportPriceList</a>({ ...params }) -> FileDownload</code>
 
 ## Addresses
 
@@ -1372,7 +1396,6 @@ Types:
 - <code><a href="./src/resources/catalog/items/actions.ts">BulkReconcileItemInput</a></code>
 - <code><a href="./src/resources/catalog/items/actions.ts">BulkReconcileItemsRequest</a></code>
 - <code><a href="./src/resources/catalog/items/actions.ts">BulkReconcileItemsResponse</a></code>
-- <code><a href="./src/resources/catalog/items/actions.ts">FileDownload</a></code>
 - <code><a href="./src/resources/catalog/items/actions.ts">ListReconcileErrorResult</a></code>
 - <code><a href="./src/resources/catalog/items/actions.ts">ListReconciledItemResult</a></code>
 - <code><a href="./src/resources/catalog/items/actions.ts">ListSkippedItemResult</a></code>

@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as AnalyticsAPI from '../core/analytics';
 import * as InvoicesAPI from '../finance/invoices';
 import * as AccountUsersAPI from '../identity/account-users/account-users';
-import * as CustomersAPI from '../sales/customers/customers';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -127,7 +127,7 @@ export interface ShippingCase {
    * through Shippo for live rating and label purchase; other carriers represent
    * self-managed shipping methods such as will call or local delivery.
    */
-  carrier: CustomersAPI.Carrier | null;
+  carrier: AnalyticsAPI.Carrier | null;
 
   /**
    * Creation timestamp.

@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as AnalyticsAPI from '../../core/analytics';
 import * as RequestLogsAPI from '../../core/request-logs';
-import * as AccountPricesAPI from '../account-prices';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as CustomersAPI from '../customers/customers';
@@ -525,7 +525,7 @@ export interface Freight {
    * through Shippo for live rating and label purchase; other carriers represent
    * self-managed shipping methods such as will call or local delivery.
    */
-  carrier: CustomersAPI.Carrier | null;
+  carrier: AnalyticsAPI.Carrier | null;
 
   /**
    * Resource type identifier.
@@ -551,7 +551,7 @@ export interface Freight {
    * Carriers connected through Shippo have their service levels synced from the
    * carrier itself; any carrier can also have service levels you create by hand.
    */
-  service_level: CustomersAPI.ServiceLevel | null;
+  service_level: AnalyticsAPI.ServiceLevel | null;
 }
 
 /**
@@ -758,7 +758,7 @@ export interface Product {
    * products are measured. Product lines are also the unit that catalog access is
    * granted over, for both customers and account groups.
    */
-  product_line: AccountPricesAPI.ProductLine | null;
+  product_line: AnalyticsAPI.ProductLine | null;
 
   /**
    * Product type code, which determines how the product behaves on orders and
@@ -999,7 +999,7 @@ export interface SalesOrder {
    * A business you sell to, with its contact details, default fulfillment settings,
    * and order policies.
    */
-  customer: CustomersAPI.Customer | null;
+  customer: AnalyticsAPI.Customer | null;
 
   /**
    * The customer's own purchase order number, for cross-referencing.
@@ -1093,7 +1093,7 @@ export interface SalesOrder {
    * A payment term describing when payment is due (e.g. `Net 30`), assignable to
    * customers, sales orders, purchase orders, and invoices.
    */
-  payment_term: CustomersAPI.PaymentTerm | null;
+  payment_term: AnalyticsAPI.PaymentTerm | null;
 
   /**
    * Fulfillment priority, used to rank orders on the shop floor.
@@ -1147,7 +1147,7 @@ export interface SalesOrder {
    * of its price groups are checked first and zero the freight charge before the
    * shipping term is considered.
    */
-  shipping_term: CustomersAPI.ShippingTerm | null;
+  shipping_term: AnalyticsAPI.ShippingTerm | null;
 
   /**
    * Order lifecycle status.

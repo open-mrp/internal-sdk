@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AccountPricesAPI from '../../sales/account-prices';
 import * as ActionsAPI from './actions';
 import {
   ActionBulkUpsertParams,
@@ -21,6 +20,7 @@ import {
   PropertyUpdateResponse,
 } from './properties';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
+import * as AccountPricesAPI from '../../sales/account-prices/account-prices';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';

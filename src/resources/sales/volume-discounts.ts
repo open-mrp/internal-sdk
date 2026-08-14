@@ -1,10 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AccountPricesAPI from './account-prices';
+import * as AnalyticsAPI from '../core/analytics';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../identity/account-users/account-users';
-import * as CustomersAPI from './customers/customers';
+import * as AccountPricesAPI from './account-prices/account-prices';
 import * as AccountGroupsAPI from './product-line-access/account-groups';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
@@ -526,7 +526,7 @@ export interface VolumeDiscount {
    * A single page of resources, together with the metadata needed to page through
    * the rest of the result set.
    */
-  customer_groups: CustomersAPI.ListAccountGroup | null;
+  customer_groups: AnalyticsAPI.ListAccountGroup | null;
 
   /**
    * Display name of the volume discount.

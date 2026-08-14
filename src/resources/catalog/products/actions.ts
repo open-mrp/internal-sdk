@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as AnalyticsAPI from '../../core/analytics';
 import * as JobsAPI from '../../core/jobs';
-import * as AccountPricesAPI from '../../sales/account-prices';
 import * as ActionsAPI from '../item-categories/actions';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
@@ -311,7 +311,7 @@ export namespace ValidateProductsResponse {
      * products are measured. Product lines are also the unit that catalog access is
      * granted over, for both customers and account groups.
      */
-    product_line: AccountPricesAPI.ProductLine | null;
+    product_line: AnalyticsAPI.ProductLine | null;
 
     /**
      * Product type code, which determines how the product behaves on orders and

@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as AnalyticsAPI from '../core/analytics';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
-import * as CustomersAPI from './customers/customers';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -30,7 +30,7 @@ export class Priorities extends APIResource {
     id: string,
     query: PriorityRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.Priority> {
+  ): APIPromise<AnalyticsAPI.Priority> {
     return this._client.get(path`/v1/sales/priorities/${id}`, { query, ...options });
   }
 
@@ -64,7 +64,7 @@ export interface ListPriority {
   /**
    * Resources in this page.
    */
-  data: Array<CustomersAPI.Priority>;
+  data: Array<AnalyticsAPI.Priority>;
 
   /**
    * Resource type identifier.

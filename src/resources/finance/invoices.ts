@@ -1,10 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as AnalyticsAPI from '../core/analytics';
 import * as FinanceAPI from './finance';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../identity/account-users/account-users';
-import * as CustomersAPI from '../sales/customers/customers';
 import * as SalesOrdersAPI from '../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
@@ -143,7 +143,7 @@ export interface Invoice {
    * A business you sell to, with its contact details, default fulfillment settings,
    * and order policies.
    */
-  customer: CustomersAPI.Customer | null;
+  customer: AnalyticsAPI.Customer | null;
 
   /**
    * Whether the billed customer is configured to exchange documents via EDI.
@@ -218,7 +218,7 @@ export interface Invoice {
    * A payment term describing when payment is due (e.g. `Net 30`), assignable to
    * customers, sales orders, purchase orders, and invoices.
    */
-  payment_term: CustomersAPI.PaymentTerm | null;
+  payment_term: AnalyticsAPI.PaymentTerm | null;
 
   /**
    * Priority level carried onto the invoice from the order it bills.
@@ -586,7 +586,7 @@ export interface Pick {
    * A business you sell to, with its contact details, default fulfillment settings,
    * and order policies.
    */
-  customer: CustomersAPI.Customer | null;
+  customer: AnalyticsAPI.Customer | null;
 
   /**
    * A single page of resources, together with the metadata needed to page through
@@ -722,7 +722,7 @@ export interface Shipment {
    * A business you sell to, with its contact details, default fulfillment settings,
    * and order policies.
    */
-  customer: CustomersAPI.Customer | null;
+  customer: AnalyticsAPI.Customer | null;
 
   /**
    * Freight describes the carrier selection and freight billing for a record.
@@ -885,7 +885,7 @@ export interface ShippingCaseDetail {
    * through Shippo for live rating and label purchase; other carriers represent
    * self-managed shipping methods such as will call or local delivery.
    */
-  carrier: CustomersAPI.Carrier | null;
+  carrier: AnalyticsAPI.Carrier | null;
 
   /**
    * Creation timestamp.
@@ -1055,7 +1055,7 @@ export interface TransactionDetail {
    * A business you sell to, with its contact details, default fulfillment settings,
    * and order policies.
    */
-  customer: CustomersAPI.Customer | null;
+  customer: AnalyticsAPI.Customer | null;
 
   /**
    * Whether the full transaction amount has been applied to invoices.

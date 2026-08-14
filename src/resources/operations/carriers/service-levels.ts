@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as CustomersAPI from '../../sales/customers/customers';
+import * as AnalyticsAPI from '../../core/analytics';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -38,7 +38,7 @@ export class ServiceLevels extends APIResource {
     carrierID: string,
     params: ServiceLevelCreateParams,
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.ServiceLevel> {
+  ): APIPromise<AnalyticsAPI.ServiceLevel> {
     const { include, ...body } = params;
     return this._client.post(path`/v1/operations/carriers/${carrierID}/service-levels`, {
       query: { include },
@@ -66,7 +66,7 @@ export class ServiceLevels extends APIResource {
     id: string,
     params: ServiceLevelRetrieveParams,
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.ServiceLevel> {
+  ): APIPromise<AnalyticsAPI.ServiceLevel> {
     const { carrier_id, ...query } = params;
     return this._client.get(path`/v1/operations/carriers/${carrier_id}/service-levels/${id}`, {
       query,
@@ -101,7 +101,7 @@ export class ServiceLevels extends APIResource {
     id: string,
     params: ServiceLevelUpdateParams,
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.ServiceLevel> {
+  ): APIPromise<AnalyticsAPI.ServiceLevel> {
     const { carrier_id, include, ...body } = params;
     return this._client.patch(path`/v1/operations/carriers/${carrier_id}/service-levels/${id}`, {
       query: { include },
@@ -131,7 +131,7 @@ export class ServiceLevels extends APIResource {
     carrierID: string,
     query: ServiceLevelListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<CustomersAPI.ListServiceLevel> {
+  ): APIPromise<AnalyticsAPI.ListServiceLevel> {
     return this._client.get(path`/v1/operations/carriers/${carrierID}/service-levels`, { query, ...options });
   }
 

@@ -31,6 +31,42 @@ export class Analytics extends APIResource {
   }
 
   /**
+   * Flags contracted customer prices that are unusually low or unprofitable.
+   *
+   * Two independent checks run over every account price. The first compares a price
+   * against the median price other customers pay for the same product line and
+   * attributes — the same pair the pricing engine matches on — so a price is only
+   * ever compared against prices that buy the same thing. The second computes gross
+   * margin from the cost of the products the price applies to. A price may be
+   * flagged by either or both.
+   *
+   * Prices a customer receives through its parent account are included and marked,
+   * since they are easy to miss when auditing customer by customer. Manual price
+   * overrides entered on an individual order are not visible here: they bypass
+   * contracted pricing entirely and are only recorded on the order line.
+   *
+   * This endpoint requires the permission: `discounts:read`.
+   *
+   * @example
+   * ```ts
+   * const analyzeCustomerPricingResponse =
+   *   await client.core.analytics.updateCustomerPricing({
+   *     customer_group_ids: ['acgp_6p4z57e9alaf'],
+   *     customer_ids: ['ac_opnlh43ymyee'],
+   *     outlier_tolerance: '0.15',
+   *     target_gross_margin: '0.30',
+   *   });
+   * ```
+   */
+  updateCustomerPricing(
+    params: AnalyticsUpdateCustomerPricingParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<AnalyzeCustomerPricingResponse> {
+    const { include, ...body } = params ?? {};
+    return this._client.put('/v1/core/analytics/customer-pricing', { query: { include }, body, ...options });
+  }
+
+  /**
    * Returns delivery performance statistics over a date range, including on-time
    * rates, average delivery times, and time-to-first-shipment metrics.
    *
@@ -395,6 +431,45 @@ export class Analytics extends APIResource {
   }
 
   /**
+   * Flags what customers were actually charged, as opposed to what they are
+   * contracted to be charged.
+   *
+   * Invoiced lines over the window are rolled up to one row per customer and SKU,
+   * weighted by quantity, and each row is checked twice: against the median price
+   * other customers achieved on the same SKU, and against a target gross margin
+   * computed from the cost captured on the lines. Findings are ranked by money at
+   * stake rather than by percentage, so a thin margin on a large account outranks a
+   * worse percentage on a single small order.
+   *
+   * This is the only view that sees a price typed onto an individual order. A manual
+   * line override bypasses contracted prices and volume discounts entirely, so it
+   * never appears in an audit of configured pricing.
+   *
+   * This endpoint requires the permission: `invoices:read`.
+   *
+   * @example
+   * ```ts
+   * const analyzeRealizedMarginsResponse =
+   *   await client.core.analytics.updateRealizedMargins({
+   *     ends_at: '2026-05-10T00:23:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
+   *     customer_group_ids: ['acgp_6p4z57e9alaf'],
+   *     customer_ids: ['ac_opnlh43ymyee'],
+   *     outlier_tolerance: '0.15',
+   *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
+   *     target_gross_margin: '0.30',
+   *   });
+   * ```
+   */
+  updateRealizedMargins(
+    params: AnalyticsUpdateRealizedMarginsParams,
+    options?: RequestOptions,
+  ): APIPromise<AnalyzeRealizedMarginsResponse> {
+    const { include, ...body } = params;
+    return this._client.put('/v1/core/analytics/realized-margins', { query: { include }, body, ...options });
+  }
+
+  /**
    * Returns detailed sales entry records over a specified date range.
    *
    * This endpoint requires the permission: `invoices:read`.
@@ -452,6 +527,86 @@ export class Analytics extends APIResource {
   ): APIPromise<AnalyzeScheduleAttainmentResponse> {
     return this._client.put('/v1/core/analytics/schedule-attainment', { body, ...options });
   }
+}
+
+/**
+ * A named grouping of customer accounts, used for pricing rules or to categorize
+ * accounts.
+ *
+ * A customer carries at most one group of type `type_group` as its customer type,
+ * plus any number of groups of type `pricing_group`. Membership of either kind can
+ * scope a volume discount to the customer and open up product lines for it to
+ * order from.
+ */
+export interface AccountGroup {
+  /**
+   * Account group ID.
+   */
+  id: string;
+
+  /**
+   * How sales commission applies to accounts in this group.
+   *
+   * - `commission_applied`: sales commission is calculated on orders from accounts
+   *   in this group.
+   * - `commission_exempt`: orders from accounts in this group are exempt from
+   *   commission.
+   */
+  commission_policy: 'commission_applied' | 'commission_exempt';
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Calendar days between an order being issued and it being due to ship, inherited
+   * by every customer in this group that has not set its own.
+   */
+  default_lead_time_days: number | null;
+
+  /**
+   * Free-form description of the account group.
+   */
+  description: string | null;
+
+  /**
+   * How freight charges apply to orders from accounts in this group.
+   *
+   * - `free_freight`: customers within this group will not have to pay for freight.
+   * - `billed_freight`: freight will be applied to any order within this account
+   *   group, unless overridden elsewhere.
+   */
+  freight_policy: 'free_freight' | 'billed_freight';
+
+  /**
+   * Display name of the account group.
+   *
+   * Unique within the account.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'account_group';
+
+  /**
+   * How this account group is used.
+   *
+   * - `pricing_group`: used for pricing rules, such as a "Preferred" group that
+   *   receives a special discount.
+   * - `type_group`: used to categorize accounts, such as "Consumers" or
+   *   "Distributors".
+   *
+   * A group's type is fixed when it is created and cannot be changed afterwards.
+   */
+  type: 'pricing_group' | 'type_group';
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
 }
 
 /**
@@ -570,6 +725,59 @@ export interface AnalyticsUnitGroupUnit {
    * The unit name.
    */
   name: string;
+}
+
+/**
+ * AnalyzeCustomerPricingRequest is the request to audit contracted customer
+ * prices.
+ */
+export interface AnalyzeCustomerPricingRequest {
+  /**
+   * Restrict the analysis to customers in these customer groups.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Restrict the analysis to these customers. Omit to cover every customer with a
+   * contracted price.
+   *
+   * Peer medians are still computed across all customers, so narrowing the result
+   * does not change what a price is compared against.
+   */
+  customer_ids?: Array<string>;
+
+  /**
+   * How far below the peer median a price must sit to be flagged, as a fraction
+   * between 0 and 1.
+   */
+  outlier_tolerance?: string;
+
+  /**
+   * The gross margin a price is expected to clear, as a fraction between 0 and 1.
+   */
+  target_gross_margin?: string;
+}
+
+/**
+ * AnalyzeCustomerPricingResponse represents the response from the customer pricing
+ * analysis.
+ */
+export interface AnalyzeCustomerPricingResponse {
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  findings: ListCustomerPricingFinding | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'analyze_customer_pricing_response';
+
+  /**
+   * CustomerPricingSummary reports the shape of the analysis behind the findings.
+   */
+  summary: CustomerPricingSummary;
 }
 
 /**
@@ -1238,6 +1446,73 @@ export namespace AnalyzeQuarterlyOrdersResponse {
 }
 
 /**
+ * AnalyzeRealizedMarginsRequest is the request to audit what customers were
+ * actually charged.
+ */
+export interface AnalyzeRealizedMarginsRequest {
+  /**
+   * End of the invoiced window.
+   */
+  ends_at: string;
+
+  /**
+   * Start of the invoiced window.
+   */
+  starts_at: string;
+
+  /**
+   * Restrict the result to customers in these customer groups.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Restrict the result to these customers.
+   *
+   * Peer medians are still computed across every customer that bought the SKU, so
+   * narrowing the result does not change what a price is compared against.
+   */
+  customer_ids?: Array<string>;
+
+  /**
+   * How far below the peer median an achieved price must sit to be flagged, as a
+   * fraction between 0 and 1.
+   */
+  outlier_tolerance?: string;
+
+  /**
+   * Restrict the result to these product lines.
+   */
+  product_line_ids?: Array<string>;
+
+  /**
+   * The gross margin a sale is expected to clear, as a fraction between 0 and 1.
+   */
+  target_gross_margin?: string;
+}
+
+/**
+ * AnalyzeRealizedMarginsResponse represents the response from the realized margin
+ * analysis.
+ */
+export interface AnalyzeRealizedMarginsResponse {
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  findings: ListRealizedMarginFinding | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'analyze_realized_margins_response';
+
+  /**
+   * RealizedMarginSummary reports the shape of the analysis behind the findings.
+   */
+  summary: RealizedMarginSummary;
+}
+
+/**
  * AnalyzeSalesRequest is the request to analyze sales data over a date range.
  */
 export interface AnalyzeSalesRequest {
@@ -1485,6 +1760,85 @@ export interface AttainmentBucket {
 }
 
 /**
+ * A shipping carrier configured for fulfilling orders.
+ *
+ * Carriers with a Shippo-supported `code` (`fedex`, `ups`, `usps`) are connected
+ * through Shippo for live rating and label purchase; other carriers represent
+ * self-managed shipping methods such as will call or local delivery.
+ */
+export interface Carrier {
+  /**
+   * Carrier ID.
+   */
+  id: string;
+
+  /**
+   * Your account number with this carrier.
+   *
+   * UPS and USPS carrier accounts are connected to Shippo using this number; FedEx
+   * carriers authorize through OAuth instead, so their account number is not used to
+   * connect them.
+   */
+  account_number: string | null;
+
+  /**
+   * Well-known carrier identifier, set only for recognized carriers and absent for
+   * custom ones.
+   *
+   * - `fedex`, `ups`, `usps`: integrated carriers managed through Shippo (live
+   *   rating and labels).
+   * - `will_call`: customer picks the order up; no carrier shipment.
+   * - `delivery`: delivered by your own vehicles/drivers.
+   * - `ltl`, `ltl1`: less-than-truckload freight carriers.
+   * - `freight_collect`: freight billed to and arranged by the receiver.
+   */
+  code: 'fedex' | 'ups' | 'usps' | 'will_call' | 'delivery' | 'ltl' | 'ltl1' | 'freight_collect' | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Whether customers can see and select this carrier at checkout in the customer
+   * portal.
+   */
+  customer_portal_visibility: 'visible' | 'hidden';
+
+  /**
+   * Soft-delete timestamp.
+   */
+  deleted_at: string | null;
+
+  /**
+   * Human-readable name for the carrier, unique among the carriers visible to your
+   * account.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'carrier';
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: APIKeysAPI.Owner | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  service_levels: ListServiceLevel | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
  * ChartData represents data for a chart visualization.
  */
 export interface ChartData {
@@ -1502,6 +1856,75 @@ export interface ChartData {
    * The chart type.
    */
   type: string;
+}
+
+/**
+ * An amount calculated on demand rather than stored.
+ *
+ * The same shape as a quantity minus the ID, because nothing was written: it is
+ * derived per request, such as a total rolled up across invoiced lines for one
+ * analysis.
+ */
+export interface ComputedQuantity {
+  /**
+   * Formatted value with unit abbreviation (e.g. "1,200 pr").
+   */
+  display_value: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'computed_quantity';
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  unit: AccountUsersAPI.Unit | null;
+
+  /**
+   * Raw decimal value, as a string to preserve precision.
+   *
+   * This is the unformatted machine value; see `display_value` for the
+   * human-readable rendering.
+   */
+  value: string;
+}
+
+/**
+ * A rate calculated on demand rather than stored.
+ *
+ * The same shape as a rate minus the fields only a persisted row can have: it
+ * carries no ID and no timestamps because nothing was written. Used where a figure
+ * is derived per request, such as an analysis comparing one customer's price
+ * against the median other customers pay.
+ */
+export interface ComputedRate {
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  denominator_unit: AccountUsersAPI.Unit | null;
+
+  /**
+   * Human-readable formatted value (e.g. "$25.50 / pr").
+   */
+  display_value: string;
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  numerator_unit: AccountUsersAPI.Unit | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'computed_rate';
+
+  /**
+   * Decimal value of the rate, as a string to preserve precision.
+   *
+   * Expressed as the amount of the numerator unit per one denominator unit.
+   */
+  value: string;
 }
 
 /**
@@ -1576,6 +1999,438 @@ export interface CostBreakdown {
    * money, weights, and durations.
    */
   total: AccountUsersAPI.Quantity | null;
+}
+
+/**
+ * A business you sell to, with its contact details, default fulfillment settings,
+ * and order policies.
+ */
+export interface Customer {
+  /**
+   * Customer ID.
+   */
+  id: string;
+
+  /**
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
+   */
+  bill_to_address: APIKeysAPI.Address | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  child_accounts: ListCustomer | null;
+
+  /**
+   * How sales commission applies to this customer's orders.
+   *
+   * - `commission_exempt`: this customer's orders are exempt from sales commission.
+   * - `commission_applied`: sales commission is calculated on this customer's
+   *   orders.
+   *
+   * The customer counts as exempt if this field, its `type` group, or any of its
+   * `price_groups` is `commission_exempt`. Exempt customers never have a sales rep
+   * assigned automatically when an order is created without one.
+   */
+  commission_policy: 'commission_applied' | 'commission_exempt';
+
+  /**
+   * Customer contact information.
+   */
+  contact_info: CustomerContactInfo | null;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
+   */
+  credit_limit: AccountUsersAPI.Quantity | null;
+
+  /**
+   * Values used to fill in a new sales order for this customer when the order does
+   * not supply its own.
+   */
+  defaults: CustomerDefaults | null;
+
+  /**
+   * Whether EDI (Electronic Data Interchange) is enabled for exchanging orders and
+   * documents with this customer.
+   */
+  edi_status: 'enabled' | 'disabled';
+
+  /**
+   * Customer freight and carrier settings.
+   */
+  freight_preferences: CustomerFreightPreferences | null;
+
+  /**
+   * The customer's business name, as shown throughout the app and on documents.
+   */
+  name: string;
+
+  /**
+   * Free-form note about the customer.
+   */
+  note: string | null;
+
+  /**
+   * Customer notification settings.
+   */
+  notification_preferences: CustomerNotificationPreferences | null;
+
+  /**
+   * Human-readable customer number used to identify the account, distinct from the
+   * `id`.
+   *
+   * Unique within your account.
+   */
+  number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'customer';
+
+  /**
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
+   */
+  parent_account: Customer | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  price_groups: ListAccountGroup | null;
+
+  /**
+   * The customer's position in the account hierarchy.
+   *
+   * - `standalone`: no parent or child accounts.
+   * - `parent`: has one or more child accounts (see `child_accounts`).
+   * - `child`: belongs to a parent account (see `parent_account`).
+   */
+  relationship_type: 'standalone' | 'parent' | 'child';
+
+  /**
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
+   */
+  ship_to_address: APIKeysAPI.Address | null;
+
+  /**
+   * The customer's account standing.
+   *
+   * - `normal`: standard account with no restrictions.
+   * - `preferred`: account flagged for prioritized handling.
+   * - `hold_shipment`: the customer's shipments should be held, typically over a
+   *   credit problem, while orders can still be placed.
+   * - `hold_all`: all activity for the customer should be held.
+   *
+   * The hold statuses are advisory: Augno flags the customer's orders as being on
+   * credit hold, but requests to create orders or shipments for the customer are not
+   * rejected.
+   */
+  status: 'normal' | 'preferred' | 'hold_shipment' | 'hold_all';
+
+  /**
+   * A named grouping of customer accounts, used for pricing rules or to categorize
+   * accounts.
+   *
+   * A customer carries at most one group of type `type_group` as its customer type,
+   * plus any number of groups of type `pricing_group`. Membership of either kind can
+   * scope a volume discount to the customer and open up product lines for it to
+   * order from.
+   */
+  type: AccountGroup | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Customer contact information.
+ */
+export interface CustomerContactInfo {
+  /**
+   * Email address.
+   */
+  email: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'customer_contact_info';
+
+  /**
+   * Phone number.
+   */
+  phone: string | null;
+
+  /**
+   * Website URL.
+   */
+  url: string | null;
+}
+
+/**
+ * Values used to fill in a new sales order for this customer when the order does
+ * not supply its own.
+ */
+export interface CustomerDefaults {
+  /**
+   * Calendar days between an order being issued and it being due to ship.
+   *
+   * Sets each order's `ship_by_date` when it is issued. With none set here the
+   * customer inherits its account group's lead time, then the account default.
+   */
+  lead_time_days: number | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'customer_defaults';
+
+  /**
+   * A payment term describing when payment is due (e.g. `Net 30`), assignable to
+   * customers, sales orders, purchase orders, and invoices.
+   */
+  payment_term: PaymentTerm | null;
+
+  /**
+   * Priority level used to order work on sales orders, purchase orders, and picks.
+   *
+   * The levels are platform-provided and the same for every account, so they cannot
+   * be created, renamed, or removed. A customer can carry a default priority that
+   * pre-fills new orders for them.
+   */
+  priority: Priority | null;
+
+  /**
+   * A user's membership in an account, carrying the account-specific status, role,
+   * and department.
+   *
+   * Profile fields (name, email, username, image URL) live on the `user`
+   * sub-resource, which is shared across every account the user belongs to.
+   */
+  sales_rep: AccountUsersAPI.AccountUser | null;
+
+  /**
+   * A named freight pricing rule that decides what a buyer pays for shipping.
+   *
+   * A customer's default shipping term is evaluated whenever freight is quoted for
+   * one of their orders. Freight exemptions on the customer, its type group, or any
+   * of its price groups are checked first and zero the freight charge before the
+   * shipping term is considered.
+   */
+  shipping_term: ShippingTerm | null;
+}
+
+/**
+ * Customer freight and carrier settings.
+ */
+export interface CustomerFreightPreferences {
+  /**
+   * Carrier billing account number charged when `billing_type` is `third_party`.
+   */
+  billing_account: string | null;
+
+  /**
+   * Who pays the carrier for shipments.
+   *
+   * - `sender`: the shipper (you) pays the carrier.
+   * - `third_party`: a third party is billed, using `billing_account`.
+   */
+  billing_type: 'sender' | 'third_party' | null;
+
+  /**
+   * A shipping carrier configured for fulfilling orders.
+   *
+   * Carriers with a Shippo-supported `code` (`fedex`, `ups`, `usps`) are connected
+   * through Shippo for live rating and label purchase; other carriers represent
+   * self-managed shipping methods such as will call or local delivery.
+   */
+  carrier: Carrier | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'customer_freight_preferences';
+
+  /**
+   * A shipping speed or method offered by a carrier, such as ground or overnight.
+   *
+   * Carriers connected through Shippo have their service levels synced from the
+   * carrier itself; any carrier can also have service levels you create by hand.
+   */
+  service_level: ServiceLevel | null;
+
+  /**
+   * Freight policy applied to this customer's orders.
+   *
+   * - `free_freight`: the customer is not billed for freight.
+   * - `billed_freight`: freight is billed to the customer.
+   *
+   * Freight is waived when this field, the customer's `type` group, any of its
+   * `price_groups`, or any product line the ordered products belong to is
+   * `free_freight`, so a shipment can come back freight-exempt even while this field
+   * is `billed_freight`.
+   */
+  status: 'free_freight' | 'billed_freight';
+}
+
+/**
+ * Customer notification settings.
+ */
+export interface CustomerNotificationPreferences {
+  /**
+   * Whether anyone is set up to receive invoice emails for this customer.
+   *
+   * Derived from the customer's notification recipients: true when at least one of
+   * them is configured for invoice notifications.
+   */
+  accepts_invoice_emails: boolean;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'customer_notification_preferences';
+}
+
+/**
+ * CustomerPricingFinding is one contracted price flagged by the pricing analysis.
+ */
+export interface CustomerPricingFinding {
+  /**
+   * Identifier for this finding, stable for the same price and customer across runs.
+   *
+   * One contracted price produces one finding per customer it reaches, so the
+   * price's own ID is not unique across findings.
+   */
+  id: string;
+
+  /**
+   * ID of the contracted price behind this finding, which is where it has to be
+   * changed.
+   */
+  account_price_id: string;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  attributes: AccountUsersAPI.ListAttribute | null;
+
+  /**
+   * How far below the peer median this price sits, as a fraction between 0 and 1.
+   * Null when there is no peer median.
+   */
+  below_peer_median_fraction: string | null;
+
+  /**
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
+   */
+  customer: Customer | null;
+
+  /**
+   * Gross margin at this price, as a fraction between 0 and 1. Null when no
+   * comparable cost could be established.
+   */
+  gross_margin: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'customer_pricing_finding';
+
+  /**
+   * How the customer comes to receive this price.
+   */
+  origin: 'direct' | 'inherited';
+
+  /**
+   * A rate calculated on demand rather than stored.
+   *
+   * The same shape as a rate minus the fields only a persisted row can have: it
+   * carries no ID and no timestamps because nothing was written. Used where a figure
+   * is derived per request, such as an analysis comparing one customer's price
+   * against the median other customers pay.
+   */
+  peer_median_price: ComputedRate | null;
+
+  /**
+   * A named grouping of related products in your catalog.
+   *
+   * A product line carries the default commission and freight policies for the
+   * products assigned to it, along with the unit group that determines how those
+   * products are measured. Product lines are also the unit that catalog access is
+   * granted over, for both customers and account groups.
+   */
+  product_line: ProductLine | null;
+
+  /**
+   * Why this price was flagged.
+   */
+  reason: 'below_peer_median' | 'below_target_margin' | 'below_peer_median_and_target_margin';
+
+  /**
+   * A rate calculated on demand rather than stored.
+   *
+   * The same shape as a rate minus the fields only a persisted row can have: it
+   * carries no ID and no timestamps because nothing was written. Used where a figure
+   * is derived per request, such as an analysis comparing one customer's price
+   * against the median other customers pay.
+   */
+  unit_price: ComputedRate | null;
+}
+
+/**
+ * CustomerPricingSummary reports the shape of the analysis behind the findings.
+ */
+export interface CustomerPricingSummary {
+  /**
+   * Prices flagged for sitting below the peer median.
+   */
+  below_peer_median_count: number;
+
+  /**
+   * Prices flagged for failing the target gross margin.
+   */
+  below_target_margin_count: number;
+
+  /**
+   * Prices whose margin could not be checked because no comparable cost was
+   * available.
+   */
+  margin_not_assessed_count: number;
+
+  /**
+   * Anything the analysis had to leave out, so the result never overstates its own
+   * coverage.
+   */
+  notes: Array<string>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'customer_pricing_summary';
+
+  /**
+   * Contracted prices examined.
+   */
+  prices_analyzed: number;
 }
 
 /**
@@ -2032,11 +2887,92 @@ export interface InventoryReceiptSummaryEntry {
  * A single page of resources, together with the metadata needed to page through
  * the rest of the result set.
  */
+export interface ListAccountGroup {
+  /**
+   * Resources in this page.
+   */
+  data: Array<AccountGroup>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
 export interface ListAttainmentBucket {
   /**
    * Resources in this page.
    */
   data: Array<AttainmentBucket>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListCustomer {
+  /**
+   * Resources in this page.
+   */
+  data: Array<Customer>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListCustomerPricingFinding {
+  /**
+   * Resources in this page.
+   */
+  data: Array<CustomerPricingFinding>;
 
   /**
    * Resource type identifier.
@@ -2226,6 +3162,60 @@ export interface ListOeeTrendPeriod {
    * Resources in this page.
    */
   data: Array<OeeTrendPeriod>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListRealizedMarginFinding {
+  /**
+   * Resources in this page.
+   */
+  data: Array<RealizedMarginFinding>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListServiceLevel {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ServiceLevel>;
 
   /**
    * Resource type identifier.
@@ -2878,6 +3868,203 @@ export interface OrderEntry {
 }
 
 /**
+ * A payment term describing when payment is due (e.g. `Net 30`), assignable to
+ * customers, sales orders, purchase orders, and invoices.
+ */
+export interface PaymentTerm {
+  /**
+   * Payment term ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Display name (e.g. `Net 30`), unique among the payment terms visible to your
+   * account.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'payment_term';
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: APIKeysAPI.Owner | null;
+
+  /**
+   * Whether this payment term is still in active use.
+   *
+   * Payment terms created through the API are always `active`, and no endpoint
+   * changes a term's status. List Payment Terms returns inactive terms alongside
+   * active ones, so filter them out yourself if you only want the ones still on
+   * offer.
+   */
+  status: 'active' | 'inactive';
+
+  /**
+   * Last-updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * Priority level used to order work on sales orders, purchase orders, and picks.
+ *
+ * The levels are platform-provided and the same for every account, so they cannot
+ * be created, renamed, or removed. A customer can carry a default priority that
+ * pre-fills new orders for them.
+ */
+export interface Priority {
+  /**
+   * Priority ID.
+   */
+  id: string;
+
+  /**
+   * Machine-readable code identifying the priority level.
+   *
+   * Other resources refer to a priority by this code rather than by its ID, such as
+   * a sales order's `priority`, and it can be used in place of the ID when
+   * retrieving a priority.
+   */
+  code: 'low' | 'normal' | 'high';
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Display name of the priority level.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'priority';
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: APIKeysAPI.Owner | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * A named grouping of related products in your catalog.
+ *
+ * A product line carries the default commission and freight policies for the
+ * products assigned to it, along with the unit group that determines how those
+ * products are measured. Product lines are also the unit that catalog access is
+ * granted over, for both customers and account groups.
+ */
+export interface ProductLine {
+  /**
+   * Product line ID.
+   */
+  id: string;
+
+  /**
+   * Default commission policy for products in this product line.
+   *
+   * - `commission_exempt`: no commission applies to these products.
+   * - `commission_applied`: commission applies to these products, unless overridden
+   *   elsewhere.
+   */
+  commission_policy: 'commission_applied' | 'commission_exempt';
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
+   */
+  default_lot: AccountUsersAPI.Quantity | null;
+
+  /**
+   * Free-form description of the product line.
+   */
+  description: string | null;
+
+  /**
+   * Default freight policy for products in this product line.
+   *
+   * - `free_freight`: these products do not incur a freight charge.
+   * - `billed_freight`: freight is billed for these products, unless overridden
+   *   elsewhere.
+   */
+  freight_policy: 'free_freight' | 'billed_freight';
+
+  /**
+   * How products in this line are produced when they do not say for themselves.
+   *
+   * - `make_to_stock`: built to the forecast, holding a safety stock against its
+   *   variability.
+   * - `make_to_order`: built only against orders already on the book, holding no
+   *   buffer.
+   *
+   * Null falls through to the account default.
+   */
+  fulfillment_policy: 'make_to_stock' | 'make_to_order' | null;
+
+  /**
+   * Display name of the product line.
+   *
+   * Unique among the product lines visible to your account, which includes the
+   * shared system lines.
+   */
+  name: string;
+
+  /**
+   * Free-form notes about the product line.
+   */
+  notes: string | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'product_line';
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: APIKeysAPI.Owner | null;
+
+  /**
+   * A named collection of units that share one dimension, defining which units a
+   * product can be ordered in.
+   *
+   * Each associated unit carries its own discount and customer portal visibility,
+   * applied when an order line is priced in that unit. A product takes its unit
+   * group from its product line, falling back to its item category.
+   */
+  unit_group: AccountUsersAPI.UnitGroup | null;
+
+  /**
+   * Last-updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
  * ProductionCostItem represents an aggregated production cost entry.
  */
 export interface ProductionCostItem {
@@ -2910,6 +4097,164 @@ export interface ProductionCostItem {
    * CostBreakdown represents a detailed cost breakdown with sub-quantities.
    */
   waste_costs: CostBreakdown;
+}
+
+/**
+ * RealizedMarginFinding is one customer/SKU trading relationship flagged by the
+ * realized margin analysis.
+ */
+export interface RealizedMarginFinding {
+  /**
+   * Identifier for this finding, stable for the same customer and item across runs.
+   */
+  id: string;
+
+  /**
+   * A rate calculated on demand rather than stored.
+   *
+   * The same shape as a rate minus the fields only a persisted row can have: it
+   * carries no ID and no timestamps because nothing was written. Used where a figure
+   * is derived per request, such as an analysis comparing one customer's price
+   * against the median other customers pay.
+   */
+  average_unit_price: ComputedRate | null;
+
+  /**
+   * How far below the peer median this customer's achieved price sits, as a fraction
+   * between 0 and 1. Null when there is no peer median.
+   */
+  below_peer_median_fraction: string | null;
+
+  /**
+   * An amount calculated on demand rather than stored.
+   *
+   * The same shape as a quantity minus the ID, because nothing was written: it is
+   * derived per request, such as a total rolled up across invoiced lines for one
+   * analysis.
+   */
+  cost: ComputedQuantity | null;
+
+  /**
+   * A business you sell to, with its contact details, default fulfillment settings,
+   * and order policies.
+   */
+  customer: Customer | null;
+
+  /**
+   * A named grouping of customer accounts, used for pricing rules or to categorize
+   * accounts.
+   *
+   * A customer carries at most one group of type `type_group` as its customer type,
+   * plus any number of groups of type `pricing_group`. Membership of either kind can
+   * scope a volume discount to the customer and open up product lines for it to
+   * order from.
+   */
+  customer_group: AccountGroup | null;
+
+  /**
+   * Realized gross margin, as a fraction between 0 and 1. Null when no cost was
+   * captured on the lines.
+   */
+  gross_margin: string | null;
+
+  /**
+   * An entry in your catalog: something you sell, consume, or build with.
+   */
+  item: AccountUsersAPI.Item | null;
+
+  /**
+   * Number of invoiced lines behind these totals.
+   */
+  line_count: number;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'realized_margin_finding';
+
+  /**
+   * A rate calculated on demand rather than stored.
+   *
+   * The same shape as a rate minus the fields only a persisted row can have: it
+   * carries no ID and no timestamps because nothing was written. Used where a figure
+   * is derived per request, such as an analysis comparing one customer's price
+   * against the median other customers pay.
+   */
+  peer_median_price: ComputedRate | null;
+
+  /**
+   * A named grouping of related products in your catalog.
+   *
+   * A product line carries the default commission and freight policies for the
+   * products assigned to it, along with the unit group that determines how those
+   * products are measured. Product lines are also the unit that catalog access is
+   * granted over, for both customers and account groups.
+   */
+  product_line: ProductLine | null;
+
+  /**
+   * An amount calculated on demand rather than stored.
+   *
+   * The same shape as a quantity minus the ID, because nothing was written: it is
+   * derived per request, such as a total rolled up across invoiced lines for one
+   * analysis.
+   */
+  quantity_invoiced: ComputedQuantity | null;
+
+  /**
+   * Why this trading relationship was flagged.
+   */
+  reason: 'below_peer_median' | 'below_target_margin' | 'below_peer_median_and_target_margin';
+
+  /**
+   * An amount calculated on demand rather than stored.
+   *
+   * The same shape as a quantity minus the ID, because nothing was written: it is
+   * derived per request, such as a total rolled up across invoiced lines for one
+   * analysis.
+   */
+  revenue: ComputedQuantity | null;
+}
+
+/**
+ * RealizedMarginSummary reports the shape of the analysis behind the findings.
+ */
+export interface RealizedMarginSummary {
+  /**
+   * Relationships flagged for an achieved price below the peer median.
+   */
+  below_peer_median_count: number;
+
+  /**
+   * Relationships flagged for failing the target gross margin.
+   */
+  below_target_margin_count: number;
+
+  /**
+   * Invoiced lines examined.
+   */
+  lines_analyzed: number;
+
+  /**
+   * Relationships whose margin could not be checked because no cost was captured.
+   */
+  margin_not_assessed_count: number;
+
+  /**
+   * Anything the analysis had to leave out, so the result never overstates its own
+   * coverage.
+   */
+  notes: Array<string>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'realized_margin_summary';
+
+  /**
+   * Customer and SKU pairs examined.
+   */
+  relationships_analyzed: number;
 }
 
 /**
@@ -3133,6 +4478,157 @@ export interface SalesEntry {
 }
 
 /**
+ * A shipping speed or method offered by a carrier, such as ground or overnight.
+ *
+ * Carriers connected through Shippo have their service levels synced from the
+ * carrier itself; any carrier can also have service levels you create by hand.
+ */
+export interface ServiceLevel {
+  /**
+   * Service level ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Whether customers can see and select this service level at checkout in the
+   * customer portal.
+   */
+  customer_portal_visibility: 'visible' | 'hidden';
+
+  /**
+   * Business days this service typically takes in transit, used to work an order's
+   * ship-by date back from a promised delivery date.
+   *
+   * A fallback for lanes the carrier has not quoted. Null means transit is unknown
+   * for this service rather than instant, so a ship-by date falls back to the
+   * promised delivery date itself.
+   */
+  default_transit_days: number | null;
+
+  /**
+   * Whether this is the carrier's default service level, pre-selected when the
+   * carrier is chosen.
+   *
+   * Each carrier has at most one default; setting a new default clears the previous
+   * one. A default service level cannot be deleted until another service level takes
+   * its place or the flag is cleared.
+   */
+  is_default: boolean;
+
+  /**
+   * Human-readable name for the service level, shown to customers at checkout when
+   * the service level is visible.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'service_level';
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: APIKeysAPI.Owner | null;
+
+  /**
+   * Carrier-specific code identifying this service level (e.g. `fedex_ground`,
+   * `ups_next_day_air`).
+   *
+   * For service levels synced from a connected carrier this is the carrier's own
+   * token, which is what rate shopping and label purchase are keyed on; for service
+   * levels you create yourself it is the `code` you supplied.
+   */
+  service_level_token: string;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * A named freight pricing rule that decides what a buyer pays for shipping.
+ *
+ * A customer's default shipping term is evaluated whenever freight is quoted for
+ * one of their orders. Freight exemptions on the customer, its type group, or any
+ * of its price groups are checked first and zero the freight charge before the
+ * shipping term is considered.
+ */
+export interface ShippingTerm {
+  /**
+   * Shipping term ID.
+   */
+  id: string;
+
+  /**
+   * When this shipping term was created.
+   */
+  created_at: string;
+
+  /**
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
+   */
+  flat_rate: AccountUsersAPI.Quantity | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  free_shipping_service_levels: ListServiceLevel | null;
+
+  /**
+   * A measured amount: a numeric value together with the unit it is expressed in.
+   *
+   * Quantities are shared building blocks rather than standalone records — other
+   * resources point at them to report stock levels, ordered and packed amounts,
+   * money, weights, and durations.
+   */
+  minimum_order_value: AccountUsersAPI.Quantity | null;
+
+  /**
+   * Human-readable name for the shipping term, used to identify it when assigning
+   * shipping terms to customers and orders.
+   */
+  name: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'shipping_term';
+
+  /**
+   * Owner describes the provenance of a resource.
+   */
+  owner: APIKeysAPI.Owner | null;
+
+  /**
+   * Freight pricing model applied by this shipping term.
+   *
+   * - `free_freight`: the buyer is never charged for shipping.
+   * - `flat_rate_freight`: the buyer is charged the fixed amount in `flat_rate`,
+   *   regardless of what the carrier would have charged.
+   * - `carrier_rate_freight`: the buyer is charged the rate the carrier quotes for
+   *   the order's carrier and service level.
+   */
+  type: 'free_freight' | 'flat_rate_freight' | 'carrier_rate_freight';
+
+  /**
+   * When this shipping term was last updated.
+   */
+  updated_at: string;
+}
+
+/**
  * WeeksOfSalesItem represents a single product line's weeks-of-sales metrics.
  */
 export interface WeeksOfSalesItem {
@@ -3170,6 +4666,42 @@ export interface AnalyticsRetrieveWeeksOfSalesParams {
    * The number of weeks to use for the sales period. Defaults to 4, minimum 1.
    */
   period_in_weeks?: number;
+}
+
+export interface AnalyticsUpdateCustomerPricingParams {
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    'customer' | 'product_line' | 'attributes' | 'unit_price.numerator_unit' | 'unit_price.denominator_unit'
+  >;
+
+  /**
+   * Body param: Restrict the analysis to customers in these customer groups.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Body param: Restrict the analysis to these customers. Omit to cover every
+   * customer with a contracted price.
+   *
+   * Peer medians are still computed across all customers, so narrowing the result
+   * does not change what a price is compared against.
+   */
+  customer_ids?: Array<string>;
+
+  /**
+   * Body param: How far below the peer median a price must sit to be flagged, as a
+   * fraction between 0 and 1.
+   */
+  outlier_tolerance?: string;
+
+  /**
+   * Body param: The gross margin a price is expected to clear, as a fraction between
+   * 0 and 1.
+   */
+  target_gross_margin?: string;
 }
 
 export interface AnalyticsUpdateDeliveriesParams {
@@ -3497,6 +5029,54 @@ export interface AnalyticsUpdateQuarterlyOrdersParams {
   sales_rep_ids?: Array<string>;
 }
 
+export interface AnalyticsUpdateRealizedMarginsParams {
+  /**
+   * Body param: End of the invoiced window.
+   */
+  ends_at: string;
+
+  /**
+   * Body param: Start of the invoiced window.
+   */
+  starts_at: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'customer' | 'customer_group' | 'item' | 'product_line'>;
+
+  /**
+   * Body param: Restrict the result to customers in these customer groups.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Body param: Restrict the result to these customers.
+   *
+   * Peer medians are still computed across every customer that bought the SKU, so
+   * narrowing the result does not change what a price is compared against.
+   */
+  customer_ids?: Array<string>;
+
+  /**
+   * Body param: How far below the peer median an achieved price must sit to be
+   * flagged, as a fraction between 0 and 1.
+   */
+  outlier_tolerance?: string;
+
+  /**
+   * Body param: Restrict the result to these product lines.
+   */
+  product_line_ids?: Array<string>;
+
+  /**
+   * Body param: The gross margin a sale is expected to clear, as a fraction between
+   * 0 and 1.
+   */
+  target_gross_margin?: string;
+}
+
 export interface AnalyticsUpdateSalesParams {
   /**
    * The end date for the analysis period.
@@ -3563,11 +5143,14 @@ export interface AnalyticsUpdateScheduleAttainmentParams {
 
 export declare namespace Analytics {
   export {
+    type AccountGroup as AccountGroup,
     type AnalyticsItem as AnalyticsItem,
     type AnalyticsLot as AnalyticsLot,
     type AnalyticsRate as AnalyticsRate,
     type AnalyticsUnitGroup as AnalyticsUnitGroup,
     type AnalyticsUnitGroupUnit as AnalyticsUnitGroupUnit,
+    type AnalyzeCustomerPricingRequest as AnalyzeCustomerPricingRequest,
+    type AnalyzeCustomerPricingResponse as AnalyzeCustomerPricingResponse,
     type AnalyzeDeliveriesRequest as AnalyzeDeliveriesRequest,
     type AnalyzeDeliveriesResponse as AnalyzeDeliveriesResponse,
     type AnalyzeDeliveryPerformanceRequest as AnalyzeDeliveryPerformanceRequest,
@@ -3596,15 +5179,27 @@ export declare namespace Analytics {
     type AnalyzeProductionCostsResponse as AnalyzeProductionCostsResponse,
     type AnalyzeQuarterlyOrdersRequest as AnalyzeQuarterlyOrdersRequest,
     type AnalyzeQuarterlyOrdersResponse as AnalyzeQuarterlyOrdersResponse,
+    type AnalyzeRealizedMarginsRequest as AnalyzeRealizedMarginsRequest,
+    type AnalyzeRealizedMarginsResponse as AnalyzeRealizedMarginsResponse,
     type AnalyzeSalesRequest as AnalyzeSalesRequest,
     type AnalyzeSalesResponse as AnalyzeSalesResponse,
     type AnalyzeScheduleAttainmentRequest as AnalyzeScheduleAttainmentRequest,
     type AnalyzeScheduleAttainmentResponse as AnalyzeScheduleAttainmentResponse,
     type AnalyzeWeeksOfSalesResponse as AnalyzeWeeksOfSalesResponse,
     type AttainmentBucket as AttainmentBucket,
+    type Carrier as Carrier,
     type ChartData as ChartData,
+    type ComputedQuantity as ComputedQuantity,
+    type ComputedRate as ComputedRate,
     type Coordinate as Coordinate,
     type CostBreakdown as CostBreakdown,
+    type Customer as Customer,
+    type CustomerContactInfo as CustomerContactInfo,
+    type CustomerDefaults as CustomerDefaults,
+    type CustomerFreightPreferences as CustomerFreightPreferences,
+    type CustomerNotificationPreferences as CustomerNotificationPreferences,
+    type CustomerPricingFinding as CustomerPricingFinding,
+    type CustomerPricingSummary as CustomerPricingSummary,
     type DateTimeCoordinate as DateTimeCoordinate,
     type DeliveryBacklogBucket as DeliveryBacklogBucket,
     type DeliveryChartData as DeliveryChartData,
@@ -3615,7 +5210,10 @@ export declare namespace Analytics {
     type DemandForecastRow as DemandForecastRow,
     type FrozenAdherence as FrozenAdherence,
     type InventoryReceiptSummaryEntry as InventoryReceiptSummaryEntry,
+    type ListAccountGroup as ListAccountGroup,
     type ListAttainmentBucket as ListAttainmentBucket,
+    type ListCustomer as ListCustomer,
+    type ListCustomerPricingFinding as ListCustomerPricingFinding,
     type ListDeliveryBacklogBucket as ListDeliveryBacklogBucket,
     type ListDeliveryPerformance as ListDeliveryPerformance,
     type ListDemandForecastRow as ListDemandForecastRow,
@@ -3623,6 +5221,8 @@ export declare namespace Analytics {
     type ListOeeDepartment as ListOeeDepartment,
     type ListOeeDowntimeReason as ListOeeDowntimeReason,
     type ListOeeTrendPeriod as ListOeeTrendPeriod,
+    type ListRealizedMarginFinding as ListRealizedMarginFinding,
+    type ListServiceLevel as ListServiceLevel,
     type ManufacturingMetrics as ManufacturingMetrics,
     type MaterialAnalyticsEntry as MaterialAnalyticsEntry,
     type NewCustomersData as NewCustomersData,
@@ -3632,11 +5232,19 @@ export declare namespace Analytics {
     type OeeTrendPeriod as OeeTrendPeriod,
     type OpenBatchSummary as OpenBatchSummary,
     type OrderEntry as OrderEntry,
+    type PaymentTerm as PaymentTerm,
+    type Priority as Priority,
+    type ProductLine as ProductLine,
     type ProductionCostItem as ProductionCostItem,
+    type RealizedMarginFinding as RealizedMarginFinding,
+    type RealizedMarginSummary as RealizedMarginSummary,
     type RevenueForecastPoint as RevenueForecastPoint,
     type SalesEntry as SalesEntry,
+    type ServiceLevel as ServiceLevel,
+    type ShippingTerm as ShippingTerm,
     type WeeksOfSalesItem as WeeksOfSalesItem,
     type AnalyticsRetrieveWeeksOfSalesParams as AnalyticsRetrieveWeeksOfSalesParams,
+    type AnalyticsUpdateCustomerPricingParams as AnalyticsUpdateCustomerPricingParams,
     type AnalyticsUpdateDeliveriesParams as AnalyticsUpdateDeliveriesParams,
     type AnalyticsUpdateDeliveryPerformanceParams as AnalyticsUpdateDeliveryPerformanceParams,
     type AnalyticsUpdateDemandForecastParams as AnalyticsUpdateDemandForecastParams,
@@ -3651,6 +5259,7 @@ export declare namespace Analytics {
     type AnalyticsUpdateOrdersParams as AnalyticsUpdateOrdersParams,
     type AnalyticsUpdateProductionCostsParams as AnalyticsUpdateProductionCostsParams,
     type AnalyticsUpdateQuarterlyOrdersParams as AnalyticsUpdateQuarterlyOrdersParams,
+    type AnalyticsUpdateRealizedMarginsParams as AnalyticsUpdateRealizedMarginsParams,
     type AnalyticsUpdateSalesParams as AnalyticsUpdateSalesParams,
     type AnalyticsUpdateScheduleAttainmentParams as AnalyticsUpdateScheduleAttainmentParams,
   };

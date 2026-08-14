@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as AnalyticsAPI from '../../core/analytics';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
-import * as CustomersAPI from '../customers/customers';
 import * as AccountGroupsAPI from './account-groups';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
@@ -167,7 +167,7 @@ export interface CustomerProductLineAccess {
    * A business you sell to, with its contact details, default fulfillment settings,
    * and order policies.
    */
-  customer: CustomersAPI.Customer | null;
+  customer: AnalyticsAPI.Customer | null;
 
   /**
    * Resource type identifier.

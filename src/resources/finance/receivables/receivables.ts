@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as AnalyticsAPI from '../../core/analytics';
 import * as InvoicesAPI from '../invoices';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
-import * as CustomersAPI from '../../sales/customers/customers';
 import * as AccountsAPI from './accounts/accounts';
 import { AccountRetrieveParams, Accounts } from './accounts/accounts';
 import { APIPromise } from '../../../core/api-promise';
@@ -77,7 +77,7 @@ export interface ReceivableEntry {
    * A business you sell to, with its contact details, default fulfillment settings,
    * and order policies.
    */
-  customer: CustomersAPI.Customer | null;
+  customer: AnalyticsAPI.Customer | null;
 
   /**
    * An invoice billing a customer for goods shipped against a sales order.

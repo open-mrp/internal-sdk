@@ -2,6 +2,7 @@
 
 import { APIResource } from '../../../core/resource';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
+import * as AccountPricesActionsAPI from '../../sales/account-prices/actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 
@@ -92,7 +93,7 @@ export class Actions extends APIResource {
    *   await client.catalog.items.actions.export();
    * ```
    */
-  export(options?: RequestOptions): APIPromise<FileDownload> {
+  export(options?: RequestOptions): APIPromise<AccountPricesActionsAPI.FileDownload> {
     return this._client.get('/v1/catalog/items/actions/export', options);
   }
 }
@@ -267,13 +268,6 @@ export interface BulkReconcileItemsResponse {
    */
   skipped_items: ListSkippedItemResult | null;
 }
-
-/**
- * FileDownload is a response type for endpoints that return a file (e.g. Excel
- * export). When the service returns \*FileDownload, the handler writes the body
- * with Content-Type and Content-Disposition.
- */
-export interface FileDownload {}
 
 /**
  * A single page of resources, together with the metadata needed to page through
@@ -454,7 +448,6 @@ export declare namespace Actions {
     type BulkReconcileItemInput as BulkReconcileItemInput,
     type BulkReconcileItemsRequest as BulkReconcileItemsRequest,
     type BulkReconcileItemsResponse as BulkReconcileItemsResponse,
-    type FileDownload as FileDownload,
     type ListReconcileErrorResult as ListReconcileErrorResult,
     type ListReconciledItemResult as ListReconciledItemResult,
     type ListSkippedItemResult as ListSkippedItemResult,

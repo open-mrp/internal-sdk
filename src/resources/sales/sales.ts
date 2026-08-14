@@ -11,21 +11,6 @@ import {
   CreateAccountGroupRequest,
   UpdateAccountGroupRequest,
 } from './account-groups';
-import * as AccountPricesAPI from './account-prices';
-import {
-  AccountPrice,
-  AccountPriceCreateParams,
-  AccountPriceDeleteResponse,
-  AccountPriceListParams,
-  AccountPriceRetrieveParams,
-  AccountPriceUpdateParams,
-  AccountPrices,
-  CreateAccountPriceRequest,
-  ListAccountPrice,
-  ListItemCategory,
-  ProductLine,
-  UpdateAccountPriceRequest,
-} from './account-prices';
 import * as AccountStatusesAPI from './account-statuses';
 import {
   AccountStatus,
@@ -78,6 +63,20 @@ import {
   VolumeDiscountUpdateParams,
   VolumeDiscounts,
 } from './volume-discounts';
+import * as AccountPricesAPI from './account-prices/account-prices';
+import {
+  AccountPrice,
+  AccountPriceCreateParams,
+  AccountPriceDeleteResponse,
+  AccountPriceListParams,
+  AccountPriceRetrieveParams,
+  AccountPriceUpdateParams,
+  AccountPrices,
+  CreateAccountPriceRequest,
+  ListAccountPrice,
+  ListItemCategory,
+  UpdateAccountPriceRequest,
+} from './account-prices/account-prices';
 import * as AccountUsersAPI from './account-users/account-users';
 import { AccountUsers } from './account-users/account-users';
 import * as AccountsAPI from './accounts/accounts';
@@ -86,35 +85,21 @@ import * as ContactsAPI from './contacts/contacts';
 import { Contacts } from './contacts/contacts';
 import * as CustomersAPI from './customers/customers';
 import {
-  AccountGroup,
   AddressInput,
-  Carrier,
   CreateCustomerRequest,
-  Customer,
-  CustomerContactInfo,
   CustomerCreateParams,
-  CustomerDefaults,
   CustomerDeleteResponse,
-  CustomerFreightPreferences,
   CustomerLeadTime,
   CustomerListParams,
-  CustomerNotificationPreferences,
   CustomerRegistrationParams,
   CustomerRegistrationResponse,
   CustomerRetrieveParams,
   CustomerUpdateParams,
   Customers,
   FrequentlyOrderedProduct,
-  ListAccountGroup,
-  ListCustomer,
   ListFrequentlyOrderedProduct,
-  ListServiceLevel,
-  PaymentTerm,
-  Priority,
   QuantityInput,
   RegisterCustomerRequest,
-  ServiceLevel,
-  ShippingTerm,
   UpdateCustomerRequest,
 } from './customers/customers';
 import * as OrderDiscountsAPI from './order-discounts/order-discounts';
@@ -364,27 +349,13 @@ export declare namespace Sales {
 
   export {
     Customers as Customers,
-    type AccountGroup as AccountGroup,
     type AddressInput as AddressInput,
-    type Carrier as Carrier,
     type CreateCustomerRequest as CreateCustomerRequest,
-    type Customer as Customer,
-    type CustomerContactInfo as CustomerContactInfo,
-    type CustomerDefaults as CustomerDefaults,
-    type CustomerFreightPreferences as CustomerFreightPreferences,
     type CustomerLeadTime as CustomerLeadTime,
-    type CustomerNotificationPreferences as CustomerNotificationPreferences,
     type FrequentlyOrderedProduct as FrequentlyOrderedProduct,
-    type ListAccountGroup as ListAccountGroup,
-    type ListCustomer as ListCustomer,
     type ListFrequentlyOrderedProduct as ListFrequentlyOrderedProduct,
-    type ListServiceLevel as ListServiceLevel,
-    type PaymentTerm as PaymentTerm,
-    type Priority as Priority,
     type QuantityInput as QuantityInput,
     type RegisterCustomerRequest as RegisterCustomerRequest,
-    type ServiceLevel as ServiceLevel,
-    type ShippingTerm as ShippingTerm,
     type UpdateCustomerRequest as UpdateCustomerRequest,
     type CustomerDeleteResponse as CustomerDeleteResponse,
     type CustomerRegistrationResponse as CustomerRegistrationResponse,
@@ -411,7 +382,6 @@ export declare namespace Sales {
     type CreateAccountPriceRequest as CreateAccountPriceRequest,
     type ListAccountPrice as ListAccountPrice,
     type ListItemCategory as ListItemCategory,
-    type ProductLine as ProductLine,
     type UpdateAccountPriceRequest as UpdateAccountPriceRequest,
     type AccountPriceDeleteResponse as AccountPriceDeleteResponse,
     type AccountPriceCreateParams as AccountPriceCreateParams,
