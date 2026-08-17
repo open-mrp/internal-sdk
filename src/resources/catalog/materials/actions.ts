@@ -30,8 +30,13 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  bulkUpsert(body: ActionBulkUpsertParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/catalog/materials/actions/bulk-upsert', { body, ...options });
+  bulkUpsert(params: ActionBulkUpsertParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/catalog/materials/actions/bulk-upsert', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -48,8 +53,13 @@ export class Actions extends APIResource {
    * });
    * ```
    */
-  export(body: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/catalog/materials/actions/export', { body, ...options });
+  export(params: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/catalog/materials/actions/export', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 }
 
@@ -175,36 +185,48 @@ export interface UpsertMaterialProperty {
 
 export interface ActionBulkUpsertParams {
   /**
-   * Materials to create or update, matched by SKU within the account.
+   * Body param: Materials to create or update, matched by SKU within the account.
    */
   materials: Array<UpsertMaterialInput>;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export interface ActionExportParams {
   /**
-   * Filter to materials carrying any of these attributes.
+   * Body param: Filter to materials carrying any of these attributes.
    */
   attribute_ids: Array<string>;
 
   /**
-   * Filter to materials in any of these categories.
+   * Body param: Filter to materials in any of these categories.
    */
   category_ids: Array<string>;
 
   /**
-   * Filter to materials created on or before this date.
+   * Body param: Filter to materials created on or before this date.
    */
   ends_at: string | null;
 
   /**
-   * Free-text search term matched against material SKU and description.
+   * Body param: Free-text search term matched against material SKU and description.
    */
   q: string | null;
 
   /**
-   * Filter to materials created on or after this date.
+   * Body param: Filter to materials created on or after this date.
    */
   starts_at: string | null;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export declare namespace Actions {

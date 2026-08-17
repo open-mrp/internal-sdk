@@ -68,6 +68,7 @@ describe('resource actions', () => {
           responsible_user_id: 'us_43irtlt2ajz6',
         },
       ],
+      include: ['created_by'],
     });
   });
 
@@ -83,6 +84,9 @@ describe('resource actions', () => {
   });
 
   test('export: required and optional params', async () => {
-    const response = await client.operations.productionRuns.actions.export({ q: null });
+    const response = await client.operations.productionRuns.actions.export({
+      q: null,
+      include: ['created_by'],
+    });
   });
 });

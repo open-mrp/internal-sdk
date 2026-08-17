@@ -420,14 +420,14 @@ Types:
 - <code><a href="./src/resources/core/jobs.ts">Job</a></code>
 - <code><a href="./src/resources/core/jobs.ts">JobExport</a></code>
 - <code><a href="./src/resources/core/jobs.ts">JobResult</a></code>
+- <code><a href="./src/resources/core/jobs.ts">ListJobResult</a></code>
 - <code><a href="./src/resources/core/jobs.ts">QuotaInfo</a></code>
 - <code><a href="./src/resources/core/jobs.ts">ResponseError</a></code>
-- <code><a href="./src/resources/core/jobs.ts">RowError</a></code>
 
 Methods:
 
-- <code title="get /v1/core/jobs/{id}">client.core.jobs.<a href="./src/resources/core/jobs.ts">retrieve</a>(id) -> Job</code>
-- <code title="post /v1/core/jobs/{id}/cancel">client.core.jobs.<a href="./src/resources/core/jobs.ts">cancel</a>(id) -> Job</code>
+- <code title="get /v1/core/jobs/{id}">client.core.jobs.<a href="./src/resources/core/jobs.ts">retrieve</a>(id, { ...params }) -> Job</code>
+- <code title="post /v1/core/jobs/{id}/cancel">client.core.jobs.<a href="./src/resources/core/jobs.ts">cancel</a>(id, { ...params }) -> Job</code>
 
 ## Analytics
 

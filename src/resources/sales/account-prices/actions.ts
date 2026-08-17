@@ -33,8 +33,13 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  exportPriceList(body: ActionExportPriceListParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/sales/account-prices/actions/export-price-list', { body, ...options });
+  exportPriceList(params: ActionExportPriceListParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/sales/account-prices/actions/export-price-list', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 }
 
@@ -50,9 +55,15 @@ export interface ExportPriceListRequest {
 
 export interface ActionExportPriceListParams {
   /**
-   * ID of the customer whose prices are listed.
+   * Body param: ID of the customer whose prices are listed.
    */
   customer_id: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export declare namespace Actions {

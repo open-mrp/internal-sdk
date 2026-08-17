@@ -1647,6 +1647,15 @@ export interface AnalyzeScheduleAttainmentResponse {
   object: 'analyze_schedule_attainment_response';
 
   /**
+   * Machines the plan asked for over this window.
+   *
+   * Every figure in this response covers those machines only. Production scanned
+   * onto a machine no published version scheduled is excluded outright, so the score
+   * measures the plan that was made rather than the whole plant against it.
+   */
+  scheduled_machine_count: number;
+
+  /**
    * Start of the measured period.
    */
   starts_at: string;
@@ -2803,6 +2812,20 @@ export interface FrozenAdherence {
    * Share of frozen campaigns that survived untouched. Null when nothing was frozen.
    */
   line_adherence_pct: number | null;
+
+  /**
+   * Campaigns the floor ran inside the frozen window that the frozen plan never
+   * called for, counted per machine-week-SKU.
+   *
+   * Working around a commitment breaks it as surely as editing it does, so this
+   * scores alongside the hand edits rather than beside them.
+   */
+  off_plan_lines: number;
+
+  /**
+   * Units behind those off-plan campaigns.
+   */
+  off_plan_quantity: number;
 
   /**
    * Entity is a polymorphic reference to any resource in the system.

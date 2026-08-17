@@ -31,8 +31,13 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  bulkUpsert(body: ActionBulkUpsertParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/catalog/products/actions/bulk-upsert', { body, ...options });
+  bulkUpsert(params: ActionBulkUpsertParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/catalog/products/actions/bulk-upsert', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -52,8 +57,9 @@ export class Actions extends APIResource {
    * });
    * ```
    */
-  export(body: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/catalog/products/actions/export', { body, ...options });
+  export(params: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/catalog/products/actions/export', { query: { include }, body, ...options });
   }
 
   /**
@@ -335,24 +341,32 @@ export namespace ValidateProductsResponse {
 
 export interface ActionBulkUpsertParams {
   /**
-   * Products to create or update, matched by SKU within the account.
+   * Body param: Products to create or update, matched by SKU within the account.
    */
   products: Array<UpsertProductInput>;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export interface ActionExportParams {
   /**
-   * Filter to products whose item carries at least one of these attributes.
+   * Body param: Filter to products whose item carries at least one of these
+   * attributes.
    */
   attribute_ids: Array<string>;
 
   /**
-   * Filter by the item category the product's item belongs to.
+   * Body param: Filter by the item category the product's item belongs to.
    */
   category_ids: Array<string>;
 
   /**
-   * Restrict the export to products these customer accounts are entitled to buy.
+   * Body param: Restrict the export to products these customer accounts are entitled
+   * to buy.
    *
    * A product matches when its product line has been granted to the customer
    * directly, through the customer's account group, or through the account group
@@ -361,26 +375,33 @@ export interface ActionExportParams {
   customer_ids: Array<string>;
 
   /**
-   * End of creation date range.
+   * Body param: End of creation date range.
    */
   ends_at: string | null;
 
   /**
-   * Filter by product line IDs.
+   * Body param: Filter by product line IDs.
    *
    * Combined with `customer_ids`, products matching either filter are exported.
    */
   product_line_ids: Array<string>;
 
   /**
-   * Free-text search matched against the SKU and description of each product's item.
+   * Body param: Free-text search matched against the SKU and description of each
+   * product's item.
    */
   q: string | null;
 
   /**
-   * Start of creation date range.
+   * Body param: Start of creation date range.
    */
   starts_at: string | null;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export interface ActionValidateParams {

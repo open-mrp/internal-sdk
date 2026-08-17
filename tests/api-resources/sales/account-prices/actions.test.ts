@@ -24,6 +24,7 @@ describe('resource actions', () => {
   test('exportPriceList: required and optional params', async () => {
     const response = await client.sales.accountPrices.actions.exportPriceList({
       customer_id: 'ac_opnlh43ymyee',
+      include: ['created_by'],
     });
   });
 });

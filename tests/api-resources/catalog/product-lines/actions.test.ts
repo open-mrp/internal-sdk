@@ -38,6 +38,7 @@ describe('resource actions', () => {
           unit_group: { id: 'ug_andst6m79n41', name: 'name' },
         },
       ],
+      include: ['created_by'],
     });
   });
 
@@ -53,6 +54,6 @@ describe('resource actions', () => {
   });
 
   test('export: required and optional params', async () => {
-    const response = await client.catalog.productLines.actions.export({ q: null });
+    const response = await client.catalog.productLines.actions.export({ q: null, include: ['created_by'] });
   });
 });

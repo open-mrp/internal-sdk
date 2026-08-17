@@ -31,6 +31,7 @@ describe('resource actions', () => {
           parent: { id: 'id', name: 'name' },
         },
       ],
+      include: ['created_by'],
     });
   });
 
@@ -46,6 +47,6 @@ describe('resource actions', () => {
   });
 
   test('export: required and optional params', async () => {
-    const response = await client.operations.locations.actions.export({ q: null });
+    const response = await client.operations.locations.actions.export({ q: null, include: ['created_by'] });
   });
 });

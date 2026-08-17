@@ -29,8 +29,13 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  bulkUpsert(body: ActionBulkUpsertParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/catalog/product-lines/actions/bulk-upsert', { body, ...options });
+  bulkUpsert(params: ActionBulkUpsertParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/catalog/product-lines/actions/bulk-upsert', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -45,8 +50,13 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  export(body: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/catalog/product-lines/actions/export', { body, ...options });
+  export(params: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/catalog/product-lines/actions/export', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 }
 
@@ -109,16 +119,29 @@ export interface UpsertProductLineInput {
 
 export interface ActionBulkUpsertParams {
   /**
-   * Product lines to create or update, matched by name within the account.
+   * Body param: Product lines to create or update, matched by name within the
+   * account.
    */
   product_lines: Array<UpsertProductLineInput>;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export interface ActionExportParams {
   /**
-   * Free-text search term matched against product line names.
+   * Body param: Free-text search term matched against product line names.
    */
   q: string | null;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export declare namespace Actions {

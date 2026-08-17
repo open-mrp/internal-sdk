@@ -168,9 +168,11 @@ export {
   type Job,
   type JobExport,
   type JobResult,
+  type ListJobResult,
   type QuotaInfo,
   type ResponseError,
-  type RowError,
+  type JobRetrieveParams,
+  type JobCancelParams,
 } from './jobs';
 export { Records } from './records/index';
 export {

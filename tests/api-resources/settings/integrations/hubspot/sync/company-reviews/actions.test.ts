@@ -41,6 +41,7 @@ describe('resource actions', () => {
             review_id: 'igrv_w88uo6y5g8bu',
           },
         ],
+        include: ['created_by'],
       },
     );
   });
@@ -62,7 +63,7 @@ describe('resource actions', () => {
   test('export: required and optional params', async () => {
     const response = await client.settings.integrations.hubspot.sync.companyReviews.actions.export(
       'igjb_pbxu4l5ujuym',
-      { status: null },
+      { status: null, include: ['created_by'] },
     );
   });
 

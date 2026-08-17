@@ -51,6 +51,7 @@ describe('resource actions', () => {
           },
         },
       ],
+      include: ['created_by'],
     });
   });
 
@@ -82,6 +83,7 @@ describe('resource actions', () => {
       product_line_ids: ['string'],
       q: null,
       starts_at: null,
+      include: ['created_by'],
     });
   });
 

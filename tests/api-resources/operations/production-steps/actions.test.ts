@@ -209,6 +209,7 @@ describe('resource actions', () => {
           scanning_station: { id: 'id', name: 'Packaging Line 1' },
         },
       ],
+      include: ['created_by'],
     });
   });
 
@@ -224,6 +225,9 @@ describe('resource actions', () => {
   });
 
   test('export: required and optional params', async () => {
-    const response = await client.operations.productionSteps.actions.export({ q: null });
+    const response = await client.operations.productionSteps.actions.export({
+      q: null,
+      include: ['created_by'],
+    });
   });
 });

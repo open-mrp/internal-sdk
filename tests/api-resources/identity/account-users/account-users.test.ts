@@ -27,6 +27,7 @@ describe('resource accountUsers', () => {
           include: ['user'],
           department_id: 'dp_m0jayebxnkos',
           email: 'jdoe@augno.com',
+          is_commission_eligible: false,
           name: 'John Doe',
           password: 'QgS7Z8Hhj3&1',
           preferences: [{ enabled: true, notification_type: 'order_acknowledgement' }],
@@ -80,6 +81,7 @@ describe('resource accountUsers', () => {
           include: ['user'],
           department_id: 'dp_m0jayebxnkos',
           email: 'jdoe@augno.com',
+          is_commission_eligible: false,
           name: 'John Doe',
           preferences: [{ enabled: true, notification_type: 'order_acknowledgement' }],
           role_id: 'rl_3xknmfqflhvb',
@@ -108,6 +110,7 @@ describe('resource accountUsers', () => {
         {
           cursor: 'cursor',
           include: ['user'],
+          is_commission_eligible: true,
           limit: 0,
           q: 'q',
           removed_scope: 'excluded',

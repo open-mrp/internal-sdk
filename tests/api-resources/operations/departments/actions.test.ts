@@ -30,6 +30,7 @@ describe('resource actions', () => {
           notes: 'notes',
         },
       ],
+      include: ['created_by'],
     });
   });
 
@@ -45,6 +46,6 @@ describe('resource actions', () => {
   });
 
   test('export: required and optional params', async () => {
-    const response = await client.operations.departments.actions.export({ q: null });
+    const response = await client.operations.departments.actions.export({ q: null, include: ['created_by'] });
   });
 });

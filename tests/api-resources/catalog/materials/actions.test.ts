@@ -50,6 +50,7 @@ describe('resource actions', () => {
           },
         },
       ],
+      include: ['created_by'],
     });
   });
 
@@ -77,6 +78,7 @@ describe('resource actions', () => {
       ends_at: null,
       q: null,
       starts_at: null,
+      include: ['created_by'],
     });
   });
 });

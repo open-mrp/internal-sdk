@@ -199,7 +199,7 @@ export class ProductionSchedules extends APIResource {
   }
 
   /**
-   * Returns the downstream department work implied by a schedule's constraint plan.
+   * Returns the department work implied by a schedule's constraint plan.
    *
    * The solver schedules only the constraint; every other department's work is
    * derived from it by walking the production-step graph, applying each step's
@@ -207,8 +207,10 @@ export class ProductionSchedules extends APIResource {
    * rather than a second plan someone has to maintain.
    *
    * `explosion_depth` is how many steps downstream the work sits, which is what a
-   * readiness indicator keys off. Work whose derived week falls past the schedule's
-   * horizon is still returned — a department needs to see it coming.
+   * readiness indicator keys off. Depth 0 is the constraint's own campaigns, so a
+   * plant with nothing configured downstream of its constraint still gets the work
+   * it actually scheduled. Work whose derived week falls past the schedule's horizon
+   * is still returned — a department needs to see it coming.
    *
    * This endpoint requires the permission: `production_schedules:read`.
    *

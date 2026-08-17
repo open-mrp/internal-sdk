@@ -40,10 +40,15 @@ export class Actions extends APIResource {
    *   );
    * ```
    */
-  bulkResolve(id: string, body: ActionBulkResolveParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+  bulkResolve(
+    id: string,
+    params: ActionBulkResolveParams,
+    options?: RequestOptions,
+  ): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
     return this._client.post(
       path`/v1/settings/integrations/hubspot/sync/${id}/company-reviews/actions/bulk-resolve`,
-      { body, ...options },
+      { query: { include }, body, ...options },
     );
   }
 
@@ -67,10 +72,11 @@ export class Actions extends APIResource {
    *   );
    * ```
    */
-  export(id: string, body: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+  export(id: string, params: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
     return this._client.post(
       path`/v1/settings/integrations/hubspot/sync/${id}/company-reviews/actions/export`,
-      { body, ...options },
+      { query: { include }, body, ...options },
     );
   }
 
@@ -188,16 +194,28 @@ export interface LinkHubspotCompanyReviewRequest {
 
 export interface ActionBulkResolveParams {
   /**
-   * The decisions to apply. Every review must belong to this sync.
+   * Body param: The decisions to apply. Every review must belong to this sync.
    */
   reviews: Array<HubspotCompanyReviewResolutionInput>;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export interface ActionExportParams {
   /**
-   * Restrict the file to reviews in this resolution status.
+   * Body param: Restrict the file to reviews in this resolution status.
    */
   status: 'pending' | 'resolved' | 'skipped' | null;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export interface ActionLinkParams {

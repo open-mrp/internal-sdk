@@ -28,8 +28,13 @@ export class Actions extends APIResource {
    * });
    * ```
    */
-  bulkUpsert(body: ActionBulkUpsertParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/catalog/parts/actions/bulk-upsert', { body, ...options });
+  bulkUpsert(params: ActionBulkUpsertParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/catalog/parts/actions/bulk-upsert', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -46,8 +51,9 @@ export class Actions extends APIResource {
    * });
    * ```
    */
-  export(body: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/catalog/parts/actions/export', { body, ...options });
+  export(params: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/catalog/parts/actions/export', { query: { include }, body, ...options });
   }
 }
 
@@ -162,36 +168,48 @@ export interface UpsertPartProperty {
 
 export interface ActionBulkUpsertParams {
   /**
-   * Parts to create or update, matched by SKU within the account.
+   * Body param: Parts to create or update, matched by SKU within the account.
    */
   parts: Array<UpsertPartInput>;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export interface ActionExportParams {
   /**
-   * Filter to parts carrying at least one of these attributes.
+   * Body param: Filter to parts carrying at least one of these attributes.
    */
   attribute_ids: Array<string>;
 
   /**
-   * Filter to parts belonging to any of these item categories.
+   * Body param: Filter to parts belonging to any of these item categories.
    */
   category_ids: Array<string>;
 
   /**
-   * Filter to parts created at or before this time.
+   * Body param: Filter to parts created at or before this time.
    */
   ends_at: string | null;
 
   /**
-   * Free-text search term matched against the part's SKU or description.
+   * Body param: Free-text search term matched against the part's SKU or description.
    */
   q: string | null;
 
   /**
-   * Filter to parts created at or after this time.
+   * Body param: Filter to parts created at or after this time.
    */
   starts_at: string | null;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export declare namespace Actions {

@@ -55,6 +55,7 @@ describe('resource actions', () => {
           ],
         },
       ],
+      include: ['created_by'],
     });
   });
 
@@ -70,6 +71,6 @@ describe('resource actions', () => {
   });
 
   test('export: required and optional params', async () => {
-    const response = await client.catalog.unitGroups.actions.export({ q: null });
+    const response = await client.catalog.unitGroups.actions.export({ q: null, include: ['created_by'] });
   });
 });

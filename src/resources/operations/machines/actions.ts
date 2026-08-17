@@ -31,8 +31,13 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  bulkUpsert(body: ActionBulkUpsertParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/operations/machines/actions/bulk-upsert', { body, ...options });
+  bulkUpsert(params: ActionBulkUpsertParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/machines/actions/bulk-upsert', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -45,8 +50,13 @@ export class Actions extends APIResource {
    * );
    * ```
    */
-  export(body: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/operations/machines/actions/export', { body, ...options });
+  export(params: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/machines/actions/export', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 }
 
@@ -101,17 +111,29 @@ export interface UpsertMachineInput {
 
 export interface ActionBulkUpsertParams {
   /**
-   * Machines to create or update, matched by name or serial number
+   * Body param: Machines to create or update, matched by name or serial number
    * (case-insensitive) within the account.
    */
   machines: Array<UpsertMachineInput>;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export interface ActionExportParams {
   /**
-   * Free-text search term matched against machine names.
+   * Body param: Free-text search term matched against machine names.
    */
   q: string | null;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export declare namespace Actions {

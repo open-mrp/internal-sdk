@@ -46,8 +46,13 @@ export class Actions extends APIResource {
    *   );
    * ```
    */
-  bulkCreate(body: ActionBulkCreateParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/operations/production-runs/actions/bulk-create', { body, ...options });
+  bulkCreate(params: ActionBulkCreateParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/production-runs/actions/bulk-create', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -62,8 +67,13 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  export(body: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
-    return this._client.post('/v1/operations/production-runs/actions/export', { body, ...options });
+  export(params: ActionExportParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/production-runs/actions/export', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 }
 
@@ -163,17 +173,29 @@ export interface ExportProductionRunsRequest {
 
 export interface ActionBulkCreateParams {
   /**
-   * Production runs to create, each owning its batches. Run numbers are assigned
-   * automatically as the next sequential numbers for the account.
+   * Body param: Production runs to create, each owning its batches. Run numbers are
+   * assigned automatically as the next sequential numbers for the account.
    */
   production_runs: Array<BulkCreateProductionRunInput>;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export interface ActionExportParams {
   /**
-   * Free-text search term matched against production run numbers.
+   * Body param: Free-text search term matched against production run numbers.
    */
   q: string | null;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export declare namespace Actions {
