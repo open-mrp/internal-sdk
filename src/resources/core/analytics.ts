@@ -117,6 +117,17 @@ export class Analytics extends APIResource {
    * Every rate is null rather than zero when nothing was due, and average lateness
    * is measured over late orders only.
    *
+   * The same window is also returned sliced by customer, customer group, product
+   * line, and the rule each ship-by date came from — each ordered worst-first, and
+   * each derived from the same set of orders as the headline so a drilldown always
+   * adds up to it. `by_product_line` is the one exception to that: an order spanning
+   * two lines is counted under both, because a late order is late for every line on
+   * it.
+   *
+   * Every filter is empty-means-all and they combine with AND. They narrow
+   * `uncommitted_order_count` too, so the excluded count always describes the same
+   * slice of the order book the rates do.
+   *
    * This endpoint requires the permission: `sales_orders:read`.
    *
    * @example
@@ -862,9 +873,30 @@ export interface AnalyzeDeliveryPerformanceRequest {
   starts_at: string;
 
   /**
+   * Only measure orders whose customer sits in these groups.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Only measure orders bought by these customers. Their child accounts are
+   * included, matching how the sales analytics resolve a customer.
+   */
+  customer_ids?: Array<string>;
+
+  /**
    * The period to break the results down by. Defaults to `week`.
    */
   granularity?: 'day' | 'week' | 'month';
+
+  /**
+   * Only measure orders containing at least one line in these product lines.
+   */
+  product_line_ids?: Array<string>;
+
+  /**
+   * Only measure orders owned by these sales reps.
+   */
+  sales_rep_ids?: Array<string>;
 }
 
 /**
@@ -876,6 +908,36 @@ export interface AnalyzeDeliveryPerformanceResponse {
    * the rest of the result set.
    */
   backlog: ListDeliveryBacklogBucket | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  by_commitment_source: ListDeliveryBreakdown | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  by_customer: ListDeliveryBreakdown | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  by_customer_group: ListDeliveryBreakdown | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  by_product_line: ListDeliveryBreakdown | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  lateness: ListDeliveryLatenessBucket | null;
 
   /**
    * Resource type identifier.
@@ -2494,6 +2556,32 @@ export interface DeliveryBacklogBucket {
 }
 
 /**
+ * Delivery performance for one slice of the order book.
+ */
+export interface DeliveryBreakdown {
+  /**
+   * Identifier of the slice — a customer, customer group, product line, or
+   * commitment source. Empty when the dimension is unset on the orders in it.
+   */
+  key: string;
+
+  /**
+   * Display name for the slice.
+   */
+  label: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'delivery_breakdown';
+
+  /**
+   * Delivery reliability for one period, or for a whole window.
+   */
+  performance: DeliveryPerformance | null;
+}
+
+/**
  * DeliveryChartData contains chart data for delivery analytics.
  */
 export interface DeliveryChartData {
@@ -2511,6 +2599,47 @@ export interface DeliveryChartData {
    * ChartData represents data for a chart visualization.
    */
   on_time_delivery: ChartData;
+}
+
+/**
+ * One band of how far the window's misses missed by.
+ */
+export interface DeliveryLatenessBucket {
+  /**
+   * Name of the band.
+   */
+  label: string;
+
+  /**
+   * Upper bound in days late; `0` means unbounded.
+   */
+  max_days_late: number;
+
+  /**
+   * Lower bound of the band in days late.
+   */
+  min_days_late: number;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'delivery_lateness_bucket';
+
+  /**
+   * Orders in the band, shipped and unshipped.
+   */
+  order_count: number;
+
+  /**
+   * How many of them have since shipped. The remainder are still owed, and are the
+   * same orders `backlog` counts.
+   */
+  shipped_count: number;
+
+  /**
+   * Quantity still unpacked across the band's orders.
+   */
+  units: number;
 }
 
 /**
@@ -3023,6 +3152,60 @@ export interface ListDeliveryBacklogBucket {
    * Resources in this page.
    */
   data: Array<DeliveryBacklogBucket>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListDeliveryBreakdown {
+  /**
+   * Resources in this page.
+   */
+  data: Array<DeliveryBreakdown>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListDeliveryLatenessBucket {
+  /**
+   * Resources in this page.
+   */
+  data: Array<DeliveryLatenessBucket>;
 
   /**
    * Resource type identifier.
@@ -4781,9 +4964,30 @@ export interface AnalyticsUpdateDeliveryPerformanceParams {
   starts_at: string;
 
   /**
+   * Only measure orders whose customer sits in these groups.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Only measure orders bought by these customers. Their child accounts are
+   * included, matching how the sales analytics resolve a customer.
+   */
+  customer_ids?: Array<string>;
+
+  /**
    * The period to break the results down by. Defaults to `week`.
    */
   granularity?: 'day' | 'week' | 'month';
+
+  /**
+   * Only measure orders containing at least one line in these product lines.
+   */
+  product_line_ids?: Array<string>;
+
+  /**
+   * Only measure orders owned by these sales reps.
+   */
+  sales_rep_ids?: Array<string>;
 }
 
 export interface AnalyticsUpdateDemandForecastParams {
@@ -5225,7 +5429,9 @@ export declare namespace Analytics {
     type CustomerPricingSummary as CustomerPricingSummary,
     type DateTimeCoordinate as DateTimeCoordinate,
     type DeliveryBacklogBucket as DeliveryBacklogBucket,
+    type DeliveryBreakdown as DeliveryBreakdown,
     type DeliveryChartData as DeliveryChartData,
+    type DeliveryLatenessBucket as DeliveryLatenessBucket,
     type DeliveryPerformance as DeliveryPerformance,
     type DeliveryStatistics as DeliveryStatistics,
     type DemandForecastForecastPoint as DemandForecastForecastPoint,
@@ -5238,6 +5444,8 @@ export declare namespace Analytics {
     type ListCustomer as ListCustomer,
     type ListCustomerPricingFinding as ListCustomerPricingFinding,
     type ListDeliveryBacklogBucket as ListDeliveryBacklogBucket,
+    type ListDeliveryBreakdown as ListDeliveryBreakdown,
+    type ListDeliveryLatenessBucket as ListDeliveryLatenessBucket,
     type ListDeliveryPerformance as ListDeliveryPerformance,
     type ListDemandForecastRow as ListDemandForecastRow,
     type ListFrozenAdherence as ListFrozenAdherence,

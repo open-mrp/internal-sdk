@@ -97,7 +97,9 @@ import {
   CustomerPricingSummary,
   DateTimeCoordinate,
   DeliveryBacklogBucket,
+  DeliveryBreakdown,
   DeliveryChartData,
+  DeliveryLatenessBucket,
   DeliveryPerformance,
   DeliveryStatistics,
   DemandForecastForecastPoint,
@@ -110,6 +112,8 @@ import {
   ListCustomer,
   ListCustomerPricingFinding,
   ListDeliveryBacklogBucket,
+  ListDeliveryBreakdown,
+  ListDeliveryLatenessBucket,
   ListDeliveryPerformance,
   ListDemandForecastRow,
   ListFrozenAdherence,
@@ -394,6 +398,8 @@ export interface Entity {
     | 'analyze_delivery_performance_response'
     | 'delivery_performance'
     | 'delivery_backlog_bucket'
+    | 'delivery_lateness_bucket'
+    | 'delivery_breakdown'
     | 'schedule_order_coverage'
     | 'schedule_order_coverage_line'
     | 'promise_date_quote'
@@ -763,6 +769,8 @@ export interface CoreRetrieveSearchParams {
     | 'analyze_delivery_performance_response'
     | 'delivery_performance'
     | 'delivery_backlog_bucket'
+    | 'delivery_lateness_bucket'
+    | 'delivery_breakdown'
     | 'schedule_order_coverage'
     | 'schedule_order_coverage_line'
     | 'promise_date_quote'
@@ -1087,7 +1095,9 @@ export declare namespace Core {
     type CustomerPricingSummary as CustomerPricingSummary,
     type DateTimeCoordinate as DateTimeCoordinate,
     type DeliveryBacklogBucket as DeliveryBacklogBucket,
+    type DeliveryBreakdown as DeliveryBreakdown,
     type DeliveryChartData as DeliveryChartData,
+    type DeliveryLatenessBucket as DeliveryLatenessBucket,
     type DeliveryPerformance as DeliveryPerformance,
     type DeliveryStatistics as DeliveryStatistics,
     type DemandForecastForecastPoint as DemandForecastForecastPoint,
@@ -1100,6 +1110,8 @@ export declare namespace Core {
     type ListCustomer as ListCustomer,
     type ListCustomerPricingFinding as ListCustomerPricingFinding,
     type ListDeliveryBacklogBucket as ListDeliveryBacklogBucket,
+    type ListDeliveryBreakdown as ListDeliveryBreakdown,
+    type ListDeliveryLatenessBucket as ListDeliveryLatenessBucket,
     type ListDeliveryPerformance as ListDeliveryPerformance,
     type ListDemandForecastRow as ListDemandForecastRow,
     type ListFrozenAdherence as ListFrozenAdherence,

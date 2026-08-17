@@ -492,7 +492,9 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">CustomerPricingSummary</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DateTimeCoordinate</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DeliveryBacklogBucket</a></code>
+- <code><a href="./src/resources/core/analytics.ts">DeliveryBreakdown</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DeliveryChartData</a></code>
+- <code><a href="./src/resources/core/analytics.ts">DeliveryLatenessBucket</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DeliveryPerformance</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DeliveryStatistics</a></code>
 - <code><a href="./src/resources/core/analytics.ts">DemandForecastForecastPoint</a></code>
@@ -505,6 +507,8 @@ Types:
 - <code><a href="./src/resources/core/analytics.ts">ListCustomer</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListCustomerPricingFinding</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListDeliveryBacklogBucket</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ListDeliveryBreakdown</a></code>
+- <code><a href="./src/resources/core/analytics.ts">ListDeliveryLatenessBucket</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListDeliveryPerformance</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListDemandForecastRow</a></code>
 - <code><a href="./src/resources/core/analytics.ts">ListFrozenAdherence</a></code>

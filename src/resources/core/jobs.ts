@@ -17,6 +17,9 @@ export class Jobs extends APIResource {
    * `Location` to observe its outcome. A completed export carries the link to its
    * file on `export.url`.
    *
+   * This endpoint requires the permissions: `jobs:read`, `customers:read`,
+   * `suppliers:read`.
+   *
    * @example
    * ```ts
    * const job = await client.core.jobs.retrieve(
@@ -36,6 +39,8 @@ export class Jobs extends APIResource {
    * Cancels a job and returns it carrying its `cancelled` status. Work in flight is
    * not interrupted but can no longer settle, and a finished job cannot be
    * cancelled.
+   *
+   * This endpoint requires the permission: `jobs:delete`.
    *
    * @example
    * ```ts
@@ -231,6 +236,8 @@ export interface Job {
     | 'analyze_delivery_performance_response'
     | 'delivery_performance'
     | 'delivery_backlog_bucket'
+    | 'delivery_lateness_bucket'
+    | 'delivery_breakdown'
     | 'schedule_order_coverage'
     | 'schedule_order_coverage_line'
     | 'promise_date_quote'

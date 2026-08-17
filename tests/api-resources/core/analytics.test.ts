@@ -101,7 +101,11 @@ describe('resource analytics', () => {
     const response = await client.core.analytics.updateDeliveryPerformance({
       ends_at: '2026-05-10T00:23:00Z',
       starts_at: '2026-05-10T00:00:00Z',
+      customer_group_ids: ['string'],
+      customer_ids: ['string'],
       granularity: 'week',
+      product_line_ids: ['string'],
+      sales_rep_ids: ['string'],
     });
   });
 
