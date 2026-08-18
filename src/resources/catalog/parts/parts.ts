@@ -13,7 +13,7 @@ import {
   UpsertPartProperty,
 } from './actions';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
-import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
+import * as AccountPricesAPI from '../../sales/account-prices/account-prices';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -197,7 +197,7 @@ export interface CreatePartRequest {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_cost?: SalesOrdersAPI.RateInput;
+  unit_cost?: AccountPricesAPI.RateInput;
 
   /**
    * A value expressed as a ratio of two units, supplied on create and update
@@ -206,7 +206,7 @@ export interface CreatePartRequest {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price?: SalesOrdersAPI.RateInput;
+  unit_price?: AccountPricesAPI.RateInput;
 }
 
 /**
@@ -339,7 +339,7 @@ export interface PartCreateParams {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_cost?: SalesOrdersAPI.RateInput;
+  unit_cost?: AccountPricesAPI.RateInput;
 
   /**
    * Body param: A value expressed as a ratio of two units, supplied on create and
@@ -348,7 +348,7 @@ export interface PartCreateParams {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price?: SalesOrdersAPI.RateInput;
+  unit_price?: AccountPricesAPI.RateInput;
 }
 
 export interface PartRetrieveParams {

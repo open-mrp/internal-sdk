@@ -6,6 +6,7 @@ export {
   type CreateAccountPriceRequest,
   type ListAccountPrice,
   type ListItemCategory,
+  type RateInput,
   type UpdateAccountPriceRequest,
   type AccountPriceDeleteResponse,
   type AccountPriceCreateParams,

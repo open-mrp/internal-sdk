@@ -39,6 +39,7 @@ describe('resource volumeDiscounts', () => {
           parent_tier_id: 'parent_tier_id',
         },
       ],
+      include: ['customer_groups'],
       attribute_ids: ['string'],
       category_ids: ['string'],
       customer_group_ids: ['string'],
@@ -95,6 +96,7 @@ describe('resource volumeDiscounts', () => {
       has_product_lines: true,
       has_tiers: true,
       has_units: true,
+      include: ['customer_groups'],
       attribute_ids: ['string'],
       category_ids: ['string'],
       customer_group_ids: ['string'],
@@ -130,6 +132,7 @@ describe('resource volumeDiscounts', () => {
       client.sales.volumeDiscounts.list(
         {
           cursor: 'cursor',
+          include: ['customer_groups'],
           limit: 0,
           q: 'q',
         },

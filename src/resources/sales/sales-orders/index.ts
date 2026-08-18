@@ -39,7 +39,6 @@ export {
   type QuoteSalesOrderPricesRequest,
   type QuoteSalesOrderPricesResponse,
   type QuotedSalesOrderLine,
-  type RateInput,
   type Record,
   type SalesOrder,
   type SalesOrderEmailContactInput,

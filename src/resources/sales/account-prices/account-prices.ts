@@ -31,9 +31,11 @@ export class AccountPrices extends APIResource {
    * const accountPrice =
    *   await client.sales.accountPrices.create({
    *     product_line_id: 'pdln_k9bnlgvxhxjh',
-   *     rate_denominator_unit_id: 'un_82bd37dae5po',
-   *     rate_numerator_unit_id: 'un_82bd37dae5po',
-   *     rate_value: '25.50',
+   *     rate: {
+   *       value: '25.50',
+   *       numerator_unit_id: 'un_82bd37dae5po',
+   *       denominator_unit_id: 'un_82bd37dae5po',
+   *     },
    *     recipient_account_id: 'ac_ykxoradjoeb3',
    *     attribute_ids: ['at_rf1w295jt5ia'],
    *     category_ids: ['ic_d06g9c6yc9ck'],
@@ -48,8 +50,8 @@ export class AccountPrices extends APIResource {
   /**
    * Returns an account price by ID.
    *
-   * A customer portal user can only retrieve a price where their own account is the
-   * recipient; any other price is reported as not found.
+   * A customer portal user can only retrieve a price whose recipient is their own
+   * account or its parent; any other price is reported as not found.
    *
    * This endpoint requires the permissions: `discounts:read`, `customers:read`,
    * `suppliers:read`.
@@ -86,7 +88,13 @@ export class AccountPrices extends APIResource {
    * const accountPrice =
    *   await client.sales.accountPrices.update(
    *     'acpr_7l4j483kf32p',
-   *     { rate_value: '30.000000000000000000000000000000' },
+   *     {
+   *       rate: {
+   *         value: '30.000000000000000000000000000000',
+   *         numerator_unit_id: 'un_82bd37dae5po',
+   *         denominator_unit_id: 'un_82bd37dae5po',
+   *       },
+   *     },
    *   );
    * ```
    */
@@ -103,8 +111,8 @@ export class AccountPrices extends APIResource {
    * Returns a paginated list of account prices, newest first.
    *
    * The search term matches the recipient customer's name or their customer number.
-   * Customer portal users always see only the prices where their own account is the
-   * recipient, whatever `recipient_account_id` is set to.
+   * Customer portal users always see only the prices that apply to their own
+   * account, whatever `recipient_account_id` is set to.
    *
    * This endpoint requires the permissions: `discounts:read`, `customers:read`,
    * `suppliers:read`.
@@ -221,19 +229,13 @@ export interface CreateAccountPriceRequest {
   product_line_id: string;
 
   /**
-   * ID of the unit for the rate's denominator — the quantity unit being priced.
+   * A value expressed as a ratio of two units, supplied on create and update
+   * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
-  rate_denominator_unit_id: string;
-
-  /**
-   * ID of the unit for the rate's numerator, typically a currency unit.
-   */
-  rate_numerator_unit_id: string;
-
-  /**
-   * The price the recipient pays, as a decimal string.
-   */
-  rate_value: string;
+  rate: RateInput;
 
   /**
    * ID of the customer this price is offered to.
@@ -314,6 +316,31 @@ export interface ListItemCategory {
 }
 
 /**
+ * A value expressed as a ratio of two units, supplied on create and update
+ * requests.
+ *
+ * A unit price, for example, has a currency as its numerator unit and the unit the
+ * product is bought or sold by as its denominator.
+ */
+export interface RateInput {
+  /**
+   * ID of the unit for the rate's denominator (the per-unit basis).
+   */
+  denominator_unit_id: string;
+
+  /**
+   * ID of the unit for the rate's numerator (e.g. the currency of a price).
+   */
+  numerator_unit_id: string;
+
+  /**
+   * Decimal value of the rate, expressed as the amount of the numerator unit per one
+   * denominator unit.
+   */
+  value: string;
+}
+
+/**
  * Request to partially update an account price.
  */
 export interface UpdateAccountPriceRequest {
@@ -340,19 +367,13 @@ export interface UpdateAccountPriceRequest {
   product_line_id?: string;
 
   /**
-   * ID of the unit for the rate's denominator — the quantity unit being priced.
+   * A value expressed as a ratio of two units, supplied on create and update
+   * requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
-  rate_denominator_unit_id?: string;
-
-  /**
-   * ID of the unit for the rate's numerator, typically a currency unit.
-   */
-  rate_numerator_unit_id?: string;
-
-  /**
-   * The price the recipient pays, as a decimal string.
-   */
-  rate_value?: string;
+  rate?: RateInput;
 
   /**
    * ID of the customer this price is offered to.
@@ -369,20 +390,13 @@ export interface AccountPriceCreateParams {
   product_line_id: string;
 
   /**
-   * Body param: ID of the unit for the rate's denominator — the quantity unit being
-   * priced.
+   * Body param: A value expressed as a ratio of two units, supplied on create and
+   * update requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
-  rate_denominator_unit_id: string;
-
-  /**
-   * Body param: ID of the unit for the rate's numerator, typically a currency unit.
-   */
-  rate_numerator_unit_id: string;
-
-  /**
-   * Body param: The price the recipient pays, as a decimal string.
-   */
-  rate_value: string;
+  rate: RateInput;
 
   /**
    * Body param: ID of the customer this price is offered to.
@@ -452,20 +466,13 @@ export interface AccountPriceUpdateParams {
   product_line_id?: string;
 
   /**
-   * Body param: ID of the unit for the rate's denominator — the quantity unit being
-   * priced.
+   * Body param: A value expressed as a ratio of two units, supplied on create and
+   * update requests.
+   *
+   * A unit price, for example, has a currency as its numerator unit and the unit the
+   * product is bought or sold by as its denominator.
    */
-  rate_denominator_unit_id?: string;
-
-  /**
-   * Body param: ID of the unit for the rate's numerator, typically a currency unit.
-   */
-  rate_numerator_unit_id?: string;
-
-  /**
-   * Body param: The price the recipient pays, as a decimal string.
-   */
-  rate_value?: string;
+  rate?: RateInput;
 
   /**
    * Body param: ID of the customer this price is offered to.
@@ -484,6 +491,12 @@ export interface AccountPriceListParams {
   cursor?: string;
 
   /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'recipient_account' | 'product_line' | 'categories' | 'attributes'>;
+
+  /**
    * Maximum number of results to return in a single page.
    */
   limit?: number;
@@ -497,6 +510,9 @@ export interface AccountPriceListParams {
 
   /**
    * Filters results to prices whose recipient is this customer account.
+   *
+   * A child account also matches the prices recorded against its parent, since those
+   * price its orders too.
    */
   recipient_account_id?: string;
 }
@@ -509,6 +525,7 @@ export declare namespace AccountPrices {
     type CreateAccountPriceRequest as CreateAccountPriceRequest,
     type ListAccountPrice as ListAccountPrice,
     type ListItemCategory as ListItemCategory,
+    type RateInput as RateInput,
     type UpdateAccountPriceRequest as UpdateAccountPriceRequest,
     type AccountPriceDeleteResponse as AccountPriceDeleteResponse,
     type AccountPriceCreateParams as AccountPriceCreateParams,

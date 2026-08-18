@@ -11,9 +11,11 @@ describe('resource accountPrices', () => {
   test('create: only required params', async () => {
     const responsePromise = client.sales.accountPrices.create({
       product_line_id: 'pdln_k9bnlgvxhxjh',
-      rate_denominator_unit_id: 'un_82bd37dae5po',
-      rate_numerator_unit_id: 'un_82bd37dae5po',
-      rate_value: '25.50',
+      rate: {
+        denominator_unit_id: 'un_82bd37dae5po',
+        numerator_unit_id: 'un_82bd37dae5po',
+        value: '25.50',
+      },
       recipient_account_id: 'ac_ykxoradjoeb3',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -28,9 +30,11 @@ describe('resource accountPrices', () => {
   test('create: required and optional params', async () => {
     const response = await client.sales.accountPrices.create({
       product_line_id: 'pdln_k9bnlgvxhxjh',
-      rate_denominator_unit_id: 'un_82bd37dae5po',
-      rate_numerator_unit_id: 'un_82bd37dae5po',
-      rate_value: '25.50',
+      rate: {
+        denominator_unit_id: 'un_82bd37dae5po',
+        numerator_unit_id: 'un_82bd37dae5po',
+        value: '25.50',
+      },
       recipient_account_id: 'ac_ykxoradjoeb3',
       include: ['recipient_account'],
       attribute_ids: ['at_rf1w295jt5ia'],
@@ -81,9 +85,11 @@ describe('resource accountPrices', () => {
           attribute_ids: ['string'],
           category_ids: ['string'],
           product_line_id: 'product_line_id',
-          rate_denominator_unit_id: 'rate_denominator_unit_id',
-          rate_numerator_unit_id: 'rate_numerator_unit_id',
-          rate_value: '30.000000000000000000000000000000',
+          rate: {
+            denominator_unit_id: 'un_82bd37dae5po',
+            numerator_unit_id: 'un_82bd37dae5po',
+            value: '30.000000000000000000000000000000',
+          },
           recipient_account_id: 'recipient_account_id',
         },
         { path: '/_stainless_unknown_path' },
@@ -108,6 +114,7 @@ describe('resource accountPrices', () => {
       client.sales.accountPrices.list(
         {
           cursor: 'cursor',
+          include: ['recipient_account'],
           limit: 0,
           q: 'q',
           recipient_account_id: 'recipient_account_id',

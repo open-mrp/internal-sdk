@@ -43,8 +43,9 @@ export class VolumeDiscounts extends APIResource {
    *   });
    * ```
    */
-  create(body: VolumeDiscountCreateParams, options?: RequestOptions): APIPromise<VolumeDiscount> {
-    return this._client.post('/v1/sales/volume-discounts', { body, ...options });
+  create(params: VolumeDiscountCreateParams, options?: RequestOptions): APIPromise<VolumeDiscount> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/sales/volume-discounts', { query: { include }, body, ...options });
   }
 
   /**
@@ -109,8 +110,17 @@ export class VolumeDiscounts extends APIResource {
    *   );
    * ```
    */
-  update(id: string, body: VolumeDiscountUpdateParams, options?: RequestOptions): APIPromise<VolumeDiscount> {
-    return this._client.patch(path`/v1/sales/volume-discounts/${id}`, { body, ...options });
+  update(
+    id: string,
+    params: VolumeDiscountUpdateParams,
+    options?: RequestOptions,
+  ): APIPromise<VolumeDiscount> {
+    const { include, ...body } = params;
+    return this._client.patch(path`/v1/sales/volume-discounts/${id}`, {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -613,33 +623,39 @@ export interface VolumeDiscountDeleteResponse {}
 
 export interface VolumeDiscountCreateParams {
   /**
-   * Display name of the volume discount.
+   * Body param: Display name of the volume discount.
    *
    * Must be unique within the account.
    */
   name: string;
 
   /**
-   * Tiers for this volume discount.
+   * Body param: Tiers for this volume discount.
    */
   tiers: Array<CreateVolumeDiscountTierInput>;
 
   /**
-   * Attribute IDs to scope the discount to.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'customer_groups' | 'product_lines' | 'categories' | 'attributes' | 'acceptable_units'>;
+
+  /**
+   * Body param: Attribute IDs to scope the discount to.
    *
    * When set, an item qualifies only if it has every listed attribute.
    */
   attribute_ids?: Array<string>;
 
   /**
-   * Item category IDs to scope the discount to.
+   * Body param: Item category IDs to scope the discount to.
    *
    * When empty, all categories qualify.
    */
   category_ids?: Array<string>;
 
   /**
-   * Account group IDs to scope the discount to specific customer groups.
+   * Body param: Account group IDs to scope the discount to specific customer groups.
    *
    * When empty, all customers qualify. A discount scoped to a group the buyer
    * belongs to is preferred over an unscoped one when both could apply to the same
@@ -648,15 +664,15 @@ export interface VolumeDiscountCreateParams {
   customer_group_ids?: Array<string>;
 
   /**
-   * Product line IDs to scope the discount to.
+   * Body param: Product line IDs to scope the discount to.
    *
    * When empty, all product lines qualify.
    */
   product_line_ids?: Array<string>;
 
   /**
-   * IDs of the units that ordered quantities are measured in when evaluating tier
-   * thresholds.
+   * Body param: IDs of the units that ordered quantities are measured in when
+   * evaluating tier thresholds.
    *
    * Quantities ordered in other units are converted into one of these before being
    * compared against a threshold. Leaving this empty makes the discount inert: the
@@ -675,27 +691,31 @@ export interface VolumeDiscountRetrieveParams {
 
 export interface VolumeDiscountUpdateParams {
   /**
-   * Whether to apply the `attribute_ids` field; when `false`, it is ignored.
+   * Body param: Whether to apply the `attribute_ids` field; when `false`, it is
+   * ignored.
    */
   has_attributes: boolean;
 
   /**
-   * Whether to apply the `category_ids` field; when `false`, it is ignored.
+   * Body param: Whether to apply the `category_ids` field; when `false`, it is
+   * ignored.
    */
   has_categories: boolean;
 
   /**
-   * Whether to apply the `customer_group_ids` field; when `false`, it is ignored.
+   * Body param: Whether to apply the `customer_group_ids` field; when `false`, it is
+   * ignored.
    */
   has_customer_groups: boolean;
 
   /**
-   * Whether to apply the `product_line_ids` field; when `false`, it is ignored.
+   * Body param: Whether to apply the `product_line_ids` field; when `false`, it is
+   * ignored.
    */
   has_product_lines: boolean;
 
   /**
-   * Whether to apply the `tiers` field.
+   * Body param: Whether to apply the `tiers` field.
    *
    * When `true`, the discount's tiers are replaced with the contents of `tiers` (an
    * empty list deletes all tiers). When `false`, `tiers` is ignored.
@@ -703,12 +723,18 @@ export interface VolumeDiscountUpdateParams {
   has_tiers: boolean;
 
   /**
-   * Whether to apply the `unit_ids` field; when `false`, it is ignored.
+   * Body param: Whether to apply the `unit_ids` field; when `false`, it is ignored.
    */
   has_units: boolean;
 
   /**
-   * Attribute IDs to set.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'customer_groups' | 'product_lines' | 'categories' | 'attributes' | 'acceptable_units'>;
+
+  /**
+   * Body param: Attribute IDs to set.
    *
    * Only applied when `has_attributes` is `true`, in which case they replace the
    * existing set entirely.
@@ -716,7 +742,7 @@ export interface VolumeDiscountUpdateParams {
   attribute_ids?: Array<string>;
 
   /**
-   * Item category IDs to set.
+   * Body param: Item category IDs to set.
    *
    * Only applied when `has_categories` is `true`, in which case they replace the
    * existing set entirely.
@@ -724,7 +750,7 @@ export interface VolumeDiscountUpdateParams {
   category_ids?: Array<string>;
 
   /**
-   * Account group IDs to set as customer groups.
+   * Body param: Account group IDs to set as customer groups.
    *
    * Only applied when `has_customer_groups` is `true`, in which case they replace
    * the existing set entirely.
@@ -732,14 +758,14 @@ export interface VolumeDiscountUpdateParams {
   customer_group_ids?: Array<string>;
 
   /**
-   * Display name of the volume discount.
+   * Body param: Display name of the volume discount.
    *
    * Must be unique within the account.
    */
   name?: string;
 
   /**
-   * Product line IDs to set.
+   * Body param: Product line IDs to set.
    *
    * Only applied when `has_product_lines` is `true`, in which case they replace the
    * existing set entirely.
@@ -747,7 +773,7 @@ export interface VolumeDiscountUpdateParams {
   product_line_ids?: Array<string>;
 
   /**
-   * The full set of tiers for this discount.
+   * Body param: The full set of tiers for this discount.
    *
    * Only applied when `has_tiers` is `true`. Tiers with an `id` are updated, tiers
    * without an `id` are created, and existing tiers not present in the list are
@@ -756,7 +782,7 @@ export interface VolumeDiscountUpdateParams {
   tiers?: Array<UpdateVolumeDiscountTierInput>;
 
   /**
-   * IDs of the units to set as acceptable units.
+   * Body param: IDs of the units to set as acceptable units.
    *
    * Only applied when `has_units` is `true`, in which case they replace the existing
    * set entirely. Clearing every unit makes the discount inert, since ordered
@@ -774,6 +800,12 @@ export interface VolumeDiscountListParams {
    * page.
    */
   cursor?: string;
+
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'customer_groups' | 'product_lines' | 'categories' | 'attributes' | 'acceptable_units'>;
 
   /**
    * Maximum number of results to return in a single page.

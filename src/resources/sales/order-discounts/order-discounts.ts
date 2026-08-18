@@ -32,7 +32,7 @@ export class OrderDiscounts extends APIResource {
    *     code: 'SAVE10',
    *     discount_type: 'percentage',
    *     name: '10% Off',
-   *     percentage: '10.000000000000000000000000000000',
+   *     percentage: '0.1',
    *   });
    * ```
    */
@@ -149,7 +149,7 @@ export interface CreateOrderDiscountRequest {
    * - `percentage`: the order total is reduced by the fraction in `percentage`.
    * - `amount`: the order total is reduced by the flat amount in `amount`.
    */
-  discount_type: string;
+  discount_type: 'percentage' | 'amount';
 
   /**
    * Display name of the discount.
@@ -300,7 +300,7 @@ export interface UpdateOrderDiscountRequest {
    * `percentage` or `amount` in the same request or the discount will take nothing
    * off.
    */
-  discount_type?: string;
+  discount_type?: 'percentage' | 'amount';
 
   /**
    * Display name of the discount.
@@ -331,7 +331,7 @@ export interface OrderDiscountCreateParams {
    * - `percentage`: the order total is reduced by the fraction in `percentage`.
    * - `amount`: the order total is reduced by the flat amount in `amount`.
    */
-  discount_type: string;
+  discount_type: 'percentage' | 'amount';
 
   /**
    * Display name of the discount.
@@ -382,7 +382,7 @@ export interface OrderDiscountUpdateParams {
    * `percentage` or `amount` in the same request or the discount will take nothing
    * off.
    */
-  discount_type?: string;
+  discount_type?: 'percentage' | 'amount';
 
   /**
    * Display name of the discount.

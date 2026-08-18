@@ -15,6 +15,7 @@ import {
   ValidateProductsRequest,
   ValidateProductsResponse,
 } from './actions';
+import * as AccountPricesAPI from '../../sales/account-prices/account-prices';
 import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
@@ -293,7 +294,7 @@ export interface CreateProductRequest {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_cost?: SalesOrdersAPI.RateInput;
+  unit_cost?: AccountPricesAPI.RateInput;
 
   /**
    * A value expressed as a ratio of two units, supplied on create and update
@@ -302,7 +303,7 @@ export interface CreateProductRequest {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price?: SalesOrdersAPI.RateInput;
+  unit_price?: AccountPricesAPI.RateInput;
 }
 
 /**
@@ -374,7 +375,7 @@ export interface UpdateProductRequest {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price?: SalesOrdersAPI.RateInput;
+  unit_price?: AccountPricesAPI.RateInput;
 }
 
 export interface ProductCreateParams {
@@ -477,7 +478,7 @@ export interface ProductCreateParams {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_cost?: SalesOrdersAPI.RateInput;
+  unit_cost?: AccountPricesAPI.RateInput;
 
   /**
    * Body param: A value expressed as a ratio of two units, supplied on create and
@@ -486,7 +487,7 @@ export interface ProductCreateParams {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price?: SalesOrdersAPI.RateInput;
+  unit_price?: AccountPricesAPI.RateInput;
 }
 
 export interface ProductRetrieveParams {
@@ -576,7 +577,7 @@ export interface ProductUpdateParams {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price?: SalesOrdersAPI.RateInput;
+  unit_price?: AccountPricesAPI.RateInput;
 }
 
 export interface ProductListParams {

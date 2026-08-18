@@ -22,6 +22,7 @@ import {
   Lines,
   UpdatePurchaseOrderLineRequest,
 } from './lines';
+import * as AccountPricesAPI from '../../sales/account-prices/account-prices';
 import * as CustomersAPI from '../../sales/customers/customers';
 import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
@@ -246,7 +247,7 @@ export interface CreatePurchaseOrderLineInput {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price: SalesOrdersAPI.RateInput;
+  unit_price: AccountPricesAPI.RateInput;
 
   /**
    * ID of the inventory item this line is linked to.
@@ -270,7 +271,7 @@ export interface CreatePurchaseOrderLineInput {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_cost?: SalesOrdersAPI.RateInput;
+  unit_cost?: AccountPricesAPI.RateInput;
 }
 
 /**
@@ -479,7 +480,7 @@ export interface OrderLineInput {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price: SalesOrdersAPI.RateInput;
+  unit_price: AccountPricesAPI.RateInput;
 
   /**
    * ID of the inventory item this line is linked to.
@@ -503,7 +504,7 @@ export interface OrderLineInput {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_cost?: SalesOrdersAPI.RateInput;
+  unit_cost?: AccountPricesAPI.RateInput;
 }
 
 /**

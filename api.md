@@ -774,6 +774,7 @@ Types:
 - <code><a href="./src/resources/sales/account-prices/account-prices.ts">CreateAccountPriceRequest</a></code>
 - <code><a href="./src/resources/sales/account-prices/account-prices.ts">ListAccountPrice</a></code>
 - <code><a href="./src/resources/sales/account-prices/account-prices.ts">ListItemCategory</a></code>
+- <code><a href="./src/resources/sales/account-prices/account-prices.ts">RateInput</a></code>
 - <code><a href="./src/resources/sales/account-prices/account-prices.ts">UpdateAccountPriceRequest</a></code>
 - <code><a href="./src/resources/sales/account-prices/account-prices.ts">AccountPriceDeleteResponse</a></code>
 
@@ -977,7 +978,6 @@ Types:
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">QuoteSalesOrderPricesRequest</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">QuoteSalesOrderPricesResponse</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">QuotedSalesOrderLine</a></code>
-- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">RateInput</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">Record</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrder</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">SalesOrderEmailContactInput</a></code>

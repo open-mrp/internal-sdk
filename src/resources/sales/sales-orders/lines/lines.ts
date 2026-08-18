@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../../core/resource';
+import * as AccountPricesAPI from '../../account-prices/account-prices';
 import * as CustomersAPI from '../../customers/customers';
 import * as SalesOrdersAPI from '../sales-orders';
 import * as ActionsAPI from './actions';
@@ -158,7 +159,7 @@ export interface CreateSalesOrderLineRequest {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price?: SalesOrdersAPI.RateInput;
+  unit_price?: AccountPricesAPI.RateInput;
 }
 
 /**
@@ -168,7 +169,7 @@ export interface UpdateSalesOrderLineRequest {
   /**
    * Description recorded on the line.
    */
-  product_description?: string;
+  product_description?: string | null;
 
   /**
    * SKU recorded on the line.
@@ -190,7 +191,7 @@ export interface UpdateSalesOrderLineRequest {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_cost?: SalesOrdersAPI.RateInput;
+  unit_cost?: AccountPricesAPI.RateInput;
 
   /**
    * A value expressed as a ratio of two units, supplied on create and update
@@ -199,7 +200,7 @@ export interface UpdateSalesOrderLineRequest {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price?: SalesOrdersAPI.RateInput;
+  unit_price?: AccountPricesAPI.RateInput;
 }
 
 export interface LineDeleteResponse {}
@@ -241,7 +242,7 @@ export interface LineCreateParams {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price?: SalesOrdersAPI.RateInput;
+  unit_price?: AccountPricesAPI.RateInput;
 }
 
 export interface LineUpdateParams {
@@ -259,7 +260,7 @@ export interface LineUpdateParams {
   /**
    * Body param: Description recorded on the line.
    */
-  product_description?: string;
+  product_description?: string | null;
 
   /**
    * Body param: SKU recorded on the line.
@@ -281,7 +282,7 @@ export interface LineUpdateParams {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_cost?: SalesOrdersAPI.RateInput;
+  unit_cost?: AccountPricesAPI.RateInput;
 
   /**
    * Body param: A value expressed as a ratio of two units, supplied on create and
@@ -290,7 +291,7 @@ export interface LineUpdateParams {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price?: SalesOrdersAPI.RateInput;
+  unit_price?: AccountPricesAPI.RateInput;
 }
 
 export interface LineDeleteParams {

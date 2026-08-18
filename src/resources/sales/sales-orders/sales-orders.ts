@@ -5,6 +5,7 @@ import * as AnalyticsAPI from '../../core/analytics';
 import * as RequestLogsAPI from '../../core/request-logs';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
+import * as AccountPricesAPI from '../account-prices/account-prices';
 import * as CustomersAPI from '../customers/customers';
 import * as OrderDiscountsAPI from '../order-discounts/order-discounts';
 import * as ActionsAPI from './actions';
@@ -333,7 +334,7 @@ export interface CreateSalesOrderLineInput {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price?: RateInput;
+  unit_price?: AccountPricesAPI.RateInput;
 }
 
 /**
@@ -856,31 +857,6 @@ export interface QuotedSalesOrderLine {
    * against the median other customers pay.
    */
   unit_price: AnalyticsAPI.ComputedRate | null;
-}
-
-/**
- * A value expressed as a ratio of two units, supplied on create and update
- * requests.
- *
- * A unit price, for example, has a currency as its numerator unit and the unit the
- * product is bought or sold by as its denominator.
- */
-export interface RateInput {
-  /**
-   * ID of the unit for the rate's denominator (the per-unit basis).
-   */
-  denominator_unit_id: string;
-
-  /**
-   * ID of the unit for the rate's numerator (e.g. the currency of a price).
-   */
-  numerator_unit_id: string;
-
-  /**
-   * Decimal value of the rate, expressed as the amount of the numerator unit per one
-   * denominator unit.
-   */
-  value: string;
 }
 
 /**
@@ -2141,7 +2117,6 @@ export declare namespace SalesOrders {
     type QuoteSalesOrderPricesRequest as QuoteSalesOrderPricesRequest,
     type QuoteSalesOrderPricesResponse as QuoteSalesOrderPricesResponse,
     type QuotedSalesOrderLine as QuotedSalesOrderLine,
-    type RateInput as RateInput,
     type Record as Record,
     type SalesOrder as SalesOrder,
     type SalesOrderEmailContactInput as SalesOrderEmailContactInput,

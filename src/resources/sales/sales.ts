@@ -75,6 +75,7 @@ import {
   CreateAccountPriceRequest,
   ListAccountPrice,
   ListItemCategory,
+  RateInput,
   UpdateAccountPriceRequest,
 } from './account-prices/account-prices';
 import * as AccountUsersAPI from './account-users/account-users';
@@ -147,7 +148,6 @@ import {
   QuoteSalesOrderPricesRequest,
   QuoteSalesOrderPricesResponse,
   QuotedSalesOrderLine,
-  RateInput,
   Record,
   SalesOrder,
   SalesOrderCheckoutParams,
@@ -381,6 +381,7 @@ export declare namespace Sales {
     type CreateAccountPriceRequest as CreateAccountPriceRequest,
     type ListAccountPrice as ListAccountPrice,
     type ListItemCategory as ListItemCategory,
+    type RateInput as RateInput,
     type UpdateAccountPriceRequest as UpdateAccountPriceRequest,
     type AccountPriceDeleteResponse as AccountPriceDeleteResponse,
     type AccountPriceCreateParams as AccountPriceCreateParams,
@@ -463,7 +464,6 @@ export declare namespace Sales {
     type QuoteSalesOrderPricesRequest as QuoteSalesOrderPricesRequest,
     type QuoteSalesOrderPricesResponse as QuoteSalesOrderPricesResponse,
     type QuotedSalesOrderLine as QuotedSalesOrderLine,
-    type RateInput as RateInput,
     type Record as Record,
     type SalesOrder as SalesOrder,
     type SalesOrderEmailContactInput as SalesOrderEmailContactInput,

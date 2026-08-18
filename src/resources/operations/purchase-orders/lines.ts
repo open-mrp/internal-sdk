@@ -2,8 +2,8 @@
 
 import { APIResource } from '../../../core/resource';
 import * as DeliveriesAPI from '../deliveries';
+import * as AccountPricesAPI from '../../sales/account-prices/account-prices';
 import * as CustomersAPI from '../../sales/customers/customers';
-import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -153,7 +153,7 @@ export interface CreatePurchaseOrderLineRequest {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price: SalesOrdersAPI.RateInput;
+  unit_price: AccountPricesAPI.RateInput;
 
   /**
    * ID of the inventory item this line is linked to.
@@ -177,7 +177,7 @@ export interface CreatePurchaseOrderLineRequest {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_cost?: SalesOrdersAPI.RateInput;
+  unit_cost?: AccountPricesAPI.RateInput;
 }
 
 /**
@@ -276,7 +276,7 @@ export interface LineCreateParams {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_price: SalesOrdersAPI.RateInput;
+  unit_price: AccountPricesAPI.RateInput;
 
   /**
    * ID of the inventory item this line is linked to.
@@ -300,7 +300,7 @@ export interface LineCreateParams {
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
    */
-  unit_cost?: SalesOrdersAPI.RateInput;
+  unit_cost?: AccountPricesAPI.RateInput;
 }
 
 export interface LineUpdateParams {
