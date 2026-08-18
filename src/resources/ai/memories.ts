@@ -139,7 +139,7 @@ export interface AgentMemory {
    * - `instruction`: standing guidance for agents to follow, such as always
    *   confirming freight before issuing an order.
    */
-  category: string;
+  category: 'preference' | 'fact' | 'instruction';
 
   /**
    * The information itself, written as plain text for an agent to read.
@@ -205,7 +205,7 @@ export interface CreateMemoryRequest {
    * - `instruction`: standing guidance for agents to follow, such as always
    *   confirming freight before issuing an order.
    */
-  category: string;
+  category: 'preference' | 'fact' | 'instruction';
 
   /**
    * The information to remember, written as plain text for an agent to read.
@@ -295,7 +295,7 @@ export interface UpdateMemoryRequest {
    * - `instruction`: standing guidance for agents to follow, such as always
    *   confirming freight before issuing an order.
    */
-  category?: string;
+  category?: 'preference' | 'fact' | 'instruction';
 
   /**
    * The information to remember, written as plain text for an agent to read.
@@ -359,7 +359,7 @@ export interface MemoryCreateParams {
    * - `instruction`: standing guidance for agents to follow, such as always
    *   confirming freight before issuing an order.
    */
-  category: string;
+  category: 'preference' | 'fact' | 'instruction';
 
   /**
    * The information to remember, written as plain text for an agent to read.
@@ -419,7 +419,7 @@ export interface MemoryUpdateParams {
    * - `instruction`: standing guidance for agents to follow, such as always
    *   confirming freight before issuing an order.
    */
-  category?: string;
+  category?: 'preference' | 'fact' | 'instruction';
 
   /**
    * The information to remember, written as plain text for an agent to read.
@@ -474,7 +474,7 @@ export interface MemoryListParams {
   /**
    * Filter to memories with this exact category (e.g. `preference`, `fact`).
    */
-  category?: string;
+  category?: 'preference' | 'fact' | 'instruction';
 
   /**
    * Opaque cursor token identifying where the page of results starts.

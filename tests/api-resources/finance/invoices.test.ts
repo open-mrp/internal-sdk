@@ -85,7 +85,7 @@ describe('resource invoices', () => {
           q: 'q',
           sales_rep_ids: ['string'],
           starts_at: 'starts_at',
-          status: 'status',
+          status: 'all',
         },
         { path: '/_stainless_unknown_path' },
       ),

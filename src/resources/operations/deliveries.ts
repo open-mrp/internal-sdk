@@ -865,7 +865,7 @@ export interface DeliveryListParams {
    * Deliveries where nothing was accepted into inventory are hidden unless you ask
    * for `rejected` or `all`.
    */
-  status?: string;
+  status?: 'all' | 'accepted' | 'rejected';
 
   /**
    * Filter to deliveries whose purchase order is with any of the given supplier

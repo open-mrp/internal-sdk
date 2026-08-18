@@ -1285,7 +1285,7 @@ export interface InvoiceListParams {
    *   invoices carrying partial payments.
    * - `overpaid`: only invoices whose applied payments exceed the invoiced amount.
    */
-  status?: string;
+  status?: 'all' | 'paid' | 'unpaid' | 'overpaid';
 }
 
 export declare namespace Invoices {

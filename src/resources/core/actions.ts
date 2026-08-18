@@ -184,7 +184,7 @@ export interface EmailRecordRequest {
    * - `purchase_order`: sends the purchase order submission to the order's
    *   submission recipients.
    */
-  type: string;
+  type: 'invoice' | 'sales_order' | 'purchase_order';
 }
 
 /**
@@ -302,7 +302,7 @@ export interface ActionEmailRecordParams {
    * - `purchase_order`: sends the purchase order submission to the order's
    *   submission recipients.
    */
-  type: string;
+  type: 'invoice' | 'sales_order' | 'purchase_order';
 }
 
 export interface ActionRequestDemoParams {
