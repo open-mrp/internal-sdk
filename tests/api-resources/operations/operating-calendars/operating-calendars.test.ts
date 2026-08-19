@@ -7,9 +7,14 @@ const client = new Augno({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource addresses', () => {
+describe('resource operatingCalendars', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.sales.addresses.create({ country: 'US', name: 'Headquarters' });
+    const responsePromise = client.operations.operatingCalendars.create({
+      code: 'default_ship',
+      days_of_week: '1111000',
+      kind: 'ship',
+      name: 'Shipping days',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,23 +25,19 @@ describe('resource addresses', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.sales.addresses.create({
-      country: 'US',
-      name: 'Headquarters',
-      email: 'warehouse@acme.com',
-      locality: 'Springfield',
-      phone: '555-123-4567',
-      postal_code: '62701',
-      receive_calendar_id: 'receive_calendar_id',
-      state: 'IL',
-      street_line_1: '123 Main St',
-      street_line_2: 'Suite 400',
-      type: 'standard',
+    const response = await client.operations.operatingCalendars.create({
+      code: 'default_ship',
+      days_of_week: '1111000',
+      kind: 'ship',
+      name: 'Shipping days',
+      cutoff_at: '15:00',
+      is_default: true,
+      timezone: 'America/Chicago',
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.sales.addresses.retrieve('ad_j8cz0b79pwdb');
+    const responsePromise = client.operations.operatingCalendars.retrieve('occd_7f2m9qk4wzxb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -47,7 +48,7 @@ describe('resource addresses', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.sales.addresses.update('ad_j8cz0b79pwdb');
+    const responsePromise = client.operations.operatingCalendars.update('occd_7f2m9qk4wzxb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -60,20 +61,14 @@ describe('resource addresses', () => {
   test('update: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.sales.addresses.update(
-        'ad_j8cz0b79pwdb',
+      client.operations.operatingCalendars.update(
+        'occd_7f2m9qk4wzxb',
         {
-          country: 'US',
-          email: 'warehouse@acme.com',
-          locality: 'Springfield',
-          name: 'Warehouse',
-          phone: '555-123-4567',
-          postal_code: '62701',
-          receive_calendar_id: 'receive_calendar_id',
-          state: 'IL',
-          street_line_1: '123 Main St',
-          street_line_2: 'Suite 400',
-          type: 'standard',
+          cutoff_at: 'cutoff_at',
+          days_of_week: 'days_of_week',
+          is_default: false,
+          name: 'name',
+          timezone: 'timezone',
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -81,7 +76,7 @@ describe('resource addresses', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.sales.addresses.list();
+    const responsePromise = client.operations.operatingCalendars.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -94,20 +89,12 @@ describe('resource addresses', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.sales.addresses.list(
-        {
-          cursor: 'cursor',
-          limit: 0,
-          q: 'q',
-          type: 'standard',
-        },
-        { path: '/_stainless_unknown_path' },
-      ),
+      client.operations.operatingCalendars.list({ kind: 'ship' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Augno.NotFoundError);
   });
 
   test('delete', async () => {
-    const responsePromise = client.sales.addresses.delete('ad_j8cz0b79pwdb');
+    const responsePromise = client.operations.operatingCalendars.delete('occd_7f2m9qk4wzxb');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

@@ -177,6 +177,9 @@ export interface CreatePartRequest {
 
   /**
    * IDs of existing attributes to link to the part at creation time.
+   *
+   * Each attribute's property must be one the part's category carries; an attribute
+   * from any other property fails the whole request.
    */
   attribute_ids?: Array<string>;
 
@@ -319,6 +322,9 @@ export interface PartCreateParams {
 
   /**
    * Body param: IDs of existing attributes to link to the part at creation time.
+   *
+   * Each attribute's property must be one the part's category carries; an attribute
+   * from any other property fails the whole request.
    */
   attribute_ids?: Array<string>;
 

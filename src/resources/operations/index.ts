@@ -137,6 +137,17 @@ export {
   type MachineListParams,
 } from './machines/index';
 export {
+  OperatingCalendars,
+  type CreateOperatingCalendarRequest,
+  type ListOperatingCalendar,
+  type OperatingCalendar,
+  type UpdateOperatingCalendarRequest,
+  type OperatingCalendarDeleteResponse,
+  type OperatingCalendarCreateParams,
+  type OperatingCalendarUpdateParams,
+  type OperatingCalendarListParams,
+} from './operating-calendars/index';
+export {
   Operations,
   type DemandOverrideType,
   type InventoryItem,

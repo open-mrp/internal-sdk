@@ -315,6 +315,15 @@ export interface Address {
   phone: string | null;
 
   /**
+   * The operating calendar naming the days this dock accepts freight.
+   *
+   * The most specific link in the receiving chain: set it when one of a customer's
+   * sites keeps different days from the rest. Null falls through to the customer,
+   * then their group, then the account default.
+   */
+  receive_calendar_id: string | null;
+
+  /**
    * How the address is used.
    *
    * - `standard`: a normal shipping or billing address.

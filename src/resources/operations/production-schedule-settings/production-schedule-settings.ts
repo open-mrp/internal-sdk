@@ -353,6 +353,8 @@ export interface ProductionScheduleSettings {
    */
   planning_horizon_weeks: number;
 
+  receive_calendar_id: string | null;
+
   /**
    * Z-score behind the safety stock targets.
    *
@@ -371,6 +373,16 @@ export interface ProductionScheduleSettings {
    * Shifts worked per day.
    */
   shifts_per_day: number;
+
+  /**
+   * The account-wide operating calendars: the days the plant tenders freight, and
+   * the days a customer's dock accepts it.
+   *
+   * Behind the per-address and per-customer links and ahead of a plain
+   * Monday-to-Friday week. Null on both means every ship-by date is resolved against
+   * weekdays alone.
+   */
+  ship_calendar_id: string | null;
 
   /**
    * Last updated timestamp.
@@ -642,6 +654,18 @@ export interface UpdateProductionScheduleSettingsRequest {
    * active, otherwise the whole update is rejected.
    */
   generation_cron?: string | null;
+
+  receive_calendar_id?: string | null;
+
+  /**
+   * The operating calendar naming the days this account's plant tenders freight, and
+   * the one naming the days a customer's dock accepts it.
+   *
+   * These are the account-wide fallbacks: an address or a customer with its own
+   * calendar overrides them, and an account with neither set falls back to a
+   * Monday-to-Friday week with no closures.
+   */
+  ship_calendar_id?: string | null;
 }
 
 export interface ProductionScheduleSettingUpdateParams {
@@ -890,6 +914,18 @@ export interface ProductionScheduleSettingUpdateParams {
    * active, otherwise the whole update is rejected.
    */
   generation_cron?: string | null;
+
+  receive_calendar_id?: string | null;
+
+  /**
+   * The operating calendar naming the days this account's plant tenders freight, and
+   * the one naming the days a customer's dock accepts it.
+   *
+   * These are the account-wide fallbacks: an address or a customer with its own
+   * calendar overrides them, and an account with neither set falls back to a
+   * Monday-to-Friday week with no closures.
+   */
+  ship_calendar_id?: string | null;
 }
 
 ProductionScheduleSettings.Resources = Resources;

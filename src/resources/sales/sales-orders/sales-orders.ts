@@ -14,10 +14,14 @@ import {
   ActionBulkDeleteResponse,
   ActionCreateProductionRunParams,
   ActionIssueParams,
+  ActionQuoteCommitmentParams,
   Actions,
   BulkDeleteSalesOrdersRequest,
+  CommitmentQuoteStep,
   IssueSalesOrderRequest,
   ProductionRun,
+  QuoteSalesOrderCommitmentRequest,
+  QuoteSalesOrderCommitmentResponse,
   QuoteSalesOrderFreightResponse,
 } from './actions';
 import * as LinesAPI from './lines/lines';
@@ -418,6 +422,15 @@ export interface CreateSalesOrderRequest {
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
+   * Days between this order being issued and it being due to ship, replacing the
+   * customer's standing lead time for this order alone.
+   *
+   * Already a ship lead time, so no carrier transit is subtracted from it. Mutually
+   * exclusive with promised_at and ship_by_override_date.
+   */
+  lead_time_override_days?: number;
+
+  /**
    * Free-form note about the order.
    */
   note?: string;
@@ -440,6 +453,11 @@ export interface CreateSalesOrderRequest {
 
   /**
    * Date delivery is promised to the customer.
+   *
+   * The order's ship-by date is worked back from this: the goods have to reach the
+   * customer on a day they receive, so transit and both operating calendars are
+   * subtracted from it. Mutually exclusive with lead_time_override_days and
+   * ship_by_override_date.
    */
   promised_at?: string;
 
@@ -461,6 +479,16 @@ export interface CreateSalesOrderRequest {
    * level unset.
    */
   service_level_id?: string;
+
+  /**
+   * The exact date the order is due to ship, bypassing transit and the customer's
+   * receiving days.
+   *
+   * Still moved back to the nearest earlier day the plant ships on, since a date
+   * nobody can ship on is not a deadline. Mutually exclusive with promised_at and
+   * lead_time_override_days.
+   */
+  ship_by_override_date?: string;
 
   /**
    * ID of the shipping terms for the order.
@@ -951,6 +979,15 @@ export interface SalesOrder {
   bill_to_address: APIKeysAPI.Address | null;
 
   /**
+   * Days the customer's receiving calendar and the plant's shipping calendar pulled
+   * the ship-by date back, beyond what carrier transit accounted for.
+   *
+   * Zero means every date along the way already fell on an open day. This is what
+   * explains a ship-by date that is earlier than transit alone would suggest.
+   */
+  calendar_adjustment_days: number | null;
+
+  /**
    * When the order was fulfilled and closed.
    */
   completed_at: string | null;
@@ -1015,9 +1052,22 @@ export interface SalesOrder {
   lead_time_days: number | null;
 
   /**
+   * Days between issue and the ship-by date, set on this order alone in place of the
+   * customer's standing lead time.
+   */
+  lead_time_override_days: number | null;
+
+  /**
    * Which rule produced the ship-by date.
    */
-  lead_time_source: 'customer' | 'account_group' | 'account' | 'manual' | null;
+  lead_time_source:
+    | 'customer'
+    | 'account_group'
+    | 'account'
+    | 'manual'
+    | 'order_lead_time'
+    | 'order_ship_by'
+    | null;
 
   /**
    * Number of lines on this order.
@@ -1098,18 +1148,35 @@ export interface SalesOrder {
   sales_rep: RequestLogsAPI.Actor | null;
 
   /**
+   * The ship-by date at the plant's pickup cutoff — the moment freight has to be
+   * tendered by, not just the day.
+   *
+   * Only set when the account's shipping calendar carries a cutoff time.
+   */
+  ship_by_cutoff_at: string | null;
+
+  /**
    * Date this order is contractually due to ship.
    *
    * Stamped when the order is issued. With a promised delivery date, this is that
-   * date less the carrier's transit for the order's lane, counted in business days —
-   * the day the order has to leave to arrive when promised. Otherwise it comes from
-   * the lead time on the customer, its account group, or the account.
+   * date less the carrier's transit for the order's lane and less any day the
+   * customer cannot receive on — the day the order has to leave to arrive when
+   * promised. Otherwise it comes from a lead time, whether this order's own or the
+   * one on the customer, its account group, or the account.
    *
-   * It is not recomputed afterwards, so neither renegotiating a customer's lead time
-   * nor a later carrier estimate moves commitments already made. Cleared if the
-   * order is unissued.
+   * Always a day the plant actually ships on, whichever rule produced it.
+   *
+   * It is not recomputed afterwards, so neither renegotiating a customer's lead
+   * time, nor a later carrier estimate, nor a holiday added to a calendar moves
+   * commitments already made. Cleared if the order is unissued.
    */
   ship_by_date: string | null;
+
+  /**
+   * The ship date pinned on this order, bypassing transit and the customer's
+   * receiving days.
+   */
+  ship_by_override_date: string | null;
 
   /**
    * A saved address that can be used for billing and shipping on sales orders,
@@ -1501,6 +1568,13 @@ export interface UpdateSalesOrderRequest {
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
+   * Days between this order being issued and it being due to ship, replacing the
+   * customer's standing lead time for this order alone. Mutually exclusive with
+   * promised_at and ship_by_override_date; clear one to switch to another.
+   */
+  lead_time_override_days?: number | null;
+
+  /**
    * Free-form note about the order.
    */
   note?: string | null;
@@ -1537,6 +1611,12 @@ export interface UpdateSalesOrderRequest {
    * ID of the carrier service level the order ships on.
    */
   service_level_id?: string | null;
+
+  /**
+   * The exact date the order is due to ship, bypassing transit and the customer's
+   * receiving days. Mutually exclusive with promised_at and lead_time_override_days.
+   */
+  ship_by_override_date?: string | null;
 
   /**
    * Shipping address ID.
@@ -1665,6 +1745,15 @@ export interface SalesOrderCreateParams {
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
+   * Body param: Days between this order being issued and it being due to ship,
+   * replacing the customer's standing lead time for this order alone.
+   *
+   * Already a ship lead time, so no carrier transit is subtracted from it. Mutually
+   * exclusive with promised_at and ship_by_override_date.
+   */
+  lead_time_override_days?: number;
+
+  /**
    * Body param: Free-form note about the order.
    */
   note?: string;
@@ -1688,6 +1777,11 @@ export interface SalesOrderCreateParams {
 
   /**
    * Body param: Date delivery is promised to the customer.
+   *
+   * The order's ship-by date is worked back from this: the goods have to reach the
+   * customer on a day they receive, so transit and both operating calendars are
+   * subtracted from it. Mutually exclusive with lead_time_override_days and
+   * ship_by_override_date.
    */
   promised_at?: string;
 
@@ -1709,6 +1803,16 @@ export interface SalesOrderCreateParams {
    * level unset.
    */
   service_level_id?: string;
+
+  /**
+   * Body param: The exact date the order is due to ship, bypassing transit and the
+   * customer's receiving days.
+   *
+   * Still moved back to the nearest earlier day the plant ships on, since a date
+   * nobody can ship on is not a deadline. Mutually exclusive with promised_at and
+   * lead_time_override_days.
+   */
+  ship_by_override_date?: string;
 
   /**
    * Body param: ID of the shipping terms for the order.
@@ -1861,6 +1965,14 @@ export interface SalesOrderUpdateParams {
   invoice_email_contacts?: Array<SalesOrderEmailContactInput>;
 
   /**
+   * Body param: Days between this order being issued and it being due to ship,
+   * replacing the customer's standing lead time for this order alone. Mutually
+   * exclusive with promised_at and ship_by_override_date; clear one to switch to
+   * another.
+   */
+  lead_time_override_days?: number | null;
+
+  /**
    * Body param: Free-form note about the order.
    */
   note?: string | null;
@@ -1897,6 +2009,13 @@ export interface SalesOrderUpdateParams {
    * Body param: ID of the carrier service level the order ships on.
    */
   service_level_id?: string | null;
+
+  /**
+   * Body param: The exact date the order is due to ship, bypassing transit and the
+   * customer's receiving days. Mutually exclusive with promised_at and
+   * lead_time_override_days.
+   */
+  ship_by_override_date?: string | null;
 
   /**
    * Body param: Shipping address ID.
@@ -2139,13 +2258,17 @@ export declare namespace SalesOrders {
   export {
     Actions as Actions,
     type BulkDeleteSalesOrdersRequest as BulkDeleteSalesOrdersRequest,
+    type CommitmentQuoteStep as CommitmentQuoteStep,
     type IssueSalesOrderRequest as IssueSalesOrderRequest,
     type ProductionRun as ProductionRun,
+    type QuoteSalesOrderCommitmentRequest as QuoteSalesOrderCommitmentRequest,
+    type QuoteSalesOrderCommitmentResponse as QuoteSalesOrderCommitmentResponse,
     type QuoteSalesOrderFreightResponse as QuoteSalesOrderFreightResponse,
     type ActionBulkDeleteResponse as ActionBulkDeleteResponse,
     type ActionBulkDeleteParams as ActionBulkDeleteParams,
     type ActionCreateProductionRunParams as ActionCreateProductionRunParams,
     type ActionIssueParams as ActionIssueParams,
+    type ActionQuoteCommitmentParams as ActionQuoteCommitmentParams,
   };
 
   export {

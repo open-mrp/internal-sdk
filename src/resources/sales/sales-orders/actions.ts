@@ -137,6 +137,46 @@ export class Actions extends APIResource {
   }
 
   /**
+   * Previews the ship-by date a set of commitment inputs would produce, without
+   * creating or changing anything.
+   *
+   * Runs the same resolution an order runs when it is issued: a promised delivery
+   * date has the customer's receiving days, the carrier's transit, and the plant's
+   * shipping days worked back through it, while a lead time or a pinned ship date is
+   * snapped onto the next earlier day the plant ships. The returned steps are that
+   * derivation in order, so a caller can show why a date is what it is rather than
+   * restating the rules.
+   *
+   * At most one of `promised_at`, `lead_time_override_days`, and
+   * `ship_by_override_date` may be set; they are alternative answers to the same
+   * question.
+   *
+   * Advisory rather than binding. Carrier transit comes from a lane cache warmed in
+   * the background, so a lane nobody has shipped yet quotes against the service
+   * level's default or against no transit at all, and the date stamped at issue may
+   * differ once the lane has been rated.
+   *
+   * This endpoint requires the permission: `sales_orders:read`.
+   *
+   * @example
+   * ```ts
+   * const quoteSalesOrderCommitmentResponse =
+   *   await client.sales.salesOrders.actions.quoteCommitment({
+   *     buyer_account_id: 'ac_ykxoradjoeb3',
+   *     promised_at: '2026-08-22T00:00:00Z',
+   *     service_level_id: 'crop_4ilk9p6gccrx',
+   *     ship_to_address_id: 'ad_npqa5y43q26z',
+   *   });
+   * ```
+   */
+  quoteCommitment(
+    body: ActionQuoteCommitmentParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<QuoteSalesOrderCommitmentResponse> {
+    return this._client.post('/v1/sales/sales-orders/actions/quote-commitment', { body, ...options });
+  }
+
+  /**
    * Re-estimates the freight (shipping) charge for an order using the latest carrier
    * rates.
    *
@@ -192,6 +232,38 @@ export interface BulkDeleteSalesOrdersRequest {
    * IDs of the sales orders to delete.
    */
   sales_order_ids: Array<string>;
+}
+
+/**
+ * CommitmentQuoteStep is one rule's contribution to a previewed ship-by date.
+ *
+ * Returned as an ordered list so a caller can show why a date is what it is
+ * without reimplementing the arithmetic, and so the explanation cannot drift from
+ * the calculation that produced it.
+ */
+export interface CommitmentQuoteStep {
+  /**
+   * Which rule applied.
+   */
+  code: 'basis' | 'receive_calendar' | 'carrier_transit' | 'ship_calendar' | 'pickup_cutoff';
+
+  /**
+   * Where the running date stood after this rule.
+   */
+  date: string;
+
+  /**
+   * How far this rule pulled the date back. Zero means the rule applied and changed
+   * nothing, which is worth showing: it says the date was already on an open day.
+   */
+  days_moved: number;
+
+  /**
+   * The rule's own parameter — where a transit estimate came from, or the cutoff
+   * time applied. Null for a rule that takes none, rather than an empty string:
+   * snapping onto an open day has no parameter to report.
+   */
+  detail: string | null;
 }
 
 /**
@@ -274,6 +346,126 @@ export interface ProductionRun {
 }
 
 /**
+ * Request to preview the ship-by date a set of commitment inputs would produce.
+ */
+export interface QuoteSalesOrderCommitmentRequest {
+  /**
+   * The buying account, used to resolve its lead time and receiving days.
+   */
+  buyer_account_id?: string;
+
+  /**
+   * Carrier for the shipment.
+   */
+  carrier_id?: string;
+
+  /**
+   * When the order would be issued. Defaults to now, since a lead time is measured
+   * from issue and an order built today but issued next week commits to next week's
+   * date.
+   */
+  issued_at?: string;
+
+  /**
+   * Days between issue and the order being due to ship, in place of the customer's
+   * standing lead time.
+   */
+  lead_time_override_days?: number;
+
+  /**
+   * Date delivery would be promised to the customer.
+   */
+  promised_at?: string;
+
+  /**
+   * An existing order to preview against. Its customer, ship-to address, carrier,
+   * and service level are used, and the commitment fields below replace whatever it
+   * currently carries.
+   *
+   * Omit it to preview an order that has not been created yet, supplying the parts
+   * directly.
+   */
+  sales_order_id?: string;
+
+  /**
+   * Service level for the shipment, which the lane's transit estimate is keyed on.
+   */
+  service_level_id?: string;
+
+  /**
+   * The exact date the order would be due to ship.
+   */
+  ship_by_override_date?: string;
+
+  /**
+   * The ship-to address, which decides the destination timezone and the lane transit
+   * is quoted on.
+   */
+  ship_to_address_id?: string;
+}
+
+/**
+ * The ship-by date a set of commitment inputs would produce, and how it was
+ * reached.
+ */
+export interface QuoteSalesOrderCommitmentResponse {
+  /**
+   * Days the receiving and shipping calendars pulled the date back, beyond what
+   * transit accounted for.
+   */
+  calendar_adjustment_days: number;
+
+  /**
+   * Calendar days between issue and the ship-by date.
+   */
+  lead_time_days: number | null;
+
+  /**
+   * Which rule produced the date.
+   */
+  lead_time_source:
+    | 'customer'
+    | 'account_group'
+    | 'account'
+    | 'manual'
+    | 'order_lead_time'
+    | 'order_ship_by'
+    | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'sales_order_commitment_quote';
+
+  /**
+   * That date at the plant's pickup cutoff — the moment freight would have to be
+   * tendered by. Null when the shipping calendar carries no cutoff.
+   */
+  ship_by_cutoff_at: string | null;
+
+  /**
+   * The date the order would be due to ship, or null when no rule resolves one.
+   */
+  ship_by_date: string | null;
+
+  /**
+   * The derivation in order, one entry per rule that moved the date.
+   */
+  steps: Array<CommitmentQuoteStep>;
+
+  /**
+   * Days the carrier needs to cover the lane. Null when the lane has never been
+   * quoted and the service level carries no default.
+   */
+  transit_days: number | null;
+
+  /**
+   * Where the transit estimate came from.
+   */
+  transit_source: 'carrier_lane' | 'service_level' | null;
+}
+
+/**
  * The freshly estimated freight charge for a sales order.
  */
 export interface QuoteSalesOrderFreightResponse {
@@ -322,15 +514,75 @@ export interface ActionIssueParams {
   notify_customer: boolean;
 }
 
+export interface ActionQuoteCommitmentParams {
+  /**
+   * The buying account, used to resolve its lead time and receiving days.
+   */
+  buyer_account_id?: string;
+
+  /**
+   * Carrier for the shipment.
+   */
+  carrier_id?: string;
+
+  /**
+   * When the order would be issued. Defaults to now, since a lead time is measured
+   * from issue and an order built today but issued next week commits to next week's
+   * date.
+   */
+  issued_at?: string;
+
+  /**
+   * Days between issue and the order being due to ship, in place of the customer's
+   * standing lead time.
+   */
+  lead_time_override_days?: number;
+
+  /**
+   * Date delivery would be promised to the customer.
+   */
+  promised_at?: string;
+
+  /**
+   * An existing order to preview against. Its customer, ship-to address, carrier,
+   * and service level are used, and the commitment fields below replace whatever it
+   * currently carries.
+   *
+   * Omit it to preview an order that has not been created yet, supplying the parts
+   * directly.
+   */
+  sales_order_id?: string;
+
+  /**
+   * Service level for the shipment, which the lane's transit estimate is keyed on.
+   */
+  service_level_id?: string;
+
+  /**
+   * The exact date the order would be due to ship.
+   */
+  ship_by_override_date?: string;
+
+  /**
+   * The ship-to address, which decides the destination timezone and the lane transit
+   * is quoted on.
+   */
+  ship_to_address_id?: string;
+}
+
 export declare namespace Actions {
   export {
     type BulkDeleteSalesOrdersRequest as BulkDeleteSalesOrdersRequest,
+    type CommitmentQuoteStep as CommitmentQuoteStep,
     type IssueSalesOrderRequest as IssueSalesOrderRequest,
     type ProductionRun as ProductionRun,
+    type QuoteSalesOrderCommitmentRequest as QuoteSalesOrderCommitmentRequest,
+    type QuoteSalesOrderCommitmentResponse as QuoteSalesOrderCommitmentResponse,
     type QuoteSalesOrderFreightResponse as QuoteSalesOrderFreightResponse,
     type ActionBulkDeleteResponse as ActionBulkDeleteResponse,
     type ActionBulkDeleteParams as ActionBulkDeleteParams,
     type ActionCreateProductionRunParams as ActionCreateProductionRunParams,
     type ActionIssueParams as ActionIssueParams,
+    type ActionQuoteCommitmentParams as ActionQuoteCommitmentParams,
   };
 }

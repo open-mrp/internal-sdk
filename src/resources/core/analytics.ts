@@ -2289,6 +2289,15 @@ export interface CustomerDefaults {
   priority: Priority | null;
 
   /**
+   * The operating calendar naming the days this customer's dock accepts freight.
+   *
+   * A promised delivery date is worked back from a day the customer can actually
+   * receive on. With none set here the customer inherits its account group's
+   * calendar, then the account default, then Monday to Friday.
+   */
+  receive_calendar_id: string | null;
+
+  /**
    * A user's membership in an account, carrying the account-specific status, role,
    * and department.
    *
@@ -4869,7 +4878,11 @@ export interface WeeksOfSalesItem {
 
 export interface AnalyticsRetrieveWeeksOfSalesParams {
   /**
-   * The number of weeks to use for the sales period. Defaults to 4, minimum 1.
+   * The number of weeks to use for the sales period. Defaults to 4.
+   *
+   * A period is a divisor of demand, so zero and negative values are rejected rather
+   * than quietly substituted with the default — a caller who asked for an impossible
+   * period should be told, not handed the answer to a different question.
    */
   period_in_weeks?: number;
 }

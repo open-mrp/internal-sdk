@@ -82,6 +82,8 @@ describe('resource productionScheduleSettings', () => {
       work_days_per_week: 5,
       constraint_department_id: 'constraint_department_id',
       generation_cron: 'generation_cron',
+      receive_calendar_id: 'receive_calendar_id',
+      ship_calendar_id: 'ship_calendar_id',
     });
   });
 

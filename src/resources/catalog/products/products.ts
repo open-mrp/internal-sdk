@@ -250,8 +250,9 @@ export interface CreateProductRequest {
   /**
    * Attribute IDs to link to the product's item at creation time.
    *
-   * Every ID must already exist in your account; an unknown ID fails the whole
-   * request rather than being skipped.
+   * Every ID must already exist in your account, and each attribute's property must
+   * be one the item's category carries; an ID that fails either check fails the
+   * whole request rather than being skipped.
    */
   attribute_ids?: Array<string>;
 
@@ -434,8 +435,9 @@ export interface ProductCreateParams {
   /**
    * Body param: Attribute IDs to link to the product's item at creation time.
    *
-   * Every ID must already exist in your account; an unknown ID fails the whole
-   * request rather than being skipped.
+   * Every ID must already exist in your account, and each attribute's property must
+   * be one the item's category carries; an ID that fails either check fails the
+   * whole request rather than being skipped.
    */
   attribute_ids?: Array<string>;
 

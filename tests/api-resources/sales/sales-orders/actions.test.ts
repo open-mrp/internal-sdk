@@ -90,6 +90,37 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('quoteCommitment', async () => {
+    const responsePromise = client.sales.salesOrders.actions.quoteCommitment();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('quoteCommitment: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.sales.salesOrders.actions.quoteCommitment(
+        {
+          buyer_account_id: 'ac_ykxoradjoeb3',
+          carrier_id: 'carrier_id',
+          issued_at: '2019-12-27T18:11:19.117Z',
+          lead_time_override_days: 0,
+          promised_at: '2026-08-22T00:00:00Z',
+          sales_order_id: 'sales_order_id',
+          service_level_id: 'crop_4ilk9p6gccrx',
+          ship_by_override_date: '2019-12-27T18:11:19.117Z',
+          ship_to_address_id: 'ad_npqa5y43q26z',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
+  });
+
   test('quoteFreight', async () => {
     const responsePromise = client.sales.salesOrders.actions.quoteFreight('or_9lqo07quiwyb');
     const rawResponse = await responsePromise.asResponse();

@@ -201,6 +201,9 @@ export interface CreateMaterialRequest {
 
   /**
    * IDs of existing attributes to link to the material at creation time.
+   *
+   * Each attribute's property must be one the material's category carries; an
+   * attribute from any other property fails the whole request.
    */
   attribute_ids?: Array<string>;
 
@@ -414,6 +417,9 @@ export interface MaterialCreateParams {
 
   /**
    * Body param: IDs of existing attributes to link to the material at creation time.
+   *
+   * Each attribute's property must be one the material's category carries; an
+   * attribute from any other property fails the whole request.
    */
   attribute_ids?: Array<string>;
 

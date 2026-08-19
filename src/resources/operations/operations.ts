@@ -172,6 +172,18 @@ import {
   Machines,
   UpdateMachineRequest,
 } from './machines/machines';
+import * as OperatingCalendarsAPI from './operating-calendars/operating-calendars';
+import {
+  CreateOperatingCalendarRequest,
+  ListOperatingCalendar,
+  OperatingCalendar,
+  OperatingCalendarCreateParams,
+  OperatingCalendarDeleteResponse,
+  OperatingCalendarListParams,
+  OperatingCalendarUpdateParams,
+  OperatingCalendars,
+  UpdateOperatingCalendarRequest,
+} from './operating-calendars/operating-calendars';
 import * as PicksAPI from './picks/picks';
 import {
   ListPick,
@@ -357,6 +369,9 @@ export class Operations extends APIResource {
     new ProductionScheduleSettingsAPI.ProductionScheduleSettings(this._client);
   fulfillmentRecommendations: FulfillmentRecommendationsAPI.FulfillmentRecommendations =
     new FulfillmentRecommendationsAPI.FulfillmentRecommendations(this._client);
+  operatingCalendars: OperatingCalendarsAPI.OperatingCalendars = new OperatingCalendarsAPI.OperatingCalendars(
+    this._client,
+  );
   purchaseOrders: PurchaseOrdersAPI.PurchaseOrders = new PurchaseOrdersAPI.PurchaseOrders(this._client);
   picks: PicksAPI.Picks = new PicksAPI.Picks(this._client);
   locations: LocationsAPI.Locations = new LocationsAPI.Locations(this._client);
@@ -1299,6 +1314,7 @@ Operations.MachineDowntimeEvents = MachineDowntimeEvents;
 Operations.DemandOverrides = DemandOverrides;
 Operations.ProductionSchedules = ProductionSchedules;
 Operations.FulfillmentRecommendations = FulfillmentRecommendations;
+Operations.OperatingCalendars = OperatingCalendars;
 Operations.PurchaseOrders = PurchaseOrders;
 Operations.Picks = Picks;
 Operations.Locations = Locations;
@@ -1580,6 +1596,18 @@ export declare namespace Operations {
     FulfillmentRecommendations as FulfillmentRecommendations,
     type FulfillmentRecommendation as FulfillmentRecommendation,
     type ListFulfillmentRecommendation as ListFulfillmentRecommendation,
+  };
+
+  export {
+    OperatingCalendars as OperatingCalendars,
+    type CreateOperatingCalendarRequest as CreateOperatingCalendarRequest,
+    type ListOperatingCalendar as ListOperatingCalendar,
+    type OperatingCalendar as OperatingCalendar,
+    type UpdateOperatingCalendarRequest as UpdateOperatingCalendarRequest,
+    type OperatingCalendarDeleteResponse as OperatingCalendarDeleteResponse,
+    type OperatingCalendarCreateParams as OperatingCalendarCreateParams,
+    type OperatingCalendarUpdateParams as OperatingCalendarUpdateParams,
+    type OperatingCalendarListParams as OperatingCalendarListParams,
   };
 
   export {

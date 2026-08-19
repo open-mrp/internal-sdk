@@ -1005,8 +1005,11 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">BulkDeleteSalesOrdersRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/actions.ts">CommitmentQuoteStep</a></code>
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">IssueSalesOrderRequest</a></code>
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">ProductionRun</a></code>
+- <code><a href="./src/resources/sales/sales-orders/actions.ts">QuoteSalesOrderCommitmentRequest</a></code>
+- <code><a href="./src/resources/sales/sales-orders/actions.ts">QuoteSalesOrderCommitmentResponse</a></code>
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">QuoteSalesOrderFreightResponse</a></code>
 - <code><a href="./src/resources/sales/sales-orders/actions.ts">ActionBulkDeleteResponse</a></code>
 
@@ -1017,6 +1020,7 @@ Methods:
 - <code title="post /v1/sales/sales-orders/{id}/actions/create-production-run">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">createProductionRun</a>(id, { ...params }) -> ProductionRun</code>
 - <code title="put /v1/sales/sales-orders/{id}/actions/issue">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">issue</a>(id, { ...params }) -> SalesOrder</code>
 - <code title="put /v1/sales/sales-orders/{id}/actions/open">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">open</a>(id) -> SalesOrder</code>
+- <code title="post /v1/sales/sales-orders/actions/quote-commitment">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">quoteCommitment</a>({ ...params }) -> QuoteSalesOrderCommitmentResponse</code>
 - <code title="post /v1/sales/sales-orders/{id}/actions/quote-freight">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">quoteFreight</a>(id) -> QuoteSalesOrderFreightResponse</code>
 - <code title="put /v1/sales/sales-orders/{id}/actions/unissue">client.sales.salesOrders.actions.<a href="./src/resources/sales/sales-orders/actions.ts">unissue</a>(id) -> SalesOrder</code>
 
@@ -2946,6 +2950,39 @@ Types:
 Methods:
 
 - <code title="post /v1/operations/fulfillment-recommendations/actions/apply">client.operations.fulfillmentRecommendations.actions.<a href="./src/resources/operations/fulfillment-recommendations/actions.ts">apply</a>({ ...params }) -> ListFulfillmentRecommendation</code>
+
+## OperatingCalendars
+
+Types:
+
+- <code><a href="./src/resources/operations/operating-calendars/operating-calendars.ts">CreateOperatingCalendarRequest</a></code>
+- <code><a href="./src/resources/operations/operating-calendars/operating-calendars.ts">ListOperatingCalendar</a></code>
+- <code><a href="./src/resources/operations/operating-calendars/operating-calendars.ts">OperatingCalendar</a></code>
+- <code><a href="./src/resources/operations/operating-calendars/operating-calendars.ts">UpdateOperatingCalendarRequest</a></code>
+- <code><a href="./src/resources/operations/operating-calendars/operating-calendars.ts">OperatingCalendarDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/operations/operating-calendars">client.operations.operatingCalendars.<a href="./src/resources/operations/operating-calendars/operating-calendars.ts">create</a>({ ...params }) -> OperatingCalendar</code>
+- <code title="get /v1/operations/operating-calendars/{id}">client.operations.operatingCalendars.<a href="./src/resources/operations/operating-calendars/operating-calendars.ts">retrieve</a>(id) -> OperatingCalendar</code>
+- <code title="patch /v1/operations/operating-calendars/{id}">client.operations.operatingCalendars.<a href="./src/resources/operations/operating-calendars/operating-calendars.ts">update</a>(id, { ...params }) -> OperatingCalendar</code>
+- <code title="get /v1/operations/operating-calendars">client.operations.operatingCalendars.<a href="./src/resources/operations/operating-calendars/operating-calendars.ts">list</a>({ ...params }) -> ListOperatingCalendar</code>
+- <code title="delete /v1/operations/operating-calendars/{id}">client.operations.operatingCalendars.<a href="./src/resources/operations/operating-calendars/operating-calendars.ts">delete</a>(id) -> OperatingCalendarDeleteResponse</code>
+
+### Closures
+
+Types:
+
+- <code><a href="./src/resources/operations/operating-calendars/closures.ts">CreateOperatingCalendarClosureRequest</a></code>
+- <code><a href="./src/resources/operations/operating-calendars/closures.ts">ListOperatingCalendarClosure</a></code>
+- <code><a href="./src/resources/operations/operating-calendars/closures.ts">OperatingCalendarClosure</a></code>
+- <code><a href="./src/resources/operations/operating-calendars/closures.ts">ClosureDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/operations/operating-calendars/{id}/closures">client.operations.operatingCalendars.closures.<a href="./src/resources/operations/operating-calendars/closures.ts">create</a>(id, { ...params }) -> OperatingCalendarClosure</code>
+- <code title="get /v1/operations/operating-calendars/{id}/closures">client.operations.operatingCalendars.closures.<a href="./src/resources/operations/operating-calendars/closures.ts">list</a>(id, { ...params }) -> ListOperatingCalendarClosure</code>
+- <code title="delete /v1/operations/operating-calendars/{id}/closures/{closure_id}">client.operations.operatingCalendars.closures.<a href="./src/resources/operations/operating-calendars/closures.ts">delete</a>(closureID, { ...params }) -> ClosureDeleteResponse</code>
 
 ## PurchaseOrders
 
