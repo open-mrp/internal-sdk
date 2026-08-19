@@ -236,6 +236,14 @@ export class Actions extends APIResource {
    * released line records the run now carrying it, and a line that is already
    * released is never re-pointed.
    *
+   * Lots an earlier week already issued are carried forward rather than reissued.
+   * When a week fell short, the next plan asks for the shortfall — and the batches
+   * covering it are usually already printed and sitting on the floor. Those tickets
+   * are moved into this run and counted against the campaign, so only the genuinely
+   * new work is created. `carried_forward_batch_count` says how many arrived that
+   * way, and each one names the run it came off. Send `skip_carry_forward` to issue
+   * the whole week new instead.
+   *
    * Cancelled campaigns and campaigns planned at zero are left behind rather than
    * released. A week that would produce an implausible number of batches is rejected
    * outright, since that is far more likely to be a misconfigured lot size than a
@@ -679,6 +687,16 @@ export interface ReleaseProductionScheduleWeekRequest {
    * Applied to every batch this release creates, across all machines in the week.
    */
   scanning_station_id?: string;
+
+  /**
+   * Issue the whole week as new batches, leaving an earlier week's unworked lots
+   * where they are.
+   *
+   * Off unless you ask for it: reprinting a ticket the floor is already holding is
+   * exactly what carrying work forward exists to prevent, so it takes a deliberate
+   * choice to do it.
+   */
+  skip_carry_forward?: boolean;
 }
 
 /**
@@ -689,9 +707,17 @@ export interface ReleaseProductionScheduleWeekRequest {
  */
 export interface ReleaseScheduleWeekResult {
   /**
-   * How many batches were created across all campaigns.
+   * How many batches the run holds across all campaigns, created and carried forward
+   * together.
    */
   batch_count: number;
+
+  /**
+   * How many of `batch_count` were moved off an earlier run rather than created.
+   *
+   * Tickets for these are already printed and on the floor.
+   */
+  carried_forward_batch_count: number;
 
   /**
    * A single page of resources, together with the metadata needed to page through
@@ -1116,6 +1142,16 @@ export interface ActionReleaseWeekParams {
    * Applied to every batch this release creates, across all machines in the week.
    */
   scanning_station_id?: string;
+
+  /**
+   * Issue the whole week as new batches, leaving an earlier week's unworked lots
+   * where they are.
+   *
+   * Off unless you ask for it: reprinting a ticket the floor is already holding is
+   * exactly what carrying work forward exists to prevent, so it takes a deliberate
+   * choice to do it.
+   */
+  skip_carry_forward?: boolean;
 }
 
 export declare namespace Actions {

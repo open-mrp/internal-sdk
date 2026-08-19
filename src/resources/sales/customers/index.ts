@@ -25,6 +25,7 @@ export {
   type CustomerUpdateParams,
   type CustomerListParams,
   type CustomerRegistrationParams,
+  type CustomerRetrieveLeadTimeParams,
 } from './customers';
 export {
   NotificationRecipients,

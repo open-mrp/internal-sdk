@@ -94,6 +94,7 @@ import {
   CustomerListParams,
   CustomerRegistrationParams,
   CustomerRegistrationResponse,
+  CustomerRetrieveLeadTimeParams,
   CustomerRetrieveParams,
   CustomerUpdateParams,
   Customers,
@@ -363,6 +364,7 @@ export declare namespace Sales {
     type CustomerUpdateParams as CustomerUpdateParams,
     type CustomerListParams as CustomerListParams,
     type CustomerRegistrationParams as CustomerRegistrationParams,
+    type CustomerRetrieveLeadTimeParams as CustomerRetrieveLeadTimeParams,
   };
 
   export {

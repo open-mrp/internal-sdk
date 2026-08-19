@@ -1062,6 +1062,7 @@ export interface SalesOrder {
    */
   lead_time_source:
     | 'customer'
+    | 'parent_customer'
     | 'account_group'
     | 'account'
     | 'manual'
@@ -1162,7 +1163,7 @@ export interface SalesOrder {
    * date less the carrier's transit for the order's lane and less any day the
    * customer cannot receive on — the day the order has to leave to arrive when
    * promised. Otherwise it comes from a lead time, whether this order's own or the
-   * one on the customer, its account group, or the account.
+   * one on the customer, its parent account, its account group, or the account.
    *
    * Always a day the plant actually ships on, whichever rule produced it.
    *

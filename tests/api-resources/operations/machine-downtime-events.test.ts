@@ -30,6 +30,7 @@ describe('resource machineDowntimeEvents', () => {
       started_at: '2026-05-10T00:00:00Z',
       include: ['machine'],
       batch_id: 'batch_id',
+      duration: { unit_id: 'unit_id', value: 'value' },
       ended_at: '2019-12-27T18:11:19.117Z',
       item_id: 'item_id',
       note: 'note',
@@ -79,8 +80,10 @@ describe('resource machineDowntimeEvents', () => {
         {
           include: ['machine'],
           batch_id: 'batch_id',
+          duration: { unit_id: 'unit_id', value: 'value' },
           ended_at: '2026-05-10T00:23:00Z',
           item_id: 'item_id',
+          machine_id: 'machine_id',
           note: 'note',
           production_run_id: 'production_run_id',
           reason: 'breakdown',

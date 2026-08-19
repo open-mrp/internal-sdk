@@ -165,6 +165,28 @@ describe('resource productionSchedules', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieveFinishingLines', async () => {
+    const responsePromise = client.operations.productionSchedules.retrieveFinishingLines('pnsc_m4zt3z8g8src');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('retrieveFinishingLines: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.productionSchedules.retrieveFinishingLines(
+        'pnsc_m4zt3z8g8src',
+        { item_id: 'item_id', week_index: 0 },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
+  });
+
   test('retrieveItemPolicies', async () => {
     const responsePromise = client.operations.productionSchedules.retrieveItemPolicies('pnsc_m4zt3z8g8src');
     const rawResponse = await responsePromise.asResponse();
@@ -193,7 +215,7 @@ describe('resource productionSchedules', () => {
     await expect(
       client.operations.productionSchedules.retrieveWeekReleasePreview(
         'pnsc_m4zt3z8g8src',
-        { week_index: 0 },
+        { skip_carry_forward: true, week_index: 0 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);

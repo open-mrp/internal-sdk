@@ -244,6 +244,7 @@ export interface Job {
     | 'schedule_deviation_type'
     | 'schedule_at_risk_order'
     | 'production_schedule_finished_policy'
+    | 'production_schedule_finishing_line'
     | 'production_schedule_week_release'
     | 'production_schedule_week_release_preview'
     | 'production_schedule_item_policy'

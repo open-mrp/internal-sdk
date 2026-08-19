@@ -206,8 +206,9 @@ export interface ProductionScheduleSettings {
   /**
    * Calendar days between an order being issued and it being due to ship.
    *
-   * The last resort in the ship-by chain: a lead time set on the customer, or on the
-   * customer's account group, takes precedence. Zero means same-day shipping.
+   * The last resort in the ship-by chain: a lead time set on the customer, on its
+   * parent account, or on the customer's account group takes precedence. Zero means
+   * same-day shipping.
    */
   default_customer_lead_time_days: number;
 
@@ -481,11 +482,11 @@ export interface UpdateProductionScheduleSettingsRequest {
   /**
    * Calendar days between an order being issued and it being due to ship.
    *
-   * The last resort in the ship-by chain: a lead time set on the customer, or on the
-   * customer's account group, takes precedence. Zero commits the account to same-day
-   * shipping on every order that falls through to it, so this update replaces the
-   * whole settings object and omitting the field is not the same as leaving it
-   * alone.
+   * The last resort in the ship-by chain: a lead time set on the customer, on its
+   * parent account, or on the customer's account group takes precedence. Zero
+   * commits the account to same-day shipping on every order that falls through to
+   * it, so this update replaces the whole settings object and omitting the field is
+   * not the same as leaving it alone.
    */
   default_customer_lead_time_days: number;
 
@@ -741,11 +742,11 @@ export interface ProductionScheduleSettingUpdateParams {
   /**
    * Calendar days between an order being issued and it being due to ship.
    *
-   * The last resort in the ship-by chain: a lead time set on the customer, or on the
-   * customer's account group, takes precedence. Zero commits the account to same-day
-   * shipping on every order that falls through to it, so this update replaces the
-   * whole settings object and omitting the field is not the same as leaving it
-   * alone.
+   * The last resort in the ship-by chain: a lead time set on the customer, on its
+   * parent account, or on the customer's account group takes precedence. Zero
+   * commits the account to same-day shipping on every order that falls through to
+   * it, so this update replaces the whole settings object and omitting the field is
+   * not the same as leaving it alone.
    */
   default_customer_lead_time_days: number;
 

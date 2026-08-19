@@ -416,6 +416,18 @@ export interface QuoteSalesOrderCommitmentResponse {
   calendar_adjustment_days: number;
 
   /**
+   * When freight leaving on the ship-by date would reach the customer: transit
+   * walked forward from it and landed on a day their dock receives. Null whenever
+   * `transit_days` is, since an arrival with no journey behind it would just be the
+   * ship date wearing a different name.
+   *
+   * Reported for every basis, including the ones that do not use transit to decide
+   * the ship-by date. An order committed on a lead time has the same journey ahead
+   * of it; it simply was not worked backwards from.
+   */
+  estimated_delivery_date: string | null;
+
+  /**
    * Calendar days between issue and the ship-by date.
    */
   lead_time_days: number | null;
@@ -425,6 +437,7 @@ export interface QuoteSalesOrderCommitmentResponse {
    */
   lead_time_source:
     | 'customer'
+    | 'parent_customer'
     | 'account_group'
     | 'account'
     | 'manual'
@@ -455,7 +468,8 @@ export interface QuoteSalesOrderCommitmentResponse {
 
   /**
    * Days the carrier needs to cover the lane. Null when the lane has never been
-   * quoted and the service level carries no default.
+   * quoted and the service level carries no default, or when no service level was
+   * supplied to quote one on.
    */
   transit_days: number | null;
 

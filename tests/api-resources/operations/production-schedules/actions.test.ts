@@ -149,6 +149,7 @@ describe('resource actions', () => {
       responsible_user_id: 'us_43irtlt2ajz6',
       week_index: 0,
       scanning_station_id: 'scanning_station_id',
+      skip_carry_forward: false,
     });
   });
 });

@@ -6,6 +6,7 @@ import * as RequestLogsAPI from '../core/request-logs';
 import * as OperationsAPI from './operations';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../identity/account-users/account-users';
+import * as CustomersAPI from '../sales/customers/customers';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -17,9 +18,11 @@ export class MachineDowntimeEvents extends APIResource {
   /**
    * Logs a machine downtime event.
    *
-   * Omit `ended_at` while the machine is still down. A machine can only have one
-   * open event at a time, so logging a second open stoppage against a machine that
-   * is already down is rejected until the first is closed.
+   * Give the stoppage an end either as `ended_at` or as a `duration` counted in a
+   * unit of time — sending both is rejected. Omit `ended_at` while the machine is
+   * still down. A machine can only have one open event at a time, so logging a
+   * second open stoppage against a machine that is already down is rejected until
+   * the first is closed.
    *
    * The department is taken from the machine, the business day is taken from
    * `started_at`, the event is attributed to the credentials that made the request,
@@ -73,10 +76,12 @@ export class MachineDowntimeEvents extends APIResource {
   /**
    * Closes or corrects a machine downtime event.
    *
-   * Only the fields provided in the request are changed. Setting `ended_at` closes
-   * the event and calculates its duration; sending it as null reopens an event
-   * closed by mistake, which is rejected when the machine already has another open
-   * stoppage. The machine an event belongs to cannot be changed.
+   * Only the fields provided in the request are changed. Setting `ended_at` — or a
+   * `duration`, which says the same thing as a length of time from the start —
+   * closes the event and calculates how long it lasted; sending either as null
+   * reopens an event closed by mistake, which is rejected when the machine already
+   * has another open stoppage. Moving the event to another machine re-resolves the
+   * department the stoppage is charged to.
    *
    * This endpoint requires the permission: `machine_downtime:update`.
    *
@@ -185,6 +190,14 @@ export interface CreateMachineDowntimeEventRequest {
    * ID of the batch in progress when the machine stopped.
    */
   batch_id?: string;
+
+  /**
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
+   */
+  duration?: CustomersAPI.QuantityInput;
 
   /**
    * When the machine started running again.
@@ -382,6 +395,14 @@ export interface UpdateMachineDowntimeEventRequest {
   batch_id?: string | null;
 
   /**
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
+   */
+  duration?: CustomersAPI.QuantityInput | null;
+
+  /**
    * When the machine started running again.
    *
    * Setting it closes the event and records the duration. Send null to reopen an
@@ -396,6 +417,15 @@ export interface UpdateMachineDowntimeEventRequest {
    * Send null to detach the item.
    */
   item_id?: string | null;
+
+  /**
+   * ID of the machine that stopped.
+   *
+   * Moving an event to another machine re-resolves the department it is charged to,
+   * so past availability changes for both rooms. Rejected when the destination
+   * machine already has an open stoppage and this one is open too.
+   */
+  machine_id?: string;
 
   /**
    * Free-form notes about the stoppage.
@@ -482,6 +512,14 @@ export interface MachineDowntimeEventCreateParams {
   batch_id?: string;
 
   /**
+   * Body param: An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
+   */
+  duration?: CustomersAPI.QuantityInput;
+
+  /**
    * Body param: When the machine started running again.
    *
    * Omit it while the machine is still down; that leaves the event open, and the
@@ -540,6 +578,14 @@ export interface MachineDowntimeEventUpdateParams {
   batch_id?: string | null;
 
   /**
+   * Body param: An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
+   */
+  duration?: CustomersAPI.QuantityInput | null;
+
+  /**
    * Body param: When the machine started running again.
    *
    * Setting it closes the event and records the duration. Send null to reopen an
@@ -554,6 +600,15 @@ export interface MachineDowntimeEventUpdateParams {
    * Send null to detach the item.
    */
   item_id?: string | null;
+
+  /**
+   * Body param: ID of the machine that stopped.
+   *
+   * Moving an event to another machine re-resolves the department it is charged to,
+   * so past availability changes for both rooms. Rejected when the destination
+   * machine already has an open stoppage and this one is open too.
+   */
+  machine_id?: string;
 
   /**
    * Body param: Free-form notes about the stoppage.

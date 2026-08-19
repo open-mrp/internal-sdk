@@ -212,6 +212,7 @@ export {
   type ListProductionScheduleDerivedLine,
   type ListProductionScheduleDeviation,
   type ListProductionScheduleFinishedPolicy,
+  type ListProductionScheduleFinishingLine,
   type ListProductionScheduleItemPolicy,
   type ListReleaseScheduleBatch,
   type ListReleasedScheduleLine,
@@ -223,6 +224,7 @@ export {
   type ProductionScheduleDerivedLine,
   type ProductionScheduleDeviation,
   type ProductionScheduleFinishedPolicy,
+  type ProductionScheduleFinishingLine,
   type ProductionScheduleItemPolicy,
   type ReleaseScheduleBatch,
   type ReleaseScheduleWeekPreview,
@@ -230,6 +232,7 @@ export {
   type ScheduleAppliedOverride,
   type ScheduleAtRiskOrder,
   type ScheduleDiagnostics,
+  type ScheduleFinishingDiagnostics,
   type ScheduleOrderCoverage,
   type ScheduleOrderCoverageLine,
   type ProductionScheduleDeleteResponse,
@@ -237,6 +240,7 @@ export {
   type ProductionScheduleListParams,
   type ProductionScheduleRetrieveDerivedLinesParams,
   type ProductionScheduleRetrieveDeviationsParams,
+  type ProductionScheduleRetrieveFinishingLinesParams,
   type ProductionScheduleRetrieveWeekReleasePreviewParams,
 } from './production-schedules/index';
 export {

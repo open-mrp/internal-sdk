@@ -294,6 +294,48 @@ export class ProductionSchedules extends APIResource {
   }
 
   /**
+   * Returns the second stage of a schedule: how many of which finished good to make
+   * from the knitted parts, week by week.
+   *
+   * The constraint plan says how much greige to knit and deliberately does not say
+   * what to turn it into — a family's demand is pooled onto the greige precisely so
+   * the buffer can sit at the undifferentiated stage, where it is cheapest. These
+   * lines are where that pooling is undone, against each finished SKU's own stock
+   * position, its own orders, and the hours the rest of the factory has that week.
+   *
+   * Levelled, not merely allocated. Work that does not fit a week moves to the next
+   * one rather than being dropped, so the plan never asks the second stage for more
+   * hours than it has. Two things bound it, and they are reported separately in the
+   * schedule's diagnostics because they call for opposite responses: a SKU held back
+   * for want of greige is a knitting problem, and a SKU held back for want of hours
+   * is a finishing one.
+   *
+   * Everything is counted in the constraint item's unit, so `greige_consumed` here
+   * and `planned_quantity` on the constraint plan are directly comparable — which is
+   * what lets the two stages be reconciled rather than only read side by side.
+   *
+   * This endpoint requires the permission: `production_schedules:read`.
+   *
+   * @example
+   * ```ts
+   * const listProductionScheduleFinishingLine =
+   *   await client.operations.productionSchedules.retrieveFinishingLines(
+   *     'pnsc_m4zt3z8g8src',
+   *   );
+   * ```
+   */
+  retrieveFinishingLines(
+    id: string,
+    query: ProductionScheduleRetrieveFinishingLinesParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ListProductionScheduleFinishingLine> {
+    return this._client.get(path`/v1/operations/production-schedules/${id}/finishing-lines`, {
+      query,
+      ...options,
+    });
+  }
+
+  /**
    * Returns the per-item policy behind a schedule version, ordered by constraint run
    * hours descending.
    *
@@ -327,6 +369,11 @@ export class ProductionSchedules extends APIResource {
    * Cancelled campaigns and campaigns planned at zero are excluded here exactly as
    * the release excludes them, so a week holding nothing but those previews as
    * empty.
+   *
+   * Lots the floor is already holding are named as such. A batch with
+   * `carried_forward_from` set is a ticket an earlier week issued and nobody worked,
+   * which the release moves into the new run rather than reissuing, so nothing has
+   * to be reprinted.
    *
    * This endpoint requires the permission: `production_schedules:read`.
    *
@@ -479,6 +526,33 @@ export interface ListProductionScheduleFinishedPolicy {
    * Resources in this page.
    */
   data: Array<ProductionScheduleFinishedPolicy>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListProductionScheduleFinishingLine {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ProductionScheduleFinishingLine>;
 
   /**
    * Resource type identifier.
@@ -1187,6 +1261,150 @@ export interface ProductionScheduleFinishedPolicy {
 }
 
 /**
+ * One finished good's build in one week: the second stage of the plan.
+ *
+ * The constraint plan says how much greige to knit and deliberately does not say
+ * what to turn it into — a family's demand is pooled onto the greige precisely so
+ * the buffer can sit at the undifferentiated stage. These lines are where that
+ * pooling is undone: how many of which finished good to make from the knitted
+ * parts, decided against each SKU's own stock position, its own orders, and the
+ * hours the rest of the factory has that week.
+ *
+ * Quantities are counted in the constraint item's unit, so `greige_consumed` and
+ * the knit plan's `planned_quantity` are directly comparable. That is what lets
+ * the two stages be reconciled rather than merely read side by side.
+ */
+export interface ProductionScheduleFinishingLine {
+  /**
+   * Finishing line ID.
+   */
+  id: string;
+
+  /**
+   * Creation timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  department: CoreAPI.Entity | null;
+
+  /**
+   * How much of the week's draw on this SKU is an order rather than a forecast.
+   */
+  firm_units: number;
+
+  /**
+   * Units of the constraint item this takes out of the greige buffer.
+   *
+   * Equal to `planned_quantity` unless a finishing yield loss means a finished unit
+   * costs more than one knitted one.
+   */
+  greige_consumed: number;
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  greige_item: CoreAPI.Entity | null;
+
+  /**
+   * SKU of that constraint item.
+   */
+  greige_sku: string;
+
+  /**
+   * Whether the line sits inside the published frozen window.
+   */
+  is_frozen: boolean;
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  item: CoreAPI.Entity | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'production_schedule_finishing_line';
+
+  /**
+   * Units in one lot.
+   */
+  planned_lot_units: number;
+
+  /**
+   * How many lots the quantity breaks into.
+   */
+  planned_lots: number;
+
+  /**
+   * Units of the finished good to make.
+   */
+  planned_quantity: number;
+
+  /**
+   * Hours of the second stage's capacity this line consumes.
+   */
+  planned_run_hours: number;
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  production_schedule: CoreAPI.Entity | null;
+
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  production_step: CoreAPI.Entity | null;
+
+  /**
+   * And after it lands.
+   */
+  projected_on_hand_after: number;
+
+  /**
+   * This SKU's own projected stock before the line lands.
+   */
+  projected_on_hand_before: number;
+
+  /**
+   * SKU of the finished good, as it stood when the plan was generated.
+   */
+  sku: string;
+
+  /**
+   * Whether the solver produced this line or a person did.
+   */
+  source: 'solver' | 'manual';
+
+  /**
+   * Where the line stands.
+   */
+  status: 'planned' | 'released' | 'in_progress' | 'complete' | 'cancelled';
+
+  /**
+   * Abbreviation of the unit everything on this line is counted in.
+   */
+  unit: string | null;
+
+  /**
+   * Last updated timestamp.
+   */
+  updated_at: string;
+
+  /**
+   * Zero-based week offset from the start of the horizon.
+   */
+  week_index: number;
+
+  /**
+   * First day of the week this is planned in.
+   */
+  week_starts_at: string;
+}
+
+/**
  * The per-item policy behind a schedule version.
  *
  * Snapshotted at generation rather than recomputed, so a historical plan can still
@@ -1433,6 +1651,15 @@ export interface ReleaseScheduleBatch {
   batch: CoreAPI.Entity | null;
 
   /**
+   * The number of the run this ticket came off, when the batch already existed.
+   *
+   * Present on a lot carried forward from an earlier week that the floor never
+   * worked. The ticket is already printed and on the floor, so the release moves it
+   * into the new run rather than issuing a replacement.
+   */
+  carried_forward_from: string | null;
+
+  /**
    * Entity is a polymorphic reference to any resource in the system.
    */
   item: CoreAPI.Entity | null;
@@ -1460,7 +1687,7 @@ export interface ReleaseScheduleBatch {
  */
 export interface ReleaseScheduleWeekPreview {
   /**
-   * How many batches would be created.
+   * How many batches the run would hold, created and carried forward together.
    */
   batch_count: number;
 
@@ -1471,6 +1698,11 @@ export interface ReleaseScheduleWeekPreview {
    * holds nothing to release.
    */
   blocked_reason: string | null;
+
+  /**
+   * How many of `batch_count` would be moved off an earlier run rather than created.
+   */
+  carried_forward_batch_count: number;
 
   /**
    * Entity is a polymorphic reference to any resource in the system.
@@ -1528,6 +1760,12 @@ export interface ReleasedScheduleLine {
    * the rest of the result set.
    */
   batches: ListReleaseScheduleBatch | null;
+
+  /**
+   * How much of `planned_quantity` is covered by tickets an earlier week already
+   * issued.
+   */
+  carried_forward_quantity: number;
 
   /**
    * Entity is a polymorphic reference to any resource in the system.
@@ -1723,6 +1961,33 @@ export interface ScheduleDiagnostics {
   excluded_item_count: number;
 
   /**
+   * How the second stage fared: what it could not make, and which of the two things
+   * it ran out of.
+   *
+   * The two starvation lists are the point of planning in two stages at all. A
+   * finished good held back for want of greige is a knitting problem — knit more of
+   * it, or knit it sooner — and one held back for want of hours is a finishing
+   * problem: another shift, or a different mix. A single "short" list would throw
+   * that distinction away, and it is the only thing this model knows that a
+   * one-stage plan does not.
+   */
+  finishing: ScheduleFinishingDiagnostics;
+
+  /**
+   * Whether the second stage's capacity was estimated rather than counted from
+   * machines.
+   */
+  finishing_capacity_is_estimated: boolean;
+
+  /**
+   * Machines outside the constraint department that the second stage was sized from.
+   *
+   * Zero means its capacity was estimated from the shift pattern alone rather than
+   * counted.
+   */
+  finishing_machine_count: number;
+
+  /**
    * Outstanding order quantity this plan owes, expressed in the constraint item's
    * own unit.
    *
@@ -1770,6 +2035,69 @@ export interface ScheduleDiagnostics {
    * never scheduled.
    */
   unschedulable_skus: Array<string>;
+}
+
+/**
+ * How the second stage fared: what it could not make, and which of the two things
+ * it ran out of.
+ *
+ * The two starvation lists are the point of planning in two stages at all. A
+ * finished good held back for want of greige is a knitting problem — knit more of
+ * it, or knit it sooner — and one held back for want of hours is a finishing
+ * problem: another shift, or a different mix. A single "short" list would throw
+ * that distinction away, and it is the only thing this model knows that a
+ * one-stage plan does not.
+ */
+export interface ScheduleFinishingDiagnostics {
+  /**
+   * Finished goods that had greige and never had hours.
+   */
+  capacity_starved_skus: Array<string>;
+
+  /**
+   * Finished goods that wanted building across the whole horizon and never had
+   * greige to build from.
+   */
+  greige_starved_skus: Array<string>;
+
+  /**
+   * Finished goods with no measured finishing rate, which cannot be levelled because
+   * the hours they cost are unknown.
+   */
+  items_without_run_rate: Array<string>;
+
+  /**
+   * How many finishing lines the plan holds.
+   */
+  line_count: number;
+
+  /**
+   * Hours the plan asks of it, week by week.
+   */
+  planned_hours_by_week: Array<number>;
+
+  /**
+   * Total finished units the stage plans across the horizon.
+   */
+  total_planned_units: number;
+
+  /**
+   * Constraint output the horizon never converts into anything.
+   *
+   * A large figure means the two stages are planned against different demand, which
+   * is worth looking at rather than leaving as an unexplained pile of greige.
+   */
+  unused_greige_units: number;
+
+  /**
+   * Those hours as a fraction of capacity, week by week.
+   */
+  utilisation_by_week: Array<number>;
+
+  /**
+   * Hours the second stage can work in one week.
+   */
+  weekly_capacity_hours: number;
 }
 
 /**
@@ -1975,7 +2303,28 @@ export interface ProductionScheduleRetrieveDeviationsParams {
   q?: string;
 }
 
+export interface ProductionScheduleRetrieveFinishingLinesParams {
+  /**
+   * Only the finishing planned for this finished good.
+   */
+  item_id?: string;
+
+  /**
+   * Only the finishing planned for this week, zero-based from the start of the
+   * horizon.
+   */
+  week_index?: number;
+}
+
 export interface ProductionScheduleRetrieveWeekReleasePreviewParams {
+  /**
+   * Preview the week as if every batch were newly issued.
+   *
+   * By default the preview counts tickets an earlier week issued and the floor never
+   * worked against this week's campaigns, because that is what releasing would do.
+   */
+  skip_carry_forward?: boolean;
+
   /**
    * Zero-based week offset from the start of the horizon.
    */
@@ -1992,6 +2341,7 @@ export declare namespace ProductionSchedules {
     type ListProductionScheduleDerivedLine as ListProductionScheduleDerivedLine,
     type ListProductionScheduleDeviation as ListProductionScheduleDeviation,
     type ListProductionScheduleFinishedPolicy as ListProductionScheduleFinishedPolicy,
+    type ListProductionScheduleFinishingLine as ListProductionScheduleFinishingLine,
     type ListProductionScheduleItemPolicy as ListProductionScheduleItemPolicy,
     type ListReleaseScheduleBatch as ListReleaseScheduleBatch,
     type ListReleasedScheduleLine as ListReleasedScheduleLine,
@@ -2003,6 +2353,7 @@ export declare namespace ProductionSchedules {
     type ProductionScheduleDerivedLine as ProductionScheduleDerivedLine,
     type ProductionScheduleDeviation as ProductionScheduleDeviation,
     type ProductionScheduleFinishedPolicy as ProductionScheduleFinishedPolicy,
+    type ProductionScheduleFinishingLine as ProductionScheduleFinishingLine,
     type ProductionScheduleItemPolicy as ProductionScheduleItemPolicy,
     type ReleaseScheduleBatch as ReleaseScheduleBatch,
     type ReleaseScheduleWeekPreview as ReleaseScheduleWeekPreview,
@@ -2010,6 +2361,7 @@ export declare namespace ProductionSchedules {
     type ScheduleAppliedOverride as ScheduleAppliedOverride,
     type ScheduleAtRiskOrder as ScheduleAtRiskOrder,
     type ScheduleDiagnostics as ScheduleDiagnostics,
+    type ScheduleFinishingDiagnostics as ScheduleFinishingDiagnostics,
     type ScheduleOrderCoverage as ScheduleOrderCoverage,
     type ScheduleOrderCoverageLine as ScheduleOrderCoverageLine,
     type ProductionScheduleDeleteResponse as ProductionScheduleDeleteResponse,
@@ -2017,6 +2369,7 @@ export declare namespace ProductionSchedules {
     type ProductionScheduleListParams as ProductionScheduleListParams,
     type ProductionScheduleRetrieveDerivedLinesParams as ProductionScheduleRetrieveDerivedLinesParams,
     type ProductionScheduleRetrieveDeviationsParams as ProductionScheduleRetrieveDeviationsParams,
+    type ProductionScheduleRetrieveFinishingLinesParams as ProductionScheduleRetrieveFinishingLinesParams,
     type ProductionScheduleRetrieveWeekReleasePreviewParams as ProductionScheduleRetrieveWeekReleasePreviewParams,
   };
 
