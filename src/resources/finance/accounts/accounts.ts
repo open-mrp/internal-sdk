@@ -23,9 +23,11 @@ export class Accounts extends APIResource {
    * shape used to apply a payment.
    *
    * Only invoices that still owe a balance are returned; invoices marked paid in
-   * full or overpaid are omitted. Invoices billed to the customer's child accounts
-   * are included alongside its own. Each invoice carries the payments already
-   * allocated to it, so the remaining balance can be worked out client-side.
+   * full are omitted, while overpaid ones are kept because they still need
+   * correcting. Invoices billed to the customer's child accounts are included
+   * alongside its own, because the parent settles for them. Each invoice carries the
+   * payments already allocated to it, so the remaining balance can be worked out
+   * client-side.
    *
    * This endpoint requires the permissions: `invoices:read`, `customers:read`,
    * `suppliers:read`.
@@ -228,14 +230,7 @@ export interface AccountRetrieveInvoicesParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'customer' | 'parent_account'>;
-
-  /**
-   * Whether to also include invoices billed to the customer's child accounts.
-   *
-   * Currently has no effect: invoices for child accounts are always included.
-   */
-  include_child_accounts?: boolean;
+  include?: Array<'customer' | 'parent_account' | 'allocations'>;
 
   /**
    * Maximum number of results to return in a single page.
@@ -265,14 +260,6 @@ export interface AccountRetrieveTransactionsParams {
    * `null`.
    */
   include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
-
-  /**
-   * Whether to also include transactions recorded against the customer's child
-   * accounts.
-   *
-   * Child account transactions are included unless this is set to `false`.
-   */
-  include_child_accounts?: boolean;
 
   /**
    * Maximum number of results to return in a single page.

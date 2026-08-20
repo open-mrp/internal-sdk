@@ -2,6 +2,7 @@
 
 export {
   Actions,
+  type AdminUpdateShipmentTrackingRequest,
   type EstimateRateRequest,
   type EstimateRateResult,
   type ListRateShopOption,
@@ -10,6 +11,7 @@ export {
   type RateShopRequest,
   type RateShopResult,
   type ShipShipmentRequest,
+  type ActionAdminUpdateTrackingParams,
   type ActionEstimateRateParams,
   type ActionRateShopParams,
   type ActionShipParams,

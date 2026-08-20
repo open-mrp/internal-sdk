@@ -511,8 +511,6 @@ export interface SendMessageRequest {
     | 'batch_lot'
     | 'check_duplicate_result'
     | 'item_trend_point'
-    | 'pack_pick_response'
-    | 'pick_shipments_response'
     | 'tenancy_pending_registration'
     | 'invoice_allocation_entry'
     | 'allocation_customer'
@@ -551,7 +549,13 @@ export interface SendMessageRequest {
     | 'computed_quantity'
     | 'analyze_realized_margins_response'
     | 'realized_margin_finding'
-    | 'realized_margin_summary';
+    | 'realized_margin_summary'
+    | 'shipment_related'
+    | 'invoice_related'
+    | 'pick_related'
+    | 'pick_shipments_response'
+    | 'pick_totals'
+    | 'pick_stage_total';
 
   /**
    * Account user ids explicitly @mentioned in the message.
@@ -953,8 +957,6 @@ export interface MessageCreateParams {
     | 'batch_lot'
     | 'check_duplicate_result'
     | 'item_trend_point'
-    | 'pack_pick_response'
-    | 'pick_shipments_response'
     | 'tenancy_pending_registration'
     | 'invoice_allocation_entry'
     | 'allocation_customer'
@@ -993,7 +995,13 @@ export interface MessageCreateParams {
     | 'computed_quantity'
     | 'analyze_realized_margins_response'
     | 'realized_margin_finding'
-    | 'realized_margin_summary';
+    | 'realized_margin_summary'
+    | 'shipment_related'
+    | 'invoice_related'
+    | 'pick_related'
+    | 'pick_shipments_response'
+    | 'pick_totals'
+    | 'pick_stage_total';
 
   /**
    * Body param: Account user ids explicitly @mentioned in the message.

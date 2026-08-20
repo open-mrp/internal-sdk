@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as InvoicesAPI from '../../finance/invoices';
+import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as ActionsAPI from './actions';
 import {
@@ -113,7 +113,7 @@ export class Departments extends APIResource {
   list(
     query: DepartmentListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<InvoicesAPI.ListDepartment> {
+  ): APIPromise<ListDepartment> {
     return this._client.get('/v1/operations/departments', { query, ...options });
   }
 
@@ -204,6 +204,33 @@ export interface DepartmentRateInput {
    * Decimal value of the rate.
    */
   value: string;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListDepartment {
+  /**
+   * Resources in this page.
+   */
+  data: Array<AccountUsersAPI.Department>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
 }
 
 /**
@@ -389,6 +416,7 @@ export declare namespace Departments {
   export {
     type CreateDepartmentRequest as CreateDepartmentRequest,
     type DepartmentRateInput as DepartmentRateInput,
+    type ListDepartment as ListDepartment,
     type UpdateDepartmentRequest as UpdateDepartmentRequest,
     type DepartmentDeleteResponse as DepartmentDeleteResponse,
     type DepartmentCreateParams as DepartmentCreateParams,

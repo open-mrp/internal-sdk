@@ -1262,6 +1262,11 @@ export interface SalesOrderLine {
   created_at: string;
 
   /**
+   * An entry in your catalog: something you sell, consume, or build with.
+   */
+  item: AccountUsersAPI.Item | null;
+
+  /**
    * Position of the line on the order.
    *
    * Assigned automatically in sequence, starting at `1`. Product lines are numbered

@@ -1,7 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AccountUsersAPI from '../../identity/account-users/account-users';
+import * as AnalyticsAPI from '../../core/analytics';
+import * as CustomersAPI from '../../sales/customers/customers';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -11,17 +12,23 @@ import { path } from '../../../internal/utils/path';
  */
 export class Inventory extends APIResource {
   /**
-   * Adjusts or reconciles on-hand inventory for an item.
+   * Adjusts or reconciles the quantity of an item you hold.
    *
-   * With `operation` set to `adjust` (the behavior when it is omitted),
-   * `quantity_change` is added to the current on-hand quantity; with `reconcile`,
-   * the on-hand quantity is set to exactly `quantity_change`. Either way it is the
-   * resulting difference that gets written, so a difference of zero moves no stock.
+   * With `operation` set to `adjust` (the behavior when it is omitted), `quantity`
+   * is added to the current quantity; with `reconcile`, the current quantity is set
+   * to exactly `quantity`. Either way it is the resulting difference that gets
+   * written, so a difference of zero moves no stock.
    *
-   * Added stock is immediately allocated against any unfilled demand for the item,
-   * so an adjustment can settle a shortfall instead of raising the quantity free on
-   * hand. The change is recorded in the item's inventory audit trail as a user
-   * correction attributed to the caller.
+   * The figure a `reconcile` measures against is what is on hand net of demand
+   * nothing has covered — the same figure `available_to_promise` is derived from,
+   * not the raw on-hand total. Reconciling to the quantity already reported
+   * therefore writes nothing.
+   *
+   * Stock that arrives is allocated against unfilled demand for the item, so an
+   * adjustment can settle a shortfall instead of raising the quantity free to
+   * promise. That allocation happens just after the request rather than inside it,
+   * because it walks every open issue for the item. The change is recorded in the
+   * item's inventory audit trail as a user correction attributed to the caller.
    *
    * This endpoint requires the permission: `items:update`.
    *
@@ -31,18 +38,20 @@ export class Inventory extends APIResource {
    *   await client.catalog.items.inventory.update(
    *     'it_pej07ckhvu62',
    *     {
+   *       quantity: {
+   *         value: '10.5',
+   *         unit_id: 'un_82bd37dae5po',
+   *       },
    *       customer_id: 'ac_opnlh43ymyee',
    *       location_id: 'lc_yonnys0hx3ju',
    *       operation: 'adjust',
-   *       quantity_change: 10.5,
-   *       unit_id: 'un_82bd37dae5po',
    *     },
    *   );
    * ```
    */
   update(
     id: string,
-    body: InventoryUpdateParams | null | undefined = {},
+    body: InventoryUpdateParams,
     options?: RequestOptions,
   ): APIPromise<InventoryUpdateResponse> {
     return this._client.patch(path`/v1/catalog/items/${id}/inventory`, { body, ...options });
@@ -80,17 +89,18 @@ export class Inventory extends APIResource {
  * what is still free to sell.
  *
  * All four quantities are reported in the same unit — the base unit of the item's
- * category.
+ * category. Derived figures, not stored rows: each is netted out of the ledger at
+ * read time, so none of them carries a quantity id.
  */
 export interface ItemInventory {
   /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
+   * An amount calculated on demand rather than stored.
    *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
+   * The same shape as a quantity minus the ID, because nothing was written: it is
+   * derived per request, such as a total rolled up across invoiced lines for one
+   * analysis.
    */
-  available_to_promise: AccountUsersAPI.Quantity | null;
+  available_to_promise: AnalyticsAPI.ComputedQuantity | null;
 
   /**
    * Resource type identifier.
@@ -98,31 +108,31 @@ export interface ItemInventory {
   object: 'item_inventory';
 
   /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
+   * An amount calculated on demand rather than stored.
    *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
+   * The same shape as a quantity minus the ID, because nothing was written: it is
+   * derived per request, such as a total rolled up across invoiced lines for one
+   * analysis.
    */
-  on_hand: AccountUsersAPI.Quantity | null;
+  on_hand: AnalyticsAPI.ComputedQuantity | null;
 
   /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
+   * An amount calculated on demand rather than stored.
    *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
+   * The same shape as a quantity minus the ID, because nothing was written: it is
+   * derived per request, such as a total rolled up across invoiced lines for one
+   * analysis.
    */
-  reserved: AccountUsersAPI.Quantity | null;
+  reserved: AnalyticsAPI.ComputedQuantity | null;
 
   /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
+   * An amount calculated on demand rather than stored.
    *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
+   * The same shape as a quantity minus the ID, because nothing was written: it is
+   * derived per request, such as a total rolled up across invoiced lines for one
+   * analysis.
    */
-  short: AccountUsersAPI.Quantity | null;
+  short: AnalyticsAPI.ComputedQuantity | null;
 }
 
 /**
@@ -130,6 +140,14 @@ export interface ItemInventory {
  */
 export interface UpdateItemInventoryRequest {
   /**
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
+   */
+  quantity: CustomersAPI.QuantityInput;
+
+  /**
    * ID of the customer account that owns the resulting inventory.
    *
    * Use this for stock you hold but do not own, such as customer-supplied material.
@@ -154,35 +172,26 @@ export interface UpdateItemInventoryRequest {
   lot_number?: string;
 
   /**
-   * How `quantity_change` is applied.
+   * How `quantity` is applied.
    *
-   * - `adjust`: adds `quantity_change` to the current on-hand quantity.
-   * - `reconcile`: sets the on-hand quantity to exactly `quantity_change`.
+   * - `adjust`: adds `quantity` to the current quantity.
+   * - `reconcile`: sets the current quantity to exactly `quantity`.
    */
   operation?: 'adjust' | 'reconcile';
-
-  /**
-   * The quantity to apply, interpreted according to `operation`.
-   *
-   * With `adjust`, it is added to the current on-hand quantity and may be negative;
-   * with `reconcile`, the on-hand quantity is set to exactly this value.
-   */
-  quantity_change?: number;
-
-  /**
-   * ID of the unit `quantity_change` is expressed in.
-   *
-   * The figure is recorded exactly as sent, with no conversion, so send it in the
-   * base unit of the item's category to keep it comparable with the quantities the
-   * inventory endpoints report.
-   */
-  unit_id?: string;
 }
 
 export interface InventoryUpdateResponse {}
 
 export interface InventoryUpdateParams {
   /**
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
+   */
+  quantity: CustomersAPI.QuantityInput;
+
+  /**
    * ID of the customer account that owns the resulting inventory.
    *
    * Use this for stock you hold but do not own, such as customer-supplied material.
@@ -207,29 +216,12 @@ export interface InventoryUpdateParams {
   lot_number?: string;
 
   /**
-   * How `quantity_change` is applied.
+   * How `quantity` is applied.
    *
-   * - `adjust`: adds `quantity_change` to the current on-hand quantity.
-   * - `reconcile`: sets the on-hand quantity to exactly `quantity_change`.
+   * - `adjust`: adds `quantity` to the current quantity.
+   * - `reconcile`: sets the current quantity to exactly `quantity`.
    */
   operation?: 'adjust' | 'reconcile';
-
-  /**
-   * The quantity to apply, interpreted according to `operation`.
-   *
-   * With `adjust`, it is added to the current on-hand quantity and may be negative;
-   * with `reconcile`, the on-hand quantity is set to exactly this value.
-   */
-  quantity_change?: number;
-
-  /**
-   * ID of the unit `quantity_change` is expressed in.
-   *
-   * The figure is recorded exactly as sent, with no conversion, so send it in the
-   * base unit of the item's category to keep it comparable with the quantities the
-   * inventory endpoints report.
-   */
-  unit_id?: string;
 }
 
 export interface InventoryListParams {

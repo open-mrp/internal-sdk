@@ -5,10 +5,12 @@ import * as InvoicesAPI from '../../finance/invoices';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as ActionsAPI from './actions';
 import {
+  ActionAdminUpdateTrackingParams,
   ActionEstimateRateParams,
   ActionRateShopParams,
   ActionShipParams,
   Actions,
+  AdminUpdateShipmentTrackingRequest,
   EstimateRateRequest,
   EstimateRateResult,
   ListRateShopOption,
@@ -188,9 +190,10 @@ export interface UpdateShipmentRequest {
    * ID of the carrier service level to set on the shipment's freight.
    *
    * Sending this without `carrier_id` keeps the existing carrier, so the service
-   * level should belong to that carrier.
+   * level should belong to that carrier; send `null` to drop the service level
+   * entirely.
    */
-  service_level_id?: string;
+  service_level_id?: string | null;
 }
 
 export interface ShipmentDeleteResponse {}
@@ -201,16 +204,17 @@ export interface ShipmentRetrieveParams {
    * `null`.
    */
   include?: Array<
-    | 'lines'
-    | 'shipping_cases'
-    | 'sales_order'
+    | 'related.sales_order'
     | 'customer'
     | 'freight'
     | 'shipping_address'
     | 'shipped_by'
-    | 'shipped_by.user'
-    | 'invoice'
-    | 'pick'
+    | 'related.invoice'
+    | 'related.pick'
+    | 'shipping_cases'
+    | 'lines'
+    | 'lines.sales_order_line'
+    | 'lines.sales_order_line.product'
   >;
 }
 
@@ -222,14 +226,13 @@ export interface ShipmentUpdateParams {
   include?: Array<
     | 'lines'
     | 'shipping_cases'
-    | 'sales_order'
+    | 'related.sales_order'
     | 'customer'
     | 'freight'
     | 'shipping_address'
     | 'shipped_by'
-    | 'shipped_by.user'
-    | 'invoice'
-    | 'pick'
+    | 'related.invoice'
+    | 'related.pick'
   >;
 
   /**
@@ -260,9 +263,10 @@ export interface ShipmentUpdateParams {
    * Body param: ID of the carrier service level to set on the shipment's freight.
    *
    * Sending this without `carrier_id` keeps the existing carrier, so the service
-   * level should belong to that carrier.
+   * level should belong to that carrier; send `null` to drop the service level
+   * entirely.
    */
-  service_level_id?: string;
+  service_level_id?: string | null;
 }
 
 export interface ShipmentListParams {
@@ -296,7 +300,18 @@ export interface ShipmentListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'customer' | 'sales_order' | 'lines'>;
+  include?: Array<
+    | 'related.sales_order'
+    | 'customer'
+    | 'freight'
+    | 'shipping_address'
+    | 'shipped_by'
+    | 'related.invoice'
+    | 'related.pick'
+    | 'lines'
+    | 'lines.sales_order_line'
+    | 'lines.sales_order_line.product'
+  >;
 
   /**
    * Only include shipments containing at least one line for any of these items.
@@ -322,7 +337,8 @@ export interface ShipmentListParams {
   q?: string;
 
   /**
-   * Only include shipments whose customer is assigned to any of these sales reps.
+   * Only include shipments whose customer is assigned to any of these sales reps,
+   * given as account user IDs matching the customer's default sales rep.
    */
   sales_rep_ids?: Array<string>;
 
@@ -354,6 +370,7 @@ export declare namespace Shipments {
 
   export {
     Actions as Actions,
+    type AdminUpdateShipmentTrackingRequest as AdminUpdateShipmentTrackingRequest,
     type EstimateRateRequest as EstimateRateRequest,
     type EstimateRateResult as EstimateRateResult,
     type ListRateShopOption as ListRateShopOption,
@@ -362,6 +379,7 @@ export declare namespace Shipments {
     type RateShopRequest as RateShopRequest,
     type RateShopResult as RateShopResult,
     type ShipShipmentRequest as ShipShipmentRequest,
+    type ActionAdminUpdateTrackingParams as ActionAdminUpdateTrackingParams,
     type ActionEstimateRateParams as ActionEstimateRateParams,
     type ActionRateShopParams as ActionRateShopParams,
     type ActionShipParams as ActionShipParams,

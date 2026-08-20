@@ -14,6 +14,36 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
+   * Rewrites the carrier, service level and master tracking number of a shipment
+   * that has already shipped. Administrators only: the ordinary update refuses to
+   * re-route a dispatched shipment, and this is the deliberate override for one that
+   * went out mis-routed.
+   *
+   * This endpoint requires the permission: `shipments:update`.
+   *
+   * @example
+   * ```ts
+   * const shipment =
+   *   await client.operations.shipments.actions.adminUpdateTracking(
+   *     'sh_pfygp2gl45y4',
+   *     { master_tracking_number: '1Z999AA10123456784' },
+   *   );
+   * ```
+   */
+  adminUpdateTracking(
+    id: string,
+    params: ActionAdminUpdateTrackingParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<InvoicesAPI.Shipment> {
+    const { include, ...body } = params ?? {};
+    return this._client.post(path`/v1/operations/shipments/${id}/actions/admin-update-tracking`, {
+      query: { include },
+      body,
+      ...options,
+    });
+  }
+
+  /**
    * Estimates the shipping rate for one specific carrier and service level.
    *
    * Freight rules are applied before live rating, in order: freight-exempt product
@@ -172,6 +202,30 @@ export class Actions extends APIResource {
   void(id: string, options?: RequestOptions): APIPromise<InvoicesAPI.Shipment> {
     return this._client.post(path`/v1/operations/shipments/${id}/actions/void`, options);
   }
+}
+
+/**
+ * ! separate endpoint due to SDK type resttrictions Request to correct a shipped
+ * shipment's tracking and routing.
+ */
+export interface AdminUpdateShipmentTrackingRequest {
+  /**
+   * ID of the carrier that actually carried the shipment; the shipment's cases move
+   * with it.
+   */
+  carrier_id?: string;
+
+  /**
+   * Carrier master tracking number covering the shipment as a whole.
+   */
+  master_tracking_number?: string;
+
+  /**
+   * ID of the carrier service level the shipment actually travelled on. Sending this
+   * without `carrier_id` keeps the existing carrier, so the service level should
+   * belong to that carrier; send `null` to drop the service level entirely.
+   */
+  service_level_id?: string | null;
 }
 
 /**
@@ -458,10 +512,46 @@ export interface ShipShipmentRequest {
   /**
    * Whether to email the customer a shipping notification.
    *
-   * Shipping notification emails are not dispatched yet, so this flag has no effect
-   * today.
+   * Whether to email the customer the invoice raised for this shipment.
    */
   email_customer: boolean;
+}
+
+export interface ActionAdminUpdateTrackingParams {
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    | 'lines'
+    | 'shipping_cases'
+    | 'related.sales_order'
+    | 'customer'
+    | 'freight'
+    | 'shipping_address'
+    | 'shipped_by'
+    | 'related.invoice'
+    | 'related.pick'
+  >;
+
+  /**
+   * Body param: ID of the carrier that actually carried the shipment; the shipment's
+   * cases move with it.
+   */
+  carrier_id?: string;
+
+  /**
+   * Body param: Carrier master tracking number covering the shipment as a whole.
+   */
+  master_tracking_number?: string;
+
+  /**
+   * Body param: ID of the carrier service level the shipment actually travelled on.
+   * Sending this without `carrier_id` keeps the existing carrier, so the service
+   * level should belong to that carrier; send `null` to drop the service level
+   * entirely.
+   */
+  service_level_id?: string | null;
 }
 
 export interface ActionEstimateRateParams {
@@ -584,8 +674,7 @@ export interface ActionShipParams {
   /**
    * Body param: Whether to email the customer a shipping notification.
    *
-   * Shipping notification emails are not dispatched yet, so this flag has no effect
-   * today.
+   * Whether to email the customer the invoice raised for this shipment.
    */
   email_customer: boolean;
 
@@ -596,19 +685,19 @@ export interface ActionShipParams {
   include?: Array<
     | 'lines'
     | 'shipping_cases'
-    | 'sales_order'
+    | 'related.sales_order'
     | 'customer'
     | 'freight'
     | 'shipping_address'
     | 'shipped_by'
-    | 'shipped_by.user'
-    | 'invoice'
-    | 'pick'
+    | 'related.invoice'
+    | 'related.pick'
   >;
 }
 
 export declare namespace Actions {
   export {
+    type AdminUpdateShipmentTrackingRequest as AdminUpdateShipmentTrackingRequest,
     type EstimateRateRequest as EstimateRateRequest,
     type EstimateRateResult as EstimateRateResult,
     type ListRateShopOption as ListRateShopOption,
@@ -617,6 +706,7 @@ export declare namespace Actions {
     type RateShopRequest as RateShopRequest,
     type RateShopResult as RateShopResult,
     type ShipShipmentRequest as ShipShipmentRequest,
+    type ActionAdminUpdateTrackingParams as ActionAdminUpdateTrackingParams,
     type ActionEstimateRateParams as ActionEstimateRateParams,
     type ActionRateShopParams as ActionRateShopParams,
     type ActionShipParams as ActionShipParams,

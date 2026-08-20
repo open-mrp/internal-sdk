@@ -24,6 +24,7 @@ describe('resource actions', () => {
   test('pack: required and optional params', async () => {
     const response = await client.operations.picks.actions.pack('pk_6eilj488bq8d', {
       shipment_case_count: 3,
+      include: ['created_by'],
     });
   });
 

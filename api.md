@@ -2121,18 +2121,16 @@ Types:
 - <code><a href="./src/resources/finance/invoices.ts">Invoice</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">InvoiceAllocation</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">InvoiceLine</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">ListDepartment</a></code>
+- <code><a href="./src/resources/finance/invoices.ts">InvoiceRelated</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListInvoice</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListInvoiceAllocation</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListInvoiceLine</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">ListPickLine</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListShipmentLine</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListShippingCaseDetail</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ListTransactionAllocation</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">Pick</a></code>
-- <code><a href="./src/resources/finance/invoices.ts">PickLine</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">Shipment</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ShipmentLine</a></code>
+- <code><a href="./src/resources/finance/invoices.ts">ShipmentRelated</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">ShippingCaseDetail</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">TransactionAllocation</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">TransactionDetail</a></code>
@@ -2483,6 +2481,7 @@ Types:
 
 - <code><a href="./src/resources/operations/departments/departments.ts">CreateDepartmentRequest</a></code>
 - <code><a href="./src/resources/operations/departments/departments.ts">DepartmentRateInput</a></code>
+- <code><a href="./src/resources/operations/departments/departments.ts">ListDepartment</a></code>
 - <code><a href="./src/resources/operations/departments/departments.ts">UpdateDepartmentRequest</a></code>
 - <code><a href="./src/resources/operations/departments/departments.ts">DepartmentDeleteResponse</a></code>
 
@@ -3040,7 +3039,13 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/operations/picks/picks.ts">ListPick</a></code>
+- <code><a href="./src/resources/operations/picks/picks.ts">ListPickLine</a></code>
+- <code><a href="./src/resources/operations/picks/picks.ts">Pick</a></code>
+- <code><a href="./src/resources/operations/picks/picks.ts">PickLine</a></code>
+- <code><a href="./src/resources/operations/picks/picks.ts">PickRelated</a></code>
 - <code><a href="./src/resources/operations/picks/picks.ts">PickShipmentsResponse</a></code>
+- <code><a href="./src/resources/operations/picks/picks.ts">PickStageTotal</a></code>
+- <code><a href="./src/resources/operations/picks/picks.ts">PickTotals</a></code>
 - <code><a href="./src/resources/operations/picks/picks.ts">UpdatePickRequest</a></code>
 
 Methods:
@@ -3055,11 +3060,10 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/operations/picks/actions.ts">PackPickRequest</a></code>
-- <code><a href="./src/resources/operations/picks/actions.ts">PackPickResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/operations/picks/{id}/actions/pack">client.operations.picks.actions.<a href="./src/resources/operations/picks/actions.ts">pack</a>(id, { ...params }) -> PackPickResponse</code>
+- <code title="post /v1/operations/picks/{id}/actions/pack">client.operations.picks.actions.<a href="./src/resources/operations/picks/actions.ts">pack</a>(id, { ...params }) -> Job</code>
 - <code title="put /v1/operations/picks/{id}/actions/pick">client.operations.picks.actions.<a href="./src/resources/operations/picks/actions.ts">pick</a>(id) -> Pick</code>
 - <code title="put /v1/operations/picks/{id}/actions/void">client.operations.picks.actions.<a href="./src/resources/operations/picks/actions.ts">void</a>(id) -> Pick</code>
 
@@ -3125,17 +3129,27 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/operations/shipping-cases.ts">ShippingCase</a></code>
-- <code><a href="./src/resources/operations/shipping-cases.ts">ShippingCaseLabelURL</a></code>
-- <code><a href="./src/resources/operations/shipping-cases.ts">UpdateShippingCaseRequest</a></code>
-- <code><a href="./src/resources/operations/shipping-cases.ts">ShippingCaseDeleteResponse</a></code>
+- <code><a href="./src/resources/operations/shipping-cases/shipping-cases.ts">ShippingCase</a></code>
+- <code><a href="./src/resources/operations/shipping-cases/shipping-cases.ts">ShippingCaseLabelURL</a></code>
+- <code><a href="./src/resources/operations/shipping-cases/shipping-cases.ts">UpdateShippingCaseRequest</a></code>
+- <code><a href="./src/resources/operations/shipping-cases/shipping-cases.ts">ShippingCaseDeleteResponse</a></code>
 
 Methods:
 
-- <code title="get /v1/operations/shipping-cases/{id}">client.operations.shippingCases.<a href="./src/resources/operations/shipping-cases.ts">retrieve</a>(id, { ...params }) -> ShippingCase</code>
-- <code title="patch /v1/operations/shipping-cases/{id}">client.operations.shippingCases.<a href="./src/resources/operations/shipping-cases.ts">update</a>(id, { ...params }) -> ShippingCase</code>
-- <code title="delete /v1/operations/shipping-cases/{id}">client.operations.shippingCases.<a href="./src/resources/operations/shipping-cases.ts">delete</a>(id) -> ShippingCaseDeleteResponse</code>
-- <code title="get /v1/operations/shipping-cases/{id}/label">client.operations.shippingCases.<a href="./src/resources/operations/shipping-cases.ts">retrieveLabel</a>(id) -> ShippingCaseLabelURL</code>
+- <code title="get /v1/operations/shipping-cases/{id}">client.operations.shippingCases.<a href="./src/resources/operations/shipping-cases/shipping-cases.ts">retrieve</a>(id, { ...params }) -> ShippingCase</code>
+- <code title="patch /v1/operations/shipping-cases/{id}">client.operations.shippingCases.<a href="./src/resources/operations/shipping-cases/shipping-cases.ts">update</a>(id, { ...params }) -> ShippingCase</code>
+- <code title="delete /v1/operations/shipping-cases/{id}">client.operations.shippingCases.<a href="./src/resources/operations/shipping-cases/shipping-cases.ts">delete</a>(id) -> ShippingCaseDeleteResponse</code>
+- <code title="get /v1/operations/shipping-cases/{id}/label">client.operations.shippingCases.<a href="./src/resources/operations/shipping-cases/shipping-cases.ts">retrieveLabel</a>(id) -> ShippingCaseLabelURL</code>
+
+### Actions
+
+Types:
+
+- <code><a href="./src/resources/operations/shipping-cases/actions.ts">AdminUpdateShippingCaseTrackingRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/operations/shipping-cases/{id}/actions/admin-update-tracking">client.operations.shippingCases.actions.<a href="./src/resources/operations/shipping-cases/actions.ts">adminUpdateTracking</a>(id, { ...params }) -> ShippingCase</code>
 
 ## Shipments
 
@@ -3156,6 +3170,7 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/operations/shipments/actions.ts">AdminUpdateShipmentTrackingRequest</a></code>
 - <code><a href="./src/resources/operations/shipments/actions.ts">EstimateRateRequest</a></code>
 - <code><a href="./src/resources/operations/shipments/actions.ts">EstimateRateResult</a></code>
 - <code><a href="./src/resources/operations/shipments/actions.ts">ListRateShopOption</a></code>
@@ -3167,6 +3182,7 @@ Types:
 
 Methods:
 
+- <code title="post /v1/operations/shipments/{id}/actions/admin-update-tracking">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">adminUpdateTracking</a>(id, { ...params }) -> Shipment</code>
 - <code title="post /v1/operations/shipments/actions/estimate-rate">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">estimateRate</a>({ ...params }) -> EstimateRateResult</code>
 - <code title="post /v1/operations/shipments/actions/rate-shop">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">rateShop</a>({ ...params }) -> RateShopResult</code>
 - <code title="post /v1/operations/shipments/{id}/actions/ship">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">ship</a>(id, { ...params }) -> Shipment</code>

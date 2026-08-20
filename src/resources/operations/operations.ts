@@ -67,16 +67,6 @@ import {
   MachineDowntimeEvents,
   UpdateMachineDowntimeEventRequest,
 } from './machine-downtime-events';
-import * as ShippingCasesAPI from './shipping-cases';
-import {
-  ShippingCase,
-  ShippingCaseDeleteResponse,
-  ShippingCaseLabelURL,
-  ShippingCaseRetrieveParams,
-  ShippingCaseUpdateParams,
-  ShippingCases,
-  UpdateShippingCaseRequest,
-} from './shipping-cases';
 import * as ShippingTermsAPI from './shipping-terms';
 import {
   CreateShippingTermRequest,
@@ -132,6 +122,7 @@ import {
   DepartmentRetrieveParams,
   DepartmentUpdateParams,
   Departments,
+  ListDepartment,
   UpdateDepartmentRequest,
 } from './departments/departments';
 import * as EdiAPI from './edi/edi';
@@ -187,10 +178,16 @@ import {
 import * as PicksAPI from './picks/picks';
 import {
   ListPick,
+  ListPickLine,
+  Pick,
+  PickLine,
   PickListParams,
+  PickRelated,
   PickRetrieveParams,
   PickRetrieveShipmentsParams,
   PickShipmentsResponse,
+  PickStageTotal,
+  PickTotals,
   PickUpdateParams,
   Picks,
   UpdatePickRequest,
@@ -329,6 +326,16 @@ import {
   Shipments,
   UpdateShipmentRequest,
 } from './shipments/shipments';
+import * as ShippingCasesAPI from './shipping-cases/shipping-cases';
+import {
+  ShippingCase,
+  ShippingCaseDeleteResponse,
+  ShippingCaseLabelURL,
+  ShippingCaseRetrieveParams,
+  ShippingCaseUpdateParams,
+  ShippingCases,
+  UpdateShippingCaseRequest,
+} from './shipping-cases/shipping-cases';
 import * as SuppliersAPI from './suppliers/suppliers';
 import {
   CreateSupplierRequest,
@@ -1438,6 +1445,7 @@ export declare namespace Operations {
     Departments as Departments,
     type CreateDepartmentRequest as CreateDepartmentRequest,
     type DepartmentRateInput as DepartmentRateInput,
+    type ListDepartment as ListDepartment,
     type UpdateDepartmentRequest as UpdateDepartmentRequest,
     type DepartmentDeleteResponse as DepartmentDeleteResponse,
     type DepartmentCreateParams as DepartmentCreateParams,
@@ -1636,7 +1644,13 @@ export declare namespace Operations {
   export {
     Picks as Picks,
     type ListPick as ListPick,
+    type ListPickLine as ListPickLine,
+    type Pick as Pick,
+    type PickLine as PickLine,
+    type PickRelated as PickRelated,
     type PickShipmentsResponse as PickShipmentsResponse,
+    type PickStageTotal as PickStageTotal,
+    type PickTotals as PickTotals,
     type UpdatePickRequest as UpdatePickRequest,
     type PickRetrieveParams as PickRetrieveParams,
     type PickUpdateParams as PickUpdateParams,

@@ -8,21 +8,19 @@ import {
   InvoiceAllocation,
   InvoiceLine,
   InvoiceListParams,
+  InvoiceRelated,
   InvoiceRetrieveParams,
   InvoiceUpdateParams,
   Invoices,
-  ListDepartment,
   ListInvoice,
   ListInvoiceAllocation,
   ListInvoiceLine,
-  ListPickLine,
   ListShipmentLine,
   ListShippingCaseDetail,
   ListTransactionAllocation,
-  Pick,
-  PickLine,
   Shipment,
   ShipmentLine,
+  ShipmentRelated,
   ShippingCaseDetail,
   TransactionAllocation,
   TransactionDetail,
@@ -626,7 +624,8 @@ export interface FinanceRetrieveOpenCreditsParams {
   customer_ids?: Array<string>;
 
   /**
-   * Only include transactions created before this date (`YYYY-MM-DD`).
+   * Only include transactions created on or before this date (`YYYY-MM-DD`),
+   * covering that whole day.
    */
   ends_at?: string;
 
@@ -739,18 +738,16 @@ export declare namespace Finance {
     type Invoice as Invoice,
     type InvoiceAllocation as InvoiceAllocation,
     type InvoiceLine as InvoiceLine,
-    type ListDepartment as ListDepartment,
+    type InvoiceRelated as InvoiceRelated,
     type ListInvoice as ListInvoice,
     type ListInvoiceAllocation as ListInvoiceAllocation,
     type ListInvoiceLine as ListInvoiceLine,
-    type ListPickLine as ListPickLine,
     type ListShipmentLine as ListShipmentLine,
     type ListShippingCaseDetail as ListShippingCaseDetail,
     type ListTransactionAllocation as ListTransactionAllocation,
-    type Pick as Pick,
-    type PickLine as PickLine,
     type Shipment as Shipment,
     type ShipmentLine as ShipmentLine,
+    type ShipmentRelated as ShipmentRelated,
     type ShippingCaseDetail as ShippingCaseDetail,
     type TransactionAllocation as TransactionAllocation,
     type TransactionDetail as TransactionDetail,

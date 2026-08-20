@@ -69,7 +69,8 @@ export class Invoices extends APIResource {
    * Returns a paginated list of invoices for the current account, newest first.
    *
    * A free-text search term (`q`) is matched against the invoice number, the invoice
-   * note, and the customer name, and still respects the other filters.
+   * note, the customer name, the sales order number, the customer PO number, and the
+   * customer number, and still respects the other filters.
    *
    * This endpoint requires the permissions: `invoices:read`, `customers:read`,
    * `suppliers:read`.
@@ -208,7 +209,6 @@ export interface Invoice {
    *   carrying partial payments.
    * - `paid`: the invoice is marked paid in full.
    * - `overpaid`: the payments applied to the invoice exceed the invoiced amount.
-   *   List Invoices and Update Invoice report such an invoice as `paid`.
    * - `partially_paid`: not currently returned; an invoice carrying a partial
    *   payment reports `unpaid`.
    */
@@ -224,6 +224,13 @@ export interface Invoice {
    * Priority level carried onto the invoice from the order it bills.
    */
   priority: 'low' | 'normal' | 'high';
+
+  /**
+   * Groups the records an invoice bills against: the order it belongs to and the
+   * shipment that raised it. Returned only when at least one member has been
+   * expanded.
+   */
+  related: InvoiceRelated | null;
 
   /**
    * A shipment of packed goods fulfilling a sales order, from packing through
@@ -347,30 +354,37 @@ export interface InvoiceLine {
 }
 
 /**
- * A single page of resources, together with the metadata needed to page through
- * the rest of the result set.
+ * Groups the records an invoice bills against: the order it belongs to and the
+ * shipment that raised it. Returned only when at least one member has been
+ * expanded.
  */
-export interface ListDepartment {
-  /**
-   * Resources in this page.
-   */
-  data: Array<AccountUsersAPI.Department>;
-
+export interface InvoiceRelated {
   /**
    * Resource type identifier.
    */
-  object: 'list';
+  object: 'invoice_related';
 
   /**
-   * PageInfo describes where the current page sits within a paginated result set and
-   * how to move to the adjacent pages.
+   * Record is a lightweight reference to a business record — a sales order, purchase
+   * order, pick, shipment, production run, invoice, etc.
    *
-   * Page a list by following the URLs below rather than assembling cursors yourself.
-   * For a top-level list endpoint the URL repeats the original request's query
-   * string with only the cursor swapped, so following it preserves the same filters,
-   * search term, and page size.
+   * Like the `actor` and `entity` references, it carries just enough to identify and
+   * label the referenced record without embedding its full resource. The `status`
+   * and `metadata` fields hold type-specific detail that varies by the kind of
+   * record referenced.
    */
-  page_info: APIKeysAPI.PageInfo;
+  sales_order: SalesOrdersAPI.Record | null;
+
+  /**
+   * Record is a lightweight reference to a business record — a sales order, purchase
+   * order, pick, shipment, production run, invoice, etc.
+   *
+   * Like the `actor` and `entity` references, it carries just enough to identify and
+   * label the referenced record without embedding its full resource. The `status`
+   * and `metadata` fields hold type-specific detail that varies by the kind of
+   * record referenced.
+   */
+  shipment: SalesOrdersAPI.Record | null;
 }
 
 /**
@@ -436,33 +450,6 @@ export interface ListInvoiceLine {
    * Resources in this page.
    */
   data: Array<InvoiceLine>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo describes where the current page sits within a paginated result set and
-   * how to move to the adjacent pages.
-   *
-   * Page a list by following the URLs below rather than assembling cursors yourself.
-   * For a top-level list endpoint the URL repeats the original request's query
-   * string with only the cursor swapped, so following it preserves the same filters,
-   * search term, and page size.
-   */
-  page_info: APIKeysAPI.PageInfo;
-}
-
-/**
- * A single page of resources, together with the metadata needed to page through
- * the rest of the result set.
- */
-export interface ListPickLine {
-  /**
-   * Resources in this page.
-   */
-  data: Array<PickLine>;
 
   /**
    * Resource type identifier.
@@ -563,142 +550,6 @@ export interface ListTransactionAllocation {
 }
 
 /**
- * A warehouse picking task for a sales order, tracking the quantities to pull from
- * inventory and pack for shipment.
- *
- * A pick is created automatically when a sales order is issued, with one line for
- * each order line whose product is of type `sale` — service, shipping, tax, credit
- * and return lines are skipped — and nothing picked yet. There is no endpoint that
- * creates a pick directly.
- */
-export interface Pick {
-  /**
-   * Pick ID.
-   */
-  id: string;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * A business you sell to, with its contact details, default fulfillment settings,
-   * and order policies.
-   */
-  customer: AnalyticsAPI.Customer | null;
-
-  /**
-   * A single page of resources, together with the metadata needed to page through
-   * the rest of the result set.
-   */
-  departments: ListDepartment | null;
-
-  /**
-   * Timestamp when the pick was finished.
-   *
-   * Set automatically once every line on the pick has been packed, and cleared
-   * whenever picking work reopens — when the pick is voided, when a shipment for the
-   * order is deleted, or when the order is reopened or its lines change so quantity
-   * is outstanding again. It can also be set or cleared directly with Update Pick.
-   */
-  finished_at: string | null;
-
-  /**
-   * A single page of resources, together with the metadata needed to page through
-   * the rest of the result set.
-   */
-  lines: ListPickLine | null;
-
-  /**
-   * Human-readable number that identifies the pick, distinct from the `id`.
-   *
-   * Copied from the sales order's number when the pick is created, and can be
-   * renamed with Update Pick.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'pick';
-
-  /**
-   * Priority used to order picks for fulfillment, inherited from the associated
-   * sales order.
-   */
-  priority: 'low' | 'normal' | 'high';
-
-  /**
-   * An order placed by a customer, tracked from estimate through fulfillment.
-   */
-  sales_order: SalesOrdersAPI.SalesOrder | null;
-
-  /**
-   * Last updated timestamp.
-   */
-  updated_at: string;
-}
-
-/**
- * A single line on a pick, tracking the quantity picked against one sales order
- * line.
- */
-export interface PickLine {
-  /**
-   * Pick line ID.
-   */
-  id: string;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'pick_line';
-
-  /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
-   *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
-   */
-  ordered_quantity: AccountUsersAPI.Quantity | null;
-
-  /**
-   * Timestamp when the line was packed.
-   *
-   * Once packed, a line can no longer be picked or voided. If the sales order line
-   * still has quantity outstanding, packing adds a fresh zero-quantity pick line for
-   * the remainder rather than reopening this one.
-   */
-  packed_at: string | null;
-
-  /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
-   *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
-   */
-  quantity: AccountUsersAPI.Quantity | null;
-
-  /**
-   * A single line item on a sales order.
-   */
-  sales_order_line: SalesOrdersAPI.SalesOrderLine | null;
-
-  /**
-   * Last updated timestamp.
-   */
-  updated_at: string;
-}
-
-/**
  * A shipment of packed goods fulfilling a sales order, from packing through
  * dispatch.
  */
@@ -712,6 +563,11 @@ export interface Shipment {
    * Bill of lading number.
    */
   bill_of_lading: string | null;
+
+  /**
+   * Number of shipping cases packed into this shipment.
+   */
+  case_count: number;
 
   /**
    * Creation timestamp.
@@ -733,9 +589,9 @@ export interface Shipment {
   freight: SalesOrdersAPI.Freight | null;
 
   /**
-   * An invoice billing a customer for goods shipped against a sales order.
+   * TODO: change from bool to a status type constant; check if its sued
    */
-  invoice: Invoice | null;
+  is_ready_to_ship: boolean;
 
   /**
    * A single page of resources, together with the metadata needed to page through
@@ -766,20 +622,16 @@ export interface Shipment {
   object: 'shipment';
 
   /**
-   * A warehouse picking task for a sales order, tracking the quantities to pull from
-   * inventory and pack for shipment.
-   *
-   * A pick is created automatically when a sales order is issued, with one line for
-   * each order line whose product is of type `sale` — service, shipping, tax, credit
-   * and return lines are skipped — and nothing picked yet. There is no endpoint that
-   * creates a pick directly.
+   * Fulfillment priority, inherited from the sales order.
    */
-  pick: Pick | null;
+  priority: 'low' | 'normal' | 'high';
 
   /**
-   * An order placed by a customer, tracked from estimate through fulfillment.
+   * Groups the records a shipment sits between: the order it fulfills, the pick it
+   * was packed from, and the invoice it raised. Returned only when at least one
+   * member has been expanded.
    */
-  sales_order: SalesOrdersAPI.SalesOrder | null;
+  related: ShipmentRelated | null;
 
   /**
    * Timestamp when the shipment was shipped.
@@ -789,13 +641,12 @@ export interface Shipment {
   shipped_at: string | null;
 
   /**
-   * A user's membership in an account, carrying the account-specific status, role,
-   * and department.
+   * CreatedBy describes who created a resource and their relationship to the account
+   * that owns it.
    *
-   * Profile fields (name, email, username, image URL) live on the `user`
-   * sub-resource, which is shared across every account the user belongs to.
+   * It is resolved from the resource's create audit event.
    */
-  shipped_by: AccountUsersAPI.AccountUser | null;
+  shipped_by: SalesOrdersAPI.CreatedBy | null;
 
   /**
    * A saved address that can be used for billing and shipping on sales orders,
@@ -869,8 +720,54 @@ export interface ShipmentLine {
 }
 
 /**
- * A physical case (package) within a shipment, with its own tracking number, label
- * and freight charge.
+ * Groups the records a shipment sits between: the order it fulfills, the pick it
+ * was packed from, and the invoice it raised. Returned only when at least one
+ * member has been expanded.
+ */
+export interface ShipmentRelated {
+  /**
+   * Record is a lightweight reference to a business record — a sales order, purchase
+   * order, pick, shipment, production run, invoice, etc.
+   *
+   * Like the `actor` and `entity` references, it carries just enough to identify and
+   * label the referenced record without embedding its full resource. The `status`
+   * and `metadata` fields hold type-specific detail that varies by the kind of
+   * record referenced.
+   */
+  invoice: SalesOrdersAPI.Record | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'shipment_related';
+
+  /**
+   * Record is a lightweight reference to a business record — a sales order, purchase
+   * order, pick, shipment, production run, invoice, etc.
+   *
+   * Like the `actor` and `entity` references, it carries just enough to identify and
+   * label the referenced record without embedding its full resource. The `status`
+   * and `metadata` fields hold type-specific detail that varies by the kind of
+   * record referenced.
+   */
+  pick: SalesOrdersAPI.Record | null;
+
+  /**
+   * Record is a lightweight reference to a business record — a sales order, purchase
+   * order, pick, shipment, production run, invoice, etc.
+   *
+   * Like the `actor` and `entity` references, it carries just enough to identify and
+   * label the referenced record without embedding its full resource. The `status`
+   * and `metadata` fields hold type-specific detail that varies by the kind of
+   * record referenced.
+   */
+  sales_order: SalesOrdersAPI.Record | null;
+}
+
+/**
+ * TODO: collaps the detail with the shipping case object whichever is more
+ * accurate A physical case (package) within a shipment, with its own tracking
+ * number, label and freight charge.
  */
 export interface ShippingCaseDetail {
   /**
@@ -1148,9 +1045,9 @@ export interface UpdateInvoiceRequest {
   is_paid_in_full?: boolean;
 
   /**
-   * Note to attach to the invoice.
+   * Free-text note attached to the invoice; send `null` to clear it.
    */
-  note?: string;
+  note?: string | null;
 }
 
 export interface InvoiceRetrieveParams {
@@ -1159,7 +1056,17 @@ export interface InvoiceRetrieveParams {
    * `null`.
    */
   include?: Array<
-    'customer' | 'order' | 'shipment' | 'billing_address' | 'payment_term' | 'lines' | 'allocations'
+    | 'customer'
+    | 'order'
+    | 'shipment'
+    | 'related.sales_order'
+    | 'related.shipment'
+    | 'billing_address'
+    | 'payment_term'
+    | 'lines'
+    | 'lines.order_line'
+    | 'lines.order_line.product'
+    | 'allocations'
   >;
 }
 
@@ -1169,7 +1076,17 @@ export interface InvoiceUpdateParams {
    * are returned as `null`.
    */
   include?: Array<
-    'customer' | 'order' | 'shipment' | 'billing_address' | 'payment_term' | 'lines' | 'allocations'
+    | 'customer'
+    | 'order'
+    | 'shipment'
+    | 'related.sales_order'
+    | 'related.shipment'
+    | 'billing_address'
+    | 'payment_term'
+    | 'lines'
+    | 'lines.order_line'
+    | 'lines.order_line.product'
+    | 'allocations'
   >;
 
   /**
@@ -1199,9 +1116,9 @@ export interface InvoiceUpdateParams {
   is_paid_in_full?: boolean;
 
   /**
-   * Body param: Note to attach to the invoice.
+   * Body param: Free-text note attached to the invoice; send `null` to clear it.
    */
-  note?: string;
+  note?: string | null;
 }
 
 export interface InvoiceListParams {
@@ -1238,10 +1155,22 @@ export interface InvoiceListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'customer' | 'order' | 'shipment' | 'billing_address' | 'payment_term' | 'lines'>;
+  include?: Array<
+    | 'customer'
+    | 'order'
+    | 'shipment'
+    | 'related.sales_order'
+    | 'related.shipment'
+    | 'billing_address'
+    | 'payment_term'
+    | 'lines'
+    | 'lines.order_line'
+    | 'lines.order_line.product'
+  >;
 
   /**
-   * Restricts results to invoices with at least one line billing any of these items.
+   * Restricts results to invoices whose sales order has at least one line for any of
+   * these items.
    */
   item_ids?: Array<string>;
 
@@ -1251,8 +1180,8 @@ export interface InvoiceListParams {
   limit?: number;
 
   /**
-   * Restricts results to invoices with at least one line whose product belongs to
-   * any of these product lines.
+   * Restricts results to invoices whose sales order has at least one line whose
+   * product belongs to any of these product lines.
    */
   product_line_ids?: Array<string>;
 
@@ -1281,8 +1210,8 @@ export interface InvoiceListParams {
    *
    * - `all`: no payment-state filtering, the same as omitting the parameter.
    * - `paid`: only invoices marked paid in full.
-   * - `unpaid`: only invoices that are neither paid in full nor overpaid, including
-   *   invoices carrying partial payments.
+   * - `unpaid`: only invoices not marked paid in full, including invoices carrying
+   *   partial payments.
    * - `overpaid`: only invoices whose applied payments exceed the invoiced amount.
    */
   status?: 'all' | 'paid' | 'unpaid' | 'overpaid';
@@ -1294,18 +1223,16 @@ export declare namespace Invoices {
     type Invoice as Invoice,
     type InvoiceAllocation as InvoiceAllocation,
     type InvoiceLine as InvoiceLine,
-    type ListDepartment as ListDepartment,
+    type InvoiceRelated as InvoiceRelated,
     type ListInvoice as ListInvoice,
     type ListInvoiceAllocation as ListInvoiceAllocation,
     type ListInvoiceLine as ListInvoiceLine,
-    type ListPickLine as ListPickLine,
     type ListShipmentLine as ListShipmentLine,
     type ListShippingCaseDetail as ListShippingCaseDetail,
     type ListTransactionAllocation as ListTransactionAllocation,
-    type Pick as Pick,
-    type PickLine as PickLine,
     type Shipment as Shipment,
     type ShipmentLine as ShipmentLine,
+    type ShipmentRelated as ShipmentRelated,
     type ShippingCaseDetail as ShippingCaseDetail,
     type TransactionAllocation as TransactionAllocation,
     type TransactionDetail as TransactionDetail,

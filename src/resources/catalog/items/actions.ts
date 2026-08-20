@@ -42,13 +42,15 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Reconciles on-hand inventory for multiple items by SKU in one call, the bulk
-   * equivalent of counting stock and correcting the books.
+   * Reconciles inventory for multiple items by SKU in one call, the bulk equivalent
+   * of counting stock and correcting the books.
    *
    * `reconcile_type` controls whether each quantity is added to the item's current
-   * on-hand quantity (`addition`) or replaces it (`force`). The response reports
-   * each item as reconciled, skipped (e.g. unknown SKU), or errored (e.g. unknown
-   * unit), so a problem with one item does not fail the rest of the batch.
+   * quantity (`addition`) or replaces it (`force`). The figure a `force` measures
+   * against is what is on hand net of demand nothing has covered, the same basis the
+   * single-item endpoint uses. The response reports each item as reconciled, skipped
+   * (e.g. unknown SKU), or errored (e.g. unknown unit), so a problem with one item
+   * does not fail the rest of the batch.
    *
    * Each correction is written to the item's inventory audit trail as a user
    * correction, attributed to the caller.
@@ -63,7 +65,7 @@ export class Actions extends APIResource {
    *       {
    *         sku: 'ALM-2024-1001',
    *         unit: 'kg',
-   *         quantity: 10.5,
+   *         quantity: '10.5',
    *       },
    *     ],
    *     reconcile_type: 'addition',
@@ -199,8 +201,11 @@ export interface BulkCreateItemsResponse {
 export interface BulkReconcileItemInput {
   /**
    * Quantity to apply, interpreted according to the request's `reconcile_type`.
+   *
+   * A decimal string rather than a number: a quantity that has been through a binary
+   * float is not the quantity you sent.
    */
-  quantity: number;
+  quantity: string;
 
   /**
    * SKU of the item to reconcile.
@@ -231,10 +236,10 @@ export interface BulkReconcileItemsRequest {
   data: Array<BulkReconcileItemInput>;
 
   /**
-   * How each item's quantity is applied to its current on-hand inventory.
+   * How each item's quantity is applied to its current quantity.
    *
-   * - `addition`: adds the quantity to the item's current on-hand quantity.
-   * - `force`: sets the item's on-hand quantity to exactly the given quantity.
+   * - `addition`: adds the quantity to the item's current quantity.
+   * - `force`: sets the item's current quantity to exactly the given quantity.
    */
   reconcile_type: string;
 }
@@ -384,14 +389,14 @@ export interface ReconciledItemResult {
   item_id: string;
 
   /**
-   * On-hand quantity after the reconciliation.
+   * Quantity after the reconciliation, as a decimal string.
    */
-  new_quantity: number;
+  new_quantity: string;
 
   /**
-   * On-hand quantity before the reconciliation.
+   * Quantity before the reconciliation, as a decimal string.
    */
-  previous_quantity: number;
+  previous_quantity: string;
 
   /**
    * Item SKU.
@@ -437,10 +442,10 @@ export interface ActionBulkReconcileParams {
   data: Array<BulkReconcileItemInput>;
 
   /**
-   * How each item's quantity is applied to its current on-hand inventory.
+   * How each item's quantity is applied to its current quantity.
    *
-   * - `addition`: adds the quantity to the item's current on-hand quantity.
-   * - `force`: sets the item's on-hand quantity to exactly the given quantity.
+   * - `addition`: adds the quantity to the item's current quantity.
+   * - `force`: sets the item's current quantity to exactly the given quantity.
    */
   reconcile_type: string;
 }

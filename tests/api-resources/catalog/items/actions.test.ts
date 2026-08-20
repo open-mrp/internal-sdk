@@ -40,7 +40,7 @@ describe('resource actions', () => {
     const responsePromise = client.catalog.items.actions.bulkReconcile({
       data: [
         {
-          quantity: 10.5,
+          quantity: '10.5',
           sku: 'ALM-2024-1001',
           unit: 'kg',
         },
@@ -60,7 +60,7 @@ describe('resource actions', () => {
     const response = await client.catalog.items.actions.bulkReconcile({
       data: [
         {
-          quantity: 10.5,
+          quantity: '10.5',
           sku: 'ALM-2024-1001',
           unit: 'kg',
         },

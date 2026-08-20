@@ -824,10 +824,8 @@ export interface DeliveryListParams {
   cursor?: string;
 
   /**
-   * Only include deliveries created up to this date (`YYYY-MM-DD`).
-   *
-   * Compared against the start of the given day, so deliveries created later that
-   * same day are excluded.
+   * Only include deliveries created on or before this date (`YYYY-MM-DD`), covering
+   * that whole day.
    */
   ends_at?: string;
 

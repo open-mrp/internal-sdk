@@ -27,7 +27,6 @@ describe('resource accounts', () => {
         {
           cursor: 'cursor',
           include: ['customer'],
-          include_child_accounts: true,
           limit: 0,
           q: 'q',
         },
@@ -55,7 +54,6 @@ describe('resource accounts', () => {
         {
           cursor: 'cursor',
           include: ['allocations'],
-          include_child_accounts: true,
           limit: 0,
           q: 'q',
           status: 'status',

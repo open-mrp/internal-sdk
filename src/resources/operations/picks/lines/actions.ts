@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../../core/resource';
-import * as InvoicesAPI from '../../../finance/invoices';
+import * as PicksAPI from '../picks';
 import { APIPromise } from '../../../../core/api-promise';
 import { RequestOptions } from '../../../../internal/request-options';
 import { path } from '../../../../internal/utils/path';
@@ -30,7 +30,7 @@ export class Actions extends APIResource {
    *   );
    * ```
    */
-  pick(id: string, params: ActionPickParams, options?: RequestOptions): APIPromise<InvoicesAPI.PickLine> {
+  pick(id: string, params: ActionPickParams, options?: RequestOptions): APIPromise<PicksAPI.PickLine> {
     const { pick_id } = params;
     return this._client.put(path`/v1/operations/picks/${pick_id}/lines/${id}/actions/pick`, options);
   }
@@ -53,7 +53,7 @@ export class Actions extends APIResource {
    *   );
    * ```
    */
-  void(id: string, params: ActionVoidParams, options?: RequestOptions): APIPromise<InvoicesAPI.PickLine> {
+  void(id: string, params: ActionVoidParams, options?: RequestOptions): APIPromise<PicksAPI.PickLine> {
     const { pick_id } = params;
     return this._client.put(path`/v1/operations/picks/${pick_id}/lines/${id}/actions/void`, options);
   }

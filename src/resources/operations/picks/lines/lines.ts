@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../../core/resource';
-import * as InvoicesAPI from '../../../finance/invoices';
+import * as PicksAPI from '../picks';
 import * as ActionsAPI from './actions';
 import { ActionPickParams, ActionVoidParams, Actions } from './actions';
 import { APIPromise } from '../../../../core/api-promise';
@@ -33,9 +33,13 @@ export class Lines extends APIResource {
    * );
    * ```
    */
-  update(id: string, params: LineUpdateParams, options?: RequestOptions): APIPromise<InvoicesAPI.PickLine> {
-    const { pick_id, ...body } = params;
-    return this._client.patch(path`/v1/operations/picks/${pick_id}/lines/${id}`, { body, ...options });
+  update(id: string, params: LineUpdateParams, options?: RequestOptions): APIPromise<PicksAPI.PickLine> {
+    const { pick_id, include, ...body } = params;
+    return this._client.patch(path`/v1/operations/picks/${pick_id}/lines/${id}`, {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 }
 
@@ -44,10 +48,8 @@ export class Lines extends APIResource {
  */
 export interface UpdatePickLineRequest {
   /**
-   * New picked quantity for the line, as a decimal string.
-   *
-   * Interpreted in the line's existing quantity unit, which this endpoint cannot
-   * change. The value is stored as given and is not capped at the ordered quantity.
+   * New picked quantity for the line, as a decimal string read in the unit the sales
+   * order line was sold in, stored as given and not capped at the ordered quantity.
    */
   quantity_value?: string;
 }
@@ -59,10 +61,22 @@ export interface LineUpdateParams {
   pick_id: string;
 
   /**
-   * Body param: New picked quantity for the line, as a decimal string.
-   *
-   * Interpreted in the line's existing quantity unit, which this endpoint cannot
-   * change. The value is stored as given and is not capped at the ordered quantity.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    | 'sales_order_line'
+    | 'sales_order_line.product'
+    | 'quantity'
+    | 'quantity.unit'
+    | 'ordered_quantity'
+    | 'ordered_quantity.unit'
+  >;
+
+  /**
+   * Body param: New picked quantity for the line, as a decimal string read in the
+   * unit the sales order line was sold in, stored as given and not capped at the
+   * ordered quantity.
    */
   quantity_value?: string;
 }

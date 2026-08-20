@@ -24,7 +24,7 @@ describe('resource picks', () => {
     await expect(
       client.operations.picks.retrieve(
         'pk_6eilj488bq8d',
-        { include: ['sales_order'] },
+        { include: ['customer'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
@@ -77,10 +77,11 @@ describe('resource picks', () => {
           customer_ids: ['string'],
           department_ids: ['string'],
           ends_at: 'ends_at',
-          include: ['sales_order'],
+          include: ['customer'],
           limit: 0,
           product_line_ids: ['string'],
           q: 'q',
+          sort: 'ship_by_date',
           starts_at: 'starts_at',
           status: 'status',
         },

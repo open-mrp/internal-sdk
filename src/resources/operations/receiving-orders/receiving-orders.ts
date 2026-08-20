@@ -114,10 +114,8 @@ export interface ReceivingOrderListParams {
   cursor?: string;
 
   /**
-   * Only return orders created up to this date (`YYYY-MM-DD`).
-   *
-   * Compared against the start of the given day, so orders created later that same
-   * day are excluded.
+   * Only return orders created on or before this date (`YYYY-MM-DD`), covering that
+   * whole day.
    */
   ends_at?: string;
 

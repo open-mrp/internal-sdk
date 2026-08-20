@@ -24,7 +24,7 @@ describe('resource shipments', () => {
     await expect(
       client.operations.shipments.retrieve(
         'sh_pfygp2gl45y4',
-        { include: ['lines'] },
+        { include: ['related.sales_order'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Augno.NotFoundError);
@@ -79,7 +79,7 @@ describe('resource shipments', () => {
           customer_group_ids: ['string'],
           customer_ids: ['string'],
           ends_at: 'ends_at',
-          include: ['customer'],
+          include: ['related.sales_order'],
           item_ids: ['string'],
           limit: 0,
           product_line_ids: ['string'],

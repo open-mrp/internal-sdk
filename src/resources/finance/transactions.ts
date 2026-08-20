@@ -550,7 +550,8 @@ export interface TransactionListParams {
   customer_ids?: Array<string>;
 
   /**
-   * Only include transactions created before this date (`YYYY-MM-DD`).
+   * Only include transactions created on or before this date (`YYYY-MM-DD`),
+   * covering that whole day.
    */
   ends_at?: string;
 

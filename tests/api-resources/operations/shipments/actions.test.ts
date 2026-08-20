@@ -8,6 +8,33 @@ const client = new Augno({
 });
 
 describe('resource actions', () => {
+  test('adminUpdateTracking', async () => {
+    const responsePromise = client.operations.shipments.actions.adminUpdateTracking('sh_pfygp2gl45y4');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('adminUpdateTracking: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.shipments.actions.adminUpdateTracking(
+        'sh_pfygp2gl45y4',
+        {
+          include: ['lines'],
+          carrier_id: 'carrier_id',
+          master_tracking_number: '1Z999AA10123456784',
+          service_level_id: 'service_level_id',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Augno.NotFoundError);
+  });
+
   test('estimateRate: only required params', async () => {
     const responsePromise = client.operations.shipments.actions.estimateRate({
       carrier_id: 'cr_tv5vfjtgu1n3',

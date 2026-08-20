@@ -77,6 +77,7 @@ export {
   Departments,
   type CreateDepartmentRequest,
   type DepartmentRateInput,
+  type ListDepartment,
   type UpdateDepartmentRequest,
   type DepartmentDeleteResponse,
   type DepartmentCreateParams,
@@ -172,7 +173,13 @@ export {
 export {
   Picks,
   type ListPick,
+  type ListPickLine,
+  type Pick,
+  type PickLine,
+  type PickRelated,
   type PickShipmentsResponse,
+  type PickStageTotal,
+  type PickTotals,
   type UpdatePickRequest,
   type PickRetrieveParams,
   type PickUpdateParams,
@@ -312,7 +319,7 @@ export {
   type ShippingCaseDeleteResponse,
   type ShippingCaseRetrieveParams,
   type ShippingCaseUpdateParams,
-} from './shipping-cases';
+} from './shipping-cases/index';
 export {
   ShippingTerms,
   type CreateShippingTermRequest,

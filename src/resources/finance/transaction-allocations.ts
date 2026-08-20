@@ -245,7 +245,8 @@ export interface TransactionAllocationListParams {
   cursor?: string;
 
   /**
-   * Only include allocations created before this date (`YYYY-MM-DD`).
+   * Only include allocations created on or before this date (`YYYY-MM-DD`), covering
+   * that whole day.
    */
   ends_at?: string;
 
