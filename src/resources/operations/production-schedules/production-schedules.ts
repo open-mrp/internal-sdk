@@ -8,7 +8,6 @@ import * as ActionsAPI from './actions';
 import {
   ActionPreviewParams,
   ActionPreviewRegenerateParams,
-  ActionQuotePromiseDateParams,
   ActionRegenerateParams,
   ActionReleaseWeekParams,
   Actions,
@@ -20,8 +19,6 @@ import {
   PreviewRegenerateProductionScheduleRequest,
   ProductionSchedulePreview,
   ProductionScheduleRegeneratePreview,
-  PromiseDateQuote,
-  QuotePromiseDateRequest,
   RegenerateProductionScheduleRequest,
   ReleaseProductionScheduleWeekRequest,
   ReleaseScheduleWeekResult,
@@ -2396,8 +2393,6 @@ export declare namespace ProductionSchedules {
     type PreviewRegenerateProductionScheduleRequest as PreviewRegenerateProductionScheduleRequest,
     type ProductionSchedulePreview as ProductionSchedulePreview,
     type ProductionScheduleRegeneratePreview as ProductionScheduleRegeneratePreview,
-    type PromiseDateQuote as PromiseDateQuote,
-    type QuotePromiseDateRequest as QuotePromiseDateRequest,
     type RegenerateProductionScheduleRequest as RegenerateProductionScheduleRequest,
     type ReleaseProductionScheduleWeekRequest as ReleaseProductionScheduleWeekRequest,
     type ReleaseScheduleWeekResult as ReleaseScheduleWeekResult,
@@ -2407,7 +2402,6 @@ export declare namespace ProductionSchedules {
     type ScheduleProjection as ScheduleProjection,
     type ActionPreviewParams as ActionPreviewParams,
     type ActionPreviewRegenerateParams as ActionPreviewRegenerateParams,
-    type ActionQuotePromiseDateParams as ActionQuotePromiseDateParams,
     type ActionRegenerateParams as ActionRegenerateParams,
     type ActionReleaseWeekParams as ActionReleaseWeekParams,
   };

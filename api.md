@@ -2870,8 +2870,6 @@ Types:
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">PreviewRegenerateProductionScheduleRequest</a></code>
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">ProductionSchedulePreview</a></code>
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">ProductionScheduleRegeneratePreview</a></code>
-- <code><a href="./src/resources/operations/production-schedules/actions.ts">PromiseDateQuote</a></code>
-- <code><a href="./src/resources/operations/production-schedules/actions.ts">QuotePromiseDateRequest</a></code>
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">RegenerateProductionScheduleRequest</a></code>
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">ReleaseProductionScheduleWeekRequest</a></code>
 - <code><a href="./src/resources/operations/production-schedules/actions.ts">ReleaseScheduleWeekResult</a></code>
@@ -2886,7 +2884,6 @@ Methods:
 - <code title="put /v1/operations/production-schedules/actions/preview">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">preview</a>({ ...params }) -> ProductionSchedulePreview</code>
 - <code title="put /v1/operations/production-schedules/{id}/actions/preview-regenerate">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">previewRegenerate</a>(id, { ...params }) -> ProductionScheduleRegeneratePreview</code>
 - <code title="put /v1/operations/production-schedules/{id}/actions/publish">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">publish</a>(id) -> ProductionSchedule</code>
-- <code title="post /v1/operations/production-schedules/actions/quote-promise-date">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">quotePromiseDate</a>({ ...params }) -> PromiseDateQuote</code>
 - <code title="put /v1/operations/production-schedules/{id}/actions/regenerate">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">regenerate</a>(id, { ...params }) -> ProductionSchedule</code>
 - <code title="post /v1/operations/production-schedules/{id}/actions/release-week">client.operations.productionSchedules.actions.<a href="./src/resources/operations/production-schedules/actions.ts">releaseWeek</a>(id, { ...params }) -> ReleaseScheduleWeekResult</code>
 

@@ -240,7 +240,6 @@ export interface Job {
     | 'delivery_breakdown'
     | 'schedule_order_coverage'
     | 'schedule_order_coverage_line'
-    | 'promise_date_quote'
     | 'schedule_deviation_type'
     | 'schedule_at_risk_order'
     | 'production_schedule_finished_policy'

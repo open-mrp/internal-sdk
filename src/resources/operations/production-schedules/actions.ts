@@ -139,44 +139,6 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Returns the earliest date the published schedule could ship a quantity of an
-   * item.
-   *
-   * Quoted from the published version — the plan the floor is actually working to —
-   * and net of everything already promised to other orders. A date backed by stock
-   * somebody else is owed is not a date, so existing commitments are consumed before
-   * anything is offered.
-   *
-   * The answer allows for finishing after the constraint stage completes, so it is a
-   * ship date rather than a production date. When the published horizon cannot
-   * supply the quantity at all, `is_promisable` is false and no date is returned: a
-   * plan that runs thirteen weeks cannot speak for the fourteenth, and inventing a
-   * date beyond it would be the one number a customer actually relies on.
-   *
-   * Quoting does not reserve anything. Two quotes taken a minute apart can both come
-   * back with the same date, and only issuing an order commits the supply.
-   *
-   * This endpoint requires the permission: `production_schedules:read`.
-   *
-   * @example
-   * ```ts
-   * const promiseDateQuote =
-   *   await client.operations.productionSchedules.actions.quotePromiseDate(
-   *     { item_id: 'it_pej07ckhvu62', quantity: 1200 },
-   *   );
-   * ```
-   */
-  quotePromiseDate(
-    body: ActionQuotePromiseDateParams,
-    options?: RequestOptions,
-  ): APIPromise<PromiseDateQuote> {
-    return this._client.post('/v1/operations/production-schedules/actions/quote-promise-date', {
-      body,
-      ...options,
-    });
-  }
-
-  /**
    * Re-solves a draft in place, keeping its version number.
    *
    * Only a draft can be regenerated. A published version is a commitment the floor
@@ -553,71 +515,6 @@ export interface ProductionScheduleRegeneratePreview {
    * Which solver produced the proposal.
    */
   solver_version: string;
-}
-
-/**
- * The earliest date the published plan could ship a quantity of an item.
- */
-export interface PromiseDateQuote {
-  /**
-   * Earliest date the quantity could ship, allowing for finishing after the
-   * constraint stage completes.
-   */
-  earliest_ship_date: string | null;
-
-  /**
-   * Horizon week the constraint stage would complete in.
-   */
-  earliest_week_index: number | null;
-
-  /**
-   * Whether the published horizon can supply it at all.
-   *
-   * False means the plan as published runs out before it could cover this quantity.
-   * That is not the same as "never" — it is the honest limit of a plan that only
-   * runs so many weeks.
-   */
-  is_promisable: boolean;
-
-  /**
-   * Entity is a polymorphic reference to any resource in the system.
-   */
-  item: CoreAPI.Entity | null;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'promise_date_quote';
-
-  /**
-   * Entity is a polymorphic reference to any resource in the system.
-   */
-  production_schedule: CoreAPI.Entity | null;
-
-  /**
-   * Version number of that schedule.
-   */
-  production_schedule_version: number;
-
-  /**
-   * The quantity being quoted.
-   */
-  quantity: number;
-}
-
-/**
- * Request to quote the earliest date a quantity could ship.
- */
-export interface QuotePromiseDateRequest {
-  /**
-   * Item being quoted.
-   */
-  item_id: string;
-
-  /**
-   * Quantity being quoted, in the item's own unit.
-   */
-  quantity: number;
 }
 
 /**
@@ -1069,18 +966,6 @@ export interface ActionPreviewRegenerateParams {
   planning_as_of?: string;
 }
 
-export interface ActionQuotePromiseDateParams {
-  /**
-   * Item being quoted.
-   */
-  item_id: string;
-
-  /**
-   * Quantity being quoted, in the item's own unit.
-   */
-  quantity: number;
-}
-
 export interface ActionRegenerateParams {
   /**
    * How future demand is derived, defaulting to the basis this version was solved
@@ -1164,8 +1049,6 @@ export declare namespace Actions {
     type PreviewRegenerateProductionScheduleRequest as PreviewRegenerateProductionScheduleRequest,
     type ProductionSchedulePreview as ProductionSchedulePreview,
     type ProductionScheduleRegeneratePreview as ProductionScheduleRegeneratePreview,
-    type PromiseDateQuote as PromiseDateQuote,
-    type QuotePromiseDateRequest as QuotePromiseDateRequest,
     type RegenerateProductionScheduleRequest as RegenerateProductionScheduleRequest,
     type ReleaseProductionScheduleWeekRequest as ReleaseProductionScheduleWeekRequest,
     type ReleaseScheduleWeekResult as ReleaseScheduleWeekResult,
@@ -1175,7 +1058,6 @@ export declare namespace Actions {
     type ScheduleProjection as ScheduleProjection,
     type ActionPreviewParams as ActionPreviewParams,
     type ActionPreviewRegenerateParams as ActionPreviewRegenerateParams,
-    type ActionQuotePromiseDateParams as ActionQuotePromiseDateParams,
     type ActionRegenerateParams as ActionRegenerateParams,
     type ActionReleaseWeekParams as ActionReleaseWeekParams,
   };
