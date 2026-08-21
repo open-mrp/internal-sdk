@@ -845,9 +845,9 @@ export interface PurchaseOrderListParams {
   starts_at?: string;
 
   /**
-   * Filter to orders with any of these statuses (`estimate`, `issued`, `fulfilled`).
+   * Filter to orders with any of these statuses.
    */
-  status_codes?: Array<string>;
+  status_codes?: Array<'estimate' | 'issued' | 'fulfilled'>;
 
   /**
    * Filter to orders placed with any of these suppliers.

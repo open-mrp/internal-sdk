@@ -160,7 +160,7 @@ describe('resource purchaseOrders', () => {
           limit: 0,
           q: 'q',
           starts_at: 'starts_at',
-          status_codes: ['string'],
+          status_codes: ['estimate'],
           supplier_ids: ['string'],
         },
         { path: '/_stainless_unknown_path' },

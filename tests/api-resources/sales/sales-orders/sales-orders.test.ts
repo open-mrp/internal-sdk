@@ -164,7 +164,7 @@ describe('resource salesOrders', () => {
           ship_by_after: 'ship_by_after',
           ship_by_before: 'ship_by_before',
           starts_at: 'starts_at',
-          status_codes: ['string'],
+          status_codes: ['estimate'],
         },
         { path: '/_stainless_unknown_path' },
       ),

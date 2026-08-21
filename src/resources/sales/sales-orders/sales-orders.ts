@@ -2166,10 +2166,9 @@ export interface SalesOrderListParams {
   starts_at?: string;
 
   /**
-   * Restricts results to orders in any of these lifecycle statuses (`estimate`,
-   * `issued`, `fulfilled`).
+   * Restricts results to orders in any of these lifecycle statuses.
    */
-  status_codes?: Array<string>;
+  status_codes?: Array<'estimate' | 'issued' | 'fulfilled'>;
 }
 
 export interface SalesOrderCheckoutParams {
