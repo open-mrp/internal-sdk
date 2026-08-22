@@ -49,7 +49,7 @@ export class Users extends APIResource {
    *   'us_43irtlt2ajz6',
    *   {
    *     image_url:
-   *       'https://cdn.openmrp.ai/avatars/us_43irtlt2ajz6.jpg',
+   *       'https://cdn.augno.com/avatars/us_43irtlt2ajz6.jpg',
    *     name: 'John Doe',
    *   },
    * );

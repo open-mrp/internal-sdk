@@ -10,7 +10,7 @@ const client = new OpenMRP({
 describe('resource registrationSessions', () => {
   test('create: only required params', async () => {
     const responsePromise = client.auth.registrationSessions.create({
-      email: 'jdoe@openmrp.ai',
+      email: 'jdoe@augno.com',
       plan_code: 'starter',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -24,7 +24,7 @@ describe('resource registrationSessions', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.auth.registrationSessions.create({
-      email: 'jdoe@openmrp.ai',
+      email: 'jdoe@augno.com',
       plan_code: 'starter',
     });
   });

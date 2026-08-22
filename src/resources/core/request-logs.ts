@@ -212,7 +212,7 @@ export interface RequestLog {
   /**
    * Request host.
    *
-   * Usually `api.openmrp.ai`.
+   * Usually `api.augno.com`.
    */
   host: string;
 
@@ -452,7 +452,7 @@ export interface RequestLogListParams {
   /**
    * Filter by the request host.
    *
-   * Typically `api.openmrp.ai`.
+   * Typically `api.augno.com`.
    */
   hosts?: Array<string>;
 

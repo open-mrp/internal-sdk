@@ -20,7 +20,7 @@ or products provided by OpenMRP, please follow the respective company's security
 
 ### OpenMRP Terms and Policies
 
-Please contact support@openmrp.ai for any questions or concerns regarding the security of our services.
+Please contact support@augno.com for any questions or concerns regarding the security of our services.
 
 ---
 

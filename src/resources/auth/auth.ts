@@ -144,7 +144,7 @@ export class Auth extends APIResource {
    * @example
    * ```ts
    * const user = await client.auth.users({
-   *   email: 'jdoe@openmrp.ai',
+   *   email: 'jdoe@augno.com',
    *   name: 'John Doe',
    *   password: 'QgS7Z8Hhj3&1',
    * });

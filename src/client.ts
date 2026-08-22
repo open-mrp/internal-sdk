@@ -127,7 +127,7 @@ import {
 import { isEmptyObj } from './internal/utils/values';
 
 const environments = {
-  production: 'https://api.openmrp.ai',
+  production: 'https://api.augno.com',
   local: 'http://localhost:8081',
 };
 type Environment = keyof typeof environments;
@@ -147,7 +147,7 @@ export interface ClientOptions {
    * Specifies the environment to use for the API.
    *
    * Each environment maps to a different base URL:
-   * - `production` corresponds to `https://api.openmrp.ai`
+   * - `production` corresponds to `https://api.augno.com`
    * - `local` corresponds to `http://localhost:8081`
    */
   environment?: Environment | undefined;
@@ -246,7 +246,7 @@ export class OpenMRP {
    * @param {string | null | undefined} [opts.bearerToken=process.env['OPENMRP_API_KEY'] ?? null]
    * @param {string | null | undefined} [opts.openMRPAccountID]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
-   * @param {string} [opts.baseURL=process.env['OPENMRP_BASE_URL'] ?? https://api.openmrp.ai] - Override the default base URL for the API.
+   * @param {string} [opts.baseURL=process.env['OPENMRP_BASE_URL'] ?? https://api.augno.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.

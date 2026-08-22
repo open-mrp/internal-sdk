@@ -26,7 +26,7 @@ export class Actions extends APIResource {
    * const response =
    *   await client.finance.accounts.actions.emailReceivables(
    *     'ac_ykxoradjoeb3',
-   *     { recipient_emails: ['jdoe@openmrp.ai'] },
+   *     { recipient_emails: ['jdoe@augno.com'] },
    *   );
    * ```
    */

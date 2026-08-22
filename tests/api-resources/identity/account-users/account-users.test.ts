@@ -26,7 +26,7 @@ describe('resource accountUsers', () => {
         {
           include: ['user'],
           department_id: 'dp_m0jayebxnkos',
-          email: 'jdoe@openmrp.ai',
+          email: 'jdoe@augno.com',
           is_commission_eligible: false,
           name: 'John Doe',
           password: 'QgS7Z8Hhj3&1',
@@ -80,7 +80,7 @@ describe('resource accountUsers', () => {
         {
           include: ['user'],
           department_id: 'dp_m0jayebxnkos',
-          email: 'jdoe@openmrp.ai',
+          email: 'jdoe@augno.com',
           is_commission_eligible: false,
           name: 'John Doe',
           preferences: [{ enabled: true, notification_type: 'order_acknowledgement' }],

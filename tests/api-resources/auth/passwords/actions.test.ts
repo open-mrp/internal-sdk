@@ -9,7 +9,7 @@ const client = new OpenMRP({
 
 describe('resource actions', () => {
   test('requestReset: only required params', async () => {
-    const responsePromise = client.auth.passwords.actions.requestReset({ identifier: 'jdoe@openmrp.ai' });
+    const responsePromise = client.auth.passwords.actions.requestReset({ identifier: 'jdoe@augno.com' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,7 +21,7 @@ describe('resource actions', () => {
 
   test('requestReset: required and optional params', async () => {
     const response = await client.auth.passwords.actions.requestReset({
-      identifier: 'jdoe@openmrp.ai',
+      identifier: 'jdoe@augno.com',
       account_slug: 'account_slug',
     });
   });

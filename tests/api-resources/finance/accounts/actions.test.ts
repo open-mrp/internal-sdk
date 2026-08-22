@@ -10,7 +10,7 @@ const client = new OpenMRP({
 describe('resource actions', () => {
   test('emailReceivables: only required params', async () => {
     const responsePromise = client.finance.accounts.actions.emailReceivables('ac_ykxoradjoeb3', {
-      recipient_emails: ['jdoe@openmrp.ai'],
+      recipient_emails: ['jdoe@augno.com'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,7 +23,7 @@ describe('resource actions', () => {
 
   test('emailReceivables: required and optional params', async () => {
     const response = await client.finance.accounts.actions.emailReceivables('ac_ykxoradjoeb3', {
-      recipient_emails: ['jdoe@openmrp.ai'],
+      recipient_emails: ['jdoe@augno.com'],
     });
   });
 });

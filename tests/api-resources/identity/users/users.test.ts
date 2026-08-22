@@ -37,7 +37,7 @@ describe('resource users', () => {
         'us_43irtlt2ajz6',
         {
           email_verified: '2019-12-27T18:11:19.117Z',
-          image_url: 'https://cdn.openmrp.ai/avatars/us_43irtlt2ajz6.jpg',
+          image_url: 'https://cdn.augno.com/avatars/us_43irtlt2ajz6.jpg',
           name: 'John Doe',
         },
         { path: '/_stainless_unknown_path' },

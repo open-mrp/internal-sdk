@@ -57,7 +57,7 @@ describe('resource auth', () => {
 
   test('users: only required params', async () => {
     const responsePromise = client.auth.users({
-      email: 'jdoe@openmrp.ai',
+      email: 'jdoe@augno.com',
       name: 'John Doe',
       password: 'QgS7Z8Hhj3&1',
     });
@@ -72,7 +72,7 @@ describe('resource auth', () => {
 
   test('users: required and optional params', async () => {
     const response = await client.auth.users({
-      email: 'jdoe@openmrp.ai',
+      email: 'jdoe@augno.com',
       name: 'John Doe',
       password: 'QgS7Z8Hhj3&1',
       account_slug: 'account_slug',

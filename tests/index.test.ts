@@ -328,13 +328,13 @@ describe('instantiate client', () => {
     test('empty env variable', () => {
       process.env['OPENMRP_BASE_URL'] = ''; // empty
       const client = new OpenMRP({ bearerToken: 'My Bearer Token' });
-      expect(client.baseURL).toEqual('https://api.openmrp.ai');
+      expect(client.baseURL).toEqual('https://api.augno.com');
     });
 
     test('blank env variable', () => {
       process.env['OPENMRP_BASE_URL'] = '  '; // blank
       const client = new OpenMRP({ bearerToken: 'My Bearer Token' });
-      expect(client.baseURL).toEqual('https://api.openmrp.ai');
+      expect(client.baseURL).toEqual('https://api.augno.com');
     });
 
     test('env variable with environment', () => {
@@ -351,7 +351,7 @@ describe('instantiate client', () => {
         baseURL: null,
         environment: 'production',
       });
-      expect(client.baseURL).toEqual('https://api.openmrp.ai');
+      expect(client.baseURL).toEqual('https://api.augno.com');
     });
 
     test('in request options', () => {
