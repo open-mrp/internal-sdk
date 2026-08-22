@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import OpenMRP from '@openmrp/internal-sdk';
+import Openmrp from '@openmrp/internal-sdk';
 
-const client = new OpenMRP({
+const client = new Openmrp({
   bearerToken: 'My Bearer Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
@@ -31,7 +31,7 @@ describe('resource productionSchedules', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('retrieve', async () => {
@@ -68,7 +68,7 @@ describe('resource productionSchedules', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('delete', async () => {
@@ -123,7 +123,7 @@ describe('resource productionSchedules', () => {
         { department_ids: ['string'], week_index: 0 },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('retrieveDeviations', async () => {
@@ -150,7 +150,7 @@ describe('resource productionSchedules', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('retrieveFinishedPolicies', async () => {
@@ -184,7 +184,7 @@ describe('resource productionSchedules', () => {
         { item_id: 'item_id', week_index: 0 },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('retrieveItemPolicies', async () => {
@@ -218,6 +218,6 @@ describe('resource productionSchedules', () => {
         { skip_carry_forward: true, week_index: 0 },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 });

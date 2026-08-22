@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import OpenMRP from '@openmrp/internal-sdk';
+import Openmrp from '@openmrp/internal-sdk';
 
-const client = new OpenMRP({
+const client = new Openmrp({
   bearerToken: 'My Bearer Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
@@ -57,7 +57,7 @@ describe('resource auth', () => {
 
   test('users: only required params', async () => {
     const responsePromise = client.auth.users({
-      email: 'jdoe@augno.com',
+      email: 'jdoe@openmrp.ai',
       name: 'John Doe',
       password: 'QgS7Z8Hhj3&1',
     });
@@ -72,7 +72,7 @@ describe('resource auth', () => {
 
   test('users: required and optional params', async () => {
     const response = await client.auth.users({
-      email: 'jdoe@augno.com',
+      email: 'jdoe@openmrp.ai',
       name: 'John Doe',
       password: 'QgS7Z8Hhj3&1',
       account_slug: 'account_slug',

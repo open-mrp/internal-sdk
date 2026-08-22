@@ -212,7 +212,7 @@ export interface RequestLog {
   /**
    * Request host.
    *
-   * Usually `api.augno.com`.
+   * Usually `api.openmrp.ai`.
    */
   host: string;
 
@@ -225,7 +225,8 @@ export interface RequestLog {
    * Request latency in microseconds.
    *
    * Measured at the API edge, from the moment the request was received until the
-   * response was written, so it excludes network time between your client and OpenMRP.
+   * response was written, so it excludes network time between your client and
+   * OpenMRP.
    */
   latency_us: number;
 
@@ -452,7 +453,7 @@ export interface RequestLogListParams {
   /**
    * Filter by the request host.
    *
-   * Typically `api.augno.com`.
+   * Typically `api.openmrp.ai`.
    */
   hosts?: Array<string>;
 

@@ -31,8 +31,7 @@ jobs:
         uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3.9.1
         with:
           node-version: '20'
-          registry-url: https://registry.npmjs.org
-          scope: '@openmrp'
+          registry-url: https://registry.npmjs.org/
 
       - name: Set up pnpm
         if: ${{ steps.release.outputs.releases_created == 'true' }}
@@ -48,7 +47,4 @@ jobs:
         run: |
           bash ./bin/publish-npm
         env:
-          # setup-node writes an .npmrc that reads NODE_AUTH_TOKEN; bin/publish-npm
-          # reads NPM_TOKEN. Both must be the npm credential, not GITHUB_TOKEN.
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.OPENMRP_NPM_TOKEN || secrets.NPM_TOKEN }}

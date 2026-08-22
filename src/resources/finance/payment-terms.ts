@@ -88,8 +88,8 @@ export class PaymentTerms extends APIResource {
   /**
    * Returns a paginated list of payment terms.
    *
-   * The list includes both payment terms created by your account and OpenMRP-provided
-   * system defaults.
+   * The list includes both payment terms created by your account and
+   * OpenMRP-provided system defaults.
    *
    * This endpoint requires the permission: `payment_terms:read`.
    *

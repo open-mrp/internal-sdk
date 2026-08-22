@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import OpenMRP from '@openmrp/internal-sdk';
+import Openmrp from '@openmrp/internal-sdk';
 
-const client = new OpenMRP({
+const client = new Openmrp({
   bearerToken: 'My Bearer Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
@@ -26,7 +26,7 @@ describe('resource analytics', () => {
         { period_in_weeks: 0 },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('updateCustomerPricing', async () => {
@@ -53,7 +53,7 @@ describe('resource analytics', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('updateDeliveries: only required params', async () => {
@@ -132,7 +132,7 @@ describe('resource analytics', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('updateInventoryReceipts', async () => {
@@ -157,7 +157,7 @@ describe('resource analytics', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('updateManufacturing: only required params', async () => {
@@ -230,7 +230,7 @@ describe('resource analytics', () => {
         { sales_order_ids: ['or_9lqo07quiwyb'], supplier_ids: ['ac_gwy8tfbc074f'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('updateNewCustomers: only required params', async () => {
@@ -345,7 +345,7 @@ describe('resource analytics', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('updateProductionCosts', async () => {
@@ -373,7 +373,7 @@ describe('resource analytics', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('updateQuarterlyOrders', async () => {
@@ -400,7 +400,7 @@ describe('resource analytics', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+    ).rejects.toThrow(Openmrp.NotFoundError);
   });
 
   test('updateRealizedMargins: only required params', async () => {

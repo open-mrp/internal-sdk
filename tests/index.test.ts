@@ -3,7 +3,7 @@
 import { APIPromise } from '@openmrp/internal-sdk/core/api-promise';
 
 import util from 'node:util';
-import OpenMRP from '@openmrp/internal-sdk';
+import Openmrp from '@openmrp/internal-sdk';
 import { APIUserAbortError } from '@openmrp/internal-sdk';
 const defaultFetch = fetch;
 
@@ -20,7 +20,7 @@ describe('instantiate client', () => {
   });
 
   describe('defaultHeaders', () => {
-    const client = new OpenMRP({
+    const client = new Openmrp({
       baseURL: 'http://localhost:5000/',
       defaultHeaders: { 'X-My-Default-Header': '2' },
       bearerToken: 'My Bearer Token',
@@ -61,7 +61,7 @@ describe('instantiate client', () => {
       process.env = env;
     });
 
-    const forceAPIResponseForClient = async (client: OpenMRP) => {
+    const forceAPIResponseForClient = async (client: Openmrp) => {
       await new APIPromise(
         client,
         Promise.resolve({
@@ -87,7 +87,7 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      const client = new OpenMRP({
+      const client = new Openmrp({
         logger: logger,
         logLevel: 'debug',
         bearerToken: 'My Bearer Token',
@@ -98,7 +98,7 @@ describe('instantiate client', () => {
     });
 
     test('default logLevel is warn', async () => {
-      const client = new OpenMRP({ bearerToken: 'My Bearer Token' });
+      const client = new Openmrp({ bearerToken: 'My Bearer Token' });
       expect(client.logLevel).toBe('warn');
     });
 
@@ -111,7 +111,7 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      const client = new OpenMRP({
+      const client = new Openmrp({
         logger: logger,
         logLevel: 'info',
         bearerToken: 'My Bearer Token',
@@ -131,7 +131,7 @@ describe('instantiate client', () => {
       };
 
       process.env['OPENMRP_LOG'] = 'debug';
-      const client = new OpenMRP({ logger: logger, bearerToken: 'My Bearer Token' });
+      const client = new Openmrp({ logger: logger, bearerToken: 'My Bearer Token' });
       expect(client.logLevel).toBe('debug');
 
       await forceAPIResponseForClient(client);
@@ -148,7 +148,7 @@ describe('instantiate client', () => {
       };
 
       process.env['OPENMRP_LOG'] = 'not a log level';
-      const client = new OpenMRP({ logger: logger, bearerToken: 'My Bearer Token' });
+      const client = new Openmrp({ logger: logger, bearerToken: 'My Bearer Token' });
       expect(client.logLevel).toBe('warn');
       expect(warnMock).toHaveBeenCalledWith(
         'process.env[\'OPENMRP_LOG\'] was set to "not a log level", expected one of ["off","error","warn","info","debug"]',
@@ -165,7 +165,7 @@ describe('instantiate client', () => {
       };
 
       process.env['OPENMRP_LOG'] = 'debug';
-      const client = new OpenMRP({
+      const client = new Openmrp({
         logger: logger,
         logLevel: 'off',
         bearerToken: 'My Bearer Token',
@@ -185,7 +185,7 @@ describe('instantiate client', () => {
       };
 
       process.env['OPENMRP_LOG'] = 'not a log level';
-      const client = new OpenMRP({
+      const client = new Openmrp({
         logger: logger,
         logLevel: 'debug',
         bearerToken: 'My Bearer Token',
@@ -197,7 +197,7 @@ describe('instantiate client', () => {
 
   describe('defaultQuery', () => {
     test('with null query params given', () => {
-      const client = new OpenMRP({
+      const client = new Openmrp({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { apiVersion: 'foo' },
         bearerToken: 'My Bearer Token',
@@ -206,7 +206,7 @@ describe('instantiate client', () => {
     });
 
     test('multiple default query params', () => {
-      const client = new OpenMRP({
+      const client = new Openmrp({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { apiVersion: 'foo', hello: 'world' },
         bearerToken: 'My Bearer Token',
@@ -215,7 +215,7 @@ describe('instantiate client', () => {
     });
 
     test('overriding with `undefined`', () => {
-      const client = new OpenMRP({
+      const client = new Openmrp({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { hello: 'world' },
         bearerToken: 'My Bearer Token',
@@ -225,7 +225,7 @@ describe('instantiate client', () => {
   });
 
   test('custom fetch', async () => {
-    const client = new OpenMRP({
+    const client = new Openmrp({
       baseURL: 'http://localhost:5000/',
       bearerToken: 'My Bearer Token',
       fetch: (url) => {
@@ -243,7 +243,7 @@ describe('instantiate client', () => {
 
   test('explicit global fetch', async () => {
     // make sure the global fetch type is assignable to our Fetch type
-    const client = new OpenMRP({
+    const client = new Openmrp({
       baseURL: 'http://localhost:5000/',
       bearerToken: 'My Bearer Token',
       fetch: defaultFetch,
@@ -251,7 +251,7 @@ describe('instantiate client', () => {
   });
 
   test('custom signal', async () => {
-    const client = new OpenMRP({
+    const client = new Openmrp({
       baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
       bearerToken: 'My Bearer Token',
       fetch: (...args) => {
@@ -283,7 +283,7 @@ describe('instantiate client', () => {
       return new Response(JSON.stringify({}), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new OpenMRP({
+    const client = new Openmrp({
       baseURL: 'http://localhost:5000/',
       bearerToken: 'My Bearer Token',
       fetch: testFetch,
@@ -295,7 +295,7 @@ describe('instantiate client', () => {
 
   describe('baseUrl', () => {
     test('trailing slash', () => {
-      const client = new OpenMRP({
+      const client = new Openmrp({
         baseURL: 'http://localhost:5000/custom/path/',
         bearerToken: 'My Bearer Token',
       });
@@ -303,7 +303,7 @@ describe('instantiate client', () => {
     });
 
     test('no trailing slash', () => {
-      const client = new OpenMRP({
+      const client = new Openmrp({
         baseURL: 'http://localhost:5000/custom/path',
         bearerToken: 'My Bearer Token',
       });
@@ -315,54 +315,54 @@ describe('instantiate client', () => {
     });
 
     test('explicit option', () => {
-      const client = new OpenMRP({ baseURL: 'https://example.com', bearerToken: 'My Bearer Token' });
+      const client = new Openmrp({ baseURL: 'https://example.com', bearerToken: 'My Bearer Token' });
       expect(client.baseURL).toEqual('https://example.com');
     });
 
     test('env variable', () => {
       process.env['OPENMRP_BASE_URL'] = 'https://example.com/from_env';
-      const client = new OpenMRP({ bearerToken: 'My Bearer Token' });
+      const client = new Openmrp({ bearerToken: 'My Bearer Token' });
       expect(client.baseURL).toEqual('https://example.com/from_env');
     });
 
     test('empty env variable', () => {
       process.env['OPENMRP_BASE_URL'] = ''; // empty
-      const client = new OpenMRP({ bearerToken: 'My Bearer Token' });
-      expect(client.baseURL).toEqual('https://api.augno.com');
+      const client = new Openmrp({ bearerToken: 'My Bearer Token' });
+      expect(client.baseURL).toEqual('https://api.openmrp.ai');
     });
 
     test('blank env variable', () => {
       process.env['OPENMRP_BASE_URL'] = '  '; // blank
-      const client = new OpenMRP({ bearerToken: 'My Bearer Token' });
-      expect(client.baseURL).toEqual('https://api.augno.com');
+      const client = new Openmrp({ bearerToken: 'My Bearer Token' });
+      expect(client.baseURL).toEqual('https://api.openmrp.ai');
     });
 
     test('env variable with environment', () => {
       process.env['OPENMRP_BASE_URL'] = 'https://example.com/from_env';
 
       expect(
-        () => new OpenMRP({ bearerToken: 'My Bearer Token', environment: 'production' }),
+        () => new Openmrp({ bearerToken: 'My Bearer Token', environment: 'production' }),
       ).toThrowErrorMatchingInlineSnapshot(
         `"Ambiguous URL; The \`baseURL\` option (or OPENMRP_BASE_URL env var) and the \`environment\` option are given. If you want to use the environment you must pass baseURL: null"`,
       );
 
-      const client = new OpenMRP({
+      const client = new Openmrp({
         bearerToken: 'My Bearer Token',
         baseURL: null,
         environment: 'production',
       });
-      expect(client.baseURL).toEqual('https://api.augno.com');
+      expect(client.baseURL).toEqual('https://api.openmrp.ai');
     });
 
     test('in request options', () => {
-      const client = new OpenMRP({ bearerToken: 'My Bearer Token' });
+      const client = new Openmrp({ bearerToken: 'My Bearer Token' });
       expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
         'http://localhost:5000/option/foo',
       );
     });
 
     test('in request options overridden by client options', () => {
-      const client = new OpenMRP({ bearerToken: 'My Bearer Token', baseURL: 'http://localhost:5000/client' });
+      const client = new Openmrp({ bearerToken: 'My Bearer Token', baseURL: 'http://localhost:5000/client' });
       expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
         'http://localhost:5000/client/foo',
       );
@@ -370,7 +370,7 @@ describe('instantiate client', () => {
 
     test('in request options overridden by env variable', () => {
       process.env['OPENMRP_BASE_URL'] = 'http://localhost:5000/env';
-      const client = new OpenMRP({ bearerToken: 'My Bearer Token' });
+      const client = new Openmrp({ bearerToken: 'My Bearer Token' });
       expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
         'http://localhost:5000/env/foo',
       );
@@ -378,17 +378,17 @@ describe('instantiate client', () => {
   });
 
   test('maxRetries option is correctly set', () => {
-    const client = new OpenMRP({ maxRetries: 4, bearerToken: 'My Bearer Token' });
+    const client = new Openmrp({ maxRetries: 4, bearerToken: 'My Bearer Token' });
     expect(client.maxRetries).toEqual(4);
 
     // default
-    const client2 = new OpenMRP({ bearerToken: 'My Bearer Token' });
+    const client2 = new Openmrp({ bearerToken: 'My Bearer Token' });
     expect(client2.maxRetries).toEqual(2);
   });
 
   describe('withOptions', () => {
     test('creates a new client with overridden options', async () => {
-      const client = new OpenMRP({
+      const client = new Openmrp({
         baseURL: 'http://localhost:5000/',
         maxRetries: 3,
         bearerToken: 'My Bearer Token',
@@ -413,7 +413,7 @@ describe('instantiate client', () => {
     });
 
     test('inherits options from the parent client', async () => {
-      const client = new OpenMRP({
+      const client = new Openmrp({
         baseURL: 'http://localhost:5000/',
         defaultHeaders: { 'X-Test-Header': 'test-value' },
         defaultQuery: { 'test-param': 'test-value' },
@@ -432,7 +432,7 @@ describe('instantiate client', () => {
     });
 
     test('respects runtime property changes when creating new client', () => {
-      const client = new OpenMRP({
+      const client = new Openmrp({
         baseURL: 'http://localhost:5000/',
         timeout: 1000,
         bearerToken: 'My Bearer Token',
@@ -465,20 +465,20 @@ describe('instantiate client', () => {
   test('with environment variable arguments', () => {
     // set options via env var
     process.env['OPENMRP_API_KEY'] = 'My Bearer Token';
-    const client = new OpenMRP();
+    const client = new Openmrp();
     expect(client.bearerToken).toBe('My Bearer Token');
   });
 
   test('with overridden environment variable arguments', () => {
     // set options via env var
     process.env['OPENMRP_API_KEY'] = 'another My Bearer Token';
-    const client = new OpenMRP({ bearerToken: 'My Bearer Token' });
+    const client = new Openmrp({ bearerToken: 'My Bearer Token' });
     expect(client.bearerToken).toBe('My Bearer Token');
   });
 });
 
 describe('request building', () => {
-  const client = new OpenMRP({ bearerToken: 'My Bearer Token' });
+  const client = new Openmrp({ bearerToken: 'My Bearer Token' });
 
   describe('custom headers', () => {
     test('handles undefined', async () => {
@@ -497,7 +497,7 @@ describe('request building', () => {
 });
 
 describe('default encoder', () => {
-  const client = new OpenMRP({ bearerToken: 'My Bearer Token' });
+  const client = new Openmrp({ bearerToken: 'My Bearer Token' });
 
   class Serializable {
     toJSON() {
@@ -582,7 +582,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new OpenMRP({
+    const client = new Openmrp({
       bearerToken: 'My Bearer Token',
       timeout: 10,
       fetch: testFetch,
@@ -616,7 +616,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new OpenMRP({ bearerToken: 'My Bearer Token', fetch: testFetch });
+    const client = new Openmrp({ bearerToken: 'My Bearer Token', fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);
@@ -646,7 +646,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new OpenMRP({ bearerToken: 'My Bearer Token', fetch: testFetch });
+    const client = new Openmrp({ bearerToken: 'My Bearer Token', fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);

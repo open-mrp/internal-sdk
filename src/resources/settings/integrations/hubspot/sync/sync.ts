@@ -99,8 +99,8 @@ export class Sync extends APIResource {
    *
    * A mapping is recorded as soon as the sync resolves a record's HubSpot object,
    * which for a confidently matched customer happens during the read-only preview,
-   * before anything has been written to HubSpot. Results are ordered by OpenMRP record
-   * id.
+   * before anything has been written to HubSpot. Results are ordered by OpenMRP
+   * record id.
    *
    * This endpoint requires the permission: `integrations:read`.
    *

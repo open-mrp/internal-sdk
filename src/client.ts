@@ -127,7 +127,7 @@ import {
 import { isEmptyObj } from './internal/utils/values';
 
 const environments = {
-  production: 'https://api.augno.com',
+  production: 'https://api.openmrp.ai',
   local: 'http://localhost:8081',
 };
 type Environment = keyof typeof environments;
@@ -141,13 +141,13 @@ export interface ClientOptions {
   /**
    * Current account UUID (OpenMRP-Account). Update when switching accounts.
    */
-  openMRPAccountID?: string | null | undefined;
+  openmrpAccountID?: string | null | undefined;
 
   /**
    * Specifies the environment to use for the API.
    *
    * Each environment maps to a different base URL:
-   * - `production` corresponds to `https://api.augno.com`
+   * - `production` corresponds to `https://api.openmrp.ai`
    * - `local` corresponds to `http://localhost:8081`
    */
   environment?: Environment | undefined;
@@ -222,11 +222,11 @@ export interface ClientOptions {
 }
 
 /**
- * API Client for interfacing with the OpenMRP API.
+ * API Client for interfacing with the Openmrp API.
  */
-export class OpenMRP {
+export class Openmrp {
   bearerToken: string | null;
-  openMRPAccountID: string | null;
+  openmrpAccountID: string | null;
 
   baseURL: string;
   maxRetries: number;
@@ -241,12 +241,12 @@ export class OpenMRP {
   private _options: ClientOptions;
 
   /**
-   * API Client for interfacing with the OpenMRP API.
+   * API Client for interfacing with the Openmrp API.
    *
    * @param {string | null | undefined} [opts.bearerToken=process.env['OPENMRP_API_KEY'] ?? null]
-   * @param {string | null | undefined} [opts.openMRPAccountID]
+   * @param {string | null | undefined} [opts.openmrpAccountID]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
-   * @param {string} [opts.baseURL=process.env['OPENMRP_BASE_URL'] ?? https://api.augno.com] - Override the default base URL for the API.
+   * @param {string} [opts.baseURL=process.env['OPENMRP_BASE_URL'] ?? https://api.openmrp.ai] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -257,25 +257,25 @@ export class OpenMRP {
   constructor({
     baseURL = readEnv('OPENMRP_BASE_URL'),
     bearerToken = readEnv('OPENMRP_API_KEY') ?? null,
-    openMRPAccountID = null,
+    openmrpAccountID = null,
     ...opts
   }: ClientOptions = {}) {
     const options: ClientOptions = {
       bearerToken,
-      openMRPAccountID,
+      openmrpAccountID,
       ...opts,
       baseURL,
       environment: opts.environment ?? 'production',
     };
 
     if (baseURL && opts.environment) {
-      throw new Errors.OpenMRPError(
+      throw new Errors.OpenmrpError(
         'Ambiguous URL; The `baseURL` option (or OPENMRP_BASE_URL env var) and the `environment` option are given. If you want to use the environment you must pass baseURL: null',
       );
     }
 
     this.baseURL = options.baseURL || environments[options.environment || 'production'];
-    this.timeout = options.timeout ?? OpenMRP.DEFAULT_TIMEOUT /* 1 minute */;
+    this.timeout = options.timeout ?? Openmrp.DEFAULT_TIMEOUT /* 1 minute */;
     this.logger = options.logger ?? console;
     const defaultLogLevel = 'warn';
     // Set default logLevel early so that we can log a warning in parseLogLevel.
@@ -304,7 +304,7 @@ export class OpenMRP {
     this._options = options;
 
     this.bearerToken = bearerToken;
-    this.openMRPAccountID = openMRPAccountID;
+    this.openmrpAccountID = openmrpAccountID;
   }
 
   /**
@@ -322,7 +322,7 @@ export class OpenMRP {
       fetch: this.fetch,
       fetchOptions: this.fetchOptions,
       bearerToken: this.bearerToken,
-      openMRPAccountID: this.openMRPAccountID,
+      openmrpAccountID: this.openmrpAccountID,
       ...options,
     });
     return client;
@@ -770,7 +770,7 @@ export class OpenMRP {
         Accept: 'application/json',
         'User-Agent': this.getUserAgent(),
         'OpenMRP-Version': '1.0.forge-preview.3',
-        'OpenMRP-Account': this.openMRPAccountID,
+        'OpenMRP-Account': this.openmrpAccountID,
       },
       await this.authHeaders(options),
       this._options.defaultHeaders,
@@ -834,10 +834,10 @@ export class OpenMRP {
     }
   }
 
-  static OpenMRP = this;
+  static Openmrp = this;
   static DEFAULT_TIMEOUT = 60000; // 1 minute
 
-  static OpenMRPError = Errors.OpenMRPError;
+  static OpenmrpError = Errors.OpenmrpError;
   static APIError = Errors.APIError;
   static APIConnectionError = Errors.APIConnectionError;
   static APIConnectionTimeoutError = Errors.APIConnectionTimeoutError;
@@ -889,21 +889,21 @@ export class OpenMRP {
   operations: API.Operations = new API.Operations(this);
 }
 
-OpenMRP.Healthz = Healthz;
-OpenMRP.Auth = Auth;
-OpenMRP.Identity = Identity;
-OpenMRP.Core = Core;
-OpenMRP.Billing = Billing;
-OpenMRP.Sales = Sales;
-OpenMRP.Settings = Settings;
-OpenMRP.Catalog = Catalog;
-OpenMRP.AI = AI;
-OpenMRP.Messaging = Messaging;
-OpenMRP.Webhooks = Webhooks;
-OpenMRP.Finance = Finance;
-OpenMRP.Operations = Operations;
+Openmrp.Healthz = Healthz;
+Openmrp.Auth = Auth;
+Openmrp.Identity = Identity;
+Openmrp.Core = Core;
+Openmrp.Billing = Billing;
+Openmrp.Sales = Sales;
+Openmrp.Settings = Settings;
+Openmrp.Catalog = Catalog;
+Openmrp.AI = AI;
+Openmrp.Messaging = Messaging;
+Openmrp.Webhooks = Webhooks;
+Openmrp.Finance = Finance;
+Openmrp.Operations = Operations;
 
-export declare namespace OpenMRP {
+export declare namespace Openmrp {
   export type RequestOptions = Opts.RequestOptions;
 
   export { Healthz as Healthz, type Healthcheck as Healthcheck };

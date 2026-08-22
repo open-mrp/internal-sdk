@@ -14,7 +14,7 @@ export class APIKeys extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
 
   /**
-   * Creates an [API key](https://docs.augno.com/api/api-keys) to authenticate API
+   * Creates an [API key](https://docs.openmrp.ai/api/api-keys) to authenticate API
    * requests.
    *
    * The key belongs to the account it was created under and only ever acts on behalf
@@ -23,7 +23,7 @@ export class APIKeys extends APIResource {
    *
    * The secret key is returned once and cannot be retrieved later, so you should
    * store it securely. We provide some
-   * [recommendations](https://docs.augno.com/api/managing-api-keys) on how you can
+   * [recommendations](https://docs.openmrp.ai/api/managing-api-keys) on how you can
    * manage your API keys.
    *
    * This endpoint requires the `admin` role type.
@@ -43,7 +43,7 @@ export class APIKeys extends APIResource {
   }
 
   /**
-   * Returns [API key](https://docs.augno.com/api/api-keys) metadata by ID.
+   * Returns [API key](https://docs.openmrp.ai/api/api-keys) metadata by ID.
    *
    * Only the redacted key value is returned. The full secret is available only in
    * the response that issued the key, so a lost secret must be replaced by rotating
@@ -67,7 +67,7 @@ export class APIKeys extends APIResource {
   }
 
   /**
-   * Returns a paginated list of [API keys](https://docs.augno.com/api/api-keys),
+   * Returns a paginated list of [API keys](https://docs.openmrp.ai/api/api-keys),
    * newest first.
    *
    * Only keys belonging to the account making the request are returned. The search
@@ -85,7 +85,7 @@ export class APIKeys extends APIResource {
   }
 
   /**
-   * Revokes an [API key](https://docs.augno.com/api/api-keys).
+   * Revokes an [API key](https://docs.openmrp.ai/api/api-keys).
    *
    * Revocation takes effect immediately and cannot be undone; any request still
    * presenting the key is rejected. The key record is kept, so it stays visible in
@@ -457,7 +457,7 @@ export interface CreatedAPIKey {
    *
    * This is the only response that ever contains the secret; if it is lost, rotate
    * the key to issue a new one. Learn more about
-   * [managing your API keys](https://docs.augno.com/api/managing-api-keys).
+   * [managing your API keys](https://docs.openmrp.ai/api/managing-api-keys).
    */
   api_key_secret: string;
 
