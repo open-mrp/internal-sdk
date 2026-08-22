@@ -260,10 +260,10 @@ export interface EmailInbox {
   email_domain: EmailDomainsAPI.EmailDomain | null;
 
   /**
-   * A forwarding address on an Augno-owned domain that also routes to this inbox.
+   * A forwarding address on an OpenMRP-owned domain that also routes to this inbox.
    *
    * Use this when your domain's mail is hosted elsewhere (e.g. Google Workspace,
-   * Microsoft 365) and you cannot point its MX records at Augno: forward mail from
+   * Microsoft 365) and you cannot point its MX records at OpenMRP: forward mail from
    * `address` to this address instead, and it will still be threaded into a
    * conversation.
    */

@@ -18,8 +18,8 @@ export class APIKeys extends APIResource {
    * requests.
    *
    * The key belongs to the account it was created under and only ever acts on behalf
-   * of that account. Keys created under a sandbox account carry an `aug_sk_test_`
-   * prefix; keys created under a production account carry an `aug_sk_prod_` prefix.
+   * of that account. Keys created under a sandbox account carry an `mrp_sk_test_`
+   * prefix; keys created under a production account carry an `mrp_sk_prod_` prefix.
    *
    * The secret key is returned once and cannot be retrieved later, so you should
    * store it securely. We provide some
@@ -107,7 +107,7 @@ export class APIKeys extends APIResource {
 }
 
 /**
- * An organization on Augno, including its branding and customer portal
+ * An organization on OpenMRP, including its branding and customer portal
  * sub-resources.
  *
  * Your own account and any customer or supplier account you trade with are both
@@ -339,7 +339,7 @@ export interface Address {
 }
 
 /**
- * An API key used to authenticate requests to the Augno API.
+ * An API key used to authenticate requests to the OpenMRP API.
  *
  * A key always acts on behalf of the account it was created under, with the
  * permissions of the role assigned to it.
@@ -384,7 +384,7 @@ export interface APIKey {
    * Redacted key value safe for display.
    *
    * The key's prefix followed by its last four characters, e.g.
-   * `aug_sk_prod_****hjt4`.
+   * `mrp_sk_prod_****hjt4`.
    */
   redacted_value: string;
 
@@ -444,7 +444,7 @@ export interface CreateAPIKeyRequest {
  */
 export interface CreatedAPIKey {
   /**
-   * An API key used to authenticate requests to the Augno API.
+   * An API key used to authenticate requests to the OpenMRP API.
    *
    * A key always acts on behalf of the account it was created under, with the
    * permissions of the role assigned to it.
@@ -544,7 +544,7 @@ export interface ListAPIKey {
  */
 export interface Owner {
   /**
-   * An organization on Augno, including its branding and customer portal
+   * An organization on OpenMRP, including its branding and customer portal
    * sub-resources.
    *
    * Your own account and any customer or supplier account you trade with are both

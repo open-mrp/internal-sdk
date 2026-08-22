@@ -968,7 +968,7 @@ export interface SalesOrder {
    *
    * Becomes `sent` when the order is issued with customer notification requested and
    * the order has acknowledgement contacts to send to. It can also be set directly
-   * when an acknowledgement was sent outside Augno.
+   * when an acknowledgement was sent outside OpenMRP.
    */
   acknowledgment_status: 'not_sent' | 'sent';
 

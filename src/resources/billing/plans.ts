@@ -32,7 +32,7 @@ export class Plans extends APIResource {
    * The preview covers the prorated amount due now and the estimated recurring
    * monthly bill afterwards. Nothing is charged and the subscription is left
    * unchanged. Amounts are quoted by Stripe where possible; when Stripe cannot quote
-   * the change, Augno estimates them and flags the result with `is_estimate`. A
+   * the change, OpenMRP estimates them and flags the result with `is_estimate`. A
    * switch to the free plan always previews as zero.
    *
    * This endpoint requires the `admin` role type.
@@ -194,7 +194,7 @@ export interface PlanChangeProration {
   /**
    * Whether the amounts are locally estimated rather than quoted by Stripe.
    *
-   * Augno falls back to its own calculation when Stripe cannot quote the change,
+   * OpenMRP falls back to its own calculation when Stripe cannot quote the change,
    * usually because another billing change is still in flight. The amounts are then
    * approximations and the final charge may differ.
    */

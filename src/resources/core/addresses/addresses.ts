@@ -140,7 +140,7 @@ export interface AddressSuggestion {
    *
    * Pass this value as the `id` path parameter of the address details endpoint to
    * retrieve the full parsed address. It is issued by the underlying address
-   * provider rather than by Augno, so it is not a durable Augno resource ID.
+   * provider rather than by OpenMRP, so it is not a durable OpenMRP resource ID.
    */
   id: string;
 

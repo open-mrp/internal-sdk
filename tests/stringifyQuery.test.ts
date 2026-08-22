@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { stringifyQuery } from '@augno/internal-sdk/internal/utils/query';
+import { stringifyQuery } from '@openmrp/internal-sdk/internal/utils/query';
 
 describe(stringifyQuery, () => {
   for (const [input, expected] of [

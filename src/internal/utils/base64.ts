@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { AugnoError } from '../../core/error';
+import { OpenMRPError } from '../../core/error';
 import { encodeUTF8 } from './bytes';
 
 export const toBase64 = (data: string | Uint8Array | null | undefined): string => {
@@ -18,7 +18,7 @@ export const toBase64 = (data: string | Uint8Array | null | undefined): string =
     return btoa(String.fromCharCode.apply(null, data as any));
   }
 
-  throw new AugnoError('Cannot generate base64 string; Expected `Buffer` or `btoa` to be defined');
+  throw new OpenMRPError('Cannot generate base64 string; Expected `Buffer` or `btoa` to be defined');
 };
 
 export const fromBase64 = (str: string): Uint8Array => {
@@ -36,5 +36,5 @@ export const fromBase64 = (str: string): Uint8Array => {
     return buf;
   }
 
-  throw new AugnoError('Cannot decode base64 string; Expected `Buffer` or `atob` to be defined');
+  throw new OpenMRPError('Cannot decode base64 string; Expected `Buffer` or `atob` to be defined');
 };

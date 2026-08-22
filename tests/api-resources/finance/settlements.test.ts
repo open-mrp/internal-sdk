@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Augno from '@augno/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 
-const client = new Augno({
+const client = new OpenMRP({
   bearerToken: 'My Bearer Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
@@ -61,7 +61,7 @@ describe('resource settlements', () => {
         { include: ['responsible_user'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Augno.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('update', async () => {
@@ -87,7 +87,7 @@ describe('resource settlements', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Augno.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('list', async () => {
@@ -116,7 +116,7 @@ describe('resource settlements', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Augno.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('delete', async () => {

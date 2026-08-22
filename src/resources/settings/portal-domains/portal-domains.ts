@@ -112,7 +112,7 @@ export interface CreatePortalDomainRequest {
    * A subdomain such as `shop.acme.com` is routed with a CNAME record and an apex
    * domain such as `acme.com` with an A record; either way the records to publish
    * come back on the response. The value is lowercased and any trailing dot is
-   * stripped before it is stored, and Augno-owned hostnames are rejected.
+   * stripped before it is stored, and OpenMRP-owned hostnames are rejected.
    */
   domain: string;
 }
@@ -280,7 +280,7 @@ export interface PortalDomainCreateParams {
    * A subdomain such as `shop.acme.com` is routed with a CNAME record and an apex
    * domain such as `acme.com` with an A record; either way the records to publish
    * come back on the response. The value is lowercased and any trailing dot is
-   * stripped before it is stored, and Augno-owned hostnames are rejected.
+   * stripped before it is stored, and OpenMRP-owned hostnames are rejected.
    */
   domain: string;
 }

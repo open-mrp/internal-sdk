@@ -54,7 +54,7 @@ export class Agents extends APIResource {
   /**
    * Retrieves a single agent by ID.
    *
-   * Resolves both the `system` agents Augno provides and the `custom` agents in your
+   * Resolves both the `system` agents OpenMRP provides and the `custom` agents in your
    * account; the `status` reflects whether the agent is enabled for your account
    * specifically.
    *
@@ -78,7 +78,7 @@ export class Agents extends APIResource {
   /**
    * Updates a custom agent.
    *
-   * Only the fields provided in the request are changed. Augno's `system` agents
+   * Only the fields provided in the request are changed. OpenMRP's `system` agents
    * cannot be edited — the only thing you can change about them is whether they are
    * enabled for your account, with the Update Agent Status endpoint.
    *
@@ -104,7 +104,7 @@ export class Agents extends APIResource {
   /**
    * Lists the agents available to your account, newest first.
    *
-   * Covers both the `system` agents Augno provides to every account and the `custom`
+   * Covers both the `system` agents OpenMRP provides to every account and the `custom`
    * agents created in yours. Deleted agents are never returned. The `q` parameter
    * matches an agent's name, slug, description, or ID.
    *
@@ -127,7 +127,7 @@ export class Agents extends APIResource {
    *
    * The agent is withdrawn from the API: it stops appearing in listings, no longer
    * resolves by ID, and can no longer be run or modified. Runs it already produced
-   * are kept. Augno's `system` agents cannot be deleted — disable one for your
+   * are kept. OpenMRP's `system` agents cannot be deleted — disable one for your
    * account with the Update Agent Status endpoint instead.
    *
    * This endpoint requires the permission: `agents:delete`.
@@ -146,7 +146,7 @@ export class Agents extends APIResource {
   /**
    * Enables or disables an agent for your account.
    *
-   * Activation is per-account, so this works for the `system` agents Augno shares
+   * Activation is per-account, so this works for the `system` agents OpenMRP shares
    * across accounts as well as your own `custom` agents: disabling one here leaves
    * the underlying agent untouched for everyone else. Triggering an inactive agent
    * returns a validation error.
@@ -203,9 +203,9 @@ export interface AgentDefinition {
   created_at: string;
 
   /**
-   * Whether the agent is provided by Augno or created in this account.
+   * Whether the agent is provided by OpenMRP or created in this account.
    *
-   * - `system`: provided by Augno; cannot be edited or deleted.
+   * - `system`: provided by OpenMRP; cannot be edited or deleted.
    * - `custom`: created by a user in this account.
    */
   definition_type: 'system' | 'custom';
@@ -434,7 +434,7 @@ export interface ConfigInput {
   /**
    * Instructions that define the agent's role and how it should behave.
    *
-   * Sent to the model on every turn of a run, alongside the platform guidance Augno
+   * Sent to the model on every turn of a run, alongside the platform guidance OpenMRP
    * adds automatically.
    */
   system_prompt?: string;
@@ -602,7 +602,7 @@ export interface ToolInput {
   /**
    * The built-in tool to attach.
    *
-   * Only Augno's built-in tools are attached here. Access to API-endpoint tools
+   * Only OpenMRP's built-in tools are attached here. Access to API-endpoint tools
    * (creating a customer, listing orders, and so on) is granted separately through
    * `config.endpoint_tool_slugs`. The List Tools endpoint (`GET /v1/ai/tools`)
    * returns both kinds, with API-endpoint tools in the `api_endpoint` category.

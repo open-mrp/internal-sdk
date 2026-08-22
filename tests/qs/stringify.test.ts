@@ -1,7 +1,7 @@
 import iconv from 'iconv-lite';
-import { stringify } from '@augno/internal-sdk/internal/qs';
-import { encode } from '@augno/internal-sdk/internal/qs/utils';
-import { StringifyOptions } from '@augno/internal-sdk/internal/qs/types';
+import { stringify } from '@openmrp/internal-sdk/internal/qs';
+import { encode } from '@openmrp/internal-sdk/internal/qs/utils';
+import { StringifyOptions } from '@openmrp/internal-sdk/internal/qs/types';
 import { empty_test_cases } from './empty-keys-cases';
 import assert from 'assert';
 

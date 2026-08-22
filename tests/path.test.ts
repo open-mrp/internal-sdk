@@ -1,4 +1,4 @@
-import { createPathTagFunction, encodeURIPath } from '@augno/internal-sdk/internal/utils/path';
+import { createPathTagFunction, encodeURIPath } from '@openmrp/internal-sdk/internal/utils/path';
 import { inspect } from 'node:util';
 import { runInNewContext } from 'node:vm';
 

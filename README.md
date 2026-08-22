@@ -1,15 +1,15 @@
-# Augno TypeScript API Library
+# OpenMRP TypeScript API Library
 
-[![NPM version](<https://img.shields.io/npm/v/@augno/internal-sdk.svg?label=npm%20(stable)>)](https://npmjs.org/package/@augno/internal-sdk) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@augno/internal-sdk)
+[![NPM version](<https://img.shields.io/npm/v/@openmrp/internal-sdk.svg?label=npm%20(stable)>)](https://npmjs.org/package/@openmrp/internal-sdk) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@openmrp/internal-sdk)
 
-This library provides convenient access to the Augno REST API from server-side TypeScript or JavaScript.
+This library provides convenient access to the OpenMRP REST API from server-side TypeScript or JavaScript.
 
 The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
 ```sh
-npm install @augno/internal-sdk
+npm install @openmrp/internal-sdk
 ```
 
 ## Usage
@@ -18,10 +18,10 @@ The full API of this library can be found in [api.md](api.md).
 
 <!-- prettier-ignore -->
 ```js
-import Augno from '@augno/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 
-const client = new Augno({
-  bearerToken: process.env['AUGNO_API_KEY'], // This is the default and can be omitted
+const client = new OpenMRP({
+  bearerToken: process.env['OPENMRP_API_KEY'], // This is the default and can be omitted
   environment: 'local', // defaults to 'production'
 });
 
@@ -36,14 +36,14 @@ This library includes TypeScript definitions for all request params and response
 
 <!-- prettier-ignore -->
 ```ts
-import Augno from '@augno/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 
-const client = new Augno({
-  bearerToken: process.env['AUGNO_API_KEY'], // This is the default and can be omitted
+const client = new OpenMRP({
+  bearerToken: process.env['OPENMRP_API_KEY'], // This is the default and can be omitted
   environment: 'local', // defaults to 'production'
 });
 
-const healthcheck: Augno.Healthcheck = await client.healthz.list();
+const healthcheck: OpenMRP.Healthcheck = await client.healthz.list();
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -57,7 +57,7 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 const healthcheck = await client.healthz.list().catch(async (err) => {
-  if (err instanceof Augno.APIError) {
+  if (err instanceof OpenMRP.APIError) {
     console.log(err.status); // 400
     console.log(err.name); // BadRequestError
     console.log(err.headers); // {server: 'nginx', ...}
@@ -91,7 +91,7 @@ You can use the `maxRetries` option to configure or disable this:
 <!-- prettier-ignore -->
 ```js
 // Configure the default for all requests:
-const client = new Augno({
+const client = new OpenMRP({
   maxRetries: 0, // default is 2
 });
 
@@ -108,7 +108,7 @@ Requests time out after 1 minute by default. You can configure this with a `time
 <!-- prettier-ignore -->
 ```ts
 // Configure the default for all requests:
-const client = new Augno({
+const client = new OpenMRP({
   timeout: 20 * 1000, // 20 seconds (default is 1 minute)
 });
 
@@ -124,18 +124,18 @@ Note that requests which time out will be [retried twice by default](#retries).
 
 ## Default Headers
 
-We automatically send the `Augno-Version` header set to `1.0.forge-preview.3`.
+We automatically send the `OpenMRP-Version` header set to `1.0.forge-preview.3`.
 
 If you need to, you can override it by setting default headers on a per-request basis.
 
 Be aware that doing so may result in incorrect types and other unexpected or undefined behavior in the SDK.
 
 ```ts
-import Augno from '@augno/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 
-const client = new Augno();
+const client = new OpenMRP();
 
-const healthcheck = await client.healthz.list({ headers: { 'Augno-Version': 'My-Custom-Value' } });
+const healthcheck = await client.healthz.list({ headers: { 'OpenMRP-Version': 'My-Custom-Value' } });
 ```
 
 ## Advanced Usage
@@ -150,7 +150,7 @@ Unlike `.asResponse()` this method consumes the body, returning once it is parse
 
 <!-- prettier-ignore -->
 ```ts
-const client = new Augno();
+const client = new OpenMRP();
 
 const response = await client.healthz.list().asResponse();
 console.log(response.headers.get('X-My-Header'));
@@ -171,13 +171,13 @@ console.log(healthcheck.object);
 
 The log level can be configured in two ways:
 
-1. Via the `AUGNO_LOG` environment variable
+1. Via the `OPENMRP_LOG` environment variable
 2. Using the `logLevel` client option (overrides the environment variable if set)
 
 ```ts
-import Augno from '@augno/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 
-const client = new Augno({
+const client = new OpenMRP({
   logLevel: 'debug', // Show all log messages
 });
 ```
@@ -203,13 +203,13 @@ When providing a custom logger, the `logLevel` option still controls which messa
 below the configured level will not be sent to your logger.
 
 ```ts
-import Augno from '@augno/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 import pino from 'pino';
 
 const logger = pino();
 
-const client = new Augno({
-  logger: logger.child({ name: 'Augno' }),
+const client = new OpenMRP({
+  logger: logger.child({ name: 'OpenMRP' }),
   logLevel: 'debug', // Send all messages to pino, allowing it to filter
 });
 ```
@@ -272,10 +272,10 @@ globalThis.fetch = fetch;
 Or pass it to the client:
 
 ```ts
-import Augno from '@augno/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 import fetch from 'my-fetch';
 
-const client = new Augno({ fetch });
+const client = new OpenMRP({ fetch });
 ```
 
 ### Fetch options
@@ -283,9 +283,9 @@ const client = new Augno({ fetch });
 If you want to set custom `fetch` options without overriding the `fetch` function, you can provide a `fetchOptions` object when instantiating the client or making a request. (Request-specific options override client options.)
 
 ```ts
-import Augno from '@augno/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 
-const client = new Augno({
+const client = new OpenMRP({
   fetchOptions: {
     // `RequestInit` options
   },
@@ -300,11 +300,11 @@ options to requests:
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/node.svg" align="top" width="18" height="21"> **Node** <sup>[[docs](https://github.com/nodejs/undici/blob/main/docs/docs/api/ProxyAgent.md#example---proxyagent-with-fetch)]</sup>
 
 ```ts
-import Augno from '@augno/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 import * as undici from 'undici';
 
 const proxyAgent = new undici.ProxyAgent('http://localhost:8888');
-const client = new Augno({
+const client = new OpenMRP({
   fetchOptions: {
     dispatcher: proxyAgent,
   },
@@ -314,9 +314,9 @@ const client = new Augno({
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/bun.svg" align="top" width="18" height="21"> **Bun** <sup>[[docs](https://bun.sh/guides/http/proxy)]</sup>
 
 ```ts
-import Augno from '@augno/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 
-const client = new Augno({
+const client = new OpenMRP({
   fetchOptions: {
     proxy: 'http://localhost:8888',
   },
@@ -326,10 +326,10 @@ const client = new Augno({
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/deno.svg" align="top" width="18" height="21"> **Deno** <sup>[[docs](https://docs.deno.com/api/deno/~/Deno.createHttpClient)]</sup>
 
 ```ts
-import Augno from 'npm:@augno/internal-sdk';
+import OpenMRP from 'npm:@openmrp/internal-sdk';
 
 const httpClient = Deno.createHttpClient({ proxy: { url: 'http://localhost:8888' } });
-const client = new Augno({
+const client = new OpenMRP({
   fetchOptions: {
     client: httpClient,
   },
@@ -348,7 +348,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/augno/internal-sdk/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/open-mrp/internal-sdk/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 

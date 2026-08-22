@@ -45,7 +45,7 @@ export class Announcements extends APIResource {
    * Lists the announcements currently active for the caller, newest first.
    *
    * The feed covers announcements broadcast to the account being acted in together
-   * with platform-wide announcements from Augno. Announcements the caller has
+   * with platform-wide announcements from OpenMRP. Announcements the caller has
    * dismissed are left out, as are any that are scheduled for later or have already
    * expired.
    *
@@ -156,7 +156,7 @@ export interface Announcement {
    *
    * - `account`: published to a single account and shown only to that account's
    *   users.
-   * - `platform`: published by Augno and shown to every user across all accounts.
+   * - `platform`: published by OpenMRP and shown to every user across all accounts.
    */
   scope: 'account' | 'platform';
 

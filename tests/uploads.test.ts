@@ -1,6 +1,6 @@
 import fs from 'fs';
-import type { ResponseLike } from '@augno/internal-sdk/internal/to-file';
-import { toFile } from '@augno/internal-sdk/core/uploads';
+import type { ResponseLike } from '@openmrp/internal-sdk/internal/to-file';
+import { toFile } from '@openmrp/internal-sdk/core/uploads';
 
 class MyClass {
   name: string = 'foo';
@@ -96,7 +96,7 @@ describe('missing File error message', () => {
   });
 
   test('is thrown', async () => {
-    const uploads = await import('@augno/internal-sdk/core/uploads');
+    const uploads = await import('@openmrp/internal-sdk/core/uploads');
     await expect(
       uploads.toFile(mockResponse({ url: 'https://example.com/my/audio.mp3' })),
     ).rejects.toMatchInlineSnapshot(

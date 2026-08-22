@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "@augno/internal-sdk/*": ["./dist/src/*"],
-      "@augno/internal-sdk": ["./dist/src/index.ts"]
+      "@openmrp/internal-sdk/*": ["./dist/src/*"],
+      "@openmrp/internal-sdk": ["./dist/src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,

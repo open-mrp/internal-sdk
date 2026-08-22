@@ -55,7 +55,7 @@ export class AccountStatuses extends APIResource {
  * A lookup value describing the standing of a customer account, such as whether
  * shipments or all activity should be held.
  *
- * The set of statuses is fixed by Augno and cannot be added to or edited; you
+ * The set of statuses is fixed by OpenMRP and cannot be added to or edited; you
  * apply one to a customer by setting the customer's `status`.
  */
 export interface AccountStatus {

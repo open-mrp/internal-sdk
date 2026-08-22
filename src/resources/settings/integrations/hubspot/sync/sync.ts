@@ -94,12 +94,12 @@ export class Sync extends APIResource {
   }
 
   /**
-   * Lists the mappings the HubSpot sync has recorded for the account — each Augno
+   * Lists the mappings the HubSpot sync has recorded for the account — each OpenMRP
    * record and the HubSpot object it maps to.
    *
    * A mapping is recorded as soon as the sync resolves a record's HubSpot object,
    * which for a confidently matched customer happens during the read-only preview,
-   * before anything has been written to HubSpot. Results are ordered by Augno record
+   * before anything has been written to HubSpot. Results are ordered by OpenMRP record
    * id.
    *
    * This endpoint requires the permission: `integrations:read`.
@@ -199,7 +199,7 @@ export interface HubspotSyncJob {
 }
 
 /**
- * One Augno record and the HubSpot object the sync has mapped it to.
+ * One OpenMRP record and the HubSpot object the sync has mapped it to.
  */
 export interface HubspotSyncRecord {
   /**
@@ -208,7 +208,7 @@ export interface HubspotSyncRecord {
   id: string;
 
   /**
-   * ID of the Augno record that was synced.
+   * ID of the OpenMRP record that was synced.
    *
    * A `contact` record carries the customer's id, because a customer keeps a single
    * primary contact in HubSpot.
@@ -216,14 +216,14 @@ export interface HubspotSyncRecord {
   augno_id: string;
 
   /**
-   * Name of the Augno record that was synced.
+   * Name of the OpenMRP record that was synced.
    *
    * Empty when the record has since been deleted.
    */
   augno_name: string;
 
   /**
-   * The kind of Augno record that was synced.
+   * The kind of OpenMRP record that was synced.
    *
    * - `customer`: a customer, mapped to a HubSpot company.
    * - `contact`: a customer's primary contact person, mapped to a HubSpot contact.

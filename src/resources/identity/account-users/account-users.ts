@@ -26,7 +26,7 @@ export class AccountUsers extends APIResource {
    * restored rather than duplicated. Adding a user to your own account consumes a
    * seat and is rejected once your plan's seat limit is reached.
    *
-   * When you add a user to a customer or supplier account that has its own Augno
+   * When you add a user to a customer or supplier account that has its own OpenMRP
    * subscription, the membership is created disabled and has to be activated before
    * that user can sign in.
    *
