@@ -14,8 +14,6 @@ npm install @openmrp/internal-sdk
 
 ## Usage
 
-The full API of this library can be found in [api.md](api.md).
-
 <!-- prettier-ignore -->
 ```js
 import OpenMRP from '@openmrp/internal-sdk';
