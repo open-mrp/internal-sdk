@@ -138,7 +138,7 @@ export interface HubspotCompanyReview {
    * The customer's email address as it stood when the review was raised.
    *
    * Snapshotted on the review rather than read from the customer, because matching a
-   * company means comparing what Augno held at match time against what HubSpot holds
+   * company means comparing what OpenMRP held at match time against what HubSpot holds
    * — a later edit to the customer must not silently change what a reviewer is
    * deciding on.
    */

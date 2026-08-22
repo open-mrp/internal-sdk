@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   release-please:
-    if: github.repository == 'augno/internal-sdk'
+    if: github.repository == 'open-mrp/internal-sdk'
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: '20'
           registry-url: https://npm.pkg.github.com
-          scope: '@augno'
+          scope: '@openmrp'
 
       - name: Set up pnpm
         if: ${{ steps.release.outputs.releases_created == 'true' }}

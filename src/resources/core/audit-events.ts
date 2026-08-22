@@ -95,7 +95,7 @@ export interface AuditEvent {
   id: string;
 
   /**
-   * An organization on Augno, including its branding and customer portal
+   * An organization on OpenMRP, including its branding and customer portal
    * sub-resources.
    *
    * Your own account and any customer or supplier account you trade with are both
@@ -952,7 +952,7 @@ export interface AuditEventListParams {
    * Filter by the actor type.
    *
    * Events are recorded for actors of type `user`, `api_key`, and `agent` — the last
-   * covering changes an Augno agent made on your account's behalf.
+   * covering changes an OpenMRP agent made on your account's behalf.
    */
   actor_types?: Array<'user' | 'api_key' | 'agent' | 'group'>;
 

@@ -159,7 +159,7 @@ export interface RequestLog {
   id: string;
 
   /**
-   * An organization on Augno, including its branding and customer portal
+   * An organization on OpenMRP, including its branding and customer portal
    * sub-resources.
    *
    * Your own account and any customer or supplier account you trade with are both
@@ -176,7 +176,7 @@ export interface RequestLog {
   /**
    * The API version the request was served with.
    *
-   * Taken from the `Augno-Version` header the caller sent; requests rejected for
+   * Taken from the `OpenMRP-Version` header the caller sent; requests rejected for
    * omitting that header record no version.
    */
   api_version: string | null;
@@ -184,8 +184,8 @@ export interface RequestLog {
   /**
    * Client IP address the request came from.
    *
-   * Not recorded for requests an Augno agent made on your behalf, since those
-   * originate inside Augno's own network.
+   * Not recorded for requests an OpenMRP agent made on your behalf, since those
+   * originate inside OpenMRP's own network.
    */
   client_ip: string | null;
 
@@ -212,7 +212,7 @@ export interface RequestLog {
   /**
    * Request host.
    *
-   * Usually `api.augno.com`.
+   * Usually `api.openmrp.ai`.
    */
   host: string;
 
@@ -225,7 +225,7 @@ export interface RequestLog {
    * Request latency in microseconds.
    *
    * Measured at the API edge, from the moment the request was received until the
-   * response was written, so it excludes network time between your client and Augno.
+   * response was written, so it excludes network time between your client and OpenMRP.
    */
   latency_us: number;
 
@@ -286,7 +286,7 @@ export interface RequestLog {
   request_body: unknown | null;
 
   /**
-   * The JSON body Augno responded with.
+   * The JSON body OpenMRP responded with.
    *
    * Sensitive values such as generated API key secrets are redacted before the body
    * is stored. Bodies larger than 256 KB are not stored in full; a small marker
@@ -347,7 +347,7 @@ export interface RequestLogListParams {
    * Filter by the actor type.
    *
    * Requests are recorded for actors of type `user`, `api_key`, and `agent` — the
-   * last covering calls an Augno agent made on your account's behalf.
+   * last covering calls an OpenMRP agent made on your account's behalf.
    */
   actor_types?: Array<'user' | 'api_key' | 'agent' | 'group'>;
 
@@ -408,7 +408,7 @@ export interface RequestLogListParams {
    * Exclude request logs whose API error code is in this set.
    *
    * Applied as a negative filter after all other filters. Successful requests (which
-   * have no error code) are always kept. The Augno dashboard uses this to hide
+   * have no error code) are always kept. The OpenMRP dashboard uses this to hide
    * routine `expired_token` 401s — the noise from short-lived access tokens expiring
    * and clients silently refreshing — while still surfacing genuine auth failures
    * like `invalid_credentials`.
@@ -452,7 +452,7 @@ export interface RequestLogListParams {
   /**
    * Filter by the request host.
    *
-   * Typically `api.augno.com`.
+   * Typically `api.openmrp.ai`.
    */
   hosts?: Array<string>;
 

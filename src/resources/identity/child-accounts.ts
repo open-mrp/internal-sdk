@@ -16,7 +16,7 @@ export class ChildAccounts extends APIResource {
    *
    * Both the parent and the child must already be accounts you have a customer
    * relationship with, and the child must be one you manage on its behalf — an
-   * account that runs its own Augno subscription, or that also trades with other
+   * account that runs its own OpenMRP subscription, or that also trades with other
    * sellers, is rejected with an authorization error.
    *
    * This call is idempotent: linking an account that is already a child of the
@@ -102,7 +102,7 @@ export interface ChildAccount {
   id: string;
 
   /**
-   * An organization on Augno, including its branding and customer portal
+   * An organization on OpenMRP, including its branding and customer portal
    * sub-resources.
    *
    * Your own account and any customer or supplier account you trade with are both

@@ -9,7 +9,7 @@ import { RequestOptions } from '../../internal/request-options';
  */
 export class Actions extends APIResource {
   /**
-   * Asks the Augno sales team to get in touch about an enterprise plan.
+   * Asks the OpenMRP sales team to get in touch about an enterprise plan.
    *
    * The account, its current plan, and the requesting user's name and email are sent
    * to sales for follow-up. Nothing about the account's plan, subscription, or

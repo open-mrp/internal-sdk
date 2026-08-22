@@ -1,5 +1,5 @@
 import { inspect } from 'node:util';
-import { buildHeaders, type HeadersLike, type NullableHeaders } from '@augno/internal-sdk/internal/headers';
+import { buildHeaders, type HeadersLike, type NullableHeaders } from '@openmrp/internal-sdk/internal/headers';
 
 function inspectNullableHeaders(headers: NullableHeaders) {
   return `NullableHeaders {${[

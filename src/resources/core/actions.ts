@@ -65,7 +65,7 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Submits a demo request from a prospective customer for the Augno team to follow
+   * Submits a demo request from a prospective customer for the OpenMRP team to follow
    * up on.
    *
    * The request creates no account, user, or other resource, and there is no
@@ -87,7 +87,7 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Submits an answer to an in-product feedback prompt for the Augno team to review.
+   * Submits an answer to an in-product feedback prompt for the OpenMRP team to review.
    *
    * The submission creates no resource and cannot be read back through the API. The
    * response carries a confirmation message suitable for display.

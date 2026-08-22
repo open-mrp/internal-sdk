@@ -2208,7 +2208,7 @@ export interface Customer {
    *   credit problem, while orders can still be placed.
    * - `hold_all`: all activity for the customer should be held.
    *
-   * The hold statuses are advisory: Augno flags the customer's orders as being on
+   * The hold statuses are advisory: OpenMRP flags the customer's orders as being on
    * credit hold, but requests to create orders or shipments for the customer are not
    * rejected.
    */

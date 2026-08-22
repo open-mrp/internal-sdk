@@ -197,7 +197,7 @@ export interface AgentAction {
    *
    * - `create_artifact`: create an artifact such as a report, document, or data
    *   export.
-   * - `read_doc`: read Augno documentation pages.
+   * - `read_doc`: read OpenMRP documentation pages.
    * - `fetch_url`: fetch content from a public URL.
    * - `draft_reply`: propose a reply to the case's external party as a draft held
    *   for human approval (not sent).

@@ -127,7 +127,7 @@ import {
 import { isEmptyObj } from './internal/utils/values';
 
 const environments = {
-  production: 'https://api.augno.com',
+  production: 'https://api.openmrp.ai',
   local: 'http://localhost:8081',
 };
 type Environment = keyof typeof environments;
@@ -139,15 +139,15 @@ export interface ClientOptions {
   bearerToken?: string | null | undefined;
 
   /**
-   * Current account UUID (Augno-Account). Update when switching accounts.
+   * Current account UUID (OpenMRP-Account). Update when switching accounts.
    */
-  augnoAccountID?: string | null | undefined;
+  openMRPAccountID?: string | null | undefined;
 
   /**
    * Specifies the environment to use for the API.
    *
    * Each environment maps to a different base URL:
-   * - `production` corresponds to `https://api.augno.com`
+   * - `production` corresponds to `https://api.openmrp.ai`
    * - `local` corresponds to `http://localhost:8081`
    */
   environment?: Environment | undefined;
@@ -155,7 +155,7 @@ export interface ClientOptions {
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
    *
-   * Defaults to process.env['AUGNO_BASE_URL'].
+   * Defaults to process.env['OPENMRP_BASE_URL'].
    */
   baseURL?: string | null | undefined;
 
@@ -209,7 +209,7 @@ export interface ClientOptions {
   /**
    * Set the log level.
    *
-   * Defaults to process.env['AUGNO_LOG'] or 'warn' if it isn't set.
+   * Defaults to process.env['OPENMRP_LOG'] or 'warn' if it isn't set.
    */
   logLevel?: LogLevel | undefined;
 
@@ -222,11 +222,11 @@ export interface ClientOptions {
 }
 
 /**
- * API Client for interfacing with the Augno API.
+ * API Client for interfacing with the OpenMRP API.
  */
-export class Augno {
+export class OpenMRP {
   bearerToken: string | null;
-  augnoAccountID: string | null;
+  openMRPAccountID: string | null;
 
   baseURL: string;
   maxRetries: number;
@@ -241,12 +241,12 @@ export class Augno {
   private _options: ClientOptions;
 
   /**
-   * API Client for interfacing with the Augno API.
+   * API Client for interfacing with the OpenMRP API.
    *
-   * @param {string | null | undefined} [opts.bearerToken=process.env['AUGNO_API_KEY'] ?? null]
-   * @param {string | null | undefined} [opts.augnoAccountID]
+   * @param {string | null | undefined} [opts.bearerToken=process.env['OPENMRP_API_KEY'] ?? null]
+   * @param {string | null | undefined} [opts.openMRPAccountID]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
-   * @param {string} [opts.baseURL=process.env['AUGNO_BASE_URL'] ?? https://api.augno.com] - Override the default base URL for the API.
+   * @param {string} [opts.baseURL=process.env['OPENMRP_BASE_URL'] ?? https://api.openmrp.ai] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -255,41 +255,41 @@ export class Augno {
    * @param {Record<string, string | undefined>} opts.defaultQuery - Default query parameters to include with every request to the API.
    */
   constructor({
-    baseURL = readEnv('AUGNO_BASE_URL'),
-    bearerToken = readEnv('AUGNO_API_KEY') ?? null,
-    augnoAccountID = null,
+    baseURL = readEnv('OPENMRP_BASE_URL'),
+    bearerToken = readEnv('OPENMRP_API_KEY') ?? null,
+    openMRPAccountID = null,
     ...opts
   }: ClientOptions = {}) {
     const options: ClientOptions = {
       bearerToken,
-      augnoAccountID,
+      openMRPAccountID,
       ...opts,
       baseURL,
       environment: opts.environment ?? 'production',
     };
 
     if (baseURL && opts.environment) {
-      throw new Errors.AugnoError(
-        'Ambiguous URL; The `baseURL` option (or AUGNO_BASE_URL env var) and the `environment` option are given. If you want to use the environment you must pass baseURL: null',
+      throw new Errors.OpenMRPError(
+        'Ambiguous URL; The `baseURL` option (or OPENMRP_BASE_URL env var) and the `environment` option are given. If you want to use the environment you must pass baseURL: null',
       );
     }
 
     this.baseURL = options.baseURL || environments[options.environment || 'production'];
-    this.timeout = options.timeout ?? Augno.DEFAULT_TIMEOUT /* 1 minute */;
+    this.timeout = options.timeout ?? OpenMRP.DEFAULT_TIMEOUT /* 1 minute */;
     this.logger = options.logger ?? console;
     const defaultLogLevel = 'warn';
     // Set default logLevel early so that we can log a warning in parseLogLevel.
     this.logLevel = defaultLogLevel;
     this.logLevel =
       parseLogLevel(options.logLevel, 'ClientOptions.logLevel', this) ??
-      parseLogLevel(readEnv('AUGNO_LOG'), "process.env['AUGNO_LOG']", this) ??
+      parseLogLevel(readEnv('OPENMRP_LOG'), "process.env['OPENMRP_LOG']", this) ??
       defaultLogLevel;
     this.fetchOptions = options.fetchOptions;
     this.maxRetries = options.maxRetries ?? 2;
     this.fetch = options.fetch ?? Shims.getDefaultFetch();
     this.#encoder = Opts.FallbackEncoder;
 
-    const customHeadersEnv = readEnv('AUGNO_CUSTOM_HEADERS');
+    const customHeadersEnv = readEnv('OPENMRP_CUSTOM_HEADERS');
     if (customHeadersEnv) {
       const parsed: Record<string, string> = {};
       for (const line of customHeadersEnv.split('\n')) {
@@ -304,7 +304,7 @@ export class Augno {
     this._options = options;
 
     this.bearerToken = bearerToken;
-    this.augnoAccountID = augnoAccountID;
+    this.openMRPAccountID = openMRPAccountID;
   }
 
   /**
@@ -322,7 +322,7 @@ export class Augno {
       fetch: this.fetch,
       fetchOptions: this.fetchOptions,
       bearerToken: this.bearerToken,
-      augnoAccountID: this.augnoAccountID,
+      openMRPAccountID: this.openMRPAccountID,
       ...options,
     });
     return client;
@@ -769,8 +769,8 @@ export class Augno {
       {
         Accept: 'application/json',
         'User-Agent': this.getUserAgent(),
-        'Augno-Version': '1.0.forge-preview.3',
-        'Augno-Account': this.augnoAccountID,
+        'OpenMRP-Version': '1.0.forge-preview.3',
+        'OpenMRP-Account': this.openMRPAccountID,
       },
       await this.authHeaders(options),
       this._options.defaultHeaders,
@@ -834,10 +834,10 @@ export class Augno {
     }
   }
 
-  static Augno = this;
+  static OpenMRP = this;
   static DEFAULT_TIMEOUT = 60000; // 1 minute
 
-  static AugnoError = Errors.AugnoError;
+  static OpenMRPError = Errors.OpenMRPError;
   static APIError = Errors.APIError;
   static APIConnectionError = Errors.APIConnectionError;
   static APIConnectionTimeoutError = Errors.APIConnectionTimeoutError;
@@ -889,21 +889,21 @@ export class Augno {
   operations: API.Operations = new API.Operations(this);
 }
 
-Augno.Healthz = Healthz;
-Augno.Auth = Auth;
-Augno.Identity = Identity;
-Augno.Core = Core;
-Augno.Billing = Billing;
-Augno.Sales = Sales;
-Augno.Settings = Settings;
-Augno.Catalog = Catalog;
-Augno.AI = AI;
-Augno.Messaging = Messaging;
-Augno.Webhooks = Webhooks;
-Augno.Finance = Finance;
-Augno.Operations = Operations;
+OpenMRP.Healthz = Healthz;
+OpenMRP.Auth = Auth;
+OpenMRP.Identity = Identity;
+OpenMRP.Core = Core;
+OpenMRP.Billing = Billing;
+OpenMRP.Sales = Sales;
+OpenMRP.Settings = Settings;
+OpenMRP.Catalog = Catalog;
+OpenMRP.AI = AI;
+OpenMRP.Messaging = Messaging;
+OpenMRP.Webhooks = Webhooks;
+OpenMRP.Finance = Finance;
+OpenMRP.Operations = Operations;
 
-export declare namespace Augno {
+export declare namespace OpenMRP {
   export type RequestOptions = Opts.RequestOptions;
 
   export { Healthz as Healthz, type Healthcheck as Healthcheck };

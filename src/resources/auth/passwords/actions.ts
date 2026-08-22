@@ -19,7 +19,7 @@ export class Actions extends APIResource {
    * ```ts
    * const response =
    *   await client.auth.passwords.actions.requestReset({
-   *     identifier: 'jdoe@augno.com',
+   *     identifier: 'jdoe@openmrp.ai',
    *   });
    * ```
    */

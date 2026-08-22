@@ -148,7 +148,7 @@ export interface InvoiceForPayment {
   object: 'invoice_for_payment';
 
   /**
-   * An organization on Augno, including its branding and customer portal
+   * An organization on OpenMRP, including its branding and customer portal
    * sub-resources.
    *
    * Your own account and any customer or supplier account you trade with are both

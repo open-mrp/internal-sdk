@@ -37,7 +37,7 @@ export class RegistrationSessions extends APIResource {
    * ```ts
    * const createSessionResponse =
    *   await client.auth.registrationSessions.create({
-   *     email: 'jdoe@augno.com',
+   *     email: 'jdoe@openmrp.ai',
    *     plan_code: 'starter',
    *   });
    * ```

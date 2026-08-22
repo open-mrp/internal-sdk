@@ -325,7 +325,7 @@ export interface TenancyCurrentAccount {
   account_user_id: string;
 
   /**
-   * The Stripe customer that Augno bills this account's own subscription and usage
+   * The Stripe customer that OpenMRP bills this account's own subscription and usage
    * against.
    *
    * This is not the account's own Stripe customer for charging their customers.
