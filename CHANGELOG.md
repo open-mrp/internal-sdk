@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.2](https://github.com/open-mrp/internal-sdk/compare/v5.0.1...v5.0.2) (2026-08-22)
+
+
+### Bug Fixes
+
+* publish from release-please to public npm, not GitHub Packages ([#145](https://github.com/open-mrp/internal-sdk/issues/145)) ([e54b522](https://github.com/open-mrp/internal-sdk/commit/e54b52279a6edc5c47269be0b9c3a29d5403d359))
+
 ## [5.0.1](https://github.com/open-mrp/internal-sdk/compare/v5.0.0...v5.0.1) (2026-08-22)
 
 
