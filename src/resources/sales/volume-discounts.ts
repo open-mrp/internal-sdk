@@ -638,7 +638,14 @@ export interface VolumeDiscountCreateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'customer_groups' | 'product_lines' | 'categories' | 'attributes' | 'acceptable_units'>;
+  include?: Array<
+    | 'customer_groups'
+    | 'product_lines'
+    | 'categories'
+    | 'categories.properties'
+    | 'attributes'
+    | 'acceptable_units'
+  >;
 
   /**
    * Body param: Attribute IDs to scope the discount to.
@@ -686,7 +693,14 @@ export interface VolumeDiscountRetrieveParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'customer_groups' | 'product_lines' | 'categories' | 'attributes' | 'acceptable_units'>;
+  include?: Array<
+    | 'customer_groups'
+    | 'product_lines'
+    | 'categories'
+    | 'categories.properties'
+    | 'attributes'
+    | 'acceptable_units'
+  >;
 }
 
 export interface VolumeDiscountUpdateParams {
@@ -731,7 +745,14 @@ export interface VolumeDiscountUpdateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'customer_groups' | 'product_lines' | 'categories' | 'attributes' | 'acceptable_units'>;
+  include?: Array<
+    | 'customer_groups'
+    | 'product_lines'
+    | 'categories'
+    | 'categories.properties'
+    | 'attributes'
+    | 'acceptable_units'
+  >;
 
   /**
    * Body param: Attribute IDs to set.
@@ -805,7 +826,14 @@ export interface VolumeDiscountListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'customer_groups' | 'product_lines' | 'categories' | 'attributes' | 'acceptable_units'>;
+  include?: Array<
+    | 'customer_groups'
+    | 'product_lines'
+    | 'categories'
+    | 'categories.properties'
+    | 'attributes'
+    | 'acceptable_units'
+  >;
 
   /**
    * Maximum number of results to return in a single page.
