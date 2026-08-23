@@ -286,9 +286,9 @@ export interface CreatePurchaseOrderRequest {
   lines: Array<CreatePurchaseOrderLineInput>;
 
   /**
-   * Priority level for fulfilling the order (`low`, `normal`, or `high`).
+   * Priority level for fulfilling the order.
    */
-  priority_code: string;
+  priority_code: 'low' | 'normal' | 'high';
 
   /**
    * ID of the supplier account to place the order with.
@@ -342,7 +342,7 @@ export interface CreatePurchaseOrderRequest {
    * - `third_party`: the carrier bills the account given in
    *   `carrier_billing_account`.
    */
-  carrier_billing_type?: string;
+  carrier_billing_type?: 'sender' | 'third_party';
 
   /**
    * ID of the carrier for the order's freight.
@@ -540,7 +540,7 @@ export interface UpdatePurchaseOrderRequest {
   /**
    * Priority level for fulfilling the order (`low`, `normal`, or `high`).
    */
-  priority_code?: string;
+  priority_code?: 'low' | 'normal' | 'high';
 
   /**
    * Promised delivery date in `YYYY-MM-DD` format.
@@ -566,10 +566,9 @@ export interface PurchaseOrderCreateParams {
   lines: Array<CreatePurchaseOrderLineInput>;
 
   /**
-   * Body param: Priority level for fulfilling the order (`low`, `normal`, or
-   * `high`).
+   * Body param: Priority level for fulfilling the order.
    */
-  priority_code: string;
+  priority_code: 'low' | 'normal' | 'high';
 
   /**
    * Body param: ID of the supplier account to place the order with.
@@ -640,7 +639,7 @@ export interface PurchaseOrderCreateParams {
    * - `third_party`: the carrier bills the account given in
    *   `carrier_billing_account`.
    */
-  carrier_billing_type?: string;
+  carrier_billing_type?: 'sender' | 'third_party';
 
   /**
    * Body param: ID of the carrier for the order's freight.
@@ -783,7 +782,7 @@ export interface PurchaseOrderUpdateParams {
    * Body param: Priority level for fulfilling the order (`low`, `normal`, or
    * `high`).
    */
-  priority_code?: string;
+  priority_code?: 'low' | 'normal' | 'high';
 
   /**
    * Body param: Promised delivery date in `YYYY-MM-DD` format.

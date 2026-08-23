@@ -350,9 +350,9 @@ export interface ShipmentListParams {
   starts_at?: string;
 
   /**
-   * Only include shipments with this status, either `packed` or `shipped`.
+   * Only include shipments with this status.
    */
-  status?: string;
+  status?: 'packed' | 'shipped';
 }
 
 Shipments.Actions = Actions;

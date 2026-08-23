@@ -150,10 +150,9 @@ export interface ReceivingOrderListParams {
   /**
    * Filter by completion status.
    *
-   * Accepts `open`, `completed`, or `all`. Completed orders are hidden when this is
-   * omitted.
+   * Completed orders are hidden when this is omitted.
    */
-  status?: string;
+  status?: 'open' | 'completed' | 'all';
 
   /**
    * Filter to orders whose originating purchase order was placed with any of the

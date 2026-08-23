@@ -108,7 +108,16 @@ export interface NotificationPreference {
    * A preference with no category is the user's global default, used for every
    * category they have not set a specific preference for.
    */
-  category: string | null;
+  category:
+    | 'chat.message'
+    | 'chat.mention'
+    | 'chat.added'
+    | 'order.updated'
+    | 'agent.run_completed'
+    | 'agent.alert'
+    | 'system.broadcast'
+    | 'customer.registered'
+    | null;
 
   /**
    * Creation timestamp.

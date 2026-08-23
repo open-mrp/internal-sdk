@@ -575,11 +575,15 @@ export interface RunListParams {
 
   /**
    * Restricts results to runs in this status.
-   *
-   * One of `pending`, `running`, `awaiting_input`, `awaiting_approval`, `completed`,
-   * `failed`, or `cancelled`.
    */
-  status?: string;
+  status?:
+    | 'pending'
+    | 'running'
+    | 'completed'
+    | 'failed'
+    | 'cancelled'
+    | 'awaiting_input'
+    | 'awaiting_approval';
 }
 
 Runs.Actions = Actions;

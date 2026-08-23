@@ -122,7 +122,7 @@ export interface AvailableTool {
    * - `api_endpoint`: an operation of this API exposed as a tool, letting the agent
    *   perform it on the account's behalf.
    */
-  category: string;
+  category: 'built_in' | 'api_endpoint';
 
   /**
    * JSON schema describing the configuration options this tool accepts.
@@ -174,7 +174,7 @@ export interface AvailableTool {
    * Role type the caller must have for this tool, when the operation is gated by
    * role rather than a permission (e.g. `admin`).
    */
-  required_role_type: string | null;
+  required_role_type: 'admin' | 'user' | 'scanner' | 'sales_rep' | 'agent' | null;
 
   /**
    * A stable identifier used when attaching the tool to an agent.

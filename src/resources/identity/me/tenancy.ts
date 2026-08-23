@@ -266,9 +266,9 @@ export interface TenancyAccountPlan {
   object: 'account_plan';
 
   /**
-   * Stable code for the plan tier (for example `free`, `starter`, or `pro`).
+   * Stable code for the plan tier.
    */
-  plan_type_code: string;
+  plan_type_code: 'free' | 'starter' | 'pro' | 'enterprise' | 'enterprise_template';
 
   /**
    * Per-seat price override in dollars used in place of `price_per_seat` when set.
@@ -347,16 +347,15 @@ export interface TenancyCurrentAccount {
    *
    * The account is fully set up and usable once this is `active`.
    */
-  onboarding_status: string;
+  onboarding_status: 'unclaimed' | 'active' | 'suspended' | 'deactivated';
 
   /**
-   * Code of the account's subscription plan (for example `free`, `starter`, or
-   * `pro`).
+   * Code of the account's subscription plan.
    *
    * The same code appears as `account_plan.plan_type_code`, alongside the plan's
    * resolved limits and features.
    */
-  plan: string;
+  plan: 'free' | 'starter' | 'pro' | 'enterprise' | 'enterprise_template';
 
   /**
    * A named set of permissions that can be assigned to users to control what they
@@ -377,7 +376,7 @@ export interface TenancyCurrentAccount {
    * - `company`: a standard production account.
    * - `sandbox`: an isolated testing account.
    */
-  type: string;
+  type: 'company' | 'sandbox';
 }
 
 /**
@@ -405,7 +404,7 @@ export interface TenancyOtherAccount {
    * - `company`: a standard production account.
    * - `sandbox`: an isolated testing account.
    */
-  type: string;
+  type: 'company' | 'sandbox';
 }
 
 /**
@@ -446,7 +445,7 @@ export interface TenancyPendingRegistration {
   /**
    * Plan code selected during registration.
    */
-  plan_code: string;
+  plan_code: 'free' | 'starter' | 'pro' | 'enterprise' | 'enterprise_template';
 
   /**
    * Registration session ID.
@@ -460,7 +459,7 @@ export interface TenancyPendingRegistration {
    * Steps run `verification`, `user_details`, `account_details`, `review`,
    * `payment`, then `completed`.
    */
-  step: string;
+  step: 'verification' | 'user_details' | 'account_details' | 'review' | 'payment' | 'completed';
 }
 
 /**

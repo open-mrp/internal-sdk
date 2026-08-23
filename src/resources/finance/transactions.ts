@@ -171,7 +171,7 @@ export interface CreateTransactionRequest {
    * - `adjustment`: a manual correction (also provide `adjustment_type`).
    * - `rebate`: a rebate granted to the customer.
    */
-  type: string;
+  type: 'payment' | 'credit_memo' | 'adjustment' | 'rebate';
 
   /**
    * The kind of correction this transaction represents (see List Adjustment Types
@@ -182,12 +182,11 @@ export interface CreateTransactionRequest {
   adjustment_type?: string;
 
   /**
-   * How the money moved: one of `cash`, `check`, `credit_card`, `gift_card`, or
-   * `ach`.
+   * How the money moved.
    *
    * Typically provided for payment transactions.
    */
-  method?: string;
+  method?: 'cash' | 'check' | 'credit_card' | 'gift_card' | 'ach';
 
   /**
    * Free-form note attached to the transaction.
@@ -356,10 +355,9 @@ export interface UpdateTransactionRequest {
   is_fully_allocated?: boolean;
 
   /**
-   * How the money moved: one of `cash`, `check`, `credit_card`, `gift_card`, or
-   * `ach`.
+   * How the money moved.
    */
-  method?: string;
+  method?: 'cash' | 'check' | 'credit_card' | 'gift_card' | 'ach';
 
   /**
    * Free-form note attached to the transaction.
@@ -402,7 +400,7 @@ export interface TransactionCreateParams {
    * - `adjustment`: a manual correction (also provide `adjustment_type`).
    * - `rebate`: a rebate granted to the customer.
    */
-  type: string;
+  type: 'payment' | 'credit_memo' | 'adjustment' | 'rebate';
 
   /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
@@ -419,12 +417,11 @@ export interface TransactionCreateParams {
   adjustment_type?: string;
 
   /**
-   * Body param: How the money moved: one of `cash`, `check`, `credit_card`,
-   * `gift_card`, or `ach`.
+   * Body param: How the money moved.
    *
    * Typically provided for payment transactions.
    */
-  method?: string;
+  method?: 'cash' | 'check' | 'credit_card' | 'gift_card' | 'ach';
 
   /**
    * Body param: Free-form note attached to the transaction.
@@ -496,10 +493,9 @@ export interface TransactionUpdateParams {
   is_fully_allocated?: boolean;
 
   /**
-   * Body param: How the money moved: one of `cash`, `check`, `credit_card`,
-   * `gift_card`, or `ach`.
+   * Body param: How the money moved.
    */
-  method?: string;
+  method?: 'cash' | 'check' | 'credit_card' | 'gift_card' | 'ach';
 
   /**
    * Body param: Free-form note attached to the transaction.
@@ -567,10 +563,9 @@ export interface TransactionListParams {
   limit?: number;
 
   /**
-   * Filter by payment method codes (`cash`, `check`, `credit_card`, `gift_card`,
-   * `ach`).
+   * Filter by payment method codes.
    */
-  methods?: Array<string>;
+  methods?: Array<'cash' | 'check' | 'credit_card' | 'gift_card' | 'ach'>;
 
   /**
    * Free-text search term used to filter results.
@@ -588,13 +583,12 @@ export interface TransactionListParams {
    * Filter by allocation status: `allocated` (marked fully applied to invoices) or
    * `unallocated` (still counted as an open credit).
    */
-  status?: string;
+  status?: 'allocated' | 'unallocated';
 
   /**
-   * Filter by transaction type codes (`payment`, `credit_memo`, `adjustment`,
-   * `rebate`).
+   * Filter by transaction type codes.
    */
-  types?: Array<string>;
+  types?: Array<'payment' | 'credit_memo' | 'adjustment' | 'rebate'>;
 }
 
 export interface TransactionDeleteParams {

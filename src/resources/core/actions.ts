@@ -128,7 +128,7 @@ export interface CheckDuplicateRequest {
    * - `customer_po_number`: checks customer PO numbers on sales orders; requires
    *   `customer_id`.
    */
-  type: string;
+  type: 'invoice_number' | 'order_number' | 'customer_po_number';
 
   /**
    * ID of the customer to scope the check to.
@@ -277,7 +277,7 @@ export interface ActionCheckDuplicatesParams {
    * - `customer_po_number`: checks customer PO numbers on sales orders; requires
    *   `customer_id`.
    */
-  type: string;
+  type: 'invoice_number' | 'order_number' | 'customer_po_number';
 
   /**
    * ID of the customer to scope the check to.

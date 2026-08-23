@@ -88,11 +88,22 @@ export class Properties extends APIResource {
    * ```ts
    * const sysPropertyValue =
    *   await client.settings.properties.retrieveLatestValue(
-   *     'example',
+   *     'transaction_number',
    *   );
    * ```
    */
-  retrieveLatestValue(typeCode: string, options?: RequestOptions): APIPromise<SysPropertyValue> {
+  retrieveLatestValue(
+    typeCode:
+      | 'transaction_number'
+      | 'settlement_number'
+      | 'sales_order_number'
+      | 'purchase_order_number'
+      | 'supplier_number'
+      | 'customer_number'
+      | 'sscc_count'
+      | 'production_run_number',
+    options?: RequestOptions,
+  ): APIPromise<SysPropertyValue> {
     return this._client.get(path`/v1/settings/properties/${typeCode}/latest-value`, options);
   }
 }
@@ -191,7 +202,15 @@ export interface SysPropertyType {
    * - `sscc_count`: serial component of the GS1 SSCC-18 codes assigned to shipping
    *   cases.
    */
-  code: string;
+  code:
+    | 'transaction_number'
+    | 'settlement_number'
+    | 'sales_order_number'
+    | 'purchase_order_number'
+    | 'supplier_number'
+    | 'customer_number'
+    | 'sscc_count'
+    | 'production_run_number';
 
   /**
    * Human-readable name of the counter, such as `Transaction Number`.

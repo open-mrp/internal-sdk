@@ -194,7 +194,7 @@ export class Items extends APIResource {
    * const itemTrends =
    *   await client.catalog.items.retrieveTrends(
    *     'it_pej07ckhvu62',
-   *     { trend_type: 'trend_type' },
+   *     { trend_type: 'inventory' },
    *   );
    * ```
    */
@@ -341,10 +341,8 @@ export interface ItemTrends {
 
   /**
    * The trend type that was requested.
-   *
-   * Currently the only supported value is `inventory`.
    */
-  trend_type: string;
+  trend_type: 'inventory';
 }
 
 /**
@@ -552,11 +550,10 @@ export interface ItemRetrieveTrendsParams {
   /**
    * The trend metric to fetch.
    *
-   * Currently the only supported value is `inventory`, which returns the item's
-   * inventory-level measurements from the last 30 days. Unsupported values are
-   * rejected with a validation error.
+   * `inventory` returns the item's inventory-level measurements from the last 30
+   * days.
    */
-  trend_type: string;
+  trend_type: 'inventory';
 }
 
 Items.Inventory = Inventory;

@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Openmrp from '@openmrp/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 
-const client = new Openmrp({
+const client = new OpenMRP({
   bearerToken: 'My Bearer Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
@@ -27,7 +27,7 @@ describe('resource items', () => {
         { include: ['category'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('list', async () => {
@@ -62,7 +62,7 @@ describe('resource items', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('changeCategory: only required params', async () => {
@@ -113,12 +113,12 @@ describe('resource items', () => {
         { include: ['unit'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('retrieveTrends: only required params', async () => {
     const responsePromise = client.catalog.items.retrieveTrends('it_pej07ckhvu62', {
-      trend_type: 'trend_type',
+      trend_type: 'inventory',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -131,7 +131,7 @@ describe('resource items', () => {
 
   test('retrieveTrends: required and optional params', async () => {
     const response = await client.catalog.items.retrieveTrends('it_pej07ckhvu62', {
-      trend_type: 'trend_type',
+      trend_type: 'inventory',
     });
   });
 });

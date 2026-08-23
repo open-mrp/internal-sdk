@@ -313,7 +313,7 @@ export interface BatchLot {
    * - `productionRun`: the lot number is the production run number the batch belongs
    *   to.
    */
-  type: string;
+  type: 'material' | 'productionRun';
 }
 
 /**

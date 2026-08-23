@@ -1117,10 +1117,9 @@ export interface UpdateQuantityRequest {
   /**
    * Type of the resource that owns this quantity.
    *
-   * Determines the permission required for the update. Must be `item`,
-   * `production_step`, or `department`.
+   * Determines the permission required for the update.
    */
-  object_type?: string;
+  object_type?: 'item' | 'production_step' | 'department';
 
   /**
    * ID of the new unit of measure for the quantity.
@@ -1166,10 +1165,9 @@ export interface UpdateRateRequest {
   /**
    * Type of the resource that owns this rate.
    *
-   * Determines the permission required for the update. Must be `item`,
-   * `production_step`, or `department`.
+   * Determines the permission required for the update.
    */
-  object_type?: string;
+  object_type?: 'item' | 'production_step' | 'department';
 
   /**
    * New decimal value for the rate, expressed as the amount of the numerator unit
@@ -1241,10 +1239,9 @@ export interface OperationUpdateQuantitiesParams {
   /**
    * Body param: Type of the resource that owns this quantity.
    *
-   * Determines the permission required for the update. Must be `item`,
-   * `production_step`, or `department`.
+   * Determines the permission required for the update.
    */
-  object_type?: string;
+  object_type?: 'item' | 'production_step' | 'department';
 
   /**
    * Body param: ID of the new unit of measure for the quantity.
@@ -1295,10 +1292,9 @@ export interface OperationUpdateRatesParams {
   /**
    * Body param: Type of the resource that owns this rate.
    *
-   * Determines the permission required for the update. Must be `item`,
-   * `production_step`, or `department`.
+   * Determines the permission required for the update.
    */
-  object_type?: string;
+  object_type?: 'item' | 'production_step' | 'department';
 
   /**
    * Body param: New decimal value for the rate, expressed as the amount of the

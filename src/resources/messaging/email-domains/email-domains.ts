@@ -153,7 +153,7 @@ export interface EmailDomain {
    *
    * Inboxes can only be created on a `verified` domain.
    */
-  status: string;
+  status: 'pending' | 'verified' | 'failed';
 
   /**
    * Last updated timestamp.

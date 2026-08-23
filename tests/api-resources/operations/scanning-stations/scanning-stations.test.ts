@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Openmrp from '@openmrp/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 
-const client = new Openmrp({
+const client = new OpenMRP({
   bearerToken: 'My Bearer Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
@@ -56,7 +56,7 @@ describe('resource scanningStations', () => {
         { include: ['department'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('update', async () => {
@@ -85,7 +85,7 @@ describe('resource scanningStations', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('list', async () => {
@@ -111,7 +111,7 @@ describe('resource scanningStations', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('delete', async () => {
@@ -173,7 +173,7 @@ describe('resource scanningStations', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('updateProductionSteps: only required params', async () => {

@@ -100,7 +100,7 @@ export interface ChangePurchaseOrderStatusRequest {
    * - `open`: move a `fulfilled` order back to `issued`. Re-opens the receiving
    *   order.
    */
-  status_change: string;
+  status_change: 'issue' | 'close' | 'unissue' | 'open';
 }
 
 export interface ActionBulkDeleteResponse {}
@@ -135,7 +135,7 @@ export interface ActionChangeStatusParams {
    * - `open`: move a `fulfilled` order back to `issued`. Re-opens the receiving
    *   order.
    */
-  status_change: string;
+  status_change: 'issue' | 'close' | 'unissue' | 'open';
 
   /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects

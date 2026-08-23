@@ -584,11 +584,8 @@ export interface PickListParams {
 
   /**
    * Filter by pick status.
-   *
-   * Pass `open` for picks that have not been finished, or `closed` for picks that
-   * have.
    */
-  status?: string;
+  status?: 'open' | 'closed';
 }
 
 export interface PickRetrieveShipmentsParams {

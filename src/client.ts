@@ -224,7 +224,7 @@ export interface ClientOptions {
 /**
  * API Client for interfacing with the Openmrp API.
  */
-export class Openmrp {
+export class OpenMRP {
   bearerToken: string | null;
   openmrpAccountID: string | null;
 
@@ -269,13 +269,13 @@ export class Openmrp {
     };
 
     if (baseURL && opts.environment) {
-      throw new Errors.OpenmrpError(
+      throw new Errors.OpenMRPError(
         'Ambiguous URL; The `baseURL` option (or OPENMRP_BASE_URL env var) and the `environment` option are given. If you want to use the environment you must pass baseURL: null',
       );
     }
 
     this.baseURL = options.baseURL || environments[options.environment || 'production'];
-    this.timeout = options.timeout ?? Openmrp.DEFAULT_TIMEOUT /* 1 minute */;
+    this.timeout = options.timeout ?? OpenMRP.DEFAULT_TIMEOUT /* 1 minute */;
     this.logger = options.logger ?? console;
     const defaultLogLevel = 'warn';
     // Set default logLevel early so that we can log a warning in parseLogLevel.
@@ -834,10 +834,10 @@ export class Openmrp {
     }
   }
 
-  static Openmrp = this;
+  static OpenMRP = this;
   static DEFAULT_TIMEOUT = 60000; // 1 minute
 
-  static OpenmrpError = Errors.OpenmrpError;
+  static OpenMRPError = Errors.OpenMRPError;
   static APIError = Errors.APIError;
   static APIConnectionError = Errors.APIConnectionError;
   static APIConnectionTimeoutError = Errors.APIConnectionTimeoutError;
@@ -889,21 +889,21 @@ export class Openmrp {
   operations: API.Operations = new API.Operations(this);
 }
 
-Openmrp.Healthz = Healthz;
-Openmrp.Auth = Auth;
-Openmrp.Identity = Identity;
-Openmrp.Core = Core;
-Openmrp.Billing = Billing;
-Openmrp.Sales = Sales;
-Openmrp.Settings = Settings;
-Openmrp.Catalog = Catalog;
-Openmrp.AI = AI;
-Openmrp.Messaging = Messaging;
-Openmrp.Webhooks = Webhooks;
-Openmrp.Finance = Finance;
-Openmrp.Operations = Operations;
+OpenMRP.Healthz = Healthz;
+OpenMRP.Auth = Auth;
+OpenMRP.Identity = Identity;
+OpenMRP.Core = Core;
+OpenMRP.Billing = Billing;
+OpenMRP.Sales = Sales;
+OpenMRP.Settings = Settings;
+OpenMRP.Catalog = Catalog;
+OpenMRP.AI = AI;
+OpenMRP.Messaging = Messaging;
+OpenMRP.Webhooks = Webhooks;
+OpenMRP.Finance = Finance;
+OpenMRP.Operations = Operations;
 
-export declare namespace Openmrp {
+export declare namespace OpenMRP {
   export type RequestOptions = Opts.RequestOptions;
 
   export { Healthz as Healthz, type Healthcheck as Healthcheck };

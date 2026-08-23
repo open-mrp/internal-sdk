@@ -754,10 +754,8 @@ export interface UpdateAgentRequest {
 export interface UpdateAgentStatusRequest {
   /**
    * Account-level status to set for the agent.
-   *
-   * Either `active` or `inactive`.
    */
-  status: string;
+  status: 'active' | 'inactive';
 }
 
 export interface AgentDeleteResponse {}
@@ -945,10 +943,8 @@ export interface AgentListParams {
 export interface AgentUpdateStatusParams {
   /**
    * Body param: Account-level status to set for the agent.
-   *
-   * Either `active` or `inactive`.
    */
-  status: string;
+  status: 'active' | 'inactive';
 
   /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects

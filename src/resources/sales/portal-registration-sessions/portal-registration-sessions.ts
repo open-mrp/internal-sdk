@@ -474,7 +474,7 @@ export interface PortalRegistrationSessionListParams {
    * - `expired`: still incomplete, but past the resume window, so the buyer can no
    *   longer pick it back up.
    */
-  status?: string;
+  status?: 'in_progress' | 'completed' | 'abandoned' | 'expired';
 }
 
 PortalRegistrationSessions.Actions = Actions;

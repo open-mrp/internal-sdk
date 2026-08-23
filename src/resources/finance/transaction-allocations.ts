@@ -161,11 +161,11 @@ export interface AllocationTransaction {
   adjustment_type: string | null;
 
   /**
-   * Payment method code (e.g. `check`, `ach`).
+   * Payment method code.
    *
    * Typically set only when `type` is `payment`.
    */
-  method: string | null;
+  method: 'cash' | 'check' | 'credit_card' | 'gift_card' | 'ach' | null;
 
   /**
    * Resource type identifier.
@@ -174,10 +174,8 @@ export interface AllocationTransaction {
 
   /**
    * Type code of the transaction the money came from.
-   *
-   * One of `payment`, `credit_memo`, `adjustment`, or `rebate`.
    */
-  type: string;
+  type: 'payment' | 'credit_memo' | 'adjustment' | 'rebate';
 }
 
 /**
@@ -268,10 +266,9 @@ export interface TransactionAllocationListParams {
   starts_at?: string;
 
   /**
-   * Filter by the underlying transaction's type code (`payment`, `credit_memo`,
-   * `adjustment`, or `rebate`).
+   * Filter by the underlying transaction's type code.
    */
-  transaction_type?: string;
+  transaction_type?: 'payment' | 'credit_memo' | 'adjustment' | 'rebate';
 }
 
 export declare namespace TransactionAllocations {

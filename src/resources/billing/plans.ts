@@ -240,7 +240,7 @@ export interface PlanLimit {
    * - `batches_maximum`: production batches the account can create per billing
    *   period.
    */
-  key: string;
+  key: 'invoices_maximum' | 'batches_maximum' | 'seats_maximum' | 'sandboxes_maximum';
 
   /**
    * Resource type identifier.

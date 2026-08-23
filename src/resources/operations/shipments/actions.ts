@@ -483,7 +483,7 @@ export interface RateShopResult {
    *   replaced every option's carrier rate.
    * - `none`: standard carrier rates apply with no exemption.
    */
-  exemption_type: string | null;
+  exemption_type: 'freight_exempt' | 'minimum_order_met' | 'flat_rate' | 'none' | null;
 
   /**
    * Flat shipping amount applied to the options.

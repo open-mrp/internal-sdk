@@ -368,7 +368,7 @@ export interface CreateSalesOrderRequest {
   /**
    * Fulfillment priority used to rank the order on the shop floor.
    */
-  priority_code: string;
+  priority_code: 'low' | 'normal' | 'high';
 
   /**
    * Ship-to address ID.
@@ -1601,7 +1601,7 @@ export interface UpdateSalesOrderRequest {
   /**
    * New fulfillment priority for the order.
    */
-  priority_code?: string;
+  priority_code?: 'low' | 'normal' | 'high';
 
   /**
    * Date delivery is promised to the customer.
@@ -1664,7 +1664,7 @@ export interface SalesOrderCreateParams {
   /**
    * Body param: Fulfillment priority used to rank the order on the shop floor.
    */
-  priority_code: string;
+  priority_code: 'low' | 'normal' | 'high';
 
   /**
    * Body param: Ship-to address ID.
@@ -1999,7 +1999,7 @@ export interface SalesOrderUpdateParams {
   /**
    * Body param: New fulfillment priority for the order.
    */
-  priority_code?: string;
+  priority_code?: 'low' | 'normal' | 'high';
 
   /**
    * Body param: Date delivery is promised to the customer.

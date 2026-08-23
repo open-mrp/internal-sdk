@@ -181,7 +181,7 @@ export interface CreateEmailInboxRequest {
    * Leaving this unset makes the agent run on every incoming message, since email
    * has no reliable @mention convention.
    */
-  agent_trigger_policy?: string;
+  agent_trigger_policy?: 'mention' | 'keyword' | 'always';
 
   /**
    * Display name for the `From` header of outbound mail.
@@ -244,7 +244,7 @@ export interface EmailInbox {
    * When no policy is set the agent runs on every incoming message, since email has
    * no reliable @mention convention.
    */
-  agent_trigger_policy: string | null;
+  agent_trigger_policy: 'mention' | 'keyword' | 'always' | null;
 
   /**
    * Creation timestamp.
@@ -296,7 +296,7 @@ export interface EmailInbox {
    * - `disabled`: the inbox stays provisioned and keeps its history, but inbound
    *   mail is dropped without being threaded.
    */
-  status: string;
+  status: 'active' | 'disabled';
 
   /**
    * Last updated timestamp.
@@ -343,7 +343,7 @@ export interface UpdateEmailInboxRequest {
    * - `disabled`: the inbox stays provisioned and keeps its history, but inbound
    *   mail is dropped without being threaded.
    */
-  status: string;
+  status: 'active' | 'disabled';
 
   /**
    * The agent to bind to this inbox to handle incoming mail.
@@ -369,7 +369,7 @@ export interface UpdateEmailInboxRequest {
    * While no policy has been set, the agent runs on every incoming message, since
    * email has no reliable @mention convention.
    */
-  agent_trigger_policy?: string;
+  agent_trigger_policy?: 'mention' | 'keyword' | 'always';
 
   /**
    * Display name for the `From` header of outbound mail.
@@ -437,7 +437,7 @@ export interface EmailInboxCreateParams {
    * Leaving this unset makes the agent run on every incoming message, since email
    * has no reliable @mention convention.
    */
-  agent_trigger_policy?: string;
+  agent_trigger_policy?: 'mention' | 'keyword' | 'always';
 
   /**
    * Body param: Display name for the `From` header of outbound mail.
@@ -470,7 +470,7 @@ export interface EmailInboxUpdateParams {
    * - `disabled`: the inbox stays provisioned and keeps its history, but inbound
    *   mail is dropped without being threaded.
    */
-  status: string;
+  status: 'active' | 'disabled';
 
   /**
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
@@ -503,7 +503,7 @@ export interface EmailInboxUpdateParams {
    * While no policy has been set, the agent runs on every incoming message, since
    * email has no reliable @mention convention.
    */
-  agent_trigger_policy?: string;
+  agent_trigger_policy?: 'mention' | 'keyword' | 'always';
 
   /**
    * Body param: Display name for the `From` header of outbound mail.

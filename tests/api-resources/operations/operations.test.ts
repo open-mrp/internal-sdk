@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Openmrp from '@openmrp/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 
-const client = new Openmrp({
+const client = new OpenMRP({
   bearerToken: 'My Bearer Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
@@ -42,7 +42,7 @@ describe('resource operations', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('retrieveMachineDowntimeReasons', async () => {
@@ -74,7 +74,7 @@ describe('resource operations', () => {
         { as_of: '2019-12-27T18:11:19.117Z', department_ids: ['string'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('retrieveScheduleDeviationTypes', async () => {
@@ -107,13 +107,13 @@ describe('resource operations', () => {
         {
           include: ['unit'],
           object_id: 'object_id',
-          object_type: 'object_type',
+          object_type: 'item',
           unit_id: 'un_82bd37dae5po',
           value: '50.000000000000000000000000000000',
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('updateRates', async () => {
@@ -137,11 +137,11 @@ describe('resource operations', () => {
           denominator_unit_id: 'denominator_unit_id',
           numerator_unit_id: 'un_82bd37dae5po',
           object_id: 'object_id',
-          object_type: 'object_type',
+          object_type: 'item',
           value: '25.50',
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 });

@@ -323,7 +323,7 @@ export interface ProductionRunListParams {
    * point it completes and becomes `closed`. Only open runs are returned when this
    * filter is omitted, so ask for `closed` explicitly to see finished runs.
    */
-  status?: string;
+  status?: 'open' | 'closed';
 }
 
 ProductionRuns.Batches = Batches;

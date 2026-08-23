@@ -257,7 +257,7 @@ export interface OAuthStatusResponse {
    *   carrier account could not be reached. Sandbox accounts always report this
    *   status.
    */
-  status: string;
+  status: 'connected' | 'authorization_pending' | 'disconnected';
 }
 
 /**

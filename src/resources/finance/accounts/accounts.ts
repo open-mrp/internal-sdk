@@ -277,13 +277,12 @@ export interface AccountRetrieveTransactionsParams {
    * Filter by allocation status: `allocated` (marked fully applied to invoices) or
    * `unallocated` (still counted as an open credit).
    */
-  status?: string;
+  status?: 'allocated' | 'unallocated';
 
   /**
-   * Filter by transaction type code (`payment`, `credit_memo`, `adjustment`, or
-   * `rebate`).
+   * Filter by transaction type code.
    */
-  type?: string;
+  type?: 'payment' | 'credit_memo' | 'adjustment' | 'rebate';
 }
 
 Accounts.Actions = Actions;

@@ -226,9 +226,9 @@ export interface BulkCreateProductionStepInput {
  */
 export interface BulkCreateProductionStepResult {
   /**
-   * The action taken: "created", "updated", or "skipped".
+   * The action taken on the underlying production step.
    */
-  action: string;
+  action: 'created' | 'updated' | 'skipped';
 
   /**
    * The error message if the step failed.
@@ -246,9 +246,9 @@ export interface BulkCreateProductionStepResult {
   production_step_id: string | null;
 
   /**
-   * Outcome of the operation for this step: "created" or "failed".
+   * Outcome of the operation for this step.
    */
-  status: string;
+  status: 'created' | 'failed';
 }
 
 /**

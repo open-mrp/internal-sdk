@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Openmrp from '@openmrp/internal-sdk';
+import OpenMRP from '@openmrp/internal-sdk';
 
-const client = new Openmrp({
+const client = new OpenMRP({
   bearerToken: 'My Bearer Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
@@ -54,7 +54,7 @@ describe('resource emailInboxes', () => {
         { include: ['email_domain'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('update: only required params', async () => {
@@ -95,7 +95,7 @@ describe('resource emailInboxes', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.messaging.emailInboxes.list({ include: ['email_domain'] }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(Openmrp.NotFoundError);
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('delete', async () => {

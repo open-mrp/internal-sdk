@@ -155,9 +155,9 @@ export interface BulkCreateItemResult {
   sku: string;
 
   /**
-   * Outcome of the create attempt: "created" or "failed".
+   * Outcome of the create attempt.
    */
-  status: string;
+  status: 'created' | 'failed';
 }
 
 /**
@@ -176,7 +176,7 @@ export interface BulkCreateItemsRequest {
    * - `material`: a raw material or component consumed in production.
    * - `part`: a part used in production.
    */
-  type: string;
+  type: 'product' | 'material' | 'part';
 }
 
 /**
@@ -241,7 +241,7 @@ export interface BulkReconcileItemsRequest {
    * - `addition`: adds the quantity to the item's current quantity.
    * - `force`: sets the item's current quantity to exactly the given quantity.
    */
-  reconcile_type: string;
+  reconcile_type: 'addition' | 'force';
 }
 
 /**
@@ -432,7 +432,7 @@ export interface ActionBulkCreateParams {
    * - `material`: a raw material or component consumed in production.
    * - `part`: a part used in production.
    */
-  type: string;
+  type: 'product' | 'material' | 'part';
 }
 
 export interface ActionBulkReconcileParams {
@@ -447,7 +447,7 @@ export interface ActionBulkReconcileParams {
    * - `addition`: adds the quantity to the item's current quantity.
    * - `force`: sets the item's current quantity to exactly the given quantity.
    */
-  reconcile_type: string;
+  reconcile_type: 'addition' | 'force';
 }
 
 export declare namespace Actions {

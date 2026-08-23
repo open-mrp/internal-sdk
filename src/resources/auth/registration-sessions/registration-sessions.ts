@@ -321,7 +321,7 @@ export interface RegistrationSession {
   /**
    * Code of the pricing plan selected for this registration.
    */
-  plan_code: string;
+  plan_code: 'free' | 'starter' | 'pro' | 'enterprise' | 'enterprise_template';
 
   /**
    * Current step in the registration flow.
