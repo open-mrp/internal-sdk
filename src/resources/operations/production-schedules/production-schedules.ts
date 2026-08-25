@@ -1554,6 +1554,17 @@ export interface ProductionScheduleItemPolicy {
   production_step: CoreAPI.Entity | null;
 
   /**
+   * The physical greige store at the end of each horizon week — the constraint stage
+   * on its own, which `projected_on_hand` cannot be decomposed back into.
+   *
+   * A week where this dips to `safety_stock_primary` is the week knitting is meant
+   * to replenish, even where `projected_on_hand` still reads full because the stock
+   * is held downstream as finished goods. Empty for a schedule generated before the
+   * greige buffer existed.
+   */
+  projected_greige_on_hand: Array<number>;
+
+  /**
    * The echelon position at the end of each horizon week, after that week's
    * campaigns land and its demand is drawn down.
    *
