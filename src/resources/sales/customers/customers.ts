@@ -77,6 +77,7 @@ export class Customers extends APIResource {
    *   edi_status: 'disabled',
    *   email: 'orders@acme.com',
    *   freight_policy: 'billed_freight',
+   *   fulfillment_policy: 'make_to_order',
    *   note: 'Key enterprise account',
    *   number: '100042',
    *   phone: '555-123-4567',
@@ -137,6 +138,7 @@ export class Customers extends APIResource {
    *   edi_status: 'disabled',
    *   email: 'orders@acme.com',
    *   freight_policy: 'billed_freight',
+   *   fulfillment_policy: 'make_to_order',
    *   name: 'Acme Corp Updated',
    *   note: 'Updated account notes',
    *   number: '100042',
@@ -491,6 +493,20 @@ export interface CreateCustomerRequest {
    * or a product line the ordered products belong to is `free_freight`.
    */
   freight_policy?: 'free_freight' | 'billed_freight';
+
+  /**
+   * How this customer's orders are produced.
+   *
+   * - `make_to_stock`: their order history feeds the production-schedule forecast,
+   *   so stock is built ahead of their demand.
+   * - `make_to_order`: their history is left out of the forecast; their orders are
+   *   produced only once placed, and fit into the schedule on their own ship-by
+   *   dates.
+   *
+   * Leave unset to inherit the customer's account group policy, then the
+   * make-to-stock default.
+   */
+  fulfillment_policy?: 'make_to_stock' | 'make_to_order';
 
   /**
    * Calendar days between an order being issued and it being due to ship.
@@ -862,6 +878,20 @@ export interface UpdateCustomerRequest {
   freight_policy?: 'free_freight' | 'billed_freight';
 
   /**
+   * How this customer's orders are produced.
+   *
+   * - `make_to_stock`: their order history feeds the production-schedule forecast,
+   *   so stock is built ahead of their demand.
+   * - `make_to_order`: their history is left out of the forecast; their orders are
+   *   produced only once placed, and fit into the schedule on their own ship-by
+   *   dates.
+   *
+   * Clearing it returns the customer to their account group policy, then the
+   * make-to-stock default.
+   */
+  fulfillment_policy?: 'make_to_stock' | 'make_to_order' | null;
+
+  /**
    * Calendar days between an order being issued and it being due to ship.
    *
    * Sets each order's `ship_by_date` when it is issued. Clear it to inherit the
@@ -1081,6 +1111,20 @@ export interface CustomerCreateParams {
    * or a product line the ordered products belong to is `free_freight`.
    */
   freight_policy?: 'free_freight' | 'billed_freight';
+
+  /**
+   * Body param: How this customer's orders are produced.
+   *
+   * - `make_to_stock`: their order history feeds the production-schedule forecast,
+   *   so stock is built ahead of their demand.
+   * - `make_to_order`: their history is left out of the forecast; their orders are
+   *   produced only once placed, and fit into the schedule on their own ship-by
+   *   dates.
+   *
+   * Leave unset to inherit the customer's account group policy, then the
+   * make-to-stock default.
+   */
+  fulfillment_policy?: 'make_to_stock' | 'make_to_order';
 
   /**
    * Body param: Calendar days between an order being issued and it being due to
@@ -1305,6 +1349,20 @@ export interface CustomerUpdateParams {
    * or a product line the ordered products belong to is `free_freight`.
    */
   freight_policy?: 'free_freight' | 'billed_freight';
+
+  /**
+   * Body param: How this customer's orders are produced.
+   *
+   * - `make_to_stock`: their order history feeds the production-schedule forecast,
+   *   so stock is built ahead of their demand.
+   * - `make_to_order`: their history is left out of the forecast; their orders are
+   *   produced only once placed, and fit into the schedule on their own ship-by
+   *   dates.
+   *
+   * Clearing it returns the customer to their account group policy, then the
+   * make-to-stock default.
+   */
+  fulfillment_policy?: 'make_to_stock' | 'make_to_order' | null;
 
   /**
    * Body param: Calendar days between an order being issued and it being due to

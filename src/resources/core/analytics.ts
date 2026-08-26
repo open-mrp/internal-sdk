@@ -2262,6 +2262,20 @@ export interface CustomerContactInfo {
  */
 export interface CustomerDefaults {
   /**
+   * How this customer's orders are produced.
+   *
+   * - `make_to_stock`: their order history feeds the production-schedule forecast,
+   *   so stock is built ahead of their demand.
+   * - `make_to_order`: their history is left out of the forecast; their orders are
+   *   produced only once placed, and fit into the schedule on their own ship-by
+   *   dates.
+   *
+   * With none set here the customer inherits its account group's policy, then falls
+   * back to make-to-stock.
+   */
+  fulfillment_policy: 'make_to_stock' | 'make_to_order' | null;
+
+  /**
    * Calendar days between an order being issued and it being due to ship.
    *
    * Sets each order's `ship_by_date` when it is issued. With none set here the
