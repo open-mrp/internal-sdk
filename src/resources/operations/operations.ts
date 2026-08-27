@@ -184,13 +184,9 @@ import {
   PickListParams,
   PickRelated,
   PickRetrieveParams,
-  PickRetrieveShipmentsParams,
-  PickShipmentsResponse,
   PickStageTotal,
   PickTotals,
-  PickUpdateParams,
   Picks,
-  UpdatePickRequest,
 } from './picks/picks';
 import * as ProductionFlowsAPI from './production-flows/production-flows';
 import {
@@ -1644,14 +1640,10 @@ export declare namespace Operations {
     type Pick as Pick,
     type PickLine as PickLine,
     type PickRelated as PickRelated,
-    type PickShipmentsResponse as PickShipmentsResponse,
     type PickStageTotal as PickStageTotal,
     type PickTotals as PickTotals,
-    type UpdatePickRequest as UpdatePickRequest,
     type PickRetrieveParams as PickRetrieveParams,
-    type PickUpdateParams as PickUpdateParams,
     type PickListParams as PickListParams,
-    type PickRetrieveShipmentsParams as PickRetrieveShipmentsParams,
   };
 
   export {

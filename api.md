@@ -963,6 +963,7 @@ Types:
 
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CheckoutSalesOrderRequest</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CheckoutSalesOrderResponse</a></code>
+- <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">Commitment</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CreateSalesOrderLineInput</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CreateSalesOrderRequest</a></code>
 - <code><a href="./src/resources/sales/sales-orders/sales-orders.ts">CreatedBy</a></code>
@@ -3040,17 +3041,13 @@ Types:
 - <code><a href="./src/resources/operations/picks/picks.ts">Pick</a></code>
 - <code><a href="./src/resources/operations/picks/picks.ts">PickLine</a></code>
 - <code><a href="./src/resources/operations/picks/picks.ts">PickRelated</a></code>
-- <code><a href="./src/resources/operations/picks/picks.ts">PickShipmentsResponse</a></code>
 - <code><a href="./src/resources/operations/picks/picks.ts">PickStageTotal</a></code>
 - <code><a href="./src/resources/operations/picks/picks.ts">PickTotals</a></code>
-- <code><a href="./src/resources/operations/picks/picks.ts">UpdatePickRequest</a></code>
 
 Methods:
 
 - <code title="get /v1/operations/picks/{id}">client.operations.picks.<a href="./src/resources/operations/picks/picks.ts">retrieve</a>(id, { ...params }) -> Pick</code>
-- <code title="patch /v1/operations/picks/{id}">client.operations.picks.<a href="./src/resources/operations/picks/picks.ts">update</a>(id, { ...params }) -> Pick</code>
 - <code title="get /v1/operations/picks">client.operations.picks.<a href="./src/resources/operations/picks/picks.ts">list</a>({ ...params }) -> ListPick</code>
-- <code title="get /v1/operations/picks/{id}/shipments">client.operations.picks.<a href="./src/resources/operations/picks/picks.ts">retrieveShipments</a>(id, { ...params }) -> PickShipmentsResponse</code>
 
 ### Actions
 

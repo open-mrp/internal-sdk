@@ -24,7 +24,7 @@ describe('resource actions', () => {
     await expect(
       client.operations.inventoryChangeLogs.actions.export(
         {
-          action_type_codes: ['string'],
+          action_types: ['scan'],
           changed_by_user_ids: ['string'],
           ends_at: '2019-12-27T18:11:19.117Z',
           item_ids: ['string'],

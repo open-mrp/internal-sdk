@@ -485,6 +485,7 @@ export interface SendNotificationRequest {
     | 'entity'
     | 'record'
     | 'freight'
+    | 'commitment'
     | 'sales_order_totals'
     | 'sales_order_stage_total'
     | 'sales_order_related'
@@ -596,6 +597,9 @@ export interface SendNotificationRequest {
     | 'delivery_backlog_bucket'
     | 'delivery_lateness_bucket'
     | 'delivery_breakdown'
+    | 'analyze_sales_breakdown_response'
+    | 'sales_totals'
+    | 'sales_breakdown'
     | 'schedule_order_coverage'
     | 'schedule_order_coverage_line'
     | 'schedule_deviation_type'
@@ -782,7 +786,6 @@ export interface SendNotificationRequest {
     | 'shipment_related'
     | 'invoice_related'
     | 'pick_related'
-    | 'pick_shipments_response'
     | 'pick_totals'
     | 'pick_stage_total';
 
@@ -843,6 +846,7 @@ export interface NotificationCreateParams {
     | 'entity'
     | 'record'
     | 'freight'
+    | 'commitment'
     | 'sales_order_totals'
     | 'sales_order_stage_total'
     | 'sales_order_related'
@@ -954,6 +958,9 @@ export interface NotificationCreateParams {
     | 'delivery_backlog_bucket'
     | 'delivery_lateness_bucket'
     | 'delivery_breakdown'
+    | 'analyze_sales_breakdown_response'
+    | 'sales_totals'
+    | 'sales_breakdown'
     | 'schedule_order_coverage'
     | 'schedule_order_coverage_line'
     | 'schedule_deviation_type'
@@ -1140,7 +1147,6 @@ export interface NotificationCreateParams {
     | 'shipment_related'
     | 'invoice_related'
     | 'pick_related'
-    | 'pick_shipments_response'
     | 'pick_totals'
     | 'pick_stage_total';
 

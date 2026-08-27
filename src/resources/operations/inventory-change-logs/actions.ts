@@ -34,10 +34,9 @@ export class Actions extends APIResource {
 
 export interface ActionExportParams {
   /**
-   * Restricts results to these action types (`scan`, `user_action`, `system_action`,
-   * `user_correction`).
+   * Restricts results to these action types.
    */
-  action_type_codes?: Array<string>;
+  action_types?: Array<'scan' | 'user_action' | 'system_action' | 'user_correction'>;
 
   /**
    * Restricts results to changes made by these users.

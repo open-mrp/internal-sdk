@@ -14,7 +14,7 @@ import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
 
 /**
- * List, view, update, pick, void, and pack picks and pick lines.
+ * List, view, pick, void, and pack picks and pick lines.
  */
 export class Picks extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
@@ -41,32 +41,6 @@ export class Picks extends APIResource {
   }
 
   /**
-   * Partially updates a pick's metadata.
-   *
-   * Only the fields provided in the request are changed. This endpoint edits the
-   * pick record itself; use the pick and pack actions to change what has actually
-   * been picked.
-   *
-   * This endpoint requires the permission: `picks:update`.
-   *
-   * @example
-   * ```ts
-   * const pick = await client.operations.picks.update(
-   *   'pk_6eilj488bq8d',
-   *   { number: 'PCK-2025-0042' },
-   * );
-   * ```
-   */
-  update(
-    id: string,
-    params: PickUpdateParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<Pick> {
-    const { include, ...body } = params ?? {};
-    return this._client.patch(path`/v1/operations/picks/${id}`, { query: { include }, body, ...options });
-  }
-
-  /**
    * Returns a paginated list of picks, soonest ship-by date first.
    *
    * The `q` search term matches the pick number, the sales order number, the
@@ -82,32 +56,6 @@ export class Picks extends APIResource {
    */
   list(query: PickListParams | null | undefined = {}, options?: RequestOptions): APIPromise<ListPick> {
     return this._client.get('/v1/operations/picks', { query, ...options });
-  }
-
-  /**
-   * Returns the shipment numbers associated with a pick, oldest first.
-   *
-   * Shipments are matched through the pick's sales order, so the list covers every
-   * shipment created for that order — each partial pack of the pick adds another
-   * one. Only the numbers are returned; retrieve the shipment to get its full
-   * detail.
-   *
-   * This endpoint requires the permission: `picks:read`.
-   *
-   * @example
-   * ```ts
-   * const pickShipmentsResponse =
-   *   await client.operations.picks.retrieveShipments(
-   *     'pk_6eilj488bq8d',
-   *   );
-   * ```
-   */
-  retrieveShipments(
-    id: string,
-    query: PickRetrieveShipmentsParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<PickShipmentsResponse> {
-    return this._client.get(path`/v1/operations/picks/${id}/shipments`, { query, ...options });
   }
 }
 
@@ -180,6 +128,22 @@ export interface Pick {
   id: string;
 
   /**
+   * Commitment describes when a record is due to ship: what was asked for, what that
+   * resolved to, and which rule decided.
+   *
+   * It is a generic, reusable sub-resource shared by anything carrying a ship-by
+   * commitment — a sales order, the pick that fulfills it, or a preview of an order
+   * that does not exist yet.
+   *
+   * The three inputs are alternative answers to the same question and at most one is
+   * ever set; `lead_time_source` reports which of them, or which level of the
+   * customer chain, produced the date. They are written flat on the create and
+   * update bodies, the way a carrier is written as `carrier_id` and read back under
+   * `freight`.
+   */
+  commitment: SalesOrdersAPI.Commitment | null;
+
+  /**
    * Creation timestamp.
    */
   created_at: string;
@@ -222,24 +186,6 @@ export interface Pick {
   last_shipped_at: string | null;
 
   /**
-   * Days allowed to prepare the order before it ships.
-   */
-  lead_time_days: number | null;
-
-  /**
-   * Which rule in the customer/group/account chain produced `lead_time_days`.
-   */
-  lead_time_source:
-    | 'customer'
-    | 'parent_customer'
-    | 'account_group'
-    | 'account'
-    | 'manual'
-    | 'order_lead_time'
-    | 'order_ship_by'
-    | null;
-
-  /**
    * Number of lines on this pick.
    */
   line_count: number;
@@ -271,21 +217,11 @@ export interface Pick {
   priority: 'low' | 'normal' | 'high';
 
   /**
-   * When the associated sales order promised delivery.
-   */
-  promised_at: string | null;
-
-  /**
    * Groups the records a pick sits between — the order it fulfills and the shipments
    * packed from it — and is returned only once at least one member has been
    * expanded.
    */
   related: PickRelated | null;
-
-  /**
-   * Date the order must ship by to meet its commitment.
-   */
-  ship_by_date: string | null;
 
   /**
    * A saved address that can be used for billing and shipping on sales orders,
@@ -297,17 +233,6 @@ export interface Pick {
    * Progress through each fulfillment stage of a pick.
    */
   totals: PickTotals | null;
-
-  /**
-   * Days the carrier is expected to take in transit.
-   */
-  transit_days: number | null;
-
-  /**
-   * Whether `transit_days` came from a cached lane estimate or the service level's
-   * default.
-   */
-  transit_source: 'carrier_lane' | 'service_level' | null;
 
   /**
    * Last updated timestamp.
@@ -404,26 +329,6 @@ export interface PickRelated {
 }
 
 /**
- * The shipment numbers for the sales order a pick belongs to.
- */
-export interface PickShipmentsResponse {
-  /**
-   * Total number of matching shipments, ignoring `limit` and `offset`.
-   */
-  count: number;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'pick_shipments_response';
-
-  /**
-   * Shipment numbers associated with the pick, oldest first.
-   */
-  shipment_numbers: Array<string>;
-}
-
-/**
  * How far one fulfillment stage of a pick has progressed.
  */
 export interface PickStageTotal {
@@ -458,27 +363,6 @@ export interface PickTotals {
   picked: PickStageTotal;
 }
 
-/**
- * Request to partially update a pick's metadata.
- */
-export interface UpdatePickRequest {
-  /**
-   * Timestamp when the pick was finished, in RFC 3339 format.
-   *
-   * Setting it closes the pick out even if lines are still unpacked; send `null` to
-   * clear it and reopen the pick.
-   */
-  finished_at?: string | null;
-
-  /**
-   * New number to assign to the pick.
-   *
-   * Maximum 255 characters. Renaming a pick does not rename the sales order it was
-   * created from.
-   */
-  number?: string;
-}
-
 export interface PickRetrieveParams {
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
@@ -501,30 +385,6 @@ export interface PickRetrieveParams {
   >;
 }
 
-export interface PickUpdateParams {
-  /**
-   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
-   * are returned as `null`.
-   */
-  include?: Array<'lines'>;
-
-  /**
-   * Body param: Timestamp when the pick was finished, in RFC 3339 format.
-   *
-   * Setting it closes the pick out even if lines are still unpacked; send `null` to
-   * clear it and reopen the pick.
-   */
-  finished_at?: string | null;
-
-  /**
-   * Body param: New number to assign to the pick.
-   *
-   * Maximum 255 characters. Renaming a pick does not rename the sales order it was
-   * created from.
-   */
-  number?: string;
-}
-
 export interface PickListParams {
   /**
    * Opaque cursor token identifying where the page of results starts.
@@ -536,27 +396,19 @@ export interface PickListParams {
   cursor?: string;
 
   /**
-   * Filter by customer type group IDs.
-   *
-   * Matches picks whose customer's type group — the account group returned in the
-   * customer's `type` field — is one of the given groups.
+   * Restricts results to picks whose customer belongs to any of these account
+   * groups, matching the `type` on the customer.
    */
   customer_group_ids?: Array<string>;
 
   /**
-   * Filter by customer IDs.
+   * Restricts results to picks raised for any of these customers.
    */
   customer_ids?: Array<string>;
 
   /**
-   * Filter by department IDs.
-   *
-   * Matches picks assigned to any of the given departments.
-   */
-  department_ids?: Array<string>;
-
-  /**
-   * Only return picks created before this date (`YYYY-MM-DD`).
+   * Latest pick creation date to include, in `YYYY-MM-DD` format. Inclusive of the
+   * date itself.
    */
   ends_at?: string;
 
@@ -586,10 +438,8 @@ export interface PickListParams {
   limit?: number;
 
   /**
-   * Filter by product line IDs.
-   *
-   * Matches picks that contain at least one line for a product in any of the given
-   * product lines.
+   * Restricts results to picks with at least one line whose product belongs to any
+   * of these product lines.
    */
   product_line_ids?: Array<string>;
 
@@ -608,31 +458,17 @@ export interface PickListParams {
   sort?: 'ship_by_date' | 'created_at';
 
   /**
-   * Only return picks created on or after this date (`YYYY-MM-DD`).
+   * Earliest pick creation date to include, in `YYYY-MM-DD` format.
    */
   starts_at?: string;
 
   /**
-   * Filter by pick status.
+   * Restricts results to picks in this state.
+   *
+   * - `open`: picks that have not been finished.
+   * - `closed`: picks that have been finished.
    */
   status?: 'open' | 'closed';
-}
-
-export interface PickRetrieveShipmentsParams {
-  /**
-   * Maximum number of results to return.
-   */
-  limit?: number;
-
-  /**
-   * Number of results to skip.
-   */
-  offset?: number;
-
-  /**
-   * Search query that filters shipment numbers by substring match.
-   */
-  q?: string;
 }
 
 Picks.Actions = Actions;
@@ -645,14 +481,10 @@ export declare namespace Picks {
     type Pick as Pick,
     type PickLine as PickLine,
     type PickRelated as PickRelated,
-    type PickShipmentsResponse as PickShipmentsResponse,
     type PickStageTotal as PickStageTotal,
     type PickTotals as PickTotals,
-    type UpdatePickRequest as UpdatePickRequest,
     type PickRetrieveParams as PickRetrieveParams,
-    type PickUpdateParams as PickUpdateParams,
     type PickListParams as PickListParams,
-    type PickRetrieveShipmentsParams as PickRetrieveShipmentsParams,
   };
 
   export {

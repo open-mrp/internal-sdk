@@ -28,6 +28,7 @@ export {
   SalesOrders,
   type CheckoutSalesOrderRequest,
   type CheckoutSalesOrderResponse,
+  type Commitment,
   type CreateSalesOrderLineInput,
   type CreateSalesOrderRequest,
   type CreatedBy,

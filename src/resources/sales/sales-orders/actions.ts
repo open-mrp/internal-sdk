@@ -410,40 +410,20 @@ export interface QuoteSalesOrderCommitmentRequest {
  */
 export interface QuoteSalesOrderCommitmentResponse {
   /**
-   * Days the receiving and shipping calendars pulled the date back, beyond what
-   * transit accounted for.
-   */
-  calendar_adjustment_days: number;
-
-  /**
-   * When freight leaving on the ship-by date would reach the customer: transit
-   * walked forward from it and landed on a day their dock receives. Null whenever
-   * `transit_days` is, since an arrival with no journey behind it would just be the
-   * ship date wearing a different name.
+   * Commitment describes when a record is due to ship: what was asked for, what that
+   * resolved to, and which rule decided.
    *
-   * Reported for every basis, including the ones that do not use transit to decide
-   * the ship-by date. An order committed on a lead time has the same journey ahead
-   * of it; it simply was not worked backwards from.
+   * It is a generic, reusable sub-resource shared by anything carrying a ship-by
+   * commitment — a sales order, the pick that fulfills it, or a preview of an order
+   * that does not exist yet.
+   *
+   * The three inputs are alternative answers to the same question and at most one is
+   * ever set; `lead_time_source` reports which of them, or which level of the
+   * customer chain, produced the date. They are written flat on the create and
+   * update bodies, the way a carrier is written as `carrier_id` and read back under
+   * `freight`.
    */
-  estimated_delivery_date: string | null;
-
-  /**
-   * Calendar days between issue and the ship-by date.
-   */
-  lead_time_days: number | null;
-
-  /**
-   * Which rule produced the date.
-   */
-  lead_time_source:
-    | 'customer'
-    | 'parent_customer'
-    | 'account_group'
-    | 'account'
-    | 'manual'
-    | 'order_lead_time'
-    | 'order_ship_by'
-    | null;
+  commitment: SalesOrdersAPI.Commitment | null;
 
   /**
    * Resource type identifier.
@@ -451,32 +431,9 @@ export interface QuoteSalesOrderCommitmentResponse {
   object: 'sales_order_commitment_quote';
 
   /**
-   * That date at the plant's pickup cutoff — the moment freight would have to be
-   * tendered by. Null when the shipping calendar carries no cutoff.
-   */
-  ship_by_cutoff_at: string | null;
-
-  /**
-   * The date the order would be due to ship, or null when no rule resolves one.
-   */
-  ship_by_date: string | null;
-
-  /**
    * The derivation in order, one entry per rule that moved the date.
    */
   steps: Array<CommitmentQuoteStep>;
-
-  /**
-   * Days the carrier needs to cover the lane. Null when the lane has never been
-   * quoted and the service level carries no default, or when no service level was
-   * supplied to quote one on.
-   */
-  transit_days: number | null;
-
-  /**
-   * Where the transit estimate came from.
-   */
-  transit_source: 'carrier_lane' | 'service_level' | null;
 }
 
 /**

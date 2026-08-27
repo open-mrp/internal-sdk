@@ -297,6 +297,117 @@ export interface CheckoutSalesOrderResponse {
 }
 
 /**
+ * Commitment describes when a record is due to ship: what was asked for, what that
+ * resolved to, and which rule decided.
+ *
+ * It is a generic, reusable sub-resource shared by anything carrying a ship-by
+ * commitment — a sales order, the pick that fulfills it, or a preview of an order
+ * that does not exist yet.
+ *
+ * The three inputs are alternative answers to the same question and at most one is
+ * ever set; `lead_time_source` reports which of them, or which level of the
+ * customer chain, produced the date. They are written flat on the create and
+ * update bodies, the way a carrier is written as `carrier_id` and read back under
+ * `freight`.
+ */
+export interface Commitment {
+  /**
+   * Days the customer's receiving calendar and the plant's shipping calendar pulled
+   * the ship-by date back, beyond what carrier transit accounted for.
+   *
+   * Zero means every date along the way already fell on an open day. This is what
+   * explains a ship-by date that is earlier than transit alone would suggest.
+   */
+  calendar_adjustment_days: number | null;
+
+  /**
+   * When freight leaving on the ship-by date would reach the customer: transit
+   * walked forward from it and landed on a day their dock receives.
+   *
+   * Reported by the commitment preview, which is asked what a set of inputs would
+   * produce and so computes the arrival too. A record carries the commitment it was
+   * stamped with, not a projection, and leaves this null.
+   */
+  estimated_delivery_date: string | null;
+
+  /**
+   * Calendar days between issue and the ship-by date.
+   */
+  lead_time_days: number | null;
+
+  /**
+   * Days between issue and the ship-by date, set on this record alone in place of
+   * the customer's standing lead time.
+   */
+  lead_time_override_days: number | null;
+
+  /**
+   * Which rule produced the ship-by date.
+   */
+  lead_time_source:
+    | 'customer'
+    | 'parent_customer'
+    | 'account_group'
+    | 'account'
+    | 'manual'
+    | 'order_lead_time'
+    | 'order_ship_by'
+    | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'commitment';
+
+  /**
+   * Date delivery was promised to the customer, if one was committed.
+   */
+  promised_at: string | null;
+
+  /**
+   * When the record is contractually due to ship.
+   *
+   * Stamped at issue. With a promised delivery date, this is that date less the
+   * carrier's transit for the order's lane and less any day the customer cannot
+   * receive on — when the order has to leave to arrive when promised. Otherwise it
+   * comes from a lead time, whether the order's own or the one on the customer, its
+   * parent account, its account group, or the account.
+   *
+   * Always a day the plant actually ships on, whichever rule produced it, and
+   * carries the plant's pickup cutoff as its time of day when the shipping calendar
+   * sets one — the moment freight has to be tendered by, not just the day. Midnight
+   * UTC means no cutoff is configured rather than a deadline at midnight.
+   *
+   * Recomputed while the order is still open whenever something it was derived from
+   * moves — the basis above, or the carrier, service level, or ship-to address the
+   * transit was quoted on. Renegotiating a customer's standing lead time or adding a
+   * holiday to a calendar does not reach back into commitments already made. Cleared
+   * if the order is unissued.
+   */
+  ship_by_date: string | null;
+
+  /**
+   * The ship date pinned by hand, bypassing transit and the customer's receiving
+   * days.
+   */
+  ship_by_override_date: string | null;
+
+  /**
+   * Business days the carrier needs to cover this lane, subtracted from the promised
+   * delivery date to reach the ship-by date.
+   *
+   * Only set when a delivery date was promised and the lane could be priced. Without
+   * it the ship-by date falls back to the promised date itself.
+   */
+  transit_days: number | null;
+
+  /**
+   * Where the transit estimate came from.
+   */
+  transit_source: 'carrier_lane' | 'service_level' | null;
+}
+
+/**
  * Line item input for a create sales order request.
  *
  * The item, unit cost, and (unless an internal user supplies a `unit_price`
@@ -979,13 +1090,20 @@ export interface SalesOrder {
   bill_to_address: APIKeysAPI.Address | null;
 
   /**
-   * Days the customer's receiving calendar and the plant's shipping calendar pulled
-   * the ship-by date back, beyond what carrier transit accounted for.
+   * Commitment describes when a record is due to ship: what was asked for, what that
+   * resolved to, and which rule decided.
    *
-   * Zero means every date along the way already fell on an open day. This is what
-   * explains a ship-by date that is earlier than transit alone would suggest.
+   * It is a generic, reusable sub-resource shared by anything carrying a ship-by
+   * commitment — a sales order, the pick that fulfills it, or a preview of an order
+   * that does not exist yet.
+   *
+   * The three inputs are alternative answers to the same question and at most one is
+   * ever set; `lead_time_source` reports which of them, or which level of the
+   * customer chain, produced the date. They are written flat on the create and
+   * update bodies, the way a carrier is written as `carrier_id` and read back under
+   * `freight`.
    */
-  calendar_adjustment_days: number | null;
+  commitment: Commitment | null;
 
   /**
    * When the order was fulfilled and closed.
@@ -1047,30 +1165,6 @@ export interface SalesOrder {
   issued_at: string | null;
 
   /**
-   * Calendar days between issue and the ship-by date.
-   */
-  lead_time_days: number | null;
-
-  /**
-   * Days between issue and the ship-by date, set on this order alone in place of the
-   * customer's standing lead time.
-   */
-  lead_time_override_days: number | null;
-
-  /**
-   * Which rule produced the ship-by date.
-   */
-  lead_time_source:
-    | 'customer'
-    | 'parent_customer'
-    | 'account_group'
-    | 'account'
-    | 'manual'
-    | 'order_lead_time'
-    | 'order_ship_by'
-    | null;
-
-  /**
    * Number of lines on this order.
    */
   line_count: number;
@@ -1130,11 +1224,6 @@ export interface SalesOrder {
   priority: 'low' | 'normal' | 'high';
 
   /**
-   * Date promised to the customer for delivery, if one was committed.
-   */
-  promised_at: string | null;
-
-  /**
    * The fulfillment records produced from a sales order.
    *
    * The group itself is returned only when at least one of its members has been
@@ -1147,37 +1236,6 @@ export interface SalesOrder {
    * with an action.
    */
   sales_rep: RequestLogsAPI.Actor | null;
-
-  /**
-   * The ship-by date at the plant's pickup cutoff — the moment freight has to be
-   * tendered by, not just the day.
-   *
-   * Only set when the account's shipping calendar carries a cutoff time.
-   */
-  ship_by_cutoff_at: string | null;
-
-  /**
-   * Date this order is contractually due to ship.
-   *
-   * Stamped when the order is issued. With a promised delivery date, this is that
-   * date less the carrier's transit for the order's lane and less any day the
-   * customer cannot receive on — the day the order has to leave to arrive when
-   * promised. Otherwise it comes from a lead time, whether this order's own or the
-   * one on the customer, its parent account, its account group, or the account.
-   *
-   * Always a day the plant actually ships on, whichever rule produced it.
-   *
-   * It is not recomputed afterwards, so neither renegotiating a customer's lead
-   * time, nor a later carrier estimate, nor a holiday added to a calendar moves
-   * commitments already made. Cleared if the order is unissued.
-   */
-  ship_by_date: string | null;
-
-  /**
-   * The ship date pinned on this order, bypassing transit and the customer's
-   * receiving days.
-   */
-  ship_by_override_date: string | null;
 
   /**
    * A saved address that can be used for billing and shipping on sales orders,
@@ -1216,20 +1274,6 @@ export interface SalesOrder {
    * ordered baseline.
    */
   totals: SalesOrderTotals | null;
-
-  /**
-   * Business days the carrier needs to cover this order's lane, subtracted from the
-   * promised delivery date to reach the ship-by date.
-   *
-   * Only set when a delivery date was promised and the lane could be priced. Without
-   * it the ship-by date falls back to the promised date itself.
-   */
-  transit_days: number | null;
-
-  /**
-   * Where the transit estimate came from.
-   */
-  transit_source: 'carrier_lane' | 'service_level' | null;
 
   /**
    * Last updated timestamp.
@@ -2226,6 +2270,7 @@ export declare namespace SalesOrders {
   export {
     type CheckoutSalesOrderRequest as CheckoutSalesOrderRequest,
     type CheckoutSalesOrderResponse as CheckoutSalesOrderResponse,
+    type Commitment as Commitment,
     type CreateSalesOrderLineInput as CreateSalesOrderLineInput,
     type CreateSalesOrderRequest as CreateSalesOrderRequest,
     type CreatedBy as CreatedBy,

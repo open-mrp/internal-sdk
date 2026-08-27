@@ -177,14 +177,10 @@ export {
   type Pick,
   type PickLine,
   type PickRelated,
-  type PickShipmentsResponse,
   type PickStageTotal,
   type PickTotals,
-  type UpdatePickRequest,
   type PickRetrieveParams,
-  type PickUpdateParams,
   type PickListParams,
-  type PickRetrieveShipmentsParams,
 } from './picks/index';
 export {
   ProductionFlows,

@@ -9,7 +9,7 @@ import { RequestOptions } from '../../../../internal/request-options';
 import { path } from '../../../../internal/utils/path';
 
 /**
- * List, view, update, pick, void, and pack picks and pick lines.
+ * List, view, pick, void, and pack picks and pick lines.
  */
 export class Lines extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
