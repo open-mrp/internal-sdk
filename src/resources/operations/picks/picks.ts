@@ -185,15 +185,36 @@ export interface Pick {
   created_at: string;
 
   /**
+   * CreatedBy describes who created a resource and their relationship to the account
+   * that owns it.
+   *
+   * It is resolved from the resource's create audit event.
+   */
+  created_by: SalesOrdersAPI.CreatedBy | null;
+
+  /**
    * A business you sell to, with its contact details, default fulfillment settings,
    * and order policies.
    */
   customer: AnalyticsAPI.Customer | null;
 
   /**
+   * The customer's own purchase order number for the sales order this pick fulfills.
+   */
+  customer_purchase_order_number: string | null;
+
+  /**
    * Timestamp when the pick was finished.
    */
   finished_at: string | null;
+
+  /**
+   * Freight describes the carrier selection and freight billing for a record.
+   *
+   * It is a generic, reusable sub-resource shared by anything that carries shipping
+   * configuration — a sales order, a purchase order, or a shipment.
+   */
+  freight: SalesOrdersAPI.Freight | null;
 
   /**
    * Timestamp of the most recent shipment sent (null until shipped).
@@ -228,6 +249,11 @@ export interface Pick {
    * the rest of the result set.
    */
   lines: ListPickLine | null;
+
+  /**
+   * Free-form note carried from the sales order this pick fulfills.
+   */
+  note: string | null;
 
   /**
    * Human-readable number that identifies the pick, distinct from the `id`.
@@ -460,6 +486,8 @@ export interface PickRetrieveParams {
    */
   include?: Array<
     | 'customer'
+    | 'created_by'
+    | 'freight'
     | 'related.sales_order'
     | 'related.shipments'
     | 'lines'
@@ -538,6 +566,8 @@ export interface PickListParams {
    */
   include?: Array<
     | 'customer'
+    | 'created_by'
+    | 'freight'
     | 'related.sales_order'
     | 'related.shipments'
     | 'lines'

@@ -637,15 +637,9 @@ export interface FrequentlyOrderedProduct {
   object: 'frequently_ordered_product';
 
   /**
-   * Number of sales order lines on which this customer ordered the item in the unit
-   * shown.
+   * Number of sales order lines on which this customer ordered the item.
    */
   order_count: number;
-
-  /**
-   * Unit of measurement used for conversions and product quantities.
-   */
-  unit: AccountUsersAPI.Unit | null;
 }
 
 /**
