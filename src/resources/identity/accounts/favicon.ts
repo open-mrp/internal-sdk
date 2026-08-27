@@ -33,11 +33,11 @@ export class Favicon extends APIResource {
   }
 
   /**
-   * Returns a presigned download URL for the account's customer-portal favicon.
+   * Returns a download URL for the account's customer-portal favicon.
    *
-   * The URL expires one hour after it is generated, so fetch the favicon promptly
-   * rather than caching it. The response carries no URL when the account has never
-   * uploaded a favicon or the stored image is no longer available.
+   * The URL is a stable public CDN link, safe to cache and embed. The response
+   * carries no URL when the account has never uploaded a favicon or the stored image
+   * is no longer available.
    *
    * @example
    * ```ts
@@ -53,7 +53,7 @@ export class Favicon extends APIResource {
 }
 
 /**
- * Presigned URL for an account's customer-portal favicon.
+ * Download URL for an account's customer-portal favicon.
  */
 export interface AccountFaviconURL {
   /**
@@ -62,11 +62,10 @@ export interface AccountFaviconURL {
   object: 'account_favicon_url';
 
   /**
-   * Presigned URL for downloading the account's favicon.
+   * Stable public CDN URL for downloading the account's favicon.
    *
-   * The URL expires one hour after it is generated, so fetch the favicon promptly
-   * rather than caching this URL. No URL is returned when the account has never
-   * uploaded a favicon or the stored image is no longer available.
+   * Safe to cache and embed. No URL is returned when the account has never uploaded
+   * a favicon or the stored image is no longer available.
    */
   url: string | null;
 }

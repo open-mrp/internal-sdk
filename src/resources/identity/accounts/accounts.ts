@@ -64,11 +64,11 @@ export class Accounts extends APIResource {
   }
 
   /**
-   * Returns a presigned download URL for the account's logo.
+   * Returns a download URL for the account's logo.
    *
-   * The URL expires one hour after it is generated, so fetch the logo promptly
-   * rather than caching it. The response carries no URL when the account has never
-   * uploaded a logo or the stored image is no longer available.
+   * The URL is a stable public CDN link, safe to cache and embed. The response
+   * carries no URL when the account has never uploaded a logo or the stored image is
+   * no longer available.
    *
    * @example
    * ```ts
@@ -105,7 +105,7 @@ export class Accounts extends APIResource {
 }
 
 /**
- * Presigned URL for an account's logo.
+ * Download URL for an account's logo.
  */
 export interface AccountLogoURL {
   /**
@@ -114,11 +114,10 @@ export interface AccountLogoURL {
   object: 'account_logo_url';
 
   /**
-   * Presigned URL for downloading the account's logo.
+   * Stable public CDN URL for downloading the account's logo.
    *
-   * The URL expires one hour after it is generated, so fetch the logo promptly
-   * rather than caching this URL. No URL is returned when the account has never
-   * uploaded a logo or the stored image is no longer available.
+   * Safe to cache and embed. No URL is returned when the account has never uploaded
+   * a logo or the stored image is no longer available.
    */
   url: string | null;
 }

@@ -187,8 +187,8 @@ export interface AccountBranding {
    * Stored location of the account's customer-portal favicon.
    *
    * Favicons uploaded through the API are stored as an object key rather than a
-   * fetchable link, so use the Get Account Favicon URL endpoint to obtain a
-   * short-lived download URL.
+   * fetchable link, so use the Get Account Favicon URL endpoint to obtain a download
+   * URL.
    */
   favicon_url: string | null;
 
@@ -206,8 +206,8 @@ export interface AccountBranding {
    * Stored location of the account's logo image.
    *
    * Logos uploaded through the API are stored as an object key rather than a
-   * fetchable link, so use the Get Account Logo URL endpoint to obtain a short-lived
-   * download URL.
+   * fetchable link, so use the Get Account Logo URL endpoint to obtain a download
+   * URL.
    */
   logo_url: string | null;
 

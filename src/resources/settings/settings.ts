@@ -49,8 +49,10 @@ export class Settings extends APIResource {
    * slug.
    *
    * This endpoint does not require authentication; it is intended for customer
-   * portal branding lookups. The logo and favicon are returned as download URLs that
-   * stay valid for one hour.
+   * portal branding lookups. The logo and favicon are returned as stable public CDN
+   * URLs, safe to embed in cached HTML (e.g. the portal favicon <link>) without the
+   * expiry that makes a presigned URL 403 once a browser reuses it past its
+   * signature.
    *
    * @example
    * ```ts
@@ -119,14 +121,13 @@ export interface PortalProfile {
   address: APIKeysAPI.Address | null;
 
   /**
-   * Download URL for the seller's customer-portal favicon, valid for one hour after
-   * the response is generated.
+   * Stable public CDN URL for the seller's customer-portal favicon, safe to cache
+   * and embed.
    */
   favicon_url: string | null;
 
   /**
-   * Download URL for the seller's logo, valid for one hour after the response is
-   * generated.
+   * Stable public CDN URL for the seller's logo, safe to cache and embed.
    */
   logo_url: string | null;
 
@@ -168,14 +169,13 @@ export interface PublicAccount {
   default_billing_address: APIKeysAPI.Address | null;
 
   /**
-   * Download URL for the account's customer-portal favicon, valid for one hour after
-   * the response is generated.
+   * Stable public CDN URL for the account's customer-portal favicon, safe to cache
+   * and embed.
    */
   favicon_url: string | null;
 
   /**
-   * Download URL for the account's logo, valid for one hour after the response is
-   * generated.
+   * Stable public CDN URL for the account's logo, safe to cache and embed.
    */
   logo_url: string | null;
 
