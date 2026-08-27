@@ -50,6 +50,9 @@ export interface UpdatePickLineRequest {
   /**
    * New picked quantity for the line, as a decimal string read in the unit the sales
    * order line was sold in, stored as given and not capped at the ordered quantity.
+   *
+   * Must not be negative. Pulling more than was ordered is a real floor event and is
+   * kept as recorded; pulling a negative amount is not.
    */
   quantity_value?: string;
 }
@@ -77,6 +80,9 @@ export interface LineUpdateParams {
    * Body param: New picked quantity for the line, as a decimal string read in the
    * unit the sales order line was sold in, stored as given and not capped at the
    * ordered quantity.
+   *
+   * Must not be negative. Pulling more than was ordered is a real floor event and is
+   * kept as recorded; pulling a negative amount is not.
    */
   quantity_value?: string;
 }
