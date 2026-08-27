@@ -53,7 +53,6 @@ describe('resource inventoryChangeLogs', () => {
           include: ['item'],
           item_ids: ['string'],
           limit: 0,
-          q: 'q',
           starts_at: '2019-12-27T18:11:19.117Z',
         },
         { path: '/_stainless_unknown_path' },
