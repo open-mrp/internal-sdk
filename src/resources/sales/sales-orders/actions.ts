@@ -360,9 +360,10 @@ export interface QuoteSalesOrderCommitmentRequest {
   carrier_id?: string;
 
   /**
-   * When the order would be issued. Defaults to now, since a lead time is measured
-   * from issue and an order built today but issued next week commits to next week's
-   * date.
+   * When the order would be issued. Defaults to the date sales_order_id was issued
+   * on, or to now for an order that has not been issued — a lead time is measured
+   * from issue, so an order built today but issued next week commits to next week's
+   * date, and re-committing one issued last week still counts from last week.
    */
   issued_at?: string;
 
@@ -497,9 +498,10 @@ export interface ActionQuoteCommitmentParams {
   carrier_id?: string;
 
   /**
-   * When the order would be issued. Defaults to now, since a lead time is measured
-   * from issue and an order built today but issued next week commits to next week's
-   * date.
+   * When the order would be issued. Defaults to the date sales_order_id was issued
+   * on, or to now for an order that has not been issued — a lead time is measured
+   * from issue, so an order built today but issued next week commits to next week's
+   * date, and re-committing one issued last week still counts from last week.
    */
   issued_at?: string;
 
