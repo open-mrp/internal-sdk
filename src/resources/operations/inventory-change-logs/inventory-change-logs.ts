@@ -41,7 +41,8 @@ export class InventoryChangeLogs extends APIResource {
    * Returns a paginated list of inventory change logs, newest first.
    *
    * Filters combine with AND, while the values within a single filter combine with
-   * OR.
+   * OR. The `q` search term matches changes affecting items whose SKU contains it,
+   * as a case-insensitive substring.
    *
    * This endpoint requires the permission: `inventory_logs:read`.
    *
@@ -205,6 +206,13 @@ export interface InventoryChangeLogListParams {
    * Maximum number of results to return in a single page.
    */
   limit?: number;
+
+  /**
+   * Free-text search term used to filter results.
+   *
+   * Which fields are matched against the term varies by endpoint.
+   */
+  q?: string;
 
   /**
    * Restricts results to change logs created on or after this timestamp.
