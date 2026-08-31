@@ -26,6 +26,14 @@ import {
   ListEmailInbox,
   UpdateEmailInboxRequest,
 } from './email-inboxes';
+import * as EmailSenderAPI from './email-sender';
+import {
+  EmailSender,
+  EmailSenderDeleteResponse,
+  EmailSenderResource,
+  EmailSenderUpdateParams,
+  SetEmailSenderRequest,
+} from './email-sender';
 import * as PreferencesAPI from './preferences';
 import {
   ListNotificationPreference,
@@ -107,6 +115,7 @@ export class Messaging extends APIResource {
   preferences: PreferencesAPI.Preferences = new PreferencesAPI.Preferences(this._client);
   emailDomains: EmailDomainsAPI.EmailDomains = new EmailDomainsAPI.EmailDomains(this._client);
   emailInboxes: EmailInboxesAPI.EmailInboxes = new EmailInboxesAPI.EmailInboxes(this._client);
+  emailSender: EmailSenderAPI.EmailSenderResource = new EmailSenderAPI.EmailSenderResource(this._client);
   supportRoutes: SupportRoutesAPI.SupportRoutes = new SupportRoutesAPI.SupportRoutes(this._client);
 
   /**
@@ -999,6 +1008,7 @@ Messaging.Blocks = Blocks;
 Messaging.Preferences = Preferences;
 Messaging.EmailDomains = EmailDomains;
 Messaging.EmailInboxes = EmailInboxes;
+Messaging.EmailSenderResource = EmailSenderResource;
 Messaging.SupportRoutes = SupportRoutes;
 
 export declare namespace Messaging {
@@ -1108,6 +1118,14 @@ export declare namespace Messaging {
     type EmailInboxRetrieveParams as EmailInboxRetrieveParams,
     type EmailInboxUpdateParams as EmailInboxUpdateParams,
     type EmailInboxListParams as EmailInboxListParams,
+  };
+
+  export {
+    EmailSenderResource as EmailSenderResource,
+    type EmailSender as EmailSender,
+    type SetEmailSenderRequest as SetEmailSenderRequest,
+    type EmailSenderDeleteResponse as EmailSenderDeleteResponse,
+    type EmailSenderUpdateParams as EmailSenderUpdateParams,
   };
 
   export {

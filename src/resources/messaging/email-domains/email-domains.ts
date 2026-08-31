@@ -140,6 +140,26 @@ export interface EmailDomain {
   domain: string;
 
   /**
+   * The subdomain used as the envelope return path for mail sent from this domain.
+   *
+   * Publishing the two records below makes the return path match the sender address.
+   * Until you do, mail clients show your mail as coming from your address "via
+   * amazonses.com".
+   */
+  mail_from_domain: string | null;
+
+  /**
+   * The MX record to publish on `mail_from_domain`, for delivery of bounces and
+   * complaints.
+   */
+  mail_from_mx_record: string | null;
+
+  /**
+   * The SPF record to publish as a TXT record on `mail_from_domain`.
+   */
+  mail_from_spf_record: string | null;
+
+  /**
    * Resource type identifier.
    */
   object: 'email_domain';

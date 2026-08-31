@@ -268,6 +268,7 @@ export interface Job {
     | 'email_log'
     | 'email_domain'
     | 'email_inbox'
+    | 'email_sender'
     | 'portal_domain'
     | 'dns_record'
     | 'inventory_change_log'

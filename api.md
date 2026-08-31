@@ -2038,6 +2038,20 @@ Methods:
 - <code title="get /v1/messaging/email-inboxes">client.messaging.emailInboxes.<a href="./src/resources/messaging/email-inboxes.ts">list</a>({ ...params }) -> ListEmailInbox</code>
 - <code title="delete /v1/messaging/email-inboxes/{id}">client.messaging.emailInboxes.<a href="./src/resources/messaging/email-inboxes.ts">delete</a>(id) -> EmailInboxDeleteResponse</code>
 
+## EmailSender
+
+Types:
+
+- <code><a href="./src/resources/messaging/email-sender.ts">EmailSender</a></code>
+- <code><a href="./src/resources/messaging/email-sender.ts">SetEmailSenderRequest</a></code>
+- <code><a href="./src/resources/messaging/email-sender.ts">EmailSenderDeleteResponse</a></code>
+
+Methods:
+
+- <code title="put /v1/messaging/email-sender">client.messaging.emailSender.<a href="./src/resources/messaging/email-sender.ts">update</a>({ ...params }) -> EmailSender</code>
+- <code title="get /v1/messaging/email-sender">client.messaging.emailSender.<a href="./src/resources/messaging/email-sender.ts">list</a>() -> EmailSender</code>
+- <code title="delete /v1/messaging/email-sender">client.messaging.emailSender.<a href="./src/resources/messaging/email-sender.ts">delete</a>() -> EmailSenderDeleteResponse</code>
+
 ## SupportRoutes
 
 Types:
