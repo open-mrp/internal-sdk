@@ -242,6 +242,8 @@ export interface Notification {
     | 'system.broadcast'
     | 'customer.registered';
 
+  change_count: number | null;
+
   /**
    * Creation timestamp.
    */
