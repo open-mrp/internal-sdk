@@ -3607,7 +3607,7 @@ export interface OeeDepartment {
   availability_loss_seconds: number;
 
   /**
-   * Run time divided by scheduled time.
+   * Run time (capped at scheduled) divided by scheduled time.
    */
   availability_pct: number | null;
 
@@ -3661,13 +3661,26 @@ export interface OeeDepartment {
   oee_pct: number | null;
 
   /**
+   * The scheduled machines' measured run time (first-to-last scan per machine per
+   * day), in seconds. Performance's denominator.
+   */
+  operating_time_seconds: number;
+
+  /**
+   * Measured run time beyond the scheduled window, in seconds. A schedule-adherence
+   * signal reported apart from OEE, so overtime is not counted as extra
+   * availability.
+   */
+  overrun_seconds: number;
+
+  /**
    * Logged downtime charged against performance, in seconds.
    */
   performance_loss_seconds: number;
 
   /**
-   * Standard seconds earned divided by run time: how fast the department ran against
-   * the designed speed of its production steps.
+   * Standard seconds earned divided by measured operating time: how fast the
+   * department ran against the designed speed of its production steps.
    */
   performance_pct: number | null;
 
@@ -3682,12 +3695,14 @@ export interface OeeDepartment {
   quality_pct: number | null;
 
   /**
-   * Scheduled time net of availability losses, in seconds.
+   * Operating time counted toward availability: measured run time capped at
+   * scheduled time, in seconds.
    */
   run_time_seconds: number;
 
   /**
-   * Planned time net of not-scheduled downtime, in seconds.
+   * Planned production time net of not-scheduled downtime, in seconds.
+   * Availability's denominator.
    */
   scheduled_seconds: number;
 
@@ -3772,7 +3787,7 @@ export interface OeeTrendPeriod {
   availability_loss_seconds: number;
 
   /**
-   * Run time divided by scheduled time.
+   * Run time (capped at scheduled) divided by scheduled time.
    */
   availability_pct: number | null;
 
@@ -3809,7 +3824,19 @@ export interface OeeTrendPeriod {
   oee_pct: number | null;
 
   /**
-   * Standard seconds earned divided by run time.
+   * The scheduled machines' measured run time, in seconds. Performance's
+   * denominator.
+   */
+  operating_time_seconds: number;
+
+  /**
+   * Measured run time beyond the scheduled window, in seconds, reported apart from
+   * OEE.
+   */
+  overrun_seconds: number;
+
+  /**
+   * Standard seconds earned divided by measured operating time.
    */
   performance_pct: number | null;
 
@@ -3819,12 +3846,14 @@ export interface OeeTrendPeriod {
   quality_pct: number | null;
 
   /**
-   * Scheduled time net of availability losses, in seconds.
+   * Operating time counted toward availability: measured run time capped at
+   * scheduled time, in seconds.
    */
   run_time_seconds: number;
 
   /**
-   * Planned time net of not-scheduled downtime, in seconds.
+   * Planned production time net of not-scheduled downtime, in seconds.
+   * Availability's denominator.
    */
   scheduled_seconds: number;
 
