@@ -33,10 +33,15 @@ export class TransactionAllocations extends APIResource {
    */
   update(
     id: string,
-    body: TransactionAllocationUpdateParams | null | undefined = {},
+    params: TransactionAllocationUpdateParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<InvoicesAPI.TransactionAllocation> {
-    return this._client.patch(path`/v1/finance/transaction-allocations/${id}`, { body, ...options });
+    const { include, ...body } = params ?? {};
+    return this._client.patch(path`/v1/finance/transaction-allocations/${id}`, {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -223,8 +228,14 @@ export interface TransactionAllocationDeleteResponse {}
 
 export interface TransactionAllocationUpdateParams {
   /**
-   * New amount of the transaction to apply to this invoice, as a decimal string in
-   * US dollars.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'transaction' | 'transaction.amount' | 'transaction.amount.unit'>;
+
+  /**
+   * Body param: New amount of the transaction to apply to this invoice, as a decimal
+   * string in US dollars.
    *
    * The new amount is not checked against the transaction's total or the invoice's
    * balance.

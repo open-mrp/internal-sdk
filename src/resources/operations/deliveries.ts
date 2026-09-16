@@ -102,18 +102,14 @@ export interface Delivery {
   object: 'delivery';
 
   /**
-   * An order placed with a supplier to purchase materials or products.
-   *
-   * The list endpoint returns this same resource as the retrieve endpoint, except
-   * that list rows never carry the note or the scheduled date and can only expand
-   * the supplier and the lines.
-   */
-  purchase_order: PurchaseOrder | null;
-
-  /**
    * When goods on this delivery were refused on inspection.
    */
   rejected_at: string | null;
+
+  /**
+   * DeliveryRelated names the records a delivery sits between.
+   */
+  related: DeliveryRelated | null;
 
   /**
    * Whether any of the delivered goods were accepted into inventory.
@@ -177,6 +173,11 @@ export interface DeliveryLine {
   object: 'delivery_line';
 
   /**
+   * A single line item on a purchase order.
+   */
+  order_line: PurchaseOrderLine | null;
+
+  /**
    * A measured amount: a numeric value together with the unit it is expressed in.
    *
    * Quantities are shared building blocks rather than standalone records — other
@@ -203,28 +204,35 @@ export interface DeliveryLine {
 }
 
 /**
- * A contact that receives the purchase order email when an order is issued with
- * the `send_email` option.
+ * DeliveryRelated names the records a delivery sits between.
  */
-export interface EmailContact {
-  /**
-   * Email contact ID.
-   */
-  id: string;
-
-  /**
-   * A user's membership in an account, carrying the account-specific status, role,
-   * and department.
-   *
-   * Profile fields (name, email, username, image URL) live on the `user`
-   * sub-resource, which is shared across every account the user belongs to.
-   */
-  account_user: AccountUsersAPI.AccountUser | null;
-
+export interface DeliveryRelated {
   /**
    * Resource type identifier.
    */
-  object: 'email_contact';
+  object: 'delivery_related';
+
+  /**
+   * Record is a lightweight reference to a business record — a sales order, purchase
+   * order, pick, shipment, production run, invoice, etc.
+   *
+   * Like the `actor` and `entity` references, it carries just enough to identify and
+   * label the referenced record without embedding its full resource. The `status`
+   * and `metadata` fields hold type-specific detail that varies by the kind of
+   * record referenced.
+   */
+  purchase_order: SalesOrdersAPI.Record | null;
+
+  /**
+   * Record is a lightweight reference to a business record — a sales order, purchase
+   * order, pick, shipment, production run, invoice, etc.
+   *
+   * Like the `actor` and `entity` references, it carries just enough to identify and
+   * label the referenced record without embedding its full resource. The `status`
+   * and `metadata` fields hold type-specific detail that varies by the kind of
+   * record referenced.
+   */
+  receiving_order: SalesOrdersAPI.Record | null;
 }
 
 /**
@@ -282,87 +290,6 @@ export interface ListDeliveryLine {
 }
 
 /**
- * A single page of resources, together with the metadata needed to page through
- * the rest of the result set.
- */
-export interface ListEmailContact {
-  /**
-   * Resources in this page.
-   */
-  data: Array<EmailContact>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo describes where the current page sits within a paginated result set and
-   * how to move to the adjacent pages.
-   *
-   * Page a list by following the URLs below rather than assembling cursors yourself.
-   * For a top-level list endpoint the URL repeats the original request's query
-   * string with only the cursor swapped, so following it preserves the same filters,
-   * search term, and page size.
-   */
-  page_info: APIKeysAPI.PageInfo;
-}
-
-/**
- * A single page of resources, together with the metadata needed to page through
- * the rest of the result set.
- */
-export interface ListPurchaseOrderLine {
-  /**
-   * Resources in this page.
-   */
-  data: Array<PurchaseOrderLine>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo describes where the current page sits within a paginated result set and
-   * how to move to the adjacent pages.
-   *
-   * Page a list by following the URLs below rather than assembling cursors yourself.
-   * For a top-level list endpoint the URL repeats the original request's query
-   * string with only the cursor swapped, so following it preserves the same filters,
-   * search term, and page size.
-   */
-  page_info: APIKeysAPI.PageInfo;
-}
-
-/**
- * A single page of resources, together with the metadata needed to page through
- * the rest of the result set.
- */
-export interface ListReceivingOrderLine {
-  /**
-   * Resources in this page.
-   */
-  data: Array<ReceivingOrderLine>;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'list';
-
-  /**
-   * PageInfo describes where the current page sits within a paginated result set and
-   * how to move to the adjacent pages.
-   *
-   * Page a list by following the URLs below rather than assembling cursors yourself.
-   * For a top-level list endpoint the URL repeats the original request's query
-   * string with only the cursor swapped, so following it preserves the same filters,
-   * search term, and page size.
-   */
-  page_info: APIKeysAPI.PageInfo;
-}
-
-/**
  * An inventory lot — a batch of an item received together and tracked under a
  * single lot number.
  */
@@ -385,160 +312,6 @@ export interface Lot {
    * Resource type identifier.
    */
   object: 'lot';
-}
-
-/**
- * An order placed with a supplier to purchase materials or products.
- *
- * The list endpoint returns this same resource as the retrieve endpoint, except
- * that list rows never carry the note or the scheduled date and can only expand
- * the supplier and the lines.
- */
-export interface PurchaseOrder {
-  /**
-   * Purchase order ID.
-   */
-  id: string;
-
-  /**
-   * Whether the order acknowledgment email has been sent to the supplier.
-   *
-   * Advances to `sent` when the order is issued with the `send_email` option;
-   * otherwise stays `not_sent`.
-   */
-  acknowledgment_status: 'not_sent' | 'sent';
-
-  /**
-   * A saved address that can be used for billing and shipping on sales orders,
-   * invoices, and shipments.
-   */
-  bill_to_address: APIKeysAPI.Address | null;
-
-  /**
-   * When the order was closed as fulfilled.
-   *
-   * Cleared again if the order is re-opened.
-   */
-  completed_at: string | null;
-
-  /**
-   * A single page of resources, together with the metadata needed to page through
-   * the rest of the result set.
-   */
-  contacts: ListEmailContact | null;
-
-  /**
-   * Created timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Freight describes the carrier selection and freight billing for a record.
-   *
-   * It is a generic, reusable sub-resource shared by anything that carries shipping
-   * configuration — a sales order, a purchase order, or a shipment.
-   */
-  freight: SalesOrdersAPI.Freight | null;
-
-  /**
-   * When the order was issued to the supplier.
-   *
-   * Cleared again if the order is unissued back to `estimate`.
-   */
-  issued_at: string | null;
-
-  /**
-   * Total number of lines on the order.
-   */
-  line_count: number;
-
-  /**
-   * A single page of resources, together with the metadata needed to page through
-   * the rest of the result set.
-   */
-  lines: ListPurchaseOrderLine | null;
-
-  /**
-   * Free-form note recorded on the order.
-   */
-  note: string | null;
-
-  /**
-   * Human-readable identifier for the order.
-   *
-   * Assigned automatically from a per-account sequence at creation; can be changed
-   * via update but must stay unique within the account.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'purchase_order';
-
-  /**
-   * A payment term describing when payment is due (e.g. `Net 30`), assignable to
-   * customers, sales orders, purchase orders, and invoices.
-   */
-  payment_term: AnalyticsAPI.PaymentTerm | null;
-
-  /**
-   * Priority level for fulfilling the order, relative to other open orders.
-   */
-  priority: 'low' | 'normal' | 'high';
-
-  /**
-   * A receiving order tracks inbound inventory against an issued purchase order.
-   *
-   * One receiving order is created automatically when a purchase order is issued,
-   * with one line per purchase order line. As goods arrive, line quantities are
-   * received and then stocked into inventory; the order is marked complete once
-   * every line is stocked. Unissuing the purchase order deletes the receiving order
-   * and its lines.
-   */
-  receiving_order: ReceivingOrder | null;
-
-  /**
-   * Date the supplier promised delivery for.
-   *
-   * Set through the `promised_at` field on create and update.
-   */
-  scheduled_at: string | null;
-
-  /**
-   * A saved address that can be used for billing and shipping on sales orders,
-   * invoices, and shipments.
-   */
-  ship_to_address: APIKeysAPI.Address | null;
-
-  /**
-   * A named freight pricing rule that decides what a buyer pays for shipping.
-   *
-   * A customer's default shipping term is evaluated whenever freight is quoted for
-   * one of their orders. Freight exemptions on the customer, its type group, or any
-   * of its price groups are checked first and zero the freight charge before the
-   * shipping term is considered.
-   */
-  shipping_term: AnalyticsAPI.ShippingTerm | null;
-
-  /**
-   * Lifecycle status of the order.
-   *
-   * - `estimate`: a draft that has not yet been issued to the supplier.
-   * - `issued`: the order has been issued to the supplier and is open for receiving.
-   * - `fulfilled`: the order is complete and closed.
-   */
-  status: 'estimate' | 'issued' | 'fulfilled';
-
-  /**
-   * The supplier (selling account) an order is placed with.
-   */
-  supplier: Supplier | null;
-
-  /**
-   * Updated timestamp.
-   */
-  updated_at: string;
 }
 
 /**
@@ -593,19 +366,13 @@ export interface PurchaseOrderLine {
   quantity_ordered: AccountUsersAPI.Quantity | null;
 
   /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
+   * An amount calculated on demand rather than stored.
    *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
+   * The same shape as a quantity minus the ID, because nothing was written: it is
+   * derived per request, such as a total rolled up across invoiced lines for one
+   * analysis.
    */
-  quantity_received: AccountUsersAPI.Quantity | null;
-
-  /**
-   * Value expressed as a ratio of two units, such as a price per kilogram or a
-   * throughput per hour.
-   */
-  unit_cost: AccountUsersAPI.Rate | null;
+  quantity_received: AnalyticsAPI.ComputedQuantity | null;
 
   /**
    * Value expressed as a ratio of two units, such as a price per kilogram or a
@@ -619,198 +386,32 @@ export interface PurchaseOrderLine {
   updated_at: string;
 }
 
-/**
- * A receiving order tracks inbound inventory against an issued purchase order.
- *
- * One receiving order is created automatically when a purchase order is issued,
- * with one line per purchase order line. As goods arrive, line quantities are
- * received and then stocked into inventory; the order is marked complete once
- * every line is stocked. Unissuing the purchase order deletes the receiving order
- * and its lines.
- */
-export interface ReceivingOrder {
-  /**
-   * Receiving order ID.
-   */
-  id: string;
-
-  /**
-   * Timestamp when the receiving order was completed.
-   *
-   * Set automatically once every line has been stocked, and also when the
-   * originating purchase order is closed. It is cleared again when the receiving
-   * order is voided or that purchase order is re-opened.
-   */
-  completed_at: string | null;
-
-  /**
-   * Percentage of lines that have been stocked, from `0` to `100`, rounded to two
-   * decimal places.
-   *
-   * A line counts toward completion once its `stocked_at` is set, and the order is
-   * marked complete when the figure reaches `100`. It is calculated for list results
-   * only; on responses that return a single receiving order it is `0`, and progress
-   * is best read from the lines' `stocked_at` values.
-   */
-  completion_percentage: number;
-
-  /**
-   * Timestamp when the receiving order was created.
-   */
-  created_at: string;
-
-  /**
-   * Total number of lines on this receiving order.
-   *
-   * Always populated, even when `lines` is not expanded.
-   */
-  line_count: number;
-
-  /**
-   * A single page of resources, together with the metadata needed to page through
-   * the rest of the result set.
-   */
-  lines: ListReceivingOrderLine | null;
-
-  /**
-   * Free-text note carried over from the originating purchase order.
-   *
-   * Not returned in list results.
-   */
-  note: string | null;
-
-  /**
-   * Human-readable identifier for the receiving order, assigned when the originating
-   * purchase order is issued.
-   *
-   * It mirrors that purchase order's number (e.g. `PO-001`). Distinct from `id`; use
-   * it to reference the order in the UI and on documents.
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'receiving_order';
-
-  /**
-   * An order placed with a supplier to purchase materials or products.
-   *
-   * The list endpoint returns this same resource as the retrieve endpoint, except
-   * that list rows never carry the note or the scheduled date and can only expand
-   * the supplier and the lines.
-   */
-  purchase_order: PurchaseOrder | null;
-
-  /**
-   * The supplier (selling account) an order is placed with.
-   */
-  supplier: Supplier | null;
-
-  /**
-   * Timestamp when the receiving order was last updated.
-   */
-  updated_at: string;
-}
-
-/**
- * Line item in a receiving order.
- *
- * One line is created per purchase order line when the purchase order is issued,
- * with its quantity initialized to the full ordered quantity. When a line is
- * stocked short of the ordered quantity, a new line is created automatically for
- * the remainder.
- */
-export interface ReceivingOrderLine {
-  /**
-   * Receiving order line ID.
-   */
-  id: string;
-
-  /**
-   * Timestamp when the line was created.
-   */
-  created_at: string;
-
-  /**
-   * An entry in your catalog: something you sell, consume, or build with.
-   */
-  item: AccountUsersAPI.Item | null;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'receiving_order_line';
-
-  /**
-   * A single line item on a sales order.
-   */
-  order_line: SalesOrdersAPI.SalesOrderLine | null;
-
-  /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
-   *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
-   */
-  quantity: AccountUsersAPI.Quantity | null;
-
-  /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
-   *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
-   */
-  rejected_quantity: AccountUsersAPI.Quantity | null;
-
-  /**
-   * Timestamp when the received quantity was stocked into inventory.
-   *
-   * Once set, the line counts toward the order's `completion_percentage`. Voiding
-   * the line or the whole order clears it, but does not reverse the inventory that
-   * was already received.
-   */
-  stocked_at: string | null;
-
-  /**
-   * Timestamp when the line was last updated.
-   */
-  updated_at: string;
-}
-
-/**
- * The supplier (selling account) an order is placed with.
- */
-export interface Supplier {
-  /**
-   * Supplier ID.
-   */
-  id: string;
-
-  /**
-   * Name of the supplier account.
-   */
-  name: string;
-
-  /**
-   * Human-facing supplier code, unique per account (e.g. `SUP-001`).
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'supplier';
-}
-
 export interface DeliveryRetrieveParams {
   /**
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'purchase_order' | 'lines'>;
+  include?: Array<
+    | 'related'
+    | 'related.purchase_order'
+    | 'related.receiving_order'
+    | 'lines'
+    | 'lines.item'
+    | 'lines.order_line'
+    | 'lines.order_line.item'
+    | 'lines.order_line.quantity_ordered'
+    | 'lines.order_line.quantity_ordered.unit'
+    | 'lines.order_line.unit_price'
+    | 'lines.order_line.unit_price.numerator_unit'
+    | 'lines.order_line.unit_price.denominator_unit'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
+    | 'lines.unit_cost'
+    | 'lines.unit_cost.numerator_unit'
+    | 'lines.unit_cost.denominator_unit'
+    | 'lines.location'
+    | 'lines.lot'
+  >;
 }
 
 export interface DeliveryListParams {
@@ -833,7 +434,27 @@ export interface DeliveryListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'purchase_order' | 'purchase_order.supplier' | 'lines'>;
+  include?: Array<
+    | 'related'
+    | 'related.purchase_order'
+    | 'related.receiving_order'
+    | 'lines'
+    | 'lines.item'
+    | 'lines.order_line'
+    | 'lines.order_line.item'
+    | 'lines.order_line.quantity_ordered'
+    | 'lines.order_line.quantity_ordered.unit'
+    | 'lines.order_line.unit_price'
+    | 'lines.order_line.unit_price.numerator_unit'
+    | 'lines.order_line.unit_price.denominator_unit'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
+    | 'lines.unit_cost'
+    | 'lines.unit_cost.numerator_unit'
+    | 'lines.unit_cost.denominator_unit'
+    | 'lines.location'
+    | 'lines.lot'
+  >;
 
   /**
    * Filter to deliveries with at least one line for any of the given item IDs.
@@ -876,18 +497,11 @@ export declare namespace Deliveries {
   export {
     type Delivery as Delivery,
     type DeliveryLine as DeliveryLine,
-    type EmailContact as EmailContact,
+    type DeliveryRelated as DeliveryRelated,
     type ListDelivery as ListDelivery,
     type ListDeliveryLine as ListDeliveryLine,
-    type ListEmailContact as ListEmailContact,
-    type ListPurchaseOrderLine as ListPurchaseOrderLine,
-    type ListReceivingOrderLine as ListReceivingOrderLine,
     type Lot as Lot,
-    type PurchaseOrder as PurchaseOrder,
     type PurchaseOrderLine as PurchaseOrderLine,
-    type ReceivingOrder as ReceivingOrder,
-    type ReceivingOrderLine as ReceivingOrderLine,
-    type Supplier as Supplier,
     type DeliveryRetrieveParams as DeliveryRetrieveParams,
     type DeliveryListParams as DeliveryListParams,
   };

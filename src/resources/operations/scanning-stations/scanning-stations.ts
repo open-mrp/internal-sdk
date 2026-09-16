@@ -697,6 +697,12 @@ export interface ScanningStationRetrieveBatchesParams {
   cursor?: string;
 
   /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'quantity.unit' | 'seconds.unit' | 'waste.unit'>;
+
+  /**
    * Maximum number of results to return in a single page.
    */
   limit?: number;

@@ -36,7 +36,6 @@ describe('resource operations', () => {
       client.operations.retrieveInventories(
         {
           cursor: 'cursor',
-          include: ['quantity.unit'],
           limit: 0,
           q: 'q',
         },

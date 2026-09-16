@@ -406,7 +406,17 @@ export interface TransactionCreateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
+  include?: Array<
+    | 'allocations'
+    | 'allocations.amount'
+    | 'allocations.amount.unit'
+    | 'allocations.transaction'
+    | 'allocations.transaction.amount'
+    | 'allocations.transaction.amount.unit'
+    | 'customer'
+    | 'responsible_user'
+    | 'responsible_user.user'
+  >;
 
   /**
    * Body param: The kind of correction this transaction represents (see List
@@ -441,7 +451,17 @@ export interface TransactionRetrieveParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
+  include?: Array<
+    | 'allocations'
+    | 'allocations.amount'
+    | 'allocations.amount.unit'
+    | 'allocations.transaction'
+    | 'allocations.transaction.amount'
+    | 'allocations.transaction.amount.unit'
+    | 'customer'
+    | 'responsible_user'
+    | 'responsible_user.user'
+  >;
 }
 
 export interface TransactionUpdateParams {
@@ -470,7 +490,17 @@ export interface TransactionUpdateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
+  include?: Array<
+    | 'allocations'
+    | 'allocations.amount'
+    | 'allocations.amount.unit'
+    | 'allocations.transaction'
+    | 'allocations.transaction.amount'
+    | 'allocations.transaction.amount.unit'
+    | 'customer'
+    | 'responsible_user'
+    | 'responsible_user.user'
+  >;
 
   /**
    * Body param: The kind of correction this transaction represents (see List
@@ -596,7 +626,17 @@ export interface TransactionDeleteParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
+  include?: Array<
+    | 'allocations'
+    | 'allocations.amount'
+    | 'allocations.amount.unit'
+    | 'allocations.transaction'
+    | 'allocations.transaction.amount'
+    | 'allocations.transaction.amount.unit'
+    | 'customer'
+    | 'responsible_user'
+    | 'responsible_user.user'
+  >;
 }
 
 export declare namespace Transactions {

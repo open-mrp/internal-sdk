@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as CoreAPI from '../../core/core';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as ActionsAPI from './actions';
@@ -49,8 +50,43 @@ export class Batches extends APIResource {
    * );
    * ```
    */
-  delete(id: string, options?: RequestOptions): APIPromise<Batch> {
-    return this._client.delete(path`/v1/operations/batches/${id}`, options);
+  delete(
+    id: string,
+    params: BatchDeleteParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Batch> {
+    const { include } = params ?? {};
+    return this._client.delete(path`/v1/operations/batches/${id}`, { query: { include }, ...options });
+  }
+
+  /**
+   * Returns the production steps a batch can be initialized at from a given scanning
+   * station.
+   *
+   * Use this to drive the step picker on a scanning terminal when an operator scans
+   * a batch that has not been scanned before. Initializing is the batch's first
+   * scan, so there is no prior step to advance from: the steps offered are the ones
+   * assigned to the given scanning station that produce the batch's own item. A
+   * batch whose item nothing at that station makes comes back with an empty list.
+   * For a batch that has already been scanned, use Get Possible Next Steps instead.
+   *
+   * This endpoint requires the permission: `batches:read`.
+   *
+   * @example
+   * ```ts
+   * const listScanningProductionStepInfo =
+   *   await client.operations.batches.initSteps(
+   *     'bt_fuies8j4pk45',
+   *     { scanning_station_id: 'scst_t71bn7lq5yov' },
+   *   );
+   * ```
+   */
+  initSteps(
+    id: string,
+    body: BatchInitStepsParams,
+    options?: RequestOptions,
+  ): APIPromise<ListScanningProductionStepInfo> {
+    return this._client.post(path`/v1/operations/batches/${id}/init-steps`, { body, ...options });
   }
 
   /**
@@ -106,10 +142,15 @@ export class Batches extends APIResource {
    * ```
    */
   remainingQuantities(
-    body: BatchRemainingQuantitiesParams,
+    params: BatchRemainingQuantitiesParams,
     options?: RequestOptions,
   ): APIPromise<AccountUsersAPI.Quantity> {
-    return this._client.post('/v1/operations/batches/remaining-quantities', { body, ...options });
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/batches/remaining-quantities', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -130,8 +171,12 @@ export class Batches extends APIResource {
    *   );
    * ```
    */
-  retrieveFlow(id: string, options?: RequestOptions): APIPromise<ListBatchFlowNode> {
-    return this._client.get(path`/v1/operations/batches/${id}/flow`, options);
+  retrieveFlow(
+    id: string,
+    query: BatchRetrieveFlowParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ListBatchFlowNode> {
+    return this._client.get(path`/v1/operations/batches/${id}/flow`, { query, ...options });
   }
 }
 
@@ -163,10 +208,9 @@ export interface Batch {
   created_at: string;
 
   /**
-   * A functional area of a production operation, such as fabrication or packaging,
-   * that groups scanning stations and machines.
+   * Entity is a polymorphic reference to any resource in the system.
    */
-  department: AccountUsersAPI.Department | null;
+  department: CoreAPI.Entity | null;
 
   /**
    * A single page of resources, together with the metadata needed to page through
@@ -175,9 +219,9 @@ export interface Batch {
   input_batches: ListBatchReference | null;
 
   /**
-   * An entry in your catalog: something you sell, consume, or build with.
+   * Entity is a polymorphic reference to any resource in the system.
    */
-  item: AccountUsersAPI.Item | null;
+  item: CoreAPI.Entity | null;
 
   /**
    * A single page of resources, together with the metadata needed to page through
@@ -189,7 +233,7 @@ export interface Batch {
    * A single page of resources, together with the metadata needed to page through
    * the rest of the result set.
    */
-  machines: AccountUsersAPI.ListMachine | null;
+  machines: CoreAPI.ListEntity | null;
 
   /**
    * Resource type identifier.
@@ -208,10 +252,9 @@ export interface Batch {
   production_run: ProductionRunReference | null;
 
   /**
-   * A single stage of work in an item's production flow, with its output, material
-   * inputs, cost rates, and graph connections.
+   * Entity is a polymorphic reference to any resource in the system.
    */
-  production_step: AccountUsersAPI.ProductionStep | null;
+  production_step: CoreAPI.Entity | null;
 
   /**
    * A measured amount: a numeric value together with the unit it is expressed in.
@@ -232,10 +275,9 @@ export interface Batch {
   scanned_at: string | null;
 
   /**
-   * A station on the production floor where operators scan batches to perform a
-   * batch operation, such as initializing or moving a batch.
+   * Entity is a polymorphic reference to any resource in the system.
    */
-  scanning_station: AccountUsersAPI.ScanningStation | null;
+  scanning_station: CoreAPI.Entity | null;
 
   /**
    * A measured amount: a numeric value together with the unit it is expressed in.
@@ -330,6 +372,16 @@ export interface BatchReference {
    * Resource type identifier.
    */
   object: 'batch';
+}
+
+/**
+ * Request to retrieve the production steps a batch can be initialized at.
+ */
+export interface GetPossibleInitStepsRequest {
+  /**
+   * Scanning station ID to evaluate initialization steps from.
+   */
+  scanning_station_id: string;
 }
 
 /**
@@ -503,14 +555,6 @@ export interface ScanningProductionStepInfo {
   id: string;
 
   /**
-   * Whether the step combines multiple distinct part items.
-   *
-   * Multi-part steps consume several parts at once, so an operator must scan one
-   * batch per part before merging or splitting into the step.
-   */
-  is_multi_part: boolean;
-
-  /**
    * Production step name.
    */
   name: string;
@@ -519,6 +563,32 @@ export interface ScanningProductionStepInfo {
    * Resource type identifier.
    */
   object: 'scanning_production_step_info';
+
+  /**
+   * How many distinct part items the step draws on, which decides how an operator
+   * scans into it.
+   *
+   * - `single`: the step consumes one part item, so a single scan advances a batch
+   *   into it.
+   * - `multi_part`: the step consumes several parts at once, so one batch per part
+   *   must be scanned before merging or splitting into it.
+   */
+  type: 'single' | 'multi_part';
+}
+
+export interface BatchDeleteParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'quantity.unit' | 'seconds.unit' | 'waste.unit'>;
+}
+
+export interface BatchInitStepsParams {
+  /**
+   * Scanning station ID to evaluate initialization steps from.
+   */
+  scanning_station_id: string;
 }
 
 export interface BatchNextStepsParams {
@@ -530,7 +600,7 @@ export interface BatchNextStepsParams {
 
 export interface BatchRemainingQuantitiesParams {
   /**
-   * Batch IDs to check remaining quantities for.
+   * Body param: Batch IDs to check remaining quantities for.
    *
    * Pass a single ID for a single-part step, or one ID per part for a multi-part
    * step. Each ID is resolved forward through its production flow to the batch that
@@ -540,12 +610,26 @@ export interface BatchRemainingQuantitiesParams {
   batch_ids: Array<string>;
 
   /**
-   * The production step the split would be performed at.
+   * Body param: The production step the split would be performed at.
    *
    * Its configuration determines the expected output quantity and the unit the
    * remainder is expressed in.
    */
   production_step_id: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'unit'>;
+}
+
+export interface BatchRetrieveFlowParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'batch.quantity.unit' | 'batch.seconds.unit' | 'batch.waste.unit'>;
 }
 
 Batches.Actions = Actions;
@@ -556,6 +640,7 @@ export declare namespace Batches {
     type BatchFlowNode as BatchFlowNode,
     type BatchLot as BatchLot,
     type BatchReference as BatchReference,
+    type GetPossibleInitStepsRequest as GetPossibleInitStepsRequest,
     type GetPossibleNextStepsRequest as GetPossibleNextStepsRequest,
     type GetRemainingQuantityToSplitRequest as GetRemainingQuantityToSplitRequest,
     type ListBatchFlowNode as ListBatchFlowNode,
@@ -564,8 +649,11 @@ export declare namespace Batches {
     type ListScanningProductionStepInfo as ListScanningProductionStepInfo,
     type ProductionRunReference as ProductionRunReference,
     type ScanningProductionStepInfo as ScanningProductionStepInfo,
+    type BatchDeleteParams as BatchDeleteParams,
+    type BatchInitStepsParams as BatchInitStepsParams,
     type BatchNextStepsParams as BatchNextStepsParams,
     type BatchRemainingQuantitiesParams as BatchRemainingQuantitiesParams,
+    type BatchRetrieveFlowParams as BatchRetrieveFlowParams,
   };
 
   export {

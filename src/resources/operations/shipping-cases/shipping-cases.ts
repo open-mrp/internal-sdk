@@ -270,7 +270,14 @@ export interface ShippingCaseRetrieveParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'carrier' | 'shipment' | 'freight_amount.unit' | 'freight_weight.unit'>;
+  include?: Array<
+    | 'carrier'
+    | 'shipment'
+    | 'freight_amount'
+    | 'freight_amount.unit'
+    | 'freight_weight'
+    | 'freight_weight.unit'
+  >;
 }
 
 export interface ShippingCaseUpdateParams {
@@ -278,7 +285,14 @@ export interface ShippingCaseUpdateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'carrier' | 'shipment' | 'freight_amount.unit' | 'freight_weight.unit'>;
+  include?: Array<
+    | 'carrier'
+    | 'shipment'
+    | 'freight_amount'
+    | 'freight_amount.unit'
+    | 'freight_weight'
+    | 'freight_weight.unit'
+  >;
 
   /**
    * Body param: ID of the currency unit the case's freight cost is expressed in.

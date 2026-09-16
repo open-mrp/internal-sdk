@@ -1066,7 +1066,18 @@ export interface InvoiceRetrieveParams {
     | 'lines'
     | 'lines.order_line'
     | 'lines.order_line.product'
+    | 'lines.item'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
+    | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
     | 'allocations'
+    | 'allocations.amount'
+    | 'allocations.amount.unit'
+    | 'allocations.transaction'
+    | 'allocations.transaction.amount'
+    | 'allocations.transaction.amount.unit'
   >;
 }
 
@@ -1086,7 +1097,18 @@ export interface InvoiceUpdateParams {
     | 'lines'
     | 'lines.order_line'
     | 'lines.order_line.product'
+    | 'lines.item'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
+    | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
     | 'allocations'
+    | 'allocations.amount'
+    | 'allocations.amount.unit'
+    | 'allocations.transaction'
+    | 'allocations.transaction.amount'
+    | 'allocations.transaction.amount.unit'
   >;
 
   /**
@@ -1166,6 +1188,12 @@ export interface InvoiceListParams {
     | 'lines'
     | 'lines.order_line'
     | 'lines.order_line.product'
+    | 'lines.item'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
+    | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
   >;
 
   /**

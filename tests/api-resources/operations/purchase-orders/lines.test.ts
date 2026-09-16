@@ -40,11 +40,6 @@ describe('resource lines', () => {
       },
       item_id: 'it_pej07ckhvu62',
       product_description: '6061-T6 Aluminum Sheet 4x8',
-      unit_cost: {
-        denominator_unit_id: 'denominator_unit_id',
-        numerator_unit_id: 'numerator_unit_id',
-        value: 'value',
-      },
     });
   });
 
@@ -70,9 +65,6 @@ describe('resource lines', () => {
       product_sku: 'RAW-100',
       quantity_unit_id: 'quantity_unit_id',
       quantity_value: '250',
-      unit_cost_denominator_unit_id: 'unit_cost_denominator_unit_id',
-      unit_cost_numerator_unit_id: 'unit_cost_numerator_unit_id',
-      unit_cost_value: 'unit_cost_value',
       unit_price_denominator_unit_id: 'unit_price_denominator_unit_id',
       unit_price_numerator_unit_id: 'unit_price_numerator_unit_id',
       unit_price_value: '15.00',

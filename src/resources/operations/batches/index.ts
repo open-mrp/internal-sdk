@@ -23,6 +23,7 @@ export {
   type BatchFlowNode,
   type BatchLot,
   type BatchReference,
+  type GetPossibleInitStepsRequest,
   type GetPossibleNextStepsRequest,
   type GetRemainingQuantityToSplitRequest,
   type ListBatchFlowNode,
@@ -31,6 +32,9 @@ export {
   type ListScanningProductionStepInfo,
   type ProductionRunReference,
   type ScanningProductionStepInfo,
+  type BatchDeleteParams,
+  type BatchInitStepsParams,
   type BatchNextStepsParams,
   type BatchRemainingQuantitiesParams,
+  type BatchRetrieveFlowParams,
 } from './batches';

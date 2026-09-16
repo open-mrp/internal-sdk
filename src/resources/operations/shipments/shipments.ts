@@ -213,6 +213,9 @@ export interface ShipmentRetrieveParams {
     | 'related.pick'
     | 'shipping_cases'
     | 'lines'
+    | 'lines.item'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
     | 'lines.sales_order_line'
     | 'lines.sales_order_line.product'
   >;
@@ -225,6 +228,11 @@ export interface ShipmentUpdateParams {
    */
   include?: Array<
     | 'lines'
+    | 'lines.item'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
+    | 'lines.sales_order_line'
+    | 'lines.sales_order_line.product'
     | 'shipping_cases'
     | 'related.sales_order'
     | 'customer'
@@ -309,6 +317,9 @@ export interface ShipmentListParams {
     | 'related.invoice'
     | 'related.pick'
     | 'lines'
+    | 'lines.item'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
     | 'lines.sales_order_line'
     | 'lines.sales_order_line.product'
   >;

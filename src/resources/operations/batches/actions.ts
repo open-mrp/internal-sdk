@@ -50,8 +50,13 @@ export class Actions extends APIResource {
    * );
    * ```
    */
-  close(body: ActionCloseParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
-    return this._client.post('/v1/operations/batches/actions/close', { body, ...options });
+  close(params: ActionCloseParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/batches/actions/close', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -75,8 +80,13 @@ export class Actions extends APIResource {
    *   });
    * ```
    */
-  initialize(body: ActionInitializeParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
-    return this._client.post('/v1/operations/batches/actions/initialize', { body, ...options });
+  initialize(params: ActionInitializeParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/batches/actions/initialize', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -104,8 +114,13 @@ export class Actions extends APIResource {
    * );
    * ```
    */
-  merge(body: ActionMergeParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
-    return this._client.post('/v1/operations/batches/actions/merge', { body, ...options });
+  merge(params: ActionMergeParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/batches/actions/merge', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -130,8 +145,9 @@ export class Actions extends APIResource {
    * });
    * ```
    */
-  move(body: ActionMoveParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
-    return this._client.post('/v1/operations/batches/actions/move', { body, ...options });
+  move(params: ActionMoveParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/batches/actions/move', { query: { include }, body, ...options });
   }
 
   /**
@@ -166,8 +182,13 @@ export class Actions extends APIResource {
    * );
    * ```
    */
-  split(body: ActionSplitParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
-    return this._client.post('/v1/operations/batches/actions/split', { body, ...options });
+  split(params: ActionSplitParams, options?: RequestOptions): APIPromise<BatchesAPI.Batch> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/batches/actions/split', {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 }
 
@@ -347,14 +368,20 @@ export interface ActionBulkDeleteParams {
 
 export interface ActionCloseParams {
   /**
-   * Batch ID.
+   * Body param: Batch ID.
    */
   batch_id: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'quantity.unit' | 'seconds.unit' | 'waste.unit'>;
 }
 
 export interface ActionInitializeParams {
   /**
-   * ID of the batch to initialize.
+   * Body param: ID of the batch to initialize.
    *
    * The batch must belong to a production run, still be open, and not have been
    * scanned before.
@@ -362,17 +389,23 @@ export interface ActionInitializeParams {
   batch_id: string;
 
   /**
-   * ID of the scanning station the batch is being scanned at.
+   * Body param: ID of the scanning station the batch is being scanned at.
    *
    * The station must have a production step that produces the batch's item, since
    * that step is what the batch is attached to.
    */
   scanning_station_id: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'quantity.unit' | 'seconds.unit' | 'waste.unit'>;
 }
 
 export interface ActionMergeParams {
   /**
-   * Batch IDs to merge.
+   * Body param: Batch IDs to merge.
    *
    * Duplicates are rejected. For single-part production steps all batches must be of
    * the same item; for multi-part steps supply at least one batch per part the step
@@ -383,19 +416,25 @@ export interface ActionMergeParams {
   batch_ids: Array<string>;
 
   /**
-   * The production step the merged batch is created at.
+   * Body param: The production step the merged batch is created at.
    */
   production_step_id: string;
 
   /**
-   * Scanning station ID performing the merge.
+   * Body param: Scanning station ID performing the merge.
    */
   scanning_station_id: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'quantity.unit' | 'seconds.unit' | 'waste.unit'>;
 }
 
 export interface ActionMoveParams {
   /**
-   * Batch IDs to move.
+   * Body param: Batch IDs to move.
    *
    * Pass a single ID to advance one batch, or multiple IDs (one per part) when the
    * target step combines multiple parts. Each ID is resolved forward through its
@@ -405,19 +444,25 @@ export interface ActionMoveParams {
   batch_ids: Array<string>;
 
   /**
-   * Target production step ID.
+   * Body param: Target production step ID.
    */
   production_step_id: string;
 
   /**
-   * Scanning station ID performing the move.
+   * Body param: Scanning station ID performing the move.
    */
   scanning_station_id: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'quantity.unit' | 'seconds.unit' | 'waste.unit'>;
 }
 
 export interface ActionSplitParams {
   /**
-   * Batch IDs to split from.
+   * Body param: Batch IDs to split from.
    *
    * Pass a single ID for single-part production steps, or multiple IDs (one per
    * part) for multi-part steps. Each ID is resolved forward through its production
@@ -427,7 +472,7 @@ export interface ActionSplitParams {
   batch_ids: Array<string>;
 
   /**
-   * Whether to close the source batches after splitting.
+   * Body param: Whether to close the source batches after splitting.
    *
    * Set this when the operator is done with the source batch even though quantity is
    * left over. When left open, a source batch is still closed automatically once
@@ -437,27 +482,33 @@ export interface ActionSplitParams {
   close_batch: boolean;
 
   /**
-   * Quantity input for a split operation.
+   * Body param: Quantity input for a split operation.
    */
   firsts: SplitQuantityInput;
 
   /**
-   * The production step the new batch is created at.
+   * Body param: The production step the new batch is created at.
    */
   production_step_id: string;
 
   /**
-   * Scanning station ID performing the split.
+   * Body param: Scanning station ID performing the split.
    */
   scanning_station_id: string;
 
   /**
-   * Quantity input for a split operation.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'quantity.unit' | 'seconds.unit' | 'waste.unit'>;
+
+  /**
+   * Body param: Quantity input for a split operation.
    */
   seconds?: SplitQuantityInput;
 
   /**
-   * Quantity input for a split operation.
+   * Body param: Quantity input for a split operation.
    */
   waste?: SplitQuantityInput;
 }

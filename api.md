@@ -2355,18 +2355,17 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/operations/suppliers/suppliers.ts">CreateSupplierRequest</a></code>
-- <code><a href="./src/resources/operations/suppliers/suppliers.ts">ListSupplierSummary</a></code>
-- <code><a href="./src/resources/operations/suppliers/suppliers.ts">SupplierDetail</a></code>
-- <code><a href="./src/resources/operations/suppliers/suppliers.ts">SupplierSummary</a></code>
+- <code><a href="./src/resources/operations/suppliers/suppliers.ts">ListSupplier</a></code>
+- <code><a href="./src/resources/operations/suppliers/suppliers.ts">Supplier</a></code>
 - <code><a href="./src/resources/operations/suppliers/suppliers.ts">UpdateSupplierRequest</a></code>
 
 Methods:
 
-- <code title="post /v1/operations/suppliers">client.operations.suppliers.<a href="./src/resources/operations/suppliers/suppliers.ts">create</a>({ ...params }) -> SupplierDetail</code>
-- <code title="get /v1/operations/suppliers/{id}">client.operations.suppliers.<a href="./src/resources/operations/suppliers/suppliers.ts">retrieve</a>(id, { ...params }) -> SupplierDetail</code>
-- <code title="patch /v1/operations/suppliers/{id}">client.operations.suppliers.<a href="./src/resources/operations/suppliers/suppliers.ts">update</a>(id, { ...params }) -> SupplierDetail</code>
-- <code title="get /v1/operations/suppliers">client.operations.suppliers.<a href="./src/resources/operations/suppliers/suppliers.ts">list</a>({ ...params }) -> ListSupplierSummary</code>
-- <code title="delete /v1/operations/suppliers/{id}">client.operations.suppliers.<a href="./src/resources/operations/suppliers/suppliers.ts">delete</a>(id) -> SupplierDetail</code>
+- <code title="post /v1/operations/suppliers">client.operations.suppliers.<a href="./src/resources/operations/suppliers/suppliers.ts">create</a>({ ...params }) -> Supplier</code>
+- <code title="get /v1/operations/suppliers/{id}">client.operations.suppliers.<a href="./src/resources/operations/suppliers/suppliers.ts">retrieve</a>(id, { ...params }) -> Supplier</code>
+- <code title="patch /v1/operations/suppliers/{id}">client.operations.suppliers.<a href="./src/resources/operations/suppliers/suppliers.ts">update</a>(id, { ...params }) -> Supplier</code>
+- <code title="get /v1/operations/suppliers">client.operations.suppliers.<a href="./src/resources/operations/suppliers/suppliers.ts">list</a>({ ...params }) -> ListSupplier</code>
+- <code title="delete /v1/operations/suppliers/{id}">client.operations.suppliers.<a href="./src/resources/operations/suppliers/suppliers.ts">delete</a>(id) -> Supplier</code>
 
 ### Materials
 
@@ -2404,6 +2403,7 @@ Types:
 - <code><a href="./src/resources/operations/batches/batches.ts">BatchFlowNode</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">BatchLot</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">BatchReference</a></code>
+- <code><a href="./src/resources/operations/batches/batches.ts">GetPossibleInitStepsRequest</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">GetPossibleNextStepsRequest</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">GetRemainingQuantityToSplitRequest</a></code>
 - <code><a href="./src/resources/operations/batches/batches.ts">ListBatchFlowNode</a></code>
@@ -2415,10 +2415,11 @@ Types:
 
 Methods:
 
-- <code title="delete /v1/operations/batches/{id}">client.operations.batches.<a href="./src/resources/operations/batches/batches.ts">delete</a>(id) -> Batch</code>
+- <code title="delete /v1/operations/batches/{id}">client.operations.batches.<a href="./src/resources/operations/batches/batches.ts">delete</a>(id, { ...params }) -> Batch</code>
+- <code title="post /v1/operations/batches/{id}/init-steps">client.operations.batches.<a href="./src/resources/operations/batches/batches.ts">initSteps</a>(id, { ...params }) -> ListScanningProductionStepInfo</code>
 - <code title="post /v1/operations/batches/{id}/next-steps">client.operations.batches.<a href="./src/resources/operations/batches/batches.ts">nextSteps</a>(id, { ...params }) -> ListScanningProductionStepInfo</code>
 - <code title="post /v1/operations/batches/remaining-quantities">client.operations.batches.<a href="./src/resources/operations/batches/batches.ts">remainingQuantities</a>({ ...params }) -> Quantity</code>
-- <code title="get /v1/operations/batches/{id}/flow">client.operations.batches.<a href="./src/resources/operations/batches/batches.ts">retrieveFlow</a>(id) -> ListBatchFlowNode</code>
+- <code title="get /v1/operations/batches/{id}/flow">client.operations.batches.<a href="./src/resources/operations/batches/batches.ts">retrieveFlow</a>(id, { ...params }) -> ListBatchFlowNode</code>
 
 ### Actions
 
@@ -2595,18 +2596,11 @@ Types:
 
 - <code><a href="./src/resources/operations/deliveries.ts">Delivery</a></code>
 - <code><a href="./src/resources/operations/deliveries.ts">DeliveryLine</a></code>
-- <code><a href="./src/resources/operations/deliveries.ts">EmailContact</a></code>
+- <code><a href="./src/resources/operations/deliveries.ts">DeliveryRelated</a></code>
 - <code><a href="./src/resources/operations/deliveries.ts">ListDelivery</a></code>
 - <code><a href="./src/resources/operations/deliveries.ts">ListDeliveryLine</a></code>
-- <code><a href="./src/resources/operations/deliveries.ts">ListEmailContact</a></code>
-- <code><a href="./src/resources/operations/deliveries.ts">ListPurchaseOrderLine</a></code>
-- <code><a href="./src/resources/operations/deliveries.ts">ListReceivingOrderLine</a></code>
 - <code><a href="./src/resources/operations/deliveries.ts">Lot</a></code>
-- <code><a href="./src/resources/operations/deliveries.ts">PurchaseOrder</a></code>
 - <code><a href="./src/resources/operations/deliveries.ts">PurchaseOrderLine</a></code>
-- <code><a href="./src/resources/operations/deliveries.ts">ReceivingOrder</a></code>
-- <code><a href="./src/resources/operations/deliveries.ts">ReceivingOrderLine</a></code>
-- <code><a href="./src/resources/operations/deliveries.ts">Supplier</a></code>
 
 Methods:
 
@@ -2665,6 +2659,12 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ListReceivingOrder</a></code>
+- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ListReceivingOrderLine</a></code>
+- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ReceivingOrder</a></code>
+- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ReceivingOrderLine</a></code>
+- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ReceivingOrderRelated</a></code>
+- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ReceivingOrderStageTotal</a></code>
+- <code><a href="./src/resources/operations/receiving-orders/receiving-orders.ts">ReceivingOrderTotals</a></code>
 
 Methods:
 
@@ -3005,8 +3005,13 @@ Types:
 
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">CreatePurchaseOrderLineInput</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">CreatePurchaseOrderRequest</a></code>
+- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">EmailContact</a></code>
+- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">ListEmailContact</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">ListPurchaseOrder</a></code>
+- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">ListPurchaseOrderLine</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">OrderLineInput</a></code>
+- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">PurchaseOrder</a></code>
+- <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">PurchaseOrderRelated</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">UpdatePurchaseOrderRequest</a></code>
 - <code><a href="./src/resources/operations/purchase-orders/purchase-orders.ts">PurchaseOrderDeleteResponse</a></code>
 

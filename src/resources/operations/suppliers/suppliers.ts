@@ -44,23 +44,22 @@ export class Suppliers extends APIResource {
    *
    * @example
    * ```ts
-   * const supplierDetail =
-   *   await client.operations.suppliers.create({
+   * const supplier = await client.operations.suppliers.create({
+   *   name: 'Acme Supplies Inc.',
+   *   number: 'SUP-001',
+   *   bill_to_address: {
    *     name: 'Acme Supplies Inc.',
-   *     number: 'SUP-001',
-   *     bill_to_address: {
-   *       name: 'Acme Supplies Inc.',
-   *       street_line_1: '456 Industrial Pkwy',
-   *       locality: 'Chicago',
-   *       state: 'IL',
-   *       postal_code: '60601',
-   *       country: 'US',
-   *     },
-   *     note: 'Primary raw materials supplier',
-   *   });
+   *     street_line_1: '456 Industrial Pkwy',
+   *     locality: 'Chicago',
+   *     state: 'IL',
+   *     postal_code: '60601',
+   *     country: 'US',
+   *   },
+   *   note: 'Primary raw materials supplier',
+   * });
    * ```
    */
-  create(body: SupplierCreateParams, options?: RequestOptions): APIPromise<SupplierDetail> {
+  create(body: SupplierCreateParams, options?: RequestOptions): APIPromise<Supplier> {
     return this._client.post('/v1/operations/suppliers', { body, ...options });
   }
 
@@ -71,17 +70,16 @@ export class Suppliers extends APIResource {
    *
    * @example
    * ```ts
-   * const supplierDetail =
-   *   await client.operations.suppliers.retrieve(
-   *     'ac_gwy8tfbc074f',
-   *   );
+   * const supplier = await client.operations.suppliers.retrieve(
+   *   'ac_gwy8tfbc074f',
+   * );
    * ```
    */
   retrieve(
     id: string,
     query: SupplierRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<SupplierDetail> {
+  ): APIPromise<Supplier> {
     return this._client.get(path`/v1/operations/suppliers/${id}`, { query, ...options });
   }
 
@@ -95,18 +93,17 @@ export class Suppliers extends APIResource {
    *
    * @example
    * ```ts
-   * const supplierDetail =
-   *   await client.operations.suppliers.update(
-   *     'ac_gwy8tfbc074f',
-   *     {
-   *       update_note: true,
-   *       name: 'Acme Supplies LLC',
-   *       note: 'Updated contact info',
-   *     },
-   *   );
+   * const supplier = await client.operations.suppliers.update(
+   *   'ac_gwy8tfbc074f',
+   *   {
+   *     update_note: true,
+   *     name: 'Acme Supplies LLC',
+   *     note: 'Updated contact info',
+   *   },
+   * );
    * ```
    */
-  update(id: string, body: SupplierUpdateParams, options?: RequestOptions): APIPromise<SupplierDetail> {
+  update(id: string, body: SupplierUpdateParams, options?: RequestOptions): APIPromise<Supplier> {
     return this._client.patch(path`/v1/operations/suppliers/${id}`, { body, ...options });
   }
 
@@ -120,14 +117,14 @@ export class Suppliers extends APIResource {
    *
    * @example
    * ```ts
-   * const listSupplierSummary =
+   * const listSupplier =
    *   await client.operations.suppliers.list();
    * ```
    */
   list(
     query: SupplierListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<ListSupplierSummary> {
+  ): APIPromise<ListSupplier> {
     return this._client.get('/v1/operations/suppliers', { query, ...options });
   }
 
@@ -143,13 +140,12 @@ export class Suppliers extends APIResource {
    *
    * @example
    * ```ts
-   * const supplierDetail =
-   *   await client.operations.suppliers.delete(
-   *     'ac_gwy8tfbc074f',
-   *   );
+   * const supplier = await client.operations.suppliers.delete(
+   *   'ac_gwy8tfbc074f',
+   * );
    * ```
    */
-  delete(id: string, options?: RequestOptions): APIPromise<SupplierDetail> {
+  delete(id: string, options?: RequestOptions): APIPromise<Supplier> {
     return this._client.delete(path`/v1/operations/suppliers/${id}`, options);
   }
 }
@@ -199,11 +195,11 @@ export interface CreateSupplierRequest {
  * A single page of resources, together with the metadata needed to page through
  * the rest of the result set.
  */
-export interface ListSupplierSummary {
+export interface ListSupplier {
   /**
    * Resources in this page.
    */
-  data: Array<SupplierSummary>;
+  data: Array<Supplier>;
 
   /**
    * Resource type identifier.
@@ -223,10 +219,15 @@ export interface ListSupplierSummary {
 }
 
 /**
- * A business you purchase materials from, with its default billing and shipping
- * addresses.
+ * An account you buy from.
+ *
+ * A supplier is another account in a selling relationship with yours, so it is
+ * referenced from purchase orders, receiving orders and deliveries as well as
+ * retrieved on its own. Everything past its identity is expandable or nullable,
+ * because a supplier named from one of those documents is known by id, name and
+ * number alone.
  */
-export interface SupplierDetail {
+export interface Supplier {
   /**
    * Supplier ID.
    */
@@ -240,16 +241,11 @@ export interface SupplierDetail {
 
   /**
    * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Number of materials sourced from this supplier.
    *
-   * Counts every material linked to the supplier, including links whose status is
-   * `inactive`.
+   * Null on a supplier named from another document, which carries its identity
+   * rather than its record.
    */
-  material_count: number;
+  created_at: string | null;
 
   /**
    * The supplier's name, as shown in the dashboard and on documents.
@@ -280,48 +276,7 @@ export interface SupplierDetail {
   /**
    * Last updated timestamp.
    */
-  updated_at: string;
-}
-
-/**
- * A condensed supplier returned by the supplier list endpoint.
- *
- * The supplier's note and its default bill-to and ship-to addresses are only
- * available when a single supplier is retrieved.
- */
-export interface SupplierSummary {
-  /**
-   * Supplier ID.
-   */
-  id: string;
-
-  /**
-   * Creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Number of materials sourced from this supplier.
-   *
-   * Counts every material linked to the supplier, including links whose status is
-   * `inactive`.
-   */
-  material_count: number;
-
-  /**
-   * The supplier's name, as shown in the dashboard and on documents.
-   */
-  name: string;
-
-  /**
-   * Human-facing supplier code, unique per account (e.g. `SUP-001`).
-   */
-  number: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'supplier_summary';
+  updated_at: string | null;
 }
 
 /**
@@ -469,6 +424,12 @@ export interface SupplierListParams {
   ends_at?: string;
 
   /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'bill_to_address' | 'ship_to_address'>;
+
+  /**
    * Filter to suppliers that can source any of these items.
    *
    * A supplier matches when it provides a material for one of the items, whether or
@@ -500,9 +461,8 @@ Suppliers.Actions = Actions;
 export declare namespace Suppliers {
   export {
     type CreateSupplierRequest as CreateSupplierRequest,
-    type ListSupplierSummary as ListSupplierSummary,
-    type SupplierDetail as SupplierDetail,
-    type SupplierSummary as SupplierSummary,
+    type ListSupplier as ListSupplier,
+    type Supplier as Supplier,
     type UpdateSupplierRequest as UpdateSupplierRequest,
     type SupplierCreateParams as SupplierCreateParams,
     type SupplierRetrieveParams as SupplierRetrieveParams,

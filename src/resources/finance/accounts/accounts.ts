@@ -230,7 +230,16 @@ export interface AccountRetrieveInvoicesParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'customer' | 'parent_account' | 'allocations'>;
+  include?: Array<
+    | 'customer'
+    | 'parent_account'
+    | 'allocations'
+    | 'allocations.amount'
+    | 'allocations.amount.unit'
+    | 'allocations.transaction'
+    | 'allocations.transaction.amount'
+    | 'allocations.transaction.amount.unit'
+  >;
 
   /**
    * Maximum number of results to return in a single page.
@@ -259,7 +268,17 @@ export interface AccountRetrieveTransactionsParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'allocations' | 'customer' | 'responsible_user' | 'responsible_user.user'>;
+  include?: Array<
+    | 'allocations'
+    | 'allocations.amount'
+    | 'allocations.amount.unit'
+    | 'allocations.transaction'
+    | 'allocations.transaction.amount'
+    | 'allocations.transaction.amount.unit'
+    | 'customer'
+    | 'responsible_user'
+    | 'responsible_user.user'
+  >;
 
   /**
    * Maximum number of results to return in a single page.

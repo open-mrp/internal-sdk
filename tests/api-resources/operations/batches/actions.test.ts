@@ -35,7 +35,10 @@ describe('resource actions', () => {
   });
 
   test('close: required and optional params', async () => {
-    const response = await client.operations.batches.actions.close({ batch_id: 'bt_fuies8j4pk45' });
+    const response = await client.operations.batches.actions.close({
+      batch_id: 'bt_fuies8j4pk45',
+      include: ['quantity.unit'],
+    });
   });
 
   test('initialize: only required params', async () => {
@@ -56,6 +59,7 @@ describe('resource actions', () => {
     const response = await client.operations.batches.actions.initialize({
       batch_id: 'bt_fuies8j4pk45',
       scanning_station_id: 'scst_t71bn7lq5yov',
+      include: ['quantity.unit'],
     });
   });
 
@@ -79,6 +83,7 @@ describe('resource actions', () => {
       batch_ids: ['bt_fuies8j4pk45'],
       production_step_id: 'prst_0ht5mkqx5a6t',
       scanning_station_id: 'scst_t71bn7lq5yov',
+      include: ['quantity.unit'],
     });
   });
 
@@ -102,6 +107,7 @@ describe('resource actions', () => {
       batch_ids: ['bt_fuies8j4pk45'],
       production_step_id: 'prst_0ht5mkqx5a6t',
       scanning_station_id: 'scst_t71bn7lq5yov',
+      include: ['quantity.unit'],
     });
   });
 
@@ -137,6 +143,7 @@ describe('resource actions', () => {
       },
       production_step_id: 'prst_0ht5mkqx5a6t',
       scanning_station_id: 'scst_t71bn7lq5yov',
+      include: ['quantity.unit'],
       seconds: {
         id: 'id',
         measure: 'measure',

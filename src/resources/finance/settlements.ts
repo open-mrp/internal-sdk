@@ -397,7 +397,16 @@ export interface SettlementRetrieveParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'responsible_user' | 'responsible_user.user' | 'allocations'>;
+  include?: Array<
+    | 'responsible_user'
+    | 'responsible_user.user'
+    | 'allocations'
+    | 'allocations.amount'
+    | 'allocations.amount.unit'
+    | 'allocations.transaction'
+    | 'allocations.transaction.amount'
+    | 'allocations.transaction.amount.unit'
+  >;
 }
 
 export interface SettlementUpdateParams {

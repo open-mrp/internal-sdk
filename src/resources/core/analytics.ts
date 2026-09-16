@@ -3645,7 +3645,7 @@ export interface OeeDepartment {
   /**
    * Whether availability was measured from logged downtime or estimated from
    * runtime. A department with no logged downtime computes as perfectly available,
-   * so an estimate is labelled rather than presented as a measurement.
+   * so an estimate is labeled rather than presented as a measurement.
    */
   measurement_status: 'measured' | 'estimated';
 
@@ -3901,9 +3901,9 @@ export interface OpenBatchSummary {
   department_name: string;
 
   /**
-   * An entry in your catalog: something you sell, consume, or build with.
+   * Entity is a polymorphic reference to any resource in the system.
    */
-  item: AccountUsersAPI.Item | null;
+  item: CoreAPI.Entity | null;
 
   /**
    * Resource type identifier.
@@ -3911,10 +3911,9 @@ export interface OpenBatchSummary {
   object: 'open_batch_summary';
 
   /**
-   * A station on the production floor where operators scan batches to perform a
-   * batch operation, such as initializing or moving a batch.
+   * Entity is a polymorphic reference to any resource in the system.
    */
-  scanning_station: AccountUsersAPI.ScanningStation | null;
+  scanning_station: CoreAPI.Entity | null;
 
   /**
    * Unit abbreviation that `count` is expressed in (for example `kg`).

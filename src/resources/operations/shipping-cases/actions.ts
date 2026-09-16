@@ -46,7 +46,7 @@ export class Actions extends APIResource {
  */
 export interface AdminUpdateShippingCaseTrackingRequest {
   /**
-   * Carrier tracking number the case actually travelled under, replacing any number
+   * Carrier tracking number the case actually traveled under, replacing any number
    * already recorded.
    */
   tracking_number?: string;
@@ -57,10 +57,17 @@ export interface ActionAdminUpdateTrackingParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'carrier' | 'shipment' | 'freight_amount.unit' | 'freight_weight.unit'>;
+  include?: Array<
+    | 'carrier'
+    | 'shipment'
+    | 'freight_amount'
+    | 'freight_amount.unit'
+    | 'freight_weight'
+    | 'freight_weight.unit'
+  >;
 
   /**
-   * Body param: Carrier tracking number the case actually travelled under, replacing
+   * Body param: Carrier tracking number the case actually traveled under, replacing
    * any number already recorded.
    */
   tracking_number?: string;

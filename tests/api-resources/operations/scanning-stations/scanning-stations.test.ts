@@ -168,6 +168,7 @@ describe('resource scanningStations', () => {
         'scst_t71bn7lq5yov',
         {
           cursor: 'cursor',
+          include: ['quantity.unit'],
           limit: 0,
           q: 'q',
         },

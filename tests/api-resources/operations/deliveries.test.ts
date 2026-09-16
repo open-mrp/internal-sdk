@@ -24,7 +24,7 @@ describe('resource deliveries', () => {
     await expect(
       client.operations.deliveries.retrieve(
         'dlv_9xsjlqx5753y',
-        { include: ['purchase_order'] },
+        { include: ['related'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(OpenMRP.NotFoundError);
@@ -48,7 +48,7 @@ describe('resource deliveries', () => {
         {
           cursor: 'cursor',
           ends_at: 'ends_at',
-          include: ['purchase_order'],
+          include: ['related'],
           item_ids: ['string'],
           limit: 0,
           q: 'q',

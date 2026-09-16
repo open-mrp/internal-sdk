@@ -21,9 +21,8 @@ export {
 export {
   Suppliers,
   type CreateSupplierRequest,
-  type ListSupplierSummary,
-  type SupplierDetail,
-  type SupplierSummary,
+  type ListSupplier,
+  type Supplier,
   type UpdateSupplierRequest,
   type SupplierCreateParams,
   type SupplierRetrieveParams,

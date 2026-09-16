@@ -221,7 +221,7 @@ export interface AdminUpdateShipmentTrackingRequest {
   master_tracking_number?: string;
 
   /**
-   * ID of the carrier service level the shipment actually travelled on. Sending this
+   * ID of the carrier service level the shipment actually traveled on. Sending this
    * without `carrier_id` keeps the existing carrier, so the service level should
    * belong to that carrier; send `null` to drop the service level entirely.
    */
@@ -524,6 +524,11 @@ export interface ActionAdminUpdateTrackingParams {
    */
   include?: Array<
     | 'lines'
+    | 'lines.item'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
+    | 'lines.sales_order_line'
+    | 'lines.sales_order_line.product'
     | 'shipping_cases'
     | 'related.sales_order'
     | 'customer'
@@ -546,7 +551,7 @@ export interface ActionAdminUpdateTrackingParams {
   master_tracking_number?: string;
 
   /**
-   * Body param: ID of the carrier service level the shipment actually travelled on.
+   * Body param: ID of the carrier service level the shipment actually traveled on.
    * Sending this without `carrier_id` keeps the existing carrier, so the service
    * level should belong to that carrier; send `null` to drop the service level
    * entirely.
@@ -684,6 +689,11 @@ export interface ActionShipParams {
    */
   include?: Array<
     | 'lines'
+    | 'lines.item'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
+    | 'lines.sales_order_line'
+    | 'lines.sales_order_line.product'
     | 'shipping_cases'
     | 'related.sales_order'
     | 'customer'

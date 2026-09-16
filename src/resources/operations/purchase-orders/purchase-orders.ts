@@ -1,8 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as AnalyticsAPI from '../../core/analytics';
 import * as DeliveriesAPI from '../deliveries';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
+import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as ActionsAPI from './actions';
 import {
   ActionBulkDeleteParams,
@@ -22,6 +24,7 @@ import {
   Lines,
   UpdatePurchaseOrderLineRequest,
 } from './lines';
+import * as SuppliersAPI from '../suppliers/suppliers';
 import * as AccountPricesAPI from '../../sales/account-prices/account-prices';
 import * as CustomersAPI from '../../sales/customers/customers';
 import * as SalesOrdersAPI from '../../sales/sales-orders/sales-orders';
@@ -84,10 +87,7 @@ export class PurchaseOrders extends APIResource {
    *   });
    * ```
    */
-  create(
-    params: PurchaseOrderCreateParams,
-    options?: RequestOptions,
-  ): APIPromise<DeliveriesAPI.PurchaseOrder> {
+  create(params: PurchaseOrderCreateParams, options?: RequestOptions): APIPromise<PurchaseOrder> {
     const { include, ...body } = params;
     return this._client.post('/v1/operations/purchase-orders', { query: { include }, body, ...options });
   }
@@ -109,7 +109,7 @@ export class PurchaseOrders extends APIResource {
     id: string,
     query: PurchaseOrderRetrieveParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<DeliveriesAPI.PurchaseOrder> {
+  ): APIPromise<PurchaseOrder> {
     return this._client.get(path`/v1/operations/purchase-orders/${id}`, { query, ...options });
   }
 
@@ -140,7 +140,7 @@ export class PurchaseOrders extends APIResource {
     id: string,
     params: PurchaseOrderUpdateParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<DeliveriesAPI.PurchaseOrder> {
+  ): APIPromise<PurchaseOrder> {
     const { include, ...body } = params ?? {};
     return this._client.patch(path`/v1/operations/purchase-orders/${id}`, {
       query: { include },
@@ -263,15 +263,6 @@ export interface CreatePurchaseOrderLineInput {
    * The product description recorded on the line.
    */
   product_description?: string;
-
-  /**
-   * A value expressed as a ratio of two units, supplied on create and update
-   * requests.
-   *
-   * A unit price, for example, has a currency as its numerator unit and the unit the
-   * product is bought or sold by as its denominator.
-   */
-  unit_cost?: AccountPricesAPI.RateInput;
 }
 
 /**
@@ -421,6 +412,58 @@ export interface CreatePurchaseOrderRequest {
 }
 
 /**
+ * A contact that receives the purchase order email when an order is issued with
+ * the `send_email` option.
+ */
+export interface EmailContact {
+  /**
+   * Email contact ID.
+   */
+  id: string;
+
+  /**
+   * A user's membership in an account, carrying the account-specific status, role,
+   * and department.
+   *
+   * Profile fields (name, email, username, image URL) live on the `user`
+   * sub-resource, which is shared across every account the user belongs to.
+   */
+  account_user: AccountUsersAPI.AccountUser | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'email_contact';
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListEmailContact {
+  /**
+   * Resources in this page.
+   */
+  data: Array<EmailContact>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
  * A single page of resources, together with the metadata needed to page through
  * the rest of the result set.
  */
@@ -428,7 +471,34 @@ export interface ListPurchaseOrder {
   /**
    * Resources in this page.
    */
-  data: Array<DeliveriesAPI.PurchaseOrder>;
+  data: Array<PurchaseOrder>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListPurchaseOrderLine {
+  /**
+   * Resources in this page.
+   */
+  data: Array<DeliveriesAPI.PurchaseOrderLine>;
 
   /**
    * Resource type identifier.
@@ -496,15 +566,187 @@ export interface OrderLineInput {
    * The product description recorded on the line.
    */
   product_description?: string;
+}
+
+/**
+ * An order placed with a supplier to purchase materials or products.
+ *
+ * The list endpoint returns this same resource as the retrieve endpoint, except
+ * that list rows never carry the note or the scheduled date and can only expand
+ * the supplier and the lines.
+ */
+export interface PurchaseOrder {
+  /**
+   * Purchase order ID.
+   */
+  id: string;
 
   /**
-   * A value expressed as a ratio of two units, supplied on create and update
-   * requests.
+   * Whether the order acknowledgment email has been sent to the supplier.
    *
-   * A unit price, for example, has a currency as its numerator unit and the unit the
-   * product is bought or sold by as its denominator.
+   * Advances to `sent` when the order is issued with the `send_email` option;
+   * otherwise stays `not_sent`.
    */
-  unit_cost?: AccountPricesAPI.RateInput;
+  acknowledgment_status: 'not_sent' | 'sent';
+
+  /**
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
+   */
+  bill_to_address: APIKeysAPI.Address | null;
+
+  /**
+   * When the order was closed as fulfilled.
+   *
+   * Cleared again if the order is re-opened.
+   */
+  completed_at: string | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  contacts: ListEmailContact | null;
+
+  /**
+   * Created timestamp.
+   */
+  created_at: string;
+
+  /**
+   * Freight describes the carrier selection and freight billing for a record.
+   *
+   * It is a generic, reusable sub-resource shared by anything that carries shipping
+   * configuration — a sales order, a purchase order, or a shipment.
+   */
+  freight: SalesOrdersAPI.Freight | null;
+
+  /**
+   * When the order was issued to the supplier.
+   *
+   * Cleared again if the order is unissued back to `estimate`.
+   */
+  issued_at: string | null;
+
+  /**
+   * Total number of lines on the order.
+   */
+  line_count: number;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  lines: ListPurchaseOrderLine | null;
+
+  /**
+   * Free-form note recorded on the order.
+   */
+  note: string | null;
+
+  /**
+   * Human-readable identifier for the order.
+   *
+   * Assigned automatically from a per-account sequence at creation; can be changed
+   * via update but must stay unique within the account.
+   */
+  number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'purchase_order';
+
+  /**
+   * A payment term describing when payment is due (e.g. `Net 30`), assignable to
+   * customers, sales orders, purchase orders, and invoices.
+   */
+  payment_term: AnalyticsAPI.PaymentTerm | null;
+
+  /**
+   * Priority level for fulfilling the order, relative to other open orders.
+   */
+  priority: 'low' | 'normal' | 'high';
+
+  /**
+   * PurchaseOrderRelated names the records produced from a purchase order.
+   */
+  related: PurchaseOrderRelated | null;
+
+  /**
+   * Date the supplier promised delivery for.
+   *
+   * Set through the `promised_at` field on create and update.
+   */
+  scheduled_at: string | null;
+
+  /**
+   * A saved address that can be used for billing and shipping on sales orders,
+   * invoices, and shipments.
+   */
+  ship_to_address: APIKeysAPI.Address | null;
+
+  /**
+   * A named freight pricing rule that decides what a buyer pays for shipping.
+   *
+   * A customer's default shipping term is evaluated whenever freight is quoted for
+   * one of their orders. Freight exemptions on the customer, its type group, or any
+   * of its price groups are checked first and zero the freight charge before the
+   * shipping term is considered.
+   */
+  shipping_term: AnalyticsAPI.ShippingTerm | null;
+
+  /**
+   * Lifecycle status of the order.
+   *
+   * - `estimate`: a draft that has not yet been issued to the supplier.
+   * - `issued`: the order has been issued to the supplier and is open for receiving.
+   * - `fulfilled`: the order is complete and closed.
+   */
+  status: 'estimate' | 'issued' | 'fulfilled';
+
+  /**
+   * An account you buy from.
+   *
+   * A supplier is another account in a selling relationship with yours, so it is
+   * referenced from purchase orders, receiving orders and deliveries as well as
+   * retrieved on its own. Everything past its identity is expandable or nullable,
+   * because a supplier named from one of those documents is known by id, name and
+   * number alone.
+   */
+  supplier: SuppliersAPI.Supplier | null;
+
+  /**
+   * Updated timestamp.
+   */
+  updated_at: string;
+}
+
+/**
+ * PurchaseOrderRelated names the records produced from a purchase order.
+ */
+export interface PurchaseOrderRelated {
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  deliveries: SalesOrdersAPI.ListRecord | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'purchase_order_related';
+
+  /**
+   * Record is a lightweight reference to a business record — a sales order, purchase
+   * order, pick, shipment, production run, invoice, etc.
+   *
+   * Like the `actor` and `entity` references, it carries just enough to identify and
+   * label the referenced record without embedding its full resource. The `status`
+   * and `metadata` fields hold type-specific detail that varies by the kind of
+   * record referenced.
+   */
+  receiving_order: SalesOrdersAPI.Record | null;
 }
 
 /**
@@ -586,8 +828,16 @@ export interface PurchaseOrderCreateParams {
     | 'freight'
     | 'payment_term'
     | 'shipping_term'
-    | 'receiving_order'
+    | 'related'
+    | 'related.receiving_order'
+    | 'related.deliveries'
     | 'lines'
+    | 'lines.item'
+    | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
+    | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
     | 'contacts'
   >;
 
@@ -729,8 +979,16 @@ export interface PurchaseOrderRetrieveParams {
     | 'freight'
     | 'payment_term'
     | 'shipping_term'
-    | 'receiving_order'
+    | 'related'
+    | 'related.receiving_order'
+    | 'related.deliveries'
     | 'lines'
+    | 'lines.item'
+    | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
+    | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
     | 'contacts'
   >;
 }
@@ -747,8 +1005,16 @@ export interface PurchaseOrderUpdateParams {
     | 'freight'
     | 'payment_term'
     | 'shipping_term'
-    | 'receiving_order'
+    | 'related'
+    | 'related.receiving_order'
+    | 'related.deliveries'
     | 'lines'
+    | 'lines.item'
+    | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
+    | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
     | 'contacts'
   >;
 
@@ -819,7 +1085,16 @@ export interface PurchaseOrderListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'supplier' | 'lines'>;
+  include?: Array<
+    | 'supplier'
+    | 'lines'
+    | 'lines.item'
+    | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
+    | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
+  >;
 
   /**
    * Filter to orders with at least one line referencing any of these items.
@@ -884,8 +1159,13 @@ export declare namespace PurchaseOrders {
   export {
     type CreatePurchaseOrderLineInput as CreatePurchaseOrderLineInput,
     type CreatePurchaseOrderRequest as CreatePurchaseOrderRequest,
+    type EmailContact as EmailContact,
+    type ListEmailContact as ListEmailContact,
     type ListPurchaseOrder as ListPurchaseOrder,
+    type ListPurchaseOrderLine as ListPurchaseOrderLine,
     type OrderLineInput as OrderLineInput,
+    type PurchaseOrder as PurchaseOrder,
+    type PurchaseOrderRelated as PurchaseOrderRelated,
     type UpdatePurchaseOrderRequest as UpdatePurchaseOrderRequest,
     type PurchaseOrderDeleteResponse as PurchaseOrderDeleteResponse,
     type PurchaseOrderCreateParams as PurchaseOrderCreateParams,

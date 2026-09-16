@@ -213,6 +213,11 @@ export class Items extends APIResource {
  */
 export interface ItemCosts {
   /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  denominator_unit: AccountUsersAPI.Unit | null;
+
+  /**
    * Labor cost to produce one unit of the item.
    *
    * Based on each step's labor time after its leveling factor and allowances are
@@ -231,9 +236,14 @@ export interface ItemCosts {
   direct_material_cost: string;
 
   /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  numerator_unit: AccountUsersAPI.Unit | null;
+
+  /**
    * Resource type identifier.
    */
-  object: 'item';
+  object: 'item_costs';
 
   /**
    * Overhead cost allocated to one unit of the item.
@@ -247,11 +257,6 @@ export interface ItemCosts {
    * Total cost to produce one unit of the item (material + labor + overhead).
    */
   total_cost: string;
-
-  /**
-   * Unit of measurement used for conversions and product quantities.
-   */
-  unit: AccountUsersAPI.Unit | null;
 }
 
 /**
@@ -331,7 +336,7 @@ export interface ItemTrends {
   /**
    * Resource type identifier.
    */
-  object: 'item';
+  object: 'item_trends';
 
   /**
    * A single page of resources, together with the metadata needed to page through

@@ -48,11 +48,6 @@ describe('resource purchaseOrders', () => {
           },
           item_id: 'item_id',
           product_description: 'product_description',
-          unit_cost: {
-            denominator_unit_id: 'denominator_unit_id',
-            numerator_unit_id: 'numerator_unit_id',
-            value: 'value',
-          },
         },
       ],
       priority_code: 'normal',

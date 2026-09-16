@@ -118,6 +118,7 @@ describe('resource suppliers', () => {
         {
           cursor: 'cursor',
           ends_at: '2019-12-27T18:11:19.117Z',
+          include: ['bill_to_address'],
           item_ids: ['string'],
           limit: 0,
           q: 'q',

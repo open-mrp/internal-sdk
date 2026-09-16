@@ -11,6 +11,12 @@ export { Lines, type UpdateReceivingOrderLineRequest, type LineUpdateParams } fr
 export {
   ReceivingOrders,
   type ListReceivingOrder,
+  type ListReceivingOrderLine,
+  type ReceivingOrder,
+  type ReceivingOrderLine,
+  type ReceivingOrderRelated,
+  type ReceivingOrderStageTotal,
+  type ReceivingOrderTotals,
   type ReceivingOrderRetrieveParams,
   type ReceivingOrderListParams,
 } from './receiving-orders';

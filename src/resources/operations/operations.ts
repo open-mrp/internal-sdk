@@ -1,8 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as AnalyticsAPI from '../core/analytics';
 import * as CoreAPI from '../core/core';
-import * as AnalyticsAPI from './analytics';
+import * as OperationsAnalyticsAPI from './analytics';
 import { Analytics, AnalyticsUpdateOpenBatchesParams, ListOpenBatchSummary } from './analytics';
 import * as DcLocationsAPI from './dc-locations';
 import {
@@ -23,19 +24,12 @@ import {
   Delivery,
   DeliveryLine,
   DeliveryListParams,
+  DeliveryRelated,
   DeliveryRetrieveParams,
-  EmailContact,
   ListDelivery,
   ListDeliveryLine,
-  ListEmailContact,
-  ListPurchaseOrderLine,
-  ListReceivingOrderLine,
   Lot,
-  PurchaseOrder,
   PurchaseOrderLine,
-  ReceivingOrder,
-  ReceivingOrderLine,
-  Supplier,
 } from './deliveries';
 import * as DemandOverridesAPI from './demand-overrides';
 import {
@@ -84,12 +78,16 @@ import * as AccountUsersAPI from '../identity/account-users/account-users';
 import * as BatchesAPI from './batches/batches';
 import {
   Batch,
+  BatchDeleteParams,
   BatchFlowNode,
+  BatchInitStepsParams,
   BatchLot,
   BatchNextStepsParams,
   BatchReference,
   BatchRemainingQuantitiesParams,
+  BatchRetrieveFlowParams,
   Batches,
+  GetPossibleInitStepsRequest,
   GetPossibleNextStepsRequest,
   GetRemainingQuantityToSplitRequest,
   ListBatchFlowNode,
@@ -274,11 +272,16 @@ import * as PurchaseOrdersAPI from './purchase-orders/purchase-orders';
 import {
   CreatePurchaseOrderLineInput,
   CreatePurchaseOrderRequest,
+  EmailContact,
+  ListEmailContact,
   ListPurchaseOrder,
+  ListPurchaseOrderLine,
   OrderLineInput,
+  PurchaseOrder,
   PurchaseOrderCreateParams,
   PurchaseOrderDeleteResponse,
   PurchaseOrderListParams,
+  PurchaseOrderRelated,
   PurchaseOrderRetrieveParams,
   PurchaseOrderRetrieveStatusesParams,
   PurchaseOrderUpdateParams,
@@ -288,8 +291,14 @@ import {
 import * as ReceivingOrdersAPI from './receiving-orders/receiving-orders';
 import {
   ListReceivingOrder,
+  ListReceivingOrderLine,
+  ReceivingOrder,
+  ReceivingOrderLine,
   ReceivingOrderListParams,
+  ReceivingOrderRelated,
   ReceivingOrderRetrieveParams,
+  ReceivingOrderStageTotal,
+  ReceivingOrderTotals,
   ReceivingOrders,
 } from './receiving-orders/receiving-orders';
 import * as ScanningStationsAPI from './scanning-stations/scanning-stations';
@@ -335,12 +344,11 @@ import {
 import * as SuppliersAPI from './suppliers/suppliers';
 import {
   CreateSupplierRequest,
-  ListSupplierSummary,
+  ListSupplier,
+  Supplier,
   SupplierCreateParams,
-  SupplierDetail,
   SupplierListParams,
   SupplierRetrieveParams,
-  SupplierSummary,
   SupplierUpdateParams,
   Suppliers,
   UpdateSupplierRequest,
@@ -357,7 +365,7 @@ export class Operations extends APIResource {
   scanningStations: ScanningStationsAPI.ScanningStations = new ScanningStationsAPI.ScanningStations(
     this._client,
   );
-  analytics: AnalyticsAPI.Analytics = new AnalyticsAPI.Analytics(this._client);
+  analytics: OperationsAnalyticsAPI.Analytics = new OperationsAnalyticsAPI.Analytics(this._client);
   departments: DepartmentsAPI.Departments = new DepartmentsAPI.Departments(this._client);
   productionSteps: ProductionStepsAPI.ProductionSteps = new ProductionStepsAPI.ProductionSteps(this._client);
   deliveries: DeliveriesAPI.Deliveries = new DeliveriesAPI.Deliveries(this._client);
@@ -612,7 +620,7 @@ export interface InventoryItem {
   /**
    * An entry in your catalog: something you sell, consume, or build with.
    */
-  item: AccountUsersAPI.Item;
+  item: AccountUsersAPI.Item | null;
 
   /**
    * Resource type identifier.
@@ -620,13 +628,13 @@ export interface InventoryItem {
   object: 'inventory_item';
 
   /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
+   * An amount calculated on demand rather than stored.
    *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
+   * The same shape as a quantity minus the ID, because nothing was written: it is
+   * derived per request, such as a total rolled up across invoiced lines for one
+   * analysis.
    */
-  quantity: AccountUsersAPI.Quantity | null;
+  quantity: AnalyticsAPI.ComputedQuantity | null;
 }
 
 /**
@@ -1183,12 +1191,6 @@ export interface OperationRetrieveInventoriesParams {
   cursor?: string;
 
   /**
-   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
-   * `null`.
-   */
-  include?: Array<'quantity.unit'>;
-
-  /**
    * Maximum number of results to return in a single page.
    */
   limit?: number;
@@ -1379,9 +1381,8 @@ export declare namespace Operations {
   export {
     Suppliers as Suppliers,
     type CreateSupplierRequest as CreateSupplierRequest,
-    type ListSupplierSummary as ListSupplierSummary,
-    type SupplierDetail as SupplierDetail,
-    type SupplierSummary as SupplierSummary,
+    type ListSupplier as ListSupplier,
+    type Supplier as Supplier,
     type UpdateSupplierRequest as UpdateSupplierRequest,
     type SupplierCreateParams as SupplierCreateParams,
     type SupplierRetrieveParams as SupplierRetrieveParams,
@@ -1395,6 +1396,7 @@ export declare namespace Operations {
     type BatchFlowNode as BatchFlowNode,
     type BatchLot as BatchLot,
     type BatchReference as BatchReference,
+    type GetPossibleInitStepsRequest as GetPossibleInitStepsRequest,
     type GetPossibleNextStepsRequest as GetPossibleNextStepsRequest,
     type GetRemainingQuantityToSplitRequest as GetRemainingQuantityToSplitRequest,
     type ListBatchFlowNode as ListBatchFlowNode,
@@ -1403,8 +1405,11 @@ export declare namespace Operations {
     type ListScanningProductionStepInfo as ListScanningProductionStepInfo,
     type ProductionRunReference as ProductionRunReference,
     type ScanningProductionStepInfo as ScanningProductionStepInfo,
+    type BatchDeleteParams as BatchDeleteParams,
+    type BatchInitStepsParams as BatchInitStepsParams,
     type BatchNextStepsParams as BatchNextStepsParams,
     type BatchRemainingQuantitiesParams as BatchRemainingQuantitiesParams,
+    type BatchRetrieveFlowParams as BatchRetrieveFlowParams,
   };
 
   export {
@@ -1464,18 +1469,11 @@ export declare namespace Operations {
     Deliveries as Deliveries,
     type Delivery as Delivery,
     type DeliveryLine as DeliveryLine,
-    type EmailContact as EmailContact,
+    type DeliveryRelated as DeliveryRelated,
     type ListDelivery as ListDelivery,
     type ListDeliveryLine as ListDeliveryLine,
-    type ListEmailContact as ListEmailContact,
-    type ListPurchaseOrderLine as ListPurchaseOrderLine,
-    type ListReceivingOrderLine as ListReceivingOrderLine,
     type Lot as Lot,
-    type PurchaseOrder as PurchaseOrder,
     type PurchaseOrderLine as PurchaseOrderLine,
-    type ReceivingOrder as ReceivingOrder,
-    type ReceivingOrderLine as ReceivingOrderLine,
-    type Supplier as Supplier,
     type DeliveryRetrieveParams as DeliveryRetrieveParams,
     type DeliveryListParams as DeliveryListParams,
   };
@@ -1502,6 +1500,12 @@ export declare namespace Operations {
   export {
     ReceivingOrders as ReceivingOrders,
     type ListReceivingOrder as ListReceivingOrder,
+    type ListReceivingOrderLine as ListReceivingOrderLine,
+    type ReceivingOrder as ReceivingOrder,
+    type ReceivingOrderLine as ReceivingOrderLine,
+    type ReceivingOrderRelated as ReceivingOrderRelated,
+    type ReceivingOrderStageTotal as ReceivingOrderStageTotal,
+    type ReceivingOrderTotals as ReceivingOrderTotals,
     type ReceivingOrderRetrieveParams as ReceivingOrderRetrieveParams,
     type ReceivingOrderListParams as ReceivingOrderListParams,
   };
@@ -1622,8 +1626,13 @@ export declare namespace Operations {
     PurchaseOrders as PurchaseOrders,
     type CreatePurchaseOrderLineInput as CreatePurchaseOrderLineInput,
     type CreatePurchaseOrderRequest as CreatePurchaseOrderRequest,
+    type EmailContact as EmailContact,
+    type ListEmailContact as ListEmailContact,
     type ListPurchaseOrder as ListPurchaseOrder,
+    type ListPurchaseOrderLine as ListPurchaseOrderLine,
     type OrderLineInput as OrderLineInput,
+    type PurchaseOrder as PurchaseOrder,
+    type PurchaseOrderRelated as PurchaseOrderRelated,
     type UpdatePurchaseOrderRequest as UpdatePurchaseOrderRequest,
     type PurchaseOrderDeleteResponse as PurchaseOrderDeleteResponse,
     type PurchaseOrderCreateParams as PurchaseOrderCreateParams,

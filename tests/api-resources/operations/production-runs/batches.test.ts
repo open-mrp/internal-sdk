@@ -42,6 +42,7 @@ describe('resource batches', () => {
           waste_value: 'waste_value',
         },
       ],
+      include: ['quantity.unit'],
     });
   });
 
@@ -63,6 +64,7 @@ describe('resource batches', () => {
         'prru_sglzcyflxk59',
         {
           cursor: 'cursor',
+          include: ['quantity.unit'],
           limit: 0,
           q: 'q',
         },

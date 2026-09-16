@@ -169,15 +169,6 @@ export interface CreatePurchaseOrderLineRequest {
    * The product description recorded on the line.
    */
   product_description?: string;
-
-  /**
-   * A value expressed as a ratio of two units, supplied on create and update
-   * requests.
-   *
-   * A unit price, for example, has a currency as its numerator unit and the unit the
-   * product is bought or sold by as its denominator.
-   */
-  unit_cost?: AccountPricesAPI.RateInput;
 }
 
 /**
@@ -213,21 +204,6 @@ export interface UpdatePurchaseOrderLineRequest {
    * Quantity ordered, as a decimal string.
    */
   quantity_value?: string;
-
-  /**
-   * ID of the unit cost's denominator unit (the unit the cost is per).
-   */
-  unit_cost_denominator_unit_id?: string;
-
-  /**
-   * ID of the unit cost's numerator unit (e.g. a currency unit).
-   */
-  unit_cost_numerator_unit_id?: string;
-
-  /**
-   * Recorded cost per unit, as a decimal string.
-   */
-  unit_cost_value?: string;
 
   /**
    * ID of the unit price's denominator unit (the unit the price is per).
@@ -292,15 +268,6 @@ export interface LineCreateParams {
    * The product description recorded on the line.
    */
   product_description?: string;
-
-  /**
-   * A value expressed as a ratio of two units, supplied on create and update
-   * requests.
-   *
-   * A unit price, for example, has a currency as its numerator unit and the unit the
-   * product is bought or sold by as its denominator.
-   */
-  unit_cost?: AccountPricesAPI.RateInput;
 }
 
 export interface LineUpdateParams {
@@ -338,21 +305,6 @@ export interface LineUpdateParams {
    * Body param: Quantity ordered, as a decimal string.
    */
   quantity_value?: string;
-
-  /**
-   * Body param: ID of the unit cost's denominator unit (the unit the cost is per).
-   */
-  unit_cost_denominator_unit_id?: string;
-
-  /**
-   * Body param: ID of the unit cost's numerator unit (e.g. a currency unit).
-   */
-  unit_cost_numerator_unit_id?: string;
-
-  /**
-   * Body param: Recorded cost per unit, as a decimal string.
-   */
-  unit_cost_value?: string;
 
   /**
    * Body param: ID of the unit price's denominator unit (the unit the price is per).

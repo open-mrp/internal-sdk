@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as DeliveriesAPI from '../deliveries';
+import * as PurchaseOrdersAPI from './purchase-orders';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -54,7 +54,7 @@ export class Actions extends APIResource {
     id: string,
     params: ActionChangeStatusParams,
     options?: RequestOptions,
-  ): APIPromise<DeliveriesAPI.PurchaseOrder> {
+  ): APIPromise<PurchaseOrdersAPI.PurchaseOrder> {
     const { include, ...body } = params;
     return this._client.put(path`/v1/operations/purchase-orders/${id}/actions/change-status`, {
       query: { include },
@@ -148,8 +148,16 @@ export interface ActionChangeStatusParams {
     | 'freight'
     | 'payment_term'
     | 'shipping_term'
-    | 'receiving_order'
+    | 'related'
+    | 'related.receiving_order'
+    | 'related.deliveries'
     | 'lines'
+    | 'lines.item'
+    | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
+    | 'lines.unit_price'
+    | 'lines.unit_price.numerator_unit'
+    | 'lines.unit_price.denominator_unit'
     | 'contacts'
   >;
 }

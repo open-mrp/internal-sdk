@@ -40,10 +40,15 @@ export class Batches extends APIResource {
    */
   create(
     id: string,
-    body: BatchCreateParams,
+    params: BatchCreateParams,
     options?: RequestOptions,
   ): APIPromise<ScanningStationsAPI.ListBatch> {
-    return this._client.post(path`/v1/operations/production-runs/${id}/batches`, { body, ...options });
+    const { include, ...body } = params;
+    return this._client.post(path`/v1/operations/production-runs/${id}/batches`, {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -143,9 +148,15 @@ export interface AddBatchesToProductionRunRequest {
 
 export interface BatchCreateParams {
   /**
-   * The batches of work to record against the run.
+   * Body param: The batches of work to record against the run.
    */
   batches: Array<AddBatchInputRequest>;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'quantity.unit' | 'seconds.unit' | 'waste.unit'>;
 }
 
 export interface BatchListParams {
@@ -157,6 +168,12 @@ export interface BatchListParams {
    * page.
    */
   cursor?: string;
+
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'quantity.unit' | 'seconds.unit' | 'waste.unit'>;
 
   /**
    * Maximum number of results to return in a single page.
