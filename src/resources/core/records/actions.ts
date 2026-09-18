@@ -135,6 +135,11 @@ export interface ListPackListLineItem {
  */
 export interface PackList {
   /**
+   * A bill-to or ship-to party shown on a pack list.
+   */
+  account_address: PackListParty | null;
+
+  /**
    * Presigned download URL for the selling account's logo.
    *
    * The URL expires one hour after it is generated, so render it promptly rather
