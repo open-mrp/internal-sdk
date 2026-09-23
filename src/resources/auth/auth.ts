@@ -86,13 +86,15 @@ export class Auth extends APIResource {
   }
 
   /**
-   * Sets a new password for a scanner-role account user, the login used by a
-   * scanning station.
+   * Sets a new password for an account user who signs in with a username and has no
+   * email address, such as a scanning station login.
    *
    * The caller must be signed in as a user with permission to manage team users and
    * must supply their own current password; API keys cannot perform this operation
-   * because they have no password to verify. Only scanner-role users in the caller's
-   * account can be changed this way — use the password reset flow for everyone else.
+   * because they have no password to verify. Only non-admin users in the caller's
+   * account without an email address can be changed this way, since they cannot
+   * receive a password reset email — users with an email address must use the
+   * password reset flow.
    *
    * This endpoint requires the permission: `team:update`.
    *
@@ -189,25 +191,25 @@ export interface RegisterRequest {
 }
 
 /**
- * Request to update a scanner-role account user's password.
+ * Request to set the password of an account user who has no email address.
  */
 export interface UpdateScannerPasswordRequest {
   /**
    * ID of the account user whose password is being changed.
    *
-   * Must belong to the caller's account and hold a scanner role; requests targeting
-   * any other user are rejected.
+   * Must belong to the caller's account, have no email address, and not hold the
+   * admin role; requests targeting any other user are rejected.
    */
   account_user_id: string;
 
   /**
-   * New password to set for the scanner user.
+   * New password to set for the user.
    */
   new_password: string;
 
   /**
    * The caller's own current password, used to confirm the caller's identity before
-   * the scanner password is changed.
+   * the user's password is changed.
    */
   requester_password: string;
 }
@@ -281,19 +283,19 @@ export interface AuthScannerPasswordsParams {
   /**
    * ID of the account user whose password is being changed.
    *
-   * Must belong to the caller's account and hold a scanner role; requests targeting
-   * any other user are rejected.
+   * Must belong to the caller's account, have no email address, and not hold the
+   * admin role; requests targeting any other user are rejected.
    */
   account_user_id: string;
 
   /**
-   * New password to set for the scanner user.
+   * New password to set for the user.
    */
   new_password: string;
 
   /**
    * The caller's own current password, used to confirm the caller's identity before
-   * the scanner password is changed.
+   * the user's password is changed.
    */
   requester_password: string;
 }
