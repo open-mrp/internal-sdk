@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AnalyticsAPI from '../../core/analytics';
 import * as InvoicesAPI from '../invoices';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
+import * as AnalyticsAPI from '../../core/analytics/analytics';
 import * as ActionsAPI from './actions';
 import {
   ActionEmailReceivablesParams,

@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AnalyticsAPI from '../core/analytics';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
+import * as CoreAnalyticsAPI from '../core/analytics/analytics';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -46,7 +46,7 @@ export interface ListOpenBatchSummary {
   /**
    * Resources in this page.
    */
-  data: Array<AnalyticsAPI.OpenBatchSummary>;
+  data: Array<CoreAnalyticsAPI.OpenBatchSummary>;
 
   /**
    * Resource type identifier.

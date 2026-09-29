@@ -433,132 +433,168 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/core/analytics.ts">AccountGroup</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyticsItem</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyticsLot</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyticsRate</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyticsUnitGroup</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyticsUnitGroupUnit</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeCustomerPricingRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeCustomerPricingResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeDeliveriesRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeDeliveriesResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeDeliveryPerformanceRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeDeliveryPerformanceResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeDemandForecastRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeDemandForecastResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeInventoryReceiptsRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeInventoryReceiptsResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeManufacturingBatchRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeManufacturingBatchResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeManufacturingRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeManufacturingResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeMaterialsRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeMaterialsResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeNewCustomersRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeNewCustomersResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeOeeRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeOeeResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeOeeTrendRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeOeeTrendResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeOpenBatchesRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeOpenBatchesResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeOrdersRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeOrdersResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeProductionCostsRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeProductionCostsResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeQuarterlyOrdersRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeQuarterlyOrdersResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeRealizedMarginsRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeRealizedMarginsResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeSalesRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeSalesResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeScheduleAttainmentRequest</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeScheduleAttainmentResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AnalyzeWeeksOfSalesResponse</a></code>
-- <code><a href="./src/resources/core/analytics.ts">AttainmentBucket</a></code>
-- <code><a href="./src/resources/core/analytics.ts">Carrier</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ChartData</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ComputedQuantity</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ComputedRate</a></code>
-- <code><a href="./src/resources/core/analytics.ts">Coordinate</a></code>
-- <code><a href="./src/resources/core/analytics.ts">CostBreakdown</a></code>
-- <code><a href="./src/resources/core/analytics.ts">Customer</a></code>
-- <code><a href="./src/resources/core/analytics.ts">CustomerContactInfo</a></code>
-- <code><a href="./src/resources/core/analytics.ts">CustomerDefaults</a></code>
-- <code><a href="./src/resources/core/analytics.ts">CustomerFreightPreferences</a></code>
-- <code><a href="./src/resources/core/analytics.ts">CustomerNotificationPreferences</a></code>
-- <code><a href="./src/resources/core/analytics.ts">CustomerPricingFinding</a></code>
-- <code><a href="./src/resources/core/analytics.ts">CustomerPricingSummary</a></code>
-- <code><a href="./src/resources/core/analytics.ts">DateTimeCoordinate</a></code>
-- <code><a href="./src/resources/core/analytics.ts">DeliveryBacklogBucket</a></code>
-- <code><a href="./src/resources/core/analytics.ts">DeliveryBreakdown</a></code>
-- <code><a href="./src/resources/core/analytics.ts">DeliveryChartData</a></code>
-- <code><a href="./src/resources/core/analytics.ts">DeliveryLatenessBucket</a></code>
-- <code><a href="./src/resources/core/analytics.ts">DeliveryPerformance</a></code>
-- <code><a href="./src/resources/core/analytics.ts">DeliveryStatistics</a></code>
-- <code><a href="./src/resources/core/analytics.ts">DemandForecastForecastPoint</a></code>
-- <code><a href="./src/resources/core/analytics.ts">DemandForecastPoint</a></code>
-- <code><a href="./src/resources/core/analytics.ts">DemandForecastRow</a></code>
-- <code><a href="./src/resources/core/analytics.ts">FrozenAdherence</a></code>
-- <code><a href="./src/resources/core/analytics.ts">InventoryReceiptSummaryEntry</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListAccountGroup</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListAttainmentBucket</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListCustomer</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListCustomerPricingFinding</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListDeliveryBacklogBucket</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListDeliveryBreakdown</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListDeliveryLatenessBucket</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListDeliveryPerformance</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListDemandForecastRow</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListFrozenAdherence</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListOeeDepartment</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListOeeDowntimeReason</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListOeeTrendPeriod</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListRealizedMarginFinding</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ListServiceLevel</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ManufacturingMetrics</a></code>
-- <code><a href="./src/resources/core/analytics.ts">MaterialAnalyticsEntry</a></code>
-- <code><a href="./src/resources/core/analytics.ts">NewCustomersData</a></code>
-- <code><a href="./src/resources/core/analytics.ts">OeeDepartment</a></code>
-- <code><a href="./src/resources/core/analytics.ts">OeeDepartmentPlannedTime</a></code>
-- <code><a href="./src/resources/core/analytics.ts">OeeDowntimeReason</a></code>
-- <code><a href="./src/resources/core/analytics.ts">OeeTrendPeriod</a></code>
-- <code><a href="./src/resources/core/analytics.ts">OpenBatchSummary</a></code>
-- <code><a href="./src/resources/core/analytics.ts">OrderEntry</a></code>
-- <code><a href="./src/resources/core/analytics.ts">PaymentTerm</a></code>
-- <code><a href="./src/resources/core/analytics.ts">Priority</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ProductLine</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ProductionCostItem</a></code>
-- <code><a href="./src/resources/core/analytics.ts">RealizedMarginFinding</a></code>
-- <code><a href="./src/resources/core/analytics.ts">RealizedMarginSummary</a></code>
-- <code><a href="./src/resources/core/analytics.ts">RevenueForecastPoint</a></code>
-- <code><a href="./src/resources/core/analytics.ts">SalesEntry</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ServiceLevel</a></code>
-- <code><a href="./src/resources/core/analytics.ts">ShippingTerm</a></code>
-- <code><a href="./src/resources/core/analytics.ts">WeeksOfSalesItem</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AccountGroup</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyticsItem</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyticsLot</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyticsRate</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyticsUnitGroup</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyticsUnitGroupUnit</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeCustomerPricingRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeCustomerPricingResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeDeliveriesRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeDeliveriesResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeDeliveryPerformanceRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeDeliveryPerformanceResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeDemandForecastRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeDemandForecastResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeInventoryReceiptsRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeInventoryReceiptsResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeManufacturingBatchRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeManufacturingBatchResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeManufacturingRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeManufacturingResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeMaterialsRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeMaterialsResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeNewCustomersRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeNewCustomersResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeOeeRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeOeeResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeOeeTrendRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeOeeTrendResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeOpenBatchesRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeOpenBatchesResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeOrdersRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeOrdersResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeProductionCostsRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeProductionCostsResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeQuarterlyOrdersRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeQuarterlyOrdersResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeRealizedMarginsRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeRealizedMarginsResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeSalesBreakdownRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeSalesInvoicesRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeSalesRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeSalesResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeSalesSummaryRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeSalesSummaryResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeScheduleAttainmentRequest</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeScheduleAttainmentResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AnalyzeWeeksOfSalesResponse</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">AttainmentBucket</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">Carrier</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ChartData</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ComputedQuantity</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ComputedRate</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">Coordinate</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">CostBreakdown</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">Customer</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">CustomerContactInfo</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">CustomerDefaults</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">CustomerFreightPreferences</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">CustomerNotificationPreferences</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">CustomerPricingFinding</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">CustomerPricingSummary</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">DateTimeCoordinate</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">DeliveryBacklogBucket</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">DeliveryBreakdown</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">DeliveryChartData</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">DeliveryLatenessBucket</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">DeliveryPerformance</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">DeliveryStatistics</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">DemandForecastForecastPoint</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">DemandForecastPoint</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">DemandForecastRow</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">FrozenAdherence</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">InventoryReceiptSummaryEntry</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListAccountGroup</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListAttainmentBucket</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListCustomer</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListCustomerPricingFinding</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListDeliveryBacklogBucket</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListDeliveryBreakdown</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListDeliveryLatenessBucket</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListDeliveryPerformance</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListDemandForecastRow</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListFrozenAdherence</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListOeeDepartment</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListOeeDowntimeReason</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListOeeTrendPeriod</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListRealizedMarginFinding</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListSalesBreakdown</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListSalesInvoice</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListSalesTotals</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListServiceLevel</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ManufacturingMetrics</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">MaterialAnalyticsEntry</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">NewCustomersData</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">OeeDepartment</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">OeeDepartmentPlannedTime</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">OeeDowntimeReason</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">OeeTrendPeriod</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">OpenBatchSummary</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">OrderEntry</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">PaymentTerm</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">Priority</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ProductLine</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ProductionCostItem</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">RealizedMarginFinding</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">RealizedMarginSummary</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">RevenueForecastPoint</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">SalesBreakdown</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">SalesComparisonPeriod</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">SalesEntry</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">SalesInvoice</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">SalesReportFilters</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">SalesTotals</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ServiceLevel</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ShippingTerm</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">WeeksOfSalesItem</a></code>
 
 Methods:
 
-- <code title="get /v1/core/analytics/weeks-of-sales">client.core.analytics.<a href="./src/resources/core/analytics.ts">retrieveWeeksOfSales</a>({ ...params }) -> AnalyzeWeeksOfSalesResponse</code>
-- <code title="put /v1/core/analytics/customer-pricing">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateCustomerPricing</a>({ ...params }) -> AnalyzeCustomerPricingResponse</code>
-- <code title="put /v1/core/analytics/deliveries">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateDeliveries</a>({ ...params }) -> AnalyzeDeliveriesResponse</code>
-- <code title="put /v1/core/analytics/delivery-performance">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateDeliveryPerformance</a>({ ...params }) -> AnalyzeDeliveryPerformanceResponse</code>
-- <code title="put /v1/core/analytics/demand-forecast">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateDemandForecast</a>({ ...params }) -> AnalyzeDemandForecastResponse</code>
-- <code title="put /v1/core/analytics/inventory-receipts">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateInventoryReceipts</a>({ ...params }) -> AnalyzeInventoryReceiptsResponse</code>
-- <code title="put /v1/core/analytics/manufacturing">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateManufacturing</a>({ ...params }) -> AnalyzeManufacturingResponse</code>
-- <code title="put /v1/core/analytics/manufacturing-batch">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateManufacturingBatch</a>({ ...params }) -> AnalyzeManufacturingBatchResponse</code>
-- <code title="put /v1/core/analytics/materials">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateMaterials</a>({ ...params }) -> AnalyzeMaterialsResponse</code>
-- <code title="put /v1/core/analytics/new-customers">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateNewCustomers</a>({ ...params }) -> AnalyzeNewCustomersResponse</code>
-- <code title="put /v1/core/analytics/oee">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateOee</a>({ ...params }) -> AnalyzeOeeResponse</code>
-- <code title="put /v1/core/analytics/oee-trend">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateOeeTrend</a>({ ...params }) -> AnalyzeOeeTrendResponse</code>
-- <code title="put /v1/core/analytics/open-batches">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateOpenBatches</a>({ ...params }) -> AnalyzeOpenBatchesResponse</code>
-- <code title="put /v1/core/analytics/orders">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateOrders</a>({ ...params }) -> AnalyzeOrdersResponse</code>
-- <code title="put /v1/core/analytics/production-costs">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateProductionCosts</a>({ ...params }) -> AnalyzeProductionCostsResponse</code>
-- <code title="put /v1/core/analytics/quarterly-orders">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateQuarterlyOrders</a>({ ...params }) -> AnalyzeQuarterlyOrdersResponse</code>
-- <code title="put /v1/core/analytics/realized-margins">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateRealizedMargins</a>({ ...params }) -> AnalyzeRealizedMarginsResponse</code>
-- <code title="put /v1/core/analytics/sales">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateSales</a>({ ...params }) -> AnalyzeSalesResponse</code>
-- <code title="put /v1/core/analytics/schedule-attainment">client.core.analytics.<a href="./src/resources/core/analytics.ts">updateScheduleAttainment</a>({ ...params }) -> AnalyzeScheduleAttainmentResponse</code>
+- <code title="get /v1/core/analytics/weeks-of-sales">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">retrieveWeeksOfSales</a>({ ...params }) -> AnalyzeWeeksOfSalesResponse</code>
+- <code title="put /v1/core/analytics/customer-pricing">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateCustomerPricing</a>({ ...params }) -> AnalyzeCustomerPricingResponse</code>
+- <code title="put /v1/core/analytics/deliveries">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateDeliveries</a>({ ...params }) -> AnalyzeDeliveriesResponse</code>
+- <code title="put /v1/core/analytics/delivery-performance">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateDeliveryPerformance</a>({ ...params }) -> AnalyzeDeliveryPerformanceResponse</code>
+- <code title="put /v1/core/analytics/demand-forecast">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateDemandForecast</a>({ ...params }) -> AnalyzeDemandForecastResponse</code>
+- <code title="put /v1/core/analytics/inventory-receipts">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateInventoryReceipts</a>({ ...params }) -> AnalyzeInventoryReceiptsResponse</code>
+- <code title="put /v1/core/analytics/manufacturing">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateManufacturing</a>({ ...params }) -> AnalyzeManufacturingResponse</code>
+- <code title="put /v1/core/analytics/manufacturing-batch">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateManufacturingBatch</a>({ ...params }) -> AnalyzeManufacturingBatchResponse</code>
+- <code title="put /v1/core/analytics/materials">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateMaterials</a>({ ...params }) -> AnalyzeMaterialsResponse</code>
+- <code title="put /v1/core/analytics/new-customers">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateNewCustomers</a>({ ...params }) -> AnalyzeNewCustomersResponse</code>
+- <code title="put /v1/core/analytics/oee">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateOee</a>({ ...params }) -> AnalyzeOeeResponse</code>
+- <code title="put /v1/core/analytics/oee-trend">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateOeeTrend</a>({ ...params }) -> AnalyzeOeeTrendResponse</code>
+- <code title="put /v1/core/analytics/open-batches">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateOpenBatches</a>({ ...params }) -> AnalyzeOpenBatchesResponse</code>
+- <code title="put /v1/core/analytics/orders">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateOrders</a>({ ...params }) -> AnalyzeOrdersResponse</code>
+- <code title="put /v1/core/analytics/production-costs">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateProductionCosts</a>({ ...params }) -> AnalyzeProductionCostsResponse</code>
+- <code title="put /v1/core/analytics/quarterly-orders">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateQuarterlyOrders</a>({ ...params }) -> AnalyzeQuarterlyOrdersResponse</code>
+- <code title="put /v1/core/analytics/realized-margins">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateRealizedMargins</a>({ ...params }) -> AnalyzeRealizedMarginsResponse</code>
+- <code title="put /v1/core/analytics/sales">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateSales</a>({ ...params }) -> AnalyzeSalesResponse</code>
+- <code title="put /v1/core/analytics/sales-breakdown">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateSalesBreakdown</a>({ ...params }) -> ListSalesBreakdown</code>
+- <code title="put /v1/core/analytics/sales-invoices">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateSalesInvoices</a>({ ...params }) -> ListSalesInvoice</code>
+- <code title="put /v1/core/analytics/sales-summary">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateSalesSummary</a>({ ...params }) -> AnalyzeSalesSummaryResponse</code>
+- <code title="put /v1/core/analytics/schedule-attainment">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateScheduleAttainment</a>({ ...params }) -> AnalyzeScheduleAttainmentResponse</code>
+
+### SalesLines
+
+Types:
+
+- <code><a href="./src/resources/core/analytics/sales-lines/sales-lines.ts">ListSalesEntry</a></code>
+- <code><a href="./src/resources/core/analytics/sales-lines/sales-lines.ts">ListSalesLinesRequest</a></code>
+
+Methods:
+
+- <code title="put /v1/core/analytics/sales-lines">client.core.analytics.salesLines.<a href="./src/resources/core/analytics/sales-lines/sales-lines.ts">update</a>({ ...params }) -> ListSalesEntry</code>
+
+#### Actions
+
+Types:
+
+- <code><a href="./src/resources/core/analytics/sales-lines/actions.ts">ExportSalesLinesRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/core/analytics/sales-lines/actions/export">client.core.analytics.salesLines.actions.<a href="./src/resources/core/analytics/sales-lines/actions.ts">export</a>({ ...params }) -> Job</code>
 
 ## Actions
 

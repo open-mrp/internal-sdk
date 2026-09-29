@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
-import * as AnalyticsAPI from '../../core/analytics';
 import * as ActionsAPI from './actions';
 import {
   ActionBulkUpsertParams,
@@ -11,6 +10,7 @@ import {
   ExportProductLinesRequest,
   UpsertProductLineInput,
 } from './actions';
+import * as AnalyticsAPI from '../../core/analytics/analytics';
 import * as CustomersAPI from '../../sales/customers/customers';
 import * as AccountGroupsAPI from '../../sales/product-line-access/account-groups';
 import { APIPromise } from '../../../core/api-promise';

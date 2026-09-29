@@ -1,29 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  Actions,
-  type CheckDuplicateRequest,
-  type CheckDuplicateResult,
-  type EmailRecordRequest,
-  type MessageResource,
-  type RequestDemoRequest,
-  type SubmitFeedbackRequest,
-  type ActionEmailRecordResponse,
-  type ActionCheckDuplicatesParams,
-  type ActionEmailRecordParams,
-  type ActionRequestDemoParams,
-  type ActionSubmitFeedbackParams,
-} from './actions';
-export {
-  Addresses,
-  type AddressComponents,
-  type AddressDetailsResult,
-  type AddressSuggestion,
-  type ListAddressSuggestion,
-  type AddressRetrieveDetailsParams,
-  type AddressRetrieveSuggestionsParams,
-} from './addresses/index';
-export {
   Analytics,
   type AccountGroup,
   type AnalyticsItem,
@@ -163,52 +140,10 @@ export {
   type AnalyticsUpdateSalesInvoicesParams,
   type AnalyticsUpdateSalesSummaryParams,
   type AnalyticsUpdateScheduleAttainmentParams,
-} from './analytics/index';
+} from './analytics';
 export {
-  AuditEvents,
-  type AuditEvent,
-  type AuditFieldChange,
-  type ListAuditEvent,
-  type ListAuditFieldChange,
-  type ListObjectType,
-  type AuditEventRetrieveParams,
-  type AuditEventListParams,
-} from './audit-events';
-export { Core, type Entity, type ListEntity, type CoreRetrieveSearchParams } from './core';
-export {
-  EmailLogs,
-  type EmailLog,
-  type ListEmailLog,
-  type EmailLogRetrieveParams,
-  type EmailLogListParams,
-} from './email-logs';
-export {
-  Jobs,
-  type Job,
-  type JobExport,
-  type JobResult,
-  type ListJobResult,
-  type QuotaInfo,
-  type ResponseError,
-  type JobRetrieveParams,
-  type JobCancelParams,
-} from './jobs';
-export { Records } from './records/index';
-export {
-  RequestLogs,
-  type Actor,
-  type ListRequestLog,
-  type RequestLog,
-  type RequestLogRetrieveParams,
-  type RequestLogListParams,
-} from './request-logs';
-export {
-  Sandboxes,
-  type CreateSandboxRequest,
-  type ListSandbox,
-  type Sandbox,
-  type SandboxDeleteResponse,
-  type SandboxCreateParams,
-  type SandboxRetrieveParams,
-  type SandboxListParams,
-} from './sandboxes';
+  SalesLines,
+  type ListSalesEntry,
+  type ListSalesLinesRequest,
+  type SalesLineUpdateParams,
+} from './sales-lines/index';

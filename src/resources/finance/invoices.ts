@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AnalyticsAPI from '../core/analytics';
 import * as FinanceAPI from './finance';
 import * as APIKeysAPI from '../auth/api-keys/api-keys';
+import * as AnalyticsAPI from '../core/analytics/analytics';
 import * as AccountUsersAPI from '../identity/account-users/account-users';
 import * as SalesOrdersAPI from '../sales/sales-orders/sales-orders';
 import { APIPromise } from '../../core/api-promise';

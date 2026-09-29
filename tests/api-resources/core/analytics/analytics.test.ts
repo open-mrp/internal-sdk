@@ -456,6 +456,95 @@ describe('resource analytics', () => {
     });
   });
 
+  test('updateSalesBreakdown: only required params', async () => {
+    const responsePromise = client.core.analytics.updateSalesBreakdown({
+      ends_at: '2019-12-27T18:11:19.117Z',
+      group_by: 'customer',
+      starts_at: '2019-12-27T18:11:19.117Z',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('updateSalesBreakdown: required and optional params', async () => {
+    const response = await client.core.analytics.updateSalesBreakdown({
+      ends_at: '2019-12-27T18:11:19.117Z',
+      group_by: 'customer',
+      starts_at: '2019-12-27T18:11:19.117Z',
+      cursor: 'cursor',
+      limit: 0,
+      comparison_ends_at: '2019-12-27T18:11:19.117Z',
+      comparison_starts_at: '2019-12-27T18:11:19.117Z',
+      customer_group_ids: ['string'],
+      customer_ids: ['string'],
+      item_ids: ['string'],
+      product_line_ids: ['string'],
+      sales_rep_ids: ['string'],
+    });
+  });
+
+  test('updateSalesInvoices: only required params', async () => {
+    const responsePromise = client.core.analytics.updateSalesInvoices({
+      ends_at: '2019-12-27T18:11:19.117Z',
+      starts_at: '2019-12-27T18:11:19.117Z',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('updateSalesInvoices: required and optional params', async () => {
+    const response = await client.core.analytics.updateSalesInvoices({
+      ends_at: '2019-12-27T18:11:19.117Z',
+      starts_at: '2019-12-27T18:11:19.117Z',
+      cursor: 'cursor',
+      limit: 0,
+      customer_group_ids: ['string'],
+      customer_ids: ['string'],
+      item_ids: ['string'],
+      product_line_ids: ['string'],
+      sales_rep_ids: ['string'],
+    });
+  });
+
+  test('updateSalesSummary: only required params', async () => {
+    const responsePromise = client.core.analytics.updateSalesSummary({
+      ends_at: '2019-12-27T18:11:19.117Z',
+      starts_at: '2019-12-27T18:11:19.117Z',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('updateSalesSummary: required and optional params', async () => {
+    const response = await client.core.analytics.updateSalesSummary({
+      ends_at: '2019-12-27T18:11:19.117Z',
+      starts_at: '2019-12-27T18:11:19.117Z',
+      comparison_ends_at: '2019-12-27T18:11:19.117Z',
+      comparison_starts_at: '2019-12-27T18:11:19.117Z',
+      customer_group_ids: ['string'],
+      customer_ids: ['string'],
+      item_ids: ['string'],
+      product_line_ids: ['string'],
+      sales_rep_ids: ['string'],
+      tz_offset_minutes: 0,
+    });
+  });
+
   test('updateScheduleAttainment: only required params', async () => {
     const responsePromise = client.core.analytics.updateScheduleAttainment({
       ends_at: '2026-05-10T00:23:00Z',
