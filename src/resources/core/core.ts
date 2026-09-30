@@ -91,6 +91,7 @@ import {
   AnalyticsUpdateManufacturingParams,
   AnalyticsUpdateMaterialsParams,
   AnalyticsUpdateNewCustomersParams,
+  AnalyticsUpdateNewCustomersTableParams,
   AnalyticsUpdateOeeParams,
   AnalyticsUpdateOeeTrendParams,
   AnalyticsUpdateOpenBatchesParams,
@@ -180,6 +181,8 @@ import {
   ListDeliveryPerformance,
   ListDemandForecastRow,
   ListFrozenAdherence,
+  ListNewCustomer,
+  ListNewCustomersRequest,
   ListOeeDepartment,
   ListOeeDowntimeReason,
   ListOeeTrendPeriod,
@@ -190,6 +193,7 @@ import {
   ListServiceLevel,
   ManufacturingMetrics,
   MaterialAnalyticsEntry,
+  NewCustomer,
   NewCustomersData,
   OeeDepartment,
   OeeDepartmentPlannedTime,
@@ -420,6 +424,7 @@ export interface Entity {
     | 'sales_totals'
     | 'sales_breakdown'
     | 'sales_invoice'
+    | 'new_customer'
     | 'schedule_order_coverage'
     | 'schedule_order_coverage_line'
     | 'schedule_deviation_type'
@@ -812,6 +817,7 @@ export interface CoreRetrieveSearchParams {
     | 'sales_totals'
     | 'sales_breakdown'
     | 'sales_invoice'
+    | 'new_customer'
     | 'schedule_order_coverage'
     | 'schedule_order_coverage_line'
     | 'schedule_deviation_type'
@@ -1176,6 +1182,8 @@ export declare namespace Core {
     type ListDeliveryPerformance as ListDeliveryPerformance,
     type ListDemandForecastRow as ListDemandForecastRow,
     type ListFrozenAdherence as ListFrozenAdherence,
+    type ListNewCustomer as ListNewCustomer,
+    type ListNewCustomersRequest as ListNewCustomersRequest,
     type ListOeeDepartment as ListOeeDepartment,
     type ListOeeDowntimeReason as ListOeeDowntimeReason,
     type ListOeeTrendPeriod as ListOeeTrendPeriod,
@@ -1186,6 +1194,7 @@ export declare namespace Core {
     type ListServiceLevel as ListServiceLevel,
     type ManufacturingMetrics as ManufacturingMetrics,
     type MaterialAnalyticsEntry as MaterialAnalyticsEntry,
+    type NewCustomer as NewCustomer,
     type NewCustomersData as NewCustomersData,
     type OeeDepartment as OeeDepartment,
     type OeeDepartmentPlannedTime as OeeDepartmentPlannedTime,
@@ -1219,6 +1228,7 @@ export declare namespace Core {
     type AnalyticsUpdateManufacturingBatchParams as AnalyticsUpdateManufacturingBatchParams,
     type AnalyticsUpdateMaterialsParams as AnalyticsUpdateMaterialsParams,
     type AnalyticsUpdateNewCustomersParams as AnalyticsUpdateNewCustomersParams,
+    type AnalyticsUpdateNewCustomersTableParams as AnalyticsUpdateNewCustomersTableParams,
     type AnalyticsUpdateOeeParams as AnalyticsUpdateOeeParams,
     type AnalyticsUpdateOeeTrendParams as AnalyticsUpdateOeeTrendParams,
     type AnalyticsUpdateOpenBatchesParams as AnalyticsUpdateOpenBatchesParams,

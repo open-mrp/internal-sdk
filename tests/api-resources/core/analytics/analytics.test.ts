@@ -256,6 +256,31 @@ describe('resource analytics', () => {
     });
   });
 
+  test('updateNewCustomersTable: only required params', async () => {
+    const responsePromise = client.core.analytics.updateNewCustomersTable({
+      ends_at: '2026-05-10T00:23:00Z',
+      starts_at: '2026-05-10T00:00:00Z',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('updateNewCustomersTable: required and optional params', async () => {
+    const response = await client.core.analytics.updateNewCustomersTable({
+      ends_at: '2026-05-10T00:23:00Z',
+      starts_at: '2026-05-10T00:00:00Z',
+      cursor: 'cursor',
+      limit: 0,
+      customer_group_ids: ['acgp_6p4z57e9alaf'],
+      sales_rep_ids: ['string'],
+    });
+  });
+
   test('updateOee: only required params', async () => {
     const responsePromise = client.core.analytics.updateOee({
       ends_at: '2026-05-10T00:23:00Z',

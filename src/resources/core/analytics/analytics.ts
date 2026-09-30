@@ -302,6 +302,37 @@ export class Analytics extends APIResource {
   }
 
   /**
+   * Returns the customers added in a period that have placed an order, newest first
+   * order first, each with the date of its first order and its lifetime sales. Sales
+   * count sales orders only: lines priced above zero, outside the shipping and misc
+   * product lines, over the customer's whole history rather than the period.
+   * Customers that have never ordered are left out.
+   *
+   * This endpoint requires the permission: `customers:read`.
+   *
+   * @example
+   * ```ts
+   * const listNewCustomer =
+   *   await client.core.analytics.updateNewCustomersTable({
+   *     ends_at: '2026-05-10T00:23:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
+   *     customer_group_ids: ['acgp_6p4z57e9alaf'],
+   *   });
+   * ```
+   */
+  updateNewCustomersTable(
+    params: AnalyticsUpdateNewCustomersTableParams,
+    options?: RequestOptions,
+  ): APIPromise<ListNewCustomer> {
+    const { cursor, limit, ...body } = params;
+    return this._client.put('/v1/core/analytics/new-customers-table', {
+      query: { cursor, limit },
+      body,
+      ...options,
+    });
+  }
+
+  /**
    * Returns Overall Equipment Effectiveness (OEE) metrics by department.
    *
    * Availability is the scheduled machine time the plant actually planned, net of
@@ -3531,6 +3562,60 @@ export interface ListFrozenAdherence {
  * A single page of resources, together with the metadata needed to page through
  * the rest of the result set.
  */
+export interface ListNewCustomer {
+  /**
+   * Resources in this page.
+   */
+  data: Array<NewCustomer>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * ListNewCustomersRequest is the request to list the customers added in a period
+ * that have ordered.
+ */
+export interface ListNewCustomersRequest {
+  /**
+   * End of the period, by when the customer was added, inclusive.
+   */
+  ends_at: string;
+
+  /**
+   * Start of the period, by when the customer was added, inclusive.
+   */
+  starts_at: string;
+
+  /**
+   * Only customers in any of these customer groups, as their group or one of their
+   * price groups.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Only customers whose default sales rep is one of these account users.
+   */
+  sales_rep_ids?: Array<string>;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
 export interface ListOeeDepartment {
   /**
    * Resources in this page.
@@ -3847,6 +3932,66 @@ export interface MaterialAnalyticsEntry {
    * AnalyticsUnitGroup represents a unit group for analytics.
    */
   unit_group: AnalyticsUnitGroup;
+}
+
+/**
+ * NewCustomer is a customer added in a report's period that has ordered, with its
+ * first order and lifetime sales.
+ */
+export interface NewCustomer {
+  /**
+   * The customer's account ID.
+   */
+  id: string;
+
+  /**
+   * When the customer was added.
+   */
+  added_at: string;
+
+  /**
+   * Name of the customer's group, or null when it has none.
+   */
+  customer_group_name: string | null;
+
+  /**
+   * When the customer's first such order was issued.
+   */
+  first_ordered_at: string;
+
+  /**
+   * An amount calculated on demand rather than stored.
+   *
+   * The same shape as a quantity minus the ID, because nothing was written: it is
+   * derived per request, such as a total rolled up across invoiced lines for one
+   * analysis.
+   */
+  lifetime_revenue: ComputedQuantity | null;
+
+  /**
+   * The default shipping address's locality and state, or null when it has neither.
+   */
+  location: string | null;
+
+  /**
+   * The customer's name: its alias, or its account's name when it has none.
+   */
+  name: string;
+
+  /**
+   * The customer's number.
+   */
+  number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'new_customer';
+
+  /**
+   * Name of the customer's default sales rep, or null when it has none.
+   */
+  sales_rep_name: string | null;
 }
 
 /**
@@ -5649,6 +5794,41 @@ export interface AnalyticsUpdateNewCustomersParams {
   sales_rep_ids?: Array<string>;
 }
 
+export interface AnalyticsUpdateNewCustomersTableParams {
+  /**
+   * Body param: End of the period, by when the customer was added, inclusive.
+   */
+  ends_at: string;
+
+  /**
+   * Body param: Start of the period, by when the customer was added, inclusive.
+   */
+  starts_at: string;
+
+  /**
+   * Query param: Opaque cursor from a previous page's `next_page_url` or
+   * `previous_page_url`. Omit for the first page.
+   */
+  cursor?: string;
+
+  /**
+   * Query param: Maximum number of customers to return.
+   */
+  limit?: number;
+
+  /**
+   * Body param: Only customers in any of these customer groups, as their group or
+   * one of their price groups.
+   */
+  customer_group_ids?: Array<string>;
+
+  /**
+   * Body param: Only customers whose default sales rep is one of these account
+   * users.
+   */
+  sales_rep_ids?: Array<string>;
+}
+
 export interface AnalyticsUpdateOeeParams {
   /**
    * The end date for the analysis period.
@@ -6154,6 +6334,8 @@ export declare namespace Analytics {
     type ListDeliveryPerformance as ListDeliveryPerformance,
     type ListDemandForecastRow as ListDemandForecastRow,
     type ListFrozenAdherence as ListFrozenAdherence,
+    type ListNewCustomer as ListNewCustomer,
+    type ListNewCustomersRequest as ListNewCustomersRequest,
     type ListOeeDepartment as ListOeeDepartment,
     type ListOeeDowntimeReason as ListOeeDowntimeReason,
     type ListOeeTrendPeriod as ListOeeTrendPeriod,
@@ -6164,6 +6346,7 @@ export declare namespace Analytics {
     type ListServiceLevel as ListServiceLevel,
     type ManufacturingMetrics as ManufacturingMetrics,
     type MaterialAnalyticsEntry as MaterialAnalyticsEntry,
+    type NewCustomer as NewCustomer,
     type NewCustomersData as NewCustomersData,
     type OeeDepartment as OeeDepartment,
     type OeeDepartmentPlannedTime as OeeDepartmentPlannedTime,
@@ -6197,6 +6380,7 @@ export declare namespace Analytics {
     type AnalyticsUpdateManufacturingBatchParams as AnalyticsUpdateManufacturingBatchParams,
     type AnalyticsUpdateMaterialsParams as AnalyticsUpdateMaterialsParams,
     type AnalyticsUpdateNewCustomersParams as AnalyticsUpdateNewCustomersParams,
+    type AnalyticsUpdateNewCustomersTableParams as AnalyticsUpdateNewCustomersTableParams,
     type AnalyticsUpdateOeeParams as AnalyticsUpdateOeeParams,
     type AnalyticsUpdateOeeTrendParams as AnalyticsUpdateOeeTrendParams,
     type AnalyticsUpdateOpenBatchesParams as AnalyticsUpdateOpenBatchesParams,

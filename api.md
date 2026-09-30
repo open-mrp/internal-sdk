@@ -516,6 +516,8 @@ Types:
 - <code><a href="./src/resources/core/analytics/analytics.ts">ListDeliveryPerformance</a></code>
 - <code><a href="./src/resources/core/analytics/analytics.ts">ListDemandForecastRow</a></code>
 - <code><a href="./src/resources/core/analytics/analytics.ts">ListFrozenAdherence</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListNewCustomer</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">ListNewCustomersRequest</a></code>
 - <code><a href="./src/resources/core/analytics/analytics.ts">ListOeeDepartment</a></code>
 - <code><a href="./src/resources/core/analytics/analytics.ts">ListOeeDowntimeReason</a></code>
 - <code><a href="./src/resources/core/analytics/analytics.ts">ListOeeTrendPeriod</a></code>
@@ -526,6 +528,7 @@ Types:
 - <code><a href="./src/resources/core/analytics/analytics.ts">ListServiceLevel</a></code>
 - <code><a href="./src/resources/core/analytics/analytics.ts">ManufacturingMetrics</a></code>
 - <code><a href="./src/resources/core/analytics/analytics.ts">MaterialAnalyticsEntry</a></code>
+- <code><a href="./src/resources/core/analytics/analytics.ts">NewCustomer</a></code>
 - <code><a href="./src/resources/core/analytics/analytics.ts">NewCustomersData</a></code>
 - <code><a href="./src/resources/core/analytics/analytics.ts">OeeDepartment</a></code>
 - <code><a href="./src/resources/core/analytics/analytics.ts">OeeDepartmentPlannedTime</a></code>
@@ -562,6 +565,7 @@ Methods:
 - <code title="put /v1/core/analytics/manufacturing-batch">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateManufacturingBatch</a>({ ...params }) -> AnalyzeManufacturingBatchResponse</code>
 - <code title="put /v1/core/analytics/materials">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateMaterials</a>({ ...params }) -> AnalyzeMaterialsResponse</code>
 - <code title="put /v1/core/analytics/new-customers">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateNewCustomers</a>({ ...params }) -> AnalyzeNewCustomersResponse</code>
+- <code title="put /v1/core/analytics/new-customers-table">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateNewCustomersTable</a>({ ...params }) -> ListNewCustomer</code>
 - <code title="put /v1/core/analytics/oee">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateOee</a>({ ...params }) -> AnalyzeOeeResponse</code>
 - <code title="put /v1/core/analytics/oee-trend">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateOeeTrend</a>({ ...params }) -> AnalyzeOeeTrendResponse</code>
 - <code title="put /v1/core/analytics/open-batches">client.core.analytics.<a href="./src/resources/core/analytics/analytics.ts">updateOpenBatches</a>({ ...params }) -> AnalyzeOpenBatchesResponse</code>
