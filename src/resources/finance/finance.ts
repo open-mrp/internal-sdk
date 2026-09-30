@@ -4,6 +4,7 @@ import { APIResource } from '../../core/resource';
 import * as InvoicesAPI from './invoices';
 import {
   AllocationInvoice,
+  AllocationSettlement,
   Invoice,
   InvoiceAllocation,
   InvoiceLine,
@@ -43,6 +44,7 @@ import {
   CreateSettlementAllocationRequest,
   CreateSettlementRequest,
   ListSettlementSummary,
+  NewSettlementTransactionRequest,
   Settlement,
   SettlementCreateParams,
   SettlementListParams,
@@ -128,10 +130,10 @@ export class Finance extends APIResource {
 
   /**
    * Returns a paginated list of customer transactions that still have money left to
-   * apply to invoices, newest first.
+   * apply to invoices, most recently received first.
    *
-   * Membership is driven by each transaction's `is_fully_allocated` flag rather than
-   * by a recomputed balance, so a transaction remains listed until that flag is set.
+   * A transaction is listed once its funds have been received, while it is not
+   * marked fully allocated and its allocations leave part of its amount unapplied.
    * Free-text search matches the transaction ID, transaction number, customer name,
    * and note.
    *
@@ -470,6 +472,11 @@ export interface OpenCreditEntry {
   customer: AllocationCustomer | null;
 
   /**
+   * When the money arrived; open credits are ordered and dated by it.
+   */
+  funds_received_at: string;
+
+  /**
    * A single page of resources, together with the metadata needed to page through
    * the rest of the result set.
    */
@@ -624,8 +631,9 @@ export interface FinanceRetrieveOpenCreditsParams {
   customer_ids?: Array<string>;
 
   /**
-   * Only include transactions created on or before this date (`YYYY-MM-DD`),
-   * covering that whole day.
+   * Only include credits whose funds were received before the end of this date
+   * (`YYYY-MM-DD`, UTC). A full timestamp (RFC 3339) is also accepted, to bound the
+   * range at a local midnight.
    */
   ends_at?: string;
 
@@ -642,7 +650,9 @@ export interface FinanceRetrieveOpenCreditsParams {
   q?: string;
 
   /**
-   * Only include transactions created on or after this date (`YYYY-MM-DD`).
+   * Only include credits whose funds were received on or after this date
+   * (`YYYY-MM-DD`, UTC). A full timestamp (RFC 3339) is also accepted, to bound the
+   * range at a local midnight.
    */
   starts_at?: string;
 }
@@ -735,6 +745,7 @@ export declare namespace Finance {
   export {
     Invoices as Invoices,
     type AllocationInvoice as AllocationInvoice,
+    type AllocationSettlement as AllocationSettlement,
     type Invoice as Invoice,
     type InvoiceAllocation as InvoiceAllocation,
     type InvoiceLine as InvoiceLine,
@@ -802,6 +813,7 @@ export declare namespace Finance {
     type CreateSettlementAllocationRequest as CreateSettlementAllocationRequest,
     type CreateSettlementRequest as CreateSettlementRequest,
     type ListSettlementSummary as ListSettlementSummary,
+    type NewSettlementTransactionRequest as NewSettlementTransactionRequest,
     type Settlement as Settlement,
     type SettlementSummary as SettlementSummary,
     type UpdateSettlementRequest as UpdateSettlementRequest,

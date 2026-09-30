@@ -50,8 +50,8 @@ export class TransactionAllocations extends APIResource {
    *
    * Each entry pairs one transaction with one invoice and the amount applied.
    * Entries are created by recording a settlement; there is no endpoint that creates
-   * one directly. Free-text search matches the invoice number and the transaction
-   * number.
+   * one directly. Free-text search matches an exact invoice number, transaction
+   * number or customer number, or part of the customer name.
    *
    * This endpoint requires the permission: `settlements:read`.
    *
@@ -222,6 +222,11 @@ export interface UpdateTransactionAllocationRequest {
    * balance.
    */
   amount?: string;
+
+  /**
+   * When the amount was applied, reported as the allocation's `created_at`.
+   */
+  applied_at?: string;
 }
 
 export interface TransactionAllocationDeleteResponse {}
@@ -241,6 +246,12 @@ export interface TransactionAllocationUpdateParams {
    * balance.
    */
   amount?: string;
+
+  /**
+   * Body param: When the amount was applied, reported as the allocation's
+   * `created_at`.
+   */
+  applied_at?: string;
 }
 
 export interface TransactionAllocationListParams {
@@ -254,8 +265,9 @@ export interface TransactionAllocationListParams {
   cursor?: string;
 
   /**
-   * Only include allocations created on or before this date (`YYYY-MM-DD`), covering
-   * that whole day.
+   * Only include allocations created on or before this date (`YYYY-MM-DD`, UTC),
+   * covering that whole day. A full timestamp (RFC 3339) is also accepted, to bound
+   * the range at a local midnight.
    */
   ends_at?: string;
 
@@ -272,7 +284,9 @@ export interface TransactionAllocationListParams {
   q?: string;
 
   /**
-   * Only include allocations created on or after this date (`YYYY-MM-DD`).
+   * Only include allocations created on or after this date (`YYYY-MM-DD`, UTC). A
+   * full timestamp (RFC 3339) is also accepted, to bound the range at a local
+   * midnight.
    */
   starts_at?: string;
 

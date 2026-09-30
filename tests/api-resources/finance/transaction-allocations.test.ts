@@ -24,7 +24,11 @@ describe('resource transactionAllocations', () => {
     await expect(
       client.finance.transactionAllocations.update(
         'txal_2o8lu50zvphn',
-        { include: ['transaction'], amount: '150.00' },
+        {
+          include: ['transaction'],
+          amount: '150.00',
+          applied_at: '2019-12-27T18:11:19.117Z',
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(OpenMRP.NotFoundError);

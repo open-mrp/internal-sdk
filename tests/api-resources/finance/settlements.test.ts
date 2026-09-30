@@ -10,13 +10,7 @@ const client = new OpenMRP({
 describe('resource settlements', () => {
   test('create: only required params', async () => {
     const responsePromise = client.finance.settlements.create({
-      allocations: [
-        {
-          amount: '150.00',
-          invoice_id: 'iv_m982ezb0fgp7',
-          transaction_id: 'tx_hvh9thtzaezn',
-        },
-      ],
+      allocations: [{ amount: '150.00', invoice_id: 'iv_m982ezb0fgp7' }],
       responsible_user_id: 'us_43irtlt2ajz6',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -34,11 +28,22 @@ describe('resource settlements', () => {
         {
           amount: '150.00',
           invoice_id: 'iv_m982ezb0fgp7',
-          transaction_id: 'tx_hvh9thtzaezn',
+          applied_at: '2019-12-27T18:11:19.117Z',
           note: 'note',
+          transaction_id: 'tx_hvh9thtzaezn',
+          transaction_key: 'transaction_key',
         },
       ],
       responsible_user_id: 'us_43irtlt2ajz6',
+      new_transactions: [
+        {
+          customer_id: 'customer_id',
+          key: 'key',
+          type: 'payment',
+          adjustment_type: 'adjustment_type',
+          method: 'cash',
+        },
+      ],
     });
   });
 

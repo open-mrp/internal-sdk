@@ -182,6 +182,12 @@ export interface CreateTransactionRequest {
   adjustment_type?: string;
 
   /**
+   * When the money arrived. Only a transaction whose funds have arrived can be
+   * applied to invoices or counts as an open credit.
+   */
+  funds_received_at?: string;
+
+  /**
    * How the money moved.
    *
    * Typically provided for payment transactions.
@@ -192,6 +198,12 @@ export interface CreateTransactionRequest {
    * Free-form note attached to the transaction.
    */
   note?: string;
+
+  /**
+   * When the transaction took place, reported as its `created_at`; defaults to now.
+   * Set it to record a payment after the fact.
+   */
+  occurred_at?: string;
 
   /**
    * ID of the account user responsible for the transaction.
@@ -245,9 +257,6 @@ export interface TransactionSummary {
    */
   adjustment_type: FinanceAPI.AdjustmentType | null;
 
-  /**
-   * Number of allocations against invoices for this transaction.
-   */
   allocation_count: number;
 
   /**
@@ -269,6 +278,12 @@ export interface TransactionSummary {
    * and order policies.
    */
   customer: AnalyticsAPI.Customer | null;
+
+  /**
+   * Number of allocations against invoices for this transaction. When the money
+   * arrived; null until it has.
+   */
+  funds_received_at: string | null;
 
   /**
    * Whether the full transaction amount has been applied to invoices.
@@ -346,6 +361,11 @@ export interface UpdateTransactionRequest {
   amount?: string;
 
   /**
+   * When the money arrived; null marks it as not yet received.
+   */
+  funds_received_at?: string | null;
+
+  /**
    * Whether the full transaction amount has been applied to invoices.
    *
    * Set this to correct the flag by hand: editing or deleting individual allocations
@@ -362,7 +382,7 @@ export interface UpdateTransactionRequest {
   /**
    * Free-form note attached to the transaction.
    */
-  note?: string;
+  note?: string | null;
 
   /**
    * New transaction number.
@@ -371,6 +391,11 @@ export interface UpdateTransactionRequest {
    * another transaction already uses it.
    */
   number?: string;
+
+  /**
+   * When the transaction took place, reported as its `created_at`.
+   */
+  occurred_at?: string;
 
   /**
    * ID of the account user responsible for the transaction.
@@ -427,6 +452,12 @@ export interface TransactionCreateParams {
   adjustment_type?: string;
 
   /**
+   * Body param: When the money arrived. Only a transaction whose funds have arrived
+   * can be applied to invoices or counts as an open credit.
+   */
+  funds_received_at?: string;
+
+  /**
    * Body param: How the money moved.
    *
    * Typically provided for payment transactions.
@@ -437,6 +468,12 @@ export interface TransactionCreateParams {
    * Body param: Free-form note attached to the transaction.
    */
   note?: string;
+
+  /**
+   * Body param: When the transaction took place, reported as its `created_at`;
+   * defaults to now. Set it to record a payment after the fact.
+   */
+  occurred_at?: string;
 
   /**
    * Body param: ID of the account user responsible for the transaction.
@@ -514,6 +551,11 @@ export interface TransactionUpdateParams {
   amount?: string;
 
   /**
+   * Body param: When the money arrived; null marks it as not yet received.
+   */
+  funds_received_at?: string | null;
+
+  /**
    * Body param: Whether the full transaction amount has been applied to invoices.
    *
    * Set this to correct the flag by hand: editing or deleting individual allocations
@@ -530,7 +572,7 @@ export interface TransactionUpdateParams {
   /**
    * Body param: Free-form note attached to the transaction.
    */
-  note?: string;
+  note?: string | null;
 
   /**
    * Body param: New transaction number.
@@ -539,6 +581,11 @@ export interface TransactionUpdateParams {
    * another transaction already uses it.
    */
   number?: string;
+
+  /**
+   * Body param: When the transaction took place, reported as its `created_at`.
+   */
+  occurred_at?: string;
 
   /**
    * Body param: ID of the account user responsible for the transaction.
@@ -576,8 +623,9 @@ export interface TransactionListParams {
   customer_ids?: Array<string>;
 
   /**
-   * Only include transactions created on or before this date (`YYYY-MM-DD`),
-   * covering that whole day.
+   * Only include transactions whose funds were received on or before this date
+   * (`YYYY-MM-DD`, UTC), covering that whole day. A full timestamp (RFC 3339) is
+   * also accepted, to bound the range at a local midnight.
    */
   ends_at?: string;
 
@@ -585,7 +633,7 @@ export interface TransactionListParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'customer'>;
+  include?: Array<'customer' | 'customer.bill_to_address'>;
 
   /**
    * Maximum number of results to return in a single page.
@@ -605,13 +653,17 @@ export interface TransactionListParams {
   q?: string;
 
   /**
-   * Only include transactions created on or after this date (`YYYY-MM-DD`).
+   * Only include transactions whose funds were received on or after this date
+   * (`YYYY-MM-DD`, UTC). A full timestamp (RFC 3339) is also accepted, to bound the
+   * range at a local midnight.
    */
   starts_at?: string;
 
   /**
+   * Search matches transactions whose number contains every word of `q` as a prefix.
+   *
    * Filter by allocation status: `allocated` (marked fully applied to invoices) or
-   * `unallocated` (still counted as an open credit).
+   * `unallocated` (not yet marked fully applied).
    */
   status?: 'allocated' | 'unallocated';
 

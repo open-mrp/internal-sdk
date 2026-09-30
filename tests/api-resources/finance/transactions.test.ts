@@ -30,8 +30,10 @@ describe('resource transactions', () => {
       type: 'payment',
       include: ['allocations'],
       adjustment_type: 'adjustment_type',
+      funds_received_at: '2019-12-27T18:11:19.117Z',
       method: 'check',
       note: 'Q1 invoice payment',
+      occurred_at: '2019-12-27T18:11:19.117Z',
       responsible_user_id: 'responsible_user_id',
     });
   });
@@ -81,10 +83,12 @@ describe('resource transactions', () => {
       include: ['allocations'],
       adjustment_type: 'adjustment_type',
       amount: '750.00',
+      funds_received_at: '2019-12-27T18:11:19.117Z',
       is_fully_allocated: false,
       method: 'ach',
       note: 'Updated payment note',
       number: 'number',
+      occurred_at: '2019-12-27T18:11:19.117Z',
       responsible_user_id: 'responsible_user_id',
     });
   });

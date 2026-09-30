@@ -2169,6 +2169,7 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/finance/invoices.ts">AllocationInvoice</a></code>
+- <code><a href="./src/resources/finance/invoices.ts">AllocationSettlement</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">Invoice</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">InvoiceAllocation</a></code>
 - <code><a href="./src/resources/finance/invoices.ts">InvoiceLine</a></code>
@@ -2280,6 +2281,7 @@ Types:
 - <code><a href="./src/resources/finance/settlements.ts">CreateSettlementAllocationRequest</a></code>
 - <code><a href="./src/resources/finance/settlements.ts">CreateSettlementRequest</a></code>
 - <code><a href="./src/resources/finance/settlements.ts">ListSettlementSummary</a></code>
+- <code><a href="./src/resources/finance/settlements.ts">NewSettlementTransactionRequest</a></code>
 - <code><a href="./src/resources/finance/settlements.ts">Settlement</a></code>
 - <code><a href="./src/resources/finance/settlements.ts">SettlementSummary</a></code>
 - <code><a href="./src/resources/finance/settlements.ts">UpdateSettlementRequest</a></code>

@@ -97,9 +97,9 @@ export class Settlements extends APIResource {
    * Each entry is a condensed view that summarizes the settlement's allocations as
    * totals per transaction type instead of listing them; retrieve a settlement to
    * see its individual allocations. Filtering by `transaction_ids` or `invoice_ids`
-   * also narrows each entry's aggregates to just the matching allocations, and when
-   * both are supplied a settlement matches only if one of its allocations satisfies
-   * both.
+   * selects settlements with a matching allocation (one allocation must satisfy both
+   * when both are given); each entry still summarizes all of the settlement's
+   * allocations. Totals that come to zero are null.
    *
    * This endpoint requires the permission: `settlements:read`.
    *
@@ -165,15 +165,28 @@ export interface CreateSettlementAllocationRequest {
   invoice_id: string;
 
   /**
-   * ID of the transaction (payment, rebate, adjustment, or credit memo) to allocate
-   * from.
+   * When the amount was applied, reported as the allocation's `created_at`; defaults
+   * to now.
    */
-  transaction_id: string;
+  applied_at?: string;
 
   /**
    * Free-form note about this allocation.
    */
   note?: string;
+
+  /**
+   * ID of the transaction (payment, rebate, adjustment, or credit memo) to allocate
+   * from. Omit it and set `transaction_key` to allocate from one of the settlement's
+   * `new_transactions`.
+   */
+  transaction_id?: string;
+
+  /**
+   * Key of the entry in `new_transactions` to allocate from, instead of an existing
+   * transaction.
+   */
+  transaction_key?: string;
 }
 
 /**
@@ -192,6 +205,11 @@ export interface CreateSettlementRequest {
    * account user in the current account.
    */
   responsible_user_id: string;
+
+  /**
+   * Transactions to record with the settlement.
+   */
+  new_transactions?: Array<NewSettlementTransactionRequest>;
 }
 
 /**
@@ -219,6 +237,41 @@ export interface ListSettlementSummary {
    * search term, and page size.
    */
   page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A transaction recorded together with the settlement that applies it, such as an
+ * adjustment or credit entered while settling.
+ *
+ * Its amount is the sum of the allocations naming its key. It is dated, and its
+ * funds counted as received, at the first of those allocations.
+ */
+export interface NewSettlementTransactionRequest {
+  /**
+   * The customer the transaction belongs to.
+   */
+  customer_id: string;
+
+  /**
+   * Names the transaction within this request; allocations draw on it through
+   * `transaction_key`.
+   */
+  key: string;
+
+  /**
+   * Type of the transaction.
+   */
+  type: 'payment' | 'credit_memo' | 'adjustment' | 'rebate';
+
+  /**
+   * Kind of adjustment, for an adjustment.
+   */
+  adjustment_type?: string;
+
+  /**
+   * How the money moved, for a payment.
+   */
+  method?: 'cash' | 'check' | 'credit_card' | 'gift_card' | 'ach';
 }
 
 /**
@@ -359,7 +412,7 @@ export interface UpdateSettlementRequest {
   /**
    * Note for this settlement.
    */
-  note?: string;
+  note?: string | null;
 
   /**
    * New settlement number.
@@ -390,6 +443,11 @@ export interface SettlementCreateParams {
    * account user in the current account.
    */
   responsible_user_id: string;
+
+  /**
+   * Transactions to record with the settlement.
+   */
+  new_transactions?: Array<NewSettlementTransactionRequest>;
 }
 
 export interface SettlementRetrieveParams {
@@ -406,6 +464,7 @@ export interface SettlementRetrieveParams {
     | 'allocations.transaction'
     | 'allocations.transaction.amount'
     | 'allocations.transaction.amount.unit'
+    | 'allocations.transaction.customer'
   >;
 }
 
@@ -413,7 +472,7 @@ export interface SettlementUpdateParams {
   /**
    * Note for this settlement.
    */
-  note?: string;
+  note?: string | null;
 
   /**
    * New settlement number.
@@ -443,7 +502,8 @@ export interface SettlementListParams {
 
   /**
    * Only return settlements created on or before this date (`YYYY-MM-DD`, UTC),
-   * covering that whole day.
+   * covering that whole day. A full timestamp (RFC 3339) is also accepted, to bound
+   * the range at a local midnight.
    */
   ends_at?: string;
 
@@ -466,7 +526,8 @@ export interface SettlementListParams {
 
   /**
    * Only return settlements created on or after the start of this date
-   * (`YYYY-MM-DD`, UTC).
+   * (`YYYY-MM-DD`, UTC). A full timestamp (RFC 3339) is also accepted, to bound the
+   * range at a local midnight.
    */
   starts_at?: string;
 
@@ -481,6 +542,7 @@ export declare namespace Settlements {
     type CreateSettlementAllocationRequest as CreateSettlementAllocationRequest,
     type CreateSettlementRequest as CreateSettlementRequest,
     type ListSettlementSummary as ListSettlementSummary,
+    type NewSettlementTransactionRequest as NewSettlementTransactionRequest,
     type Settlement as Settlement,
     type SettlementSummary as SettlementSummary,
     type UpdateSettlementRequest as UpdateSettlementRequest,

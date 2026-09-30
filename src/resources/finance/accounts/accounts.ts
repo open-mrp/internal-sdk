@@ -294,7 +294,8 @@ export interface AccountRetrieveTransactionsParams {
 
   /**
    * Filter by allocation status: `allocated` (marked fully applied to invoices) or
-   * `unallocated` (still counted as an open credit).
+   * `unallocated` (funds received and not yet fully applied: the transactions
+   * available to settle).
    */
   status?: 'allocated' | 'unallocated';
 

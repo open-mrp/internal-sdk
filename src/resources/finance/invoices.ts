@@ -106,6 +106,27 @@ export interface AllocationInvoice {
 }
 
 /**
+ * A portion of a transaction's amount applied to a specific invoice. The
+ * settlement an allocation was recorded in.
+ */
+export interface AllocationSettlement {
+  /**
+   * Settlement ID.
+   */
+  id: string;
+
+  /**
+   * Settlement number.
+   */
+  number: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'settlement';
+}
+
+/**
  * An invoice billing a customer for goods shipped against a sales order.
  */
 export interface Invoice {
@@ -854,9 +875,6 @@ export interface ShippingCaseDetail {
   updated_at: string;
 }
 
-/**
- * A portion of a transaction's amount applied to a specific invoice.
- */
 export interface TransactionAllocation {
   /**
    * Allocation ID.
@@ -892,6 +910,12 @@ export interface TransactionAllocation {
    * Resource type identifier.
    */
   object: 'transaction_allocation';
+
+  /**
+   * A portion of a transaction's amount applied to a specific invoice. The
+   * settlement an allocation was recorded in.
+   */
+  settlement: AllocationSettlement | null;
 
   /**
    * A financial transaction recorded against a customer, such as a payment, credit
@@ -953,6 +977,12 @@ export interface TransactionDetail {
    * and order policies.
    */
   customer: AnalyticsAPI.Customer | null;
+
+  /**
+   * When the money arrived; null until it has. Only a transaction whose funds have
+   * arrived can be applied to invoices or counts as an open credit.
+   */
+  funds_received_at: string | null;
 
   /**
    * Whether the full transaction amount has been applied to invoices.
@@ -1248,6 +1278,7 @@ export interface InvoiceListParams {
 export declare namespace Invoices {
   export {
     type AllocationInvoice as AllocationInvoice,
+    type AllocationSettlement as AllocationSettlement,
     type Invoice as Invoice,
     type InvoiceAllocation as InvoiceAllocation,
     type InvoiceLine as InvoiceLine,

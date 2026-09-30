@@ -29,6 +29,7 @@ export {
 export {
   Invoices,
   type AllocationInvoice,
+  type AllocationSettlement,
   type Invoice,
   type InvoiceAllocation,
   type InvoiceLine,
@@ -72,6 +73,7 @@ export {
   type CreateSettlementAllocationRequest,
   type CreateSettlementRequest,
   type ListSettlementSummary,
+  type NewSettlementTransactionRequest,
   type Settlement,
   type SettlementSummary,
   type UpdateSettlementRequest,
