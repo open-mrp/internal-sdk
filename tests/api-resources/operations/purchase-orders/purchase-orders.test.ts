@@ -12,7 +12,6 @@ describe('resource purchaseOrders', () => {
     const responsePromise = client.operations.purchaseOrders.create({
       lines: [
         {
-          product_id: 'pd_07oe0r7adh2w',
           product_sku: 'RAW-100',
           quantity: { unit_id: 'un_82bd37dae5po', value: '500' },
           unit_price: {
@@ -38,7 +37,6 @@ describe('resource purchaseOrders', () => {
     const response = await client.operations.purchaseOrders.create({
       lines: [
         {
-          product_id: 'pd_07oe0r7adh2w',
           product_sku: 'RAW-100',
           quantity: { unit_id: 'un_82bd37dae5po', value: '500' },
           unit_price: {
@@ -46,13 +44,15 @@ describe('resource purchaseOrders', () => {
             numerator_unit_id: 'un_82bd37dae5po',
             value: '12.50',
           },
-          item_id: 'item_id',
+          item_id: 'it_pej07ckhvu62',
           product_description: 'product_description',
+          product_id: 'product_id',
         },
       ],
       priority_code: 'normal',
       supplier_account_id: 'ac_gwy8tfbc074f',
       include: ['supplier'],
+      bill_to_address_id: 'bill_to_address_id',
       bill_to_country: 'bill_to_country',
       bill_to_locality: 'bill_to_locality',
       bill_to_name: 'bill_to_name',
@@ -65,9 +65,11 @@ describe('resource purchaseOrders', () => {
       carrier_id: 'cr_tv5vfjtgu1n3',
       contact_account_user_ids: ['string'],
       note: 'Urgent restock order',
+      number: 'number',
       payment_term_id: 'payment_term_id',
       promised_at: 'promised_at',
       service_level_id: 'crop_4ilk9p6gccrx',
+      ship_to_address_id: 'ship_to_address_id',
       ship_to_country: 'US',
       ship_to_locality: 'San Francisco',
       ship_to_name: 'Acme Inc.',

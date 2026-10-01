@@ -32,7 +32,6 @@ export class Lines extends APIResource {
    *   await client.operations.purchaseOrders.lines.create(
    *     'po_3ov2ym1pca8m',
    *     {
-   *       product_id: 'pd_07oe0r7adh2w',
    *       product_sku: 'ALM-2024-1001',
    *       quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
    *       unit_price: {
@@ -48,10 +47,15 @@ export class Lines extends APIResource {
    */
   create(
     id: string,
-    body: LineCreateParams,
+    params: LineCreateParams,
     options?: RequestOptions,
   ): APIPromise<DeliveriesAPI.PurchaseOrderLine> {
-    return this._client.post(path`/v1/operations/purchase-orders/${id}/lines`, { body, ...options });
+    const { include, ...body } = params;
+    return this._client.post(path`/v1/operations/purchase-orders/${id}/lines`, {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -88,8 +92,9 @@ export class Lines extends APIResource {
     params: LineUpdateParams,
     options?: RequestOptions,
   ): APIPromise<DeliveriesAPI.PurchaseOrderLine> {
-    const { id, ...body } = params;
+    const { id, include, ...body } = params;
     return this._client.patch(path`/v1/operations/purchase-orders/${id}/lines/${lineID}`, {
+      query: { include },
       body,
       ...options,
     });
@@ -125,11 +130,6 @@ export class Lines extends APIResource {
  * purchase order and when adding a line to an existing one.
  */
 export interface CreatePurchaseOrderLineRequest {
-  /**
-   * ID of the product being ordered.
-   */
-  product_id: string;
-
   /**
    * The product SKU recorded on the line.
    *
@@ -169,6 +169,14 @@ export interface CreatePurchaseOrderLineRequest {
    * The product description recorded on the line.
    */
   product_description?: string;
+
+  /**
+   * ID of the product being ordered.
+   *
+   * A line for a material restocks an item rather than selling a product, so it may
+   * name only `item_id`; one of the two is required.
+   */
+  product_id?: string;
 }
 
 /**
@@ -225,12 +233,7 @@ export interface LineDeleteResponse {}
 
 export interface LineCreateParams {
   /**
-   * ID of the product being ordered.
-   */
-  product_id: string;
-
-  /**
-   * The product SKU recorded on the line.
+   * Body param: The product SKU recorded on the line.
    *
    * Stored on the line itself, so it stays stable even if the product's SKU changes
    * later.
@@ -238,7 +241,7 @@ export interface LineCreateParams {
   product_sku: string;
 
   /**
-   * An amount together with the unit it is expressed in.
+   * Body param: An amount together with the unit it is expressed in.
    *
    * The unit may be a currency, so money amounts such as a credit limit are written
    * the same way as physical amounts like weights or counts.
@@ -246,8 +249,8 @@ export interface LineCreateParams {
   quantity: CustomersAPI.QuantityInput;
 
   /**
-   * A value expressed as a ratio of two units, supplied on create and update
-   * requests.
+   * Body param: A value expressed as a ratio of two units, supplied on create and
+   * update requests.
    *
    * A unit price, for example, has a currency as its numerator unit and the unit the
    * product is bought or sold by as its denominator.
@@ -255,7 +258,28 @@ export interface LineCreateParams {
   unit_price: AccountPricesAPI.RateInput;
 
   /**
-   * ID of the inventory item this line is linked to.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    | 'item'
+    | 'item.category'
+    | 'item.category.unit_group'
+    | 'item.category.unit_group.base_unit'
+    | 'item.category.unit_group.associated_units'
+    | 'item.category.unit_group.associated_units.unit'
+    | 'quantity_ordered'
+    | 'quantity_ordered.unit'
+    | 'unit_price'
+    | 'unit_price.numerator_unit'
+    | 'unit_price.denominator_unit'
+    | 'delivery_lines'
+    | 'delivery_lines.quantity'
+    | 'delivery_lines.quantity.unit'
+  >;
+
+  /**
+   * Body param: ID of the inventory item this line is linked to.
    *
    * Stock received against the line is booked into this item, so lines for goods you
    * hold in inventory should reference one. Supplying an item also records the
@@ -265,9 +289,17 @@ export interface LineCreateParams {
   item_id?: string;
 
   /**
-   * The product description recorded on the line.
+   * Body param: The product description recorded on the line.
    */
   product_description?: string;
+
+  /**
+   * Body param: ID of the product being ordered.
+   *
+   * A line for a material restocks an item rather than selling a product, so it may
+   * name only `item_id`; one of the two is required.
+   */
+  product_id?: string;
 }
 
 export interface LineUpdateParams {
@@ -275,6 +307,27 @@ export interface LineUpdateParams {
    * Path param: Purchase order ID.
    */
   id: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    | 'item'
+    | 'item.category'
+    | 'item.category.unit_group'
+    | 'item.category.unit_group.base_unit'
+    | 'item.category.unit_group.associated_units'
+    | 'item.category.unit_group.associated_units.unit'
+    | 'quantity_ordered'
+    | 'quantity_ordered.unit'
+    | 'unit_price'
+    | 'unit_price.numerator_unit'
+    | 'unit_price.denominator_unit'
+    | 'delivery_lines'
+    | 'delivery_lines.quantity'
+    | 'delivery_lines.quantity.unit'
+  >;
 
   /**
    * Body param: ID of the inventory item to tie this line to.

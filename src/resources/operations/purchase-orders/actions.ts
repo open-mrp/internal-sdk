@@ -83,8 +83,7 @@ export interface ChangePurchaseOrderStatusRequest {
    *
    * Only applies to the `issue` action. When `true`, the purchase order submission
    * email is sent to the order's email contacts and `acknowledgment_status` is set
-   * to `sent`. An order with no email contacts still moves to `sent` even though no
-   * email goes out.
+   * to `sent`. An order with no email contacts sends nothing and stays `not_sent`.
    */
   send_email: boolean;
 
@@ -92,7 +91,7 @@ export interface ChangePurchaseOrderStatusRequest {
    * The lifecycle transition to apply.
    *
    * - `issue`: move an `estimate` order to `issued`. Creates the order's receiving
-   *   order with a line for each order line.
+   *   order with a line for each order line, each at a received quantity of zero.
    * - `unissue`: move an `issued` order back to `estimate`. Deletes the receiving
    *   order.
    * - `close`: move an `issued` order to `fulfilled`. Marks the receiving order
@@ -118,8 +117,7 @@ export interface ActionChangeStatusParams {
    *
    * Only applies to the `issue` action. When `true`, the purchase order submission
    * email is sent to the order's email contacts and `acknowledgment_status` is set
-   * to `sent`. An order with no email contacts still moves to `sent` even though no
-   * email goes out.
+   * to `sent`. An order with no email contacts sends nothing and stays `not_sent`.
    */
   send_email: boolean;
 
@@ -127,7 +125,7 @@ export interface ActionChangeStatusParams {
    * Body param: The lifecycle transition to apply.
    *
    * - `issue`: move an `estimate` order to `issued`. Creates the order's receiving
-   *   order with a line for each order line.
+   *   order with a line for each order line, each at a received quantity of zero.
    * - `unissue`: move an `issued` order back to `estimate`. Deletes the receiving
    *   order.
    * - `close`: move an `issued` order to `fulfilled`. Marks the receiving order
@@ -143,6 +141,7 @@ export interface ActionChangeStatusParams {
    */
   include?: Array<
     | 'supplier'
+    | 'created_by'
     | 'bill_to_address'
     | 'ship_to_address'
     | 'freight'
@@ -151,14 +150,22 @@ export interface ActionChangeStatusParams {
     | 'related'
     | 'related.receiving_order'
     | 'related.deliveries'
+    | 'contacts'
     | 'lines'
     | 'lines.item'
+    | 'lines.item.category'
+    | 'lines.item.category.unit_group'
+    | 'lines.item.category.unit_group.base_unit'
+    | 'lines.item.category.unit_group.associated_units'
+    | 'lines.item.category.unit_group.associated_units.unit'
     | 'lines.quantity_ordered'
     | 'lines.quantity_ordered.unit'
     | 'lines.unit_price'
     | 'lines.unit_price.numerator_unit'
     | 'lines.unit_price.denominator_unit'
-    | 'contacts'
+    | 'lines.delivery_lines'
+    | 'lines.delivery_lines.quantity'
+    | 'lines.delivery_lines.quantity.unit'
   >;
 }
 

@@ -10,7 +10,6 @@ const client = new OpenMRP({
 describe('resource lines', () => {
   test('create: only required params', async () => {
     const responsePromise = client.operations.purchaseOrders.lines.create('po_3ov2ym1pca8m', {
-      product_id: 'pd_07oe0r7adh2w',
       product_sku: 'ALM-2024-1001',
       quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
       unit_price: {
@@ -30,7 +29,6 @@ describe('resource lines', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.operations.purchaseOrders.lines.create('po_3ov2ym1pca8m', {
-      product_id: 'pd_07oe0r7adh2w',
       product_sku: 'ALM-2024-1001',
       quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
       unit_price: {
@@ -38,8 +36,10 @@ describe('resource lines', () => {
         numerator_unit_id: 'un_82bd37dae5po',
         value: '25.50',
       },
+      include: ['item'],
       item_id: 'it_pej07ckhvu62',
       product_description: '6061-T6 Aluminum Sheet 4x8',
+      product_id: 'product_id',
     });
   });
 
@@ -59,6 +59,7 @@ describe('resource lines', () => {
   test('update: required and optional params', async () => {
     const response = await client.operations.purchaseOrders.lines.update('example', {
       id: 'po_3ov2ym1pca8m',
+      include: ['item'],
       item_id: 'item_id',
       product_description: 'product_description',
       product_id: 'pd_07oe0r7adh2w',

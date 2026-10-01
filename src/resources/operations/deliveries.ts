@@ -329,6 +329,12 @@ export interface PurchaseOrderLine {
   created_at: string;
 
   /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  delivery_lines: ListDeliveryLine | null;
+
+  /**
    * An entry in your catalog: something you sell, consume, or build with.
    */
   item: AccountUsersAPI.Item | null;

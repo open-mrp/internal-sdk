@@ -42,11 +42,12 @@ export class PurchaseOrders extends APIResource {
   /**
    * Creates a purchase order.
    *
-   * The order number is assigned automatically from a per-account sequence and the
-   * order starts in `estimate` status; issue it separately to send it to the
-   * supplier and open it for receiving. Bill-to and ship-to addresses are created as
-   * new address records from the inline address fields, and any provided lines and
-   * email contacts are created with the order.
+   * The order number is assigned automatically from a per-account sequence unless
+   * `number` is given, and the order starts in `estimate` status; issue it
+   * separately to send it to the supplier and open it for receiving. Bill-to and
+   * ship-to addresses are either one of the supplier's saved addresses, named by id,
+   * or created as new address records from the inline address fields. Any provided
+   * lines and email contacts are created with the order.
    *
    * A line that references an inventory item also links that item's material to the
    * supplier, if it is not linked already, so the material shows up as sourced from
@@ -60,7 +61,7 @@ export class PurchaseOrders extends APIResource {
    *   await client.operations.purchaseOrders.create({
    *     lines: [
    *       {
-   *         product_id: 'pd_07oe0r7adh2w',
+   *         item_id: 'it_pej07ckhvu62',
    *         product_sku: 'RAW-100',
    *         quantity: {
    *           unit_id: 'un_82bd37dae5po',
@@ -220,11 +221,6 @@ export class PurchaseOrders extends APIResource {
  */
 export interface CreatePurchaseOrderLineInput {
   /**
-   * ID of the product being ordered.
-   */
-  product_id: string;
-
-  /**
    * The product SKU recorded on the line.
    *
    * Stored on the line itself, so it stays stable even if the product's SKU changes
@@ -263,6 +259,14 @@ export interface CreatePurchaseOrderLineInput {
    * The product description recorded on the line.
    */
   product_description?: string;
+
+  /**
+   * ID of the product being ordered.
+   *
+   * A line for a material restocks an item rather than selling a product, so it may
+   * name only `item_id`; one of the two is required.
+   */
+  product_id?: string;
 }
 
 /**
@@ -285,6 +289,13 @@ export interface CreatePurchaseOrderRequest {
    * ID of the supplier account to place the order with.
    */
   supplier_account_id: string;
+
+  /**
+   * ID of one of the supplier's saved addresses to bill the order to.
+   *
+   * When set, the inline `bill_to_*` fields are ignored.
+   */
+  bill_to_address_id?: string;
 
   /**
    * Bill-to country as a two-letter code.
@@ -354,12 +365,21 @@ export interface CreatePurchaseOrderRequest {
   note?: string;
 
   /**
+   * Order number to use instead of the next one in the account's sequence.
+   *
+   * Must be unique within the account; a number already used by another purchase
+   * order is rejected.
+   */
+  number?: string;
+
+  /**
    * ID of the payment term agreed with the supplier.
    */
   payment_term_id?: string;
 
   /**
-   * Promised delivery date in `YYYY-MM-DD` format.
+   * Promised delivery date, as a `YYYY-MM-DD` date (midnight UTC) or an RFC 3339
+   * timestamp.
    *
    * Returned as `scheduled_at` on the purchase order resource.
    */
@@ -369,6 +389,13 @@ export interface CreatePurchaseOrderRequest {
    * ID of the carrier service level for the order's freight.
    */
   service_level_id?: string;
+
+  /**
+   * ID of one of the supplier's saved addresses to ship the order to.
+   *
+   * When set, the inline `ship_to_*` fields are ignored.
+   */
+  ship_to_address_id?: string;
 
   /**
    * Ship-to country as a two-letter code.
@@ -429,6 +456,19 @@ export interface EmailContact {
    * sub-resource, which is shared across every account the user belongs to.
    */
   account_user: AccountUsersAPI.AccountUser | null;
+
+  /**
+   * Email address the purchase order is sent to.
+   */
+  email: string | null;
+
+  /**
+   * Name of the person behind the account user.
+   *
+   * Carried on the contact because the account user belongs to the supplier, whose
+   * users the ordering account cannot read.
+   */
+  name: string | null;
 
   /**
    * Resource type identifier.
@@ -523,11 +563,6 @@ export interface ListPurchaseOrderLine {
  */
 export interface OrderLineInput {
   /**
-   * ID of the product being ordered.
-   */
-  product_id: string;
-
-  /**
    * The product SKU recorded on the line.
    *
    * Stored on the line itself, so it stays stable even if the product's SKU changes
@@ -566,14 +601,22 @@ export interface OrderLineInput {
    * The product description recorded on the line.
    */
   product_description?: string;
+
+  /**
+   * ID of the product being ordered.
+   *
+   * A line for a material restocks an item rather than selling a product, so it may
+   * name only `item_id`; one of the two is required.
+   */
+  product_id?: string;
 }
 
 /**
  * An order placed with a supplier to purchase materials or products.
  *
  * The list endpoint returns this same resource as the retrieve endpoint, except
- * that list rows never carry the note or the scheduled date and can only expand
- * the supplier and the lines.
+ * that list rows cannot expand the creator, the bill-to address, freight, terms or
+ * deliveries.
  */
 export interface PurchaseOrder {
   /**
@@ -612,6 +655,14 @@ export interface PurchaseOrder {
    * Created timestamp.
    */
   created_at: string;
+
+  /**
+   * CreatedBy describes who created a resource and their relationship to the account
+   * that owns it.
+   *
+   * It is resolved from the resource's create audit event.
+   */
+  created_by: SalesOrdersAPI.CreatedBy | null;
 
   /**
    * Freight describes the carrier selection and freight billing for a record.
@@ -785,11 +836,12 @@ export interface UpdatePurchaseOrderRequest {
   priority_code?: 'low' | 'normal' | 'high';
 
   /**
-   * Promised delivery date in `YYYY-MM-DD` format.
+   * Promised delivery date, as a `YYYY-MM-DD` date (midnight UTC) or an RFC 3339
+   * timestamp; `null` clears it.
    *
    * Returned as `scheduled_at` on the purchase order resource.
    */
-  promised_at?: string;
+  promised_at?: string | null;
 
   /**
    * ID of an existing address to use as the ship-to address.
@@ -823,6 +875,7 @@ export interface PurchaseOrderCreateParams {
    */
   include?: Array<
     | 'supplier'
+    | 'created_by'
     | 'bill_to_address'
     | 'ship_to_address'
     | 'freight'
@@ -831,15 +884,30 @@ export interface PurchaseOrderCreateParams {
     | 'related'
     | 'related.receiving_order'
     | 'related.deliveries'
+    | 'contacts'
     | 'lines'
     | 'lines.item'
+    | 'lines.item.category'
+    | 'lines.item.category.unit_group'
+    | 'lines.item.category.unit_group.base_unit'
+    | 'lines.item.category.unit_group.associated_units'
+    | 'lines.item.category.unit_group.associated_units.unit'
     | 'lines.quantity_ordered'
     | 'lines.quantity_ordered.unit'
     | 'lines.unit_price'
     | 'lines.unit_price.numerator_unit'
     | 'lines.unit_price.denominator_unit'
-    | 'contacts'
+    | 'lines.delivery_lines'
+    | 'lines.delivery_lines.quantity'
+    | 'lines.delivery_lines.quantity.unit'
   >;
+
+  /**
+   * Body param: ID of one of the supplier's saved addresses to bill the order to.
+   *
+   * When set, the inline `bill_to_*` fields are ignored.
+   */
+  bill_to_address_id?: string;
 
   /**
    * Body param: Bill-to country as a two-letter code.
@@ -910,12 +978,22 @@ export interface PurchaseOrderCreateParams {
   note?: string;
 
   /**
+   * Body param: Order number to use instead of the next one in the account's
+   * sequence.
+   *
+   * Must be unique within the account; a number already used by another purchase
+   * order is rejected.
+   */
+  number?: string;
+
+  /**
    * Body param: ID of the payment term agreed with the supplier.
    */
   payment_term_id?: string;
 
   /**
-   * Body param: Promised delivery date in `YYYY-MM-DD` format.
+   * Body param: Promised delivery date, as a `YYYY-MM-DD` date (midnight UTC) or an
+   * RFC 3339 timestamp.
    *
    * Returned as `scheduled_at` on the purchase order resource.
    */
@@ -925,6 +1003,13 @@ export interface PurchaseOrderCreateParams {
    * Body param: ID of the carrier service level for the order's freight.
    */
   service_level_id?: string;
+
+  /**
+   * Body param: ID of one of the supplier's saved addresses to ship the order to.
+   *
+   * When set, the inline `ship_to_*` fields are ignored.
+   */
+  ship_to_address_id?: string;
 
   /**
    * Body param: Ship-to country as a two-letter code.
@@ -974,6 +1059,7 @@ export interface PurchaseOrderRetrieveParams {
    */
   include?: Array<
     | 'supplier'
+    | 'created_by'
     | 'bill_to_address'
     | 'ship_to_address'
     | 'freight'
@@ -982,14 +1068,22 @@ export interface PurchaseOrderRetrieveParams {
     | 'related'
     | 'related.receiving_order'
     | 'related.deliveries'
+    | 'contacts'
     | 'lines'
     | 'lines.item'
+    | 'lines.item.category'
+    | 'lines.item.category.unit_group'
+    | 'lines.item.category.unit_group.base_unit'
+    | 'lines.item.category.unit_group.associated_units'
+    | 'lines.item.category.unit_group.associated_units.unit'
     | 'lines.quantity_ordered'
     | 'lines.quantity_ordered.unit'
     | 'lines.unit_price'
     | 'lines.unit_price.numerator_unit'
     | 'lines.unit_price.denominator_unit'
-    | 'contacts'
+    | 'lines.delivery_lines'
+    | 'lines.delivery_lines.quantity'
+    | 'lines.delivery_lines.quantity.unit'
   >;
 }
 
@@ -1000,6 +1094,7 @@ export interface PurchaseOrderUpdateParams {
    */
   include?: Array<
     | 'supplier'
+    | 'created_by'
     | 'bill_to_address'
     | 'ship_to_address'
     | 'freight'
@@ -1008,14 +1103,22 @@ export interface PurchaseOrderUpdateParams {
     | 'related'
     | 'related.receiving_order'
     | 'related.deliveries'
+    | 'contacts'
     | 'lines'
     | 'lines.item'
+    | 'lines.item.category'
+    | 'lines.item.category.unit_group'
+    | 'lines.item.category.unit_group.base_unit'
+    | 'lines.item.category.unit_group.associated_units'
+    | 'lines.item.category.unit_group.associated_units.unit'
     | 'lines.quantity_ordered'
     | 'lines.quantity_ordered.unit'
     | 'lines.unit_price'
     | 'lines.unit_price.numerator_unit'
     | 'lines.unit_price.denominator_unit'
-    | 'contacts'
+    | 'lines.delivery_lines'
+    | 'lines.delivery_lines.quantity'
+    | 'lines.delivery_lines.quantity.unit'
   >;
 
   /**
@@ -1051,11 +1154,12 @@ export interface PurchaseOrderUpdateParams {
   priority_code?: 'low' | 'normal' | 'high';
 
   /**
-   * Body param: Promised delivery date in `YYYY-MM-DD` format.
+   * Body param: Promised delivery date, as a `YYYY-MM-DD` date (midnight UTC) or an
+   * RFC 3339 timestamp; `null` clears it.
    *
    * Returned as `scheduled_at` on the purchase order resource.
    */
-  promised_at?: string;
+  promised_at?: string | null;
 
   /**
    * Body param: ID of an existing address to use as the ship-to address.
@@ -1087,13 +1191,25 @@ export interface PurchaseOrderListParams {
    */
   include?: Array<
     | 'supplier'
+    | 'ship_to_address'
+    | 'related'
+    | 'related.receiving_order'
+    | 'contacts'
     | 'lines'
     | 'lines.item'
+    | 'lines.item.category'
+    | 'lines.item.category.unit_group'
+    | 'lines.item.category.unit_group.base_unit'
+    | 'lines.item.category.unit_group.associated_units'
+    | 'lines.item.category.unit_group.associated_units.unit'
     | 'lines.quantity_ordered'
     | 'lines.quantity_ordered.unit'
     | 'lines.unit_price'
     | 'lines.unit_price.numerator_unit'
     | 'lines.unit_price.denominator_unit'
+    | 'lines.delivery_lines'
+    | 'lines.delivery_lines.quantity'
+    | 'lines.delivery_lines.quantity.unit'
   >;
 
   /**
