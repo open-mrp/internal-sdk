@@ -19,6 +19,17 @@ describe('resource actions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('receive: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.receivingOrders.actions.receive(
+        'rcor_iy0usuxcrjj8',
+        { include: ['supplier'] },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(OpenMRP.NotFoundError);
+  });
+
   test('stock', async () => {
     const responsePromise = client.operations.receivingOrders.actions.stock('rcor_iy0usuxcrjj8');
     const rawResponse = await responsePromise.asResponse();
@@ -36,12 +47,18 @@ describe('resource actions', () => {
       client.operations.receivingOrders.actions.stock(
         'rcor_iy0usuxcrjj8',
         {
+          include: ['supplier'],
           line_items: [
             {
               receiving_order_line_id: 'rcorln_7f39n28j00fr',
-              allocations: [{ quantity: '100', location_id: 'lc_yonnys0hx3ju' }],
+              allocations: [
+                {
+                  quantity: { unit_id: 'un_82bd37dae5po', value: '100' },
+                  location_id: 'lc_yonnys0hx3ju',
+                },
+              ],
               lot_number: 'lot_number',
-              rejected_quantity: 'rejected_quantity',
+              rejected_quantity: { unit_id: 'unit_id', value: 'value' },
             },
           ],
         },
@@ -59,5 +76,16 @@ describe('resource actions', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('void: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.receivingOrders.actions.void(
+        'rcor_iy0usuxcrjj8',
+        { include: ['supplier'] },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 });

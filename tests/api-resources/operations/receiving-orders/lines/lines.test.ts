@@ -24,7 +24,8 @@ describe('resource lines', () => {
   test('update: required and optional params', async () => {
     const response = await client.operations.receivingOrders.lines.update('orln_la01fxgrwcnr', {
       receiving_order_id: 'rcor_iy0usuxcrjj8',
-      quantity_value: '50',
+      include: ['item'],
+      quantity: { unit_id: 'un_82bd37dae5po', value: '50' },
     });
   });
 });

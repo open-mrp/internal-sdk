@@ -2,6 +2,7 @@
 
 import { APIResource } from '../../../core/resource';
 import * as ReceivingOrdersAPI from './receiving-orders';
+import * as CustomersAPI from '../../sales/customers/customers';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -11,12 +12,13 @@ import { path } from '../../../internal/utils/path';
  */
 export class Actions extends APIResource {
   /**
-   * Records the full outstanding quantity as received on every unstocked line of a
-   * receiving order.
+   * Records the full outstanding quantity as received on every purchase order line
+   * of a receiving order.
    *
-   * Each unstocked line's quantity is set to what is still outstanding on its
-   * purchase order line — the ordered quantity less everything already stocked
-   * against that line — and lines with nothing outstanding are left as they are.
+   * For each purchase order line with an unstocked receiving line, the oldest such
+   * line is set, in the ordered unit, to the ordered quantity less what the order
+   * line's other receiving lines already hold, stocked or not. Lines that already
+   * hold at least that much, and order lines already covered, are left as they are.
    * Nothing enters inventory and no delivery is recorded; use Stock Receiving Order
    * to put the received quantities away.
    *
@@ -30,8 +32,16 @@ export class Actions extends APIResource {
    *   );
    * ```
    */
-  receive(id: string, options?: RequestOptions): APIPromise<ReceivingOrdersAPI.ReceivingOrder> {
-    return this._client.put(path`/v1/operations/receiving-orders/${id}/actions/receive`, options);
+  receive(
+    id: string,
+    params: ActionReceiveParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ReceivingOrdersAPI.ReceivingOrder> {
+    const { include } = params ?? {};
+    return this._client.put(path`/v1/operations/receiving-orders/${id}/actions/receive`, {
+      query: { include },
+      ...options,
+    });
   }
 
   /**
@@ -44,13 +54,18 @@ export class Actions extends APIResource {
    * whole stocking event, with a line per allocation and a line per refused
    * quantity.
    *
+   * Each entry must name a line of this order that is being stocked now, at most
+   * once, and its allocations and refusal together may not exceed the quantity
+   * received on that line. Otherwise the request is refused and nothing is stocked.
+   *
    * The newly received stock is then applied to any open inventory issues for the
    * same item, oldest first, so demand already waiting on the item is satisfied
    * automatically.
    *
-   * If a line was received short of its ordered quantity, a new unstocked line is
-   * created automatically for the remainder. Once every line is stocked, the order
-   * is marked complete and the originating purchase order is marked fulfilled.
+   * If a purchase order line is still short once everything against it is stocked, a
+   * new unstocked line is opened for it at a quantity of `0`, in the ordered unit,
+   * for the rest to be received against. Once every line is stocked, the order is
+   * marked complete and the originating purchase order is marked fulfilled.
    *
    * A receiving order with no unstocked, non-zero lines is returned untouched: no
    * delivery is recorded and no inventory is created.
@@ -69,7 +84,10 @@ export class Actions extends APIResource {
    *           allocations: [
    *             {
    *               location_id: 'lc_yonnys0hx3ju',
-   *               quantity: '100',
+   *               quantity: {
+   *                 value: '100',
+   *                 unit_id: 'un_82bd37dae5po',
+   *               },
    *             },
    *           ],
    *         },
@@ -80,10 +98,15 @@ export class Actions extends APIResource {
    */
   stock(
     id: string,
-    body: ActionStockParams | null | undefined = {},
+    params: ActionStockParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<ReceivingOrdersAPI.ReceivingOrder> {
-    return this._client.post(path`/v1/operations/receiving-orders/${id}/actions/stock`, { body, ...options });
+    const { include, ...body } = params ?? {};
+    return this._client.post(path`/v1/operations/receiving-orders/${id}/actions/stock`, {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -111,8 +134,16 @@ export class Actions extends APIResource {
    *   );
    * ```
    */
-  void(id: string, options?: RequestOptions): APIPromise<ReceivingOrdersAPI.ReceivingOrder> {
-    return this._client.put(path`/v1/operations/receiving-orders/${id}/actions/void`, options);
+  void(
+    id: string,
+    params: ActionVoidParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ReceivingOrdersAPI.ReceivingOrder> {
+    const { include } = params ?? {};
+    return this._client.put(path`/v1/operations/receiving-orders/${id}/actions/void`, {
+      query: { include },
+      ...options,
+    });
   }
 }
 
@@ -121,9 +152,12 @@ export class Actions extends APIResource {
  */
 export interface AllocationRequest {
   /**
-   * Quantity to allocate, as a decimal string.
+   * An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
-  quantity: string;
+  quantity: CustomersAPI.QuantityInput;
 
   /**
    * ID of the storage location to put the quantity away at.
@@ -160,12 +194,12 @@ export interface StockLineItemRequest {
   lot_number?: string;
 
   /**
-   * Quantity refused on inspection, as a decimal string.
+   * An amount together with the unit it is expressed in.
    *
-   * The refused quantity is recorded on the delivery and on the receiving order
-   * line's `rejected_quantity`, but never enters inventory.
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
-  rejected_quantity?: string;
+  rejected_quantity?: CustomersAPI.QuantityInput;
 }
 
 /**
@@ -182,10 +216,72 @@ export interface StockReceivingOrderRequest {
   line_items?: Array<StockLineItemRequest>;
 }
 
+export interface ActionReceiveParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<
+    | 'supplier'
+    | 'totals'
+    | 'related'
+    | 'related.purchase_order'
+    | 'related.deliveries'
+    | 'lines'
+    | 'lines.item'
+    | 'lines.item.category'
+    | 'lines.item.category.unit_group'
+    | 'lines.item.category.unit_group.base_unit'
+    | 'lines.item.category.unit_group.associated_units'
+    | 'lines.item.category.unit_group.associated_units.unit'
+    | 'lines.order_line'
+    | 'lines.order_line.item'
+    | 'lines.order_line.quantity_ordered'
+    | 'lines.order_line.quantity_ordered.unit'
+    | 'lines.order_line.unit_price'
+    | 'lines.order_line.unit_price.numerator_unit'
+    | 'lines.order_line.unit_price.denominator_unit'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
+    | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
+  >;
+}
+
 export interface ActionStockParams {
   /**
-   * Per-line stocking details: where to put the goods away, which lot to record them
-   * under, and how much was refused on inspection.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    | 'supplier'
+    | 'totals'
+    | 'related'
+    | 'related.purchase_order'
+    | 'related.deliveries'
+    | 'lines'
+    | 'lines.item'
+    | 'lines.item.category'
+    | 'lines.item.category.unit_group'
+    | 'lines.item.category.unit_group.base_unit'
+    | 'lines.item.category.unit_group.associated_units'
+    | 'lines.item.category.unit_group.associated_units.unit'
+    | 'lines.order_line'
+    | 'lines.order_line.item'
+    | 'lines.order_line.quantity_ordered'
+    | 'lines.order_line.quantity_ordered.unit'
+    | 'lines.order_line.unit_price'
+    | 'lines.order_line.unit_price.numerator_unit'
+    | 'lines.order_line.unit_price.denominator_unit'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
+    | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
+  >;
+
+  /**
+   * Body param: Per-line stocking details: where to put the goods away, which lot to
+   * record them under, and how much was refused on inspection.
    *
    * Unstocked lines left out of this list are still marked as stocked, but nothing
    * is added to inventory for them and they contribute no delivery lines.
@@ -193,11 +289,45 @@ export interface ActionStockParams {
   line_items?: Array<StockLineItemRequest>;
 }
 
+export interface ActionVoidParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<
+    | 'supplier'
+    | 'totals'
+    | 'related'
+    | 'related.purchase_order'
+    | 'related.deliveries'
+    | 'lines'
+    | 'lines.item'
+    | 'lines.item.category'
+    | 'lines.item.category.unit_group'
+    | 'lines.item.category.unit_group.base_unit'
+    | 'lines.item.category.unit_group.associated_units'
+    | 'lines.item.category.unit_group.associated_units.unit'
+    | 'lines.order_line'
+    | 'lines.order_line.item'
+    | 'lines.order_line.quantity_ordered'
+    | 'lines.order_line.quantity_ordered.unit'
+    | 'lines.order_line.unit_price'
+    | 'lines.order_line.unit_price.numerator_unit'
+    | 'lines.order_line.unit_price.denominator_unit'
+    | 'lines.quantity'
+    | 'lines.quantity.unit'
+    | 'lines.quantity_ordered'
+    | 'lines.quantity_ordered.unit'
+  >;
+}
+
 export declare namespace Actions {
   export {
     type AllocationRequest as AllocationRequest,
     type StockLineItemRequest as StockLineItemRequest,
     type StockReceivingOrderRequest as StockReceivingOrderRequest,
+    type ActionReceiveParams as ActionReceiveParams,
     type ActionStockParams as ActionStockParams,
+    type ActionVoidParams as ActionVoidParams,
   };
 }

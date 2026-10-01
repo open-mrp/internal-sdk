@@ -2725,9 +2725,9 @@ Types:
 
 Methods:
 
-- <code title="put /v1/operations/receiving-orders/{id}/actions/receive">client.operations.receivingOrders.actions.<a href="./src/resources/operations/receiving-orders/actions.ts">receive</a>(id) -> ReceivingOrder</code>
+- <code title="put /v1/operations/receiving-orders/{id}/actions/receive">client.operations.receivingOrders.actions.<a href="./src/resources/operations/receiving-orders/actions.ts">receive</a>(id, { ...params }) -> ReceivingOrder</code>
 - <code title="post /v1/operations/receiving-orders/{id}/actions/stock">client.operations.receivingOrders.actions.<a href="./src/resources/operations/receiving-orders/actions.ts">stock</a>(id, { ...params }) -> ReceivingOrder</code>
-- <code title="put /v1/operations/receiving-orders/{id}/actions/void">client.operations.receivingOrders.actions.<a href="./src/resources/operations/receiving-orders/actions.ts">void</a>(id) -> ReceivingOrder</code>
+- <code title="put /v1/operations/receiving-orders/{id}/actions/void">client.operations.receivingOrders.actions.<a href="./src/resources/operations/receiving-orders/actions.ts">void</a>(id, { ...params }) -> ReceivingOrder</code>
 
 ### Lines
 

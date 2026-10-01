@@ -2,6 +2,7 @@
 
 import { APIResource } from '../../../../core/resource';
 import * as ReceivingOrdersAPI from '../receiving-orders';
+import * as CustomersAPI from '../../../sales/customers/customers';
 import * as ActionsAPI from './actions';
 import { ActionReceiveParams, ActionVoidParams, Actions } from './actions';
 import { APIPromise } from '../../../../core/api-promise';
@@ -21,6 +22,8 @@ export class Lines extends APIResource {
    * example — before stocking the order. Nothing enters inventory until the order is
    * stocked.
    *
+   * A line that has been stocked, or a line of a completed order, cannot be changed.
+   *
    * This endpoint requires the permission: `receiving_orders:update`.
    *
    * @example
@@ -30,7 +33,7 @@ export class Lines extends APIResource {
    *     'orln_la01fxgrwcnr',
    *     {
    *       receiving_order_id: 'rcor_iy0usuxcrjj8',
-   *       quantity_value: '50',
+   *       quantity: { value: '50', unit_id: 'un_82bd37dae5po' },
    *     },
    *   );
    * ```
@@ -40,8 +43,9 @@ export class Lines extends APIResource {
     params: LineUpdateParams,
     options?: RequestOptions,
   ): APIPromise<ReceivingOrdersAPI.ReceivingOrderLine> {
-    const { receiving_order_id, ...body } = params;
+    const { receiving_order_id, include, ...body } = params;
     return this._client.patch(path`/v1/operations/receiving-orders/${receiving_order_id}/lines/${id}`, {
+      query: { include },
       body,
       ...options,
     });
@@ -53,11 +57,12 @@ export class Lines extends APIResource {
  */
 export interface UpdateReceivingOrderLineRequest {
   /**
-   * New received quantity for the line, as a decimal string.
+   * An amount together with the unit it is expressed in.
    *
-   * When omitted, the line is returned unchanged.
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
    */
-  quantity_value?: string;
+  quantity?: CustomersAPI.QuantityInput;
 }
 
 export interface LineUpdateParams {
@@ -67,11 +72,36 @@ export interface LineUpdateParams {
   receiving_order_id: string;
 
   /**
-   * Body param: New received quantity for the line, as a decimal string.
-   *
-   * When omitted, the line is returned unchanged.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
    */
-  quantity_value?: string;
+  include?: Array<
+    | 'item'
+    | 'item.category'
+    | 'item.category.unit_group'
+    | 'item.category.unit_group.base_unit'
+    | 'item.category.unit_group.associated_units'
+    | 'item.category.unit_group.associated_units.unit'
+    | 'order_line'
+    | 'order_line.item'
+    | 'order_line.quantity_ordered'
+    | 'order_line.quantity_ordered.unit'
+    | 'order_line.unit_price'
+    | 'order_line.unit_price.numerator_unit'
+    | 'order_line.unit_price.denominator_unit'
+    | 'quantity'
+    | 'quantity.unit'
+    | 'quantity_ordered'
+    | 'quantity_ordered.unit'
+  >;
+
+  /**
+   * Body param: An amount together with the unit it is expressed in.
+   *
+   * The unit may be a currency, so money amounts such as a credit limit are written
+   * the same way as physical amounts like weights or counts.
+   */
+  quantity?: CustomersAPI.QuantityInput;
 }
 
 Lines.Actions = Actions;

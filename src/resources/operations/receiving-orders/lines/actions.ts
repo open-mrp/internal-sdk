@@ -14,11 +14,14 @@ export class Actions extends APIResource {
    * Records the full outstanding quantity as received on a single receiving order
    * line.
    *
-   * Sets the line's quantity to what is still outstanding on its purchase order line
-   * — the ordered quantity less everything already recorded across the receiving
-   * lines for that order line — and returns the line unchanged when nothing is
-   * outstanding. Nothing enters inventory; use Stock Receiving Order to put the
-   * received quantity away.
+   * Sets the line's quantity, in the ordered unit, to the ordered quantity less what
+   * the purchase order line's other receiving lines already hold, so that together
+   * they cover the order. A line that already holds at least that much, or whose
+   * order line is already covered, is returned unchanged. Nothing enters inventory;
+   * use Stock Receiving Order to put the received quantity away.
+   *
+   * A line that has been stocked, or a line of a completed order, cannot be
+   * received.
    *
    * This endpoint requires the permission: `receiving_orders:update`.
    *
@@ -36,19 +39,21 @@ export class Actions extends APIResource {
     params: ActionReceiveParams,
     options?: RequestOptions,
   ): APIPromise<ReceivingOrdersAPI.ReceivingOrderLine> {
-    const { receiving_order_id } = params;
+    const { receiving_order_id, include } = params;
     return this._client.put(
       path`/v1/operations/receiving-orders/${receiving_order_id}/lines/${id}/actions/receive`,
-      options,
+      { query: { include }, ...options },
     );
   }
 
   /**
    * Voids a single receiving order line, resetting its receiving progress.
    *
-   * The line's received quantity is reset to `0` and its stocked state is cleared,
-   * leaving the rest of the order untouched. The line itself is not deleted, and any
-   * inventory already stocked from it is not reversed.
+   * The line's received quantity is reset to `0`, leaving the rest of the order
+   * untouched. The line itself is not deleted.
+   *
+   * A line that has been stocked, or a line of a completed order, cannot be voided;
+   * void the receiving order to reopen it.
    *
    * This endpoint requires the permission: `receiving_orders:update`.
    *
@@ -66,26 +71,74 @@ export class Actions extends APIResource {
     params: ActionVoidParams,
     options?: RequestOptions,
   ): APIPromise<ReceivingOrdersAPI.ReceivingOrderLine> {
-    const { receiving_order_id } = params;
+    const { receiving_order_id, include } = params;
     return this._client.put(
       path`/v1/operations/receiving-orders/${receiving_order_id}/lines/${id}/actions/void`,
-      options,
+      { query: { include }, ...options },
     );
   }
 }
 
 export interface ActionReceiveParams {
   /**
-   * Receiving order ID.
+   * Path param: Receiving order ID.
    */
   receiving_order_id: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    | 'item'
+    | 'item.category'
+    | 'item.category.unit_group'
+    | 'item.category.unit_group.base_unit'
+    | 'item.category.unit_group.associated_units'
+    | 'item.category.unit_group.associated_units.unit'
+    | 'order_line'
+    | 'order_line.item'
+    | 'order_line.quantity_ordered'
+    | 'order_line.quantity_ordered.unit'
+    | 'order_line.unit_price'
+    | 'order_line.unit_price.numerator_unit'
+    | 'order_line.unit_price.denominator_unit'
+    | 'quantity'
+    | 'quantity.unit'
+    | 'quantity_ordered'
+    | 'quantity_ordered.unit'
+  >;
 }
 
 export interface ActionVoidParams {
   /**
-   * Receiving order ID.
+   * Path param: Receiving order ID.
    */
   receiving_order_id: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    | 'item'
+    | 'item.category'
+    | 'item.category.unit_group'
+    | 'item.category.unit_group.base_unit'
+    | 'item.category.unit_group.associated_units'
+    | 'item.category.unit_group.associated_units.unit'
+    | 'order_line'
+    | 'order_line.item'
+    | 'order_line.quantity_ordered'
+    | 'order_line.quantity_ordered.unit'
+    | 'order_line.unit_price'
+    | 'order_line.unit_price.numerator_unit'
+    | 'order_line.unit_price.denominator_unit'
+    | 'quantity'
+    | 'quantity.unit'
+    | 'quantity_ordered'
+    | 'quantity_ordered.unit'
+  >;
 }
 
 export declare namespace Actions {

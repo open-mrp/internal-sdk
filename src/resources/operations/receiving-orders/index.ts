@@ -5,7 +5,9 @@ export {
   type AllocationRequest,
   type StockLineItemRequest,
   type StockReceivingOrderRequest,
+  type ActionReceiveParams,
   type ActionStockParams,
+  type ActionVoidParams,
 } from './actions';
 export { Lines, type UpdateReceivingOrderLineRequest, type LineUpdateParams } from './lines/index';
 export {

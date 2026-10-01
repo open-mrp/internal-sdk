@@ -7,7 +7,9 @@ import * as AnalyticsAPI from '../../core/analytics/analytics';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as ActionsAPI from './actions';
 import {
+  ActionReceiveParams,
   ActionStockParams,
+  ActionVoidParams,
   Actions,
   AllocationRequest,
   StockLineItemRequest,
@@ -55,6 +57,9 @@ export class ReceivingOrders extends APIResource {
    *
    * Only open (incomplete) orders are returned by default; pass `status` to change
    * this.
+   *
+   * `q` matches part of the receiving order's number, its purchase order's number or
+   * customer PO number, or the supplier's name, alias or account number.
    *
    * This endpoint requires the permission: `receiving_orders:read`.
    *
@@ -378,6 +383,11 @@ export interface ReceivingOrderTotals {
   /**
    * ReceivingOrderStageTotal is how much of a receiving order has reached one stage.
    */
+  received: ReceivingOrderStageTotal;
+
+  /**
+   * ReceivingOrderStageTotal is how much of a receiving order has reached one stage.
+   */
   rejected: ReceivingOrderStageTotal;
 
   /**
@@ -399,6 +409,11 @@ export interface ReceivingOrderRetrieveParams {
     | 'related.deliveries'
     | 'lines'
     | 'lines.item'
+    | 'lines.item.category'
+    | 'lines.item.category.unit_group'
+    | 'lines.item.category.unit_group.base_unit'
+    | 'lines.item.category.unit_group.associated_units'
+    | 'lines.item.category.unit_group.associated_units.unit'
     | 'lines.order_line'
     | 'lines.order_line.item'
     | 'lines.order_line.quantity_ordered'
@@ -410,11 +425,6 @@ export interface ReceivingOrderRetrieveParams {
     | 'lines.quantity.unit'
     | 'lines.quantity_ordered'
     | 'lines.quantity_ordered.unit'
-    | 'lines.item.category'
-    | 'lines.item.category.unit_group'
-    | 'lines.item.category.unit_group.base_unit'
-    | 'lines.item.category.unit_group.associated_units'
-    | 'lines.item.category.unit_group.associated_units.unit'
   >;
 }
 
@@ -430,7 +440,7 @@ export interface ReceivingOrderListParams {
 
   /**
    * Only return orders created on or before this date (`YYYY-MM-DD`), covering that
-   * whole day.
+   * whole day, or on or before this exact RFC 3339 timestamp.
    */
   ends_at?: string;
 
@@ -446,6 +456,11 @@ export interface ReceivingOrderListParams {
     | 'related.deliveries'
     | 'lines'
     | 'lines.item'
+    | 'lines.item.category'
+    | 'lines.item.category.unit_group'
+    | 'lines.item.category.unit_group.base_unit'
+    | 'lines.item.category.unit_group.associated_units'
+    | 'lines.item.category.unit_group.associated_units.unit'
     | 'lines.order_line'
     | 'lines.order_line.item'
     | 'lines.order_line.quantity_ordered'
@@ -457,11 +472,6 @@ export interface ReceivingOrderListParams {
     | 'lines.quantity.unit'
     | 'lines.quantity_ordered'
     | 'lines.quantity_ordered.unit'
-    | 'lines.item.category'
-    | 'lines.item.category.unit_group'
-    | 'lines.item.category.unit_group.base_unit'
-    | 'lines.item.category.unit_group.associated_units'
-    | 'lines.item.category.unit_group.associated_units.unit'
   >;
 
   /**
@@ -482,7 +492,8 @@ export interface ReceivingOrderListParams {
   q?: string;
 
   /**
-   * Only return orders created on or after this date (`YYYY-MM-DD`).
+   * Only return orders created on or after this date (`YYYY-MM-DD`) or exact RFC
+   * 3339 timestamp.
    */
   starts_at?: string;
 
@@ -521,7 +532,9 @@ export declare namespace ReceivingOrders {
     type AllocationRequest as AllocationRequest,
     type StockLineItemRequest as StockLineItemRequest,
     type StockReceivingOrderRequest as StockReceivingOrderRequest,
+    type ActionReceiveParams as ActionReceiveParams,
     type ActionStockParams as ActionStockParams,
+    type ActionVoidParams as ActionVoidParams,
   };
 
   export {

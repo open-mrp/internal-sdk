@@ -24,6 +24,7 @@ describe('resource actions', () => {
   test('receive: required and optional params', async () => {
     const response = await client.operations.receivingOrders.lines.actions.receive('orln_la01fxgrwcnr', {
       receiving_order_id: 'rcor_iy0usuxcrjj8',
+      include: ['item'],
     });
   });
 
@@ -43,6 +44,7 @@ describe('resource actions', () => {
   test('void: required and optional params', async () => {
     const response = await client.operations.receivingOrders.lines.actions.void('orln_la01fxgrwcnr', {
       receiving_order_id: 'rcor_iy0usuxcrjj8',
+      include: ['item'],
     });
   });
 });
