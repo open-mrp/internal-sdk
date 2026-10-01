@@ -199,6 +199,7 @@ import {
 } from './production-flows/production-flows';
 import * as ProductionRunsAPI from './production-runs/production-runs';
 import {
+  AddBatchInputRequest,
   CreateProductionRunRequest,
   ListProductionRun,
   ProductionRunCreateParams,
@@ -1523,6 +1524,7 @@ export declare namespace Operations {
 
   export {
     ProductionRuns as ProductionRuns,
+    type AddBatchInputRequest as AddBatchInputRequest,
     type CreateProductionRunRequest as CreateProductionRunRequest,
     type ListProductionRun as ListProductionRun,
     type UpdateProductionRunRequest as UpdateProductionRunRequest,

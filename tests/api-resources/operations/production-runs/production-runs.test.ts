@@ -25,6 +25,20 @@ describe('resource productionRuns', () => {
     const response = await client.operations.productionRuns.create({
       responsible_user_id: 'us_43irtlt2ajz6',
       include: ['responsible_user'],
+      batches: [
+        {
+          item_id: 'it_pej07ckhvu62',
+          quantity_unit_id: 'un_82bd37dae5po',
+          quantity_value: '100',
+          machine_ids: ['mc_ffcfk9dxixis'],
+          production_step_id: 'prst_0ht5mkqx5a6t',
+          scanning_station_id: 'scanning_station_id',
+          seconds_unit_id: 'seconds_unit_id',
+          seconds_value: 'seconds_value',
+          waste_unit_id: 'waste_unit_id',
+          waste_value: 'waste_value',
+        },
+      ],
     });
   });
 

@@ -191,6 +191,7 @@ export {
 } from './production-flows/index';
 export {
   ProductionRuns,
+  type AddBatchInputRequest,
   type CreateProductionRunRequest,
   type ListProductionRun,
   type UpdateProductionRunRequest,

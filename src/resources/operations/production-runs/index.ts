@@ -11,13 +11,13 @@ export {
 } from './actions';
 export {
   Batches,
-  type AddBatchInputRequest,
   type AddBatchesToProductionRunRequest,
   type BatchCreateParams,
   type BatchListParams,
 } from './batches';
 export {
   ProductionRuns,
+  type AddBatchInputRequest,
   type CreateProductionRunRequest,
   type ListProductionRun,
   type UpdateProductionRunRequest,
