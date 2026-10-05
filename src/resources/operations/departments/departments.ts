@@ -265,8 +265,10 @@ export interface UpdateDepartmentRequest {
 
   /**
    * Free-form notes about the department.
+   *
+   * Send `null` to clear.
    */
-  notes?: string;
+  notes?: string | null;
 
   /**
    * IDs of scanning stations to assign to this department.
@@ -369,8 +371,10 @@ export interface DepartmentUpdateParams {
 
   /**
    * Body param: Free-form notes about the department.
+   *
+   * Send `null` to clear.
    */
-  notes?: string;
+  notes?: string | null;
 
   /**
    * Body param: IDs of scanning stations to assign to this department.

@@ -99,6 +99,7 @@ describe('resource machines', () => {
       client.operations.machines.list(
         {
           cursor: 'cursor',
+          include: ['department'],
           limit: 0,
           q: 'q',
         },
