@@ -4,19 +4,6 @@ import { APIResource } from '../../core/resource';
 import * as CoreAPI from '../core/core';
 import * as AnalyticsAPI from './analytics';
 import { Analytics, AnalyticsUpdateOpenBatchesParams, ListOpenBatchSummary } from './analytics';
-import * as DcLocationsAPI from './dc-locations';
-import {
-  CreateDcLocationRequest,
-  DcLocation,
-  DcLocationCreateParams,
-  DcLocationCustomer,
-  DcLocationDeleteResponse,
-  DcLocationListParams,
-  DcLocationUpdateParams,
-  DcLocations,
-  ListDcLocation,
-  UpdateDcLocationRequest,
-} from './dc-locations';
 import * as DeliveriesAPI from './deliveries';
 import {
   Deliveries,
@@ -43,8 +30,6 @@ import {
   ListDemandOverride,
   UpdateDemandOverrideRequest,
 } from './demand-overrides';
-import * as EdiRunsAPI from './edi-runs';
-import { EdiRun, EdiRunListParams, EdiRuns, ListEdiRun } from './edi-runs';
 import * as LocationTypesAPI from './location-types';
 import { ListLocationType, LocationType, LocationTypeListParams, LocationTypes } from './location-types';
 import * as MachineDowntimeEventsAPI from './machine-downtime-events';
@@ -123,8 +108,6 @@ import {
   ListDepartment,
   UpdateDepartmentRequest,
 } from './departments/departments';
-import * as EdiAPI from './edi/edi';
-import { Edi } from './edi/edi';
 import * as FulfillmentRecommendationsAPI from './fulfillment-recommendations/fulfillment-recommendations';
 import {
   FulfillmentRecommendation,
@@ -395,9 +378,6 @@ export class Operations extends APIResource {
   locationTypes: LocationTypesAPI.LocationTypes = new LocationTypesAPI.LocationTypes(this._client);
   shippingCases: ShippingCasesAPI.ShippingCases = new ShippingCasesAPI.ShippingCases(this._client);
   shipments: ShipmentsAPI.Shipments = new ShipmentsAPI.Shipments(this._client);
-  edi: EdiAPI.Edi = new EdiAPI.Edi(this._client);
-  dcLocations: DcLocationsAPI.DcLocations = new DcLocationsAPI.DcLocations(this._client);
-  ediRuns: EdiRunsAPI.EdiRuns = new EdiRunsAPI.EdiRuns(this._client);
 
   /**
    * Returns the demand override types, which describe how an override's value
@@ -1369,9 +1349,6 @@ Operations.Locations = Locations;
 Operations.LocationTypes = LocationTypes;
 Operations.ShippingCases = ShippingCases;
 Operations.Shipments = Shipments;
-Operations.Edi = Edi;
-Operations.DcLocations = DcLocations;
-Operations.EdiRuns = EdiRuns;
 
 export declare namespace Operations {
   export {
@@ -1736,27 +1713,5 @@ export declare namespace Operations {
     type ShipmentRetrieveParams as ShipmentRetrieveParams,
     type ShipmentUpdateParams as ShipmentUpdateParams,
     type ShipmentListParams as ShipmentListParams,
-  };
-
-  export { Edi as Edi };
-
-  export {
-    DcLocations as DcLocations,
-    type CreateDcLocationRequest as CreateDcLocationRequest,
-    type DcLocation as DcLocation,
-    type DcLocationCustomer as DcLocationCustomer,
-    type ListDcLocation as ListDcLocation,
-    type UpdateDcLocationRequest as UpdateDcLocationRequest,
-    type DcLocationDeleteResponse as DcLocationDeleteResponse,
-    type DcLocationCreateParams as DcLocationCreateParams,
-    type DcLocationUpdateParams as DcLocationUpdateParams,
-    type DcLocationListParams as DcLocationListParams,
-  };
-
-  export {
-    EdiRuns as EdiRuns,
-    type EdiRun as EdiRun,
-    type ListEdiRun as ListEdiRun,
-    type EdiRunListParams as EdiRunListParams,
   };
 }

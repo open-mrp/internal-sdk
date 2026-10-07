@@ -49,7 +49,6 @@ describe('resource invoices', () => {
         {
           include: ['customer'],
           has_been_sent: true,
-          is_edi_sent: false,
           is_paid_in_full: false,
           metadata: { foo: 'string' },
           note: 'Payment received via wire transfer',

@@ -35,18 +35,6 @@ export {
   type CarrierListParams,
 } from './carriers/index';
 export {
-  DcLocations,
-  type CreateDcLocationRequest,
-  type DcLocation,
-  type DcLocationCustomer,
-  type ListDcLocation,
-  type UpdateDcLocationRequest,
-  type DcLocationDeleteResponse,
-  type DcLocationCreateParams,
-  type DcLocationUpdateParams,
-  type DcLocationListParams,
-} from './dc-locations';
-export {
   Deliveries,
   type Delivery,
   type DeliveryLine,
@@ -82,8 +70,6 @@ export {
   type DepartmentUpdateParams,
   type DepartmentListParams,
 } from './departments/index';
-export { Edi } from './edi/index';
-export { EdiRuns, type EdiRun, type ListEdiRun, type EdiRunListParams } from './edi-runs';
 export {
   FulfillmentRecommendations,
   type FulfillmentRecommendation,

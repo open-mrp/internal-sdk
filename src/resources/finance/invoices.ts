@@ -167,25 +167,12 @@ export interface Invoice {
   customer: AnalyticsAPI.Customer | null;
 
   /**
-   * Whether the billed customer is configured to exchange documents via EDI.
-   */
-  customer_is_edi_enabled: boolean;
-
-  /**
    * Whether the invoice has been sent to the customer.
    *
    * Set automatically when the invoice is emailed through Email Record, and can also
    * be set directly through Update Invoice.
    */
   has_been_sent: boolean;
-
-  /**
-   * Whether the invoice has been transmitted to the customer via EDI.
-   *
-   * Nothing in the platform sets this flag; it is recorded through Update Invoice
-   * once the invoice has been transmitted elsewhere.
-   */
-  is_edi_sent: boolean;
 
   /**
    * Whether the invoice is marked paid in full.
@@ -1078,13 +1065,6 @@ export interface UpdateInvoiceRequest {
   has_been_sent?: boolean;
 
   /**
-   * Records whether the invoice has been transmitted to the customer via EDI.
-   *
-   * A tracking flag only; setting it does not transmit anything.
-   */
-  is_edi_sent?: boolean;
-
-  /**
    * Whether the invoice has been paid in full.
    *
    * Setting this to `true` marks the invoice as paid regardless of the payments
@@ -1178,14 +1158,6 @@ export interface InvoiceUpdateParams {
    * to be set here when the invoice was delivered outside the platform.
    */
   has_been_sent?: boolean;
-
-  /**
-   * Body param: Records whether the invoice has been transmitted to the customer via
-   * EDI.
-   *
-   * A tracking flag only; setting it does not transmit anything.
-   */
-  is_edi_sent?: boolean;
 
   /**
    * Body param: Whether the invoice has been paid in full.
