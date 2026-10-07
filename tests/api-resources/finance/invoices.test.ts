@@ -84,6 +84,7 @@ describe('resource invoices', () => {
           numbers: ['string'],
           product_line_ids: ['string'],
           q: 'q',
+          q_match: 'prefix',
           sales_rep_ids: ['string'],
           starts_at: 'starts_at',
           status: 'all',

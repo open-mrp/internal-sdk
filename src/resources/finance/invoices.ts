@@ -66,9 +66,11 @@ export class Invoices extends APIResource {
   /**
    * Returns a paginated list of invoices for the current account, newest first.
    *
-   * A free-text search term (`q`) is matched against the invoice number, the invoice
-   * note, the customer name, the sales order number, the customer PO number, and the
-   * customer's number, alias, and notes, and still respects the other filters.
+   * A free-text search term (`q`) matches the start of the invoice number, the sales
+   * order number, the customer PO number, and the customer's name, number, and
+   * alias, and still respects the other filters. With `q_match=contains` it matches
+   * anywhere in those fields and also searches the invoice note and the customer's
+   * notes.
    *
    * This endpoint requires the permission: `invoices:read`.
    *
@@ -1249,9 +1251,9 @@ export interface InvoiceListParams {
   /**
    * Restricts results to invoices with any of these numbers, matched exactly.
    *
-   * Up to 100 numbers. Unlike `q`, which matches part of a number and also searches
-   * notes, customers, order numbers and purchase order numbers, this finds exactly
-   * the invoices named.
+   * Up to 100 numbers. Unlike `q`, which matches the start of a number (or any part
+   * of it with `q_match=contains`) and also searches customers, order numbers and
+   * purchase order numbers, this finds exactly the invoices named.
    */
   numbers?: Array<string>;
 
@@ -1267,6 +1269,17 @@ export interface InvoiceListParams {
    * Which fields are matched against the term varies by endpoint.
    */
   q?: string;
+
+  /**
+   * How `q` is matched. Defaults to `prefix`.
+   *
+   * - `prefix`: `q` matches the start of the invoice number, the sales order number,
+   *   the customer PO number, and the customer's name, number, and alias. Notes are
+   *   not searched.
+   * - `contains`: `q` matches anywhere in those fields, and also in the invoice note
+   *   and the customer's notes. Slower on accounts with many invoices.
+   */
+  q_match?: 'prefix' | 'contains';
 
   /**
    * Restricts results to invoices whose sales order is credited to any of these
