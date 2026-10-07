@@ -13,10 +13,12 @@ describe('resource salesOrders', () => {
       buyer_account_id: 'ac_opnlh43ymyee',
       lines: [
         {
+          metadata: { foo: 'string' },
           product_id: 'pd_07oe0r7adh2w',
           quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
         },
       ],
+      metadata: { foo: 'string' },
       priority_code: 'normal',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -33,6 +35,7 @@ describe('resource salesOrders', () => {
       buyer_account_id: 'ac_opnlh43ymyee',
       lines: [
         {
+          metadata: { foo: 'string' },
           product_id: 'pd_07oe0r7adh2w',
           quantity: { unit_id: 'un_82bd37dae5po', value: '10' },
           product_description: 'product_description',
@@ -44,6 +47,7 @@ describe('resource salesOrders', () => {
           },
         },
       ],
+      metadata: { foo: 'string' },
       priority_code: 'normal',
       include: ['customer'],
       acknowledgement_email_contacts: [{ account_user_id: 'acus_e5zu8bde0z3h' }],
@@ -158,6 +162,7 @@ describe('resource salesOrders', () => {
           customer_purchase_order_number: 'customer_purchase_order_number',
           invoice_email_contacts: [{ account_user_id: 'account_user_id' }],
           lead_time_override_days: 0,
+          metadata: { foo: 'string' },
           note: 'Updated shipping instructions',
           order_discount_id: 'order_discount_id',
           payment_term_id: 'payment_term_id',

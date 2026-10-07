@@ -66,6 +66,7 @@ export class SalesOrders extends APIResource {
    *       quantity: { value: '10', unit_id: 'un_82bd37dae5po' },
    *     },
    *   ],
+   *   metadata: { foo: 'string' },
    *   priority_code: 'normal',
    *   acknowledgement_email_contacts: [
    *     { account_user_id: 'acus_e5zu8bde0z3h' },
@@ -429,6 +430,16 @@ export interface Commitment {
  */
 export interface CreateSalesOrderLineInput {
   /**
+   * Key-value pairs to store on the line for your own references, such as its ID in
+   * another system.
+   *
+   * Up to 50 keys. Keys are up to 40 characters and cannot contain `[` or `]`;
+   * values are strings up to 500 characters, and an empty string is stored as one. A
+   * key sent as `null` is not stored.
+   */
+  metadata: { [key: string]: string };
+
+  /**
    * ID of the product being ordered.
    */
   product_id: string;
@@ -481,6 +492,16 @@ export interface CreateSalesOrderRequest {
    * are added on top of these automatically.
    */
   lines: Array<CreateSalesOrderLineInput>;
+
+  /**
+   * Key-value pairs to store on the order for your own references, such as its ID in
+   * another system.
+   *
+   * Up to 50 keys. Keys are up to 40 characters and cannot contain `[` or `]`;
+   * values are strings up to 500 characters, and an empty string is stored as one. A
+   * key sent as `null` is not stored.
+   */
+  metadata: { [key: string]: string };
 
   /**
    * Fulfillment priority used to rank the order on the shop floor.
@@ -1215,6 +1236,12 @@ export interface SalesOrder {
   lines: ListSalesOrderLine | null;
 
   /**
+   * Key-value pairs you attach to the order for your own references, such as its ID
+   * in another system.
+   */
+  metadata: { [key: string]: string };
+
+  /**
    * Free-form note about the order.
    */
   note: string | null;
@@ -1357,6 +1384,12 @@ export interface SalesOrderLine {
    * the bottom; removing a line renumbers the rest so the sequence stays contiguous.
    */
   line_item_number: number;
+
+  /**
+   * Key-value pairs you attach to the line for your own references, such as its ID
+   * in another system.
+   */
+  metadata: { [key: string]: string };
 
   /**
    * Resource type identifier.
@@ -1676,6 +1709,16 @@ export interface UpdateSalesOrderRequest {
   lead_time_override_days?: number | null;
 
   /**
+   * Key-value pairs to store on the order, merged into the ones it already has.
+   *
+   * Keys left out are kept, so `{}` changes nothing. Setting a key to `null` removes
+   * it; an empty string is stored as a value. Sending `metadata: null` removes every
+   * key. An object holds at most 50 keys. Keys are up to 40 characters and cannot
+   * contain `[` or `]`; values are up to 500 characters.
+   */
+  metadata?: { [key: string]: string } | null;
+
+  /**
    * Free-form note about the order.
    */
   note?: string | null;
@@ -1760,6 +1803,16 @@ export interface SalesOrderCreateParams {
    * are added on top of these automatically.
    */
   lines: Array<CreateSalesOrderLineInput>;
+
+  /**
+   * Body param: Key-value pairs to store on the order for your own references, such
+   * as its ID in another system.
+   *
+   * Up to 50 keys. Keys are up to 40 characters and cannot contain `[` or `]`;
+   * values are strings up to 500 characters, and an empty string is stored as one. A
+   * key sent as `null` is not stored.
+   */
+  metadata: { [key: string]: string };
 
   /**
    * Body param: Fulfillment priority used to rank the order on the shop floor.
@@ -2122,6 +2175,17 @@ export interface SalesOrderUpdateParams {
    * another.
    */
   lead_time_override_days?: number | null;
+
+  /**
+   * Body param: Key-value pairs to store on the order, merged into the ones it
+   * already has.
+   *
+   * Keys left out are kept, so `{}` changes nothing. Setting a key to `null` removes
+   * it; an empty string is stored as a value. Sending `metadata: null` removes every
+   * key. An object holds at most 50 keys. Keys are up to 40 characters and cannot
+   * contain `[` or `]`; values are up to 500 characters.
+   */
+  metadata?: { [key: string]: string } | null;
 
   /**
    * Body param: Free-form note about the order.

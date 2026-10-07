@@ -35,7 +35,7 @@ export class Invoices extends APIResource {
   }
 
   /**
-   * Updates an invoice's note and its sent and paid tracking flags.
+   * Updates an invoice's note, its sent and paid tracking flags, and its metadata.
    *
    * Only the fields supplied in the request are changed. The invoice's lines, its
    * customer, and the amounts it bills follow the sales order behind the invoice and
@@ -204,6 +204,12 @@ export interface Invoice {
    * the rest of the result set.
    */
   lines: ListInvoiceLine | null;
+
+  /**
+   * Key-value pairs you attach to the invoice for your own references, such as its
+   * ID in another system.
+   */
+  metadata: { [key: string]: string };
 
   /**
    * Note attached to the invoice.
@@ -1087,6 +1093,16 @@ export interface UpdateInvoiceRequest {
   is_paid_in_full?: boolean;
 
   /**
+   * Key-value pairs to store on the invoice, merged into the ones it already has.
+   *
+   * Keys left out are kept, so `{}` changes nothing. Setting a key to `null` removes
+   * it; an empty string is stored as a value. Sending `metadata: null` removes every
+   * key. An object holds at most 50 keys. Keys are up to 40 characters and cannot
+   * contain `[` or `]`; values are up to 500 characters.
+   */
+  metadata?: { [key: string]: string } | null;
+
+  /**
    * Free-text note attached to the invoice; send `null` to clear it.
    */
   note?: string | null;
@@ -1178,6 +1194,17 @@ export interface InvoiceUpdateParams {
    * recalculates the flag from its allocations and can overwrite the value set here.
    */
   is_paid_in_full?: boolean;
+
+  /**
+   * Body param: Key-value pairs to store on the invoice, merged into the ones it
+   * already has.
+   *
+   * Keys left out are kept, so `{}` changes nothing. Setting a key to `null` removes
+   * it; an empty string is stored as a value. Sending `metadata: null` removes every
+   * key. An object holds at most 50 keys. Keys are up to 40 characters and cannot
+   * contain `[` or `]`; values are up to 500 characters.
+   */
+  metadata?: { [key: string]: string } | null;
 
   /**
    * Body param: Free-text note attached to the invoice; send `null` to clear it.
