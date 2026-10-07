@@ -74,10 +74,12 @@ export class Invoices extends APIResource {
    *
    * @example
    * ```ts
-   * const listInvoice = await client.finance.invoices.list();
+   * const listInvoice = await client.finance.invoices.list({
+   *   numbers: ['string'],
+   * });
    * ```
    */
-  list(query: InvoiceListParams | null | undefined = {}, options?: RequestOptions): APIPromise<ListInvoice> {
+  list(query: InvoiceListParams, options?: RequestOptions): APIPromise<ListInvoice> {
     return this._client.get('/v1/finance/invoices', { query, ...options });
   }
 }
@@ -1213,6 +1215,15 @@ export interface InvoiceUpdateParams {
 }
 
 export interface InvoiceListParams {
+  /**
+   * Restricts results to invoices with any of these numbers, matched exactly.
+   *
+   * Up to 100 numbers. Unlike `q`, which matches part of a number and also searches
+   * notes, customers, order numbers and purchase order numbers, this finds exactly
+   * the invoices named.
+   */
+  numbers: Array<string>;
+
   /**
    * Opaque cursor token identifying where the page of results starts.
    *

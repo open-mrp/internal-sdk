@@ -59,8 +59,8 @@ describe('resource invoices', () => {
     ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
-  test('list', async () => {
-    const responsePromise = client.finance.invoices.list();
+  test('list: only required params', async () => {
+    const responsePromise = client.finance.invoices.list({ numbers: ['string'] });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -70,26 +70,21 @@ describe('resource invoices', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('list: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.finance.invoices.list(
-        {
-          cursor: 'cursor',
-          customer_group_ids: ['string'],
-          customer_ids: ['string'],
-          ends_at: 'ends_at',
-          include: ['customer'],
-          item_ids: ['string'],
-          limit: 0,
-          product_line_ids: ['string'],
-          q: 'q',
-          sales_rep_ids: ['string'],
-          starts_at: 'starts_at',
-          status: 'all',
-        },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+  test('list: required and optional params', async () => {
+    const response = await client.finance.invoices.list({
+      numbers: ['string'],
+      cursor: 'cursor',
+      customer_group_ids: ['string'],
+      customer_ids: ['string'],
+      ends_at: 'ends_at',
+      include: ['customer'],
+      item_ids: ['string'],
+      limit: 0,
+      product_line_ids: ['string'],
+      q: 'q',
+      sales_rep_ids: ['string'],
+      starts_at: 'starts_at',
+      status: 'all',
+    });
   });
 });
