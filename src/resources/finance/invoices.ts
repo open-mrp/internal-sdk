@@ -74,12 +74,10 @@ export class Invoices extends APIResource {
    *
    * @example
    * ```ts
-   * const listInvoice = await client.finance.invoices.list({
-   *   numbers: ['string'],
-   * });
+   * const listInvoice = await client.finance.invoices.list();
    * ```
    */
-  list(query: InvoiceListParams, options?: RequestOptions): APIPromise<ListInvoice> {
+  list(query: InvoiceListParams | null | undefined = {}, options?: RequestOptions): APIPromise<ListInvoice> {
     return this._client.get('/v1/finance/invoices', { query, ...options });
   }
 }
@@ -1188,15 +1186,6 @@ export interface InvoiceUpdateParams {
 
 export interface InvoiceListParams {
   /**
-   * Restricts results to invoices with any of these numbers, matched exactly.
-   *
-   * Up to 100 numbers. Unlike `q`, which matches part of a number and also searches
-   * notes, customers, order numbers and purchase order numbers, this finds exactly
-   * the invoices named.
-   */
-  numbers: Array<string>;
-
-  /**
    * Opaque cursor token identifying where the page of results starts.
    *
    * Use the `cursor` value embedded in a previous response's `next_page_url` or
@@ -1256,6 +1245,15 @@ export interface InvoiceListParams {
    * Maximum number of results to return in a single page.
    */
   limit?: number;
+
+  /**
+   * Restricts results to invoices with any of these numbers, matched exactly.
+   *
+   * Up to 100 numbers. Unlike `q`, which matches part of a number and also searches
+   * notes, customers, order numbers and purchase order numbers, this finds exactly
+   * the invoices named.
+   */
+  numbers?: Array<string>;
 
   /**
    * Restricts results to invoices whose sales order has at least one line whose

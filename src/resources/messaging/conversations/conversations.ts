@@ -92,9 +92,9 @@ export class Conversations extends APIResource {
    * ```ts
    * const conversation =
    *   await client.messaging.conversations.create({
-   *     participant_account_user_ids: ['acus_e5zu8bde0z3h'],
    *     type: 'group',
    *     group_id: 'cvgp_wjlypugna7s4',
+   *     participant_account_user_ids: ['acus_e5zu8bde0z3h'],
    *     participants: [
    *       {
    *         account_user_id: 'acus_e5zu8bde0z3h',
@@ -215,19 +215,6 @@ export interface ConversationParticipantInput {
  */
 export interface CreateConversationRequest {
   /**
-   * The other participants to add.
-   *
-   * For a direct message, exactly one account user. For a group, the members to seed
-   * — these can be omitted when `group_id` supplies a roster, or when the
-   * conversation is anchored to a topic resource, since a record discussion may
-   * start solo and pull people in later.
-   *
-   * The caller is always a participant and does not need to be listed; on a group
-   * they become its owner and every other member seeded at creation is notified.
-   */
-  participant_account_user_ids: Array<string>;
-
-  /**
    * The kind of conversation to create.
    *
    * - `direct_message`: a 1:1 thread with exactly one other user. Addressing
@@ -246,6 +233,19 @@ export interface CreateConversationRequest {
    * Ignored for direct messages.
    */
   group_id?: string;
+
+  /**
+   * The other participants to add.
+   *
+   * For a direct message, exactly one account user. For a group, the members to seed
+   * — these can be omitted when `group_id` supplies a roster, or when the
+   * conversation is anchored to a topic resource, since a record discussion may
+   * start solo and pull people in later.
+   *
+   * The caller is always a participant and does not need to be listed; on a group
+   * they become its owner and every other member seeded at creation is notified.
+   */
+  participant_account_user_ids?: Array<string>;
 
   /**
    * Members to seat in a group with the role each starts with.
@@ -651,19 +651,6 @@ export interface UpdateConversationRequest {
 
 export interface ConversationCreateParams {
   /**
-   * Body param: The other participants to add.
-   *
-   * For a direct message, exactly one account user. For a group, the members to seed
-   * — these can be omitted when `group_id` supplies a roster, or when the
-   * conversation is anchored to a topic resource, since a record discussion may
-   * start solo and pull people in later.
-   *
-   * The caller is always a participant and does not need to be listed; on a group
-   * they become its owner and every other member seeded at creation is notified.
-   */
-  participant_account_user_ids: Array<string>;
-
-  /**
    * Body param: The kind of conversation to create.
    *
    * - `direct_message`: a 1:1 thread with exactly one other user. Addressing
@@ -699,6 +686,19 @@ export interface ConversationCreateParams {
    * Ignored for direct messages.
    */
   group_id?: string;
+
+  /**
+   * Body param: The other participants to add.
+   *
+   * For a direct message, exactly one account user. For a group, the members to seed
+   * — these can be omitted when `group_id` supplies a roster, or when the
+   * conversation is anchored to a topic resource, since a record discussion may
+   * start solo and pull people in later.
+   *
+   * The caller is always a participant and does not need to be listed; on a group
+   * they become its owner and every other member seeded at creation is notified.
+   */
+  participant_account_user_ids?: Array<string>;
 
   /**
    * Body param: Members to seat in a group with the role each starts with.
