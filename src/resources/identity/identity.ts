@@ -67,6 +67,7 @@ import {
   AccountRetrieveParams,
   AccountUpdateParams,
   Accounts,
+  InlineAddressInput,
   UpdateAccountRequest,
 } from './accounts/accounts';
 import * as MeAPI from './me/me';
@@ -369,6 +370,7 @@ export declare namespace Identity {
     Accounts as Accounts,
     type AccountLogoURL as AccountLogoURL,
     type AccountPhotoUploadResult as AccountPhotoUploadResult,
+    type InlineAddressInput as InlineAddressInput,
     type UpdateAccountRequest as UpdateAccountRequest,
     type AccountRetrieveParams as AccountRetrieveParams,
     type AccountUpdateParams as AccountUpdateParams,

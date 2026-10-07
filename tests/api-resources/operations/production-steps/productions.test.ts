@@ -44,6 +44,7 @@ describe('resource productions', () => {
   test('update: required and optional params', async () => {
     const response = await client.operations.productionSteps.productions.update('example', {
       production_step_id: 'prst_0ht5mkqx5a6t',
+      include: ['produced_item'],
       item_id: 'it_pej07ckhvu62',
       quantity_unit_id: 'un_82bd37dae5po',
       quantity_value: '500',

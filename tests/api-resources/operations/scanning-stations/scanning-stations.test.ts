@@ -147,6 +147,7 @@ describe('resource scanningStations', () => {
         measure: '10.5',
         unit_id: 'un_82bd37dae5po',
       },
+      type_override: 'init_batch',
     });
   });
 

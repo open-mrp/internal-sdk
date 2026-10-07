@@ -47,9 +47,9 @@ export class Actions extends APIResource {
 export interface AdminUpdateShippingCaseTrackingRequest {
   /**
    * Carrier tracking number the case actually traveled under, replacing any number
-   * already recorded.
+   * already recorded; send `null` to clear it.
    */
-  tracking_number?: string;
+  tracking_number?: string | null;
 }
 
 export interface ActionAdminUpdateTrackingParams {
@@ -68,9 +68,9 @@ export interface ActionAdminUpdateTrackingParams {
 
   /**
    * Body param: Carrier tracking number the case actually traveled under, replacing
-   * any number already recorded.
+   * any number already recorded; send `null` to clear it.
    */
-  tracking_number?: string;
+  tracking_number?: string | null;
 }
 
 export declare namespace Actions {

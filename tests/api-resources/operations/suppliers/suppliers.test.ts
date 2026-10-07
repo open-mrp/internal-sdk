@@ -26,6 +26,7 @@ describe('resource suppliers', () => {
     const response = await client.operations.suppliers.create({
       name: 'Acme Supplies Inc.',
       number: 'SUP-001',
+      include: ['bill_to_address'],
       bill_to_address: {
         country: 'US',
         name: 'Acme Supplies Inc.',
@@ -92,6 +93,7 @@ describe('resource suppliers', () => {
   test('update: required and optional params', async () => {
     const response = await client.operations.suppliers.update('ac_gwy8tfbc074f', {
       update_note: true,
+      include: ['bill_to_address'],
       bill_to_address_id: 'bill_to_address_id',
       name: 'Acme Supplies LLC',
       note: 'Updated contact info',
@@ -138,5 +140,16 @@ describe('resource suppliers', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('delete: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.operations.suppliers.delete(
+        'ac_gwy8tfbc074f',
+        { include: ['bill_to_address'] },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 });

@@ -73,7 +73,9 @@ export class ShippingCases extends APIResource {
    *
    * Only the case is removed; its shipment, the shipment's lines, and the shipment's
    * other cases are left untouched. Deleting a case that has already been deleted
-   * returns an error rather than succeeding again.
+   * returns an error rather than succeeding again. A case whose shipping label was
+   * bought cannot be deleted until its shipment is voided, which refunds the label;
+   * a conflict error is returned instead.
    *
    * This endpoint requires the permission: `shipments:delete`.
    *
@@ -258,9 +260,9 @@ export interface UpdateShippingCaseRequest {
 
   /**
    * Carrier tracking number to set on the case, replacing any number already
-   * recorded.
+   * recorded; send `null` to clear it.
    */
-  tracking_number?: string;
+  tracking_number?: string | null;
 }
 
 export interface ShippingCaseDeleteResponse {}
@@ -324,9 +326,9 @@ export interface ShippingCaseUpdateParams {
 
   /**
    * Body param: Carrier tracking number to set on the case, replacing any number
-   * already recorded.
+   * already recorded; send `null` to clear it.
    */
-  tracking_number?: string;
+  tracking_number?: string | null;
 }
 
 ShippingCases.Actions = Actions;

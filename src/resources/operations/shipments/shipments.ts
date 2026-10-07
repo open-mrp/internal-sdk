@@ -46,6 +46,9 @@ export class Shipments extends APIResource {
   /**
    * Returns a shipment by ID.
    *
+   * A customer or supplier portal retrieves only a shipment on an order its own
+   * account placed; any other shipment is reported as not found.
+   *
    * This endpoint requires the permission: `shipments:read`.
    *
    * @example
@@ -115,7 +118,8 @@ export class Shipments extends APIResource {
    * Deletes a shipment along with its lines and shipping cases.
    *
    * Deleting a shipment also unpacks the associated pick lines and reopens the pick
-   * for the shipment's order so the items can be repacked.
+   * for the shipment's order so the items can be repacked. A shipped shipment cannot
+   * be deleted; void it first, or a conflict error is returned.
    *
    * This endpoint requires the permission: `shipments:update`.
    *
@@ -172,9 +176,10 @@ export interface UpdateShipmentRequest {
   carrier_id?: string;
 
   /**
-   * Carrier master tracking number covering the shipment as a whole.
+   * Carrier master tracking number covering the shipment as a whole; send `null` to
+   * clear it.
    */
-  master_tracking_number?: string;
+  master_tracking_number?: string | null;
 
   /**
    * Note for the shipment.
@@ -253,9 +258,10 @@ export interface ShipmentUpdateParams {
   carrier_id?: string;
 
   /**
-   * Body param: Carrier master tracking number covering the shipment as a whole.
+   * Body param: Carrier master tracking number covering the shipment as a whole;
+   * send `null` to clear it.
    */
-  master_tracking_number?: string;
+  master_tracking_number?: string | null;
 
   /**
    * Body param: Note for the shipment.
@@ -348,8 +354,10 @@ export interface ShipmentListParams {
   q?: string;
 
   /**
-   * Only include shipments whose customer is assigned to any of these sales reps,
-   * given as account user IDs matching the customer's default sales rep.
+   * Only include shipments whose sales order is credited to any of these sales reps.
+   *
+   * These are account user IDs, matching the `sales_rep` on the order, not the
+   * customer's default sales rep.
    */
   sales_rep_ids?: Array<string>;
 

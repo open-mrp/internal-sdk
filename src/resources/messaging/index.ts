@@ -18,6 +18,7 @@ export {
 } from './blocks';
 export {
   Conversations,
+  type ConversationParticipantInput,
   type CreateConversationRequest,
   type ListConversation,
   type UpdateConversationRequest,

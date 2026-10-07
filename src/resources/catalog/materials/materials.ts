@@ -33,8 +33,11 @@ export class Materials extends APIResource {
    * zero and cannot be supplied here — it is derived from recorded consumption as
    * production happens.
    *
-   * This endpoint requires the permissions: `materials:create`, `customers:update`,
-   * `suppliers:update`.
+   * Acting in a customer's account requires `customers:update`, and acting in a
+   * supplier's account requires `suppliers:update`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `materials:create`.
    *
    * @example
    * ```ts
@@ -72,8 +75,11 @@ export class Materials extends APIResource {
   /**
    * Returns a material by ID.
    *
-   * This endpoint requires the permissions: `materials:read`, `customers:read`,
-   * `suppliers:read`.
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `materials:read`.
    *
    * @example
    * ```ts
@@ -95,17 +101,20 @@ export class Materials extends APIResource {
    *
    * Fields not provided retain their current values. Only the cost side of pricing
    * can be changed here; the selling price set at creation is not editable through
-   * this endpoint. Use the Change Item Category endpoint to move the material to a
-   * different category.
+   * this endpoint.
    *
-   * This endpoint requires the permissions: `materials:update`, `customers:update`,
-   * `suppliers:update`.
+   * Acting in a customer's account requires `customers:update`, and acting in a
+   * supplier's account requires `suppliers:update`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `materials:update`.
    *
    * @example
    * ```ts
    * const material = await client.catalog.materials.update(
    *   'ml_ow202v78slbl',
    *   {
+   *     category_id: 'ic_d06g9c6yc9ck',
    *     description:
    *       'Cold-rolled 304 stainless steel sheet, 2.0mm',
    *     lead_time: {
@@ -141,8 +150,11 @@ export class Materials extends APIResource {
    *
    * `q` matches against SKU and description, with closer SKU matches ranked first.
    *
-   * This endpoint requires the permissions: `materials:read`, `customers:read`,
-   * `suppliers:read`.
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `materials:read`.
    *
    * @example
    * ```ts
@@ -164,8 +176,11 @@ export class Materials extends APIResource {
    * material as it stood immediately before deletion, and deleting an
    * already-deleted material returns an error.
    *
-   * This endpoint requires the permissions: `materials:delete`, `customers:update`,
-   * `suppliers:update`.
+   * Acting in a customer's account requires `customers:update`, and acting in a
+   * supplier's account requires `suppliers:update`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `materials:delete`.
    *
    * @example
    * ```ts
@@ -346,6 +361,18 @@ export interface QuantityInputRequest {
  */
 export interface UpdateMaterialRequest {
   /**
+   * ID of the item category to move the material to.
+   *
+   * The move is the one Change Item Category makes: the category has to be a
+   * material category and has to carry the properties of every attribute the
+   * material already has, and the material's rate and order-point units switch to
+   * the category's base unit while their numbers stay as they were. It is applied
+   * before the other fields in the request, so an `order_point` or `unit_cost` sent
+   * alongside is written after it.
+   */
+  category_id?: string;
+
+  /**
    * New description for the material.
    */
   description?: string;
@@ -494,6 +521,18 @@ export interface MaterialUpdateParams {
     | 'item.burn_rate'
     | 'item.attributes'
   >;
+
+  /**
+   * Body param: ID of the item category to move the material to.
+   *
+   * The move is the one Change Item Category makes: the category has to be a
+   * material category and has to carry the properties of every attribute the
+   * material already has, and the material's rate and order-point units switch to
+   * the category's base unit while their numbers stay as they were. It is applied
+   * before the other fields in the request, so an `order_point` or `unit_cost` sent
+   * alongside is written after it.
+   */
+  category_id?: string;
 
   /**
    * Body param: New description for the material.

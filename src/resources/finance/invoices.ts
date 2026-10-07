@@ -17,8 +17,7 @@ export class Invoices extends APIResource {
   /**
    * Returns an invoice by ID.
    *
-   * This endpoint requires the permissions: `invoices:read`, `customers:read`,
-   * `suppliers:read`.
+   * This endpoint requires the permission: `invoices:read`.
    *
    * @example
    * ```ts
@@ -42,8 +41,7 @@ export class Invoices extends APIResource {
    * customer, and the amounts it bills follow the sales order behind the invoice and
    * cannot be changed here.
    *
-   * This endpoint requires the permissions: `invoices:update`, `customers:update`,
-   * `suppliers:update`.
+   * This endpoint requires the permission: `invoices:update`.
    *
    * @example
    * ```ts
@@ -70,10 +68,9 @@ export class Invoices extends APIResource {
    *
    * A free-text search term (`q`) is matched against the invoice number, the invoice
    * note, the customer name, the sales order number, the customer PO number, and the
-   * customer number, and still respects the other filters.
+   * customer's number, alias, and notes, and still respects the other filters.
    *
-   * This endpoint requires the permissions: `invoices:read`, `customers:read`,
-   * `suppliers:read`.
+   * This endpoint requires the permission: `invoices:read`.
    *
    * @example
    * ```ts
@@ -187,6 +184,15 @@ export interface Invoice {
    * once the invoice has been transmitted elsewhere.
    */
   is_edi_sent: boolean;
+
+  /**
+   * Whether the invoice is marked paid in full.
+   *
+   * An overpaid invoice is paid in full too, and Update Invoice can clear the mark
+   * on it, so `payment_status` alone cannot tell whether an `overpaid` invoice is
+   * marked paid.
+   */
+  is_paid_in_full: boolean;
 
   /**
    * Number of line items on the invoice.
@@ -311,6 +317,12 @@ export interface InvoiceAllocation {
    * Resource type identifier.
    */
   object: 'invoice_allocation';
+
+  /**
+   * A portion of a transaction's amount applied to a specific invoice. The
+   * settlement an allocation was recorded in.
+   */
+  settlement: AllocationSettlement | null;
 
   /**
    * A financial transaction recorded against a customer, such as a payment, credit
@@ -1195,11 +1207,9 @@ export interface InvoiceListParams {
   customer_ids?: Array<string>;
 
   /**
-   * Latest invoice creation date to include, in `YYYY-MM-DD` format.
-   *
-   * Compared against the creation timestamp at the start of that day, so invoices
-   * created later on the end date itself are excluded; pass the following day to
-   * include them.
+   * Only include invoices created on or before this date (`YYYY-MM-DD`, UTC),
+   * covering that whole day. A full timestamp (RFC 3339) is also accepted, to bound
+   * the range at a local midnight.
    */
   ends_at?: string;
 
@@ -1259,7 +1269,8 @@ export interface InvoiceListParams {
   sales_rep_ids?: Array<string>;
 
   /**
-   * Earliest invoice creation date to include, in `YYYY-MM-DD` format.
+   * Only include invoices created on or after this date (`YYYY-MM-DD`, UTC). A full
+   * timestamp (RFC 3339) is also accepted, to bound the range at a local midnight.
    */
   starts_at?: string;
 
@@ -1267,7 +1278,7 @@ export interface InvoiceListParams {
    * Restricts results to invoices in this payment state.
    *
    * - `all`: no payment-state filtering, the same as omitting the parameter.
-   * - `paid`: only invoices marked paid in full.
+   * - `paid`: only invoices marked paid in full, overpaid ones included.
    * - `unpaid`: only invoices not marked paid in full, including invoices carrying
    *   partial payments.
    * - `overpaid`: only invoices whose applied payments exceed the invoiced amount.

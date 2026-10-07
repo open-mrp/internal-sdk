@@ -59,17 +59,15 @@ export class RegistrationFlows extends APIResource {
    *   await client.sales.registrationFlows.update(
    *     'rgfw_5jo86wzvfpgn',
    *     {
-   *       has_customer_group_ids: true,
-   *       has_payment_term_ids: true,
-   *       has_shipping_term_ids: true,
    *       name: 'Wholesale Registration Updated',
+   *       payment_term_ids: ['pytm_skssmsy21lem'],
    *     },
    *   );
    * ```
    */
   update(
     id: string,
-    body: RegistrationFlowUpdateParams,
+    body: RegistrationFlowUpdateParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<RegistrationFlow> {
     return this._client.patch(path`/v1/sales/registration-flows/${id}`, { body, ...options });
@@ -287,34 +285,10 @@ export interface RegistrationFlowOption {
  */
 export interface UpdateRegistrationFlowRequest {
   /**
-   * Whether to replace the flow's customer group options with `customer_group_ids`.
+   * IDs of the customer groups to offer as this flow's options.
    *
-   * When `true`, existing options are cleared and replaced (an empty list removes
-   * all options). When `false` or omitted, customer group options are left
-   * unchanged.
-   */
-  has_customer_group_ids: boolean;
-
-  /**
-   * Whether to replace the flow's payment term options with `payment_term_ids`.
-   *
-   * When `true`, existing options are cleared and replaced (an empty list removes
-   * all options). When `false` or omitted, payment term options are left unchanged.
-   */
-  has_payment_term_ids: boolean;
-
-  /**
-   * Whether to replace the flow's shipping term options with `shipping_term_ids`.
-   *
-   * When `true`, existing options are cleared and replaced (an empty list removes
-   * all options). When `false` or omitted, shipping term options are left unchanged.
-   */
-  has_shipping_term_ids: boolean;
-
-  /**
-   * IDs of the customer groups to set as this flow's options.
-   *
-   * Ignored unless `has_customer_group_ids` is `true`.
+   * Replaces the flow's customer group options; an empty list removes them all. Omit
+   * to leave them unchanged.
    */
   customer_group_ids?: Array<string>;
 
@@ -324,16 +298,18 @@ export interface UpdateRegistrationFlowRequest {
   name?: string;
 
   /**
-   * IDs of the payment terms to set as this flow's options.
+   * IDs of the payment terms to offer as this flow's options.
    *
-   * Ignored unless `has_payment_term_ids` is `true`.
+   * Replaces the flow's payment term options; an empty list removes them all. Omit
+   * to leave them unchanged.
    */
   payment_term_ids?: Array<string>;
 
   /**
-   * IDs of the shipping terms to set as this flow's options.
+   * IDs of the shipping terms to offer as this flow's options.
    *
-   * Ignored unless `has_shipping_term_ids` is `true`.
+   * Replaces the flow's shipping term options; an empty list removes them all. Omit
+   * to leave them unchanged.
    */
   shipping_term_ids?: Array<string>;
 }
@@ -364,34 +340,10 @@ export interface RegistrationFlowCreateParams {
 
 export interface RegistrationFlowUpdateParams {
   /**
-   * Whether to replace the flow's customer group options with `customer_group_ids`.
+   * IDs of the customer groups to offer as this flow's options.
    *
-   * When `true`, existing options are cleared and replaced (an empty list removes
-   * all options). When `false` or omitted, customer group options are left
-   * unchanged.
-   */
-  has_customer_group_ids: boolean;
-
-  /**
-   * Whether to replace the flow's payment term options with `payment_term_ids`.
-   *
-   * When `true`, existing options are cleared and replaced (an empty list removes
-   * all options). When `false` or omitted, payment term options are left unchanged.
-   */
-  has_payment_term_ids: boolean;
-
-  /**
-   * Whether to replace the flow's shipping term options with `shipping_term_ids`.
-   *
-   * When `true`, existing options are cleared and replaced (an empty list removes
-   * all options). When `false` or omitted, shipping term options are left unchanged.
-   */
-  has_shipping_term_ids: boolean;
-
-  /**
-   * IDs of the customer groups to set as this flow's options.
-   *
-   * Ignored unless `has_customer_group_ids` is `true`.
+   * Replaces the flow's customer group options; an empty list removes them all. Omit
+   * to leave them unchanged.
    */
   customer_group_ids?: Array<string>;
 
@@ -401,16 +353,18 @@ export interface RegistrationFlowUpdateParams {
   name?: string;
 
   /**
-   * IDs of the payment terms to set as this flow's options.
+   * IDs of the payment terms to offer as this flow's options.
    *
-   * Ignored unless `has_payment_term_ids` is `true`.
+   * Replaces the flow's payment term options; an empty list removes them all. Omit
+   * to leave them unchanged.
    */
   payment_term_ids?: Array<string>;
 
   /**
-   * IDs of the shipping terms to set as this flow's options.
+   * IDs of the shipping terms to offer as this flow's options.
    *
-   * Ignored unless `has_shipping_term_ids` is `true`.
+   * Replaces the flow's shipping term options; an empty list removes them all. Omit
+   * to leave them unchanged.
    */
   shipping_term_ids?: Array<string>;
 }

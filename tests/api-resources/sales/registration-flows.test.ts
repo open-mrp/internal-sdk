@@ -39,12 +39,8 @@ describe('resource registrationFlows', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: only required params', async () => {
-    const responsePromise = client.sales.registrationFlows.update('rgfw_5jo86wzvfpgn', {
-      has_customer_group_ids: true,
-      has_payment_term_ids: true,
-      has_shipping_term_ids: true,
-    });
+  test('update', async () => {
+    const responsePromise = client.sales.registrationFlows.update('rgfw_5jo86wzvfpgn');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -54,16 +50,20 @@ describe('resource registrationFlows', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: required and optional params', async () => {
-    const response = await client.sales.registrationFlows.update('rgfw_5jo86wzvfpgn', {
-      has_customer_group_ids: true,
-      has_payment_term_ids: true,
-      has_shipping_term_ids: true,
-      customer_group_ids: ['string'],
-      name: 'Wholesale Registration Updated',
-      payment_term_ids: ['string'],
-      shipping_term_ids: ['string'],
-    });
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.sales.registrationFlows.update(
+        'rgfw_5jo86wzvfpgn',
+        {
+          customer_group_ids: ['string'],
+          name: 'Wholesale Registration Updated',
+          payment_term_ids: ['pytm_skssmsy21lem'],
+          shipping_term_ids: ['string'],
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
   test('list', async () => {

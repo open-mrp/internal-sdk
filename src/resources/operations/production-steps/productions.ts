@@ -60,8 +60,9 @@ export class Productions extends APIResource {
     params: ProductionUpdateParams,
     options?: RequestOptions,
   ): APIPromise<AccountUsersAPI.ProductionOutput> {
-    const { production_step_id, ...body } = params;
+    const { production_step_id, include, ...body } = params;
     return this._client.patch(path`/v1/operations/production-steps/${production_step_id}/productions/${id}`, {
+      query: { include },
       body,
       ...options,
     });
@@ -106,7 +107,16 @@ export interface ProductionRetrieveParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'produced_item'>;
+  include?: Array<
+    | 'produced_item'
+    | 'produced_item.category'
+    | 'produced_item.category.unit_group'
+    | 'produced_item.category.unit_group.base_unit'
+    | 'produced_item.category.unit_group.associated_units'
+    | 'produced_item.category.unit_group.associated_units.unit'
+    | 'produced_item.unit_cost'
+    | 'quantity.unit'
+  >;
 }
 
 export interface ProductionUpdateParams {
@@ -114,6 +124,21 @@ export interface ProductionUpdateParams {
    * Path param: Production step ID.
    */
   production_step_id: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    | 'produced_item'
+    | 'produced_item.category'
+    | 'produced_item.category.unit_group'
+    | 'produced_item.category.unit_group.base_unit'
+    | 'produced_item.category.unit_group.associated_units'
+    | 'produced_item.category.unit_group.associated_units.unit'
+    | 'produced_item.unit_cost'
+    | 'quantity.unit'
+  >;
 
   /**
    * Body param: Item this step produces.

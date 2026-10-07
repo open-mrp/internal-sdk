@@ -95,6 +95,12 @@ export class Conversations extends APIResource {
    *     participant_account_user_ids: ['acus_e5zu8bde0z3h'],
    *     type: 'group',
    *     group_id: 'cvgp_wjlypugna7s4',
+   *     participants: [
+   *       {
+   *         account_user_id: 'acus_e5zu8bde0z3h',
+   *         role: 'admin',
+   *       },
+   *     ],
    *     title: 'Order #1042 — shipping question',
    *     topic_resource_id: 'or_9lqo07quiwyb',
    *     topic_resource_type: 'sales_order',
@@ -184,6 +190,27 @@ export class Conversations extends APIResource {
 }
 
 /**
+ * A member to seat in a new group conversation, with the role they start with.
+ */
+export interface ConversationParticipantInput {
+  /**
+   * The account user to add.
+   */
+  account_user_id: string;
+
+  /**
+   * The role the member starts with.
+   *
+   * - `owner`: can rename or delete the conversation and manage members and roles,
+   *   alongside you.
+   * - `admin`: can add and remove members and rename the conversation.
+   * - `member`: can post, leave, mute, and react.
+   * - `viewer`: read-only access.
+   */
+  role: 'owner' | 'admin' | 'member' | 'viewer';
+}
+
+/**
  * Request to create a conversation.
  */
 export interface CreateConversationRequest {
@@ -219,6 +246,19 @@ export interface CreateConversationRequest {
    * Ignored for direct messages.
    */
   group_id?: string;
+
+  /**
+   * Members to seat in a group with the role each starts with.
+   *
+   * Each account user listed here joins the group as those in
+   * `participant_account_user_ids` do, then takes the role given, exactly as if you
+   * set it on the new participant: the change is announced in the thread and
+   * recorded on the participant's history. A user also listed in
+   * `participant_account_user_ids` or on the roster takes the role given here. You
+   * cannot list yourself (you own the group) or the same user twice, and a direct
+   * message takes no roles.
+   */
+  participants?: Array<ConversationParticipantInput>;
 
   /**
    * Title for a group conversation.
@@ -360,6 +400,10 @@ export interface CreateConversationRequest {
     | 'sales_totals'
     | 'sales_breakdown'
     | 'sales_invoice'
+    | 'open_orders_summary'
+    | 'open_order_product'
+    | 'open_order'
+    | 'open_order_line'
     | 'new_customer'
     | 'schedule_order_coverage'
     | 'schedule_order_coverage_line'
@@ -559,7 +603,13 @@ export interface CreateConversationRequest {
     | 'invoice_related'
     | 'pick_related'
     | 'pick_totals'
-    | 'pick_stage_total';
+    | 'pick_stage_total'
+    | 'analyze_production_costs_response'
+    | 'production_cost'
+    | 'production_cost_totals'
+    | 'production_cost_department'
+    | 'production_cost_category'
+    | 'production_cost_department_category';
 }
 
 /**
@@ -651,6 +701,19 @@ export interface ConversationCreateParams {
    * Ignored for direct messages.
    */
   group_id?: string;
+
+  /**
+   * Body param: Members to seat in a group with the role each starts with.
+   *
+   * Each account user listed here joins the group as those in
+   * `participant_account_user_ids` do, then takes the role given, exactly as if you
+   * set it on the new participant: the change is announced in the thread and
+   * recorded on the participant's history. A user also listed in
+   * `participant_account_user_ids` or on the roster takes the role given here. You
+   * cannot list yourself (you own the group) or the same user twice, and a direct
+   * message takes no roles.
+   */
+  participants?: Array<ConversationParticipantInput>;
 
   /**
    * Body param: Title for a group conversation.
@@ -792,6 +855,10 @@ export interface ConversationCreateParams {
     | 'sales_totals'
     | 'sales_breakdown'
     | 'sales_invoice'
+    | 'open_orders_summary'
+    | 'open_order_product'
+    | 'open_order'
+    | 'open_order_line'
     | 'new_customer'
     | 'schedule_order_coverage'
     | 'schedule_order_coverage_line'
@@ -991,7 +1058,13 @@ export interface ConversationCreateParams {
     | 'invoice_related'
     | 'pick_related'
     | 'pick_totals'
-    | 'pick_stage_total';
+    | 'pick_stage_total'
+    | 'analyze_production_costs_response'
+    | 'production_cost'
+    | 'production_cost_totals'
+    | 'production_cost_department'
+    | 'production_cost_category'
+    | 'production_cost_department_category';
 }
 
 export interface ConversationRetrieveParams {
@@ -1241,6 +1314,10 @@ export interface ConversationListParams {
     | 'sales_totals'
     | 'sales_breakdown'
     | 'sales_invoice'
+    | 'open_orders_summary'
+    | 'open_order_product'
+    | 'open_order'
+    | 'open_order_line'
     | 'new_customer'
     | 'schedule_order_coverage'
     | 'schedule_order_coverage_line'
@@ -1440,7 +1517,13 @@ export interface ConversationListParams {
     | 'invoice_related'
     | 'pick_related'
     | 'pick_totals'
-    | 'pick_stage_total';
+    | 'pick_stage_total'
+    | 'analyze_production_costs_response'
+    | 'production_cost'
+    | 'production_cost_totals'
+    | 'production_cost_department'
+    | 'production_cost_category'
+    | 'production_cost_department_category';
 
   /**
    * Filter by conversation type.
@@ -1476,6 +1559,7 @@ Conversations.Attachments = Attachments;
 
 export declare namespace Conversations {
   export {
+    type ConversationParticipantInput as ConversationParticipantInput,
     type CreateConversationRequest as CreateConversationRequest,
     type ListConversation as ListConversation,
     type UpdateConversationRequest as UpdateConversationRequest,

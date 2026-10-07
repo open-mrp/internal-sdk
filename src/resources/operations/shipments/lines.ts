@@ -43,8 +43,14 @@ export class Lines extends APIResource {
   /**
    * Returns a shipment line by ID.
    *
-   * This endpoint requires the permissions: `shipments:read`, `customers:read`,
-   * `suppliers:read`.
+   * A customer or supplier portal retrieves only a line of a shipment on an order
+   * its own account placed; any other shipment is reported as not found.
+   *
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `shipments:read`.
    *
    * @example
    * ```ts
@@ -100,8 +106,14 @@ export class Lines extends APIResource {
   /**
    * Returns a paginated list of lines for the specified shipment.
    *
-   * This endpoint requires the permissions: `shipments:read`, `customers:read`,
-   * `suppliers:read`.
+   * A customer or supplier portal lists only the lines of a shipment on an order its
+   * own account placed; any other shipment is reported as not found.
+   *
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `shipments:read`.
    *
    * @example
    * ```ts

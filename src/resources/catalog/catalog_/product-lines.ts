@@ -21,8 +21,11 @@ export class ProductLines extends APIResource {
    * as their price group. The `q` search term is matched against the product line
    * name.
    *
-   * This endpoint requires the permissions: `products:read`, `customers:read`,
-   * `suppliers:read`.
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `products:read`.
    *
    * @example
    * ```ts
@@ -49,8 +52,11 @@ export class ProductLines extends APIResource {
    * against the category name, and a page returns whole categories with all of their
    * products.
    *
-   * This endpoint requires the permissions: `products:read`, `customers:read`,
-   * `suppliers:read`.
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `products:read`.
    *
    * @example
    * ```ts

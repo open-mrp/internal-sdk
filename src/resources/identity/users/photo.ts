@@ -17,6 +17,11 @@ export class Photo extends APIResource {
    * not publicly readable, use Get User Photo URL to obtain a temporary link for
    * displaying it.
    *
+   * Users may always upload their own photo. Uploading one for another user requires
+   * permission to update team users, and that user must belong to the account you
+   * are acting in. A body that is empty or not a PNG, JPEG, GIF, or WebP image is
+   * refused with a 400, and one over 10 MB with a 413; nothing is stored either way.
+   *
    * This endpoint requires the permission: `team:update`.
    *
    * @example

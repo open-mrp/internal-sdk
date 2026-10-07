@@ -38,7 +38,7 @@ export class Suppliers extends APIResource {
    * Creates a supplier, optionally with inline bill-to and ship-to addresses.
    *
    * Returns a conflict error if another supplier in the account already uses the
-   * given number.
+   * given number. The created addresses are returned when requested with `include`.
    *
    * This endpoint requires the permission: `suppliers:create`.
    *
@@ -59,8 +59,9 @@ export class Suppliers extends APIResource {
    * });
    * ```
    */
-  create(body: SupplierCreateParams, options?: RequestOptions): APIPromise<Supplier> {
-    return this._client.post('/v1/operations/suppliers', { body, ...options });
+  create(params: SupplierCreateParams, options?: RequestOptions): APIPromise<Supplier> {
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/suppliers', { query: { include }, body, ...options });
   }
 
   /**
@@ -103,15 +104,17 @@ export class Suppliers extends APIResource {
    * );
    * ```
    */
-  update(id: string, body: SupplierUpdateParams, options?: RequestOptions): APIPromise<Supplier> {
-    return this._client.patch(path`/v1/operations/suppliers/${id}`, { body, ...options });
+  update(id: string, params: SupplierUpdateParams, options?: RequestOptions): APIPromise<Supplier> {
+    const { include, ...body } = params;
+    return this._client.patch(path`/v1/operations/suppliers/${id}`, { query: { include }, body, ...options });
   }
 
   /**
    * Returns a paginated list of suppliers for the current account, newest first.
    *
    * Filters combine with AND, so an item filter and a date range narrow the list
-   * together. The `q` search term matches the supplier name and number.
+   * together. The `q` search term is split into words, and a supplier matches when
+   * every word appears in its name, number or notes.
    *
    * This endpoint requires the permission: `suppliers:read`.
    *
@@ -133,8 +136,9 @@ export class Suppliers extends APIResource {
    *
    * The supplier's saved addresses and any users belonging to the supplier are
    * deleted along with it. Returns the supplier as it looked immediately before
-   * deletion. Deleting a supplier that has already been deleted returns an error
-   * rather than succeeding again.
+   * deletion, with its addresses when requested with `include`. Deleting a supplier
+   * that has already been deleted returns a `410 Gone` error rather than succeeding
+   * again.
    *
    * This endpoint requires the permission: `suppliers:update`.
    *
@@ -145,8 +149,13 @@ export class Suppliers extends APIResource {
    * );
    * ```
    */
-  delete(id: string, options?: RequestOptions): APIPromise<Supplier> {
-    return this._client.delete(path`/v1/operations/suppliers/${id}`, options);
+  delete(
+    id: string,
+    params: SupplierDeleteParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Supplier> {
+    const { include } = params ?? {};
+    return this._client.delete(path`/v1/operations/suppliers/${id}`, { query: { include }, ...options });
   }
 }
 
@@ -241,11 +250,16 @@ export interface Supplier {
 
   /**
    * Creation timestamp.
-   *
-   * Null on a supplier named from another document, which carries its identity
-   * rather than its record.
    */
   created_at: string | null;
+
+  /**
+   * How many materials are linked to the supplier, as listed by the supplier's
+   * materials endpoint.
+   *
+   * A material whose item has been deleted is not counted.
+   */
+  material_count: number | null;
 
   /**
    * The supplier's name, as shown in the dashboard and on documents.
@@ -293,11 +307,17 @@ export interface UpdateSupplierRequest {
 
   /**
    * ID of an existing address to set as the supplier's default billing address.
+   *
+   * Must be one of the supplier's own addresses, as listed for the supplier's
+   * account; any other address is not found.
    */
   bill_to_address_id?: string;
 
   /**
    * The supplier's name, as shown in the dashboard and on documents.
+   *
+   * This is your account's name for the supplier; it does not rename the supplier's
+   * own account.
    */
   name?: string;
 
@@ -318,18 +338,21 @@ export interface UpdateSupplierRequest {
 
   /**
    * ID of an existing address to set as the supplier's default shipping address.
+   *
+   * Must be one of the supplier's own addresses, as listed for the supplier's
+   * account; any other address is not found.
    */
   ship_to_address_id?: string;
 }
 
 export interface SupplierCreateParams {
   /**
-   * The supplier's name, as shown in the dashboard and on documents.
+   * Body param: The supplier's name, as shown in the dashboard and on documents.
    */
   name: string;
 
   /**
-   * Human-facing supplier code, such as `SUP-001`.
+   * Body param: Human-facing supplier code, such as `SUP-001`.
    *
    * Must be unique per account; creating a supplier with a number already in use
    * returns a conflict error.
@@ -337,8 +360,14 @@ export interface SupplierCreateParams {
   number: string;
 
   /**
-   * Address details supplied when creating an address, either on its own or inline
-   * on another resource.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'bill_to_address' | 'ship_to_address'>;
+
+  /**
+   * Body param: Address details supplied when creating an address, either on its own
+   * or inline on another resource.
    *
    * A few requests, such as shipping rate estimates, take these same fields for a
    * one-off address that is never saved to the account.
@@ -346,13 +375,13 @@ export interface SupplierCreateParams {
   bill_to_address?: CustomersAPI.AddressInput;
 
   /**
-   * Free-form notes about the supplier.
+   * Body param: Free-form notes about the supplier.
    */
   note?: string;
 
   /**
-   * Address details supplied when creating an address, either on its own or inline
-   * on another resource.
+   * Body param: Address details supplied when creating an address, either on its own
+   * or inline on another resource.
    *
    * A few requests, such as shipping rate estimates, take these same fields for a
    * one-off address that is never saved to the account.
@@ -370,7 +399,7 @@ export interface SupplierRetrieveParams {
 
 export interface SupplierUpdateParams {
   /**
-   * Whether to apply the `note` field.
+   * Body param: Whether to apply the `note` field.
    *
    * When `true`, the note is set to the provided `note` value, or cleared if `note`
    * is omitted. When `false`, the note is left unchanged.
@@ -378,24 +407,37 @@ export interface SupplierUpdateParams {
   update_note: boolean;
 
   /**
-   * ID of an existing address to set as the supplier's default billing address.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'bill_to_address' | 'ship_to_address'>;
+
+  /**
+   * Body param: ID of an existing address to set as the supplier's default billing
+   * address.
+   *
+   * Must be one of the supplier's own addresses, as listed for the supplier's
+   * account; any other address is not found.
    */
   bill_to_address_id?: string;
 
   /**
-   * The supplier's name, as shown in the dashboard and on documents.
+   * Body param: The supplier's name, as shown in the dashboard and on documents.
+   *
+   * This is your account's name for the supplier; it does not rename the supplier's
+   * own account.
    */
   name?: string;
 
   /**
-   * New value for the supplier's note.
+   * Body param: New value for the supplier's note.
    *
    * Ignored unless `update_note` is `true`.
    */
   note?: string;
 
   /**
-   * Human-facing supplier code, such as `SUP-001`.
+   * Body param: Human-facing supplier code, such as `SUP-001`.
    *
    * Must be unique per account; updating to a number already used by another
    * supplier returns a conflict error.
@@ -403,7 +445,11 @@ export interface SupplierUpdateParams {
   number?: string;
 
   /**
-   * ID of an existing address to set as the supplier's default shipping address.
+   * Body param: ID of an existing address to set as the supplier's default shipping
+   * address.
+   *
+   * Must be one of the supplier's own addresses, as listed for the supplier's
+   * account; any other address is not found.
    */
   ship_to_address_id?: string;
 }
@@ -455,6 +501,14 @@ export interface SupplierListParams {
   starts_at?: string;
 }
 
+export interface SupplierDeleteParams {
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'bill_to_address' | 'ship_to_address'>;
+}
+
 Suppliers.Materials = Materials;
 Suppliers.Actions = Actions;
 
@@ -468,6 +522,7 @@ export declare namespace Suppliers {
     type SupplierRetrieveParams as SupplierRetrieveParams,
     type SupplierUpdateParams as SupplierUpdateParams,
     type SupplierListParams as SupplierListParams,
+    type SupplierDeleteParams as SupplierDeleteParams,
   };
 
   export {

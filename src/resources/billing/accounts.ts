@@ -37,6 +37,9 @@ export class Accounts extends APIResource {
    * from the pricing plan configured in Stripe, so they can differ from the name and
    * price the same plan advertises on the pricing page.
    *
+   * Customer and supplier portal users are refused with `403`: the usage is the
+   * seller's own.
+   *
    * This endpoint requires the permission: `self:read`.
    *
    * @example

@@ -3,9 +3,11 @@
 export {
   Actions,
   type BulkDeleteCustomersRequest,
+  type ExportCustomersRequest,
   type MergeCustomersRequest,
   type ActionBulkDeleteResponse,
   type ActionBulkDeleteParams,
+  type ActionExportParams,
   type ActionMergeParams,
 } from './actions';
 export {

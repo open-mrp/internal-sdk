@@ -32,6 +32,7 @@ export {
 export { Attachments } from './attachments/index';
 export {
   Conversations,
+  type ConversationParticipantInput,
   type CreateConversationRequest,
   type ListConversation,
   type UpdateConversationRequest,

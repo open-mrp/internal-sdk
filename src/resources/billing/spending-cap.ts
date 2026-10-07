@@ -36,6 +36,8 @@ export class SpendingCap extends APIResource {
    * The cap limits estimated agent LLM spend within a billing month; Get Account
    * Usage reports how much of it has been spent so far.
    *
+   * Customer and supplier portal users are refused with `403`.
+   *
    * This endpoint requires the permission: `self:read`.
    *
    * @example

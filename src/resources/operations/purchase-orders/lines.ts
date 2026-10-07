@@ -23,8 +23,10 @@ export class Lines extends APIResource {
    * supplier, if it is not linked already, so the material shows up as sourced from
    * them.
    *
-   * This endpoint requires the permissions: `purchase_orders:update`,
-   * `suppliers:update`.
+   * Acting in a supplier's account requires `suppliers:update` instead of the
+   * permission this endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `purchase_orders:update`.
    *
    * @example
    * ```ts
@@ -69,8 +71,10 @@ export class Lines extends APIResource {
    * supplier, if it is not linked already, so the material shows up as sourced from
    * them.
    *
-   * This endpoint requires the permissions: `purchase_orders:update`,
-   * `suppliers:update`.
+   * Acting in a supplier's account requires `suppliers:update` instead of the
+   * permission this endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `purchase_orders:update`.
    *
    * @example
    * ```ts
@@ -107,8 +111,10 @@ export class Lines extends APIResource {
    * quantity can no longer be received. Line numbers on the remaining lines are left
    * as they are.
    *
-   * This endpoint requires the permissions: `purchase_orders:update`,
-   * `suppliers:update`.
+   * Acting in a supplier's account requires `suppliers:update` instead of the
+   * permission this endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `purchase_orders:update`.
    *
    * @example
    * ```ts

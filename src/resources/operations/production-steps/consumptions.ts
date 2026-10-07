@@ -189,8 +189,10 @@ export interface CreateConsumptionRequest {
 export interface UpdateConsumptionRequest {
   /**
    * Instructions for how this material is consumed.
+   *
+   * Send `null` to remove them.
    */
-  instructions?: string;
+  instructions?: string | null;
 
   /**
    * ID of the item to consume.
@@ -270,7 +272,17 @@ export interface ConsumptionCreateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'consumed_item'>;
+  include?: Array<
+    | 'consumed_item'
+    | 'consumed_item.category'
+    | 'consumed_item.category.unit_group'
+    | 'consumed_item.category.unit_group.base_unit'
+    | 'consumed_item.category.unit_group.associated_units'
+    | 'consumed_item.category.unit_group.associated_units.unit'
+    | 'consumed_item.unit_cost'
+    | 'quantity.unit'
+    | 'waste_quantity.unit'
+  >;
 
   /**
    * Body param: Instructions for how this material is consumed.
@@ -288,7 +300,17 @@ export interface ConsumptionRetrieveParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'consumed_item'>;
+  include?: Array<
+    | 'consumed_item'
+    | 'consumed_item.category'
+    | 'consumed_item.category.unit_group'
+    | 'consumed_item.category.unit_group.base_unit'
+    | 'consumed_item.category.unit_group.associated_units'
+    | 'consumed_item.category.unit_group.associated_units.unit'
+    | 'consumed_item.unit_cost'
+    | 'quantity.unit'
+    | 'waste_quantity.unit'
+  >;
 }
 
 export interface ConsumptionUpdateParams {
@@ -301,12 +323,24 @@ export interface ConsumptionUpdateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'consumed_item'>;
+  include?: Array<
+    | 'consumed_item'
+    | 'consumed_item.category'
+    | 'consumed_item.category.unit_group'
+    | 'consumed_item.category.unit_group.base_unit'
+    | 'consumed_item.category.unit_group.associated_units'
+    | 'consumed_item.category.unit_group.associated_units.unit'
+    | 'consumed_item.unit_cost'
+    | 'quantity.unit'
+    | 'waste_quantity.unit'
+  >;
 
   /**
    * Body param: Instructions for how this material is consumed.
+   *
+   * Send `null` to remove them.
    */
-  instructions?: string;
+  instructions?: string | null;
 
   /**
    * Body param: ID of the item to consume.
@@ -359,7 +393,17 @@ export interface ConsumptionDeleteParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'consumed_item'>;
+  include?: Array<
+    | 'consumed_item'
+    | 'consumed_item.category'
+    | 'consumed_item.category.unit_group'
+    | 'consumed_item.category.unit_group.base_unit'
+    | 'consumed_item.category.unit_group.associated_units'
+    | 'consumed_item.category.unit_group.associated_units.unit'
+    | 'consumed_item.unit_cost'
+    | 'quantity.unit'
+    | 'waste_quantity.unit'
+  >;
 }
 
 export declare namespace Consumptions {

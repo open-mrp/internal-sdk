@@ -5,6 +5,7 @@ import * as DeliveriesAPI from '../deliveries';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as AnalyticsAPI from '../../core/analytics/analytics';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
+import * as AccountsAPI from '../../identity/accounts/accounts';
 import * as ActionsAPI from './actions';
 import {
   ActionBulkDeleteParams,
@@ -44,10 +45,12 @@ export class PurchaseOrders extends APIResource {
    *
    * The order number is assigned automatically from a per-account sequence unless
    * `number` is given, and the order starts in `estimate` status; issue it
-   * separately to send it to the supplier and open it for receiving. Bill-to and
-   * ship-to addresses are either one of the supplier's saved addresses, named by id,
-   * or created as new address records from the inline address fields. Any provided
-   * lines and email contacts are created with the order.
+   * separately to send it to the supplier and open it for receiving. Both a bill-to
+   * and a ship-to address are required. Each is one of the supplier's saved
+   * addresses, named by id, an address object saved to the supplier's account with
+   * the order, or a new address record created from the flat address fields, which
+   * then need at least a name and a country. Any provided lines and email contacts
+   * are created with the order.
    *
    * A line that references an inventory item also links that item's material to the
    * supplier, if it is not linked already, so the material shows up as sourced from
@@ -76,6 +79,7 @@ export class PurchaseOrders extends APIResource {
    *     ],
    *     priority_code: 'normal',
    *     supplier_account_id: 'ac_gwy8tfbc074f',
+   *     bill_to_address_id: 'ad_j8cz0b79pwdb',
    *     carrier_id: 'cr_tv5vfjtgu1n3',
    *     note: 'Urgent restock order',
    *     service_level_id: 'crop_4ilk9p6gccrx',
@@ -118,7 +122,7 @@ export class PurchaseOrders extends APIResource {
    * Partially updates a purchase order.
    *
    * Only the fields sent are changed. Addresses are repointed at existing address
-   * records here, unlike create, which builds new addresses from inline fields; the
+   * records by id, or saved to the supplier's account from an address object; the
    * order's lifecycle status is changed through the change-status endpoint instead.
    *
    * This endpoint requires the permission: `purchase_orders:update`.
@@ -291,14 +295,29 @@ export interface CreatePurchaseOrderRequest {
   supplier_account_id: string;
 
   /**
+   * An address saved together with the record that uses it, under that record's own
+   * permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  bill_to_address?: AccountsAPI.InlineAddressInput;
+
+  /**
    * ID of one of the supplier's saved addresses to bill the order to.
    *
-   * When set, the inline `bill_to_*` fields are ignored.
+   * A bill-to address is required: give it here, as `bill_to_address`, or through
+   * the flat `bill_to_*` fields. When set, the flat `bill_to_*` fields are ignored.
    */
   bill_to_address_id?: string;
 
   /**
    * Bill-to country as a two-letter code.
+   *
+   * Required when the bill-to address is given through the flat `bill_to_*` fields.
    */
   bill_to_country?: string;
 
@@ -309,6 +328,8 @@ export interface CreatePurchaseOrderRequest {
 
   /**
    * Bill-to address name.
+   *
+   * Required when the bill-to address is given through the flat `bill_to_*` fields.
    */
   bill_to_name?: string;
 
@@ -391,14 +412,29 @@ export interface CreatePurchaseOrderRequest {
   service_level_id?: string;
 
   /**
+   * An address saved together with the record that uses it, under that record's own
+   * permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  ship_to_address?: AccountsAPI.InlineAddressInput;
+
+  /**
    * ID of one of the supplier's saved addresses to ship the order to.
    *
-   * When set, the inline `ship_to_*` fields are ignored.
+   * A ship-to address is required: give it here, as `ship_to_address`, or through
+   * the flat `ship_to_*` fields. When set, the flat `ship_to_*` fields are ignored.
    */
   ship_to_address_id?: string;
 
   /**
    * Ship-to country as a two-letter code.
+   *
+   * Required when the ship-to address is given through the flat `ship_to_*` fields.
    */
   ship_to_country?: string;
 
@@ -409,6 +445,8 @@ export interface CreatePurchaseOrderRequest {
 
   /**
    * Ship-to address name.
+   *
+   * Required when the ship-to address is given through the flat `ship_to_*` fields.
    */
   ship_to_name?: string;
 
@@ -805,6 +843,18 @@ export interface PurchaseOrderRelated {
  */
 export interface UpdatePurchaseOrderRequest {
   /**
+   * An address saved together with the record that uses it, under that record's own
+   * permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  billing_address?: AccountsAPI.InlineAddressInput;
+
+  /**
    * ID of an existing address to use as the bill-to address.
    */
   billing_address_id?: string;
@@ -842,6 +892,18 @@ export interface UpdatePurchaseOrderRequest {
    * Returned as `scheduled_at` on the purchase order resource.
    */
   promised_at?: string | null;
+
+  /**
+   * An address saved together with the record that uses it, under that record's own
+   * permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  shipping_address?: AccountsAPI.InlineAddressInput;
 
   /**
    * ID of an existing address to use as the ship-to address.
@@ -903,14 +965,29 @@ export interface PurchaseOrderCreateParams {
   >;
 
   /**
+   * Body param: An address saved together with the record that uses it, under that
+   * record's own permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  bill_to_address?: AccountsAPI.InlineAddressInput;
+
+  /**
    * Body param: ID of one of the supplier's saved addresses to bill the order to.
    *
-   * When set, the inline `bill_to_*` fields are ignored.
+   * A bill-to address is required: give it here, as `bill_to_address`, or through
+   * the flat `bill_to_*` fields. When set, the flat `bill_to_*` fields are ignored.
    */
   bill_to_address_id?: string;
 
   /**
    * Body param: Bill-to country as a two-letter code.
+   *
+   * Required when the bill-to address is given through the flat `bill_to_*` fields.
    */
   bill_to_country?: string;
 
@@ -921,6 +998,8 @@ export interface PurchaseOrderCreateParams {
 
   /**
    * Body param: Bill-to address name.
+   *
+   * Required when the bill-to address is given through the flat `bill_to_*` fields.
    */
   bill_to_name?: string;
 
@@ -1005,14 +1084,29 @@ export interface PurchaseOrderCreateParams {
   service_level_id?: string;
 
   /**
+   * Body param: An address saved together with the record that uses it, under that
+   * record's own permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  ship_to_address?: AccountsAPI.InlineAddressInput;
+
+  /**
    * Body param: ID of one of the supplier's saved addresses to ship the order to.
    *
-   * When set, the inline `ship_to_*` fields are ignored.
+   * A ship-to address is required: give it here, as `ship_to_address`, or through
+   * the flat `ship_to_*` fields. When set, the flat `ship_to_*` fields are ignored.
    */
   ship_to_address_id?: string;
 
   /**
    * Body param: Ship-to country as a two-letter code.
+   *
+   * Required when the ship-to address is given through the flat `ship_to_*` fields.
    */
   ship_to_country?: string;
 
@@ -1023,6 +1117,8 @@ export interface PurchaseOrderCreateParams {
 
   /**
    * Body param: Ship-to address name.
+   *
+   * Required when the ship-to address is given through the flat `ship_to_*` fields.
    */
   ship_to_name?: string;
 
@@ -1122,6 +1218,18 @@ export interface PurchaseOrderUpdateParams {
   >;
 
   /**
+   * Body param: An address saved together with the record that uses it, under that
+   * record's own permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  billing_address?: AccountsAPI.InlineAddressInput;
+
+  /**
    * Body param: ID of an existing address to use as the bill-to address.
    */
   billing_address_id?: string;
@@ -1160,6 +1268,18 @@ export interface PurchaseOrderUpdateParams {
    * Returned as `scheduled_at` on the purchase order resource.
    */
   promised_at?: string | null;
+
+  /**
+   * Body param: An address saved together with the record that uses it, under that
+   * record's own permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  shipping_address?: AccountsAPI.InlineAddressInput;
 
   /**
    * Body param: ID of an existing address to use as the ship-to address.

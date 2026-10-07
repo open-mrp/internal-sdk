@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -9,6 +10,40 @@ import { path } from '../../../internal/utils/path';
  * List and manage item categories.
  */
 export class Properties extends APIResource {
+  /**
+   * Creates a property and attaches it to an item category, returning the new
+   * property.
+   *
+   * The property is one of your account's properties like any other, starting with
+   * no attributes, and the category carries it from the moment it exists. Both
+   * happen in one request that needs only permission to update the category. A name
+   * already used by one of your account's properties returns a conflict error naming
+   * `name`.
+   *
+   * This endpoint requires the permission: `item_categories:update`.
+   *
+   * @example
+   * ```ts
+   * const property =
+   *   await client.catalog.itemCategories.properties.create(
+   *     'ic_d06g9c6yc9ck',
+   *     { name: 'Color' },
+   *   );
+   * ```
+   */
+  create(
+    id: string,
+    params: PropertyCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<AccountUsersAPI.Property> {
+    const { include, ...body } = params;
+    return this._client.post(path`/v1/catalog/item-categories/${id}/properties`, {
+      query: { include },
+      body,
+      ...options,
+    });
+  }
+
   /**
    * Attaches one of your account's properties to an item category.
    *
@@ -65,9 +100,38 @@ export class Properties extends APIResource {
   }
 }
 
+/**
+ * Request to create a property on an item category.
+ */
+export interface CreateItemCategoryPropertyRequest {
+  /**
+   * Display name of the new property, such as `Color` or `Size`.
+   *
+   * Must be unique within your account. To attach a property that already exists,
+   * use the add item category property endpoint.
+   */
+  name: string;
+}
+
 export interface PropertyUpdateResponse {}
 
 export interface PropertyDeleteResponse {}
+
+export interface PropertyCreateParams {
+  /**
+   * Body param: Display name of the new property, such as `Color` or `Size`.
+   *
+   * Must be unique within your account. To attach a property that already exists,
+   * use the add item category property endpoint.
+   */
+  name: string;
+
+  /**
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<'attributes'>;
+}
 
 export interface PropertyUpdateParams {
   /**
@@ -85,8 +149,10 @@ export interface PropertyDeleteParams {
 
 export declare namespace Properties {
   export {
+    type CreateItemCategoryPropertyRequest as CreateItemCategoryPropertyRequest,
     type PropertyUpdateResponse as PropertyUpdateResponse,
     type PropertyDeleteResponse as PropertyDeleteResponse,
+    type PropertyCreateParams as PropertyCreateParams,
     type PropertyUpdateParams as PropertyUpdateParams,
     type PropertyDeleteParams as PropertyDeleteParams,
   };

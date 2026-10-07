@@ -9,9 +9,11 @@ import * as ActionsAPI from './actions';
 import {
   ActionBulkDeleteParams,
   ActionBulkDeleteResponse,
+  ActionExportParams,
   ActionMergeParams,
   Actions,
   BulkDeleteCustomersRequest,
+  ExportCustomersRequest,
   MergeCustomersRequest,
 } from './actions';
 import * as NotificationRecipientsAPI from './notification-recipients';
@@ -94,7 +96,13 @@ export class Customers extends APIResource {
   /**
    * Returns a customer by ID.
    *
-   * This endpoint requires the permissions: `customers:read`, `suppliers:read`.
+   * A customer or supplier portal retrieves only its own account; any other customer
+   * is reported as not found.
+   *
+   * Acting in a supplier's account requires `suppliers:read` instead of the
+   * permission this endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `customers:read`.
    *
    * @example
    * ```ts
@@ -241,8 +249,14 @@ export class Customers extends APIResource {
    * services, shipping, tax, credits, and returns are ignored, and hiding a product
    * from the portal removes its lines from the ranking.
    *
-   * This endpoint requires the permissions: `customers:read`, `suppliers:read`,
-   * `items:read`.
+   * A customer or supplier portal reads only its own account's products; any other
+   * customer is reported as not found.
+   *
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `items:read`.
    *
    * @example
    * ```ts
@@ -1664,9 +1678,11 @@ export declare namespace Customers {
   export {
     Actions as Actions,
     type BulkDeleteCustomersRequest as BulkDeleteCustomersRequest,
+    type ExportCustomersRequest as ExportCustomersRequest,
     type MergeCustomersRequest as MergeCustomersRequest,
     type ActionBulkDeleteResponse as ActionBulkDeleteResponse,
     type ActionBulkDeleteParams as ActionBulkDeleteParams,
+    type ActionExportParams as ActionExportParams,
     type ActionMergeParams as ActionMergeParams,
   };
 

@@ -35,7 +35,9 @@ describe('resource operations', () => {
     await expect(
       client.operations.retrieveInventories(
         {
+          as_of: '2019-12-27T18:11:19.117Z',
           cursor: 'cursor',
+          include: ['product_line'],
           limit: 0,
           q: 'q',
         },

@@ -21,6 +21,10 @@ export class Users extends APIResource {
    * details such as their status, role, and department live on the account user
    * record instead.
    *
+   * Users may always retrieve their own profile. Retrieving another user requires
+   * permission to read team users, and only users who belong to the account you are
+   * acting in are found.
+   *
    * This endpoint requires the permission: `team:read`.
    *
    * @example
@@ -40,6 +44,10 @@ export class Users extends APIResource {
    * Changes apply everywhere the user appears, in every account they belong to.
    * Account-specific details such as their status, role, and department are changed
    * on the account user record instead.
+   *
+   * Users may always update their own profile. Updating another user requires
+   * permission to update team users, and that user must belong to the account you
+   * are acting in; any other user is not found.
    *
    * This endpoint requires the permission: `team:update`.
    *

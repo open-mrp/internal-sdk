@@ -60,6 +60,9 @@ describe('resource actions', () => {
       batch_id: 'bt_fuies8j4pk45',
       scanning_station_id: 'scst_t71bn7lq5yov',
       include: ['quantity.unit'],
+      consume_materials: false,
+      production_step_id: 'production_step_id',
+      type_override: 'init_batch',
     });
   });
 

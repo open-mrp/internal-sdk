@@ -28,4 +28,5 @@ export {
   type SupplierRetrieveParams,
   type SupplierUpdateParams,
   type SupplierListParams,
+  type SupplierDeleteParams,
 } from './suppliers';

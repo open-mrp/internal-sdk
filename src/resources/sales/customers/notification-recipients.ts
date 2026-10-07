@@ -20,7 +20,10 @@ export class NotificationRecipients extends APIResource {
    * managed here — purchase-order submission preferences on the same relationship
    * are left untouched, and still appear in the returned recipients.
    *
-   * This endpoint requires the permissions: `customers:update`, `suppliers:update`.
+   * Acting in a supplier's account requires `suppliers:update` instead of the
+   * permission this endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `customers:update`.
    *
    * @example
    * ```ts
@@ -62,7 +65,10 @@ export class NotificationRecipients extends APIResource {
    * a sales order does not apply them automatically. Recipients whose account user
    * has since been removed from the customer's account are omitted.
    *
-   * This endpoint requires the permissions: `customers:read`, `suppliers:read`.
+   * Acting in a supplier's account requires `suppliers:read` instead of the
+   * permission this endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `customers:read`.
    *
    * @example
    * ```ts

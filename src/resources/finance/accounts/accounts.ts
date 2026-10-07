@@ -22,15 +22,16 @@ export class Accounts extends APIResource {
    * Returns a paginated list of a customer's open invoices, newest first, in the
    * shape used to apply a payment.
    *
-   * Only invoices that still owe a balance are returned; invoices marked paid in
-   * full are omitted, while overpaid ones are kept because they still need
-   * correcting. Invoices billed to the customer's child accounts are included
-   * alongside its own, because the parent settles for them. Each invoice carries the
-   * payments already allocated to it, so the remaining balance can be worked out
-   * client-side.
+   * Only invoices not marked paid in full are returned; an overpaid invoice is
+   * marked paid in full, so it is omitted too. Invoices billed to the customer's
+   * child accounts are included alongside its own, because the parent settles for
+   * them. Each invoice carries the payments already allocated to it, so the
+   * remaining balance can be worked out client-side.
    *
-   * This endpoint requires the permissions: `invoices:read`, `customers:read`,
-   * `suppliers:read`.
+   * A free-text search term (`q`) is matched against the invoice number, the sales
+   * order number, and the customer PO number.
+   *
+   * This endpoint requires the permission: `invoices:read`.
    *
    * @example
    * ```ts
@@ -77,7 +78,8 @@ export class Accounts extends APIResource {
  *
  * Carries the fields needed to apply a customer payment: the invoice total, the
  * allocations already applied, and the billing relationship of the customer being
- * charged. Only invoices that still owe a balance are represented.
+ * charged. Only invoices not marked paid in full are represented; an overpaid
+ * invoice is marked paid in full.
  */
 export interface InvoiceForPayment {
   /**
@@ -121,7 +123,7 @@ export interface InvoiceForPayment {
   /**
    * Whether the invoice has been paid in full.
    *
-   * Always `false` here, because only invoices that still owe a balance are listed.
+   * Always `false` here, because only invoices not marked paid in full are listed.
    */
   is_paid_in_full: boolean;
 
@@ -233,6 +235,7 @@ export interface AccountRetrieveInvoicesParams {
   include?: Array<
     | 'customer'
     | 'parent_account'
+    | 'billing_address'
     | 'allocations'
     | 'allocations.amount'
     | 'allocations.amount.unit'

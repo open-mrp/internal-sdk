@@ -15,6 +15,9 @@ export class Materials extends APIResource {
    * Links a material to a supplier, recording the supplier's part number and
    * description for it.
    *
+   * Returns a not-found error when the supplier is not one of your account's
+   * suppliers or the material is not one of your account's materials.
+   *
    * This endpoint requires the permission: `suppliers:create`.
    *
    * @example
@@ -147,8 +150,8 @@ export interface CreateSupplierMaterialRequest {
   /**
    * ID of the material the supplier provides.
    *
-   * A material can be linked to a given supplier at most once; creating a duplicate
-   * link fails with a conflict error.
+   * The material must be one of your account's. A material can be linked to a given
+   * supplier at most once; creating a duplicate link fails with a conflict error.
    */
   material_id: string;
 
@@ -165,7 +168,7 @@ export interface CreateSupplierMaterialRequest {
   is_active?: boolean;
 
   /**
-   * The supplier's own description of this material.
+   * The supplier's own description of this material, up to 65,535 characters.
    */
   supplier_description?: string;
 }
@@ -264,9 +267,10 @@ export interface UpdateSupplierMaterialRequest {
   is_active?: boolean;
 
   /**
-   * New supplier description of this material.
+   * New supplier description of this material, up to 65,535 characters. Pass null to
+   * remove it.
    */
-  supplier_description?: string;
+  supplier_description?: string | null;
 
   /**
    * New part number the supplier uses for this material.
@@ -278,8 +282,8 @@ export interface MaterialCreateParams {
   /**
    * ID of the material the supplier provides.
    *
-   * A material can be linked to a given supplier at most once; creating a duplicate
-   * link fails with a conflict error.
+   * The material must be one of your account's. A material can be linked to a given
+   * supplier at most once; creating a duplicate link fails with a conflict error.
    */
   material_id: string;
 
@@ -296,7 +300,7 @@ export interface MaterialCreateParams {
   is_active?: boolean;
 
   /**
-   * The supplier's own description of this material.
+   * The supplier's own description of this material, up to 65,535 characters.
    */
   supplier_description?: string;
 }
@@ -327,9 +331,10 @@ export interface MaterialUpdateParams {
   is_active?: boolean;
 
   /**
-   * Body param: New supplier description of this material.
+   * Body param: New supplier description of this material, up to 65,535 characters.
+   * Pass null to remove it.
    */
-  supplier_description?: string;
+  supplier_description?: string | null;
 
   /**
    * Body param: New part number the supplier uses for this material.

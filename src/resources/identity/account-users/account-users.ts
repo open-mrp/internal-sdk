@@ -20,18 +20,24 @@ export class AccountUsers extends APIResource {
    *
    * If no user with the given email or username exists, a new user is created; a
    * user created with an email address is sent a welcome email containing a
-   * generated password, unless they are being added to a supplier account, since
-   * suppliers have no portal to sign in to. If a matching user already exists, that
-   * user is added to the account instead, and a user you previously removed is
-   * restored rather than duplicated. Adding a user to your own account consumes a
-   * seat and is rejected once your plan's seat limit is reached.
+   * generated password and a link to sign in, unless they are being added to a
+   * supplier account, since suppliers have no portal to sign in to. A user added to
+   * a customer account signs in through your customer portal, on its verified custom
+   * domain when you have one. If a matching user already exists, that user is added
+   * to the account instead, and a user you previously removed is restored rather
+   * than duplicated. Adding a user to your own account consumes a seat and is
+   * rejected once your plan's seat limit is reached.
    *
-   * When you add a user to a customer or supplier account that has its own OpenMRP
-   * subscription, the membership is created disabled and has to be activated before
-   * that user can sign in.
+   * You can add users to a customer or supplier account only while you manage it
+   * alone: an account that runs its own OpenMRP subscription, or that another
+   * account also has as a customer or supplier, manages its own users, and the
+   * request is refused.
    *
-   * This endpoint requires the permissions: `team:create`, `customers:update`,
-   * `suppliers:update`.
+   * Acting in a customer's account requires `customers:create`, and acting in a
+   * supplier's account requires `suppliers:create`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `team:create`.
    *
    * @example
    * ```ts
@@ -66,8 +72,11 @@ export class AccountUsers extends APIResource {
    * The lookup is scoped to the account you are acting in, so an ID belonging to
    * another account is reported as not found.
    *
-   * This endpoint requires the permissions: `team:read`, `customers:read`,
-   * `suppliers:read`.
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `team:read`.
    *
    * @example
    * ```ts
@@ -92,8 +101,11 @@ export class AccountUsers extends APIResource {
    * update the underlying user, which is shared across every account the user
    * belongs to, so the change is visible everywhere that person works.
    *
-   * This endpoint requires the permissions: `team:update`, `customers:update`,
-   * `suppliers:update`.
+   * Acting in a customer's account requires `customers:update`, and acting in a
+   * supplier's account requires `suppliers:update`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `team:update`.
    *
    * @example
    * ```ts
@@ -134,10 +146,14 @@ export class AccountUsers extends APIResource {
    * in.
    *
    * When the account you are acting in is a customer or supplier account you manage,
-   * this lists that account's users rather than your own team.
+   * this lists that account's users rather than your own team, each with the
+   * `notification_types` you send them.
    *
-   * This endpoint requires the permissions: `team:read`, `customers:read`,
-   * `suppliers:read`.
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `team:read`.
    *
    * @example
    * ```ts
@@ -183,13 +199,35 @@ export interface AccountUser {
    *
    * Independent of the `sales_rep` role type, which still scopes analytics and hides
    * cost. Users with the `sales_rep` role are always eligible.
+   *
+   * Null to customer and supplier portal users, like the rest of your commission
+   * settings.
    */
-  is_commission_eligible: boolean;
+  is_commission_eligible: boolean | null;
 
   /**
    * When the user last accessed this account.
+   *
+   * Null to customer and supplier portal users: it is your own team's activity.
    */
   last_used_at: string | null;
+
+  /**
+   * The notifications you send this user about the customer or supplier account they
+   * belong to.
+   *
+   * Set when the account you are acting in is a customer or supplier account you
+   * manage, and an empty list when none are enabled; turn them on and off with
+   * `preferences` on create and update. `null` for your own account's users, and
+   * where an account user is embedded in another resource.
+   *
+   * - `order_acknowledgement`: the confirmation email sent when an order is placed
+   *   for the customer.
+   * - `invoice`: invoice emails for the customer's orders.
+   * - `purchase_order_submission`: a copy of each purchase order you submit to the
+   *   supplier.
+   */
+  notification_types: Array<'invoice' | 'order_acknowledgement' | 'purchase_order_submission'> | null;
 
   /**
    * Resource type identifier.
@@ -396,8 +434,11 @@ export interface CreateAccountUserRequest {
   /**
    * Notification preference toggles for the new user.
    *
-   * Only applies when creating a user in another account you manage (cross-account);
-   * ignored when creating a user in your own account.
+   * Only applies when adding a user to a customer or supplier account you manage;
+   * ignored when adding a user to your own account. The enabled types are returned
+   * in the user's `notification_types`. When the user is one you previously removed,
+   * the toggles apply over the preferences they had before removal, and types you
+   * leave out keep their previous state.
    */
   preferences?: Array<NotificationPreferenceItem>;
 
@@ -523,6 +564,8 @@ export interface Item {
 
   /**
    * Free-form notes about the item.
+   *
+   * Null to customer and supplier portal users: they are your own team's notes.
    */
   notes: string | null;
 
@@ -585,6 +628,8 @@ export interface ItemCategory {
 
   /**
    * Free-form notes about the item category.
+   *
+   * Null to customer and supplier portal users: they are your own team's notes.
    */
   notes: string | null;
 
@@ -1606,8 +1651,9 @@ export interface UpdateAccountUserRequest {
   /**
    * Notification preference toggles to apply.
    *
-   * Only allowed when updating a user in another account you manage (cross-account);
-   * rejected otherwise. Notification types omitted from the list are left unchanged.
+   * Only allowed when updating a user in a customer or supplier account you manage;
+   * rejected otherwise. Notification types omitted from the list are left unchanged,
+   * and the result is returned in `notification_types`.
    */
   preferences?: Array<NotificationPreferenceItem>;
 
@@ -1678,8 +1724,11 @@ export interface AccountUserCreateParams {
   /**
    * Body param: Notification preference toggles for the new user.
    *
-   * Only applies when creating a user in another account you manage (cross-account);
-   * ignored when creating a user in your own account.
+   * Only applies when adding a user to a customer or supplier account you manage;
+   * ignored when adding a user to your own account. The enabled types are returned
+   * in the user's `notification_types`. When the user is one you previously removed,
+   * the toggles apply over the preferences they had before removal, and types you
+   * leave out keep their previous state.
    */
   preferences?: Array<NotificationPreferenceItem>;
 
@@ -1751,8 +1800,9 @@ export interface AccountUserUpdateParams {
   /**
    * Body param: Notification preference toggles to apply.
    *
-   * Only allowed when updating a user in another account you manage (cross-account);
-   * rejected otherwise. Notification types omitted from the list are left unchanged.
+   * Only allowed when updating a user in a customer or supplier account you manage;
+   * rejected otherwise. Notification types omitted from the list are left unchanged,
+   * and the result is returned in `notification_types`.
    */
   preferences?: Array<NotificationPreferenceItem>;
 

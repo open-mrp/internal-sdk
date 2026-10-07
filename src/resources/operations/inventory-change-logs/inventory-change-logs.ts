@@ -5,7 +5,12 @@ import * as AuthAPI from '../../auth/auth';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
 import * as ActionsAPI from './actions';
-import { ActionExportParams, Actions } from './actions';
+import {
+  ActionExportParams,
+  ActionStartExportParams,
+  Actions,
+  StartInventoryChangeLogsExportRequest,
+} from './actions';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -234,5 +239,10 @@ export declare namespace InventoryChangeLogs {
     type InventoryChangeLogListParams as InventoryChangeLogListParams,
   };
 
-  export { Actions as Actions, type ActionExportParams as ActionExportParams };
+  export {
+    Actions as Actions,
+    type StartInventoryChangeLogsExportRequest as StartInventoryChangeLogsExportRequest,
+    type ActionExportParams as ActionExportParams,
+    type ActionStartExportParams as ActionStartExportParams,
+  };
 }

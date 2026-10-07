@@ -50,11 +50,14 @@ export class AccountPrices extends APIResource {
   /**
    * Returns an account price by ID.
    *
-   * A customer portal user can only retrieve a price whose recipient is their own
-   * account or its parent; any other price is reported as not found.
+   * A customer or supplier portal user can only retrieve a price whose recipient is
+   * their own account or its parent; any other price is reported as not found.
    *
-   * This endpoint requires the permissions: `discounts:read`, `customers:read`,
-   * `suppliers:read`.
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `discounts:read`.
    *
    * @example
    * ```ts
@@ -111,11 +114,14 @@ export class AccountPrices extends APIResource {
    * Returns a paginated list of account prices, newest first.
    *
    * The search term matches the recipient customer's name or their customer number.
-   * Customer portal users always see only the prices that apply to their own
-   * account, whatever `recipient_account_id` is set to.
+   * Customer and supplier portal users always see only the prices that apply to
+   * their own account, whatever `recipient_account_id` is set to.
    *
-   * This endpoint requires the permissions: `discounts:read`, `customers:read`,
-   * `suppliers:read`.
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `discounts:read`.
    *
    * @example
    * ```ts

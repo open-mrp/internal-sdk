@@ -125,14 +125,18 @@ export class Items extends APIResource {
    *
    * The figures are recomputed on each call by walking back through every production
    * step that feeds the step producing this item, so the answer reflects the current
-   * recipe and the current cost of everything consumed along the way. Items that no
-   * production flow produces — purchased materials, for instance — return a
-   * not-found error rather than a zero breakdown.
+   * recipe and the current cost of everything consumed along the way. Each upstream
+   * step is scaled by how much of its output the step after it consumes, both sides
+   * converted through their units, so a step drawing 2 dozen from one that produces
+   * 12 eaches is costed as two of its runs. Items that no production flow produces —
+   * purchased materials, for instance — return a not-found error rather than a zero
+   * breakdown, as do items whose producing step has a zero production quantity.
    *
-   * Calling this also writes the computed total back to the item's `unit_cost`, so
-   * it is how a stale unit cost gets refreshed.
+   * Reading costs stores nothing. The item's `unit_cost` is restated separately,
+   * shortly after anything it is built from changes — a material's cost, a
+   * production step, a consumption.
    *
-   * This endpoint requires the permission: `items:read`.
+   * This endpoint requires the permission: `costs:read`.
    *
    * @example
    * ```ts
@@ -180,12 +184,20 @@ export class Items extends APIResource {
   }
 
   /**
-   * Returns how an item's stock level has moved over the last 30 days, as a series
-   * of point-in-time measurements.
+   * Returns how an item's stock level has moved over the last 30 days: exactly 30
+   * points, one per UTC calendar day ending today, oldest first.
    *
-   * Days on which nothing was logged produce no point, and days with several entries
-   * contribute only the first, so the series is sparse rather than one point per
-   * calendar day.
+   * Each point is the last inventory level logged on or before the end of its day,
+   * so a day with several movements reports where it closed. A day with nothing
+   * logged carries the previous day's level forward, and the series opens at the
+   * last level logged before the window rather than at zero, so an item that has not
+   * moved for a month shows its stock rather than a flat line at zero. An item never
+   * logged reads zero throughout.
+   *
+   * A logged level is the item's physical stock — on hand less what is short against
+   * open demand — at the moment of the movement that wrote it. Every value is
+   * converted into the base unit of the item's category, returned as `unit`,
+   * whatever unit the movement was recorded in.
    *
    * This endpoint requires the permission: `items:read`.
    *
@@ -310,7 +322,7 @@ export interface ItemLotDefault {
 }
 
 /**
- * A single measurement in an item's trend series.
+ * One day of an item's trend series.
  */
 export interface ItemTrendPoint {
   /**
@@ -319,18 +331,18 @@ export interface ItemTrendPoint {
   object: 'item_trend_point';
 
   /**
-   * Timestamp of the data point.
+   * Start of the UTC calendar day this point closes.
    */
   occurred_at: string;
 
   /**
-   * Recorded value of the trend metric at `occurred_at`.
+   * Value of the trend metric at the end of that day, in the series' `unit`.
    */
   value: string;
 }
 
 /**
- * Historical trend data for an item, as a time-ordered series of measurements.
+ * An item's trend metric over the last 30 UTC calendar days, one point per day.
  */
 export interface ItemTrends {
   /**
@@ -348,6 +360,11 @@ export interface ItemTrends {
    * The trend type that was requested.
    */
   trend_type: 'inventory';
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  unit: AccountUsersAPI.Unit | null;
 }
 
 /**
@@ -516,7 +533,7 @@ export interface ItemListParams {
   /**
    * Filter to items of these types (`product`, `material`, `part`).
    */
-  types?: Array<string>;
+  types?: Array<'product' | 'material' | 'part'>;
 }
 
 export interface ItemChangeCategoryParams {
@@ -555,8 +572,8 @@ export interface ItemRetrieveTrendsParams {
   /**
    * The trend metric to fetch.
    *
-   * `inventory` returns the item's inventory-level measurements from the last 30
-   * days.
+   * `inventory` returns the item's logged inventory level at the close of each of
+   * the last 30 days.
    */
   trend_type: 'inventory';
 }

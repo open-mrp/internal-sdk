@@ -94,7 +94,8 @@ export class Territories extends APIResource {
    * first.
    *
    * The `q` search term matches the state, the sales rep's name or email address,
-   * and the product line name.
+   * and the product line name. A ZIP code also matches the territories whose range
+   * covers it.
    *
    * This endpoint requires the permission: `sales_rep_territories:read`.
    *
@@ -149,6 +150,9 @@ export interface CreateTerritoryRequest {
   /**
    * ID of the account user to credit as the sales rep on orders matching this
    * territory.
+   *
+   * Must be an account user of your account that has not been removed from it; a
+   * user ID is not accepted.
    */
   sales_rep_id: string;
 
@@ -165,12 +169,14 @@ export interface CreateTerritoryRequest {
    * Inclusive end of the ZIP code range this territory covers (`501`-`99999`).
    *
    * Dropped when no start ZIP code is supplied. Supplying a start without an end
-   * creates a territory that matches that single ZIP code.
+   * creates a territory that matches that single ZIP code. Must not be less than
+   * `start_zipcode`.
    */
   end_zipcode?: number;
 
   /**
-   * ID of the product line this territory is associated with.
+   * ID of the product line this territory is associated with, which must be one of
+   * your account's product lines.
    *
    * Sales rep auto-assignment matches on ZIP code and state only, so this records
    * what the territory covers rather than narrowing which orders it matches.
@@ -297,12 +303,15 @@ export interface UpdateTerritoryRequest {
   /**
    * Set to `true` to remove the end ZIP code.
    *
-   * The territory then matches the start ZIP code alone rather than a range.
+   * The territory then matches the start ZIP code alone rather than a range. `true`
+   * cannot be combined with `end_zipcode`.
    */
   clear_end_zipcode?: boolean;
 
   /**
    * Set to `true` to remove the product line the territory is associated with.
+   *
+   * `true` cannot be combined with `product_line_id`.
    */
   clear_product_line?: boolean;
 
@@ -310,17 +319,22 @@ export interface UpdateTerritoryRequest {
    * Set to `true` to remove the start ZIP code.
    *
    * Clearing the start ZIP code also clears the end ZIP code, so the territory
-   * covers the entire state.
+   * covers the entire state. `true` cannot be combined with `start_zipcode`.
    */
   clear_start_zipcode?: boolean;
 
   /**
    * Inclusive end of the ZIP code range this territory covers (`501`-`99999`).
+   *
+   * Must not be less than the territory's start ZIP code after the update. Dropped
+   * when the territory has no start ZIP code after the update, as an end ZIP code
+   * alone matches nothing.
    */
   end_zipcode?: number;
 
   /**
-   * ID of the product line this territory is associated with.
+   * ID of the product line this territory is associated with, which must be one of
+   * your account's product lines.
    */
   product_line_id?: string;
 
@@ -328,7 +342,9 @@ export interface UpdateTerritoryRequest {
    * ID of the account user to credit as the sales rep on orders matching this
    * territory.
    *
-   * A territory always has a sales rep, so this one can be replaced but not removed.
+   * Must be an account user of your account that has not been removed from it; a
+   * user ID is not accepted. A territory always has a sales rep, so this one can be
+   * replaced but not removed.
    */
   sales_rep_id?: string;
 
@@ -352,6 +368,9 @@ export interface TerritoryCreateParams {
   /**
    * Body param: ID of the account user to credit as the sales rep on orders matching
    * this territory.
+   *
+   * Must be an account user of your account that has not been removed from it; a
+   * user ID is not accepted.
    */
   sales_rep_id: string;
 
@@ -375,12 +394,14 @@ export interface TerritoryCreateParams {
    * (`501`-`99999`).
    *
    * Dropped when no start ZIP code is supplied. Supplying a start without an end
-   * creates a territory that matches that single ZIP code.
+   * creates a territory that matches that single ZIP code. Must not be less than
+   * `start_zipcode`.
    */
   end_zipcode?: number;
 
   /**
-   * Body param: ID of the product line this territory is associated with.
+   * Body param: ID of the product line this territory is associated with, which must
+   * be one of your account's product lines.
    *
    * Sales rep auto-assignment matches on ZIP code and state only, so this records
    * what the territory covers rather than narrowing which orders it matches.
@@ -399,6 +420,8 @@ export interface TerritoryCreateParams {
 export interface TerritoryRetrieveParams {
   /**
    * Path param: ID of your account, which owns the territory.
+   *
+   * A path naming any other account returns a not-found error.
    */
   account_id: string;
 
@@ -412,6 +435,8 @@ export interface TerritoryRetrieveParams {
 export interface TerritoryUpdateParams {
   /**
    * Path param: ID of your account, which owns the territory.
+   *
+   * A path naming any other account returns a not-found error.
    */
   account_id: string;
 
@@ -424,13 +449,16 @@ export interface TerritoryUpdateParams {
   /**
    * Body param: Set to `true` to remove the end ZIP code.
    *
-   * The territory then matches the start ZIP code alone rather than a range.
+   * The territory then matches the start ZIP code alone rather than a range. `true`
+   * cannot be combined with `end_zipcode`.
    */
   clear_end_zipcode?: boolean;
 
   /**
    * Body param: Set to `true` to remove the product line the territory is associated
    * with.
+   *
+   * `true` cannot be combined with `product_line_id`.
    */
   clear_product_line?: boolean;
 
@@ -438,18 +466,23 @@ export interface TerritoryUpdateParams {
    * Body param: Set to `true` to remove the start ZIP code.
    *
    * Clearing the start ZIP code also clears the end ZIP code, so the territory
-   * covers the entire state.
+   * covers the entire state. `true` cannot be combined with `start_zipcode`.
    */
   clear_start_zipcode?: boolean;
 
   /**
    * Body param: Inclusive end of the ZIP code range this territory covers
    * (`501`-`99999`).
+   *
+   * Must not be less than the territory's start ZIP code after the update. Dropped
+   * when the territory has no start ZIP code after the update, as an end ZIP code
+   * alone matches nothing.
    */
   end_zipcode?: number;
 
   /**
-   * Body param: ID of the product line this territory is associated with.
+   * Body param: ID of the product line this territory is associated with, which must
+   * be one of your account's product lines.
    */
   product_line_id?: string;
 
@@ -457,7 +490,9 @@ export interface TerritoryUpdateParams {
    * Body param: ID of the account user to credit as the sales rep on orders matching
    * this territory.
    *
-   * A territory always has a sales rep, so this one can be replaced but not removed.
+   * Must be an account user of your account that has not been removed from it; a
+   * user ID is not accepted. A territory always has a sales rep, so this one can be
+   * replaced but not removed.
    */
   sales_rep_id?: string;
 
@@ -508,6 +543,8 @@ export interface TerritoryListParams {
 export interface TerritoryDeleteParams {
   /**
    * ID of your account, which owns the territory.
+   *
+   * A path naming any other account returns a not-found error.
    */
   account_id: string;
 }

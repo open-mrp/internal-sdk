@@ -41,6 +41,7 @@ export {
   Accounts,
   type AccountLogoURL,
   type AccountPhotoUploadResult,
+  type InlineAddressInput,
   type UpdateAccountRequest,
   type AccountRetrieveParams,
   type AccountUpdateParams,

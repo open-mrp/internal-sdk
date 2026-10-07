@@ -55,8 +55,9 @@ export class Actions extends APIResource {
    * quantity.
    *
    * Each entry must name a line of this order that is being stocked now, at most
-   * once, and its allocations and refusal together may not exceed the quantity
-   * received on that line. Otherwise the request is refused and nothing is stocked.
+   * once, each allocation must be at one of the account's storage locations, and its
+   * allocations and refusal together may not exceed the quantity received on that
+   * line. Otherwise the request is refused and nothing is stocked.
    *
    * The newly received stock is then applied to any open inventory issues for the
    * same item, oldest first, so demand already waiting on the item is satisfied
@@ -114,12 +115,14 @@ export class Actions extends APIResource {
    *
    * Every line's received quantity is reset to `0` and its stocked state is cleared,
    * the extra lines created for short receipts are removed so that one line per
-   * purchase order line remains, and the order returns to open. The receiving order
-   * itself is not deleted, and it can be received and stocked again from scratch.
+   * purchase order line remains, and the order returns to open. A line a delivery
+   * was recorded against is never removed, so the delivery keeps its line. The
+   * receiving order itself is not deleted, and it can be received and stocked again
+   * from scratch.
    *
-   * A receiving order that has already been marked complete is only reopened: the
-   * extra lines are still removed, but the lines that remain keep their received
-   * quantities and stay marked as stocked.
+   * A receiving order that has already been marked complete is only reopened: its
+   * lines keep their received quantities and stay marked as stocked, and none is
+   * removed.
    *
    * Deliveries and inventory received by earlier stocking are not reversed — voiding
    * only reopens the receiving order.
@@ -160,7 +163,8 @@ export interface AllocationRequest {
   quantity: CustomersAPI.QuantityInput;
 
   /**
-   * ID of the storage location to put the quantity away at.
+   * ID of the storage location to put the quantity away at. It must be one of the
+   * account's storage locations.
    *
    * When omitted, the inventory receipt is created without a storage location.
    */

@@ -158,6 +158,16 @@ export class Actions extends APIResource {
    * has already been shipped, so shipping is a one-way move that can only be
    * reversed with the void action.
    *
+   * Shipping raises the shipment's invoice, numbered after the shipment, and queues
+   * it for EDI transmission when the customer trades over EDI. When the carrier is
+   * linked to the account's Shippo integration, a label is bought for every case
+   * first; each case must have a freight weight, and the carrier's charge is
+   * recorded as the cost of the order's freight line (zero when no label is bought).
+   * Labels already bought for the cases by an earlier attempt are reused, never
+   * bought twice. A shipment is shipped, voided or deleted by one request at a time:
+   * a concurrent request for the same shipment fails with a conflict error and can
+   * be retried once the first finishes.
+   *
    * This endpoint requires the permission: `shipments:update`.
    *
    * @example
@@ -189,6 +199,10 @@ export class Actions extends APIResource {
    * raised for the shipment if one exists, and returns the associated sales order to
    * its unfulfilled state. Case SSCCs are kept.
    *
+   * Labels bought through the Shippo integration are refunded first. If the carrier
+   * refuses a refund, the void fails and nothing is cleared, so the label stays on
+   * record and the void can be retried; a label already refunded counts as refunded.
+   *
    * This endpoint requires the permission: `shipments:update`.
    *
    * @example
@@ -216,9 +230,10 @@ export interface AdminUpdateShipmentTrackingRequest {
   carrier_id?: string;
 
   /**
-   * Carrier master tracking number covering the shipment as a whole.
+   * Carrier master tracking number covering the shipment as a whole; send `null` to
+   * clear it.
    */
-  master_tracking_number?: string;
+  master_tracking_number?: string | null;
 
   /**
    * ID of the carrier service level the shipment actually traveled on. Sending this
@@ -546,9 +561,10 @@ export interface ActionAdminUpdateTrackingParams {
   carrier_id?: string;
 
   /**
-   * Body param: Carrier master tracking number covering the shipment as a whole.
+   * Body param: Carrier master tracking number covering the shipment as a whole;
+   * send `null` to clear it.
    */
-  master_tracking_number?: string;
+  master_tracking_number?: string | null;
 
   /**
    * Body param: ID of the carrier service level the shipment actually traveled on.

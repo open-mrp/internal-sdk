@@ -89,6 +89,9 @@ export class Accounts extends APIResource {
    * image replaces any existing logo and can be retrieved via the Get Account Logo
    * URL endpoint. You can only upload a logo for the account you are acting in.
    *
+   * A body that is empty or not a PNG, JPEG, GIF, or WebP image is refused with a
+   * 400, and one over 10 MB with a 413; the existing logo is kept either way.
+   *
    * This endpoint requires the permission: `self:update`.
    *
    * @example
@@ -138,23 +141,136 @@ export interface AccountPhotoUploadResult {
 }
 
 /**
+ * An address saved together with the record that uses it, under that record's own
+ * permission.
+ *
+ * Without `id`, a new address is created from these fields, so `name` and
+ * `country` are required. With `id`, that saved address is updated: omitted fields
+ * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+ * `street_line_2`. The address must already belong to the account the record saves
+ * it in.
+ */
+export interface InlineAddressInput {
+  /**
+   * ID of a saved address to update instead of creating a new one.
+   */
+  id?: string;
+
+  /**
+   * Two-letter ISO 3166-1 country code, such as `US`. Required when `id` is omitted.
+   */
+  country?: string;
+
+  /**
+   * Email address associated with the address.
+   */
+  email?: string | null;
+
+  /**
+   * City or locality.
+   */
+  locality?: string;
+
+  /**
+   * Display name of the address. Required when `id` is omitted.
+   */
+  name?: string;
+
+  /**
+   * Phone number associated with the address.
+   */
+  phone?: string | null;
+
+  /**
+   * Postal or ZIP code.
+   */
+  postal_code?: string;
+
+  /**
+   * The operating calendar naming the days this dock accepts freight, overriding the
+   * customer's own.
+   */
+  receive_calendar_id?: string | null;
+
+  /**
+   * State or administrative area.
+   */
+  state?: string;
+
+  /**
+   * First line of the street address.
+   */
+  street_line_1?: string;
+
+  /**
+   * Second line of the street address.
+   */
+  street_line_2?: string | null;
+
+  /**
+   * How the address is used.
+   *
+   * - `standard`: a normal shipping or billing address.
+   * - `drop_ship`: an address an order is shipped to directly, typically a third
+   *   party or end customer rather than the account itself.
+   */
+  type?: 'standard' | 'drop_ship';
+}
+
+/**
  * Request to partially update an account.
  */
 export interface UpdateAccountRequest {
   /**
+   * An address saved together with the record that uses it, under that record's own
+   * permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  default_billing_address?: InlineAddressInput;
+
+  /**
+   * Default billing address for the account's orders. Must be one of the account's
+   * own addresses.
+   */
+  default_billing_address_id?: string;
+
+  /**
+   * An address saved together with the record that uses it, under that record's own
+   * permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  default_shipping_address?: InlineAddressInput;
+
+  /**
+   * Default shipping address for the account's orders. Must be one of the account's
+   * own addresses.
+   */
+  default_shipping_address_id?: string;
+
+  /**
    * Facebook handle.
    */
-  facebook_handle?: string;
+  facebook_handle?: string | null;
 
   /**
    * Instagram handle.
    */
-  instagram_handle?: string;
+  instagram_handle?: string | null;
 
   /**
    * LinkedIn handle.
    */
-  linkedin_handle?: string;
+  linkedin_handle?: string | null;
 
   /**
    * The account's display name.
@@ -164,31 +280,34 @@ export interface UpdateAccountRequest {
   /**
    * The account's public contact phone number.
    */
-  phone_number?: string;
+  phone_number?: string | null;
 
   /**
    * URL slug for the account's customer portal.
    *
-   * The slug is unique across all accounts; updating to one that is already taken
-   * returns a conflict error. Changing it changes the portal address customers use,
-   * so existing portal links stop resolving.
+   * Letters and digits, in runs joined by single hyphens (`acme-inc`); letters are
+   * saved lowercase. The slug is unique across all accounts, ignoring case; updating
+   * to one that is already taken returns a conflict error. Changing it changes the
+   * portal address customers use, so existing portal links stop resolving. An
+   * account without a portal gets one at this slug.
    */
   slug?: string;
 
   /**
-   * The email address customers are directed to for support.
+   * The email address customers are directed to for support. Pass null to remove it,
+   * as for the other branding fields.
    */
-  support_email?: string;
+  support_email?: string | null;
 
   /**
    * Twitter handle.
    */
-  twitter_handle?: string;
+  twitter_handle?: string | null;
 
   /**
-   * The account's public website.
+   * The account's public website, as an `http` or `https` URL.
    */
-  website_url?: string;
+  website_url?: string | null;
 }
 
 export interface AccountRetrieveParams {
@@ -196,7 +315,7 @@ export interface AccountRetrieveParams {
    * Sub-objects to expand in the response. When omitted, sub-objects are returned as
    * `null`.
    */
-  include?: Array<'branding' | 'portal'>;
+  include?: Array<'branding' | 'portal' | 'default_billing_address' | 'default_shipping_address'>;
 }
 
 export interface AccountUpdateParams {
@@ -204,22 +323,58 @@ export interface AccountUpdateParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<'branding' | 'portal'>;
+  include?: Array<'branding' | 'portal' | 'default_billing_address' | 'default_shipping_address'>;
+
+  /**
+   * Body param: An address saved together with the record that uses it, under that
+   * record's own permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  default_billing_address?: InlineAddressInput;
+
+  /**
+   * Body param: Default billing address for the account's orders. Must be one of the
+   * account's own addresses.
+   */
+  default_billing_address_id?: string;
+
+  /**
+   * Body param: An address saved together with the record that uses it, under that
+   * record's own permission.
+   *
+   * Without `id`, a new address is created from these fields, so `name` and
+   * `country` are required. With `id`, that saved address is updated: omitted fields
+   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`. The address must already belong to the account the record saves
+   * it in.
+   */
+  default_shipping_address?: InlineAddressInput;
+
+  /**
+   * Body param: Default shipping address for the account's orders. Must be one of
+   * the account's own addresses.
+   */
+  default_shipping_address_id?: string;
 
   /**
    * Body param: Facebook handle.
    */
-  facebook_handle?: string;
+  facebook_handle?: string | null;
 
   /**
    * Body param: Instagram handle.
    */
-  instagram_handle?: string;
+  instagram_handle?: string | null;
 
   /**
    * Body param: LinkedIn handle.
    */
-  linkedin_handle?: string;
+  linkedin_handle?: string | null;
 
   /**
    * Body param: The account's display name.
@@ -229,31 +384,34 @@ export interface AccountUpdateParams {
   /**
    * Body param: The account's public contact phone number.
    */
-  phone_number?: string;
+  phone_number?: string | null;
 
   /**
    * Body param: URL slug for the account's customer portal.
    *
-   * The slug is unique across all accounts; updating to one that is already taken
-   * returns a conflict error. Changing it changes the portal address customers use,
-   * so existing portal links stop resolving.
+   * Letters and digits, in runs joined by single hyphens (`acme-inc`); letters are
+   * saved lowercase. The slug is unique across all accounts, ignoring case; updating
+   * to one that is already taken returns a conflict error. Changing it changes the
+   * portal address customers use, so existing portal links stop resolving. An
+   * account without a portal gets one at this slug.
    */
   slug?: string;
 
   /**
-   * Body param: The email address customers are directed to for support.
+   * Body param: The email address customers are directed to for support. Pass null
+   * to remove it, as for the other branding fields.
    */
-  support_email?: string;
+  support_email?: string | null;
 
   /**
    * Body param: Twitter handle.
    */
-  twitter_handle?: string;
+  twitter_handle?: string | null;
 
   /**
-   * Body param: The account's public website.
+   * Body param: The account's public website, as an `http` or `https` URL.
    */
-  website_url?: string;
+  website_url?: string | null;
 }
 
 Accounts.Favicon = Favicon;
@@ -262,6 +420,7 @@ export declare namespace Accounts {
   export {
     type AccountLogoURL as AccountLogoURL,
     type AccountPhotoUploadResult as AccountPhotoUploadResult,
+    type InlineAddressInput as InlineAddressInput,
     type UpdateAccountRequest as UpdateAccountRequest,
     type AccountRetrieveParams as AccountRetrieveParams,
     type AccountUpdateParams as AccountUpdateParams,

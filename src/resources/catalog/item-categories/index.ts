@@ -23,8 +23,10 @@ export {
 } from './item-categories';
 export {
   Properties,
+  type CreateItemCategoryPropertyRequest,
   type PropertyUpdateResponse,
   type PropertyDeleteResponse,
+  type PropertyCreateParams,
   type PropertyUpdateParams,
   type PropertyDeleteParams,
 } from './properties';

@@ -348,6 +348,7 @@ import {
   ListSupplier,
   Supplier,
   SupplierCreateParams,
+  SupplierDeleteParams,
   SupplierListParams,
   SupplierRetrieveParams,
   SupplierUpdateParams,
@@ -418,13 +419,17 @@ export class Operations extends APIResource {
   }
 
   /**
-   * Returns a paginated list of items with on-hand inventory quantities for the
-   * account.
+   * Returns a paginated list of items with inventory quantities for the account.
    *
    * Items are listed whether or not they have ever held stock; an item with no
    * recorded inventory reports a zero quantity. Items backed by a non-sale product —
    * the service, shipping, tax, credit, and return products that carry charges on
    * orders — are left out. The `q` search term matches on item SKU and description.
+   *
+   * Without `as_of`, each quantity is the item's current on-hand stock. With it,
+   * each is the item's last logged level at or before that instant, which is what an
+   * inventory valuation at a past date reads. Either way the figure is in the base
+   * unit of the item's category.
    *
    * This endpoint requires the permission: `items:read`.
    *
@@ -520,6 +525,12 @@ export class Operations extends APIResource {
    * the amount a production step consumes, and so on — so this changes that
    * resource's stored measure directly.
    *
+   * Updating takes the update permission of the resource the quantity belongs to:
+   * `items:update` for a material's order point or lead time, and
+   * `production_steps:update` for a production step's production or consumption. A
+   * quantity that belongs to none of these in the account you are acting in is
+   * reported as not found.
+   *
    * This endpoint requires the permissions: `items:update`,
    * `production_steps:update`.
    *
@@ -554,8 +565,13 @@ export class Operations extends APIResource {
    * department's labor rate, and so on — so this changes that resource's stored rate
    * directly.
    *
+   * Updating takes the update permission of the resource the rate belongs to:
+   * `items:update` for an item's, `production_steps:update` for a production step's,
+   * and `departments:update` for a department's. A rate that belongs to none of
+   * these in the account you are acting in is reported as not found.
+   *
    * This endpoint requires the permissions: `items:update`,
-   * `production_steps:update`.
+   * `production_steps:update`, `departments:update`.
    *
    * @example
    * ```ts
@@ -627,6 +643,16 @@ export interface InventoryItem {
    * Resource type identifier.
    */
   object: 'inventory_item';
+
+  /**
+   * A named grouping of related products in your catalog.
+   *
+   * A product line carries the default commission and freight policies for the
+   * products assigned to it, along with the unit group that determines how those
+   * products are measured. Product lines are also the unit that catalog access is
+   * granted over, for both customers and account groups.
+   */
+  product_line: CoreAnalyticsAPI.ProductLine | null;
 
   /**
    * An amount calculated on demand rather than stored.
@@ -1122,7 +1148,7 @@ export interface UpdateQuantityRequest {
   /**
    * Type of the resource that owns this quantity.
    *
-   * Determines the permission required for the update.
+   * Used together with `object_id` to verify the owning resource exists.
    */
   object_type?: 'item' | 'production_step' | 'department';
 
@@ -1170,7 +1196,7 @@ export interface UpdateRateRequest {
   /**
    * Type of the resource that owns this rate.
    *
-   * Determines the permission required for the update.
+   * Used together with `object_id` to verify the owning resource exists.
    */
   object_type?: 'item' | 'production_step' | 'department';
 
@@ -1183,6 +1209,16 @@ export interface UpdateRateRequest {
 
 export interface OperationRetrieveInventoriesParams {
   /**
+   * Reports each item's stock as it stood at this instant instead of now.
+   *
+   * The figure is then the last inventory level logged for the item at or before
+   * `as_of`: its physical stock — on hand less what was short against open demand —
+   * when the movement that wrote it happened. An item with nothing logged by then
+   * reports zero.
+   */
+  as_of?: string;
+
+  /**
    * Opaque cursor token identifying where the page of results starts.
    *
    * Use the `cursor` value embedded in a previous response's `next_page_url` or
@@ -1190,6 +1226,12 @@ export interface OperationRetrieveInventoriesParams {
    * page.
    */
   cursor?: string;
+
+  /**
+   * Sub-objects to expand in the response. When omitted, sub-objects are returned as
+   * `null`.
+   */
+  include?: Array<'product_line'>;
 
   /**
    * Maximum number of results to return in a single page.
@@ -1238,7 +1280,7 @@ export interface OperationUpdateQuantitiesParams {
   /**
    * Body param: Type of the resource that owns this quantity.
    *
-   * Determines the permission required for the update.
+   * Used together with `object_id` to verify the owning resource exists.
    */
   object_type?: 'item' | 'production_step' | 'department';
 
@@ -1291,7 +1333,7 @@ export interface OperationUpdateRatesParams {
   /**
    * Body param: Type of the resource that owns this rate.
    *
-   * Determines the permission required for the update.
+   * Used together with `object_id` to verify the owning resource exists.
    */
   object_type?: 'item' | 'production_step' | 'department';
 
@@ -1389,6 +1431,7 @@ export declare namespace Operations {
     type SupplierRetrieveParams as SupplierRetrieveParams,
     type SupplierUpdateParams as SupplierUpdateParams,
     type SupplierListParams as SupplierListParams,
+    type SupplierDeleteParams as SupplierDeleteParams,
   };
 
   export {

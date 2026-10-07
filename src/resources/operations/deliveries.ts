@@ -83,6 +83,13 @@ export interface Delivery {
   created_at: string;
 
   /**
+   * Total number of lines on this delivery.
+   *
+   * Always populated, even when `lines` is not expanded.
+   */
+  line_count: number;
+
+  /**
    * A single page of resources, together with the metadata needed to page through
    * the rest of the result set.
    */

@@ -55,8 +55,11 @@ export class ProductLines extends APIResource {
    * Both the product lines your account owns and the shared system lines can be
    * retrieved.
    *
-   * This endpoint requires the permissions: `product_lines:read`, `customers:read`,
-   * `suppliers:read`.
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `product_lines:read`.
    *
    * @example
    * ```ts
@@ -116,8 +119,11 @@ export class ProductLines extends APIResource {
    * Covers both the product lines your account owns and the shared system lines. The
    * `q` search term is matched against the product line name.
    *
-   * This endpoint requires the permissions: `product_lines:read`, `customers:read`,
-   * `suppliers:read`.
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `product_lines:read`.
    *
    * @example
    * ```ts

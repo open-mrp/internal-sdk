@@ -56,6 +56,7 @@ import * as ConversationsAPI from './conversations/conversations';
 import {
   ConversationCreateParams,
   ConversationListParams,
+  ConversationParticipantInput,
   ConversationRetrieveParams,
   ConversationUpdateParams,
   Conversations,
@@ -254,8 +255,10 @@ export interface Conversation {
    *
    * While held, the conversation is exempt from automatic retention purging and from
    * redaction until the hold is released.
+   *
+   * Null to customer and supplier portal users: a hold is your own legal matter.
    */
-  legal_hold: 'released' | 'held';
+  legal_hold: 'released' | 'held' | null;
 
   /**
    * Resource type identifier.
@@ -567,6 +570,7 @@ export interface Message {
     | 'missing_field'
     | 'invalid_format'
     | 'method_not_allowed'
+    | 'request_too_large'
     | 'resource_not_found'
     | 'resource_exists'
     | 'resource_conflict'
@@ -1055,6 +1059,7 @@ export declare namespace Messaging {
 
   export {
     Conversations as Conversations,
+    type ConversationParticipantInput as ConversationParticipantInput,
     type CreateConversationRequest as CreateConversationRequest,
     type ListConversation as ListConversation,
     type UpdateConversationRequest as UpdateConversationRequest,

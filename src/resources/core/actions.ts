@@ -46,6 +46,9 @@ export class Actions extends APIResource {
    * succeeds and nothing is sent; in that case a sales order or purchase order is
    * also left unmarked, while an invoice is still marked as sent.
    *
+   * An `id` that is not one of the account's records of the given `type` answers
+   * `404`.
+   *
    * This endpoint requires the permissions: `invoices:read`, `sales_orders:read`,
    * `purchase_orders:read`.
    *
@@ -116,7 +119,7 @@ export interface CheckDuplicateRequest {
    * The record number to check for an existing match.
    *
    * Surrounding whitespace is trimmed before the number is compared against existing
-   * records.
+   * records, and a number that is only whitespace is refused.
    */
   record_number: string;
 
@@ -265,7 +268,7 @@ export interface ActionCheckDuplicatesParams {
    * The record number to check for an existing match.
    *
    * Surrounding whitespace is trimmed before the number is compared against existing
-   * records.
+   * records, and a number that is only whitespace is refused.
    */
   record_number: string;
 

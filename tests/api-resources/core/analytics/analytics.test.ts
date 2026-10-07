@@ -373,8 +373,11 @@ describe('resource analytics', () => {
     ).rejects.toThrow(OpenMRP.NotFoundError);
   });
 
-  test('updateProductionCosts', async () => {
-    const responsePromise = client.core.analytics.updateProductionCosts();
+  test('updateProductionCosts: only required params', async () => {
+    const responsePromise = client.core.analytics.updateProductionCosts({
+      ends_at: '2026-05-10T00:23:00Z',
+      starts_at: '2026-05-10T00:00:00Z',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -384,21 +387,15 @@ describe('resource analytics', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('updateProductionCosts: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.core.analytics.updateProductionCosts(
-        {
-          category_ids: ['ic_d06g9c6yc9ck'],
-          department_ids: ['dp_m0jayebxnkos'],
-          ends_at: '2026-05-10T00:23:00Z',
-          item_ids: ['it_pej07ckhvu62'],
-          product_line_ids: ['pdln_k9bnlgvxhxjh'],
-          starts_at: '2026-05-10T00:00:00Z',
-        },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(OpenMRP.NotFoundError);
+  test('updateProductionCosts: required and optional params', async () => {
+    const response = await client.core.analytics.updateProductionCosts({
+      ends_at: '2026-05-10T00:23:00Z',
+      starts_at: '2026-05-10T00:00:00Z',
+      category_ids: ['ic_d06g9c6yc9ck'],
+      department_ids: ['dp_m0jayebxnkos'],
+      item_ids: ['it_pej07ckhvu62'],
+      product_line_ids: ['pdln_k9bnlgvxhxjh'],
+    });
   });
 
   test('updateQuarterlyOrders', async () => {
@@ -422,6 +419,7 @@ describe('resource analytics', () => {
           item_ids: ['it_pej07ckhvu62'],
           product_line_ids: ['pdln_k9bnlgvxhxjh'],
           sales_rep_ids: ['acus_e5zu8bde0z3h'],
+          years_back: 5,
         },
         { path: '/_stainless_unknown_path' },
       ),

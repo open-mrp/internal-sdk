@@ -3,7 +3,30 @@
 import { APIResource } from '../../../core/resource';
 import * as CoreAPI from '../core';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
+import * as OpenOrdersAPI from './open-orders';
+import {
+  AnalyticsCustomer,
+  AnalyticsSalesOrder,
+  AnalyticsShipTo,
+  AnalyzeOpenOrdersBreakdownRequest,
+  AnalyzeOpenOrdersSummaryRequest,
+  AnalyzeOpenOrdersSummaryResponse,
+  ListOpenOrder,
+  ListOpenOrderLine,
+  ListOpenOrderProduct,
+  ListOpenOrdersRequest,
+  OpenOrder,
+  OpenOrderFilters,
+  OpenOrderLine,
+  OpenOrderProduct,
+  OpenOrderUpdateBreakdownParams,
+  OpenOrderUpdateParams,
+  OpenOrderUpdateSummaryParams,
+  OpenOrders,
+} from './open-orders';
 import * as AccountUsersAPI from '../../identity/account-users/account-users';
+import * as OpenOrderLinesAPI from './open-order-lines/open-order-lines';
+import { OpenOrderLines } from './open-order-lines/open-order-lines';
 import * as SalesLinesAPI from './sales-lines/sales-lines';
 import {
   ListSalesEntry,
@@ -19,10 +42,18 @@ import { RequestOptions } from '../../../internal/request-options';
  */
 export class Analytics extends APIResource {
   salesLines: SalesLinesAPI.SalesLines = new SalesLinesAPI.SalesLines(this._client);
+  openOrders: OpenOrdersAPI.OpenOrders = new OpenOrdersAPI.OpenOrders(this._client);
+  openOrderLines: OpenOrderLinesAPI.OpenOrderLines = new OpenOrderLinesAPI.OpenOrderLines(this._client);
 
   /**
    * Returns weeks-of-sales metrics per product line, including on-hand quantity,
    * average weekly sales, and weeks of inventory remaining.
+   *
+   * On-hand stock is the available receipts of the line's sale products, deleted
+   * items included, net of what has been drawn against them. Sales are the
+   * quantities ordered on the account's orders issued in the trailing period. Both
+   * are stated in the product line's base unit, converting each line and receipt
+   * from its own unit.
    *
    * This endpoint requires the permission: `inventory:read`.
    *
@@ -54,7 +85,7 @@ export class Analytics extends APIResource {
    * overrides entered on an individual order are not visible here: they bypass
    * contracted pricing entirely and are only recorded on the order line.
    *
-   * This endpoint requires the permission: `discounts:read`.
+   * This endpoint requires the permission: `costs:read`.
    *
    * @example
    * ```ts
@@ -160,6 +191,11 @@ export class Analytics extends APIResource {
    * Returns demand forecasts for items, including historical data and projected
    * demand with confidence bounds.
    *
+   * Demand is the quantity ordered on sales orders, by month of creation, in each
+   * item's base unit; revenue is its ordered value, and sales its invoiced value by
+   * month of invoice. Purchase orders are left out. An item first ordered this month
+   * is forecast at zero.
+   *
    * This endpoint requires the permission: `invoices:read`.
    *
    * @example
@@ -181,8 +217,14 @@ export class Analytics extends APIResource {
   }
 
   /**
-   * Returns inventory receipt summaries including remaining quantities, costs, and
-   * values.
+   * Returns the account's available inventory receipts grouped by item, location,
+   * lot, owner and holder, oldest receipt first.
+   *
+   * Each receipt counts for what is left of it after its allocations, in the item's
+   * base unit and never below zero; a receipt without a unit cost is left out. The
+   * weighted average unit cost is per base unit, and the inventory value is the
+   * remaining quantity at that cost, in the oldest receipt's currency. A group with
+   * nothing left has no inventory value and a weighted average cost of zero.
    *
    * This endpoint requires the permission: `materials:read`.
    *
@@ -258,6 +300,11 @@ export class Analytics extends APIResource {
   /**
    * Returns material inventory and demand analytics per material, including
    * quantities, unit groups, and supplier information.
+   *
+   * The quantity in inventory is available to promise: available receipts less
+   * reserved and open issues, each net of its allocations. The quantity in demand is
+   * the open issues. Both are converted to the order point's unit, or the item's
+   * base unit for a material without an order point.
    *
    * This endpoint requires the permission: `materials:read`.
    *
@@ -391,7 +438,12 @@ export class Analytics extends APIResource {
   }
 
   /**
-   * Returns open batch summaries grouped by scanning station.
+   * Returns open batch summaries grouped by scanning station and item.
+   *
+   * Each open, scanned batch counts for its quantity less what has already gone
+   * downstream into output batches. Selecting items or product lines selects the
+   * parts their production consumes, recursively, together with the selected items
+   * themselves; a selection that leads to no part does not filter.
    *
    * This endpoint requires the permission: `batches:read`.
    *
@@ -435,32 +487,63 @@ export class Analytics extends APIResource {
   }
 
   /**
-   * Returns aggregated production cost breakdowns by department and category.
+   * Costs the production scanned over a window: overall, per department, per item
+   * category, and per department and category.
    *
-   * This endpoint requires the permission: `batches:read`.
+   * Every batch scanned at a production step within the window counts, open or
+   * closed. Each kind of output is charged for the runs of its step it amounts to: a
+   * batch's productive quantity, and the seconds and waste it recorded, are each
+   * carried into the unit the step's production is entered in and divided by what
+   * one run produces. One run costs its raw material consumption (quantity plus
+   * waste allowance, at each material's unit cost) and its labor time — the step's
+   * labor time per unit, stretched by its leveling factor and allowances — priced at
+   * the step's labor rate and again at its overhead rate.
+   *
+   * Labor time is read in its own units on both sides: seconds per pair on a step
+   * producing eaches is half those seconds per each, and minutes or seconds are
+   * carried into hours before they meet a rate. The dashboard's report, for a step
+   * whose labor time is per a different unit from the one it produces in, read a
+   * figure in hours as if it were in the labor time's own unit, scaling the labor
+   * time, and the labor and overhead priced from it, by that unit's size in hours:
+   * seconds by 1/3600. A step producing 1 pr with a labor time of 2 min/ea at $10/hr
+   * is 4 minutes and $0.67 of labor here, where the dashboard reported $0.01. A
+   * labor time per a unit of another dimension than the step's output, which the
+   * dashboard could not cost at all, is read as per unit produced.
+   *
+   * Money is in `currency_unit` and labor time in `time_unit`, rounded to 10 decimal
+   * places. What was produced is stated per dimension, in its base unit.
+   *
+   * This endpoint requires the permission: `costs:read`.
    *
    * @example
    * ```ts
    * const analyzeProductionCostsResponse =
    *   await client.core.analytics.updateProductionCosts({
+   *     ends_at: '2026-05-10T00:23:00Z',
+   *     starts_at: '2026-05-10T00:00:00Z',
    *     category_ids: ['ic_d06g9c6yc9ck'],
    *     department_ids: ['dp_m0jayebxnkos'],
-   *     ends_at: '2026-05-10T00:23:00Z',
    *     item_ids: ['it_pej07ckhvu62'],
    *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
-   *     starts_at: '2026-05-10T00:00:00Z',
    *   });
    * ```
    */
   updateProductionCosts(
-    body: AnalyticsUpdateProductionCostsParams | null | undefined = {},
+    body: AnalyticsUpdateProductionCostsParams,
     options?: RequestOptions,
   ): APIPromise<AnalyzeProductionCostsResponse> {
     return this._client.put('/v1/core/analytics/production-costs', { body, ...options });
   }
 
   /**
-   * Returns yearly order totals broken down by quarter.
+   * Returns the ordered value of sales orders by the year and quarter they were
+   * issued, for the last few calendar years.
+   *
+   * Each year's quarters and total are the ordered value of sale lines — quantity
+   * times unit price, converted between units — on sales orders issued in that
+   * quarter (UTC), whatever their status now. Estimates, which have not been issued,
+   * and purchase orders are left out. Customers include their child accounts. Sales
+   * reps see only their own orders.
    *
    * This endpoint requires the permission: `invoices:read`.
    *
@@ -473,6 +556,7 @@ export class Analytics extends APIResource {
    *     item_ids: ['it_pej07ckhvu62'],
    *     product_line_ids: ['pdln_k9bnlgvxhxjh'],
    *     sales_rep_ids: ['acus_e5zu8bde0z3h'],
+   *     years_back: 5,
    *   });
    * ```
    */
@@ -498,7 +582,7 @@ export class Analytics extends APIResource {
    * line override bypasses contracted prices and volume discounts entirely, so it
    * never appears in an audit of configured pricing.
    *
-   * This endpoint requires the permission: `invoices:read`.
+   * This endpoint requires the permission: `costs:read`.
    *
    * @example
    * ```ts
@@ -693,8 +777,11 @@ export interface AccountGroup {
    *   in this group.
    * - `commission_exempt`: orders from accounts in this group are exempt from
    *   commission.
+   *
+   * Null to customer and supplier portal users, like the rest of your commission
+   * settings.
    */
-  commission_policy: 'commission_applied' | 'commission_exempt';
+  commission_policy: 'commission_applied' | 'commission_exempt' | null;
 
   /**
    * Creation timestamp.
@@ -1266,6 +1353,8 @@ export interface AnalyzeManufacturingRequest {
 
   /**
    * The type of manufacturing analytics to compute.
+   *
+   * `costsPerUnit` and `margin` are cost data and also require `costs:read`.
    */
   type: string;
 }
@@ -1513,54 +1602,100 @@ export interface AnalyzeOrdersResponse {
 }
 
 /**
- * AnalyzeProductionCostsRequest is the request to analyze production costs.
+ * AnalyzeProductionCostsRequest is the request to cost a window's production.
  */
 export interface AnalyzeProductionCostsRequest {
   /**
-   * Optional category IDs to filter by.
+   * End of the window, inclusive: batches scanned at or before it are costed.
+   */
+  ends_at: string;
+
+  /**
+   * Start of the window, inclusive: batches scanned at or after it are costed.
+   */
+  starts_at: string;
+
+  /**
+   * Restrict the report to batches of items in these categories.
    */
   category_ids?: Array<string>;
 
   /**
-   * Optional department IDs to filter by.
+   * Restrict the report to batches scanned at these departments' stations.
    */
   department_ids?: Array<string>;
 
   /**
-   * Optional end date for the analysis period.
-   */
-  ends_at?: string;
-
-  /**
-   * Optional item IDs to filter by.
+   * Restrict the report to these items' production: the items themselves and every
+   * part their steps consume, recursively upstream. Combines with
+   * `product_line_ids`.
    */
   item_ids?: Array<string>;
 
   /**
-   * Optional product line IDs to filter by.
+   * Restrict the report to the production of these product lines' items: the parts
+   * their steps consume, recursively upstream, and any of the items no step
+   * produces. An item a step produces is selected only through `item_ids`.
+   *
+   * Product lines that lead to no item, with no `item_ids`, do not restrict the
+   * report.
    */
   product_line_ids?: Array<string>;
-
-  /**
-   * Optional start date for the analysis period.
-   */
-  starts_at?: string;
 }
 
 /**
- * AnalyzeProductionCostsResponse represents the response from the analyze
- * production costs endpoint.
+ * AnalyzeProductionCostsResponse is what production cost over a window: overall,
+ * by department, by item category, and by both.
  */
 export interface AnalyzeProductionCostsResponse {
   /**
-   * The production cost data.
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
    */
-  data: Array<ProductionCostItem>;
+  categories: ListProductionCostCategory | null;
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  currency_unit: AccountUsersAPI.Unit | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  department_categories: ListProductionCostDepartmentCategory | null;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  departments: ListProductionCostDepartment | null;
+
+  /**
+   * End of the window, inclusive.
+   */
+  ends_at: string;
 
   /**
    * Resource type identifier.
    */
-  object: 'list';
+  object: 'analyze_production_costs_response';
+
+  /**
+   * Start of the window, inclusive.
+   */
+  starts_at: string;
+
+  /**
+   * Unit of measurement used for conversions and product quantities.
+   */
+  time_unit: AccountUsersAPI.Unit | null;
+
+  /**
+   * ProductionCostTotals is what a production cost report's batches cost, by the
+   * kind of output they went into.
+   */
+  totals: ProductionCostTotals | null;
 }
 
 /**
@@ -1591,6 +1726,11 @@ export interface AnalyzeQuarterlyOrdersRequest {
    * Optional sales rep IDs to filter by.
    */
   sales_rep_ids?: Array<string>;
+
+  /**
+   * Calendar years to cover, the current one included. Defaults to 5.
+   */
+  years_back?: number;
 }
 
 /**
@@ -2243,65 +2383,6 @@ export interface Coordinate {
 }
 
 /**
- * CostBreakdown represents a detailed cost breakdown with sub-quantities.
- */
-export interface CostBreakdown {
-  /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
-   *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
-   */
-  labor: AccountUsersAPI.Quantity | null;
-
-  /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
-   *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
-   */
-  materials: AccountUsersAPI.Quantity | null;
-
-  /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
-   *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
-   */
-  overhead: AccountUsersAPI.Quantity | null;
-
-  /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
-   *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
-   */
-  quantity: AccountUsersAPI.Quantity | null;
-
-  /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
-   *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
-   */
-  time: AccountUsersAPI.Quantity | null;
-
-  /**
-   * A measured amount: a numeric value together with the unit it is expressed in.
-   *
-   * Quantities are shared building blocks rather than standalone records — other
-   * resources point at them to report stock levels, ordered and packed amounts,
-   * money, weights, and durations.
-   */
-  total: AccountUsersAPI.Quantity | null;
-}
-
-/**
  * A business you sell to, with its contact details, default fulfillment settings,
  * and order policies.
  */
@@ -2333,8 +2414,11 @@ export interface Customer {
    * The customer counts as exempt if this field, its `type` group, or any of its
    * `price_groups` is `commission_exempt`. Exempt customers never have a sales rep
    * assigned automatically when an order is created without one.
+   *
+   * Null to customer and supplier portal users, like the rest of your commission
+   * settings.
    */
-  commission_policy: 'commission_applied' | 'commission_exempt';
+  commission_policy: 'commission_applied' | 'commission_exempt' | null;
 
   /**
    * Customer contact information.
@@ -2379,6 +2463,8 @@ export interface Customer {
 
   /**
    * Free-form note about the customer.
+   *
+   * Null to customer and supplier portal users: it is your own team's note.
    */
   note: string | null;
 
@@ -2499,7 +2585,8 @@ export interface CustomerDefaults {
    *   dates.
    *
    * With none set here the customer inherits its account group's policy, then falls
-   * back to make-to-stock.
+   * back to make-to-stock. Always null to customer and supplier portal users, like
+   * the rest of your production planning.
    */
   fulfillment_policy: 'make_to_stock' | 'make_to_order' | null;
 
@@ -2671,6 +2758,9 @@ export interface CustomerPricingFinding {
   /**
    * Gross margin at this price, as a fraction between 0 and 1. Null when no
    * comparable cost could be established.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
   gross_margin: string | null;
 
@@ -3285,7 +3375,7 @@ export interface InventoryReceiptSummaryEntry {
   /**
    * AnalyticsRate represents a rate with numerator and denominator quantities.
    */
-  weighted_average_unit_cost: AnalyticsRate;
+  weighted_average_unit_cost: AnalyticsRate | null;
 }
 
 /**
@@ -3324,6 +3414,33 @@ export interface ListAttainmentBucket {
    * Resources in this page.
    */
   data: Array<AttainmentBucket>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListComputedQuantity {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ComputedQuantity>;
 
   /**
    * Resource type identifier.
@@ -3697,6 +3814,87 @@ export interface ListOeeTrendPeriod {
  * A single page of resources, together with the metadata needed to page through
  * the rest of the result set.
  */
+export interface ListProductionCostCategory {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ProductionCostCategory>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListProductionCostDepartment {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ProductionCostDepartment>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
+export interface ListProductionCostDepartmentCategory {
+  /**
+   * Resources in this page.
+   */
+  data: Array<ProductionCostDepartmentCategory>;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'list';
+
+  /**
+   * PageInfo describes where the current page sits within a paginated result set and
+   * how to move to the adjacent pages.
+   *
+   * Page a list by following the URLs below rather than assembling cursors yourself.
+   * For a top-level list endpoint the URL repeats the original request's query
+   * string with only the cursor swapped, so following it preserves the same filters,
+   * search term, and page size.
+   */
+  page_info: APIKeysAPI.PageInfo;
+}
+
+/**
+ * A single page of resources, together with the metadata needed to page through
+ * the rest of the result set.
+ */
 export interface ListRealizedMarginFinding {
   /**
    * Resources in this page.
@@ -3834,8 +4032,11 @@ export interface ListServiceLevel {
 export interface ManufacturingMetrics {
   /**
    * The costs per unit metric value.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
-  costs_per_unit: number;
+  costs_per_unit: number | null;
 
   /**
    * The labor efficiency metric value.
@@ -3844,8 +4045,11 @@ export interface ManufacturingMetrics {
 
   /**
    * The margin metric value.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
-  margin: number;
+  margin: number | null;
 
   /**
    * The production metric value.
@@ -4510,8 +4714,11 @@ export interface OrderEntry {
 
   /**
    * The total cost.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
-  total_cost: number;
+  total_cost: number | null;
 
   /**
    * The total invoiced amount.
@@ -4525,8 +4732,11 @@ export interface OrderEntry {
 
   /**
    * The total profit.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
-  total_profit: number;
+  total_profit: number | null;
 
   /**
    * The unit of measure.
@@ -4535,8 +4745,11 @@ export interface OrderEntry {
 
   /**
    * The unit cost.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
-  unit_cost: number;
+  unit_cost: number | null;
 
   /**
    * The unit price.
@@ -4545,8 +4758,11 @@ export interface OrderEntry {
 
   /**
    * The unit profit.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
-  unit_profit: number;
+  unit_profit: number | null;
 }
 
 /**
@@ -4664,8 +4880,11 @@ export interface ProductLine {
    * - `commission_exempt`: no commission applies to these products.
    * - `commission_applied`: commission applies to these products, unless overridden
    *   elsewhere.
+   *
+   * Null to customer and supplier portal users, like the rest of your commission
+   * settings.
    */
-  commission_policy: 'commission_applied' | 'commission_exempt';
+  commission_policy: 'commission_applied' | 'commission_exempt' | null;
 
   /**
    * Creation timestamp.
@@ -4703,7 +4922,8 @@ export interface ProductLine {
    * - `make_to_order`: built only against orders already on the book, holding no
    *   buffer.
    *
-   * Null falls through to the account default.
+   * Null falls through to the account default. Always null to customer and supplier
+   * portal users, like the rest of your production planning.
    */
   fulfillment_policy: 'make_to_stock' | 'make_to_order' | null;
 
@@ -4717,6 +4937,8 @@ export interface ProductLine {
 
   /**
    * Free-form notes about the product line.
+   *
+   * Null to customer and supplier portal users: they are your own team's notes.
    */
   notes: string | null;
 
@@ -4747,9 +4969,131 @@ export interface ProductLine {
 }
 
 /**
- * ProductionCostItem represents an aggregated production cost entry.
+ * ProductionCost is what one kind of output cost: the material it consumed, the
+ * labor and overhead its labor time was charged, and what it was.
  */
-export interface ProductionCostItem {
+export interface ProductionCost {
+  /**
+   * Labor time priced at each step's labor rate, in `currency_unit`.
+   */
+  labor: string;
+
+  /**
+   * Labor time, after each step's leveling factor and allowances, in `time_unit`.
+   */
+  labor_time: string;
+
+  /**
+   * Raw material consumed, waste allowance included, in `currency_unit`.
+   */
+  materials: string;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'production_cost';
+
+  /**
+   * Labor time priced at each step's overhead rate, in `currency_unit`.
+   */
+  overhead: string;
+
+  /**
+   * A single page of resources, together with the metadata needed to page through
+   * the rest of the result set.
+   */
+  produced: ListComputedQuantity | null;
+
+  /**
+   * Materials, labor and overhead together, in `currency_unit`.
+   */
+  total: string;
+}
+
+/**
+ * ProductionCostCategory is what the batches of one item category cost.
+ */
+export interface ProductionCostCategory {
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  category: CoreAPI.Entity | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'production_cost_category';
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  productive: ProductionCost | null;
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  seconds: ProductionCost | null;
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  total: ProductionCost | null;
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  waste: ProductionCost | null;
+}
+
+/**
+ * ProductionCostDepartment is what the batches scanned at one department's
+ * stations cost.
+ */
+export interface ProductionCostDepartment {
+  /**
+   * Entity is a polymorphic reference to any resource in the system.
+   */
+  department: CoreAPI.Entity | null;
+
+  /**
+   * Resource type identifier.
+   */
+  object: 'production_cost_department';
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  productive: ProductionCost | null;
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  seconds: ProductionCost | null;
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  total: ProductionCost | null;
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  waste: ProductionCost | null;
+}
+
+/**
+ * ProductionCostDepartmentCategory is what the batches of one item category
+ * scanned at one department's stations cost.
+ */
+export interface ProductionCostDepartmentCategory {
   /**
    * Entity is a polymorphic reference to any resource in the system.
    */
@@ -4761,24 +5105,68 @@ export interface ProductionCostItem {
   department: CoreAPI.Entity | null;
 
   /**
-   * CostBreakdown represents a detailed cost breakdown with sub-quantities.
+   * Resource type identifier.
    */
-  productive_costs: CostBreakdown;
+  object: 'production_cost_department_category';
 
   /**
-   * CostBreakdown represents a detailed cost breakdown with sub-quantities.
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
    */
-  seconds_costs: CostBreakdown;
+  productive: ProductionCost | null;
 
   /**
-   * CostBreakdown represents a detailed cost breakdown with sub-quantities.
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
    */
-  total_costs: CostBreakdown;
+  seconds: ProductionCost | null;
 
   /**
-   * CostBreakdown represents a detailed cost breakdown with sub-quantities.
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
    */
-  waste_costs: CostBreakdown;
+  total: ProductionCost | null;
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  waste: ProductionCost | null;
+}
+
+/**
+ * ProductionCostTotals is what a production cost report's batches cost, by the
+ * kind of output they went into.
+ */
+export interface ProductionCostTotals {
+  /**
+   * Resource type identifier.
+   */
+  object: 'production_cost_totals';
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  productive: ProductionCost | null;
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  seconds: ProductionCost | null;
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  total: ProductionCost | null;
+
+  /**
+   * ProductionCost is what one kind of output cost: the material it consumed, the
+   * labor and overhead its labor time was charged, and what it was.
+   */
+  waste: ProductionCost | null;
 }
 
 /**
@@ -4836,6 +5224,9 @@ export interface RealizedMarginFinding {
   /**
    * Realized gross margin, as a fraction between 0 and 1. Null when no cost was
    * captured on the lines.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
   gross_margin: string | null;
 
@@ -5183,8 +5574,11 @@ export interface SalesEntry {
 
   /**
    * The total cost.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
-  total_cost: number;
+  total_cost: number | null;
 
   /**
    * The total invoiced amount.
@@ -5193,8 +5587,11 @@ export interface SalesEntry {
 
   /**
    * The total profit.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
-  total_profit: number;
+  total_profit: number | null;
 
   /**
    * The unit of measure.
@@ -5203,8 +5600,11 @@ export interface SalesEntry {
 
   /**
    * The unit cost.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
-  unit_cost: number;
+  unit_cost: number | null;
 
   /**
    * The unit price.
@@ -5213,8 +5613,11 @@ export interface SalesEntry {
 
   /**
    * The unit profit.
+   *
+   * Null unless the caller holds `costs:read`; customer and supplier portal users
+   * never see it.
    */
-  unit_profit: number;
+  unit_profit: number | null;
 }
 
 /**
@@ -5714,6 +6117,8 @@ export interface AnalyticsUpdateManufacturingParams {
 
   /**
    * The type of manufacturing analytics to compute.
+   *
+   * `costsPerUnit` and `margin` are cost data and also require `costs:read`.
    */
   type: string;
 }
@@ -5908,34 +6313,41 @@ export interface AnalyticsUpdateOrdersParams {
 
 export interface AnalyticsUpdateProductionCostsParams {
   /**
-   * Optional category IDs to filter by.
+   * End of the window, inclusive: batches scanned at or before it are costed.
+   */
+  ends_at: string;
+
+  /**
+   * Start of the window, inclusive: batches scanned at or after it are costed.
+   */
+  starts_at: string;
+
+  /**
+   * Restrict the report to batches of items in these categories.
    */
   category_ids?: Array<string>;
 
   /**
-   * Optional department IDs to filter by.
+   * Restrict the report to batches scanned at these departments' stations.
    */
   department_ids?: Array<string>;
 
   /**
-   * Optional end date for the analysis period.
-   */
-  ends_at?: string;
-
-  /**
-   * Optional item IDs to filter by.
+   * Restrict the report to these items' production: the items themselves and every
+   * part their steps consume, recursively upstream. Combines with
+   * `product_line_ids`.
    */
   item_ids?: Array<string>;
 
   /**
-   * Optional product line IDs to filter by.
+   * Restrict the report to the production of these product lines' items: the parts
+   * their steps consume, recursively upstream, and any of the items no step
+   * produces. An item a step produces is selected only through `item_ids`.
+   *
+   * Product lines that lead to no item, with no `item_ids`, do not restrict the
+   * report.
    */
   product_line_ids?: Array<string>;
-
-  /**
-   * Optional start date for the analysis period.
-   */
-  starts_at?: string;
 }
 
 export interface AnalyticsUpdateQuarterlyOrdersParams {
@@ -5963,6 +6375,11 @@ export interface AnalyticsUpdateQuarterlyOrdersParams {
    * Optional sales rep IDs to filter by.
    */
   sales_rep_ids?: Array<string>;
+
+  /**
+   * Calendar years to cover, the current one included. Defaults to 5.
+   */
+  years_back?: number;
 }
 
 export interface AnalyticsUpdateRealizedMarginsParams {
@@ -6248,6 +6665,8 @@ export interface AnalyticsUpdateScheduleAttainmentParams {
 }
 
 Analytics.SalesLines = SalesLines;
+Analytics.OpenOrders = OpenOrders;
+Analytics.OpenOrderLines = OpenOrderLines;
 
 export declare namespace Analytics {
   export {
@@ -6304,7 +6723,6 @@ export declare namespace Analytics {
     type ComputedQuantity as ComputedQuantity,
     type ComputedRate as ComputedRate,
     type Coordinate as Coordinate,
-    type CostBreakdown as CostBreakdown,
     type Customer as Customer,
     type CustomerContactInfo as CustomerContactInfo,
     type CustomerDefaults as CustomerDefaults,
@@ -6326,6 +6744,7 @@ export declare namespace Analytics {
     type InventoryReceiptSummaryEntry as InventoryReceiptSummaryEntry,
     type ListAccountGroup as ListAccountGroup,
     type ListAttainmentBucket as ListAttainmentBucket,
+    type ListComputedQuantity as ListComputedQuantity,
     type ListCustomer as ListCustomer,
     type ListCustomerPricingFinding as ListCustomerPricingFinding,
     type ListDeliveryBacklogBucket as ListDeliveryBacklogBucket,
@@ -6339,6 +6758,9 @@ export declare namespace Analytics {
     type ListOeeDepartment as ListOeeDepartment,
     type ListOeeDowntimeReason as ListOeeDowntimeReason,
     type ListOeeTrendPeriod as ListOeeTrendPeriod,
+    type ListProductionCostCategory as ListProductionCostCategory,
+    type ListProductionCostDepartment as ListProductionCostDepartment,
+    type ListProductionCostDepartmentCategory as ListProductionCostDepartmentCategory,
     type ListRealizedMarginFinding as ListRealizedMarginFinding,
     type ListSalesBreakdown as ListSalesBreakdown,
     type ListSalesInvoice as ListSalesInvoice,
@@ -6357,7 +6779,11 @@ export declare namespace Analytics {
     type PaymentTerm as PaymentTerm,
     type Priority as Priority,
     type ProductLine as ProductLine,
-    type ProductionCostItem as ProductionCostItem,
+    type ProductionCost as ProductionCost,
+    type ProductionCostCategory as ProductionCostCategory,
+    type ProductionCostDepartment as ProductionCostDepartment,
+    type ProductionCostDepartmentCategory as ProductionCostDepartmentCategory,
+    type ProductionCostTotals as ProductionCostTotals,
     type RealizedMarginFinding as RealizedMarginFinding,
     type RealizedMarginSummary as RealizedMarginSummary,
     type RevenueForecastPoint as RevenueForecastPoint,
@@ -6401,4 +6827,27 @@ export declare namespace Analytics {
     type ListSalesLinesRequest as ListSalesLinesRequest,
     type SalesLineUpdateParams as SalesLineUpdateParams,
   };
+
+  export {
+    OpenOrders as OpenOrders,
+    type AnalyticsCustomer as AnalyticsCustomer,
+    type AnalyticsSalesOrder as AnalyticsSalesOrder,
+    type AnalyticsShipTo as AnalyticsShipTo,
+    type AnalyzeOpenOrdersBreakdownRequest as AnalyzeOpenOrdersBreakdownRequest,
+    type AnalyzeOpenOrdersSummaryRequest as AnalyzeOpenOrdersSummaryRequest,
+    type AnalyzeOpenOrdersSummaryResponse as AnalyzeOpenOrdersSummaryResponse,
+    type ListOpenOrder as ListOpenOrder,
+    type ListOpenOrderLine as ListOpenOrderLine,
+    type ListOpenOrderProduct as ListOpenOrderProduct,
+    type ListOpenOrdersRequest as ListOpenOrdersRequest,
+    type OpenOrder as OpenOrder,
+    type OpenOrderFilters as OpenOrderFilters,
+    type OpenOrderLine as OpenOrderLine,
+    type OpenOrderProduct as OpenOrderProduct,
+    type OpenOrderUpdateParams as OpenOrderUpdateParams,
+    type OpenOrderUpdateBreakdownParams as OpenOrderUpdateBreakdownParams,
+    type OpenOrderUpdateSummaryParams as OpenOrderUpdateSummaryParams,
+  };
+
+  export { OpenOrderLines as OpenOrderLines };
 }

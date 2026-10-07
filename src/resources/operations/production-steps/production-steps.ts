@@ -103,10 +103,11 @@ export class ProductionSteps extends APIResource {
    * ```
    */
   create(
-    body: ProductionStepCreateParams,
+    params: ProductionStepCreateParams,
     options?: RequestOptions,
   ): APIPromise<AccountUsersAPI.ProductionStep> {
-    return this._client.post('/v1/operations/production-steps', { body, ...options });
+    const { include, ...body } = params;
+    return this._client.post('/v1/operations/production-steps', { query: { include }, body, ...options });
   }
 
   /**
@@ -153,10 +154,15 @@ export class ProductionSteps extends APIResource {
    */
   update(
     id: string,
-    body: ProductionStepUpdateParams | null | undefined = {},
+    params: ProductionStepUpdateParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<AccountUsersAPI.ProductionStep> {
-    return this._client.patch(path`/v1/operations/production-steps/${id}`, { body, ...options });
+    const { include, ...body } = params ?? {};
+    return this._client.patch(path`/v1/operations/production-steps/${id}`, {
+      query: { include },
+      body,
+      ...options,
+    });
   }
 
   /**
@@ -372,11 +378,24 @@ export interface UpdateProductionStepRequest {
   leveling_factor?: string;
 
   /**
+   * Machines assigned to the step, replacing the current set.
+   *
+   * A machine belongs to one step, so a machine assigned to another step moves to
+   * this one. Pass an empty list to unassign every machine.
+   */
+  machine_ids?: Array<string>;
+
+  /**
    * New display name.
    *
    * Must be unique within the account.
    */
   name?: string;
+
+  /**
+   * Free-form notes. Pass null to remove them.
+   */
+  notes?: string | null;
 
   /**
    * Scanning station where batches at this step are scanned.
@@ -388,8 +407,8 @@ export interface ProductionStepDeleteResponse {}
 
 export interface ProductionStepCreateParams {
   /**
-   * Allowance correction factor applied to labor time in cost calculations, as a
-   * decimal string.
+   * Body param: Allowance correction factor applied to labor time in cost
+   * calculations, as a decimal string.
    *
    * Effective labor time per unit is
    * `labor_time × (1 + leveling_factor) × (1 + allowances)`, so `0` applies no
@@ -398,20 +417,20 @@ export interface ProductionStepCreateParams {
   allowances: string;
 
   /**
-   * A rate, expressed as a value together with the units of its numerator and
-   * denominator (for example, `25.00` `$` per `hr`).
+   * Body param: A rate, expressed as a value together with the units of its
+   * numerator and denominator (for example, `25.00` `$` per `hr`).
    */
   labor_rate: CreateRateInput;
 
   /**
-   * A rate, expressed as a value together with the units of its numerator and
-   * denominator (for example, `25.00` `$` per `hr`).
+   * Body param: A rate, expressed as a value together with the units of its
+   * numerator and denominator (for example, `25.00` `$` per `hr`).
    */
   labor_time: CreateRateInput;
 
   /**
-   * Leveling correction factor applied to labor time in cost calculations, as a
-   * decimal string.
+   * Body param: Leveling correction factor applied to labor time in cost
+   * calculations, as a decimal string.
    *
    * Effective labor time per unit is
    * `labor_time × (1 + leveling_factor) × (1 + allowances)`, so `0` applies no
@@ -420,40 +439,80 @@ export interface ProductionStepCreateParams {
   leveling_factor: string;
 
   /**
-   * Display name of the step.
+   * Body param: Display name of the step.
    *
    * Must be unique within the account.
    */
   name: string;
 
   /**
-   * A rate, expressed as a value together with the units of its numerator and
-   * denominator (for example, `25.00` `$` per `hr`).
+   * Body param: A rate, expressed as a value together with the units of its
+   * numerator and denominator (for example, `25.00` `$` per `hr`).
    */
   overhead_rate: CreateRateInput;
 
   /**
-   * The item and quantity a production step produces.
+   * Body param: The item and quantity a production step produces.
    */
   production: CreateProductionInput;
 
   /**
-   * Materials consumed by the step.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    | 'production'
+    | 'production.produced_item'
+    | 'production.produced_item.category'
+    | 'production.produced_item.category.unit_group'
+    | 'production.produced_item.category.unit_group.base_unit'
+    | 'production.produced_item.category.unit_group.associated_units'
+    | 'production.produced_item.category.unit_group.associated_units.unit'
+    | 'production.produced_item.unit_cost'
+    | 'production.quantity.unit'
+    | 'consumptions'
+    | 'consumptions.consumed_item'
+    | 'consumptions.consumed_item.category'
+    | 'consumptions.consumed_item.category.unit_group'
+    | 'consumptions.consumed_item.category.unit_group.base_unit'
+    | 'consumptions.consumed_item.category.unit_group.associated_units'
+    | 'consumptions.consumed_item.category.unit_group.associated_units.unit'
+    | 'consumptions.consumed_item.unit_cost'
+    | 'consumptions.quantity'
+    | 'consumptions.quantity.unit'
+    | 'consumptions.waste_quantity'
+    | 'consumptions.waste_quantity.unit'
+    | 'machines'
+    | 'machines.department'
+    | 'scanning_station'
+    | 'department'
+    | 'in_steps'
+    | 'out_steps'
+    | 'labor_rate.numerator_unit'
+    | 'labor_rate.denominator_unit'
+    | 'labor_time.numerator_unit'
+    | 'labor_time.denominator_unit'
+    | 'overhead_rate.numerator_unit'
+    | 'overhead_rate.denominator_unit'
+  >;
+
+  /**
+   * Body param: Materials consumed by the step.
    */
   consumptions?: Array<CreateConsumptionInput>;
 
   /**
-   * Department responsible for this step.
+   * Body param: Department responsible for this step.
    */
   department_id?: string;
 
   /**
-   * Free-form notes about the step.
+   * Body param: Free-form notes about the step.
    */
   notes?: string;
 
   /**
-   * Scanning station where batches at this step are scanned.
+   * Body param: Scanning station where batches at this step are scanned.
    */
   scanning_station_id?: string;
 }
@@ -466,40 +525,115 @@ export interface ProductionStepRetrieveParams {
   include?: Array<
     | 'production'
     | 'production.produced_item'
+    | 'production.produced_item.category'
+    | 'production.produced_item.category.unit_group'
+    | 'production.produced_item.category.unit_group.base_unit'
+    | 'production.produced_item.category.unit_group.associated_units'
+    | 'production.produced_item.category.unit_group.associated_units.unit'
+    | 'production.produced_item.unit_cost'
+    | 'production.quantity.unit'
     | 'consumptions'
     | 'consumptions.consumed_item'
+    | 'consumptions.consumed_item.category'
+    | 'consumptions.consumed_item.category.unit_group'
+    | 'consumptions.consumed_item.category.unit_group.base_unit'
+    | 'consumptions.consumed_item.category.unit_group.associated_units'
+    | 'consumptions.consumed_item.category.unit_group.associated_units.unit'
+    | 'consumptions.consumed_item.unit_cost'
     | 'consumptions.quantity'
+    | 'consumptions.quantity.unit'
     | 'consumptions.waste_quantity'
+    | 'consumptions.waste_quantity.unit'
     | 'machines'
+    | 'machines.department'
     | 'scanning_station'
     | 'department'
     | 'in_steps'
     | 'out_steps'
+    | 'labor_rate.numerator_unit'
+    | 'labor_rate.denominator_unit'
+    | 'labor_time.numerator_unit'
+    | 'labor_time.denominator_unit'
+    | 'overhead_rate.numerator_unit'
+    | 'overhead_rate.denominator_unit'
   >;
 }
 
 export interface ProductionStepUpdateParams {
   /**
-   * Allowance correction factor applied to labor time in cost calculations, as a
-   * decimal string.
+   * Query param: Sub-objects to expand in the response. When omitted, sub-objects
+   * are returned as `null`.
+   */
+  include?: Array<
+    | 'production'
+    | 'production.produced_item'
+    | 'production.produced_item.category'
+    | 'production.produced_item.category.unit_group'
+    | 'production.produced_item.category.unit_group.base_unit'
+    | 'production.produced_item.category.unit_group.associated_units'
+    | 'production.produced_item.category.unit_group.associated_units.unit'
+    | 'production.produced_item.unit_cost'
+    | 'production.quantity.unit'
+    | 'consumptions'
+    | 'consumptions.consumed_item'
+    | 'consumptions.consumed_item.category'
+    | 'consumptions.consumed_item.category.unit_group'
+    | 'consumptions.consumed_item.category.unit_group.base_unit'
+    | 'consumptions.consumed_item.category.unit_group.associated_units'
+    | 'consumptions.consumed_item.category.unit_group.associated_units.unit'
+    | 'consumptions.consumed_item.unit_cost'
+    | 'consumptions.quantity'
+    | 'consumptions.quantity.unit'
+    | 'consumptions.waste_quantity'
+    | 'consumptions.waste_quantity.unit'
+    | 'machines'
+    | 'machines.department'
+    | 'scanning_station'
+    | 'department'
+    | 'in_steps'
+    | 'out_steps'
+    | 'labor_rate.numerator_unit'
+    | 'labor_rate.denominator_unit'
+    | 'labor_time.numerator_unit'
+    | 'labor_time.denominator_unit'
+    | 'overhead_rate.numerator_unit'
+    | 'overhead_rate.denominator_unit'
+  >;
+
+  /**
+   * Body param: Allowance correction factor applied to labor time in cost
+   * calculations, as a decimal string.
    */
   allowances?: string;
 
   /**
-   * Leveling correction factor applied to labor time in cost calculations, as a
-   * decimal string.
+   * Body param: Leveling correction factor applied to labor time in cost
+   * calculations, as a decimal string.
    */
   leveling_factor?: string;
 
   /**
-   * New display name.
+   * Body param: Machines assigned to the step, replacing the current set.
+   *
+   * A machine belongs to one step, so a machine assigned to another step moves to
+   * this one. Pass an empty list to unassign every machine.
+   */
+  machine_ids?: Array<string>;
+
+  /**
+   * Body param: New display name.
    *
    * Must be unique within the account.
    */
   name?: string;
 
   /**
-   * Scanning station where batches at this step are scanned.
+   * Body param: Free-form notes. Pass null to remove them.
+   */
+  notes?: string | null;
+
+  /**
+   * Body param: Scanning station where batches at this step are scanned.
    */
   scanning_station_id?: string;
 }
@@ -526,15 +660,37 @@ export interface ProductionStepListParams {
   include?: Array<
     | 'production'
     | 'production.produced_item'
+    | 'production.produced_item.category'
+    | 'production.produced_item.category.unit_group'
+    | 'production.produced_item.category.unit_group.base_unit'
+    | 'production.produced_item.category.unit_group.associated_units'
+    | 'production.produced_item.category.unit_group.associated_units.unit'
+    | 'production.produced_item.unit_cost'
+    | 'production.quantity.unit'
     | 'consumptions'
     | 'consumptions.consumed_item'
+    | 'consumptions.consumed_item.category'
+    | 'consumptions.consumed_item.category.unit_group'
+    | 'consumptions.consumed_item.category.unit_group.base_unit'
+    | 'consumptions.consumed_item.category.unit_group.associated_units'
+    | 'consumptions.consumed_item.category.unit_group.associated_units.unit'
+    | 'consumptions.consumed_item.unit_cost'
     | 'consumptions.quantity'
+    | 'consumptions.quantity.unit'
     | 'consumptions.waste_quantity'
+    | 'consumptions.waste_quantity.unit'
     | 'machines'
+    | 'machines.department'
     | 'scanning_station'
     | 'department'
     | 'in_steps'
     | 'out_steps'
+    | 'labor_rate.numerator_unit'
+    | 'labor_rate.denominator_unit'
+    | 'labor_time.numerator_unit'
+    | 'labor_time.denominator_unit'
+    | 'overhead_rate.numerator_unit'
+    | 'overhead_rate.denominator_unit'
   >;
 
   /**

@@ -68,6 +68,7 @@ describe('resource productionSteps', () => {
         quantity_unit_id: 'un_82bd37dae5po',
         quantity_value: '100',
       },
+      include: ['production'],
       consumptions: [
         {
           item_id: 'it_pej07ckhvu62',
@@ -123,9 +124,12 @@ describe('resource productionSteps', () => {
       client.operations.productionSteps.update(
         'prst_0ht5mkqx5a6t',
         {
+          include: ['production'],
           allowances: 'allowances',
           leveling_factor: '1.15',
+          machine_ids: ['string'],
           name: 'Assembly Step A',
+          notes: 'notes',
           scanning_station_id: 'scst_t71bn7lq5yov',
         },
         { path: '/_stainless_unknown_path' },
