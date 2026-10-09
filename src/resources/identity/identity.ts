@@ -9,6 +9,16 @@ import {
   ChildAccounts,
   ListChildAccount,
 } from './child-accounts';
+import * as DocumentSettingsAPI from './document-settings';
+import {
+  DocumentControl,
+  DocumentControlInput,
+  DocumentSetting,
+  DocumentSettingUpdateParams,
+  DocumentSettings,
+  ListDocumentSetting,
+  UpdateDocumentSettingRequest,
+} from './document-settings';
 import * as RolesAPI from './roles';
 import {
   CreateRoleRequest,
@@ -86,6 +96,9 @@ export class Identity extends APIResource {
   users: UsersAPI.Users = new UsersAPI.Users(this._client);
   accounts: AccountsAPI.Accounts = new AccountsAPI.Accounts(this._client);
   childAccounts: ChildAccountsAPI.ChildAccounts = new ChildAccountsAPI.ChildAccounts(this._client);
+  documentSettings: DocumentSettingsAPI.DocumentSettings = new DocumentSettingsAPI.DocumentSettings(
+    this._client,
+  );
   roles: RolesAPI.Roles = new RolesAPI.Roles(this._client);
 
   /**
@@ -309,6 +322,7 @@ Identity.AccountUsers = AccountUsers;
 Identity.Users = Users;
 Identity.Accounts = Accounts;
 Identity.ChildAccounts = ChildAccounts;
+Identity.DocumentSettings = DocumentSettings;
 Identity.Roles = Roles;
 
 export declare namespace Identity {
@@ -382,6 +396,16 @@ export declare namespace Identity {
     type ListChildAccount as ListChildAccount,
     type ChildAccountDeleteResponse as ChildAccountDeleteResponse,
     type ChildAccountListParams as ChildAccountListParams,
+  };
+
+  export {
+    DocumentSettings as DocumentSettings,
+    type DocumentControl as DocumentControl,
+    type DocumentControlInput as DocumentControlInput,
+    type DocumentSetting as DocumentSetting,
+    type ListDocumentSetting as ListDocumentSetting,
+    type UpdateDocumentSettingRequest as UpdateDocumentSettingRequest,
+    type DocumentSettingUpdateParams as DocumentSettingUpdateParams,
   };
 
   export {

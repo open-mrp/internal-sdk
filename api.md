@@ -304,6 +304,22 @@ Methods:
 - <code title="get /v1/identity/child-accounts">client.identity.childAccounts.<a href="./src/resources/identity/child-accounts.ts">list</a>({ ...params }) -> ListChildAccount</code>
 - <code title="delete /v1/identity/child-accounts/{child_account_id}">client.identity.childAccounts.<a href="./src/resources/identity/child-accounts.ts">delete</a>(childAccountID) -> ChildAccountDeleteResponse</code>
 
+## DocumentSettings
+
+Types:
+
+- <code><a href="./src/resources/identity/document-settings.ts">DocumentControl</a></code>
+- <code><a href="./src/resources/identity/document-settings.ts">DocumentControlInput</a></code>
+- <code><a href="./src/resources/identity/document-settings.ts">DocumentSetting</a></code>
+- <code><a href="./src/resources/identity/document-settings.ts">ListDocumentSetting</a></code>
+- <code><a href="./src/resources/identity/document-settings.ts">UpdateDocumentSettingRequest</a></code>
+
+Methods:
+
+- <code title="get /v1/identity/document-settings/{document_type}">client.identity.documentSettings.<a href="./src/resources/identity/document-settings.ts">retrieve</a>(documentType) -> DocumentSetting</code>
+- <code title="patch /v1/identity/document-settings/{document_type}">client.identity.documentSettings.<a href="./src/resources/identity/document-settings.ts">update</a>(documentType, { ...params }) -> DocumentSetting</code>
+- <code title="get /v1/identity/document-settings">client.identity.documentSettings.<a href="./src/resources/identity/document-settings.ts">list</a>() -> ListDocumentSetting</code>
+
 ## Roles
 
 Types:

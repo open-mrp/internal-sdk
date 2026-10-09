@@ -54,6 +54,15 @@ export {
   type ChildAccountListParams,
 } from './child-accounts';
 export {
+  DocumentSettings,
+  type DocumentControl,
+  type DocumentControlInput,
+  type DocumentSetting,
+  type ListDocumentSetting,
+  type UpdateDocumentSettingRequest,
+  type DocumentSettingUpdateParams,
+} from './document-settings';
+export {
   Identity,
   type ListPermission,
   type ListPermissionGroup,
