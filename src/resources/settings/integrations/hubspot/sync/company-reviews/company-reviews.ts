@@ -30,7 +30,7 @@ export class CompanyReviews extends APIResource {
    * Resolves a reviewed customer by creating a new HubSpot company for it during the
    * sync (rather than linking to an existing one).
    *
-   * This endpoint requires the permission: `integrations:create`.
+   * This endpoint requires the permission: `integrations:update`.
    *
    * @example
    * ```ts

@@ -15,6 +15,10 @@ export class SpendingCap extends APIResource {
    * in-progress runs are stopped until the cap is raised, removed, or the next
    * billing month begins.
    *
+   * Requires `billing:update`.
+   *
+   * This endpoint requires the permission: `billing:update`.
+   *
    * @example
    * ```ts
    * const spendingCapResponse =
@@ -36,9 +40,10 @@ export class SpendingCap extends APIResource {
    * The cap limits estimated agent LLM spend within a billing month; Get Account
    * Usage reports how much of it has been spent so far.
    *
-   * Customer and supplier portal users are refused with `403`.
+   * Requires `billing:read`. Customer and supplier portal users are refused with
+   * `403`.
    *
-   * This endpoint requires the permission: `self:read`.
+   * This endpoint requires the permission: `billing:read`.
    *
    * @example
    * ```ts

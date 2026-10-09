@@ -37,6 +37,8 @@ export class Accounts extends APIResource {
    * from the pricing plan configured in Stripe, so they can differ from the name and
    * price the same plan advertises on the pricing page.
    *
+   * `agent_spend` is `null` unless the caller holds `billing:read`.
+   *
    * Customer and supplier portal users are refused with `403`: the usage is the
    * seller's own.
    *

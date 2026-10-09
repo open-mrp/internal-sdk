@@ -17,6 +17,8 @@ export class Actions extends APIResource {
    * synchronously, then writes asynchronously — 202 with a job whose `results`
    * already carry the new ids.
    *
+   * This endpoint requires the permission: `production_runs:create`.
+   *
    * @example
    * ```ts
    * const job =
@@ -58,6 +60,8 @@ export class Actions extends APIResource {
   /**
    * Starts an export of every matching production run and returns the job that
    * tracks it; the file lists a run's batches one per row.
+   *
+   * This endpoint requires the permission: `production_runs:read`.
    *
    * @example
    * ```ts

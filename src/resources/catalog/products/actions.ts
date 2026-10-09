@@ -19,6 +19,8 @@ export class Actions extends APIResource {
    *
    * At most 1,000 products and an 8 MB request body per call.
    *
+   * This endpoint requires the permissions: `items:create` and `items:update`.
+   *
    * @example
    * ```ts
    * const job =
@@ -45,6 +47,12 @@ export class Actions extends APIResource {
   /**
    * Starts an export of every matching product and returns the job that tracks it;
    * as with the product list, only products of type `sale` are exported.
+   *
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
+   * This endpoint requires the permission: `items:read`.
    *
    * @example
    * ```ts

@@ -15,6 +15,9 @@ export class Actions extends APIResource {
    * writes asynchronously — 202 with a job to poll. Scanning stations and machines
    * are not assigned here.
    *
+   * This endpoint requires the permissions: `departments:create` and
+   * `departments:update`.
+   *
    * @example
    * ```ts
    * const job =
@@ -35,6 +38,8 @@ export class Actions extends APIResource {
   /**
    * Starts an export of every matching department and returns the job that tracks
    * it.
+   *
+   * This endpoint requires the permission: `departments:read`.
    *
    * @example
    * ```ts

@@ -512,7 +512,7 @@ export class Operations extends APIResource {
    * reported as not found.
    *
    * This endpoint requires the permissions: `items:update`,
-   * `production_steps:update`.
+   * `production_steps:update`, `departments:update`.
    *
    * @example
    * ```ts

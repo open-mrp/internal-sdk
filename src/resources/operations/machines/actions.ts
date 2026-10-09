@@ -14,6 +14,8 @@ export class Actions extends APIResource {
    * Creates or updates multiple machines for the account, matched by name or serial
    * number (case-insensitive), then writes asynchronously — 202 with a job to poll.
    *
+   * This endpoint requires the permissions: `machines:create` and `machines:update`.
+   *
    * @example
    * ```ts
    * const job =
@@ -42,6 +44,8 @@ export class Actions extends APIResource {
 
   /**
    * Starts an export of every matching machine and returns the job that tracks it.
+   *
+   * This endpoint requires the permission: `machines:read`.
    *
    * @example
    * ```ts

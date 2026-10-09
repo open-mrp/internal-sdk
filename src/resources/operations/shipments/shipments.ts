@@ -49,6 +49,10 @@ export class Shipments extends APIResource {
    * A customer or supplier portal retrieves only a shipment on an order its own
    * account placed; any other shipment is reported as not found.
    *
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
    * This endpoint requires the permission: `shipments:read`.
    *
    * @example

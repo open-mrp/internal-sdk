@@ -15,6 +15,8 @@ export class Actions extends APIResource {
    * (case-insensitive). Validates and resolves synchronously, then writes
    * asynchronously — 202 with a job to poll.
    *
+   * This endpoint requires the permissions: `scanners:create` and `scanners:update`.
+   *
    * @example
    * ```ts
    * const job =
@@ -47,6 +49,8 @@ export class Actions extends APIResource {
   /**
    * Starts an export of every matching scanning station and returns the job that
    * tracks it.
+   *
+   * This endpoint requires the permission: `scanners:read`.
    *
    * @example
    * ```ts

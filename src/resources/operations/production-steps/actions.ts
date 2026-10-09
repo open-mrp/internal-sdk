@@ -63,6 +63,9 @@ export class Actions extends APIResource {
    * (case-insensitive). Validates and resolves synchronously, then writes
    * asynchronously — 202 with a job to poll.
    *
+   * This endpoint requires the permissions: `production_steps:create` and
+   * `production_steps:update`.
+   *
    * @example
    * ```ts
    * const job = await client.operations.productionSteps.actions.bulkUpsert({
@@ -94,6 +97,8 @@ export class Actions extends APIResource {
   /**
    * Starts an export of every matching production step and returns the job that
    * tracks it; the file lists a step's consumptions one per row.
+   *
+   * This endpoint requires the permission: `production_steps:read`.
    *
    * @example
    * ```ts

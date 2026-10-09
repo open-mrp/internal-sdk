@@ -13,6 +13,9 @@ export class Actions extends APIResource {
    * Creates or updates multiple unit groups for the account, matched by name
    * (case-insensitive), then writes asynchronously — 202 with a job to poll.
    *
+   * This endpoint requires the permissions: `unit_groups:create` and
+   * `unit_groups:update`.
+   *
    * @example
    * ```ts
    * const job =
@@ -45,6 +48,8 @@ export class Actions extends APIResource {
   /**
    * Starts an export of every matching unit group and returns the job that tracks
    * it; the file lists a group's units one per row, the base unit excepted.
+   *
+   * This endpoint requires the permission: `unit_groups:read`.
    *
    * @example
    * ```ts

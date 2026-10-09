@@ -226,6 +226,10 @@ export class Analytics extends APIResource {
    * remaining quantity at that cost, in the oldest receipt's currency. A group with
    * nothing left has no inventory value and a weighted average cost of zero.
    *
+   * Acting in a customer's account requires `customers:read`, and acting in a
+   * supplier's account requires `suppliers:read`, instead of the permission this
+   * endpoint requires in your own account.
+   *
    * This endpoint requires the permission: `materials:read`.
    *
    * @example
