@@ -9,6 +9,12 @@ export {
   type ActionExportParams,
 } from './actions';
 export {
+  Items,
+  type ReplaceMachineItemsRequest,
+  type ItemUpdateParams,
+  type ItemListParams,
+} from './items/index';
+export {
   Machines,
   type CreateMachineRequest,
   type UpdateMachineRequest,

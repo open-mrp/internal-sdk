@@ -2772,6 +2772,29 @@ Methods:
 - <code title="post /v1/operations/machines/actions/bulk-upsert">client.operations.machines.actions.<a href="./src/resources/operations/machines/actions.ts">bulkUpsert</a>({ ...params }) -> Job</code>
 - <code title="post /v1/operations/machines/actions/export">client.operations.machines.actions.<a href="./src/resources/operations/machines/actions.ts">export</a>({ ...params }) -> Job</code>
 
+### Items
+
+Types:
+
+- <code><a href="./src/resources/operations/machines/items/items.ts">ReplaceMachineItemsRequest</a></code>
+
+Methods:
+
+- <code title="put /v1/operations/machines/{id}/items">client.operations.machines.items.<a href="./src/resources/operations/machines/items/items.ts">update</a>(id, { ...params }) -> ListItem</code>
+- <code title="get /v1/operations/machines/{id}/items">client.operations.machines.items.<a href="./src/resources/operations/machines/items/items.ts">list</a>(id, { ...params }) -> ListItem</code>
+
+#### Actions
+
+Types:
+
+- <code><a href="./src/resources/operations/machines/items/actions.ts">ListMachineItemScanSuggestion</a></code>
+- <code><a href="./src/resources/operations/machines/items/actions.ts">MachineItemScanSuggestion</a></code>
+- <code><a href="./src/resources/operations/machines/items/actions.ts">SuggestMachineItemsFromScansRequest</a></code>
+
+Methods:
+
+- <code title="post /v1/operations/machines/{id}/items/actions/suggest-from-scans">client.operations.machines.items.actions.<a href="./src/resources/operations/machines/items/actions.ts">suggestFromScans</a>(id, { ...params }) -> ListMachineItemScanSuggestion</code>
+
 ## ReceivingOrders
 
 Types:
@@ -3316,7 +3339,7 @@ Methods:
 - <code title="post /v1/operations/shipments/{id}/actions/admin-update-tracking">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">adminUpdateTracking</a>(id, { ...params }) -> Shipment</code>
 - <code title="post /v1/operations/shipments/actions/estimate-rate">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">estimateRate</a>({ ...params }) -> EstimateRateResult</code>
 - <code title="post /v1/operations/shipments/actions/rate-shop">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">rateShop</a>({ ...params }) -> RateShopResult</code>
-- <code title="post /v1/operations/shipments/{id}/actions/ship">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">ship</a>(id, { ...params }) -> Shipment</code>
+- <code title="post /v1/operations/shipments/{id}/actions/ship">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">ship</a>(id, { ...params }) -> Job</code>
 - <code title="post /v1/operations/shipments/{id}/actions/void">client.operations.shipments.actions.<a href="./src/resources/operations/shipments/actions.ts">void</a>(id) -> Shipment</code>
 
 ### Lines

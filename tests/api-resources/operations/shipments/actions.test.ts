@@ -182,7 +182,7 @@ describe('resource actions', () => {
   test('ship: required and optional params', async () => {
     const response = await client.operations.shipments.actions.ship('sh_pfygp2gl45y4', {
       email_customer: true,
-      include: ['lines'],
+      include: ['created_by'],
     });
   });
 

@@ -11,6 +11,8 @@ import {
   ExportMachinesRequest,
   UpsertMachineInput,
 } from './actions';
+import * as ItemsAPI from './items/items';
+import { ItemListParams, ItemUpdateParams, Items, ReplaceMachineItemsRequest } from './items/items';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 import { path } from '../../../internal/utils/path';
@@ -20,6 +22,7 @@ import { path } from '../../../internal/utils/path';
  */
 export class Machines extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
+  items: ItemsAPI.Items = new ItemsAPI.Items(this._client);
 
   /**
    * Creates a machine and assigns it to a department.
@@ -292,6 +295,7 @@ export interface MachineListParams {
 }
 
 Machines.Actions = Actions;
+Machines.Items = Items;
 
 export declare namespace Machines {
   export {
@@ -311,5 +315,12 @@ export declare namespace Machines {
     type UpsertMachineInput as UpsertMachineInput,
     type ActionBulkUpsertParams as ActionBulkUpsertParams,
     type ActionExportParams as ActionExportParams,
+  };
+
+  export {
+    Items as Items,
+    type ReplaceMachineItemsRequest as ReplaceMachineItemsRequest,
+    type ItemUpdateParams as ItemUpdateParams,
+    type ItemListParams as ItemListParams,
   };
 }

@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
+import * as JobsAPI from '../../core/jobs';
 import * as InvoicesAPI from '../../finance/invoices';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
 import * as AnalyticsAPI from '../../core/analytics/analytics';
@@ -150,9 +151,12 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Dispatches a packed shipment, marking it and its cases as shipped.
+   * Dispatches a packed shipment asynchronously, marking it and its cases as
+   * shipped.
    *
-   * Sets the shipment status to `shipped`, records `shipped_at` and the acting user
+   * Returns `202 Accepted` with a job. Poll the job at the returned `Location`; once
+   * it reports `completed`, its first result carries the shipment's `id`. The job
+   * sets the shipment status to `shipped`, records `shipped_at` and the acting user
    * as `shipped_by`, marks all shipping cases as shipped, and assigns an SSCC to any
    * case that does not already have one. Fails with a conflict error if the shipment
    * has already been shipped, so shipping is a one-way move that can only be
@@ -165,21 +169,20 @@ export class Actions extends APIResource {
    * recorded as the cost of the order's freight line (zero when no label is bought).
    * Labels already bought for the cases by an earlier attempt are reused, never
    * bought twice. A shipment is shipped, voided or deleted by one request at a time:
-   * a concurrent request for the same shipment fails with a conflict error and can
-   * be retried once the first finishes.
+   * a concurrent ship of the same shipment fails its job with a conflict error and
+   * can be retried once the first finishes.
    *
    * This endpoint requires the permission: `shipments:update`.
    *
    * @example
    * ```ts
-   * const shipment =
-   *   await client.operations.shipments.actions.ship(
-   *     'sh_pfygp2gl45y4',
-   *     { email_customer: true },
-   *   );
+   * const job = await client.operations.shipments.actions.ship(
+   *   'sh_pfygp2gl45y4',
+   *   { email_customer: true },
+   * );
    * ```
    */
-  ship(id: string, params: ActionShipParams, options?: RequestOptions): APIPromise<InvoicesAPI.Shipment> {
+  ship(id: string, params: ActionShipParams, options?: RequestOptions): APIPromise<JobsAPI.Job> {
     const { include, ...body } = params;
     return this._client.post(path`/v1/operations/shipments/${id}/actions/ship`, {
       query: { include },
@@ -703,22 +706,7 @@ export interface ActionShipParams {
    * Query param: Sub-objects to expand in the response. When omitted, sub-objects
    * are returned as `null`.
    */
-  include?: Array<
-    | 'lines'
-    | 'lines.item'
-    | 'lines.quantity'
-    | 'lines.quantity.unit'
-    | 'lines.sales_order_line'
-    | 'lines.sales_order_line.product'
-    | 'shipping_cases'
-    | 'related.sales_order'
-    | 'customer'
-    | 'freight'
-    | 'shipping_address'
-    | 'shipped_by'
-    | 'related.invoice'
-    | 'related.pick'
-  >;
+  include?: Array<'created_by' | 'created_by.role'>;
 }
 
 export declare namespace Actions {
