@@ -65,6 +65,9 @@ describe('resource portalRegistrationSessions', () => {
         payment_term_id: 'payment_term_id',
         phone: 'phone',
         shipping_term_id: 'shipping_term_id',
+        lookup_number: 'lookup_number',
+        lookup_postal_code: 'lookup_postal_code',
+        lookup_type: 'customer_number',
       },
     });
   });

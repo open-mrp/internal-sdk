@@ -203,7 +203,8 @@ export class Customers extends APIResource {
   /**
    * Registers the authenticated user as a customer of a seller account.
    *
-   * Either links the user to an existing customer account by customer number, or
+   * Either links the user to an existing customer account, found by its customer
+   * number or one of its order or invoice numbers together with its ZIP code, or
    * creates a new customer account with the provided details and links the user to
    * it. A new customer account takes the authenticated user's email address as its
    * contact email, and either way the seller's customer-service contacts are
@@ -705,9 +706,10 @@ export interface RegisterCustomerRequest {
   /**
    * Whether the registrant is an existing customer of the seller account.
    *
-   * When `true`, the registering user is linked to the customer account matching
-   * `customer_number`. When `false`, a new customer account is created and
-   * `customer_name`, `customer_group_id`, `address`, `shipping_term_id`, and
+   * When `true`, the registering user is linked to the customer found by
+   * `lookup_type` and `lookup_number` whose default billing or shipping address has
+   * the ZIP `lookup_postal_code`. When `false`, a new customer account is created
+   * and `customer_name`, `customer_group_id`, `address`, `shipping_term_id`, and
    * `payment_term_id` are required.
    */
   is_existing_customer: boolean;
@@ -738,10 +740,31 @@ export interface RegisterCustomerRequest {
   /**
    * Customer number identifying the existing customer account.
    *
-   * Required when `is_existing_customer` is `true`; ignored otherwise. New customers
-   * are assigned the seller's next customer number automatically.
+   * Superseded by `lookup_number`, and read only when that is omitted and
+   * `lookup_type` is `customer_number`. New customers are assigned the seller's next
+   * customer number automatically.
    */
   customer_number?: string;
+
+  /**
+   * The customer, sales order, or invoice number that finds the existing customer.
+   *
+   * Used when `is_existing_customer` is `true`.
+   */
+  lookup_number?: string;
+
+  /**
+   * The ZIP or postal code on the existing customer's default billing or shipping
+   * address.
+   *
+   * Required when `is_existing_customer` is `true`: the number alone links nobody.
+   */
+  lookup_postal_code?: string;
+
+  /**
+   * Which kind of number `lookup_number` is. Defaults to `customer_number`.
+   */
+  lookup_type?: 'customer_number' | 'sales_order_number' | 'invoice_number';
 
   /**
    * ID of the payment term assigned to the new customer.
@@ -1560,9 +1583,10 @@ export interface CustomerRegistrationParams {
   /**
    * Whether the registrant is an existing customer of the seller account.
    *
-   * When `true`, the registering user is linked to the customer account matching
-   * `customer_number`. When `false`, a new customer account is created and
-   * `customer_name`, `customer_group_id`, `address`, `shipping_term_id`, and
+   * When `true`, the registering user is linked to the customer found by
+   * `lookup_type` and `lookup_number` whose default billing or shipping address has
+   * the ZIP `lookup_postal_code`. When `false`, a new customer account is created
+   * and `customer_name`, `customer_group_id`, `address`, `shipping_term_id`, and
    * `payment_term_id` are required.
    */
   is_existing_customer: boolean;
@@ -1593,10 +1617,31 @@ export interface CustomerRegistrationParams {
   /**
    * Customer number identifying the existing customer account.
    *
-   * Required when `is_existing_customer` is `true`; ignored otherwise. New customers
-   * are assigned the seller's next customer number automatically.
+   * Superseded by `lookup_number`, and read only when that is omitted and
+   * `lookup_type` is `customer_number`. New customers are assigned the seller's next
+   * customer number automatically.
    */
   customer_number?: string;
+
+  /**
+   * The customer, sales order, or invoice number that finds the existing customer.
+   *
+   * Used when `is_existing_customer` is `true`.
+   */
+  lookup_number?: string;
+
+  /**
+   * The ZIP or postal code on the existing customer's default billing or shipping
+   * address.
+   *
+   * Required when `is_existing_customer` is `true`: the number alone links nobody.
+   */
+  lookup_postal_code?: string;
+
+  /**
+   * Which kind of number `lookup_number` is. Defaults to `customer_number`.
+   */
+  lookup_type?: 'customer_number' | 'sales_order_number' | 'invoice_number';
 
   /**
    * ID of the payment term assigned to the new customer.

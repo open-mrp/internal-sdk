@@ -186,8 +186,8 @@ export interface PortalRegistrationSession {
    * creating a new one.
    *
    * When true, completing the registration links the buyer to the seller's existing
-   * customer identified by `customer_number`; otherwise it creates a new customer
-   * from the rest of the session data.
+   * customer found by `lookup_type`, `lookup_number`, and `lookup_postal_code`;
+   * otherwise it creates a new customer from the rest of the session data.
    */
   is_existing_customer: boolean | null;
 
@@ -309,11 +309,30 @@ export interface PortalRegistrationSessionData {
   /**
    * The seller-assigned customer number the buyer is claiming.
    *
-   * Only used when the buyer is joining an existing customer, where it must match a
-   * customer already on the seller's books. New customers are assigned a number
+   * Superseded by `lookup_number`, and read only when that is empty and
+   * `lookup_type` is `customer_number`. New customers are assigned a number
    * automatically when the registration completes.
    */
   customer_number: string;
+
+  /**
+   * The customer, sales order, or invoice number the buyer gave to find the customer
+   * they are joining.
+   */
+  lookup_number: string;
+
+  /**
+   * The ZIP or postal code the buyer gave to confirm the customer they are joining.
+   */
+  lookup_postal_code: string;
+
+  /**
+   * Which kind of number `lookup_number` is, for a buyer joining an existing
+   * customer.
+   *
+   * Null until the buyer chooses one.
+   */
+  lookup_type: 'customer_number' | 'sales_order_number' | 'invoice_number' | null;
 
   /**
    * Resource type identifier.
@@ -369,6 +388,25 @@ export interface PortalRegistrationSessionDataInput {
   phone: string;
 
   shipping_term_id: string;
+
+  /**
+   * The customer, sales order, or invoice number the buyer gives to find the
+   * customer they are joining.
+   */
+  lookup_number?: string;
+
+  /**
+   * The ZIP or postal code on the customer's default billing or shipping address.
+   *
+   * Joining an existing customer requires it: the number alone links nobody.
+   */
+  lookup_postal_code?: string;
+
+  /**
+   * Which kind of number `lookup_number` is, for a buyer joining an existing
+   * customer. Defaults to `customer_number`.
+   */
+  lookup_type?: 'customer_number' | 'sales_order_number' | 'invoice_number';
 }
 
 /**
@@ -389,9 +427,10 @@ export interface UpdatePortalRegistrationSessionRequest {
    * creating a new one.
    *
    * This decides what completing the registration does: joining an existing customer
-   * links the buyer to the customer matching `customer_number`, while a new customer
-   * is built from the rest of the session data. Like the session data it is stored
-   * as sent, so re-send it on every update to keep the choice.
+   * links the buyer to the customer found by `lookup_type` and `lookup_number` whose
+   * default billing or shipping address has the ZIP `lookup_postal_code`, while a
+   * new customer is built from the rest of the session data. Like the session data
+   * it is stored as sent, so re-send it on every update to keep the choice.
    */
   is_existing_customer?: boolean;
 
@@ -427,9 +466,10 @@ export interface PortalRegistrationSessionUpdateParams {
    * creating a new one.
    *
    * This decides what completing the registration does: joining an existing customer
-   * links the buyer to the customer matching `customer_number`, while a new customer
-   * is built from the rest of the session data. Like the session data it is stored
-   * as sent, so re-send it on every update to keep the choice.
+   * links the buyer to the customer found by `lookup_type` and `lookup_number` whose
+   * default billing or shipping address has the ZIP `lookup_postal_code`, while a
+   * new customer is built from the rest of the session data. Like the session data
+   * it is stored as sent, so re-send it on every update to keep the choice.
    */
   is_existing_customer?: boolean;
 
