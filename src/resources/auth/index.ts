@@ -43,22 +43,3 @@ export {
   type PasswordCreateResponse,
   type PasswordCreateParams,
 } from './passwords/index';
-export {
-  RegistrationSessions,
-  type CompleteRegistrationResponse,
-  type CreateRegistrationSessionRequest,
-  type CreateSessionResponse,
-  type CreateUserRequest,
-  type CreateUserResponse,
-  type ListRegistrationSession,
-  type RegistrationSession,
-  type RegistrationSessionAccount,
-  type RegistrationSessionAddress,
-  type RegistrationSessionUser,
-  type UpdateSessionDataRequest,
-  type UpdateSessionRequest,
-  type RegistrationSessionCreateParams,
-  type RegistrationSessionUpdateParams,
-  type RegistrationSessionListParams,
-  type RegistrationSessionUsersParams,
-} from './registration-sessions/index';

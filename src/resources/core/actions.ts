@@ -68,28 +68,6 @@ export class Actions extends APIResource {
   }
 
   /**
-   * Submits a demo request from a prospective customer for the OpenMRP team to
-   * follow up on.
-   *
-   * The request creates no account, user, or other resource, and there is no
-   * endpoint to read it back. The response carries a confirmation message suitable
-   * for display.
-   *
-   * @example
-   * ```ts
-   * const messageResource =
-   *   await client.core.actions.requestDemo({
-   *     company: 'Acme Corp',
-   *     email: 'jane@example.com',
-   *     name: 'Jane Smith',
-   *   });
-   * ```
-   */
-  requestDemo(body: ActionRequestDemoParams, options?: RequestOptions): APIPromise<MessageResource> {
-    return this._client.post('/v1/core/actions/request-demo', { body, ...options });
-  }
-
-  /**
    * Submits an answer to an in-product feedback prompt for the OpenMRP team to
    * review.
    *
@@ -211,36 +189,6 @@ export interface MessageResource {
 }
 
 /**
- * Request to be contacted for a product demo.
- */
-export interface RequestDemoRequest {
-  /**
-   * Name of the company the requester represents.
-   */
-  company: string;
-
-  /**
-   * Email address to reach the requester at.
-   */
-  email: string;
-
-  /**
-   * Full name of the person requesting the demo.
-   */
-  name: string;
-
-  /**
-   * Free-form note from the requester about what they would like to see.
-   */
-  message?: string;
-
-  /**
-   * Phone number to reach the requester at.
-   */
-  phone_number?: string;
-}
-
-/**
  * Request to submit user feedback.
  */
 export interface SubmitFeedbackRequest {
@@ -309,33 +257,6 @@ export interface ActionEmailRecordParams {
   type: 'invoice' | 'sales_order' | 'purchase_order';
 }
 
-export interface ActionRequestDemoParams {
-  /**
-   * Name of the company the requester represents.
-   */
-  company: string;
-
-  /**
-   * Email address to reach the requester at.
-   */
-  email: string;
-
-  /**
-   * Full name of the person requesting the demo.
-   */
-  name: string;
-
-  /**
-   * Free-form note from the requester about what they would like to see.
-   */
-  message?: string;
-
-  /**
-   * Phone number to reach the requester at.
-   */
-  phone_number?: string;
-}
-
 export interface ActionSubmitFeedbackParams {
   /**
    * The user's response to the question.
@@ -360,12 +281,10 @@ export declare namespace Actions {
     type CheckDuplicateResult as CheckDuplicateResult,
     type EmailRecordRequest as EmailRecordRequest,
     type MessageResource as MessageResource,
-    type RequestDemoRequest as RequestDemoRequest,
     type SubmitFeedbackRequest as SubmitFeedbackRequest,
     type ActionEmailRecordResponse as ActionEmailRecordResponse,
     type ActionCheckDuplicatesParams as ActionCheckDuplicatesParams,
     type ActionEmailRecordParams as ActionEmailRecordParams,
-    type ActionRequestDemoParams as ActionRequestDemoParams,
     type ActionSubmitFeedbackParams as ActionSubmitFeedbackParams,
   };
 }

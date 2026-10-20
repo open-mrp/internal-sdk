@@ -37,7 +37,6 @@ import {
   UpdateScannerPasswordRequest,
   User,
 } from './resources/auth/auth';
-import { Billing, BillingPortalSessionResponse } from './resources/billing/billing';
 import { Catalog } from './resources/catalog/catalog';
 import { Core, CoreRetrieveSearchParams, Entity, ListEntity } from './resources/core/core';
 import {
@@ -870,10 +869,6 @@ export class OpenMRP {
    */
   core: API.Core = new API.Core(this);
   /**
-   * Billing and pricing plan operations.
-   */
-  billing: API.Billing = new API.Billing(this);
-  /**
    * Create customer checkout sessions.
    */
   sales: API.Sales = new API.Sales(this);
@@ -893,7 +888,6 @@ OpenMRP.Healthz = Healthz;
 OpenMRP.Auth = Auth;
 OpenMRP.Identity = Identity;
 OpenMRP.Core = Core;
-OpenMRP.Billing = Billing;
 OpenMRP.Sales = Sales;
 OpenMRP.Settings = Settings;
 OpenMRP.Catalog = Catalog;
@@ -935,8 +929,6 @@ export declare namespace OpenMRP {
     type ListEntity as ListEntity,
     type CoreRetrieveSearchParams as CoreRetrieveSearchParams,
   };
-
-  export { Billing as Billing, type BillingPortalSessionResponse as BillingPortalSessionResponse };
 
   export {
     Sales as Sales,

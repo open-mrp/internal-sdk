@@ -20,7 +20,6 @@ export {
   type AuthScannerPasswordsParams,
   type AuthUsersParams,
 } from './auth/auth';
-export { Billing, type BillingPortalSessionResponse } from './billing/billing';
 export { Catalog } from './catalog/catalog';
 export { Core, type Entity, type ListEntity, type CoreRetrieveSearchParams } from './core/core';
 export {

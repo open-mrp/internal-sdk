@@ -36,26 +36,6 @@ import {
   Passwords,
   UpdatePasswordRequest,
 } from './passwords/passwords';
-import * as RegistrationSessionsAPI from './registration-sessions/registration-sessions';
-import {
-  CompleteRegistrationResponse,
-  CreateRegistrationSessionRequest,
-  CreateSessionResponse,
-  CreateUserRequest,
-  CreateUserResponse,
-  ListRegistrationSession,
-  RegistrationSession,
-  RegistrationSessionAccount,
-  RegistrationSessionAddress,
-  RegistrationSessionCreateParams,
-  RegistrationSessionListParams,
-  RegistrationSessionUpdateParams,
-  RegistrationSessionUser,
-  RegistrationSessionUsersParams,
-  RegistrationSessions,
-  UpdateSessionDataRequest,
-  UpdateSessionRequest,
-} from './registration-sessions/registration-sessions';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -66,8 +46,6 @@ export class Auth extends APIResource {
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
   passwords: PasswordsAPI.Passwords = new PasswordsAPI.Passwords(this._client);
   apiKeys: APIKeysAPI.APIKeys = new APIKeysAPI.APIKeys(this._client);
-  registrationSessions: RegistrationSessionsAPI.RegistrationSessions =
-    new RegistrationSessionsAPI.RegistrationSessions(this._client);
 
   /**
    * Signs the current session out by revoking its refresh token.
@@ -333,7 +311,6 @@ export interface AuthUsersParams {
 Auth.Actions = Actions;
 Auth.Passwords = Passwords;
 Auth.APIKeys = APIKeys;
-Auth.RegistrationSessions = RegistrationSessions;
 
 export declare namespace Auth {
   export {
@@ -380,25 +357,5 @@ export declare namespace Auth {
     type APIKeyCreateParams as APIKeyCreateParams,
     type APIKeyRetrieveParams as APIKeyRetrieveParams,
     type APIKeyListParams as APIKeyListParams,
-  };
-
-  export {
-    RegistrationSessions as RegistrationSessions,
-    type CompleteRegistrationResponse as CompleteRegistrationResponse,
-    type CreateRegistrationSessionRequest as CreateRegistrationSessionRequest,
-    type CreateSessionResponse as CreateSessionResponse,
-    type CreateUserRequest as CreateUserRequest,
-    type CreateUserResponse as CreateUserResponse,
-    type ListRegistrationSession as ListRegistrationSession,
-    type RegistrationSession as RegistrationSession,
-    type RegistrationSessionAccount as RegistrationSessionAccount,
-    type RegistrationSessionAddress as RegistrationSessionAddress,
-    type RegistrationSessionUser as RegistrationSessionUser,
-    type UpdateSessionDataRequest as UpdateSessionDataRequest,
-    type UpdateSessionRequest as UpdateSessionRequest,
-    type RegistrationSessionCreateParams as RegistrationSessionCreateParams,
-    type RegistrationSessionUpdateParams as RegistrationSessionUpdateParams,
-    type RegistrationSessionListParams as RegistrationSessionListParams,
-    type RegistrationSessionUsersParams as RegistrationSessionUsersParams,
   };
 }

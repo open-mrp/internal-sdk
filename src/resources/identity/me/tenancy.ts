@@ -225,83 +225,10 @@ export interface Tenancy {
   owner_account: TenancyOwnerAccount | null;
 
   /**
-   * An in-progress registration session, present only partway through signup before
-   * an account exists.
-   */
-  pending_registration: TenancyPendingRegistration | null;
-
-  /**
    * A single page of resources, together with the metadata needed to page through
    * the rest of the result set.
    */
   sandboxes: ListTenancySandboxAccount | null;
-}
-
-/**
- * The resolved subscription plan for the current account, including its limits and
- * features.
- */
-export interface TenancyAccountPlan {
-  /**
-   * Which capabilities this plan unlocks, keyed by feature code (for example
-   * `customer_portal`).
-   */
-  features: { [key: string]: boolean };
-
-  /**
-   * Ceilings this plan imposes, keyed by limit code (for example `seats_maximum`).
-   *
-   * A `null` value means that resource is unlimited on this plan.
-   */
-  limits: { [key: string]: number };
-
-  /**
-   * Display name of the plan, as shown in billing.
-   */
-  name: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'account_plan';
-
-  /**
-   * Stable code for the plan tier.
-   */
-  plan_type_code: 'free' | 'starter' | 'pro' | 'enterprise' | 'enterprise_template';
-
-  /**
-   * Per-seat price override in dollars used in place of `price_per_seat` when set.
-   *
-   * The monthly bill multiplies this by the number of seats (at least
-   * `seat_minimum`). `null` or `0` falls back to `price_per_seat`.
-   */
-  price_per_month: number | null;
-
-  /**
-   * Price per seat per month in dollars.
-   */
-  price_per_seat: number;
-
-  /**
-   * Fewest seats the account is billed for, regardless of how many users it actually
-   * has.
-   */
-  seat_minimum: number | null;
-
-  /**
-   * Identifier of the plan definition the account is subscribed to.
-   */
-  type_id: string;
-
-  /**
-   * Revision of the plan definition the account is on.
-   *
-   * Plans are versioned so existing subscribers keep the pricing, limits, and
-   * features they signed up under when a newer version of the same plan is
-   * published.
-   */
-  version: number;
 }
 
 /**
@@ -314,23 +241,9 @@ export interface TenancyCurrentAccount {
   id: string;
 
   /**
-   * The resolved subscription plan for the current account, including its limits and
-   * features.
-   */
-  account_plan: TenancyAccountPlan | null;
-
-  /**
    * ID of the authenticated user's membership record within this account.
    */
   account_user_id: string;
-
-  /**
-   * The Stripe customer that OpenMRP bills this account's own subscription and usage
-   * against.
-   *
-   * This is not the account's own Stripe customer for charging their customers.
-   */
-  internal_stripe_customer_id: string | null;
 
   /**
    * Display name.
@@ -348,14 +261,6 @@ export interface TenancyCurrentAccount {
    * The account is fully set up and usable once this is `active`.
    */
   onboarding_status: 'unclaimed' | 'active' | 'suspended' | 'deactivated';
-
-  /**
-   * Code of the account's subscription plan.
-   *
-   * The same code appears as `account_plan.plan_type_code`, alongside the plan's
-   * resolved limits and features.
-   */
-  plan: 'free' | 'starter' | 'pro' | 'enterprise' | 'enterprise_template';
 
   /**
    * A named set of permissions that can be assigned to users to control what they
@@ -428,41 +333,6 @@ export interface TenancyOwnerAccount {
 }
 
 /**
- * An in-progress registration session, present only partway through signup before
- * an account exists.
- */
-export interface TenancyPendingRegistration {
-  /**
-   * Session creation timestamp.
-   */
-  created_at: string;
-
-  /**
-   * Resource type identifier.
-   */
-  object: 'tenancy_pending_registration';
-
-  /**
-   * Plan code selected during registration.
-   */
-  plan_code: 'free' | 'starter' | 'pro' | 'enterprise' | 'enterprise_template';
-
-  /**
-   * Registration session ID.
-   */
-  session_id: string;
-
-  /**
-   * How far the signup has progressed, so the flow can be resumed where the user
-   * left off.
-   *
-   * Steps run `verification`, `user_details`, `account_details`, `review`,
-   * `payment`, then `completed`.
-   */
-  step: 'verification' | 'user_details' | 'account_details' | 'review' | 'payment' | 'completed';
-}
-
-/**
  * Sandbox account available to the user.
  */
 export interface TenancySandboxAccount {
@@ -520,11 +390,9 @@ export declare namespace TenancyResource {
     type ListTenancySandboxAccount as ListTenancySandboxAccount,
     type SwitchAccountRequest as SwitchAccountRequest,
     type Tenancy as Tenancy,
-    type TenancyAccountPlan as TenancyAccountPlan,
     type TenancyCurrentAccount as TenancyCurrentAccount,
     type TenancyOtherAccount as TenancyOtherAccount,
     type TenancyOwnerAccount as TenancyOwnerAccount,
-    type TenancyPendingRegistration as TenancyPendingRegistration,
     type TenancySandboxAccount as TenancySandboxAccount,
     type TenancyUpdateParams as TenancyUpdateParams,
     type TenancyRetrieveCustomerAccountsParams as TenancyRetrieveCustomerAccountsParams,

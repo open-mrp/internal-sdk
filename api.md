@@ -99,48 +99,6 @@ Methods:
 - <code title="post /v1/auth/api-keys/actions/fetch-doc-api-key">client.auth.apiKeys.actions.<a href="./src/resources/auth/api-keys/actions.ts">fetchDocAPIKey</a>({ ...params }) -> CreatedAPIKey</code>
 - <code title="post /v1/auth/api-keys/{id}/actions/rotate">client.auth.apiKeys.actions.<a href="./src/resources/auth/api-keys/actions.ts">rotate</a>(id, { ...params }) -> CreatedAPIKey</code>
 
-## RegistrationSessions
-
-Types:
-
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">CompleteRegistrationResponse</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">CreateRegistrationSessionRequest</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">CreateSessionResponse</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">CreateUserRequest</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">CreateUserResponse</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">ListRegistrationSession</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">RegistrationSession</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">RegistrationSessionAccount</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">RegistrationSessionAddress</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">RegistrationSessionUser</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">UpdateSessionDataRequest</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/registration-sessions.ts">UpdateSessionRequest</a></code>
-
-Methods:
-
-- <code title="post /v1/auth/registration-sessions">client.auth.registrationSessions.<a href="./src/resources/auth/registration-sessions/registration-sessions.ts">create</a>({ ...params }) -> CreateSessionResponse</code>
-- <code title="get /v1/auth/registration-sessions/{session_id}">client.auth.registrationSessions.<a href="./src/resources/auth/registration-sessions/registration-sessions.ts">retrieve</a>(sessionID) -> RegistrationSession</code>
-- <code title="patch /v1/auth/registration-sessions/{session_id}">client.auth.registrationSessions.<a href="./src/resources/auth/registration-sessions/registration-sessions.ts">update</a>(sessionID, { ...params }) -> RegistrationSession</code>
-- <code title="get /v1/auth/registration-sessions">client.auth.registrationSessions.<a href="./src/resources/auth/registration-sessions/registration-sessions.ts">list</a>({ ...params }) -> ListRegistrationSession</code>
-- <code title="post /v1/auth/registration-sessions/{session_id}/accounts">client.auth.registrationSessions.<a href="./src/resources/auth/registration-sessions/registration-sessions.ts">accounts</a>(sessionID) -> CompleteRegistrationResponse</code>
-- <code title="post /v1/auth/registration-sessions/{session_id}/users">client.auth.registrationSessions.<a href="./src/resources/auth/registration-sessions/registration-sessions.ts">users</a>(sessionID, { ...params }) -> CreateUserResponse</code>
-
-### Actions
-
-Types:
-
-- <code><a href="./src/resources/auth/registration-sessions/actions.ts">ConfirmPaymentRequest</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/actions.ts">ConfirmPaymentResponse</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/actions.ts">SetupBillingResponse</a></code>
-- <code><a href="./src/resources/auth/registration-sessions/actions.ts">ActionResendVerificationEmailResponse</a></code>
-
-Methods:
-
-- <code title="post /v1/auth/registration-sessions/{session_id}/actions/confirm-payment">client.auth.registrationSessions.actions.<a href="./src/resources/auth/registration-sessions/actions.ts">confirmPayment</a>(sessionID, { ...params }) -> ConfirmPaymentResponse</code>
-- <code title="post /v1/auth/registration-sessions/{session_id}/actions/resend-verification-email">client.auth.registrationSessions.actions.<a href="./src/resources/auth/registration-sessions/actions.ts">resendVerificationEmail</a>(sessionID) -> ActionResendVerificationEmailResponse</code>
-- <code title="post /v1/auth/registration-sessions/{session_id}/actions/setup-billing">client.auth.registrationSessions.actions.<a href="./src/resources/auth/registration-sessions/actions.ts">setupBilling</a>(sessionID) -> SetupBillingResponse</code>
-- <code title="put /v1/auth/registration-sessions/{token}/actions/verify-token">client.auth.registrationSessions.actions.<a href="./src/resources/auth/registration-sessions/actions.ts">verifyToken</a>(token) -> RegistrationSession</code>
-
 # Identity
 
 Types:
@@ -170,11 +128,9 @@ Types:
 - <code><a href="./src/resources/identity/me/tenancy.ts">ListTenancySandboxAccount</a></code>
 - <code><a href="./src/resources/identity/me/tenancy.ts">SwitchAccountRequest</a></code>
 - <code><a href="./src/resources/identity/me/tenancy.ts">Tenancy</a></code>
-- <code><a href="./src/resources/identity/me/tenancy.ts">TenancyAccountPlan</a></code>
 - <code><a href="./src/resources/identity/me/tenancy.ts">TenancyCurrentAccount</a></code>
 - <code><a href="./src/resources/identity/me/tenancy.ts">TenancyOtherAccount</a></code>
 - <code><a href="./src/resources/identity/me/tenancy.ts">TenancyOwnerAccount</a></code>
-- <code><a href="./src/resources/identity/me/tenancy.ts">TenancyPendingRegistration</a></code>
 - <code><a href="./src/resources/identity/me/tenancy.ts">TenancySandboxAccount</a></code>
 
 Methods:
@@ -438,7 +394,6 @@ Types:
 - <code><a href="./src/resources/core/jobs.ts">JobExport</a></code>
 - <code><a href="./src/resources/core/jobs.ts">JobResult</a></code>
 - <code><a href="./src/resources/core/jobs.ts">ListJobResult</a></code>
-- <code><a href="./src/resources/core/jobs.ts">QuotaInfo</a></code>
 - <code><a href="./src/resources/core/jobs.ts">ResponseError</a></code>
 
 Methods:
@@ -670,7 +625,6 @@ Types:
 - <code><a href="./src/resources/core/actions.ts">CheckDuplicateResult</a></code>
 - <code><a href="./src/resources/core/actions.ts">EmailRecordRequest</a></code>
 - <code><a href="./src/resources/core/actions.ts">MessageResource</a></code>
-- <code><a href="./src/resources/core/actions.ts">RequestDemoRequest</a></code>
 - <code><a href="./src/resources/core/actions.ts">SubmitFeedbackRequest</a></code>
 - <code><a href="./src/resources/core/actions.ts">ActionEmailRecordResponse</a></code>
 
@@ -678,7 +632,6 @@ Methods:
 
 - <code title="put /v1/core/actions/check-duplicates">client.core.actions.<a href="./src/resources/core/actions.ts">checkDuplicates</a>({ ...params }) -> CheckDuplicateResult</code>
 - <code title="post /v1/core/actions/email-record">client.core.actions.<a href="./src/resources/core/actions.ts">emailRecord</a>({ ...params }) -> ActionEmailRecordResponse</code>
-- <code title="post /v1/core/actions/request-demo">client.core.actions.<a href="./src/resources/core/actions.ts">requestDemo</a>({ ...params }) -> MessageResource</code>
 - <code title="post /v1/core/actions/submit-feedback">client.core.actions.<a href="./src/resources/core/actions.ts">submitFeedback</a>({ ...params }) -> MessageResource</code>
 
 ## Records
@@ -700,72 +653,6 @@ Types:
 Methods:
 
 - <code title="post /v1/core/records/actions/generate-pack-list">client.core.records.actions.<a href="./src/resources/core/records/actions.ts">generatePackList</a>({ ...params }) -> PackList</code>
-
-# Billing
-
-Types:
-
-- <code><a href="./src/resources/billing/billing.ts">BillingPortalSessionResponse</a></code>
-
-Methods:
-
-- <code title="post /v1/billing/portal-sessions">client.billing.<a href="./src/resources/billing/billing.ts">portalSessions</a>() -> BillingPortalSessionResponse</code>
-
-## Plans
-
-Types:
-
-- <code><a href="./src/resources/billing/plans.ts">ListPlanChangeLineItem</a></code>
-- <code><a href="./src/resources/billing/plans.ts">ListPlanLimit</a></code>
-- <code><a href="./src/resources/billing/plans.ts">ListPricingPlan</a></code>
-- <code><a href="./src/resources/billing/plans.ts">PlanChangeLineItem</a></code>
-- <code><a href="./src/resources/billing/plans.ts">PlanChangeProration</a></code>
-- <code><a href="./src/resources/billing/plans.ts">PlanLimit</a></code>
-- <code><a href="./src/resources/billing/plans.ts">PricingPlan</a></code>
-- <code><a href="./src/resources/billing/plans.ts">SwitchPlanResponse</a></code>
-
-Methods:
-
-- <code title="get /v1/billing/plans">client.billing.plans.<a href="./src/resources/billing/plans.ts">list</a>({ ...params }) -> ListPricingPlan</code>
-- <code title="get /v1/billing/plans/{id}/proration">client.billing.plans.<a href="./src/resources/billing/plans.ts">retrieveProration</a>(id) -> PlanChangeProration</code>
-- <code title="post /v1/billing/plans/{id}/switch">client.billing.plans.<a href="./src/resources/billing/plans.ts">switch</a>(id) -> SwitchPlanResponse</code>
-
-## Accounts
-
-Types:
-
-- <code><a href="./src/resources/billing/accounts.ts">AccountUsageResponse</a></code>
-- <code><a href="./src/resources/billing/accounts.ts">AgentSpendInfo</a></code>
-- <code><a href="./src/resources/billing/accounts.ts">EnsureBillingCustomerResponse</a></code>
-- <code><a href="./src/resources/billing/accounts.ts">SubscriptionInfo</a></code>
-- <code><a href="./src/resources/billing/accounts.ts">UsageItem</a></code>
-
-Methods:
-
-- <code title="put /v1/billing/accounts">client.billing.accounts.<a href="./src/resources/billing/accounts.ts">update</a>() -> EnsureBillingCustomerResponse</code>
-- <code title="get /v1/billing/accounts/usage">client.billing.accounts.<a href="./src/resources/billing/accounts.ts">retrieveUsage</a>() -> AccountUsageResponse</code>
-
-## Actions
-
-Types:
-
-- <code><a href="./src/resources/billing/actions.ts">EnterpriseInquiry</a></code>
-
-Methods:
-
-- <code title="post /v1/billing/actions/request-enterprise">client.billing.actions.<a href="./src/resources/billing/actions.ts">requestEnterprise</a>() -> EnterpriseInquiry</code>
-
-## SpendingCap
-
-Types:
-
-- <code><a href="./src/resources/billing/spending-cap.ts">SetSpendingCapRequest</a></code>
-- <code><a href="./src/resources/billing/spending-cap.ts">SpendingCapResponse</a></code>
-
-Methods:
-
-- <code title="put /v1/billing/spending-cap">client.billing.spendingCap.<a href="./src/resources/billing/spending-cap.ts">update</a>({ ...params }) -> SpendingCapResponse</code>
-- <code title="get /v1/billing/spending-cap">client.billing.spendingCap.<a href="./src/resources/billing/spending-cap.ts">list</a>() -> SpendingCapResponse</code>
 
 # Sales
 
@@ -2196,7 +2083,6 @@ Types:
 
 Methods:
 
-- <code title="post /v1/webhooks/stripe">client.webhooks.stripe.<a href="./src/resources/webhooks/stripe.ts">create</a>({ ...params }) -> WebhookResponse</code>
 - <code title="post /v1/webhooks/stripe/accounts/{account_id}">client.webhooks.stripe.<a href="./src/resources/webhooks/stripe.ts">accounts</a>(accountID, { ...params }) -> WebhookResponse</code>
 
 # Finance

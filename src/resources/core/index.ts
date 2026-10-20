@@ -6,12 +6,10 @@ export {
   type CheckDuplicateResult,
   type EmailRecordRequest,
   type MessageResource,
-  type RequestDemoRequest,
   type SubmitFeedbackRequest,
   type ActionEmailRecordResponse,
   type ActionCheckDuplicatesParams,
   type ActionEmailRecordParams,
-  type ActionRequestDemoParams,
   type ActionSubmitFeedbackParams,
 } from './actions';
 export {
@@ -199,7 +197,6 @@ export {
   type JobExport,
   type JobResult,
   type ListJobResult,
-  type QuotaInfo,
   type ResponseError,
   type JobRetrieveParams,
   type JobCancelParams,

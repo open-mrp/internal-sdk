@@ -555,8 +555,7 @@ export interface Message {
    * Machine-readable reason an agent reply failed.
    *
    * A client can react to the specific code rather than just showing the body —
-   * `agent_spending_cap_reached`, for example, is a cue to offer raising the agent
-   * spending limit.
+   * `insufficient_permissions`, for example, means the agent was not allowed to act.
    */
   agent_error_code:
     | 'expired_token'
@@ -564,8 +563,6 @@ export interface Message {
     | 'api_key_revoked'
     | 'invalid_credentials'
     | 'insufficient_permissions'
-    | 'payment_required'
-    | 'agent_spending_cap_reached'
     | 'validation_failed'
     | 'missing_field'
     | 'invalid_format'
@@ -576,7 +573,6 @@ export interface Message {
     | 'resource_conflict'
     | 'resource_gone'
     | 'idempotency_in_progress'
-    | 'limit_exceeded'
     | 'registration_closed'
     | 'rate_limit_exceeded'
     | 'parameter_missing'

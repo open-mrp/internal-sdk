@@ -11,36 +11,6 @@ import { path } from '../../internal/utils/path';
  */
 export class Stripe extends APIResource {
   /**
-   * Processes a Stripe webhook event delivered to OpenMRP's own Stripe account.
-   *
-   * The payload's signature is verified, then the events OpenMRP acts on —
-   * subscription servicing and collection changes, billing cadence outcomes,
-   * customer deletions, and completed checkouts — are queued for asynchronous
-   * handling; every other event type is acknowledged and dropped. A success response
-   * means the event was accepted, not that it has already been applied to the
-   * account.
-   *
-   * @example
-   * ```ts
-   * const webhookResponse =
-   *   await client.webhooks.stripe.create();
-   * ```
-   */
-  create(
-    params: StripeCreateParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<WebhookResponse> {
-    const { 'Stripe-Signature': stripeSignature } = params ?? {};
-    return this._client.post('/v1/webhooks/stripe', {
-      ...options,
-      headers: buildHeaders([
-        { ...(stripeSignature != null ? { 'Stripe-Signature': stripeSignature } : undefined) },
-        options?.headers,
-      ]),
-    });
-  }
-
-  /**
    * Processes a Stripe webhook event delivered by an account's own connected Stripe
    * account.
    *
@@ -93,13 +63,6 @@ export interface WebhookResponse {
   received: boolean;
 }
 
-export interface StripeCreateParams {
-  /**
-   * Stripe-Signature header value for payload verification.
-   */
-  'Stripe-Signature'?: string;
-}
-
 export interface StripeAccountsParams {
   /**
    * Stripe-Signature header value for payload verification.
@@ -108,9 +71,5 @@ export interface StripeAccountsParams {
 }
 
 export declare namespace Stripe {
-  export {
-    type WebhookResponse as WebhookResponse,
-    type StripeCreateParams as StripeCreateParams,
-    type StripeAccountsParams as StripeAccountsParams,
-  };
+  export { type WebhookResponse as WebhookResponse, type StripeAccountsParams as StripeAccountsParams };
 }
