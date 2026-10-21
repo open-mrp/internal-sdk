@@ -335,14 +335,6 @@ export interface SplitBatchRequest {
    * left over. When left open, a source batch is still closed automatically once
    * everything split off it (firsts, seconds, and waste together) accounts for its
    * full quantity.
-   *
-   * A split is treated as a hand count. When a split closes a source batch,
-   * everything split off it becomes the source's quantity, along with the batches it
-   * was moved from whole. The inventory of each batch's step is then corrected for
-   * the difference. A source recorded as 60 that closes after 55 releases the
-   * materials for 5. A source that splits into 65 receives 5 more and consumes the
-   * materials to make them. Undoing the split that closed the source reverses the
-   * correction.
    */
   close_batch: boolean;
 
@@ -545,14 +537,6 @@ export interface ActionSplitParams {
    * left over. When left open, a source batch is still closed automatically once
    * everything split off it (firsts, seconds, and waste together) accounts for its
    * full quantity.
-   *
-   * A split is treated as a hand count. When a split closes a source batch,
-   * everything split off it becomes the source's quantity, along with the batches it
-   * was moved from whole. The inventory of each batch's step is then corrected for
-   * the difference. A source recorded as 60 that closes after 55 releases the
-   * materials for 5. A source that splits into 65 receives 5 more and consumes the
-   * materials to make them. Undoing the split that closed the source reverses the
-   * correction.
    */
   close_batch: boolean;
 
