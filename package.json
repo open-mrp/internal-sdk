@@ -1,6 +1,6 @@
 {
   "name": "@openmrp/internal-sdk",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "description": "The official TypeScript library for the Openmrp API",
   "author": "Openmrp <support@openmrp.ai>",
   "types": "dist/index.d.ts",
