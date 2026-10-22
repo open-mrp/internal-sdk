@@ -277,6 +277,9 @@ export interface CreateConversationRequest {
    *
    * An anchored conversation is returned when conversations are listed for that
    * record, which is how a discussion shows up on an order or invoice.
+   *
+   * Anchor a group to another `conversation` to start a new topic with the same
+   * people, or to an `agent_definition` to start a new chat with that agent.
    */
   topic_resource_type?:
     | 'account'
@@ -463,6 +466,7 @@ export interface CreateConversationRequest {
     | 'oauth_status_response'
     | 'stripe_publishable_key'
     | 'stripe_status'
+    | 'openrouter_usage'
     | 'healthcheck'
     | 'agent_definition_config'
     | 'trigger_config'
@@ -714,6 +718,9 @@ export interface ConversationCreateParams {
    *
    * An anchored conversation is returned when conversations are listed for that
    * record, which is how a discussion shows up on an order or invoice.
+   *
+   * Anchor a group to another `conversation` to start a new topic with the same
+   * people, or to an `agent_definition` to start a new chat with that agent.
    */
   topic_resource_type?:
     | 'account'
@@ -900,6 +907,7 @@ export interface ConversationCreateParams {
     | 'oauth_status_response'
     | 'stripe_publishable_key'
     | 'stripe_status'
+    | 'openrouter_usage'
     | 'healthcheck'
     | 'agent_definition_config'
     | 'trigger_config'
@@ -1155,6 +1163,10 @@ export interface ConversationListParams {
    *
    * Matches both conversations anchored to the record and conversations that merely
    * link it, which is what powers the "discussions on this record" view.
+   *
+   * A `conversation` or `agent_definition` anchor is personal: only conversations
+   * you take part in are returned, which lists the topics started from a
+   * conversation or your own chats with an agent.
    */
   topic_resource_type?:
     | 'account'
@@ -1341,6 +1353,7 @@ export interface ConversationListParams {
     | 'oauth_status_response'
     | 'stripe_publishable_key'
     | 'stripe_status'
+    | 'openrouter_usage'
     | 'healthcheck'
     | 'agent_definition_config'
     | 'trigger_config'

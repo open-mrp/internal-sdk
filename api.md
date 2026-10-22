@@ -1147,6 +1147,8 @@ Types:
 - <code><a href="./src/resources/settings/integrations/integrations.ts">AccountIntegration</a></code>
 - <code><a href="./src/resources/settings/integrations/integrations.ts">CreateAccountIntegrationRequest</a></code>
 - <code><a href="./src/resources/settings/integrations/integrations.ts">ListAccountIntegration</a></code>
+- <code><a href="./src/resources/settings/integrations/integrations.ts">Money</a></code>
+- <code><a href="./src/resources/settings/integrations/integrations.ts">MoneyInput</a></code>
 - <code><a href="./src/resources/settings/integrations/integrations.ts">UpdateAccountIntegrationRequest</a></code>
 
 Methods:
@@ -1167,6 +1169,16 @@ Methods:
 
 - <code title="get /v1/settings/integrations/stripe/publishable-key">client.settings.integrations.stripe.<a href="./src/resources/settings/integrations/stripe.ts">retrievePublishableKey</a>() -> StripePublishableKey</code>
 - <code title="get /v1/settings/integrations/stripe/status">client.settings.integrations.stripe.<a href="./src/resources/settings/integrations/stripe.ts">retrieveStatus</a>() -> StripeStatus</code>
+
+### Openrouter
+
+Types:
+
+- <code><a href="./src/resources/settings/integrations/openrouter.ts">OpenRouterUsage</a></code>
+
+Methods:
+
+- <code title="get /v1/settings/integrations/openrouter/usage">client.settings.integrations.openrouter.<a href="./src/resources/settings/integrations/openrouter.ts">retrieveUsage</a>() -> OpenRouterUsage</code>
 
 ### Hubspot
 

@@ -22,6 +22,8 @@ import {
   IntegrationUpdateParams,
   Integrations,
   ListAccountIntegration,
+  Money,
+  MoneyInput,
   UpdateAccountIntegrationRequest,
 } from './integrations/integrations';
 import * as PortalDomainsAPI from './portal-domains/portal-domains';
@@ -242,6 +244,8 @@ export declare namespace Settings {
     type AccountIntegration as AccountIntegration,
     type CreateAccountIntegrationRequest as CreateAccountIntegrationRequest,
     type ListAccountIntegration as ListAccountIntegration,
+    type Money as Money,
+    type MoneyInput as MoneyInput,
     type UpdateAccountIntegrationRequest as UpdateAccountIntegrationRequest,
     type IntegrationCreateParams as IntegrationCreateParams,
     type IntegrationUpdateParams as IntegrationUpdateParams,

@@ -2,6 +2,8 @@
 
 import { APIResource } from '../../../core/resource';
 import * as APIKeysAPI from '../../auth/api-keys/api-keys';
+import * as OpenrouterAPI from './openrouter';
+import { OpenRouterUsage, Openrouter } from './openrouter';
 import * as StripeAPI from './stripe';
 import { Stripe, StripePublishableKey, StripeStatus } from './stripe';
 import * as HubspotAPI from './hubspot/hubspot';
@@ -15,6 +17,7 @@ import { path } from '../../../internal/utils/path';
  */
 export class Integrations extends APIResource {
   stripe: StripeAPI.Stripe = new StripeAPI.Stripe(this._client);
+  openrouter: OpenrouterAPI.Openrouter = new OpenrouterAPI.Openrouter(this._client);
   hubspot: HubspotAPI.Hubspot = new HubspotAPI.Hubspot(this._client);
 
   /**
@@ -45,7 +48,8 @@ export class Integrations extends APIResource {
   }
 
   /**
-   * Renames an account integration, or activates or deactivates it.
+   * Renames an account integration, activates or deactivates it, or changes its
+   * monthly spend limit.
    *
    * Omitted fields are left unchanged. Credentials cannot be changed here; to rotate
    * them, call Create Account Integration again with the same `provider`.
@@ -137,6 +141,11 @@ export interface AccountIntegration {
   created_at: string;
 
   /**
+   * A monetary amount.
+   */
+  monthly_spend_limit: Money | null;
+
+  /**
    * Display name of the integration.
    */
   name: string;
@@ -152,8 +161,9 @@ export interface AccountIntegration {
    * - `stripe`: Stripe payment processing.
    * - `shippo`: Shippo shipping and label generation.
    * - `hubspot`: HubSpot CRM.
+   * - `openrouter`: OpenRouter, the LLM gateway that serves agent runs.
    */
-  provider: 'stripe' | 'shippo' | 'hubspot';
+  provider: 'stripe' | 'shippo' | 'hubspot' | 'openrouter';
 
   /**
    * Lifecycle status of the integration.
@@ -183,10 +193,11 @@ export interface CreateAccountIntegrationRequest {
    *   `webhook_secret` (`whsec_...`).
    * - `shippo`: `api_key` (`shippo_live_...` or `shippo_test_...`).
    * - `hubspot`: `access_token` (`pat-...`).
+   * - `openrouter`: `api_key` (`sk-or-...`).
    *
    * For Stripe and Shippo, sandbox accounts must supply test keys and production
    * accounts must supply live keys; credentials that do not match are rejected.
-   * HubSpot tokens make no such distinction.
+   * HubSpot and OpenRouter keys make no such distinction.
    */
   credentials: string;
 
@@ -201,8 +212,14 @@ export interface CreateAccountIntegrationRequest {
    * - `stripe`: Stripe payment processing.
    * - `shippo`: Shippo shipping and label generation.
    * - `hubspot`: HubSpot CRM.
+   * - `openrouter`: OpenRouter, the LLM gateway that serves agent runs.
    */
-  provider: 'stripe' | 'shippo' | 'hubspot';
+  provider: 'stripe' | 'shippo' | 'hubspot' | 'openrouter';
+
+  /**
+   * A monetary amount, supplied on create and update requests.
+   */
+  monthly_spend_limit?: MoneyInput;
 }
 
 /**
@@ -233,9 +250,44 @@ export interface ListAccountIntegration {
 }
 
 /**
+ * A monetary amount.
+ */
+export interface Money {
+  /**
+   * Decimal amount, as a string to preserve precision.
+   */
+  amount: string;
+
+  /**
+   * Lowercase ISO 4217 currency code.
+   */
+  currency: string;
+}
+
+/**
+ * A monetary amount, supplied on create and update requests.
+ */
+export interface MoneyInput {
+  /**
+   * Decimal amount, as a string to preserve precision.
+   */
+  amount: string;
+
+  /**
+   * Lowercase ISO 4217 currency code.
+   */
+  currency: string;
+}
+
+/**
  * Request to update an account integration.
  */
 export interface UpdateAccountIntegrationRequest {
+  /**
+   * A monetary amount, supplied on create and update requests.
+   */
+  monthly_spend_limit?: MoneyInput | null;
+
   /**
    * Display name of the integration.
    */
@@ -260,10 +312,11 @@ export interface IntegrationCreateParams {
    *   `webhook_secret` (`whsec_...`).
    * - `shippo`: `api_key` (`shippo_live_...` or `shippo_test_...`).
    * - `hubspot`: `access_token` (`pat-...`).
+   * - `openrouter`: `api_key` (`sk-or-...`).
    *
    * For Stripe and Shippo, sandbox accounts must supply test keys and production
    * accounts must supply live keys; credentials that do not match are rejected.
-   * HubSpot tokens make no such distinction.
+   * HubSpot and OpenRouter keys make no such distinction.
    */
   credentials: string;
 
@@ -278,11 +331,22 @@ export interface IntegrationCreateParams {
    * - `stripe`: Stripe payment processing.
    * - `shippo`: Shippo shipping and label generation.
    * - `hubspot`: HubSpot CRM.
+   * - `openrouter`: OpenRouter, the LLM gateway that serves agent runs.
    */
-  provider: 'stripe' | 'shippo' | 'hubspot';
+  provider: 'stripe' | 'shippo' | 'hubspot' | 'openrouter';
+
+  /**
+   * A monetary amount, supplied on create and update requests.
+   */
+  monthly_spend_limit?: MoneyInput;
 }
 
 export interface IntegrationUpdateParams {
+  /**
+   * A monetary amount, supplied on create and update requests.
+   */
+  monthly_spend_limit?: MoneyInput | null;
+
   /**
    * Display name of the integration.
    */
@@ -321,6 +385,7 @@ export interface IntegrationListParams {
 }
 
 Integrations.Stripe = Stripe;
+Integrations.Openrouter = Openrouter;
 Integrations.Hubspot = Hubspot;
 
 export declare namespace Integrations {
@@ -328,6 +393,8 @@ export declare namespace Integrations {
     type AccountIntegration as AccountIntegration,
     type CreateAccountIntegrationRequest as CreateAccountIntegrationRequest,
     type ListAccountIntegration as ListAccountIntegration,
+    type Money as Money,
+    type MoneyInput as MoneyInput,
     type UpdateAccountIntegrationRequest as UpdateAccountIntegrationRequest,
     type IntegrationCreateParams as IntegrationCreateParams,
     type IntegrationUpdateParams as IntegrationUpdateParams,
@@ -339,6 +406,8 @@ export declare namespace Integrations {
     type StripePublishableKey as StripePublishableKey,
     type StripeStatus as StripeStatus,
   };
+
+  export { Openrouter as Openrouter, type OpenRouterUsage as OpenRouterUsage };
 
   export { Hubspot as Hubspot };
 }

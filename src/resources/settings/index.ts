@@ -5,6 +5,8 @@ export {
   type AccountIntegration,
   type CreateAccountIntegrationRequest,
   type ListAccountIntegration,
+  type Money,
+  type MoneyInput,
   type UpdateAccountIntegrationRequest,
   type IntegrationCreateParams,
   type IntegrationUpdateParams,
