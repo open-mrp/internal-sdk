@@ -301,8 +301,8 @@ export interface CreatePurchaseOrderRequest {
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
    * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
-   * address must already belong to the account the record saves it in.
+   * `street_line_2`, and `null` or an empty string clears `state` or `postal_code`.
+   * The address must already belong to the account the record saves it in.
    */
   bill_to_address?: AccountsAPI.InlineAddressInput;
 
@@ -418,8 +418,8 @@ export interface CreatePurchaseOrderRequest {
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
    * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
-   * address must already belong to the account the record saves it in.
+   * `street_line_2`, and `null` or an empty string clears `state` or `postal_code`.
+   * The address must already belong to the account the record saves it in.
    */
   ship_to_address?: AccountsAPI.InlineAddressInput;
 
@@ -849,8 +849,8 @@ export interface UpdatePurchaseOrderRequest {
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
    * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
-   * address must already belong to the account the record saves it in.
+   * `street_line_2`, and `null` or an empty string clears `state` or `postal_code`.
+   * The address must already belong to the account the record saves it in.
    */
   billing_address?: AccountsAPI.InlineAddressInput;
 
@@ -900,8 +900,8 @@ export interface UpdatePurchaseOrderRequest {
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
    * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
-   * address must already belong to the account the record saves it in.
+   * `street_line_2`, and `null` or an empty string clears `state` or `postal_code`.
+   * The address must already belong to the account the record saves it in.
    */
   shipping_address?: AccountsAPI.InlineAddressInput;
 
@@ -971,8 +971,8 @@ export interface PurchaseOrderCreateParams {
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
    * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
-   * address must already belong to the account the record saves it in.
+   * `street_line_2`, and `null` or an empty string clears `state` or `postal_code`.
+   * The address must already belong to the account the record saves it in.
    */
   bill_to_address?: AccountsAPI.InlineAddressInput;
 
@@ -1090,8 +1090,8 @@ export interface PurchaseOrderCreateParams {
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
    * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
-   * address must already belong to the account the record saves it in.
+   * `street_line_2`, and `null` or an empty string clears `state` or `postal_code`.
+   * The address must already belong to the account the record saves it in.
    */
   ship_to_address?: AccountsAPI.InlineAddressInput;
 
@@ -1224,8 +1224,8 @@ export interface PurchaseOrderUpdateParams {
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
    * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
-   * address must already belong to the account the record saves it in.
+   * `street_line_2`, and `null` or an empty string clears `state` or `postal_code`.
+   * The address must already belong to the account the record saves it in.
    */
   billing_address?: AccountsAPI.InlineAddressInput;
 
@@ -1276,8 +1276,8 @@ export interface PurchaseOrderUpdateParams {
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
    * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
-   * address must already belong to the account the record saves it in.
+   * `street_line_2`, and `null` or an empty string clears `state` or `postal_code`.
+   * The address must already belong to the account the record saves it in.
    */
   shipping_address?: AccountsAPI.InlineAddressInput;
 
