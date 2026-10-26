@@ -146,9 +146,9 @@ export interface AccountPhotoUploadResult {
  *
  * Without `id`, a new address is created from these fields, so `name` and
  * `country` are required. With `id`, that saved address is updated: omitted fields
- * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
- * `street_line_2`. The address must already belong to the account the record saves
- * it in.
+ * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
+ * `street_line_2`, and an empty string clears `state` or `postal_code`. The
+ * address must already belong to the account the record saves it in.
  */
 export interface InlineAddressInput {
   /**
@@ -183,6 +183,8 @@ export interface InlineAddressInput {
 
   /**
    * Postal or ZIP code.
+   *
+   * Send an empty string to clear.
    */
   postal_code?: string;
 
@@ -194,6 +196,8 @@ export interface InlineAddressInput {
 
   /**
    * State or administrative area.
+   *
+   * Send an empty string to clear.
    */
   state?: string;
 
@@ -227,9 +231,9 @@ export interface UpdateAccountRequest {
    *
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
-   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`. The address must already belong to the account the record saves
-   * it in.
+   * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
+   * address must already belong to the account the record saves it in.
    */
   default_billing_address?: InlineAddressInput;
 
@@ -245,9 +249,9 @@ export interface UpdateAccountRequest {
    *
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
-   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`. The address must already belong to the account the record saves
-   * it in.
+   * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
+   * address must already belong to the account the record saves it in.
    */
   default_shipping_address?: InlineAddressInput;
 
@@ -331,9 +335,9 @@ export interface AccountUpdateParams {
    *
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
-   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`. The address must already belong to the account the record saves
-   * it in.
+   * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
+   * address must already belong to the account the record saves it in.
    */
   default_billing_address?: InlineAddressInput;
 
@@ -349,9 +353,9 @@ export interface AccountUpdateParams {
    *
    * Without `id`, a new address is created from these fields, so `name` and
    * `country` are required. With `id`, that saved address is updated: omitted fields
-   * are left unchanged, and `null` clears `phone`, `email`, `receive_calendar_id` or
-   * `street_line_2`. The address must already belong to the account the record saves
-   * it in.
+   * are left unchanged, `null` clears `phone`, `email`, `receive_calendar_id` or
+   * `street_line_2`, and an empty string clears `state` or `postal_code`. The
+   * address must already belong to the account the record saves it in.
    */
   default_shipping_address?: InlineAddressInput;
 

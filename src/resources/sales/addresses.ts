@@ -212,6 +212,8 @@ export interface UpdateAddressRequest {
 
   /**
    * Postal or ZIP code.
+   *
+   * Send an empty string to clear.
    */
   postal_code?: string;
 
@@ -223,6 +225,8 @@ export interface UpdateAddressRequest {
 
   /**
    * State or administrative area.
+   *
+   * Send an empty string to clear.
    */
   state?: string;
 
@@ -344,6 +348,8 @@ export interface AddressUpdateParams {
 
   /**
    * Postal or ZIP code.
+   *
+   * Send an empty string to clear.
    */
   postal_code?: string;
 
@@ -355,6 +361,8 @@ export interface AddressUpdateParams {
 
   /**
    * State or administrative area.
+   *
+   * Send an empty string to clear.
    */
   state?: string;
 
