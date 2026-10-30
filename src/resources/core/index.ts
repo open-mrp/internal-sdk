@@ -192,6 +192,14 @@ export {
   type EmailLogListParams,
 } from './email-logs';
 export {
+  FeedbackReports,
+  type CreateFeedbackReportRequest,
+  type FeedbackReport,
+  type ListFeedbackReport,
+  type FeedbackReportCreateParams,
+  type FeedbackReportListParams,
+} from './feedback-reports';
+export {
   Jobs,
   type Job,
   type JobExport,

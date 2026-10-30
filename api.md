@@ -401,6 +401,19 @@ Methods:
 - <code title="get /v1/core/jobs/{id}">client.core.jobs.<a href="./src/resources/core/jobs.ts">retrieve</a>(id, { ...params }) -> Job</code>
 - <code title="post /v1/core/jobs/{id}/cancel">client.core.jobs.<a href="./src/resources/core/jobs.ts">cancel</a>(id, { ...params }) -> Job</code>
 
+## FeedbackReports
+
+Types:
+
+- <code><a href="./src/resources/core/feedback-reports.ts">CreateFeedbackReportRequest</a></code>
+- <code><a href="./src/resources/core/feedback-reports.ts">FeedbackReport</a></code>
+- <code><a href="./src/resources/core/feedback-reports.ts">ListFeedbackReport</a></code>
+
+Methods:
+
+- <code title="post /v1/core/feedback-reports">client.core.feedbackReports.<a href="./src/resources/core/feedback-reports.ts">create</a>({ ...params }) -> FeedbackReport</code>
+- <code title="get /v1/core/feedback-reports">client.core.feedbackReports.<a href="./src/resources/core/feedback-reports.ts">list</a>({ ...params }) -> ListFeedbackReport</code>
+
 ## Analytics
 
 Types:

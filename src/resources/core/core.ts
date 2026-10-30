@@ -27,6 +27,15 @@ import {
 } from './audit-events';
 import * as EmailLogsAPI from './email-logs';
 import { EmailLog, EmailLogListParams, EmailLogRetrieveParams, EmailLogs, ListEmailLog } from './email-logs';
+import * as FeedbackReportsAPI from './feedback-reports';
+import {
+  CreateFeedbackReportRequest,
+  FeedbackReport,
+  FeedbackReportCreateParams,
+  FeedbackReportListParams,
+  FeedbackReports,
+  ListFeedbackReport,
+} from './feedback-reports';
 import * as JobsAPI from './jobs';
 import {
   Job,
@@ -237,6 +246,7 @@ export class Core extends APIResource {
   addresses: AddressesAPI.Addresses = new AddressesAPI.Addresses(this._client);
   emailLogs: EmailLogsAPI.EmailLogs = new EmailLogsAPI.EmailLogs(this._client);
   jobs: JobsAPI.Jobs = new JobsAPI.Jobs(this._client);
+  feedbackReports: FeedbackReportsAPI.FeedbackReports = new FeedbackReportsAPI.FeedbackReports(this._client);
   analytics: AnalyticsAPI.Analytics = new AnalyticsAPI.Analytics(this._client);
   actions: ActionsAPI.Actions = new ActionsAPI.Actions(this._client);
   records: RecordsAPI.Records = new RecordsAPI.Records(this._client);
@@ -552,6 +562,7 @@ export interface Entity {
     | 'sys_property_type'
     | 'sys_property_value'
     | 'territory'
+    | 'feedback_report'
     | 'tenancy'
     | 'checkout_session'
     | 'estimate_rate_result'
@@ -939,6 +950,7 @@ export interface CoreRetrieveSearchParams {
     | 'sys_property_type'
     | 'sys_property_value'
     | 'territory'
+    | 'feedback_report'
     | 'tenancy'
     | 'checkout_session'
     | 'estimate_rate_result'
@@ -1017,6 +1029,7 @@ Core.AuditEvents = AuditEvents;
 Core.Addresses = Addresses;
 Core.EmailLogs = EmailLogs;
 Core.Jobs = Jobs;
+Core.FeedbackReports = FeedbackReports;
 Core.Analytics = Analytics;
 Core.Actions = Actions;
 Core.Records = Records;
@@ -1086,6 +1099,15 @@ export declare namespace Core {
     type ResponseError as ResponseError,
     type JobRetrieveParams as JobRetrieveParams,
     type JobCancelParams as JobCancelParams,
+  };
+
+  export {
+    FeedbackReports as FeedbackReports,
+    type CreateFeedbackReportRequest as CreateFeedbackReportRequest,
+    type FeedbackReport as FeedbackReport,
+    type ListFeedbackReport as ListFeedbackReport,
+    type FeedbackReportCreateParams as FeedbackReportCreateParams,
+    type FeedbackReportListParams as FeedbackReportListParams,
   };
 
   export {
