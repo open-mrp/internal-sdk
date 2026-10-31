@@ -26,6 +26,7 @@ describe('resource feedbackReports', () => {
       message: 'The item list loses its filters when I open an item and come back.',
       include: ['user'],
       page: '/dashboard/items',
+      severity: 'medium',
     });
   });
 

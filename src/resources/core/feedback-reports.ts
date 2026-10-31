@@ -23,6 +23,7 @@ export class FeedbackReports extends APIResource {
    *     message:
    *       'The item list loses its filters when I open an item and come back.',
    *     page: '/dashboard/items',
+   *     severity: 'medium',
    *   });
    * ```
    */
@@ -67,6 +68,11 @@ export interface CreateFeedbackReportRequest {
    * report can be read in context.
    */
   page?: string;
+
+  /**
+   * How urgently the report needs attention. Defaults to `medium` when omitted.
+   */
+  severity?: 'urgent' | 'medium' | 'low';
 }
 
 /**
@@ -97,6 +103,11 @@ export interface FeedbackReport {
    * Dashboard page the user was on when they submitted the report.
    */
   page: string | null;
+
+  /**
+   * How urgently the report needs attention.
+   */
+  severity: 'urgent' | 'medium' | 'low';
 
   /**
    * When the report was last updated.
@@ -156,6 +167,12 @@ export interface FeedbackReportCreateParams {
    * recorded so the report can be read in context.
    */
   page?: string;
+
+  /**
+   * Body param: How urgently the report needs attention. Defaults to `medium` when
+   * omitted.
+   */
+  severity?: 'urgent' | 'medium' | 'low';
 }
 
 export interface FeedbackReportListParams {
