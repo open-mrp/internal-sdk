@@ -411,6 +411,9 @@ export class Operations extends APIResource {
    * inventory valuation at a past date reads. Either way the figure is in the base
    * unit of the item's category.
    *
+   * Each item carries its `unit_value` and `unit_cost`; `unit_cost` is null unless
+   * the caller holds `costs:read`.
+   *
    * This endpoint requires the permission: `items:read`.
    *
    * @example
